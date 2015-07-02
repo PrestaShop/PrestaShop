@@ -329,6 +329,9 @@
         min-height: 360px; } }
     @media (max-width: 991px) {
       #layer_cart .layer_cart_cart {
+        -moz-border-radius: 0px 0 4px 4px;
+        -webkit-border-radius: 0px;
+        border-radius: 0px 0 4px 4px;
         border-left: none;
         border-top: 1px solid #d6d4d4; } }
     #layer_cart .layer_cart_cart h2 {

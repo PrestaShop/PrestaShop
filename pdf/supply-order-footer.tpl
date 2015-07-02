@@ -31,24 +31,24 @@
 			{if !empty($shop_phone) OR !empty($shop_fax)}
 				{l s='For more assistance, contact Support:' pdf='true'}<br />
 				{if !empty($shop_phone)}
-					Tel: {$shop_phone|escape:'html':'UTF-8'}
+					{l s='Tel: %s' sprintf=[$shop_phone|escape:'html':'UTF-8'] pdf='true'}
 				{/if}
 
 				{if !empty($shop_fax)}
-					Fax: {$shop_fax|escape:'html':'UTF-8'}
+					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] pdf='true'}
 				{/if}
 				<br />
 			{/if}
-            
-            {if isset($shop_details)}
-                {$shop_details|escape:'html':'UTF-8'}<br />
-            {/if}
+			
+			{if isset($shop_details)}
+				{$shop_details|escape:'html':'UTF-8'}<br />
+			{/if}
 
-            {if isset($free_text)}
-            	{foreach $free_text as $text}
-    				{$text|escape:'html':'UTF-8'}<br />
-    			{/foreach}
-            {/if}
+			{if isset($free_text)}
+				{foreach $free_text as $text}
+					{$text|escape:'html':'UTF-8'}<br />
+				{/foreach}
+			{/if}
 		</td>
 	</tr>
 </table>

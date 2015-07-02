@@ -83,14 +83,14 @@ function latin1_database_to_utf8()
 					array('name' => 'tax_lang', 'id' => 'id_tax', 'lang' => true, 'fields' => array('name')),
 					array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
 				);
-	
-	foreach ($tables AS $table)
+
+	foreach ($tables as $table)
 	{
 		/* Latin1 datas' selection */
 		if (!Db::getInstance()->execute('SET NAMES latin1'))
 			echo 'Cannot change the sql encoding to latin1!';
 		$query = 'SELECT `'.$table['id'].'`';
-		foreach ($table['fields'] AS $field)
+		foreach ($table['fields'] as $field)
 			$query .= ', `'.$field.'`';
 		if (isset($table['lang']) AND $table['lang'])
 			$query .= ', `id_lang`';
@@ -106,16 +106,16 @@ function latin1_database_to_utf8()
 					<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
 				</request>'."\n";
 		}
-	
+
 		if (Db::getInstance()->NumRows())
 		{
 			/* Utf-8 datas' restitution */
 			if (!Db::getInstance()->execute('SET NAMES utf8'))
 				echo 'Cannot change the sql encoding to utf8!';
-			foreach ($latin1Datas AS $latin1Data)
+			foreach ($latin1Datas as $latin1Data)
 			{
 				$query = 'UPDATE `'._DB_PREFIX_.$table['name'].'` SET';
-				foreach ($table['fields'] AS $field)
+				foreach ($table['fields'] as $field)
 					$query .= ' `'.$field.'` = \''.pSQL($latin1Data[$field]).'\',';
 				$query = rtrim($query, ',');
 				$query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);

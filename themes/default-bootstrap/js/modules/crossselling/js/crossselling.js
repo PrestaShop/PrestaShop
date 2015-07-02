@@ -23,6 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function() {
+	initCrossSellingbxSlider();
+});
+
+function initCrossSellingbxSlider()
+{
 	if (!!$.prototype.bxSlider)
 		$('#crossselling_list_car').bxSlider({
 			minSlides: 2,
@@ -36,4 +41,4 @@ $(document).ready(function() {
 			infiniteLoop:false,
 			hideControlOnEnd: true
 		});
-});
+}

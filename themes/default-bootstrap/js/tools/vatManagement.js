@@ -48,6 +48,8 @@ function vat_number_ajax()
 {
 	$(document).on('change', '#id_country', function()
 	{
+		if ($('#company').length && !$('#company').val())
+			return;
 		if (typeof vatnumber_ajax_call !== 'undefined' && vatnumber_ajax_call)
 			$.ajax({
 				type: 'POST',
@@ -67,6 +69,8 @@ function vat_number_ajax()
 
 	$(document).on('change', '#id_country_invoice', function()
 	{
+		if ($('#company_invoice').length && !$('#company_invoice').val())
+			return;
 		if (typeof vatnumber_ajax_call !== 'undefined' && vatnumber_ajax_call)
 			$.ajax({
 				type: 'POST',

@@ -54,36 +54,36 @@ class ConnectionsSourceCore extends ObjectModel
 			Referrer::cacheNewSource($this->id);
 		return $result;
 	}
-	
+
 	public static function logHttpReferer(Cookie $cookie = null)
 	{
 		if (!$cookie)
 			$cookie = Context::getContext()->cookie;
 		if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections))
 			return false;
-			
+
 		// If the referrer is not correct, we drop the connection
 		if (isset($_SERVER['HTTP_REFERER']) && !Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER']))
 			return false;
-		// If there is no referrer and we do not want to save direct traffic (as opposed to referral traffic), we drop the connection			
+		// If there is no referrer and we do not want to save direct traffic (as opposed to referral traffic), we drop the connection
 		if (!isset($_SERVER['HTTP_REFERER']) && !Configuration::get('TRACKING_DIRECT_TRAFFIC'))
 			return false;
-		
+
 		$source = new ConnectionsSource();
 
 		// There are a few more operations if there is a referrer
 		if (isset($_SERVER['HTTP_REFERER']))
 		{
-			// If the referrer is internal (i.e. from your own website), then we drop the connection		
+			// If the referrer is internal (i.e. from your own website), then we drop the connection
 			$parsed = parse_url($_SERVER['HTTP_REFERER']);
 			$parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
-			if ((!isset($parsed['path']) ||!isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
+			if ((!isset($parsed['path']) || !isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__)))
 				return false;
 
 			$source->http_referer = substr($_SERVER['HTTP_REFERER'], 0, ConnectionsSource::$uri_max_size);
 			$source->keywords = substr(trim(SearchEngine::getKeywords($_SERVER['HTTP_REFERER'])), 0, ConnectionsSource::$uri_max_size);
 		}
-		
+
 		$source->id_connections = (int)$cookie->id_connections;
 		$source->request_uri = Tools::getHttpHost(false, false);
 
@@ -97,7 +97,7 @@ class ConnectionsSourceCore extends ObjectModel
 		$source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
 		return $source->add();
 	}
-	
+
 	public static function getOrderSources($id_order)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('

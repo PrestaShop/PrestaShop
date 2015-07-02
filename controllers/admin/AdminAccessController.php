@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Profile $object
+ */
 class AdminAccessControllerCore extends AdminController
 {
 	/* @var array : Black list of id_tab that do not have access */
@@ -118,7 +121,6 @@ class AdminAccessControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
-		$this->initTabModuleList();
 		$this->display = 'edit';
 		$this->initTabModuleList();
 		if (!$this->loadObject(true))
@@ -242,7 +244,7 @@ class AdminAccessControllerCore extends AdminController
 	/**
 	* Get the current profile id
 	*
-	* @return the $_GET['profile'] if valid, else 1 (the first profile id)
+	* @return int the $_GET['profile'] if valid, else 1 (the first profile id)
 	*/
 	public function getCurrentProfileId()
 	{

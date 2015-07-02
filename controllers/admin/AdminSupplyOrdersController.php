@@ -26,10 +26,11 @@
 
 /**
  * @since 1.5.0
+ * @property SupplyOrder $object
  */
 class AdminSupplyOrdersControllerCore extends AdminController
 {
-	/*
+	/**
 	 * @var array List of warehouses
 	 */
 	protected $warehouses;
@@ -372,9 +373,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
-	public function getList($id_lang, $order_by = null, $order_way = null,
-		$start = 0, $limit = null, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
 			$limit = false;
@@ -1715,7 +1724,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$query->leftJoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang);
 		$query->leftJoin('product_supplier', 'ps', 'ps.id_product = p.id_product AND ps.id_product_attribute = IFNULL(pa.id_product_attribute, 0)');
 		$query->where('(pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\' OR ps.product_supplier_reference LIKE \'%'.$pattern.'%\')');
-		$query->where('p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
+		$query->where('NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
 		$query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
 
 		if ($id_supplier)
@@ -2138,7 +2147,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	/**
 	 * Overrides AdminController::beforeAdd()
 	 * @see AdminController::beforeAdd()
-	 * @param ObjectModel $object
+	 *
+	 * @param SupplyOrder $object
+	 *
+	 * @return true
 	 */
 	public function beforeAdd($object)
 	{

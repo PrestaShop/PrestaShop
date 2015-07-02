@@ -61,9 +61,7 @@ class Tools extends ToolsCore
 				header($header);
 		}
 
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectLink($url)
@@ -78,15 +76,13 @@ class Tools extends ToolsCore
 				$url .= '?'.$explode[1];
 		}
 
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectAdmin($url)
 	{
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		if (!is_object(Context::getContext()->controller))
+			Context::getContext()->controller = new StdClass();
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 }

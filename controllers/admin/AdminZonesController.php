@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Zone $object
+ */
 class AdminZonesControllerCore extends AdminController
 {
 	public $asso_type = 'shop';
@@ -31,10 +34,10 @@ class AdminZonesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'zone';
+		$this->table = 'zone';
 		$this->className = 'Zone';
-	 	$this->lang = false;
-		
+		$this->lang = false;
+
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
@@ -60,7 +63,7 @@ class AdminZonesControllerCore extends AdminController
 				'icon' => 'icon-trash'
 			)
 		);
-			
+
 		parent::__construct();
 	}
 

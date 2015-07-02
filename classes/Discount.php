@@ -25,18 +25,18 @@
 */
 
 /**
-  * @deprecated 1.5.0.1
-  */
+ * @deprecated 1.5.0.1
+ */
 class DiscountCore extends CartRule
 {
 	const PERCENT = 1;
 	const AMOUNT = 2;
 	const FREE_SHIPPING = 3;
-	
+
 	public function __get($key)
 	{
 		Tools::displayAsDeprecated();
-		
+
 		if ($key == 'id_group')
 			return 0;
 		if ($key == 'id_discount_type')
@@ -72,11 +72,11 @@ class DiscountCore extends CartRule
 
 		return $this->{$key};
 	}
-	
+
 	public function __set($key, $value)
 	{
 		Tools::displayAsDeprecated();
-		
+
 		if ($key == 'id_discount_type')
 		{
 			if ($value == Discount::FREE_SHIPPING)
@@ -98,10 +98,10 @@ class DiscountCore extends CartRule
 				$this->reduction_amount = true;
 			}
 		}
-		
+
 		if ($key == 'code')
 			$this->name[Configuration::get('PS_LANG_DEFAULT')] = $value;
-		
+
 		if ($key == 'value')
 		{
 			if ($this->reduction_percent)
@@ -117,10 +117,10 @@ class DiscountCore extends CartRule
 			$this->reduction_tax = $value;
 		if ($key == 'behavior_not_exhausted')
 			$this->partial_use = $value;
-		
+
 		$this->{$key} = $value;
 	}
-	
+
 	public function __call($method, $args)
 	{
 		Tools::displayAsDeprecated();
@@ -131,18 +131,18 @@ class DiscountCore extends CartRule
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public function add($autodate = true, $nullValues = false, $categories = null)
 	{
 		$r = parent::add($autodate, $nullValues);
 		// Todo : manage categories
 		return $r;
 	}
-	
+
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public function update($autodate = true, $nullValues = false, $categories = null)
 	{
 		$r = parent::update($autodate, $nullValues);
@@ -151,32 +151,32 @@ class DiscountCore extends CartRule
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public static function getIdByName($code)
 	{
-	 	return parent::getIdByCode($code);
+		return parent::getIdByCode($code);
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public static function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $hasStock = false, Cart $cart = null)
 	{
 		return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart);
 	}
-	
+
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public static function getVouchersToCartDisplay($id_lang, $id_customer)
 	{
 		return CartRule::getCustomerCartRules($id_lang, $id_customer);
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public function getValue($nb_discounts = 0, $order_total_products = 0, $shipping_fees = 0, $id_cart = false, $useTax = true, Currency $currency = null, Shop $shop = null)
 	{
 		$context = Context::getContext();
@@ -186,23 +186,24 @@ class DiscountCore extends CartRule
 			$context->currency = $currency;
 		if (Validate::isLoadedObject($shop))
 			$context->shop = $shop;
-	 	return parent::getContextualValue($useTax, $context);
-    }
+		return parent::getContextualValue($useTax, $context);
+	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public static function discountExists($discountName, $id_discount = 0)
 	{
 		return parent::cartRuleExists($discountName);
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 * @param Order $order
+	 * @return Discount
+	 */
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
-	{		
-		$languages = Language::getLanguages($order);
+	{
 		$products = $order->getProducts(false, $productList, $qtyList);
 
 		// Totals are stored in the order currency (or at least should be)
@@ -222,8 +223,8 @@ class DiscountCore extends CartRule
 		// create discount
 		$voucher = new Discount();
 		$voucher->id_discount_type = Discount::AMOUNT;
-		foreach ($languages as $language)
-			$voucher->description[$language['id_lang']] = strval($name).(int)($order->id);
+		foreach (Language::getIDs((bool)$order) as $id_lang)
+			$voucher->description[$id_lang] = strval($name).(int)($order->id);
 		$voucher->value = (float)($total);
 		$voucher->name = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 		$voucher->id_customer = (int)($order->id_customer);
@@ -250,8 +251,8 @@ class DiscountCore extends CartRule
 	}
 
 	/**
-	  * @deprecated 1.5.0.1
-	  */
+	 * @deprecated 1.5.0.1
+	 */
 	public static function display($value, $type, $currency = null)
 	{
 		if ((float)$value && (int)$type)

@@ -23,6 +23,10 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+/**
+ * @property Feature $object
+ */
 class AdminFeaturesControllerCore extends AdminController
 {
 	public $bootstrap = true;
@@ -400,7 +404,6 @@ class AdminFeaturesControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
-		$this->initTabModuleList();
 		if (Feature::isFeatureActive())
 		{
 			// toolbar (save, cancel, new, ..)
@@ -561,6 +564,15 @@ class AdminFeaturesControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{

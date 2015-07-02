@@ -29,6 +29,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
 	{
 		$visits = ($granularity == false) ? 0 : array();
+		/** @var Gapi $gapi */
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{
@@ -86,7 +87,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(DISTINCT id_guest)
 		FROM `'._DB_PREFIX_.'cart`
 		WHERE `date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+		AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'orders` WHERE `'._DB_PREFIX_.'orders`.id_cart = `'._DB_PREFIX_.'cart`.id_cart)
 		'.Shop::addSqlRestriction());
 	}
 
@@ -364,7 +365,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getAverageCustomerAge()
 	{
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT AVG(DATEDIFF(NOW(), birthday))
+		SELECT AVG(DATEDIFF("'.date('Y-m-d').' 00:00:00", birthday))
 		FROM `'._DB_PREFIX_.'customer` c
 		WHERE active = 1
 		AND birthday IS NOT NULL AND birthday != "0000-00-00" '.Shop::addSqlRestriction());
@@ -682,12 +683,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$languages = Language::getLanguages();
 				$total = $translated = 0;
 				foreach ($themes as $theme)
+				{
+					/** @var Theme $theme */
 					foreach ($languages as $language)
 					{
 						$kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
 						$total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
 						$translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
 					}
+				}
 				$value = 0;
 				if ($translated)
 					$value = round(100 * $translated / $total, 1);

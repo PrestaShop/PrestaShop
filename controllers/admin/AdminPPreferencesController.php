@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminPPreferencesControllerCore extends AdminController
 {
 	public function __construct()
@@ -36,7 +39,7 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		$warehouse_list = Warehouse::getWarehouses();
 		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (default setting)')));
-		$warehouse_list = array_merge($warehouse_no,$warehouse_list);
+		$warehouse_list = array_merge($warehouse_no, $warehouse_list);
 
 		$this->fields_options = array(
 			'products' => array(
@@ -217,12 +220,12 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Products stock'),
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
-		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
-		 				'validation' => 'isBool',
-		 				'cast' => 'intval',
-		 				'required' => false,
-		 				'type' => 'bool'
+						'title' => $this->l('Allow ordering of out-of-stock products'),
+						'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					),
 					'PS_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable stock management'),
@@ -299,15 +302,21 @@ class AdminPPreferencesControllerCore extends AdminController
 		}
 
 		// if advanced stock management is disabled, updates concerned tables
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 &&
-			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0 && Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL)
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 && (int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 		{
-			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'product_shop.`advanced_stock_management` = 1');
+			$id_shop_list = Shop::getContextListShopID();
+			$sql_shop = 'UPDATE `'._DB_PREFIX_.'product_shop` SET `advanced_stock_management` = 0 WHERE
+			`advanced_stock_management` = 1 AND (`id_shop` = '.implode(' OR `id_shop` = ', $id_shop_list).')';
 
-			Db::getInstance()->execute(
-				'UPDATE `'._DB_PREFIX_.'stock_available`
-				 SET `depends_on_stock` = 0, `quantity` = 0
-				 WHERE `depends_on_stock` = 1');
+			$sql_stock = 'UPDATE `'._DB_PREFIX_.'stock_available` SET `depends_on_stock` = 0, `quantity` = 0
+					 WHERE `depends_on_stock` = 1 AND (`id_shop` = '.implode(' OR `id_shop` = ', $id_shop_list).')';
+
+			$sql = 'UPDATE `'._DB_PREFIX_.'product` SET `advanced_stock_management` = 0 WHERE
+			`advanced_stock_management` = 1 AND (`id_shop_default` = '.implode(' OR `id_shop_default` = ', $id_shop_list).')';
+
+			Db::getInstance()->execute($sql_shop);
+			Db::getInstance()->execute($sql_stock);
+			Db::getInstance()->execute($sql);
 		}
 
 		if (Tools::getIsset('PS_CATALOG_MODE'))

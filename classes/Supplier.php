@@ -28,7 +28,7 @@ class SupplierCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer supplier ID */
+	/** @var int supplier ID */
 	public $id_supplier;
 
 	/** @var string Name */
@@ -55,7 +55,7 @@ class SupplierCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -71,7 +71,7 @@ class SupplierCore extends ObjectModel
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-			// Lang fields
+			/* Lang fields */
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -99,10 +99,10 @@ class SupplierCore extends ObjectModel
 	}
 
 	/**
-	  * Return suppliers
-	  *
-	  * @return array Suppliers
-	  */
+	 * Return suppliers
+	 *
+	 * @return array Suppliers
+	 */
 	public static function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
 	{
 		if (!$id_lang)
@@ -134,7 +134,7 @@ class SupplierCore extends ObjectModel
 			}
 
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT  p.`id_supplier`, COUNT(DISTINCT p.`id_product`) as nb_products
+					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
 					FROM `'._DB_PREFIX_.'product_supplier` ps
 					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
 					'.Shop::addSqlAssociation('product', 'p').'
@@ -148,9 +148,9 @@ class SupplierCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
-					)
-					GROUP BY p.`id_supplier`'
-				));
+					)').'
+					GROUP BY ps.`id_supplier`'
+				);
 
 			$counts = array();
 			foreach ($results as $result)
@@ -172,11 +172,11 @@ class SupplierCore extends ObjectModel
 	}
 
 	/**
-	  * Return name from id
-	  *
-	  * @param integer $id_supplier Supplier ID
-	  * @return string name
-	  */
+	 * Return name from id
+	 *
+	 * @param int $id_supplier Supplier ID
+	 * @return string name
+	 */
 	static protected $cache_name = array();
 	public static function getNameById($id_supplier)
 	{
@@ -208,8 +208,8 @@ class SupplierCore extends ObjectModel
 			$front = false;
 
 		if ($p < 1) $p = 1;
-	 	if (empty($order_by) || $order_by == 'position') $order_by = 'name';
-	 	if (empty($order_way)) $order_way = 'ASC';
+		if (empty($order_by) || $order_by == 'position') $order_by = 'name';
+		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
@@ -267,24 +267,22 @@ class SupplierCore extends ObjectModel
 					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
-					MAX(image_shop.`id_image`) id_image,
+					image_shop.`id_image` id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
-					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
-					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '').'
+					DATEDIFF(p.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00", INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
+					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
 				 FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
-					AND ps.id_product_attribute = 0)
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-					ON (p.`id_product` = pa.`id_product`)
-				'.(Combination::isFeatureActive() ?
-				Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1') : '').'
+					AND ps.id_product_attribute = 0) '.
+				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
@@ -303,11 +301,11 @@ class SupplierCore extends ObjectModel
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				GROUP BY product_shop.id_product
+				GROUP BY ps.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
 		if (!$result)
 			return false;
@@ -349,7 +347,7 @@ class SupplierCore extends ObjectModel
 	* Tells if a supplier exists
 	*
 	* @param $id_supplier Supplier id
-	* @return boolean
+	* @return bool
 	*/
 	public static function supplierExists($id_supplier)
 	{

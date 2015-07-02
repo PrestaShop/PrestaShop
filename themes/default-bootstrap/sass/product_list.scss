@@ -18,18 +18,6 @@ ul.product_list {
 			font-weight: bold;
 			padding: 3px 8px 4px 8px;
 			margin-bottom: 20px;
-			&.available-now {
-				background: #55c65e;
-				border: 1px solid #36943e;
-			}
-			&.out-of-stock{
-				background: #fe9126;
-				border: 1px solid #e4752b;
-			}
-			&.available-dif{
-				background: #fe9126;
-				border: 1px solid #e4752b;
-			}
 		}
 	}
 	.color-list-container {
@@ -229,7 +217,6 @@ ul.product_list.grid {
 				margin-bottom: 13px;
 				position: relative;
 				@media (max-width: $screen-xs-max) { // max 767px
-					max-width: 290px;
 					margin-left: auto;
 					margin-right: auto;
 				}
@@ -280,6 +267,9 @@ ul.product_list.grid {
 				margin-right: 5px;
 			}
 			.button-container {
+				@media (min-width: $screen-lg) { // min 1200px
+					display: none;
+				}
 				margin-bottom: 14px;
 				.ajax_add_to_cart_button,
 				span.button,
@@ -439,7 +429,7 @@ ul.product_list.list {
 						padding-top: 0;
 						width: 100%;
 					}
-					span{
+					.price {
 						display: inline-block;
 						margin-top: -4px;
 						margin-bottom: 14px;

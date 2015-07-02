@@ -31,45 +31,45 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 	public $languages = array();
 	protected $wsUrl;
 	protected $schemaToDisplay;
-	
+
 	/**
 	 * Current entity
 	 */
 	protected $currentEntity;
-	
+
 	/**
 	 * Current association
 	 */
 	protected $currentAssociatedEntity;
-	
+
 	/**
 	 * Json content
 	 */
 	protected $content = array();
-	
+
 	public function __construct($languages = array())
 	{
 		$this->languages = $languages;
 	}
-	
+
 	public function setSchemaToDisplay($schema)
 	{
 		if (is_string($schema))
 			$this->schemaToDisplay = $schema;
 		return $this;
 	}
-	
+
 	public function getSchemaToDisplay()
 	{
 		return $this->schemaToDisplay;
 	}
-	
+
 	public function setWsUrl($url)
 	{
 		$this->wsUrl = $url;
 		return $this;
 	}
-	
+
 	public function getWsUrl()
 	{
 		return $this->wsUrl;
@@ -77,16 +77,15 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 
 	public function getContentType()
 	{
-		return 'text/html';
 		return 'application/json';
 	}
-	
+
 	public function renderErrors($message, $code = null)
 	{
 		$this->content['errors'][] = array('code' => $code, 'message' => $message);
 		return '';
 	}
-	
+
 	public function renderField($field)
 	{
 		$is_association = (isset($field['is_association']) && $field['is_association'] == true);
@@ -103,16 +102,12 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 		}
 		// Case 1 : fields of the current entity (not an association)
 		if (!$is_association)
-		{
 			$this->currentEntity[$field['sqlId']]  = $field['value'];
-		}
-		else // Case 2 : fields of an associated entity to the current one 
-		{
+		else // Case 2 : fields of an associated entity to the current one
 			$this->currentAssociatedEntity[] = array('name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']);
-		}
 		return '';
 	}
-	
+
 	public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
 	{
 		// api ?
@@ -120,16 +115,12 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 		if ($node_name == 'api' && ($isAPICall == false))
 			$isAPICall = true;
 		if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api')))
-		{
 			$this->content[] = $node_name;
-		}
 		if (isset($more_attr, $more_attr['id']))
-		{
 			$this->content[$params['objectsNodeName']][] = array('id' => $more_attr['id']);
-		}
 		return '';
 	}
-	
+
 	public function getNodeName($params)
 	{
 		$node_name = '';
@@ -137,7 +128,7 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 			$node_name = $params['objectNodeName'];
 		return $node_name;
 	}
-	
+
 	public function renderNodeFooter($node_name, $params)
 	{
 		if (isset($params['objectNodeName']) && $params['objectNodeName'] == $node_name)
@@ -156,9 +147,9 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 			//$this->currentEntity['associations'][$element['name']][][$element['key']] = $element['value'];
 			$this->currentEntity['associations'][$element['name']][] = $current;
 			$this->currentAssociatedEntity = array();
-		}		
+		}
 	}
-	
+
 	public function overrideContent($content)
 	{
 		$content = '';
@@ -166,7 +157,7 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 		$content = preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", $content);
 		return $content;
 	}
-	
+
 	public function setLanguages($languages)
 	{
 		$this->languages = $languages;

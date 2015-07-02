@@ -252,7 +252,7 @@
     <unit type="base_distance" value="m"/>
     <unit type="long_distance" value="km"/>
   </units>
-  <state>
+  <states>
     <state name="Άγιο Όρος" iso_code="GR-69" country="GR" zone="Europe"/>
     <state name="Αιτωλοακαρνανίας" iso_code="GR-01" country="GR" zone="Europe"/>
     <state name="Αργολίδας" iso_code="GR-11" country="GR" zone="Europe"/>
@@ -305,5 +305,5 @@
     <state name="Χίου" iso_code="GR-85" country="GR" zone="Europe"/>
     <state name="Χαλκιδικής" iso_code="GR-64" country="GR" zone="Europe"/>
     <state name="Χανίων" iso_code="GR-94" country="GR" zone="Europe"/>
-  </state>
+  </states>
 </localizationPack>

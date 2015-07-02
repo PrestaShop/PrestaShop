@@ -124,7 +124,7 @@ class DispatcherCore
 				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
 			),
 		),
-		// Must be after the product and category rules in order to avoid conflict
+		/* Must be after the product and category rules in order to avoid conflict */
 		'layered_rule' => array(
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
@@ -412,10 +412,10 @@ class DispatcherCore
 		// Load custom routes from modules
 		$modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
-			foreach($modules_routes as $module_route)
+			foreach ($modules_routes as $module_route)
 			{
 				if (is_array($module_route) && count($module_route))
-					foreach($module_route as $route => $route_details)
+					foreach ($module_route as $route => $route_details)
 						if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details)
 							&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
 						{
@@ -425,34 +425,27 @@ class DispatcherCore
 						}
 			}
 
-		$languages = array();
-		if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
-		{
-			$languages[] = (int)$context->language->id;
-			// Set default routes
-			foreach ($languages as $lang)
-				foreach ($this->default_routes as $id => $route)
-					$this->addRoute(
-						$id,
-						$route['rule'],
-						$route['controller'],
-						$lang['id_lang'],
-						$route['keywords'],
-						isset($route['params']) ? $route['params'] : array(),
-						$id_shop
-					);
-		}
+		$language_ids = Language::getIDs();
+
+		if (isset($context->language) && !in_array($context->language->id, $language_ids))
+			$language_ids[] = (int)$context->language->id;
+
+		// Set default routes
+		foreach ($language_ids as $id_lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$id_lang,
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array(),
+					$id_shop
+				);
 
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
-			// Get iso lang
-			$iso_lang = Tools::getValue('isolang');
-			if (isset($context->language))
-				$id_lang = (int)$context->language->id;
-			if ((!empty($iso_lang) && Validate::isLanguageIsoCode($iso_lang)) || !isset($id_lang))
-				$id_lang = Language::getIdByIso($iso_lang);
-
 			// Load routes from meta table
 			$sql = 'SELECT m.page, ml.url_rewrite, ml.id_lang
 					FROM `'._DB_PREFIX_.'meta` m
@@ -477,14 +470,15 @@ class DispatcherCore
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop))
 				{
-					if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
-						$languages[] = (int)$context->language->id;
-					foreach ($languages as $lang)
+					if (isset($context->language) && !in_array($context->language->id, $language_ids))
+						$language_ids[] = (int)$context->language->id;
+
+					foreach ($language_ids as $id_lang)
 						$this->addRoute(
 							$route_id,
 							$custom_route,
 							$route_data['controller'],
-							$lang['id_lang'],
+							$id_lang,
 							$route_data['keywords'],
 							isset($route_data['params']) ? $route_data['params'] : array(),
 							$id_shop
@@ -499,7 +493,7 @@ class DispatcherCore
 	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
 	 * @param int $id_lang
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 */
 	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
 	{
@@ -561,7 +555,7 @@ class DispatcherCore
 	 *
 	 * @param string $route_id
 	 * @param int $id_lang
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 * @return bool
 	 */
 	public function hasRoute($route_id, $id_lang = null, $id_shop = null)
@@ -580,7 +574,7 @@ class DispatcherCore
 	 * @param string $route_id
 	 * @param int $id_lang
 	 * @param string $keyword
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 * @return bool
 	 */
 	public function hasKeyword($route_id, $id_lang, $keyword, $id_shop = null)
@@ -741,9 +735,10 @@ class DispatcherCore
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
 			$controller = $this->controller_not_found;
+			$test_request_uri = preg_replace('/(=http:\/\/)/', '=', $this->request_uri);
 
 			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher)
-			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($this->request_uri, PHP_URL_PATH)))
+			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($test_request_uri, PHP_URL_PATH)))
 			{
 				// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 				if ($this->empty_route)
@@ -848,7 +843,7 @@ class DispatcherCore
 	/**
 	 * Get list of available controllers from the specified dir
 	 *
-	 * @param string dir directory to scan (recursively)
+	 * @param string $dir Directory to scan (recursively)
 	 * @return array
 	 */
 	public static function getControllersInDirectory($dir)

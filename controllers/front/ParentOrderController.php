@@ -130,6 +130,7 @@ class ParentOrderControllerCore extends FrontController
 				elseif (($id_cart_rule = (int)Tools::getValue('deleteDiscount')) && Validate::isUnsignedId($id_cart_rule))
 				{
 					$this->context->cart->removeCartRule($id_cart_rule);
+					CartRule::autoAddToCart($this->context);
 					Tools::redirect('index.php?controller=order-opc');
 				}
 			}
@@ -164,7 +165,7 @@ class ParentOrderControllerCore extends FrontController
 
 	/**
 	 * Check if order is free
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function _checkFreeOrder()
 	{
@@ -272,7 +273,10 @@ class ParentOrderControllerCore extends FrontController
 
 	/**
 	 * Validate get/post param delivery option
+	 *
 	 * @param array $delivery_option
+	 *
+	 * @return bool
 	 */
 	protected function validateDeliveryOption($delivery_option)
 	{
@@ -332,21 +336,16 @@ class ParentOrderControllerCore extends FrontController
 				$cart_product_context);
 
 			if (Product::getTaxCalculationMethod())
-				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price'], _PS_PRICE_COMPUTE_PRECISION_);
+				$product['is_discounted'] = Tools::ps_round($product['price_without_specific_price'], _PS_PRICE_COMPUTE_PRECISION_) != Tools::ps_round($product['price'], _PS_PRICE_COMPUTE_PRECISION_);
 			else
-				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price_wt'], _PS_PRICE_COMPUTE_PRECISION_);
+				$product['is_discounted'] = Tools::ps_round($product['price_without_specific_price'], _PS_PRICE_COMPUTE_PRECISION_) != Tools::ps_round($product['price_wt'], _PS_PRICE_COMPUTE_PRECISION_);
 		}
 
 		// Get available cart rules and unset the cart rules already in the cart
-		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
+		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
 		$cart_cart_rules = $this->context->cart->getCartRules();
 		foreach ($available_cart_rules as $key => $available_cart_rule)
 		{
-			if (!$available_cart_rule['highlight'] || strpos($available_cart_rule['code'], CartRule::BO_ORDER_CODE_PREFIX) === 0)
-			{
-				unset($available_cart_rules[$key]);
-				continue;
-			}
 			foreach ($cart_cart_rules as $cart_cart_rule)
 				if ($available_cart_rule['id_cart_rule'] == $cart_cart_rule['id_cart_rule'])
 				{
@@ -356,6 +355,7 @@ class ParentOrderControllerCore extends FrontController
 		}
 
 		$show_option_allow_separate_package = (!$this->context->cart->isAllProductsInStock(true) && Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
+		$advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
 		$this->context->smarty->assign($summary);
 		$this->context->smarty->assign(array(
@@ -373,6 +373,7 @@ class ParentOrderControllerCore extends FrontController
 			'displayVouchers' => $available_cart_rules,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
 			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
+			'advanced_payment_api' => $advanced_payment_api
 
 		));
 
@@ -391,7 +392,11 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		elseif (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
+		{
+			$multi = (int)Tools::getValue('multi-shipping');
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi ? '&multi-shipping='.$multi : '')));
+		}
+
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{
@@ -504,13 +509,16 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option' => $delivery_option
 		));
 
+		$advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
+
 		$vars = array(
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
 				'delivery_option' => $delivery_option
-			))
+			)),
+			'advanced_payment_api' => $advanced_payment_api
 		);
 
 		Cart::addExtraCarriers($vars);
@@ -557,15 +565,36 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option' => $this->context->cart->getDeliveryOption(null, false),
 			'gift_wrapping_price' => (float)$wrapping_fees,
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
+			'override_tos_display' => Hook::exec('overrideTOSDisplay'),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
 	}
 
 	protected function _assignPayment()
 	{
-		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-			'HOOK_PAYMENT' => Hook::exec('displayPayment'),
-		));
+
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+		{
+			$this->addJS(_THEME_JS_DIR_.'advanced-payment-api.js');
+
+			// TOS
+			$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+			$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool)Configuration::get('PS_SSL_ENABLED'));
+			if (!strpos($this->link_conditions, '?'))
+				$this->link_conditions .= '?content_only=1';
+			else
+				$this->link_conditions .= '&content_only=1';
+
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentOptions', array(), null, true),
+				'link_conditions' => $this->link_conditions
+			));
+		}
+		else
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
+				'HOOK_PAYMENT' => Hook::exec('displayPayment'),
+			));
 	}
 
 	/**

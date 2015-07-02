@@ -94,6 +94,4 @@ class SupplyOrderReceiptHistoryCore extends ObjectModel
 			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
 		),
 	);
-
 }
-

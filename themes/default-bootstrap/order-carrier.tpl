@@ -39,6 +39,7 @@
 <div class="order_carrier_content box">
 	{if isset($virtual_cart) && $virtual_cart}
 		<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
+        <p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
 	{else}
 		<div id="HOOK_BEFORECARRIER">
 			{if isset($carriers) && isset($HOOK_BEFORECARRIER)}
@@ -71,7 +72,7 @@
 													{foreach $option.carrier_list as $carrier}
 														{if $carrier.logo}
 															<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{if !$carrier@last} - {/if}
 														{/if}
@@ -94,7 +95,7 @@
 															{else}
 																<span class="best_grade best_grade_speed">{l s='The fastest'}</span>
 															{/if}
-														{else if $option.is_best_price}
+														{elseif $option.is_best_price}
 															<span class="best_grade best_grade_price">{l s='The best price'}</span>
 														{/if}
 													{/if}
@@ -130,7 +131,7 @@
 													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														{if $first.logo}
 															<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$first.instance->name|escape:'htmlall':'UTF-8'}
 														{/if}
 													</td>
@@ -173,7 +174,7 @@
 																			)
 																		{/if}
 																	{/if}
-																{strip}
+																{/strip}
 															{/foreach}
 														{/if}
 													</td>
@@ -201,7 +202,7 @@
 														<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
 															{if $carrier.logo}
 																<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-															{else if !$option.unique_carrier}
+															{elseif !$option.unique_carrier}
 																{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{/if}
 														</td>
@@ -244,7 +245,7 @@
 																				)
 																			{/if}
 																		{/if}
-																	{strip}
+																	{/strip}
 																{/foreach}
 															{/if}
 														</td>
@@ -261,12 +262,28 @@
 							{if isset($HOOK_EXTRACARRIER_ADDR) &&  isset($HOOK_EXTRACARRIER_ADDR.$id_address)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}
 						</div>
 						{foreachelse}
+							{assign var='errors' value=' '|explode:''}
 							<p class="alert alert-warning" id="noCarrierWarning">
-								{foreach $cart->getDeliveryAddressesWithoutCarriers(true) as $address}
+								{foreach $cart->getDeliveryAddressesWithoutCarriers(true, $errors) as $address}
 									{if empty($address->alias)}
 										{l s='No carriers available.'}
 									{else}
-										{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+										{assign var='flag_error_message' value=false}
+										{foreach $errors as $error}
+											{if $error == Carrier::SHIPPING_WEIGHT_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s): it is too heavy. Please amend your cart to lower its weight.'}
+											{elseif $error == Carrier::SHIPPING_PRICE_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s). Please amend your cart.'}
+											{elseif $error == Carrier::SHIPPING_SIZE_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s): its size does not fit. Please amend your cart to reduce its size.'}
+											{/if}
+										{/foreach}
+										{if !$flag_error_message}
+											{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+										{/if}
 									{/if}
 									{if !$address@last}
 										<br />
@@ -289,6 +306,7 @@
 					</div>
 				{/if}
 				{if $recyclablePackAllowed}
+					<p class="carrier_title">{l s='Recyclable Packaging'}</p>
 					<div class="checkbox recyclable">
 						<label for="recyclable">
 							<input type="checkbox" name="recyclable" id="recyclable" value="1"{if $recyclable == 1} checked="checked"{/if} />
@@ -301,7 +319,7 @@
 						<hr style="" />
 					{/if}
 					<p class="carrier_title">{l s='Gift'}</p>
-					<p class="checkbox gift">
+					<div class="checkbox gift">
 						<input type="checkbox" name="gift" id="gift" value="1"{if $cart->gift == 1} checked="checked"{/if} />
 						<label for="gift">
 							{l s='I would like my order to be gift wrapped.'}
@@ -324,7 +342,7 @@
 								</i>
 							{/if}
 						</label>
-					</p>
+					</div>
 					<p id="gift_div">
 						<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
 						<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
@@ -332,16 +350,21 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions AND $cms_id}
+			{if $conditions && $cms_id && (isset($advanced_payment_api) && !$advanced_payment_api)}
 				{if $opc}
 					<hr style="" />
 				{/if}
-				<p class="carrier_title">{l s='Terms of service'}</p>
-				<p class="checkbox">
-					<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-					<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
-					<a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
-				</p>
+                {if isset($override_tos_display) && $override_tos_display}
+                    {$override_tos_display}
+                {else}
+                    <div class="box">
+                        <p class="checkbox">
+                            <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+                            <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
+                            <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
+                        </p>
+                    </div>
+                {/if}
 			{/if}
 		</div> <!-- end delivery_options_address -->
 		{if !$opc}
@@ -383,10 +406,6 @@
 {strip}
 {if !$opc}
 	{addJsDef orderProcess='order'}
-	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-	{addJsDef currencyRate=$currencyRate|floatval}
-	{addJsDef currencyFormat=$currencyFormat|intval}
-	{addJsDef currencyBlank=$currencyBlank|intval}
 	{if isset($virtual_cart) && !$virtual_cart && $giftAllowed && $cart->gift == 1}
 		{addJsDef cart_gift=true}
 	{else}

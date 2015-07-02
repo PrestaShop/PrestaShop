@@ -59,7 +59,7 @@ class AdminModulesControllerCore extends AdminController
 	protected $iso_default_country;
 	protected $filter_configuration = array();
 
-	protected $xml_modules_list = 'api.prestashop.com/xml/modules_list_16.xml';
+ 	protected $xml_modules_list = _PS_API_MODULES_LIST_16_;
 
 	/**
 	 * Admin Modules Controller Constructor
@@ -85,7 +85,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
 		$this->list_modules_categories['export']['name'] = $this->l('Export');
 		$this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
-		$this->list_modules_categories['front_office_features']['name'] = $this->l('Front Office Features');
+		$this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
 		$this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
 		$this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandising');
 		$this->list_modules_categories['migration_tools']['name'] = $this->l('Migration Tools');
@@ -125,7 +125,11 @@ class AdminModulesControllerCore extends AdminController
 			$xml_modules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
 		if ($xml_modules)
 			foreach ($xml_modules->children() as $xml_module)
+			{
+				/** @var SimpleXMLElement $xml_module */
 				foreach ($xml_module->children() as $module)
+				{
+					/** @var SimpleXMLElement $module */
 					foreach ($module->attributes() as $key => $value)
 					{
 						if ($xml_module->attributes() == 'native' && $key == 'name')
@@ -133,7 +137,8 @@ class AdminModulesControllerCore extends AdminController
 						if ($xml_module->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
-
+				}
+			}
 	}
 
 	public function checkCategoriesNames($a, $b)
@@ -579,7 +584,7 @@ class AdminModulesControllerCore extends AdminController
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
 				$this->errors[] = Tools::displayError('Unknown archive type.');
 			elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
-				$this->errors[] = Tools::displayError('An error occurred while copying archive to the module directory.');
+				$this->errors[] = Tools::displayError('An error occurred while copying the archive to the module directory.');
 			else
 				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
 		}
@@ -784,7 +789,7 @@ class AdminModulesControllerCore extends AdminController
 								if (!$download_ok)
 									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while downloading the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
-									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while extracting the latest version'), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while extracting the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
 								else
 									$module_upgraded[] = $name;
 							}
@@ -810,11 +815,11 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name))))
 						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
 					elseif ($key == 'install' && Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
+						$this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
+						$this->errors[] = sprintf(Tools::displayError('This module has already been uninstalled: %s.'), $module->name);
 					elseif ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
+						$this->errors[] = sprintf(Tools::displayError('This module needs to be installed in order to be updated: %s.'), $module->name);
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -911,7 +916,6 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 							$this->context->smarty->assign(array(
-								'shop_list' => Helper::renderShopList(),
 								'is_multishop' => Shop::isFeatureActive(),
 								'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
 							));
@@ -978,9 +982,9 @@ class AdminModulesControllerCore extends AdminController
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
 				if ($key == 'uninstall')
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s.'), $html_error);
 				else
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s.'), $html_error);
 				$this->context->smarty->assign('error_module', 'true');
 			}
 		}
@@ -1438,8 +1442,10 @@ class AdminModulesControllerCore extends AdminController
 						continue;
 					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
 				}
+
 				if ($object = new $module->name())
 				{
+					/** @var Module $object */
 					$object->runUpgradeModule();
 					if ((count($errors_module_list = $object->getErrors())))
 						$module_errors[] = array('name' => $module->displayName, 'message' => $errors_module_list);
@@ -1522,12 +1528,12 @@ class AdminModulesControllerCore extends AdminController
 		if (count($module_errors))
 		{
 			$html = $this->generateHtmlMessage($module_errors);
-			$this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s'), $html);
+			$this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s.'), $html);
 		}
 		if (count($module_success))
 		{
 			$html = $this->generateHtmlMessage($module_success);
-			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
+			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully: %s.'), $html);
 		}
 
 		ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));

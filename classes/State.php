@@ -26,10 +26,10 @@
 
 class StateCore extends ObjectModel
 {
-	/** @var integer Country id which state belongs */
+	/** @var int Country id which state belongs */
 	public $id_country;
 
-	/** @var integer Zone id which state belongs */
+	/** @var int Zone id which state belongs */
 	public $id_zone;
 
 	/** @var string 2 letters iso code */
@@ -38,7 +38,7 @@ class StateCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for delivery */
+	/** @var bool Status for delivery */
 	public $active = true;
 
 	/**
@@ -75,7 +75,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Get a state name with its ID
 	 *
-	 * @param integer $id_state Country ID
+	 * @param int $id_state Country ID
 	 * @return string State name
 	 */
 	public static function getNameById($id_state)
@@ -91,6 +91,7 @@ class StateCore extends ObjectModel
 				WHERE `id_state` = '.(int)$id_state
 			);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -99,7 +100,7 @@ class StateCore extends ObjectModel
 	 * Get a state id with its name
 	 *
 	 * @param string $id_state Country ID
-	 * @return integer state id
+	 * @return int state id
 	 */
 	public static function getIdByName($state)
 	{
@@ -111,9 +112,10 @@ class StateCore extends ObjectModel
 			$result = (int)Db::getInstance()->getValue('
 				SELECT `id_state`
 				FROM `'._DB_PREFIX_.'state`
-				WHERE `name` LIKE \''.pSQL($state).'\'
+				WHERE `name` = \''.pSQL($state).'\'
 			');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -122,11 +124,11 @@ class StateCore extends ObjectModel
 	* Get a state id with its iso code
 	*
 	* @param string $iso_code Iso code
-	* @return integer state id
+	* @return int state id
 	*/
 	public static function getIdByIso($iso_code, $id_country = null)
 	{
-	  	return Db::getInstance()->getValue('
+		return Db::getInstance()->getValue('
 		SELECT `id_state`
 		FROM `'._DB_PREFIX_.'state`
 		WHERE `iso_code` = \''.pSQL($iso_code).'\'
@@ -136,7 +138,7 @@ class StateCore extends ObjectModel
 	/**
 	* Delete a state only if is not in use
 	*
-	* @return boolean
+	* @return bool
 	*/
 	public function delete()
 	{
@@ -159,7 +161,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Check if a state is used
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isUsed()
 	{
@@ -169,7 +171,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Returns the number of utilisation of a state
 	 *
-	 * @return integer count for this state
+	 * @return int count for this state
 	 */
 	public function countUsed()
 	{
@@ -181,17 +183,17 @@ class StateCore extends ObjectModel
 		return $result;
 	}
 
-    public static function getStatesByIdCountry($id_country)
-    {
-        if (empty($id_country))
-            die(Tools::displayError());
+	public static function getStatesByIdCountry($id_country)
+	{
+		if (empty($id_country))
+			die(Tools::displayError());
 
-        return Db::getInstance()->executeS('
-        SELECT *
-        FROM `'._DB_PREFIX_.'state` s
-        WHERE s.`id_country` = '.(int)$id_country
-        );
-    }
+		return Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'state` s
+			WHERE s.`id_country` = '.(int)$id_country
+		);
+	}
 
 	public static function hasCounties($id_state)
 	{
@@ -224,4 +226,3 @@ class StateCore extends ObjectModel
 		');
 	}
 }
-

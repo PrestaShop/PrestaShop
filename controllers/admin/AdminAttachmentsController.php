@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Attachment $object
+ */
 class AdminAttachmentsControllerCore extends AdminController
 {
 	public $bootstrap = true ;
@@ -42,6 +45,7 @@ class AdminAttachmentsControllerCore extends AdminController
 
 		$this->_select = 'IFNULL(virtual.products, 0) as products';
 		$this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
+		$this->_use_found_rows = false;
 
 		$this->fields_list = array(
 			'id_attachment' => array(
@@ -116,6 +120,7 @@ class AdminAttachmentsControllerCore extends AdminController
 	{
 		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
 		{
+			/** @var Attachment $obj */
 			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
 
 			if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))

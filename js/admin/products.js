@@ -119,7 +119,7 @@ function ProductTabsManager(){
 			}
 
 			return $.ajax({
-				url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
+				url : $('#link-' + tab_name).attr('href') + '&ajax=1' + '&page=' + parseInt($('#page').val()) + '&rand=' + + new Date().getTime(),
 				async : true,
 				cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
 				type: send_type,
@@ -750,7 +750,6 @@ product_tabs['Prices'] = new function(){
 				data: {
 					ajax: true
 				},
-				context: document.body,
 				dataType: 'json',
 				context: this,
 				async: false,

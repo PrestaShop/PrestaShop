@@ -26,21 +26,21 @@
 
 class CustomizationCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_product_attribute;
-	/** @var integer */
+	/** @var int */
 	public $id_address_delivery;
-	/** @var integer */
+	/** @var int */
 	public $id_cart;
-	/** @var integer */
+	/** @var int */
 	public $id_product;
-	/** @var integer */
+	/** @var int */
 	public $quantity;
-	/** @var integer */
+	/** @var int */
 	public $quantity_refunded;
-	/** @var integer */
+	/** @var int */
 	public $quantity_returned;
-	/** @var boolean */
+	/** @var bool */
 	public $in_cart;
 
 	/**
@@ -179,7 +179,7 @@ class CustomizationCore extends ObjectModel
 		');
 
 		foreach ($results as $row)
-			$quantity[$row['id_product']][$row['product_attribute_id']] = $row['quantity'];
+			$quantity[$row['id_product']][$row['id_product_attribute']] = $row['quantity'];
 
 		return $quantity;
 	}
@@ -256,4 +256,3 @@ class CustomizationCore extends ObjectModel
 		return true;
 	}
 }
-

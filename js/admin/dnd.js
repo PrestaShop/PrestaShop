@@ -117,6 +117,14 @@ function initTableDnD(table)
 						way: way
 					};
 				}
+				else if (table.id.indexOf('module-') != -1) {
+					module = table.id.replace('module-', '');
+
+					params = {
+						updatePositions: true,
+						configure: module
+					};
+				}
 				// default
 				else
 				{
@@ -128,15 +136,21 @@ function initTableDnD(table)
 				}
 
 				params['ajax'] = 1;
+				params['page'] = parseInt($('input[name=page]').val());
+				params['selected_pagination'] = parseInt($('input[name=selected_pagination]').val());
 
+				var data = $.tableDnD.serialize();
+				if ((table.id == 'category') && (data.indexOf('_0&') != -1))
+					data += '&found_first=1';
 				$.ajax({
 					type: 'POST',
 					headers: { "cache-control": "no-cache" },
 					async: false,
 					url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
-					data: $.tableDnD.serialize() + '&' + objToString(params) ,
+					data:  data + '&' + objToString(params) ,
 					success: function(data) {
 						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
+						var new_pos;
 						if (come_from == 'AdminModulesPositions')
 						{
 							nodrag_lines.each(function(i) {
@@ -146,18 +160,20 @@ function initTableDnD(table)
 						else
 						{
 							if (table.id == 'product' || table.id.indexOf('attribute') != -1 || table.id == 'attribute_group' || table.id == 'feature')
-							{
 								var reg = /_[0-9][0-9]*$/g;
-							}
 							else
-							{
 								var reg = /_[0-9]$/g;
-							}
 
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
 							nodrag_lines.each(function(i) {
-								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
-								$(this).find('.positions').text(i);
+
+								if (params['page'] > 1)
+									new_pos = i + ((params['page'] - 1) * params['selected_pagination']);
+								else
+									new_pos = i;
+
+								$(this).attr('id', $(this).attr('id').replace(reg, '_' + new_pos));
+								$(this).find('.positions').text(new_pos + 1);
 							});
 						}
 

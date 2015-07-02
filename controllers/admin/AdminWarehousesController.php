@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property Warehouse $object
  */
 class AdminWarehousesControllerCore extends AdminController
 {
@@ -122,7 +123,7 @@ class AdminWarehousesControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 			LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
-
+		$this->_use_found_rows = false;
 		// display help informations
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the default currency used.').'<br />');
@@ -139,6 +140,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
+		/** @var Warehouse $obj */
 		// loads current warehouse
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -285,10 +287,10 @@ class AdminWarehousesControllerCore extends AdminController
 					),
 					'hint' => array(
 						$this->l('Associated carriers.'),
-						$this->l('If you do not select any carrier, none will be able to ship from this warehouse.'),
-						$this->l('You can specify the number of carriers available to ship orders from particular warehouses.'),
+						$this->l('You can choose which carriers can ship orders from particular warehouses.'),
+						$this->l('If you do not select any carrier, all the carriers will be able to ship from this warehouse.'),
 					),
-					'desc' => $this->l('You must select at least one carrier to enable shipping from this warehouse. Use CTRL+Click to select more than one carrier.'),
+					'desc' => $this->l('If no carrier is selected, all the carriers will be allowed to ship from this warehouse. Use CTRL+Click to select more than one carrier.'),
 				),
 			),
 
@@ -446,9 +448,13 @@ class AdminWarehousesControllerCore extends AdminController
 	}
 
 	/**
-	 * @see AdminController::afterAdd()
 	 * Called once $object is set.
 	 * Used to process the associations with address/shops/carriers
+	 * @see AdminController::afterAdd()
+	 *
+	 * @param Warehouse $object
+	 *
+	 * @return bool
 	 */
 	protected function afterAdd($object)
 	{
@@ -461,8 +467,11 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 
 		// handles carriers associations
-		if (Tools::isSubmit('ids_carriers_selected'))
-			$object->setCarriers(Tools::getValue('ids_carriers_selected'));
+		$ids_carriers_selected = Tools::getValue('ids_carriers_selected');
+		if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+			$object->setCarriers($ids_carriers_selected);
+		else
+			$object->setCarriers(Tools::getValue('ids_carriers_available'));
 
 		return true;
 	}
@@ -470,6 +479,15 @@ class AdminWarehousesControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -592,6 +610,7 @@ class AdminWarehousesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('delete'.$this->table))
 		{
+			/** @var Warehouse $obj */
 			// check if the warehouse exists and can be deleted
 			if (!($obj = $this->loadObject(true)))
 				return;
@@ -621,11 +640,18 @@ class AdminWarehousesControllerCore extends AdminController
 	public function processUpdate()
 	{
 		// loads object
-		if (!($obj = $this->loadObject(true)))
+		if (!($object = $this->loadObject(true)))
 			return;
+
+		/** @var Warehouse $object */
+
 		$this->updateAddress();
 		// handles carriers associations
-		$obj->setCarriers(Tools::getValue('ids_carriers_selected'), array());
+		$ids_carriers_selected = Tools::getValue('ids_carriers_selected');
+		if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+			$object->setCarriers($ids_carriers_selected);
+		else
+			$object->setCarriers(Tools::getValue('ids_carriers_available'));
 
 		return parent::processUpdate();
 	}
@@ -635,6 +661,8 @@ class AdminWarehousesControllerCore extends AdminController
 		parent::updateAssoShop($id_object);
 		if (!($obj = $this->loadObject(true)))
 			return;
+
+		/** @var Warehouse $obj */
 		$obj->resetStockAvailable();
 	}
 }

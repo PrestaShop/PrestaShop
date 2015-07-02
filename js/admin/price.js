@@ -131,7 +131,7 @@ function calcPriceTI()
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice, priceDisplayPrecision).toFixed(priceDisplayPrecision);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(priceTE) == true || priceTE < 0) ? '' :
-		(ps_round(priceTE, 6) + getEcotaxTaxExcluded()).toFixed(6);
+		(ps_round(priceTE, 6)).toFixed(6);
 	calcReduction();
 
 	if (isNaN(parseFloat($('#priceTI').val())))
@@ -157,7 +157,7 @@ function calcPriceTE()
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(priceTI, priceDisplayPrecision).toFixed(priceDisplayPrecision);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
-		(ps_round(newPrice, 6) + getEcotaxTaxExcluded()).toFixed(6);
+		(ps_round(newPrice, 6)).toFixed(6);
 	calcReduction();
 }
 
@@ -288,6 +288,11 @@ function unitySecond()
 function changeCurrencySpecificPrice(index)
 {
 	var id_currency = $('#spm_currency_' + index).val();
+	if (id_currency > 0)
+		$('#sp_reduction_type option[value="amount"]').text($('#spm_currency_' + index + ' option[value= ' + id_currency + ']').text());
+	else if (typeof currencyName !== 'undefined')
+		$('#sp_reduction_type option[value="amount"]').text(currencyName);
+
 	if (currencies[id_currency]["format"] == 2 || currencies[id_currency]["format"] == 4)
 	{
 		$('#spm_currency_sign_pre_' + index).html('');
@@ -299,4 +304,3 @@ function changeCurrencySpecificPrice(index)
 		$('#spm_currency_sign_pre_' + index).html(currencies[id_currency]["sign"] + ' ');
 	}
 }
-

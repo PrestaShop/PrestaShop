@@ -49,21 +49,21 @@ function ddd($var)
 	Tools::d($var);
 }
 
+function epr($var, $message_type = null, $destination = null, $extra_headers = null)
+{
+	return Tools::error_log($var, $message_type, $destination, $extra_headers);
+}
+
 /**
  * Sanitize data which will be injected into SQL query
  *
  * @param string $string SQL data which will be injected into SQL query
- * @param boolean $htmlOK Does data contain HTML code ? (optional)
+ * @param bool $htmlOK Does data contain HTML code ? (optional)
  * @return string Sanitized data
  */
 function pSQL($string, $htmlOK = false)
 {
-	// Avoid thousands of "Db::getInstance()"...
-	static $db = false;
-	if (!$db)
-		$db = Db::getInstance();
-
-	return $db->escape($string, $htmlOK);
+	return Db::getInstance()->escape($string, $htmlOK);
 }
 
 function bqSQL($string)

@@ -27,59 +27,54 @@
 if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 	include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 
+/**
+ * Class DbCore
+ */
 abstract class DbCore
 {
-	/**
-	 * Constants used by insert() method
-	 */
+	/** @var int Constant used by insert() method */
 	const INSERT = 1;
+
+	/** @var int Constant used by insert() method */
 	const INSERT_IGNORE = 2;
+
+	/** @var int Constant used by insert() method */
 	const REPLACE = 3;
 
-	/**
-	 * @var string Server (eg. localhost)
-	 */
+	/** @var int Constant used by insert() method */
+	const ON_DUPLICATE_KEY = 4;
+
+	/** @var string Server (eg. localhost) */
 	protected $server;
 
-	/**
-	 * @var string Database user (eg. root)
-	 */
+	/**  @var string Database user (eg. root) */
 	protected $user;
 
-	/**
-	 * @var string Database password (eg. can be empty !)
-	 */
+	/** @var string Database password (eg. can be empty !) */
 	protected $password;
 
-	/**
-	 * @var string Database name
-	 */
+	/** @var string Database name */
 	protected $database;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $is_cache_enabled;
 
-	/**
-	 * @var mixed Ressource link
-	 */
+	/** @var PDO|mysqli|resource Resource link */
 	protected $link;
 
-	/**
-	 * @var mixed SQL cached result
-	 */
+	/** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
 	protected $result;
 
-	/**
-	 * @var array List of DB instance
-	 */
-	protected static $instance = array();
+	/** @var array List of DB instances */
+	public static $instance = array();
 
-	/**
-	 * @var array Object instance for singleton
+	/** @var array List of server settings */
+	public static $_servers = array();
+
+	/** @var null Flag used to load slave servers only once.
+	 * See loadSlaveServers() method.
 	 */
-	protected static $_servers = array();
+	public static $_slave_servers_loaded = null;
 
 	/**
 	 * Store last executed query
@@ -89,6 +84,13 @@ abstract class DbCore
 	protected $last_query;
 
 	/**
+	 * Store hash of the last executed query
+	 *
+	 * @var string
+	 */
+	protected $last_query_hash;
+
+	/**
 	 * Last cached query
 	 *
 	 * @var string
@@ -96,12 +98,14 @@ abstract class DbCore
 	protected $last_cached;
 
 	/**
-	 * Open a connection
+	 * Opens a database connection
+	 *
+	 * @return PDO|mysqli|resource
 	 */
 	abstract public function connect();
 
 	/**
-	 * Close a connection
+	 * Closes database connection
 	 */
 	abstract public function disconnect();
 
@@ -109,7 +113,7 @@ abstract class DbCore
 	 * Execute a query and get result resource
 	 *
 	 * @param string $sql
-	 * @return mixed
+	 * @return PDOStatement|mysqli_result|resource|bool
 	 */
 	abstract protected function _query($sql);
 
@@ -117,32 +121,38 @@ abstract class DbCore
 	 * Get number of rows in a result
 	 *
 	 * @param mixed $result
+	 * @return int
 	 */
 	abstract protected function _numRows($result);
 
 	/**
 	 * Get the ID generated from the previous INSERT operation
+	 *
+	 * @return int|string
 	 */
 	abstract public function Insert_ID();
 
 	/**
 	 * Get number of affected rows in previous database operation
+	 *
+	 * @return int
 	 */
 	abstract public function Affected_Rows();
 
 	/**
-	 * Get next row for a query which doesn't return an array
+	 * Get next row for a query which does not return an array
 	 *
-	 * @param mixed $result
+	 * @param PDOStatement|mysqli_result|resource|bool $result
+	 * @return array|object|false|null
 	 */
 	abstract public function nextRow($result = false);
 
 	/**
 	 * Get all rows for a query which return an array
 	 *
-	 * @param mixed $result
+	 * @param PDOStatement|mysqli_result|resource|bool|null $result
+	 * @return array
 	 */
-
 	abstract protected function getAll($result = false);
 
 	/**
@@ -162,24 +172,39 @@ abstract class DbCore
 
 	/**
 	 * Returns the text of the error message from previous database operation
+	 *
+	 * @return string
 	 */
 	abstract public function getMsgError();
 
 	/**
 	 * Returns the number of the error from previous database operation
+	 *
+	 * @return int
 	 */
 	abstract public function getNumberError();
 
-	/* do not remove, useful for some modules */
+	/**
+	 * Sets the current active database on the server that's associated with the specified link identifier.
+	 * Do not remove, useful for some modules.
+	 *
+	 * @param string $db_name
+	 * @return bool|int
+	 */
 	abstract public function set_db($db_name);
 
+	/**
+	 * Selects best table engine.
+	 *
+	 * @return string
+	 */
 	abstract public function getBestEngine();
 
 	/**
-	 * Get Db object instance
+	 * Returns database object instance.
 	 *
 	 * @param bool $master Decides whether the connection to be returned by the master server or the slave server
-	 * @return Db instance
+	 * @return Db Singleton instance of Db object
 	 */
 	public static function getInstance($master = true)
 	{
@@ -191,7 +216,8 @@ abstract class DbCore
 				array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
 			);
 
-		Db::loadSlaveServers();
+		if (!$master)
+			Db::loadSlaveServers();
 
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
@@ -216,21 +242,40 @@ abstract class DbCore
 		return self::$instance[$id_server];
 	}
 
+	/**
+	 * @param $test_db Db
+	 * Unit testing purpose only
+	 */
+	public static function setInstanceForTesting($test_db)
+	{
+		self::$instance[0] = $test_db;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = array();
+	}
+
+	/**
+	 * Loads configuration settings for slave servers if needed.
+	 */
 	protected static function loadSlaveServers()
 	{
-		static $is_loaded = null;
-		if ($is_loaded !== null)
+		if (self::$_slave_servers_loaded !== null)
 			return;
 
 		// Add here your slave(s) server(s) in this file
 		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
 			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
 
-		$is_loaded = true;
+		self::$_slave_servers_loaded = true;
 	}
 
 	/**
-	 * Get child layer class
+	 * Returns the best child layer database class.
 	 *
 	 * @return string
 	 */
@@ -241,17 +286,18 @@ abstract class DbCore
 			$class = 'DbPDO';
 		elseif (extension_loaded('mysqli'))
 			$class = 'DbMySQLi';
+
 		return $class;
 	}
 
 	/**
-	 * Instantiate database connection
+	 * Instantiates a database connection
 	 *
 	 * @param string $server Server address
 	 * @param string $user User login
 	 * @param string $password User password
 	 * @param string $database Database name
-	 * @param bool $connect If false, don't connect in constructor (since 1.5.0)
+	 * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
 	 */
 	public function __construct($server, $user, $password, $database, $connect = true)
 	{
@@ -269,7 +315,26 @@ abstract class DbCore
 	}
 
 	/**
-	 * Close connection to database
+	 * Disable the use of the cache
+	 *
+	 */
+	public function disableCache()
+	{
+		$this->is_cache_enabled = false;
+	}
+
+	/**
+	 * Enable & flush the cache
+	 *
+	 */
+	public function enableCache()
+	{
+		$this->is_cache_enabled = true;
+		Cache::getInstance()->flush();
+	}
+
+	/**
+	 * Closes connection to database
 	 */
 	public function __destruct()
 	{
@@ -278,7 +343,18 @@ abstract class DbCore
 	}
 
 	/**
-	 * @deprecated 1.5.0 use insert() or update() method instead
+	 * Executes SQL query based on selected type
+	 *
+	 * @deprecated 1.5.0.1 Use insert() or update() method instead.
+	 * @param string $table
+	 * @param array $data
+	 * @param string $type (INSERT, INSERT IGNORE, REPLACE, UPDATE).
+	 * @param string $where
+	 * @param int $limit
+	 * @param bool $use_cache
+	 * @param bool $use_null
+	 * @return bool
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function autoExecute($table, $data, $type, $where = '', $limit = 0, $use_cache = true, $use_null = false)
 	{
@@ -306,11 +382,12 @@ abstract class DbCore
 	 * Filter SQL query within a blacklist
 	 *
 	 * @param string $table Table where insert/update data
-	 * @param string $values Data to insert/update
+	 * @param array $values Data to insert/update
 	 * @param string $type INSERT or UPDATE
 	 * @param string $where WHERE clause, only for UPDATE (optional)
 	 * @param int $limit LIMIT clause (optional)
-	 * @return mixed|boolean SQL query result
+	 * @return bool
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function autoExecuteWithNullValues($table, $values, $type, $where = '', $limit = 0)
 	{
@@ -318,10 +395,11 @@ abstract class DbCore
 	}
 
 	/**
-	 * Execute a query and get result ressource
+	 * Execute a query and get result resource
 	 *
-	 * @param string $sql
-	 * @return mixed
+	 * @param string|DbQuery $sql
+	 * @return bool|mysqli_result|PDOStatement|resource
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function query($sql)
 	{
@@ -338,11 +416,12 @@ abstract class DbCore
 
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
+
 		return $this->result;
 	}
 
 	/**
-	 * Execute an INSERT query
+	 * Executes an INSERT query
 	 *
 	 * @param string $table Table name without prefix
 	 * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
@@ -351,6 +430,7 @@ abstract class DbCore
 	 * @param int $type Must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE
 	 * @param bool $add_prefix Add or not _DB_PREFIX_ before table name
 	 * @return bool
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function insert($table, $data, $null_values = false, $use_cache = true, $type = Db::INSERT, $add_prefix = true)
 	{
@@ -366,6 +446,8 @@ abstract class DbCore
 			$insert_keyword = 'INSERT IGNORE';
 		elseif ($type == Db::REPLACE)
 			$insert_keyword = 'REPLACE';
+		elseif ($type == Db::ON_DUPLICATE_KEY)
+			$insert_keyword = 'INSERT';
 		else
 			throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
 
@@ -376,16 +458,21 @@ abstract class DbCore
 
 		$keys = array();
 		$values_stringified = array();
+		$first_loop = true;
+		$duplicate_key_stringified = '';
 		foreach ($data as $row_data)
 		{
 			$values = array();
 			foreach ($row_data as $key => $value)
 			{
-				if (isset($keys_stringified))
+				if (!$first_loop)
 				{
 					// Check if row array mapping are the same
 					if (!in_array("`$key`", $keys))
 						throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
+
+					if ($duplicate_key_stringified != '')
+						throw new PrestaShopDatabaseException('On duplicate key cannot be used on insert with more than 1 VALUE group');
 				}
 				else
 					$keys[] = '`'.bqSQL($key).'`';
@@ -393,19 +480,28 @@ abstract class DbCore
 				if (!is_array($value))
 					$value = array('type' => 'text', 'value' => $value);
 				if ($value['type'] == 'sql')
-					$values[] = $value['value'];
+					$values[] = $string_value = $value['value'];
 				else
-					$values[] = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+					$values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+
+				if ($type == Db::ON_DUPLICATE_KEY)
+					$duplicate_key_stringified .= '`'.bqSQL($key).'` = '.$string_value.',';
 			}
-			$keys_stringified = implode(', ', $keys);
+			$first_loop = false;
 			$values_stringified[] = '('.implode(', ', $values).')';
 		}
+		$keys_stringified = implode(', ', $keys);
 
 		$sql = $insert_keyword.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+		if ($type == Db::ON_DUPLICATE_KEY)
+			$sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
+
 		return (bool)$this->q($sql, $use_cache);
 	}
 
 	/**
+	 * Executes an UPDATE query
+	 *
 	 * @param string $table Table name without prefix
 	 * @param array $data Data to insert as associative array. If $data is a list of arrays, multiple insert will be done
 	 * @param string $where WHERE condition
@@ -439,11 +535,12 @@ abstract class DbCore
 			$sql .= ' WHERE '.$where;
 		if ($limit)
 			$sql .= ' LIMIT '.(int)$limit;
+
 		return (bool)$this->q($sql, $use_cache);
 	}
 
 	/**
-	 * Execute a DELETE query
+	 * Executes a DELETE query
 	 *
 	 * @param string $table Name of the table to delete
 	 * @param string $where WHERE clause on query
@@ -462,13 +559,14 @@ abstract class DbCore
 		$res = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+
 		return (bool)$res;
 	}
 
 	/**
-	 * Execute a query
+	 * Executes a query
 	 *
-	 * @param string $sql
+	 * @param string|DbQuery $sql
 	 * @param bool $use_cache
 	 * @return bool
 	 */
@@ -480,21 +578,36 @@ abstract class DbCore
 		$this->result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+
 		return (bool)$this->result;
 	}
 
 	/**
-	 * ExecuteS return the result of $sql as array
+	 * Executes return the result of $sql as array
 	 *
-	 * @param string $sql query to execute
-	 * @param boolean $array return an array instead of a mysql_result object (deprecated since 1.5.0, use query method instead)
-	 * @param bool $use_cache if query has been already executed, use its result
-	 * @return array or result object
+	 * @param string|DbQuery $sql Query to execute
+	 * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
+	 * @param bool $use_cache
+	 * @return array|false|null|mysqli_result|PDOStatement|resource
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function executeS($sql, $array = true, $use_cache = true)
 	{
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
+
+		$this->result = false;
+		$this->last_query = $sql;
+
+		if ($use_cache && $this->is_cache_enabled && $array)
+		{
+			$this->last_query_hash = Tools::encryptIV($sql);
+			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false)
+			{
+				$this->last_cached = true;
+				return $result;
+			}
+		}
 
 		// This method must be used only with queries which display results
 		if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql))
@@ -502,15 +615,6 @@ abstract class DbCore
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 				throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
 			return $this->execute($sql, $use_cache);
-		}
-
-		$this->result = false;
-		$this->last_query = $sql;
-
-		if ($use_cache && $this->is_cache_enabled && $array && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
-		{
-			$this->last_cached = true;
-			return $result;
 		}
 
 		$this->result = $this->query($sql);
@@ -529,18 +633,19 @@ abstract class DbCore
 		}
 
 		$this->last_cached = false;
-		if ($use_cache && $this->is_cache_enabled)
+		if ($use_cache && $this->is_cache_enabled && $array)
 			Cache::getInstance()->setQuery($sql, $result);
+
 		return $result;
 	}
 
 	/**
-	 * getRow return an associative array containing the first row of the query
-	 * This function automatically add "limit 1" to the query
+	 * Returns an associative array containing the first row of the query
+	 * This function automatically adds "LIMIT 1" to the query
 	 *
-	 * @param mixed $sql the select query (without "LIMIT 1")
-	 * @param bool $use_cache find it in cache first
-	 * @return array associative array of (field=>value)
+	 * @param string|DbQuery $sql the select query (without "LIMIT 1")
+	 * @param bool $use_cache Find it in cache first
+	 * @return array|bool|object|null
 	 */
 	public function getRow($sql, $use_cache = true)
 	{
@@ -550,30 +655,40 @@ abstract class DbCore
 		$sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
-		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
+
+		if ($use_cache && $this->is_cache_enabled)
 		{
-			$this->last_cached = true;
-			return $result;
+			$this->last_query_hash = Tools::encryptIV($sql);
+			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false)
+			{
+				$this->last_cached = true;
+				return $result;
+			}
 		}
+
 		$this->result = $this->query($sql);
 		if (!$this->result)
 			$result = false;
 		else
 			$result = $this->nextRow($this->result);
+
 		$this->last_cached = false;
+
 		if (is_null($result))
 			$result = false;
+
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->setQuery($sql, $result);
+
 		return $result;
 	}
 
 	/**
-	 * getValue return the first item of a select query.
+	 * Returns a value from the first row, first column of a SELECT query
 	 *
-	 * @param mixed $sql
+	 * @param string|DbQuery $sql
 	 * @param bool $use_cache
-	 * @return mixed
+	 * @return string|false|null
 	 */
 	public function getValue($sql, $use_cache = true)
 	{
@@ -582,6 +697,7 @@ abstract class DbCore
 
 		if (!$result = $this->getRow($sql, $use_cache))
 			return false;
+
 		return array_shift($result);
 	}
 
@@ -596,20 +712,20 @@ abstract class DbCore
 		{
 			$nrows = $this->_numRows($this->result);
 			if ($this->is_cache_enabled)
-				Cache::getInstance()->set(Tools::encryptIV($this->last_query).'_nrows', $nrows);
+				Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
 			return $nrows;
 		}
 		elseif ($this->is_cache_enabled && $this->last_cached)
-			return Cache::getInstance()->get(Tools::encryptIV($this->last_query).'_nrows');
+			return Cache::getInstance()->get($this->last_query_hash.'_nrows');
 	}
 
 	/**
+	 * Executes a query
 	 *
-	 * Execute a query
-	 *
-	 * @param string $sql
+	 * @param string|DbQuery $sql
 	 * @param bool $use_cache
-	 * @return mixed $result
+	 * @return bool|mysqli_result|PDOStatement|resource
+	 * @throws PrestaShopDatabaseException
 	 */
 	protected function q($sql, $use_cache = true)
 	{
@@ -620,15 +736,18 @@ abstract class DbCore
 		$result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->deleteQuery($sql);
+
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
+
 		return $result;
 	}
 
 	/**
-	 * Display last SQL error
+	 * Displays last SQL error
 	 *
-	 * @param bool $sql
+	 * @param string|bool $sql
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function displayError($sql = false)
 	{
@@ -644,41 +763,48 @@ abstract class DbCore
 		{
 			if ($sql)
 				throw new PrestaShopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+
 			throw new PrestaShopDatabaseException($this->getMsgError());
 		}
 	}
 
-	/**
-	 * Sanitize data which will be injected into SQL query
-	 *
-	 * @param string $string SQL data which will be injected into SQL query
-	 * @param boolean $html_ok Does data contain HTML code ? (optional)
-	 * @return string Sanitized data
-	 */
-	public function escape($string, $html_ok = false)
+    /**
+     * Sanitize data which will be injected into SQL query
+     *
+     * @param string $string SQL data which will be injected into SQL query
+     * @param bool $html_ok Does data contain HTML code ? (optional)
+     * @return string Sanitized data
+     */
+	public function escape($string, $html_ok = false, $bq_sql = false)
 	{
 		if (_PS_MAGIC_QUOTES_GPC_)
 			$string = stripslashes($string);
+
 		if (!is_numeric($string))
 		{
 			$string = $this->_escape($string);
+
 			if (!$html_ok)
 				$string = strip_tags(Tools::nl2br($string));
+
+			if ($bq_sql === true)
+				$string = str_replace('`', '\`', $string);
 		}
 
 		return $string;
 	}
 
 	/**
-	 * Try a connection to te database
+	 * Try a connection to the database
 	 *
 	 * @param string $server Server address
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
 	 * @param string $db Database name
 	 * @param bool $new_db_link
-	 * @param bool $engine
-	 * @return int
+	 * @param string|bool $engine
+	 * @param int $timeout
+	 * @return int Error code or 0 if connection was successful
 	 */
 	public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
@@ -686,12 +812,12 @@ abstract class DbCore
 	}
 
 	/**
-	 * Try a connection to te database
+	 * Try a connection to the database and set names to UTF-8
 	 *
 	 * @param string $server Server address
 	 * @param string $user Login for database connection
 	 * @param string $pwd Password for database connection
-	 * @return int
+	 * @return bool
 	 */
 	public static function checkEncoding($server, $user, $pwd)
 	{
@@ -713,18 +839,43 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
 	}
 
+	/**
+	 * Tries to connect to the database and create a table (checking creation privileges)
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @param string $db
+	 * @param string $prefix
+	 * @param string|null $engine Table engine
+	 * @return bool|string True, false or error
+	 */
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
 	}
 
+	/**
+	 * Checks if auto increment value and offset is 1
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @return bool
+	 */
 	public static function checkAutoIncrement($server, $user, $pwd)
 	{
 		return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * Executes a query
+	 *
+	 * @deprecated 1.5.0.1
+	 * @param string|DbQuery $sql
+	 * @param bool $use_cache
+	 * @return array|bool|mysqli_result|PDOStatement|resource
+	 * @throws PrestaShopDatabaseException
 	 */
 	public static function s($sql, $use_cache = true)
 	{
@@ -733,7 +884,12 @@ abstract class DbCore
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * Executes a query
+	 *
+	 * @deprecated 1.5.0.1
+	 * @param $sql
+	 * @param int $use_cache
+	 * @return array|bool|mysqli_result|PDOStatement|resource
 	 */
 	public static function ps($sql, $use_cache = 1)
 	{
@@ -743,12 +899,26 @@ abstract class DbCore
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * Executes a query and kills process (dies)
+	 *
+	 * @deprecated 1.5.0.1
+	 * @param $sql
+	 * @param int $use_cache
 	 */
 	public static function ds($sql, $use_cache = 1)
 	{
 		Tools::displayAsDeprecated();
 		Db::s($sql, $use_cache);
 		die();
+	}
+
+	/**
+	 * Get used link instance
+	 *
+	 * @return PDO|mysqli|resource Resource
+	 */
+	public function getLink()
+	{
+		return $this->link;
 	}
 }

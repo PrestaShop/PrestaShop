@@ -26,10 +26,10 @@
 
 class ZoneCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
-	/** @var boolean Zone status */
+	/** @var bool Zone status */
 	public $active = true;
 
 	/**
@@ -64,6 +64,7 @@ class ZoneCore extends ObjectModel
 				ORDER BY `name` ASC
 			');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -72,7 +73,7 @@ class ZoneCore extends ObjectModel
 	 * Get a zone ID from its default language name
 	 *
 	 * @param string $name
-	 * @return integer id_zone
+	 * @return int id_zone
 	 */
 	public static function getIdByName($name)
 	{
@@ -86,19 +87,19 @@ class ZoneCore extends ObjectModel
 	/**
 	* Delete a zone
 	*
-	* @return boolean Deletion result
+	* @return bool Deletion result
 	*/
 	public function delete()
 	{
 		if (parent::delete())
 		{
 			// Delete regarding delivery preferences
-			$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_zone WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'delivery WHERE id_zone = '.(int)$this->id);
+			$result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int)$this->id);
 
 			// Update Country & state zone with 0
-			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'state SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
 
 			return $result;
 		}

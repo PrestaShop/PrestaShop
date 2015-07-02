@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarrierWizardControllerCore extends AdminController
 {
 	protected $wizard_access;
@@ -245,7 +248,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'form' => array(
 				'id_form' => 'step_carrier_ranges',
 				'input' => array(
-					array(
+					'shipping_handling' => array(
 						'type' => 'switch',
 						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
@@ -266,7 +269,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						),
 						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
-					array(
+					'is_free' => array(
 						'type' => 'switch',
 						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
@@ -285,7 +288,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						),
 					),
-					array(
+					'shipping_method' => array(
 						'type' => 'radio',
 						'label' => $this->l('Billing'),
 						'name' => 'shipping_method',
@@ -305,7 +308,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						)
 					),
-					array(
+					'id_tax_rules_group' => array(
 						'type' => 'select',
 						'label' => $this->l('Tax'),
 						'name' => 'id_tax_rules_group',
@@ -319,7 +322,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						)
 					),
-					array(
+					'range_behavior' => array(
 						'type' => 'select',
 						'label' => $this->l('Out-of-range behavior'),
 						'name' => 'range_behavior',
@@ -339,13 +342,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 						),
 						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).')
 					),
-					array(
+					'zones' => array(
 						'type' => 'zone',
 						'name' => 'zones'
 					)
 				),
 
 			));
+
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+			unset($this->fields_form['form']['input']['id_tax_rules_group']);
+		}
 
 		$tpl_vars = array();
 		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
@@ -360,6 +368,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 *
+	 * @return string
+	 */
 	public function renderStepFour($carrier)
 	{
 		$this->fields_form = array(
@@ -368,17 +381,17 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
-						'name' => 'max_height',
-						'required' => false,
-						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
-					),
-					array(
-						'type' => 'text',
 						'label' => sprintf($this->l('Maximum package width (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_width',
 						'required' => false,
 						'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
+						'name' => 'max_height',
+						'required' => false,
+						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
 					),
 					array(
 						'type' => 'text',
@@ -444,7 +457,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'value' => 0
 							)
 						),
-						'hint' => $this->l('Enable the carrier in the Front Office.')
+						'hint' => $this->l('Enable the carrier in the front office.')
 					)
 				)
 			));
@@ -462,6 +475,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $template->fetch('controllers/carrier_wizard/summary.tpl');
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 * @param array   $tpl_vars
+	 * @param array   $fields_value
+	 */
 	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
 	{
 		$tpl_vars['zones'] = Zone::getZones(false);
@@ -765,8 +783,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
+
 				// if update we duplicate current Carrier
+				/** @var Carrier $new_carrier */
 				$new_carrier = $current_carrier->duplicateObject();
+
 				if (Validate::isLoadedObject($new_carrier))
 				{
 					// Set flag deteled to true for historization

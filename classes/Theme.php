@@ -68,7 +68,7 @@ class ThemeCore extends ObjectModel
 	{
 		$themes = new PrestaShopCollection('Theme');
 
-		if(is_array($excluded_ids) && !empty($excluded_ids))
+		if (is_array($excluded_ids) && !empty($excluded_ids))
 			$themes->where('id_theme', 'notin', $excluded_ids);
 
 		$themes->orderBy('name');
@@ -78,7 +78,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * return an array of all available theme (installed or not)
 	 *
-	 * @param boolean $installed_only
+	 * @param bool $installed_only
 	 * @return array string (directory)
 	 */
 	public static function getAvailable($installed_only = true)
@@ -98,7 +98,11 @@ class ThemeCore extends ObjectModel
 		{
 			$themes = Theme::getThemes();
 			foreach ($themes as $theme_obj)
+			{
+				/** @var Theme $theme_obj */
 				$themes_dir[] = $theme_obj->directory;
+			}
+
 			foreach ($dirlist as $theme)
 				if (false !== array_search($theme, $themes_dir))
 					$available_theme[] = $theme;
@@ -113,7 +117,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * check if a theme is used by a shop
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isUsed()
 	{
@@ -126,7 +130,7 @@ class ThemeCore extends ObjectModel
 	 *
 	 * @param bool $null_values
 	 * @param bool $autodate
-	 * @return boolean Insertion result
+	 * @return bool Insertion result
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
@@ -137,7 +141,9 @@ class ThemeCore extends ObjectModel
 	}
 
 	/**
-	 * @param $directory
+	 * Checks if theme exists (by folder) and returns Theme object.
+	 *
+	 * @param string $directory
 	 *
 	 * @return bool|Theme
 	 */
@@ -145,13 +151,12 @@ class ThemeCore extends ObjectModel
 	{
 		if (is_string($directory) && strlen($directory) > 0 && file_exists(_PS_ALL_THEMES_DIR_.$directory) && is_dir(_PS_ALL_THEMES_DIR_.$directory))
 		{
-			$res = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
+			$id_theme = (int)Db::getInstance()->getValue('SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
 
-			if (!$res)
-				return false;
-
-			return new Theme($res['id_theme']);
+			return $id_theme ? new Theme($id_theme) : false;
 		}
+
+		return false;
 	}
 
 	public static function getInstalledThemeDirectories()
@@ -166,7 +171,7 @@ class ThemeCore extends ObjectModel
 
 	public static function getThemeInfo($id_theme)
 	{
-		$theme = new Theme($id_theme);
+		$theme = new Theme((int)$id_theme);
 		$theme_arr = array();
 
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
@@ -178,7 +183,7 @@ class ThemeCore extends ObjectModel
 
 		if ($config_file)
 		{
-			$theme_arr['theme_id'] = $theme->id;
+			$theme_arr['theme_id'] = (int)$theme->id;
 			$xml_theme = @simplexml_load_file($config_file);
 
 			if ($xml_theme !== false)
@@ -196,7 +201,7 @@ class ThemeCore extends ObjectModel
 		else
 		{
 			// If no xml we use data from database
-			$theme_arr['theme_id'] = $theme->id;
+			$theme_arr['theme_id'] = (int)$theme->id;
 			$theme_arr['theme_name'] = $theme->name;
 			$theme_arr['theme_directory'] = $theme->directory;
 		}
@@ -212,7 +217,7 @@ class ThemeCore extends ObjectModel
 		{
 			$dir = basename($theme_dir);
 			$config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
-			if(!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
+			if (!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
 			{
 				if ($xml_theme = @simplexml_load_file($config_file))
 				{

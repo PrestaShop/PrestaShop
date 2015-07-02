@@ -52,7 +52,7 @@ class TranslateCore
 		{
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
-				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));
+				$iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
 				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
@@ -85,10 +85,9 @@ class TranslateCore
 	/**
 	 * Return the translation for a string if it exists for the base AdminController or for helpers
 	 *
-	 * @static
 	 * @param $string string to translate
 	 * @param null $key md5 key if already calculated (optional)
-	 * @param $lang_array global array of admin translations
+	 * @param array $lang_array Global array of admin translations
 	 * @return string translation
 	 */
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
@@ -210,7 +209,7 @@ class TranslateCore
 	 * @param string $string
 	 * @return string
 	 */
-	public static function getPdfTranslation($string)
+	public static function getPdfTranslation($string, $sprintf = null)
 	{
 		global $_LANGPDF;
 
@@ -222,10 +221,10 @@ class TranslateCore
 		$override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
 		$i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
 		if (file_exists($override_i18n_file))
-            $i18n_file = $override_i18n_file;
+			$i18n_file = $override_i18n_file;
 
-      if (!include($i18n_file))
-            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
+		if (!include($i18n_file))
+			Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
 
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
@@ -234,6 +233,9 @@ class TranslateCore
 		$key = md5($string);
 
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+
+		if ($sprintf !== null)
+			$str = Translate::checkAndReplaceArgs($str, $sprintf);
 
 		return $str;
 	}

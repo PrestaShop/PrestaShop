@@ -33,7 +33,7 @@ function generate_tax_rules()
 	if (!is_array($taxes))
 		return true;
 
-	foreach ($taxes AS $tax)
+	foreach ($taxes as $tax)
 	{
 		$id_tax = $tax['id_tax'];
 		$row = array(
@@ -53,11 +53,11 @@ function generate_tax_rules()
 		);
 		if ($countries)
 		{
-			foreach ($countries AS $country)
+			foreach ($countries as $country)
 			{
-				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tax_rule` 
+				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tax_rule`
 					(`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
-					VALUES 
+					VALUES
 					('.$id_tax_rules_group.', '.(int)$country['id_country'].', 0, 0, '.(int)$id_tax. ')');
 			}
 		}
@@ -69,7 +69,7 @@ function generate_tax_rules()
 
 		if ($states)
 		{
-			foreach ($states AS $state)
+			foreach ($states as $state)
 			{
 				if (!in_array($state['tax_behavior'], array(PS_PRODUCT_TAX, PS_STATE_TAX, PS_BOTH_TAX)))
 					$tax_behavior = PS_PRODUCT_TAX;
@@ -100,7 +100,7 @@ function generate_tax_rules()
 		WHERE `id_tax` = '.(int)$id_tax
 		);
 
-		$socolissimo_overcost_tax = Db::getInstance()->getValue('SELECT value 
+		$socolissimo_overcost_tax = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="SOCOLISSIMO_OVERCOST_TAX"');
 		if ($socolissimo_overcost_tax == $id_tax)

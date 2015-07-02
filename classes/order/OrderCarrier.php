@@ -26,16 +26,16 @@
 
 class OrderCarrierCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_carrier;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_carrier;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
 	/** @var float */
@@ -47,7 +47,7 @@ class OrderCarrierCore extends ObjectModel
 	/** @var float */
 	public $shipping_cost_tax_incl;
 
-	/** @var integer */
+	/** @var int */
 	public $tracking_number;
 
 	/** @var string Object creation date */

@@ -74,12 +74,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * @var int Total of elements for iteration
 	 */
 	protected $total;
-	
+
 	/**
 	 * @var int Page number
 	 */
 	protected $page_number = 0;
-	
+
 	/**
 	 * @var int Size of a page
 	 */
@@ -344,11 +344,10 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 				break;
 			}
 		}
-		
+
 		// All limit clause
 		if ($this->page_size)
 			$this->query->limit($this->page_size, $this->page_number * $this->page_size);
-		
 
 		// Shall we display query for debug ?
 		if ($display_query)
@@ -674,7 +673,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 		}
 		return $this->fields[$field];
 	}
-	
+
 	/**
 	 * Set the page number
 	 *
@@ -686,11 +685,11 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 		$page_number = (int)$page_number;
 		if ($page_number > 0)
 			$page_number--;
-		
+
 		$this->page_number = $page_number;
 		return $this;
 	}
-	
+
 	/**
 	 * Set the nuber of item per page
 	 *

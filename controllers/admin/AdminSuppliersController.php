@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Supplier $object
+ */
 class AdminSuppliersControllerCore extends AdminController
 {
 	public $bootstrap = true ;
@@ -40,7 +43,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->_defaultOrderBy = 'name';
 		$this->_defaultOrderWay = 'ASC';
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -64,7 +67,6 @@ class AdminSuppliersControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
 	}
 
 	public function setMedia()
@@ -121,7 +123,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
-				(in_array('company', $required_fields) ? 
+				(in_array('company', $required_fields) ?
 					array(
 						'type' => 'text',
 						'label' => $this->l('Company'),
@@ -131,7 +133,7 @@ class AdminSuppliersControllerCore extends AdminController
 						'maxlength' => 16,
 						'col' => 4,
 						'hint' => $this->l('Company name for this supplier')
-					) 
+					)
 					: null
 				),
 				array(
@@ -334,7 +336,8 @@ class AdminSuppliersControllerCore extends AdminController
 	{
 		parent::initToolbar();
 		$this->addPageHeaderToolBarModulesListButton();
-		if (empty($this->display))
+
+		if (empty($this->display) && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
 				'desc' => $this->l('Import')
@@ -347,6 +350,7 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->toolbar_title = $this->object->name;
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
+
 		for ($i = 0; $i < $total_product; $i++)
 		{
 			$products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
@@ -406,6 +410,8 @@ class AdminSuppliersControllerCore extends AdminController
 	protected function afterImageUpload()
 	{
 		$return = true;
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		/* Generate image with differents size */
 		if (($id_supplier = (int)Tools::getValue('id_supplier')) &&
 			 isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
@@ -416,6 +422,10 @@ class AdminSuppliersControllerCore extends AdminController
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
 				if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 					$return = false;
+
+				if ($generate_hight_dpi_images)
+					if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2))
+						$return = false;
 			}
 
 			$current_logo_file = _PS_TMP_IMG_DIR_.'supplier_mini_'.$id_supplier.'_'.$this->context->shop->id.'.jpg';
@@ -492,8 +502,8 @@ class AdminSuppliersControllerCore extends AdminController
 			else
 			{
 				//delete all product_supplier linked to this supplier
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id); 
-				
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id);
+
 				$id_address = Address::getAddressIdBySupplierId($obj->id);
 				$address = new Address($id_address);
 				if (Validate::isLoadedObject($address))
@@ -510,6 +520,10 @@ class AdminSuppliersControllerCore extends AdminController
 
 	/**
 	 * @see AdminController::afterAdd()
+	 *
+	 * @param Supplier $object
+	 *
+	 * @return bool
 	 */
 	protected function afterAdd($object)
 	{
@@ -520,12 +534,16 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->id_supplier = $object->id;
 			$address->save();
 		}
-		return true;
 
+		return true;
 	}
 
 	/**
 	 * @see AdminController::afterUpdate()
+	 *
+	 * @param Supplier $object
+	 *
+	 * @return bool
 	 */
 	protected function afterUpdate($object)
 	{
@@ -543,4 +561,3 @@ class AdminSuppliersControllerCore extends AdminController
 	}
 
 }
-

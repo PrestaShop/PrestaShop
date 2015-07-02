@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property SearchEngine $object
+ */
 class AdminSearchEnginesControllerCore extends AdminController
 {
 	public function __construct()

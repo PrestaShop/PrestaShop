@@ -63,7 +63,7 @@
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
-				
+
 				<script type="text/javascript">
 					$(document).ready(function(){
 						$('a.useSpecialSyntax').click(function(){
@@ -86,9 +86,9 @@
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
-							<li>"There are <strong>%d</strong> products": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
-							<li>"List of pages in <strong>%s</strong>": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
-							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
+							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
 				</div>
@@ -120,7 +120,7 @@
 										<td width="40%"> {*todo : md5 is already calculated in AdminTranslationsController*}
 											{if $key|strlen < $textarea_sized}
 												<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
+													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
 													value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
 											{else}
 												<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
@@ -144,10 +144,10 @@
 							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 						</div>
 						</div>
-						
+
 					</div>
 				{/if}
-			{/foreach}			
+			{/foreach}
 		</form>
 	{/if}
 

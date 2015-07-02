@@ -24,12 +24,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderInvoice $object
+ */
 class AdminOutstandingControllerCore  extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'order_invoice';
+		$this->table = 'order_invoice';
 		$this->className = 'OrderInvoice';
 		$this->addRowAction('view');
 
@@ -46,30 +49,34 @@ class AdminOutstandingControllerCore  extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'risk` r ON (r.`id_risk` = c.`id_risk`)
 		LEFT JOIN `'._DB_PREFIX_.'risk_lang` rl ON (r.`id_risk` = rl.`id_risk` AND rl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_where = 'AND number > 0';
+		$this->_use_found_rows = false;
 
 		$risks = array();
 		foreach (Risk::getRisks() as $risk)
+		{
+			/** @var Risk $risk */
 			$risks[$risk->id] = $risk->name;
+		}
 
 		$this->fields_list = array(
 			'number' => array(
 				'title' => $this->l('Invoice')
- 			),
+			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
 				'type' => 'date',
 				'align' => 'right',
 				'filter_key' => 'a!date_add'
- 			),
+			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
 				'filter_key' => 'customer',
 				'tmpTableFilter' => true
- 			),
+			),
 			'company' => array(
 				'title' => $this->l('Company'),
 				'align' => 'center'
- 			),
+			),
 			'risk' => array(
 				'title' => $this->l('Risk'),
 				'align' => 'center',
@@ -79,21 +86,21 @@ class AdminOutstandingControllerCore  extends AdminController
 				'list' => $risks,
 				'filter_key' => 'r!id_risk',
 				'filter_type' => 'int'
- 			),
+			),
 			'outstanding_allow_amount' => array(
-				'title' => $this->l('Outstanding Allow'),
+				'title' => $this->l('Outstanding Allowance'),
 				'align' => 'center',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
 				'type' => 'price'
- 			),
+			),
 			'outstanding' => array(
 				'title' => $this->l('Current Outstanding'),
 				'align' => 'center',
 				'callback' => 'printOutstandingCalculation',
 				'orderby' => false,
 				'search' => false
- 			),
+			),
 			'id_invoice' => array(
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
@@ -134,13 +141,13 @@ class AdminOutstandingControllerCore  extends AdminController
 	{
 		$order_invoice = new OrderInvoice($id_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object OrderInvoice can\'t be loaded');
+			throw new PrestaShopException('object OrderInvoice cannot be loaded');
 		$order = new Order($order_invoice->id_order);
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object Order can\'t be loaded');
+			throw new PrestaShopException('object Order cannot be loaded');
 		$customer = new Customer((int)$order->id_customer);
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object Customer can\'t be loaded');
+			throw new PrestaShopException('object Customer cannot be loaded');
 
 		return '<b>'.Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency).'</b>';
 	}
@@ -153,10 +160,10 @@ class AdminOutstandingControllerCore  extends AdminController
 	{
 		$order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object OrderInvoice can\'t be loaded');
+			throw new PrestaShopException('object OrderInvoice cannot be loaded');
 		$order = new Order($order_invoice->id_order);
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object Order can\'t be loaded');
+			throw new PrestaShopException('object Order cannot be loaded');
 
 		$link = $this->context->link->getAdminLink('AdminOrders');
 		$link .= '&vieworder&id_order='.$order->id;
@@ -164,4 +171,3 @@ class AdminOutstandingControllerCore  extends AdminController
 		$this->redirect();
 	}
 }
-

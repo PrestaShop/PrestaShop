@@ -38,13 +38,13 @@ class CustomerCore extends ObjectModel
 	/** @var string protected note */
 	public $note;
 
-	/** @var integer Gender ID */
+	/** @var int Gender ID */
 	public $id_gender = 0;
 
-	/** @var integer Default group ID */
+	/** @var int Default group ID */
 	public $id_default_group;
 
-	/** @var integer Current language used by the customer */
+	/** @var int Current language used by the customer */
 	public $id_lang;
 
 	/** @var string Lastname */
@@ -59,7 +59,7 @@ class CustomerCore extends ObjectModel
 	/** @var string e-mail */
 	public $email;
 
-	/** @var boolean Newsletter subscription */
+	/** @var bool Newsletter subscription */
 	public $newsletter;
 
 	/** @var string Newsletter ip registration */
@@ -68,7 +68,7 @@ class CustomerCore extends ObjectModel
 	/** @var string Newsletter ip registration */
 	public $newsletter_date_add;
 
-	/** @var boolean Opt-in subscription */
+	/** @var bool Opt-in subscription */
 	public $optin;
 
 	/** @var string WebSite **/
@@ -86,28 +86,28 @@ class CustomerCore extends ObjectModel
 	/** @var float Outstanding allow amount (B2B opt)  */
 	public $outstanding_allow_amount = 0;
 
-	/** @var integer Show public prices (B2B opt) */
+	/** @var int Show public prices (B2B opt) */
 	public $show_public_prices = 0;
 
 	/** @var int Risk ID (B2B opt) */
 	public $id_risk;
 
-	/** @var integer Max payment day */
+	/** @var int Max payment day */
 	public $max_payment_days = 0;
 
-	/** @var integer Password */
+	/** @var int Password */
 	public $passwd;
 
 	/** @var string Datetime Password */
 	public $last_passwd_gen;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = true;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $is_guest = 0;
 
-	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
+	/** @var bool True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	/** @var string Object creation date */
@@ -127,7 +127,7 @@ class CustomerCore extends ObjectModel
 	/** @var string customer postcode as determined by geolocation */
 	public $geoloc_postcode;
 
-	/** @var boolean is the customer logged in */
+	/** @var bool is the customer logged in */
 	public $logged = 0;
 
 	/** @var int id_guest meaning the guest table, not the guest customer  */
@@ -222,7 +222,7 @@ class CustomerCore extends ObjectModel
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 			return false;
-	 	$success = parent::add($autodate, $null_values);
+		$success = parent::add($autodate, $null_values);
 		$this->updateGroup($this->groupBox);
 		return $success;
 	}
@@ -246,7 +246,7 @@ class CustomerCore extends ObjectModel
 			}
 		}
 
-	 	return parent::update(true);
+		return parent::update(true);
 	}
 
 	public function delete()
@@ -328,16 +328,14 @@ class CustomerCore extends ObjectModel
 			return false;
 		$this->id = $result['id_customer'];
 		foreach ($result as $key => $value)
-			if (array_key_exists($key, $this))
+			if (property_exists($this, $key))
 				$this->{$key} = $value;
-
 		return $this;
 	}
 
 	/**
 	 * Retrieve customers by email address
 	 *
-	 * @static
 	 * @param $email
 	 * @return array
 	 */
@@ -355,7 +353,7 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Check id the customer is active or not
 	 *
-	 * @return boolean customer validity
+	 * @return bool customer validity
 	 */
 	public static function isBanned($id_customer)
 	{
@@ -371,6 +369,7 @@ class CustomerCore extends ObjectModel
 			AND active = 1
 			AND `deleted` = 0');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -404,9 +403,9 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Check if an address is owned by a customer
 	 *
-	 * @param integer $id_customer Customer ID
-	 * @param integer $id_address Address ID
-	 * @return boolean result
+	 * @param int $id_customer Customer ID
+	 * @param int $id_address Address ID
+	 * @return bool result
 	 */
 	public static function customerHasAddress($id_customer, $id_address)
 	{
@@ -433,7 +432,7 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Return customer addresses
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return array Addresses
 	 */
 	public function getAddresses($id_lang)
@@ -452,6 +451,7 @@ class CustomerCore extends ObjectModel
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -459,8 +459,8 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Count the number of addresses for a customer
 	 *
-	 * @param integer $id_customer Customer ID
-	 * @return integer Number of addresses
+	 * @param int $id_customer Customer ID
+	 * @return int Number of addresses
 	 */
 	public static function getAddressesTotalById($id_customer)
 	{
@@ -476,7 +476,7 @@ class CustomerCore extends ObjectModel
 	 * Check if customer password is the right one
 	 *
 	 * @param string $passwd Password
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function checkPassword($id_customer, $passwd)
 	{
@@ -491,6 +491,7 @@ class CustomerCore extends ObjectModel
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `passwd` = \''.pSQL($passwd).'\'');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -499,21 +500,25 @@ class CustomerCore extends ObjectModel
 	 * Light back office search for customers
 	 *
 	 * @param string $query Searched string
-	 * @return array Corresponding customers
+	 * @param null|int $limit Limit query results
+	 * @return array|false|mysqli_result|null|PDOStatement|resource Corresponding customers
+	 * @throws PrestaShopDatabaseException
 	 */
-	public static function searchByName($query)
+	public static function searchByName($query, $limit = null)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE (
-			`email` LIKE \'%'.pSQL($query).'%\'
-			OR `id_customer` = '.(int)$query.'
-			OR `lastname` LIKE \'%'.pSQL($query).'%\'
-			OR `firstname` LIKE \'%'.pSQL($query).'%\'
-		)
-		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER));
+		$sql_base = 'SELECT *
+				FROM `'._DB_PREFIX_.'customer`';
+		$sql = '('.$sql_base.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `id_customer` = '.(int)$query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+
+		if ($limit)
+			$sql .= ' LIMIT 0, '.(int)$limit;
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
+
 
 	/**
 	 * Search for customers by ip address
@@ -591,9 +596,9 @@ class CustomerCore extends ObjectModel
 	* Specify if a customer already in base
 	*
 	* @param $id_customer Customer id
-	* @return boolean
+	* @return bool
 	*/
-	// DEPRECATED
+	/* DEPRECATED */
 	public function customerIdExists($id_customer)
 	{
 		return Customer::customerIdExistsStatic((int)$id_customer);
@@ -609,6 +614,7 @@ class CustomerCore extends ObjectModel
 			FROM '._DB_PREFIX_.'customer c
 			WHERE c.`id_customer` = '.(int)$id_customer);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -689,7 +695,12 @@ class CustomerCore extends ObjectModel
 	public static function getDefaultGroupId($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return Configuration::get('PS_CUSTOMER_GROUP');
+		{
+			static $ps_customer_group = null;
+			if ($ps_customer_group === null)
+				$ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
+			return $ps_customer_group;
+		}
 
 		if (!isset(self::$_defaultGroupId[(int)$id_customer]))
 			self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
@@ -739,7 +750,7 @@ class CustomerCore extends ObjectModel
 		if (!$this->isGuest())
 			return false;
 		if (empty($password))
-			$password = Tools::passwdGen();
+			$password = Tools::passwdGen(8, 'RANDOM');
 		if (!Validate::isPasswd($password))
 			return false;
 
@@ -787,8 +798,8 @@ class CustomerCore extends ObjectModel
 	 * Check customer informations and return customer validity
 	 *
 	 * @since 1.5.0
-	 * @param boolean $with_guest
-	 * @return boolean customer validity
+	 * @param bool $with_guest
+	 * @return bool customer validity
 	 */
 	public function isLogged($with_guest = false)
 	{

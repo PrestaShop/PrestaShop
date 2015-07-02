@@ -28,25 +28,25 @@ class CMSCategoryCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer CMSCategory ID */
+	/** @var int CMSCategory ID */
 	public $id_cms_category;
 
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for display */
+	/** @var bool Status for display */
 	public $active = 1;
 
 	/** @var string Description */
 	public $description;
 
-	/** @var integer Parent CMSCategory ID */
+	/** @var int Parent CMSCategory ID */
 	public $id_parent;
 
-	/** @var  integer category position */
+	/** @var  int category position */
 	public $position;
 
-	/** @var integer Parents number */
+	/** @var int Parents number */
 	public $level_depth;
 
 	/** @var string string used in rewrited URL */
@@ -85,7 +85,7 @@ class CMSCategoryCore extends ObjectModel
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 64),
 			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 64),
 			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -117,15 +117,15 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Recursive scan of subcategories
-	  *
-	  * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
- 	  * @param integer $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
-	  * @param array $excluded_ids_array specify a list of ids to exclude of results
- 	  * @param integer $idLang Specify the id of the language used
-	  *
- 	  * @return array Subcategories lite tree
-	  */
+	 * Recursive scan of subcategories
+	 *
+	 * @param int $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
+	 * @param int $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
+	 * @param array $excluded_ids_array specify a list of ids to exclude of results
+	 * @param int $idLang Specify the id of the language used
+	 *
+	 * @return array Subcategories lite tree
+	 */
 	public function recurseLiteCategTree($max_depth = 3, $currentDepth = 0, $id_lang = null, $excluded_ids_array = null, Link $link = null)
 	{
 		if (!$link)
@@ -213,15 +213,15 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Recursively add specified CMSCategory childs to $toDelete array
-	  *
-	  * @param array &$toDelete Array reference where categories ID will be saved
-	  * @param array|int $id_cms_category Parent CMSCategory ID
-	  */
+	 * Recursively add specified CMSCategory childs to $toDelete array
+	 *
+	 * @param array &$toDelete Array reference where categories ID will be saved
+	 * @param array|int $id_cms_category Parent CMSCategory ID
+	 */
 	protected function recursiveDelete(&$to_delete, $id_cms_category)
 	{
-	 	if (!is_array($to_delete) || !$id_cms_category)
-	 		die(Tools::displayError());
+		if (!is_array($to_delete) || !$id_cms_category)
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->executeS('
 		SELECT `id_cms_category`
@@ -254,7 +254,7 @@ class CMSCategoryCore extends ObjectModel
 		Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', $id_shop_list).')');
 
 		$has_multishop_entries = $this->hasMultishopEntries();
-		if (!$hasMultishopEntries)
+		if (!$has_multishop_entries)
 		{
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category` WHERE `id_cms_category` IN ('.$list.')');
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category_lang` WHERE `id_cms_category` IN ('.$list.')');
@@ -267,11 +267,11 @@ class CMSCategoryCore extends ObjectModel
 		SELECT `id_cms`
 		FROM `'._DB_PREFIX_.'cms`
 		WHERE `id_cms_category` IN ('.$list.')');
-		foreach ($result as $p)
+		foreach ($result as $c)
 		{
-			$product = new CMS($p['id_cms']);
-			if (Validate::isLoadedObject($product))
-				$product->delete();
+			$cms = new CMS((int)$c['id_cms']);
+			if (Validate::isLoadedObject($cms))
+				$cms->delete();
 		}
 		return true;
 	}
@@ -293,10 +293,10 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Get the number of parent categories
-	  *
-	  * @return integer Level depth
-	  */
+	 * Get the number of parent categories
+	 *
+	 * @return int Level depth
+	 */
 	public function calcLevelDepth()
 	{
 		$parentCMSCategory = new CMSCategory($this->id_parent);
@@ -306,16 +306,16 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return available categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array Categories
-	  */
+	 * Return available categories
+	 *
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
+	 * @return array Categories
+	 */
 	public static function getCategories($id_lang, $active = true, $order = true)
 	{
-	 	if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
@@ -345,16 +345,16 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return current CMSCategory childs
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array Categories
-	  */
+	 * Return current CMSCategory childs
+	 *
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
+	 * @return array Categories
+	 */
 	public function getSubCategories($id_lang, $active = true)
 	{
-	 	if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_keywords, cl.meta_description
@@ -372,23 +372,23 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Hide CMSCategory prefix used for position
-	  *
-	  * @param string $name CMSCategory name
-	  * @return string Name without position
-	  */
+	 * Hide CMSCategory prefix used for position
+	 *
+	 * @param string $name CMSCategory name
+	 * @return string Name without position
+	 */
 	public static function hideCMSCategoryPosition($name)
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);
 	}
 
 	/**
-	  * Return main categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array categories
-	  */
+	 * Return main categories
+	 *
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
+	 * @return array categories
+	 */
 	public static function getHomeCategories($id_lang, $active = true)
 	{
 		return CMSCategory::getChildren(1, $id_lang, $active);
@@ -397,7 +397,7 @@ class CMSCategoryCore extends ObjectModel
 	public static function getChildren($id_parent, $id_lang, $active = true)
 	{
 		if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+			die(Tools::displayError());
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.`id_cms_category`, cl.`name`, cl.`link_rewrite`
@@ -419,11 +419,11 @@ class CMSCategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Check if CMSCategory can be moved in another one
-	  *
-	  * @param integer $id_parent Parent candidate
-	  * @return boolean Parent validity
-	  */
+	 * Check if CMSCategory can be moved in another one
+	 *
+	 * @param int $id_parent Parent candidate
+	 * @return bool Parent validity
+	 */
 	public static function checkBeforeMove($id_cms_category, $id_parent)
 	{
 		if ($id_cms_category == $id_parent) return false;
@@ -481,9 +481,9 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Light back office search for categories
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first CMSCategory and exact match
+	  * @param bool $unrestricted allows search without lang and includes first CMSCategory and exact match
 	  * @return array Corresponding categories
 	  */
 	public static function searchByName($id_lang, $query, $unrestricted = false)
@@ -493,7 +493,7 @@ class CMSCategoryCore extends ObjectModel
 			SELECT c.*, cl.*
 			FROM `'._DB_PREFIX_.'cms_category` c
 			LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
-			WHERE `name` LIKE \''.pSQL($query).'\'');
+			WHERE `name` = \''.pSQL($query).'\'');
 		else
 			return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
@@ -505,11 +505,11 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Retrieve CMSCategory by name and parent CMSCategory id
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @param string  $CMSCategory_name Searched CMSCategory name
-	  * @param integer $id_parent_CMSCategory parent CMSCategory ID
+	  * @param int $id_parent_CMSCategory parent CMSCategory ID
 	  * @return array Corresponding CMSCategory
-	  *	@deprecated
+	  * @deprecated 1.5.3.0
 	  */
 	public static function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
 	{
@@ -518,7 +518,7 @@ class CMSCategoryCore extends ObjectModel
 		SELECT c.*, cl.*
 	    FROM `'._DB_PREFIX_.'cms_category` c
 	    LEFT JOIN `'._DB_PREFIX_.'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = '.(int)$id_lang.')
-	    WHERE `name`  LIKE \''.pSQL($CMSCategory_name).'\'
+	    WHERE `name` = \''.pSQL($CMSCategory_name).'\'
 		AND c.`id_cms_category` != 1
 		AND c.`id_parent` = '.(int)$id_parent_CMSCategory);
 	}
@@ -526,7 +526,7 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Get Each parent CMSCategory of this CMSCategory until the root CMSCategory
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
 	public function getParentsCategories($id_lang = null)
@@ -612,7 +612,7 @@ class CMSCategoryCore extends ObjectModel
 
 	public static function getUrlRewriteInformations($id_category)
 	{
-	    $sql = '
+		$sql = '
 		SELECT l.`id_lang`, c.`link_rewrite`
 		FROM `'._DB_PREFIX_.'cms_category_lang` AS c
 		LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
@@ -622,5 +622,3 @@ class CMSCategoryCore extends ObjectModel
 		return $arr_return;
 	}
 }
-
-

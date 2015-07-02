@@ -27,55 +27,81 @@
 /**
  * SQL query builder
  *
- * @since 1.5.0
+ * @since 1.5.0.1
  */
 class DbQueryCore
 {
 	/**
-	 * @var array list of data to build the query
+	 * List of data to build the query
+	 *
+	 * @var array
 	 */
 	protected $query = array(
+		'type'   => 'SELECT',
 		'select' => array(),
-		'from' => 	'',
-		'join' => 	array(),
-		'where' => 	array(),
-		'group' => 	array(),
+		'from'   => '',
+		'join'   => array(),
+		'where'  => array(),
+		'group'  => array(),
 		'having' => array(),
-		'order' => 	array(),
-		'limit' => 	array('offset' => 0, 'limit' => 0),
+		'order'  => array(),
+		'limit'  => array('offset' => 0, 'limit' => 0),
 	);
 
 	/**
-	 * Add fields in query selection
+	 * Sets type of the query
+	 *
+	 * @param string $type SELECT|DELETE
+	 *
+	 * @return DbQuery
+	 */
+	public function type($type)
+	{
+		$types = array('SELECT', 'DELETE');
+
+		if (!empty($type) && in_array($type, $types))
+			$this->query['type'] = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Adds fields to SELECT clause
 	 *
 	 * @param string $fields List of fields to concat to other fields
+	 *
 	 * @return DbQuery
 	 */
 	public function select($fields)
 	{
 		if (!empty($fields))
 			$this->query['select'][] = $fields;
+
 		return $this;
 	}
 
 	/**
-	 * Set table for FROM clause
+	 * Sets table for FROM clause
 	 *
-	 * @param string $table Table name
+	 * @param string      $table Table name
+	 * @param string|null $alias Table alias
+	 *
 	 * @return DbQuery
 	 */
 	public function from($table, $alias = null)
 	{
 		if (!empty($table))
 			$this->query['from'][] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
+
 		return $this;
 	}
 
 	/**
-	 * Add JOIN clause
-	 * 	E.g. $this->join('RIGHT JOIN '._DB_PREFIX_.'product p ON ...');
+	 * Adds JOIN clause
+	 * E.g. $this->join('RIGHT JOIN '._DB_PREFIX_.'product p ON ...');
 	 *
 	 * @param string $join Complete string
+	 *
 	 * @return DbQuery
 	 */
 	public function join($join)
@@ -87,11 +113,13 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add LEFT JOIN clause
+	 * Adds a LEFT JOIN clause
 	 *
-	 * @param string $table Table name (without prefix)
-	 * @param string $alias Table alias
-	 * @param string $on ON clause
+	 * @param string      $table Table name (without prefix)
+	 * @param string|null $alias Table alias
+	 * @param string|null $on    ON clause
+	 *
+	 * @return DbQuery
 	 */
 	public function leftJoin($table, $alias = null, $on = null)
 	{
@@ -99,12 +127,14 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add INNER JOIN clause
-	 * 	E.g. $this->innerJoin('product p ON ...')
+	 * Adds an INNER JOIN clause
+	 * E.g. $this->innerJoin('product p ON ...')
 	 *
-	 * @param string $table Table name (without prefix)
-	 * @param string $alias Table alias
-	 * @param string $on ON clause
+	 * @param string      $table Table name (without prefix)
+	 * @param string|null $alias Table alias
+	 * @param string|null $on    ON clause
+	 *
+	 * @return DbQuery
 	 */
 	public function innerJoin($table, $alias = null, $on = null)
 	{
@@ -112,11 +142,13 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add LEFT OUTER JOIN clause
+	 * Adds a LEFT OUTER JOIN clause
 	 *
-	 * @param string $table Table name (without prefix)
-	 * @param string $alias Table alias
-	 * @param string $on ON clause
+	 * @param string      $table Table name (without prefix)
+	 * @param string|null $alias Table alias
+	 * @param string|null $on    ON clause
+	 *
+	 * @return DbQuery
 	 */
 	public function leftOuterJoin($table, $alias = null, $on = null)
 	{
@@ -124,10 +156,12 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add NATURAL JOIN clause
+	 * Adds a NATURAL JOIN clause
 	 *
-	 * @param string $table Table name (without prefix)
-	 * @param string $alias Table alias
+	 * @param string      $table Table name (without prefix)
+	 * @param string|null $alias Table alias
+	 *
+	 * @return DbQuery
 	 */
 	public function naturalJoin($table, $alias = null)
 	{
@@ -135,9 +169,10 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add a restriction in WHERE clause (each restriction will be separated by AND statement)
+	 * Adds a restriction in WHERE clause (each restriction will be separated by AND statement)
 	 *
 	 * @param string $restriction
+	 *
 	 * @return DbQuery
 	 */
 	public function where($restriction)
@@ -149,9 +184,10 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add a restriction in HAVING clause (each restriction will be separated by AND statement)
+	 * Adds a restriction in HAVING clause (each restriction will be separated by AND statement)
 	 *
 	 * @param string $restriction
+	 *
 	 * @return DbQuery
 	 */
 	public function having($restriction)
@@ -163,9 +199,10 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add an ORDER B restriction
+	 * Adds an ORDER BY restriction
 	 *
 	 * @param string $fields List of fields to sort. E.g. $this->order('myField, b.mySecondField DESC')
+	 *
 	 * @return DbQuery
 	 */
 	public function orderBy($fields)
@@ -177,9 +214,10 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add a GROUP BY restriction
+	 * Adds a GROUP BY restriction
 	 *
-	 * @param string $fields List of fields to sort. E.g. $this->group('myField, b.mySecondField DESC')
+	 * @param string $fields List of fields to group. E.g. $this->group('myField1, myField2')
+	 *
 	 * @return DbQuery
 	 */
 	public function groupBy($fields)
@@ -191,9 +229,11 @@ class DbQueryCore
 	}
 
 	/**
-	 * Limit results in query
+	 * Sets query offset and limit
 	 *
-	 * @param string $fields List of fields to sort. E.g. $this->order('myField, b.mySecondField DESC')
+	 * @param int $limit
+	 * @param int $offset
+	 *
 	 * @return DbQuery
 	 */
 	public function limit($limit, $offset = 0)
@@ -204,22 +244,28 @@ class DbQueryCore
 
 		$this->query['limit'] = array(
 			'offset' => $offset,
-			'limit' =>	(int)$limit,
+			'limit'  => (int)$limit,
 		);
+
 		return $this;
 	}
 
 	/**
-	 * Generate and get the query
+	 * Generates query and return SQL string
 	 *
 	 * @return string
+	 * @throws PrestaShopException
 	 */
 	public function build()
 	{
-		$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
+		if ($this->query['type'] == 'SELECT')
+			$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
+		else
+			$sql = $this->query['type'].' ';
 
 		if (!$this->query['from'])
-			die('DbQuery->build() missing from clause');
+			throw new PrestaShopException('Table name not set in DbQuery object. Cannot build a valid SQL query.');
+
 		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
 
 		if ($this->query['join'])
@@ -240,15 +286,19 @@ class DbQueryCore
 		if ($this->query['limit']['limit'])
 		{
 			$limit = $this->query['limit'];
-			$sql .= 'LIMIT '.(($limit['offset']) ? $limit['offset'].', '.$limit['limit'] : $limit['limit']);
+			$sql .= 'LIMIT '.($limit['offset'] ? $limit['offset'].', ' : '').$limit['limit'];
 		}
 
 		return $sql;
 	}
 
+	/**
+	 * Converts object to string
+	 *
+	 * @return string
+	 */
 	public function __toString()
 	{
 		return $this->build();
 	}
 }
-

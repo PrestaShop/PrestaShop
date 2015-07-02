@@ -28,7 +28,7 @@ function set_payment_module_group()
 {
 	// Get all modules then select only payment ones
 	$modules = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module`');
-	foreach ($modules AS $module)
+	foreach ($modules as $module)
 	{
 		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
 		if (!file_exists($file))

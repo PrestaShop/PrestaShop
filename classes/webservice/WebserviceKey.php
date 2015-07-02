@@ -26,10 +26,10 @@
 
 class WebserviceKeyCore extends ObjectModel
 {
- 	/** @var string Key */
+	/** @var string Key */
 	public $key;
 
-	/** @var boolean Webservice Account statuts */
+	/** @var bool Webservice Account statuts */
 	public $active = true;
 
 	/** @var string Webservice Account description */
@@ -70,15 +70,7 @@ class WebserviceKeyCore extends ObjectModel
 
 	public function deleteAssociations()
 	{
-		if (Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
-				WHERE `id_webservice_account` = '.(int)$this->id) === false
-			||
-			Db::getInstance()->execute('
-				DELETE FROM `'._DB_PREFIX_.'webservice_permission`
-				WHERE `id_webservice_account` = '.(int)$this->id) === false)
-			return false;
-		return true;
+		return Db::getInstance()->delete('webservice_permission', 'id_webservice_account = '.(int)$this->id);
 	}
 
 	public static function getPermissionForAccount($auth_key)

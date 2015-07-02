@@ -35,10 +35,12 @@ class HelperTreeCategoriesCore extends TreeCore
 	private $_lang;
 	private $_root_category;
 	private $_selected_categories;
+	private $_full_tree = false;
 	private $_shop;
 	private $_use_checkbox;
 	private $_use_search;
 	private $_use_shop_restriction;
+	private $_children_only = false;
 
 	public function __construct($id, $title = null, $root_category = null,
 		$lang = null, $use_shop_restriction = true)
@@ -55,14 +57,92 @@ class HelperTreeCategoriesCore extends TreeCore
 		$this->setUseShopRestriction($use_shop_restriction);
 	}
 
+	private function fillTree(&$categories, $id_category)
+	{
+		$tree = array();
+		foreach($categories[$id_category] as $category)
+		{
+			$tree[$category['id_category']] = $category;
+			if (!empty($categories[$category['id_category']]))
+				$tree[$category['id_category']]['children'] = $this->fillTree($categories, $category['id_category']);
+			else if ($result = Category::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id))
+				$tree[$category['id_category']]['children'] = array($result[0]['id_category'] => $result[0]);
+		}
+		return $tree;
+	}
+
 	public function getData()
 	{
 		if (!isset($this->_data))
-			$this->setData(Category::getNestedCategories(
-				$this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
+		{
+            $shop = $this->getShop();
+            $lang = $this->getLang();
+            $root_category = (int)$this->getRootCategory();
+			if ($this->_full_tree)
+			{
+				$this->setData(Category::getNestedCategories(
+					$root_category, $lang, false, null, $this->useShopRestriction()));
+				$this->setDataSearch(Category::getAllCategoriesName($root_category, $lang, false, null, $this->useShopRestriction()));
+			}
+			else if ($this->_children_only)
+			{
+				$categories[$root_category] = Category::getChildren($root_category, $lang, false, $shop->id);
+				$children = $this->fillTree($categories, $root_category);
+				$this->setData($children);
+			}
+			else
+			{
+				$new_selected_categories = array();
+				$selected_categories = $this->getSelectedCategories();
+				$categories[$root_category] = Category::getChildren($root_category, $lang, false, $shop->id);
+				foreach($selected_categories as $selected_category)
+				{
+					$category = new Category($selected_category, $lang, $shop->id);
+					$new_selected_categories[] = $selected_category;
+					$parents = $category->getParentsCategories($lang);
+					foreach($parents as $value)
+						$new_selected_categories[] = $value['id_category'];
+				}
+				$new_selected_categories = array_unique($new_selected_categories);
+				foreach($new_selected_categories as $selected_category)
+				{
+					$current_category = Category::getChildren($selected_category, $lang, false, $shop->id);
+					if (!empty($current_category))
+						$categories[$selected_category] = $current_category;
+				}
+
+				$tree = Category::getCategoryInformations(array($root_category), $lang);
+
+				$children = $this->fillTree($categories, $root_category);
+
+				if (!empty($children))
+					$tree[$root_category]['children'] = $children;
+
+				$this->setData($tree);
+				$this->setDataSearch(Category::getAllCategoriesName($root_category, $lang, false, null, $this->useShopRestriction()));
+			}
+		}
 
 		return $this->_data;
 	}
+
+	public function setChildrenOnly($value)
+	{
+		$this->_children_only = $value;
+		return $this;
+	}
+
+	public function setFullTree($value)
+	{
+		$this->_full_tree = $value;
+		return $this;
+	}
+
+	public function getFullTree()
+	{
+		return $this->_full_tree;
+	}
+
 
 	public function setDisabledCategories($value)
 	{
@@ -216,7 +296,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		return (isset($this->_use_shop_restriction) && $this->_use_shop_restriction);
 	}
 
-	public function render($data = NULL)
+	public function render($data = null)
 	{
 		if (!isset($data))
 			$data = $this->getData();
@@ -277,10 +357,11 @@ class HelperTreeCategoriesCore extends TreeCore
 
 		$this->setAttribute('selected_categories', $this->getSelectedCategories());
 		$this->getContext()->smarty->assign('root_category', Configuration::get('PS_ROOT_CATEGORY'));
+		$this->getContext()->smarty->assign('token', Tools::getAdminTokenLite('AdminProducts'));
 		return parent::render($data);
 	}
 
-	//Override
+	/* Override */
 	public function renderNodes($data = null)
 	{
 		if (!isset($data))

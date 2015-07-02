@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Gender $object
+ */
 class AdminGendersControllerCore extends AdminController
 {
 	public function __construct()
@@ -171,6 +174,7 @@ class AdminGendersControllerCore extends AdminController
 			)
 		);
 
+		/** @var Gender $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

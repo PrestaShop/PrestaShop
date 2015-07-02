@@ -37,7 +37,7 @@ class TaxManagerFactoryCore
 	* @param Address $address
 	* @param string $type
 	*
-	* @return TaxManager
+	* @return TaxManagerInterface
 	*/
 	public static function getManager(Address $address, $type)
 	{
@@ -60,8 +60,8 @@ class TaxManagerFactoryCore
 	* @param Address $address
 	* @param string $type
 	*
-	* @return TaxManager
-   */
+	* @return TaxManagerInterface|false
+	*/
 	public static function execHookTaxManagerFactory(Address $address, $type)
 	{
 		$modules_infos = Hook::getModulesFromHook(Hook::getIdByName('taxManager'));

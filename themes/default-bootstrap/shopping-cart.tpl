@@ -303,6 +303,9 @@
 				<tr class="cart_total_price">
 					<td colspan="{$col_span_subtotal}" class="total_price_container text-right">
 						<span>{l s='Total'}</span>
+                        <div id="hookDisplayProductPriceBlock-price">
+                            {hook h="displayCartTotalPriceLabel"}
+                        </div>
 					</td>
 					{if $use_taxes}
 						<td colspan="2" class="price" id="total_price_container">
@@ -492,7 +495,7 @@
 		{$addresses_style.alias = 'address_title'}
 	{/if}
 
-	{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
+	{if !$advanced_payment_api && ((!empty($delivery_option) && !isset($virtualCart)) OR $delivery->id || $invoice->id) && !$opc}
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}
@@ -571,17 +574,11 @@
 			<i class="icon-chevron-left"></i>{l s='Continue shopping'}
 		</a>
 	</p>
-	{if !empty($HOOK_SHOPPING_CART_EXTRA)}
-		<div class="clear"></div>
-		<div class="cart_navigation_extra">
-			<div id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</div>
-		</div>
-	{/if}
+	<div class="clear"></div>
+	<div class="cart_navigation_extra">
+		<div id="HOOK_SHOPPING_CART_EXTRA">{if isset($HOOK_SHOPPING_CART_EXTRA)}{$HOOK_SHOPPING_CART_EXTRA}{/if}</div>
+	</div>
 {strip}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef deliveryAddress=$cart->id_address_delivery|intval}
 {addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
 {addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}

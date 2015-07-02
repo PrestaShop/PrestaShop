@@ -26,9 +26,14 @@
 
 @ini_set('max_execution_time', 3600);
 
+/**
+ * @property Product $object
+ */
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
 	protected $combinations = array();
+
+	/** @var Product */
 	protected $product;
 
 	public function __construct()
@@ -39,6 +44,12 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		$this->multishop_context_group = false;
 
 		parent::__construct();
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'admin/attributes.js');
 	}
 
 	protected function addAttribute($attributes, $price = 0, $weight = 0)
@@ -81,6 +92,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		if (!defined('PS_MASS_PRODUCT_CREATION'))
+			define('PS_MASS_PRODUCT_CREATION', true);
+
 		if (Tools::isSubmit('generate'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -124,13 +138,26 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				$this->product->deleteProductAttributes();
 				$this->product->generateMultipleCombinations($values, $this->combinations);
 
+				// Reset cached default attribute for the product and get a new one
+				Product::getDefaultAttribute($this->product->id, 0, true);
+				Product::updateDefaultAttribute($this->product->id);
+
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
 				{
 					$attributes = Product::getProductAttributesIds($this->product->id, true);
 					$quantity = (int)Tools::getValue('quantity');
 					foreach ($attributes as $attribute)
-						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity);
+						if (Shop::getContext() == Shop::CONTEXT_ALL)
+						{
+							$shops_list = Shop::getShops();
+							if (is_array($shops_list))
+								foreach ($shops_list as $current_shop)
+									if (isset($current_shop['id_shop']) && (int)$current_shop['id_shop'] > 0)
+										StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity, (int)$current_shop['id_shop']);
+						}
+						else
+							StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity);
 				}
 				else
 					StockAvailable::synchronize($this->product->id);
@@ -190,7 +217,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		$this->page_header_toolbar_title = $this->l('Attributes generator', null, null, false);
 		$this->page_header_toolbar_btn['back'] = array(
-			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations',
+			'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations',
 			'desc' => $this->l('Back to the product', null, null, false)
 		);
 	}

@@ -24,7 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-
+/**
+ * @property Shop $object
+ */
 class AdminShopControllerCore extends AdminController
 {
 	public function __construct()
@@ -156,7 +158,7 @@ class AdminShopControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
@@ -255,6 +257,7 @@ class AdminShopControllerCore extends AdminController
 		if (count($this->errors))
 			return false;
 
+		/** @var Shop|bool $result */
 		$result = parent::postProcess();
 
 		if ($result != false && (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) && (int)$result->id_category != (int)Configuration::get('PS_HOME_CATEGORY', null, null, (int)$result->id))
@@ -282,6 +285,10 @@ class AdminShopControllerCore extends AdminController
 		return false;
 	}
 
+	/**
+	 * @param Shop $new_shop
+	 * @return bool
+	 */
 	protected function afterAdd($new_shop)
 	{
 		$import_data = Tools::getValue('importData', array());
@@ -304,6 +311,10 @@ class AdminShopControllerCore extends AdminController
 		return parent::afterAdd($new_shop);
 	}
 
+	/**
+	 * @param Shop $new_shop
+	 * @return bool
+	 */
 	protected function afterUpdate($new_shop)
 	{
 		$categories = Tools::getValue('categoryBox');
@@ -346,6 +357,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Shop $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -359,8 +371,8 @@ class AdminShopControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Shop name'),
-					'desc' => array($this->l('This field does not refer to the shop name visible in the Front Office.'),
-							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
+					'desc' => array($this->l('This field does not refer to the shop name visible in the front office.'),
+							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the front office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
 					'name' => 'name',
 					'required' => true,
 				)
@@ -380,6 +392,7 @@ class AdminShopControllerCore extends AdminController
 			$options = array();
 			foreach (ShopGroup::getShopGroups() as $group)
 			{
+				/** @var ShopGroup $group */
 				if ($this->display == 'edit' && ($group->share_customer || $group->share_order || $group->share_stock) && ShopGroup::hasDependency($group->id))
 					continue;
 
@@ -630,6 +643,7 @@ class AdminShopControllerCore extends AdminController
 
 		if (!count($this->errors))
 		{
+			/** @var Shop $object */
 			$object = new $this->className();
 			$this->copyFromPost($object, $this->table);
 			$this->beforeAdd($object);

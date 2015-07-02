@@ -63,7 +63,7 @@ class CombinationCore extends ObjectModel
 		'table' => 'product_attribute',
 		'primary' => 'id_product_attribute',
 		'fields' => array(
-			'id_product' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => 		array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'location' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
 			'ean13' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
 			'upc' => 				array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
@@ -78,7 +78,7 @@ class CombinationCore extends ObjectModel
 			'weight' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
 			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
 			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
-			'default_on' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isBool'),
+			'default_on' => 		array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
 			'available_date' => 	array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 		),
 	);
@@ -127,6 +127,11 @@ class CombinationCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
+		if ($this->default_on)
+			$this->default_on = 1;
+		else
+			$this->default_on = null;
+
 		if (!parent::add($autodate, $null_values))
 			return false;
 
@@ -145,6 +150,11 @@ class CombinationCore extends ObjectModel
 
 	public function update($null_values = false)
 	{
+		if ($this->default_on)
+			$this->default_on = 1;
+		else
+			$this->default_on = null;
+
 		$return = parent::update($null_values);
 		Product::updateDefaultAttribute($this->id_product);
 

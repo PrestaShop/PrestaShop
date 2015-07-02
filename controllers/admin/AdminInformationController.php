@@ -54,7 +54,7 @@ class AdminInformationControllerCore extends AdminController
 	public function renderView()
 	{
 		$this->initPageHeaderToolbar();
-		
+
 		$hosting_vars = array();
 		if (!defined('_PS_HOST_MODE_'))
 			$hosting_vars = array(
@@ -75,7 +75,7 @@ class AdminInformationControllerCore extends AdminController
 				'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
 				'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
 			);
-		
+
 		$shop_vars = array(
 			'shop' => array(
 				'ps' => _PS_VERSION_,
@@ -125,7 +125,8 @@ class AdminInformationControllerCore extends AdminController
 			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
 			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
 			'gz' => $this->l('Enable GZIP compression on your server.'),
-			'files' => $this->l('Some PrestaShop files are missing from your server.')
+			'files' => $this->l('Some PrestaShop files are missing from your server.'),
+			'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion())
 		);
 
 		// Functions list to test with 'test_system'
@@ -135,17 +136,17 @@ class AdminInformationControllerCore extends AdminController
 		if (!defined('_PS_HOST_MODE_'))
 			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
 
-		$failRequired = in_array('fail', $params_required_results);
-		
-		if ($failRequired && $params_required_results['files'] != 'ok')
+		$fail_required = in_array('fail', $params_required_results);
+
+		if ($fail_required && $params_required_results['files'] != 'ok')
 		{
-			$tmp = 	ConfigurationTest::test_files(true);
+			$tmp = ConfigurationTest::test_files(true);
 			if (is_array($tmp) && count($tmp))
 				$tests_errors['files'] = $tests_errors['files'].'<br/>('.implode(', ', $tmp).')';
- 		}
+		}
 
 		$results = array(
-			'failRequired' => $failRequired,
+			'failRequired' => $fail_required,
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
 		);
@@ -162,7 +163,7 @@ class AdminInformationControllerCore extends AdminController
 	public function displayAjaxCheckFiles()
 	{
 		$this->file_list = array('missing' => array(), 'updated' => array());
-		$xml = @simplexml_load_file('http://api.prestashop.com/xml/md5/'._PS_VERSION_.'.xml');
+		$xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
 		if (!$xml)
 			die(Tools::jsonEncode($this->file_list));
 

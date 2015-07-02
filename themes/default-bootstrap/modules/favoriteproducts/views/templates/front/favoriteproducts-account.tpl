@@ -51,7 +51,7 @@
                     </p>
                     <div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'html':'UTF-8'}</div>
                     <div class="remove">
-                    	<a href="#" onclick="return false" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}">
+                    	<a href="#" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}">
                     		<i class="icon-remove"></i>
                     	</a>
                     </div>

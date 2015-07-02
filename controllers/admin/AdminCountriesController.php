@@ -24,14 +24,17 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Country $object
+ */
 class AdminCountriesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'country';
+		$this->table = 'country';
 		$this->className = 'Country';
-	 	$this->lang = true;
+		$this->lang = true;
 		$this->deleted = false;
 		$this->_defaultOrderBy = 'name';
 		$this->_defaultOrderWay = 'ASC';
@@ -56,7 +59,7 @@ class AdminCountriesControllerCore extends AdminController
 				'title' =>	$this->l('Country options'),
 				'fields' =>	array(
 					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-						'title' => $this->l('Restrict country selections in Front Office to those covered by active carriers'),
+						'title' => $this->l('Restrict country selections in front office to those covered by active carriers'),
 						'cast' => 'intval',
 						'type' => 'bool',
 						'default' => '0'
@@ -139,11 +142,12 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function renderList()
 	{
-	 	$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_select = 'z.`name` AS zone';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_use_found_rows = false;
 
 		$this->tpl_list_vars['zones'] = Zone::getZones();
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()
@@ -193,7 +197,7 @@ class AdminCountriesControllerCore extends AdminController
 					'class' => 'uppercase',
 					'required' => true,
 					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. "us for United States).')
-					 /* TO DO - ajouter les liens dans le hint ? */
+					/* @TODO - ajouter les liens dans le hint ? */
 					/*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
@@ -364,6 +368,7 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
+		/** @var Country $country */
 		$country = $this->loadObject();
 		if (Validate::isLoadedObject($country) && Tools::getValue('id_zone'))
 		{
@@ -438,8 +443,11 @@ class AdminCountriesControllerCore extends AdminController
 	public function processStatus()
 	{
 		parent::processStatus();
+
+		/** @var Country $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()) && $object->active == 1)
 			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
+
 		return false;
 	}
 

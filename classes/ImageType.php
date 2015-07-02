@@ -31,28 +31,28 @@ class ImageTypeCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var integer Width */
+	/** @var int Width */
 	public $width;
 
-	/** @var integer Height */
+	/** @var int Height */
 	public $height;
 
-	/** @var boolean Apply to products */
+	/** @var bool Apply to products */
 	public $products;
 
-	/** @var integer Apply to categories */
+	/** @var int Apply to categories */
 	public $categories;
 
-	/** @var integer Apply to manufacturers */
+	/** @var int Apply to manufacturers */
 	public $manufacturers;
 
-	/** @var integer Apply to suppliers */
+	/** @var int Apply to suppliers */
 	public $suppliers;
 
-	/** @var integer Apply to scenes */
+	/** @var int Apply to scenes */
 	public $scenes;
 
-	/** @var integer Apply to store */
+	/** @var int Apply to store */
 	public $stores;
 
 	/**
@@ -62,8 +62,8 @@ class ImageTypeCore extends ObjectModel
 		'table' => 'image_type',
 		'primary' => 'id_image_type',
 		'fields' => array(
-			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
-			'width' => 			array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64),
+			'width' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'height' => 		array('type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true),
 			'categories' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'products' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -84,12 +84,14 @@ class ImageTypeCore extends ObjectModel
 	protected $webserviceParameters = array();
 
 	/**
-	* Returns image type definitions
-	*
-	* @param string|null Image type
-	* @return array Image type definitions
-	*/
-	public static function getImagesTypes($type = null)
+	 * Returns image type definitions
+	 *
+	 * @param string|null Image type
+	 * @param bool        $order_by_size
+	 * @return array Image type definitions
+	 * @throws PrestaShopDatabaseException
+	 */
+	public static function getImagesTypes($type = null, $order_by_size = false)
 	{
 		if (!isset(self::$images_types_cache[$type]))
 		{
@@ -97,7 +99,11 @@ class ImageTypeCore extends ObjectModel
 			if (!empty($type))
 				$where .= ' AND `'.bqSQL($type).'` = 1 ';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
+			if ($order_by_size)
+				$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+			else
+				$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
+
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 		return self::$images_types_cache[$type];
@@ -107,17 +113,17 @@ class ImageTypeCore extends ObjectModel
 	* Check if type already is already registered in database
 	*
 	* @param string $typeName Name
-	* @return integer Number of results found
+	* @return int Number of results found
 	*/
-	public static function typeAlreadyExists($typeName)
+	public static function typeAlreadyExists($type_name)
 	{
-		if (!Validate::isImageTypeName($typeName))
+		if (!Validate::isImageTypeName($type_name))
 			die(Tools::displayError());
 
 		Db::getInstance()->executeS('
 			SELECT `id_image_type`
 			FROM `'._DB_PREFIX_.'image_type`
-			WHERE `name` = \''.pSQL($typeName).'\'');
+			WHERE `name` = \''.pSQL($type_name).'\'');
 
 		return Db::getInstance()->NumRows();
 	}
@@ -127,7 +133,7 @@ class ImageTypeCore extends ObjectModel
 	 * @param string $name
 	 * @param string $type
 	 */
-	public static function getByNameNType($name, $type = null, $order = null)
+	public static function getByNameNType($name, $type = null, $order = 0)
 	{
 		static $is_passed = false;
 

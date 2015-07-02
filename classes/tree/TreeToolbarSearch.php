@@ -40,7 +40,10 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
 
 	public function render()
 	{
-		if ($this->hasAttribute('data'))
+		if ($this->hasAttribute('data_search'))
+			$this->setAttribute('typeahead_source',
+				$this->_renderData($this->getAttribute('data_search')));
+		else  if ($this->hasAttribute('data'))
 			$this->setAttribute('typeahead_source',
 				$this->_renderData($this->getAttribute('data')));
 

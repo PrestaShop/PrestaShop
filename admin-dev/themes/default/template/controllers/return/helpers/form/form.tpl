@@ -39,7 +39,7 @@
 	{elseif $input.type == 'pdf_order_return'}
 		<p>
 			{if $state_order_return == 2}
-				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}")|escape:'html':'UTF-8'}">
+				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}&adtoken={Tools::getAdminTokenLite('AdminReturn')}&id_employee={$employee->id|intval}")|escape:'html':'UTF-8'}">
 					<i class="icon-file-text"></i> {l s='Print out'}
 				</a>
 			{else}
@@ -77,7 +77,7 @@
 						<tr>
 							<td colspan="4">
 								<div class="form-horizontal">
-									{if $type == $smarty.const._CUSTOMIZE_FILE_}
+									{if $type == Product::CUSTOMIZE_FILE}
 										{foreach from=$datas item='data'}
 											<div class="form-group">
 												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
@@ -86,9 +86,7 @@
 												</div>
 											</div>
 										{/foreach}
-									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
-
-
+									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
 											{foreach from=$datas item='data'}
 												<div class="form-group">
 													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}</strong></span>

@@ -95,7 +95,7 @@
 							{l s='One after another'}
 						{/if}
 					{elseif $key == 'rate'}
-						{$tr.$key|string_format:"%.2f"}%
+						{$tr.$key|string_format:"%.3f"}%
 					{elseif $key == 'zipcode'}
 						{if $tr.$key == '0 - 0'}
 							--

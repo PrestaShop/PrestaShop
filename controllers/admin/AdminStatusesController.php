@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderState $object
+ */
 class AdminStatusesControllerCore extends AdminController
 {
 	public function __construct()
@@ -62,8 +65,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', range(1, 13));
-
+		$this->addRowActionSkipList('delete', range(1, 14));
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -131,7 +133,7 @@ class AdminStatusesControllerCore extends AdminController
 	protected function initOrdersReturnsList()
 	{
 		$this->table = 'order_return_state';
-		$this->className = 'OrderState';
+		$this->className = 'OrderReturnState';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
 		$this->list_id = 'order_return_state';
 		$this->deleted = false;
@@ -333,7 +335,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'pdf_invoice',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email'), 'val' => '1'),
+							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -344,7 +346,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'pdf_delivery',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email'), 'val' => '1'),
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -531,9 +533,8 @@ class AdminStatusesControllerCore extends AdminController
 
 			$order_return_state->color = Tools::getValue('color');
 			$order_return_state->name = array();
-			$languages = Language::getLanguages(false);
-				foreach ($languages as $language)
-					$order_return_state->name[$language['id_lang']] = Tools::getValue('name_'.$language['id_lang']);
+			foreach (Language::getIDs(false) as $id_lang)
+				$order_return_state->name[$id_lang] = Tools::getValue('name_'.$id_lang);
 
 			// Update object
 			if (!$order_return_state->save())
@@ -576,11 +577,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['pdf_delivery'] = (int)Tools::getValue('pdf_delivery_on');
 			$_POST['pdf_invoice'] = (int)Tools::getValue('pdf_invoice_on');
 			if (!$_POST['send_email'])
-			{
-				$languages = Language::getLanguages(false);
-				foreach ($languages as $language)
-					$_POST['template_'.$language['id_lang']] = '';
-			}
+				foreach (Language::getIDs(false) as $id_lang)
+					$_POST['template_'.$id_lang] = '';
 
 			return parent::postProcess();
 		}

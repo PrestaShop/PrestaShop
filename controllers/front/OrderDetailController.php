@@ -85,7 +85,12 @@ class OrderDetailControllerCore extends FrontController
 						$ct->add();
 					}
 					else
+					{
 						$ct = new CustomerThread((int)$id_customer_thread);
+						$ct->status = 'open';
+						$ct->update();
+					}
+					
 					$cm->id_customer_thread = $ct->id;
 					$cm->message = $msgText;
 					$cm->ip_address = (int)ip2long($_SERVER['REMOTE_ADDR']);
@@ -204,7 +209,7 @@ class OrderDetailControllerCore extends FrontController
 					/* DEPRECATED: customizedDatas @since 1.5 */
 					'customizedDatas' => $customizedDatas,
 					/* DEPRECATED: customizedDatas @since 1.5 */
-					'reorderingAllowed' => !(int)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
+					'reorderingAllowed' => !(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
 				));
 
 				if ($carrier->url && $order->shipping_number)

@@ -106,10 +106,10 @@
 		{elseif $key == 'allcheckbox'}
 			<div id="data_list" {if !$checked}display:none{/if}>
 				<label class="control-label col-lg-3">{$field.label}</label>
-				<div class="col-lg-9">					
+				<div class="col-lg-9">
 				{foreach $field.values as $key => $label}
 					<p class="checkbox"><input type="checkbox" name="importData[{$key}]" checked="checked" /> {$label}</p>
-				{/foreach}					
+				{/foreach}
 				</div>
 			</div>
 		{elseif $key == 'submit'}
@@ -117,7 +117,7 @@
 				<input type="submit" value="{$field.title}" name="submitAdd{$table}" class="btn btn-default{if isset($field.class)} {$field.class}{/if}" />
 			</div>
 		{/if}
-		</div>			
+		</div>
 		{/foreach}
 		<div class="panel-footer">
 			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
@@ -142,7 +142,7 @@
 			{
 				$('input[name^="importData["]').prop('checked', true);
 				$('#shop_list, #data_list').slideDown('slow');
-			}	
+			}
 			else
 			{
 				$('input[name^="importData["]').prop('checked', false);

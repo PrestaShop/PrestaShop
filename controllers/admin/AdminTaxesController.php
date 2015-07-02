@@ -24,17 +24,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tax $object
+ */
 class AdminTaxesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'tax';
-	 	$this->className = 'Tax';
-	 	$this->lang = true;
+		$this->table = 'tax';
+		$this->className = 'Tax';
+		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -105,7 +108,7 @@ class AdminTaxesControllerCore extends AdminController
 				);
 
 		parent::__construct();
-		
+
 		$this->_where .= ' AND a.deleted = 0';
 	}
 
@@ -123,6 +126,13 @@ class AdminTaxesControllerCore extends AdminController
 
 	/**
 	 * Display delete action link
+	 *
+	 * @param string|null $token
+	 * @param int         $id
+	 *
+	 * @return string
+	 * @throws Exception
+	 * @throws SmartyException
 	 */
 	public function displayDeleteLink($token = null, $id)
 	{
@@ -225,7 +235,7 @@ class AdminTaxesControllerCore extends AdminController
 	{
 		if ($this->action == 'save')
 		{
-		 	/* Checking fields validity */
+			/* Checking fields validity */
 			$this->validateRules();
 			if (!count($this->errors))
 			{
@@ -234,6 +244,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object update */
 				if (isset($id) && !empty($id))
 				{
+					/** @var Tax $object */
 					$object = new $this->className($id);
 					if (Validate::isLoadedObject($object))
 					{
@@ -252,6 +263,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object creation */
 				else
 				{
+					/** @var Tax $object */
 					$object = new $this->className();
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())
@@ -279,4 +291,3 @@ class AdminTaxesControllerCore extends AdminController
 		}
 	}
 }
-

@@ -45,15 +45,15 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3">
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Invalid characters:'} <>;=#{}">
+					title="{l s='Update all captions at once, or select the position of the image whose caption you wish to edit. Invalid characters: %s' sprintf=['<>;=#{}']}">
 					{l s='Caption'}
 				</span>
 			</label>
-			<div class="col-lg-9">
+			<div class="col-lg-4">
 			{foreach from=$languages item=language}
 				{if $languages|count > 1}
 				<div class="translatable-field row lang-{$language.id_lang}">
-					<div class="col-lg-6">
+					<div class="col-lg-8">
 				{/if}
 						<input type="text" id="legend_{$language.id_lang}"{if isset($input_class)} class="{$input_class}"{/if} name="legend_{$language.id_lang}" value="{if $images|count}{$images[0]->legend[$language.id_lang]|escape:'html':'UTF-8'}{else}{$product->name[$language.id_lang]|escape:'html':'UTF-8'}{/if}"{if !$product->id} disabled="disabled"{/if}/>
 				{if $languages|count > 1}
@@ -74,6 +74,19 @@
 				</div>
 				{/if}
 			{/foreach}
+			</div>
+			<div class="col-lg-2{if $images|count <= 1} hidden{/if}" id="caption_selection">
+				<select name="id_caption">
+					<option value="0">{l s='All captions'}</option>
+					{foreach from=$images item=image}
+					<option value="{$image->id_image|intval}">
+						{l s='Position %d' sprintf=$image->position|intval}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-2">
+				<button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update'}</button>
 			</div>
 		</div>
 	</div>
@@ -139,7 +152,7 @@
 		</tr>
 	</table>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
@@ -244,6 +257,9 @@
 					$("#countImage").html(parseInt($("#countImage").html()) - 1);
 					refreshImagePositions($("#imageTable"));
 					showSuccessMessage(data.confirmations);
+
+					if (parseInt($("#countImage").html()) <= 1)
+						$('#caption_selection').addClass('hidden');
 				}
 			}
 

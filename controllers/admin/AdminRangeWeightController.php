@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RangeWeight $object
+ */
 class AdminRangeWeightControllerCore extends AdminController
 {
 	public function __construct()
@@ -46,6 +49,7 @@ class AdminRangeWeightControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';
 		$this->_where = 'AND ca.`deleted` = 0';
+		$this->_use_found_rows = false;
 
 		parent::__construct();
 	}
@@ -120,7 +124,7 @@ class AdminRangeWeightControllerCore extends AdminController
 		if ($this->_list && is_array($this->_list))
 			foreach ($this->_list as $key => $list)
 				if ($list['carrier_name'] == '0')
-					$this->_list[$key]['carrier_name'] = Configuration::get('PS_SHOP_NAME');
+					$this->_list[$key]['carrier_name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function postProcess()

@@ -37,7 +37,7 @@ $(document).ready(function(){
 		if (markerNum !== 'none')
 		google.maps.event.trigger(markers[markerNum], 'click');
 	};
-	
+
 	$('#addressInput').keypress(function(e) {
 		code = e.keyCode ? e.keyCode : e.which;
 		if(code.toString() === 13)
@@ -119,7 +119,7 @@ function clearLocations(n)
 	infoWindow.close();
 	for (var i = 0; i < markers.length; i++)
 		markers[i].setMap(null);
-		
+
 	markers.length = 0;
 
 	locationSelect.innerHTML = '';
@@ -133,9 +133,12 @@ function clearLocations(n)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
-	} 
+	}
 	locationSelect.appendChild(option);
-	$("select#locationSelect").uniform();
+
+	if (!!$.prototype.uniform)
+		$("select#locationSelect").uniform();
+
 	$('#stores-table tr.node').remove();
 }
 
@@ -176,9 +179,9 @@ function searchLocationsNear(center)
 		if (markerNodes.length)
 		{
 			map.fitBounds(bounds);
-			var listener = google.maps.event.addListener(map, "idle", function() { 
+			var listener = google.maps.event.addListener(map, "idle", function() {
 				if (map.getZoom() > 13) map.setZoom(13);
-				google.maps.event.removeListener(listener); 
+				google.maps.event.removeListener(listener);
 			});
 		}
 		locationSelect.style.visibility = 'visible';

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Category $object
+ */
 class AdminCategoriesControllerCore extends AdminController
 {
 	/**
@@ -32,10 +35,10 @@ class AdminCategoriesControllerCore extends AdminController
 	protected $_category = null;
 	protected $position_identifier = 'id_category_to_move';
 
-	/** @var boolean does the product have to be removed during the delete process */
+	/** @var bool does the product have to be removed during the delete process */
 	public $remove_products = true;
 
-	/** @var boolean does the product have to be disable during the delete process */
+	/** @var bool does the product have to be disable during the delete process */
 	public $disable_products = false;
 
 	private $original_filter = '';
@@ -137,6 +140,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 		$this->_select = 'sa.position position';
 		$this->original_filter = $this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+		$this->_use_found_rows = false;
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
@@ -210,7 +214,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
@@ -268,10 +272,12 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
-				'desc' => $this->l('Import')
-			);
+
+			if ($this->can_import)
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
+					'desc' => $this->l('Import')
+				);
 		}
 		// be able to edit the Home category
 		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
@@ -407,8 +413,11 @@ class AdminCategoriesControllerCore extends AdminController
 	public function renderForm()
 	{
 		$this->initToolbar();
+
+		/** @var Category $obj */
 		$obj = $this->loadObject(true);
-		$id_shop = Context::getContext()->shop->id;
+        $context = Context::getContext();
+		$id_shop = $context->shop->id;
 		$selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
@@ -468,7 +477,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'tree'  => array(
 						'id'                  => 'categories-tree',
 						'selected_categories' => $selected_categories,
-						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null
+						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null,
+                        'root_category'       => $context->shop->getCategory()
 					)
 				),
 				array(
@@ -704,6 +714,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if ($this->tabAccess['delete'] === '1')
 		{
+			/** @var Category $category */
 			$category = $this->loadObject();
 			if ($category->isRootCategoryForAShop())
 				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
@@ -725,7 +736,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$fatherless_products = Db::getInstance()->executeS('
 			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			WHERE p.`id_product` NOT IN (SELECT DISTINCT(cp.`id_product`) FROM `'._DB_PREFIX_.'category_product` cp)');
+			WHERE NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
 		foreach ($fatherless_products as $id_poor_product)
 		{
@@ -765,6 +776,8 @@ class AdminCategoriesControllerCore extends AdminController
 	protected function postImage($id)
 	{
 		$ret = parent::postImage($id);
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		if (($id_category = (int)Tools::getValue('id_category')) &&
 			isset($_FILES) && count($_FILES) && $_FILES['image']['name'] != null &&
 			file_exists(_PS_CAT_IMG_DIR_.$id_category.'.jpg'))
@@ -777,6 +790,13 @@ class AdminCategoriesControllerCore extends AdminController
 					_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.jpg',
 					(int)$image_type['width'], (int)$image_type['height']
 				);
+
+				if ($generate_hight_dpi_images)
+					ImageManager::resize(
+						_PS_CAT_IMG_DIR_.$id_category.'.jpg',
+						_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'2x.jpg',
+						(int)$image_type['width']*2, (int)$image_type['height']*2
+					);
 			}
 		}
 
@@ -790,10 +810,11 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function ajaxProcessUpdatePositions()
 	{
-		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
-		$id_category_parent = (int)(Tools::getValue('id_category_parent'));
-		$way = (int)(Tools::getValue('way'));
+		$id_category_to_move = (int)Tools::getValue('id_category_to_move');
+		$id_category_parent = (int)Tools::getValue('id_category_parent');
+		$way = (int)Tools::getValue('way');
 		$positions = Tools::getValue('category');
+		$found_first = (bool)Tools::getValue('found_first');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
 			{
@@ -811,6 +832,11 @@ class AdminCategoriesControllerCore extends AdminController
 			if (isset($position) && $category->updatePosition($way, $position))
 			{
 				Hook::exec('actionCategoryUpdate');
+
+				/* Position '0' was not found in given positions so try to reorder parent category*/
+				if (!$found_first)
+					$category->cleanPositions((int)$category->id_parent);
+
 				die(true);
 			}
 			else

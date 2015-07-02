@@ -105,9 +105,10 @@ a.fancybox-nav {
 	margin-top: 10px;
 	@media (max-width: $screen-xs-max) { //max 767px
 		width: 280px;
-		margin-left: 10px auto 0px auto;
+		margin: 10px auto 0px auto;
 	}
 }
+
 #thumbs_list {
 	overflow: hidden;
 	float: left;
@@ -163,13 +164,57 @@ a.fancybox-nav {
 		}
 	}
 }
+
+.show-right-column.hide-left-column, .hide-right-column.show-left-column
+{
+	#thumbs_list {
+		width: 294px;
+		@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
+			width: 194px;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+			width: 82px;
+		}
+		@media (max-width: $screen-xs-max) { //max 767px
+			width: 196px;
+		}
+	}
+}
+
 span.view_scroll_spacer {
 	float: left;
 	width: 39px;
 	padding-left: 12px;
-	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { //min 768px max 991px
-		padding-left: 6px;
-		width: 28px;
+	@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
+		width: 45px;
+		padding-left: 18px;
+	}
+	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+		width: 30px;
+		padding-left: 3px;
+	}
+	@media (max-width: $screen-xs-max) { //max 767px
+		width: 45px;
+		padding-left: 18px;
+	}
+}
+.show-right-column.hide-left-column, .hide-right-column.show-left-column
+{
+	span.view_scroll_spacer {
+		width: 27px;
+		padding-left: 2px;
+		@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
+			width: 44px;
+			padding-left: 16px;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+			width: 41px;
+			padding-left: 13px;
+		}
+		@media (max-width: $screen-xs-max) { //max 767px
+			width: 45px;
+			padding-left: 14px;
+		}
 	}
 }
 #view_scroll_left,
@@ -859,7 +904,7 @@ table.table-product-discounts{
 }
 #old_price {
 	padding-bottom: 15px;
-	font-size: 17px;
+	font-size: 13px;
 	text-decoration: line-through;
 	display: inline-block;
 	font-family: $font-custom;
@@ -948,7 +993,7 @@ table.table-product-discounts{
 				padding: 0 5px;
 				height: 22px;
 				width: 100%;
-				border: 1px solid base-border-color;
+				border: 1px solid $base-border-color;
 				font-size: 12px;
 				color: #666;
 			}
@@ -1118,9 +1163,6 @@ Quick View Styles
 		div,
 		section {
 			&.primary_block {
-				@media (max-width: $screen-xs - 1)  {  // max 479px
-					margin-left: 0;
-				}
 				div {
 					&.pb-left-column {
 						width: 100%;
@@ -1146,23 +1188,10 @@ Quick View Styles
 						width: 50%;
 						float: left;
 						padding-left: 35px;
-						@media (max-width: $screen-xs - 1)  { // max 479px
-							width: 100%;
-							float: none;
-							padding-left: 15px;
-							@include box-sizing(border-box)
-						}
 					}
 					&.pb-right-column {
 						width: 50%;
 						float: left;
-						@media (max-width: $screen-xs - 1)  {  // max 479px
-							margin-top: 10px;
-							width: 100%;
-							float: none;
-							padding-left: 15px;
-							@include box-sizing(border-box)
-						}
 						.box-info-product {
 							border-top-width: 1px;
 							min-height: 1px;

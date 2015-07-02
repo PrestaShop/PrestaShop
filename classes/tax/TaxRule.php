@@ -26,14 +26,14 @@
 
 class TaxRuleCore extends ObjectModel
 {
-	 public $id_tax_rules_group;
-	 public $id_country;
-	 public $id_state;
-	 public $zipcode_from;
-	 public $zipcode_to;
-	 public $id_tax;
-	 public $behavior;
-	 public $description;
+	public $id_tax_rules_group;
+	public $id_country;
+	public $id_state;
+	public $zipcode_from;
+	public $zipcode_to;
+	public $id_tax;
+	public $behavior;
+	public $description;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -53,31 +53,31 @@ class TaxRuleCore extends ObjectModel
 		),
 	);
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_tax_rules_group' => array('xlink_resource'=> 'tax_rule_groups'),
-            'id_state' => array('xlink_resource'=> 'states'),
-            'id_country' => array('xlink_resource'=> 'countries')
-        ),
-    );
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_tax_rules_group' => array('xlink_resource'=> 'tax_rule_groups'),
+			'id_state' => array('xlink_resource'=> 'states'),
+			'id_country' => array('xlink_resource'=> 'countries')
+		),
+	);
 
-    public static function deleteByGroupId($id_group)
-    {
-        if (empty($id_group))
-            die(Tools::displayError());
+	public static function deleteByGroupId($id_group)
+	{
+		if (empty($id_group))
+			die(Tools::displayError());
 
-        return Db::getInstance()->execute('
-        DELETE FROM `'._DB_PREFIX_.'tax_rule`
-        WHERE `id_tax_rules_group` = '.(int)$id_group
-        );
-    }
+		return Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rules_group` = '.(int)$id_group
+		);
+	}
 
-    public static function retrieveById($id_tax_rule)
-    {
-    	return Db::getInstance()->getRow('
-    	SELECT * FROM `'._DB_PREFIX_.'tax_rule`
-    	WHERE `id_tax_rule` = '.(int)$id_tax_rule);
-    }
+	public static function retrieveById($id_tax_rule)
+	{
+		return Db::getInstance()->getRow('
+			SELECT * FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rule` = '.(int)$id_tax_rule);
+	}
 
 	public static function getTaxRulesByGroupId($id_lang, $id_group)
 	{
@@ -100,14 +100,13 @@ class TaxRuleCore extends ObjectModel
 		);
 	}
 
-    public static function deleteTaxRuleByIdTax($id_tax)
-    {
-        return Db::getInstance()->execute('
-        DELETE FROM `'._DB_PREFIX_.'tax_rule`
-        WHERE `id_tax` = '.(int)$id_tax
-        );
-    }
-
+	public static function deleteTaxRuleByIdTax($id_tax)
+	{
+		return Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax` = '.(int)$id_tax
+		);
+	}
 
 	/**
 	* @deprecated since 1.5
@@ -120,24 +119,25 @@ class TaxRuleCore extends ObjectModel
 
 	/**
 	* @param int $id_tax
-	* @return boolean
+	* @return bool
 	*/
-    public static function isTaxInUse($id_tax)
-    {
+	public static function isTaxInUse($id_tax)
+	{
 		$cache_id = 'TaxRule::isTaxInUse_'.(int)$id_tax;
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
-    }
+	}
 
 
-	 /**
-	  * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
-	  * @return array an array containing two zipcode ordered by zipcode
-	  */
+	/**
+	 * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+	 * @return array an array containing two zipcode ordered by zipcode
+	 */
 	public function breakDownZipCode($zip_codes)
 	{
 		$zip_codes = preg_split('/-/', $zip_codes);
@@ -183,4 +183,3 @@ class TaxRuleCore extends ObjectModel
 		);
 	}
 }
-

@@ -26,13 +26,13 @@
 
 class OrderHistoryCore extends ObjectModel
 {
-	/** @var integer Order id */
+	/** @var int Order id */
 	public $id_order;
 
-	/** @var integer Order status id */
+	/** @var int Order status id */
 	public $id_order_state;
 
-	/** @var integer Employee id for this history entry */
+	/** @var int Employee id for this history entry */
 	public $id_employee;
 
 	/** @var string Object creation date */
@@ -161,7 +161,7 @@ class OrderHistoryCore extends ObjectModel
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				$manager = StockManagerFactory::getManager();
 
-			$errorOrCanceledStatuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
+			$error_or_canceled_statuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 
 			// foreach products of the order
 			if (Validate::isLoadedObject($old_os))
@@ -173,7 +173,7 @@ class OrderHistoryCore extends ObjectModel
 						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							in_array($old_os->id, $errorOrCanceledStatuses) &&
+							in_array($old_os->id, $error_or_canceled_statuses) &&
 							!StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
@@ -184,19 +184,19 @@ class OrderHistoryCore extends ObjectModel
 
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							in_array($new_os->id, $errorOrCanceledStatuses) &&
+							in_array($new_os->id, $error_or_canceled_statuses) &&
 							!StockAvailable::dependsOnStock($product['id_product']))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					}
 					// if waiting for payment => payment error/canceled
 					elseif (!$new_os->logable && !$old_os->logable &&
-							 in_array($new_os->id, $errorOrCanceledStatuses) &&
-							 !in_array($old_os->id, $errorOrCanceledStatuses) &&
-							 !StockAvailable::dependsOnStock($product['id_product']))
-							 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+							in_array($new_os->id, $error_or_canceled_statuses) &&
+							!in_array($old_os->id, $error_or_canceled_statuses) &&
+							!StockAvailable::dependsOnStock($product['id_product']))
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 
-					if ((int)$this->id_employee)
-						$this->id_employee = Validate::isLoadedObject(new Employee((int)$this->id_employee)) ? $this->id_employee : 0;
+					if ((int)$this->id_employee && !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee))))
+						$employee = null;
 
 					// @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
 					// decrements the physical stock using $id_warehouse
@@ -214,20 +214,20 @@ class OrderHistoryCore extends ObjectModel
 							$product['product_id'],
 							$product['product_attribute_id'],
 							$warehouse,
-							$product['product_quantity'],
+							($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
 							Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
 							true,
 							(int)$order->id,
 							0,
-							(int)$this->id_employee
+							$employee
 						);
 					}
 					// @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
 					elseif ($new_os->shipped == 0 && $old_os->shipped == 1 &&
-							 Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-							 Warehouse::exists($product['id_warehouse']) &&
-							 $manager != null &&
-							 (int)$product['advanced_stock_management'] == 1)
+							Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
+							Warehouse::exists($product['id_warehouse']) &&
+							$manager != null &&
+							(int)$product['advanced_stock_management'] == 1)
 					{
 						// if the product is a pack, we restock every products in the pack using the last negative stock mvts
 						if (Pack::isPack($product['product_id']))
@@ -248,7 +248,7 @@ class OrderHistoryCore extends ObjectModel
 											null,
 											$mvt['price_te'],
 											true,
-											(int)$this->id_employee
+											$employee
 										);
 									}
 									if (!StockAvailable::dependsOnStock($product['id_product']))
@@ -259,7 +259,10 @@ class OrderHistoryCore extends ObjectModel
 						// else, it's not a pack, re-stock using the last negative stock mvts
 						else
 						{
-							$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
+							$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
+								$product['product_attribute_id'],
+								($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
+
 							foreach ($mvts as $mvt)
 							{
 								$manager->addProduct(
@@ -302,6 +305,7 @@ class OrderHistoryCore extends ObjectModel
 
 			foreach ($invoices as $invoice)
 			{
+				/** @var OrderInvoice $invoice */
 				$rest_paid = $invoice->getRestPaid();
 				if ($rest_paid > 0)
 				{
@@ -380,6 +384,14 @@ class OrderHistoryCore extends ObjectModel
 		if (!$this->add($autodate))
 			return false;
 
+		if (!$this->sendEmail($order, $template_vars))
+			return false;
+
+		return true;
+	}
+
+	public function sendEmail($order, $template_vars = false)
+	{
 		$result = Db::getInstance()->getRow('
 			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
 			FROM `'._DB_PREFIX_.'order_history` oh
@@ -423,6 +435,7 @@ class OrderHistoryCore extends ObjectModel
 
 					if ($result['pdf_invoice'] && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
 					{
+						Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $invoice));
 						$pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
 						$file_attachement['invoice']['content'] = $pdf->render(false);
 						$file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
@@ -432,15 +445,16 @@ class OrderHistoryCore extends ObjectModel
 					{
 						$pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
 						$file_attachement['delivery']['content'] = $pdf->render(false);
-						$file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->delivery_number).'.pdf';
+						$file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop).sprintf('%06d', $order->delivery_number).'.pdf';
 						$file_attachement['delivery']['mime'] = 'application/pdf';
 					}
 				}
 				else
 					$file_attachement = null;
 
-				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+				if(!Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
+					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop))
+					return false;
 			}
 
 			ShopUrl::resetMainDomainCache();
@@ -477,29 +491,29 @@ class OrderHistoryCore extends ObjectModel
 		AND os.`logable` = 1');
 	}
 
-    /**
-     * Add method for webservice create resource Order History
-     * If sendemail=1 GET parameter is present sends email to customer otherwise does not
-     * @return bool
-     */
+	/**
+	 * Add method for webservice create resource Order History
+	 * If sendemail=1 GET parameter is present sends email to customer otherwise does not
+	 * @return bool
+	 */
 	public function addWs()
 	{
-	    $sendemail = (bool)Tools::getValue('sendemail', false);
-	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
+		$sendemail = (bool)Tools::getValue('sendemail', false);
+		$this->changeIdOrderState($this->id_order_state, $this->id_order);
 
-	    if ($sendemail)
-	    {
-	        //Mail::Send requires link object on context and is not set when getting here
-	        $context = Context::getContext();
-	        if ($context->link == null)
-	        {
-	            $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $context->link = new Link($protocol_link, $protocol_content);
-	        }
-	        return $this->addWithemail();
-	    }
+		if ($sendemail)
+		{
+			//Mail::Send requires link object on context and is not set when getting here
+			$context = Context::getContext();
+			if ($context->link == null)
+			{
+				$protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$context->link = new Link($protocol_link, $protocol_content);
+			}
+			return $this->addWithemail();
+		}
 		else
-	        return $this->add();
+			return $this->add();
 	}
 }

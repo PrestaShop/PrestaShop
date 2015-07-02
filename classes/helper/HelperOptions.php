@@ -40,7 +40,7 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Generate a form for options
-	 * @param array options
+	 * @param array $option_list
 	 * @return string html
 	 */
 	public function generateOptions($option_list)
@@ -81,19 +81,19 @@ class HelperOptionsCore extends Helper
 					$field['value'] = $this->getOptionValue($key, $field);
 
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
-				$isDisabled = $isInvisible = false;
+				$is_disabled = $is_invisible = false;
 				if (Shop::isFeatureActive())
 				{
 					if (isset($field['visibility']) && $field['visibility'] > Shop::getContext())
 					{
-						$isDisabled = true;
-						$isInvisible = true;
+						$is_disabled = true;
+						$is_invisible = true;
 					}
 					elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
-						$isDisabled = true;
+						$is_disabled = true;
 				}
-				$field['is_disabled'] = $isDisabled;
-				$field['is_invisible'] = $isInvisible;
+				$field['is_disabled'] = $is_disabled;
+				$field['is_invisible'] = $is_invisible;
 
 				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
@@ -115,7 +115,7 @@ class HelperOptionsCore extends Helper
 
 					if (isset($field['files']) && $field['files'])
 						$uploader->setFiles($field['files']);
-					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,
@@ -124,7 +124,7 @@ class HelperOptionsCore extends Helper
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
 						)));
 
-					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_FILE,
@@ -133,7 +133,7 @@ class HelperOptionsCore extends Helper
 							'download_url' => isset($field['file'])?$field['file']:null
 						)));
 
-					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,
@@ -185,7 +185,7 @@ class HelperOptionsCore extends Helper
 
 				// Multishop default value
 				$field['multishop_default'] = false;
-				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible)
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$is_invisible)
 				{
 					$field['multishop_default'] = true;
 					$use_multishop = true;

@@ -54,7 +54,8 @@ class WarehouseCore extends ObjectModel
 
 	/**
 	 * Describes the way a Warehouse is managed
-	 * @var enum WA|LIFO|FIFO
+	 *
+	 * @var string enum WA|LIFO|FIFO
 	 */
 	public $management_type;
 
@@ -78,15 +79,15 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_address' => array('xlink_resource' => 'addresses'),
- 			'id_employee' => array('xlink_resource' => 'employees'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
- 			'deleted' => array(),
- 		),
- 		'associations' => array(
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_address' => array('xlink_resource' => 'addresses'),
+			'id_employee' => array('xlink_resource' => 'employees'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
+			'deleted' => array(),
+		),
+		'associations' => array(
 			'stocks' => array(
 				'resource' => 'stock',
 				'fields' => array(
@@ -107,7 +108,7 @@ class WarehouseCore extends ObjectModel
 				),
 			),
 		),
- 	);
+	);
 
 	/**
 	 * Gets the shops associated to the current warehouse
@@ -151,7 +152,7 @@ class WarehouseCore extends ObjectModel
 
 		foreach ($res as $carriers)
 			foreach ($carriers as $carrier)
-				$ids_carrier[] = $carrier;
+				$ids_carrier[$carrier] = $carrier;
 
 		return $ids_carrier;
 	}
@@ -291,7 +292,6 @@ class WarehouseCore extends ObjectModel
 	 */
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
-
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
 		$share_stock = false;
 		if ($id_shop === null)
@@ -457,11 +457,11 @@ class WarehouseCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse', 'w');
-		$query->leftJoin('stock', 's', 's.id_warehouse = w.id_warehouse');
+		$query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
 		if ($id_product)
-			$query->where('s.id_product = '.(int)$id_product);
+			$query->where('wpl.id_product = '.(int)$id_product);
 		if ($id_product_attribute)
-			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
+			$query->where('wpl.id_product_attribute = '.(int)$id_product_attribute);
 		$query->orderBy('w.reference ASC');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -506,7 +506,10 @@ class WarehouseCore extends ObjectModel
 
 		// fills $list
 		foreach ($pack_warehouses as $pack_warehouse)
+		{
+			/** @var WarehouseProductLocation $pack_warehouse */
 			$list['pack_warehouses'][] = (int)$pack_warehouse->id_warehouse;
+		}
 
 		// for each products in the pack
 		foreach ($products as $product)

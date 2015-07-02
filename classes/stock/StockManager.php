@@ -42,6 +42,19 @@ class StockManagerCore implements StockManagerInterface
 
 	/**
 	 * @see StockManagerInterface::addProduct()
+	 *
+	 * @param int           $id_product
+	 * @param int           $id_product_attribute
+	 * @param Warehouse     $warehouse
+	 * @param int           $quantity
+	 * @param int           $id_stock_mvt_reason
+	 * @param float         $price_te
+	 * @param bool          $is_usable
+	 * @param int|null      $id_supply_order
+	 * @param Employee|null $employee
+	 *
+	 * @return bool
+	 * @throws PrestaShopException
 	 */
 	public function addProduct($id_product,
 							   $id_product_attribute = 0,
@@ -51,7 +64,8 @@ class StockManagerCore implements StockManagerInterface
 							   $price_te,
 							   $is_usable = true,
 							   $id_supply_order = null,
-							   $id_employee = null)
+							   $employee = null
+							  )
 	{
 		if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product)
 			return false;
@@ -71,9 +85,9 @@ class StockManagerCore implements StockManagerInterface
 			'price_te' => $price_te,
 			'last_wa' => null,
 			'current_wa' => null,
-			'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $id_employee,
-			'employee_firstname' => $context->employee->firstname,
-			'employee_lastname' => $context->employee->lastname,
+			'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
+			'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
+			'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
 			'sign' => 1
 		);
 
@@ -92,6 +106,7 @@ class StockManagerCore implements StockManagerInterface
 				{
 					$stock_exists = true;
 
+					/** @var Stock $stock */
 					// for a warehouse using WA, there is one and only one stock for a given product
 					$stock = $stock_collection->current();
 
@@ -132,6 +147,7 @@ class StockManagerCore implements StockManagerInterface
 				{
 					$stock_exists = true;
 
+					/** @var Stock $stock */
 					// there is one and only one stock for a given product in a warehouse and at the current unit price
 					$stock = $stock_collection->current();
 
@@ -185,6 +201,19 @@ class StockManagerCore implements StockManagerInterface
 
 	/**
 	 * @see StockManagerInterface::removeProduct()
+	 *
+	 * @param int           $id_product
+	 * @param int|null      $id_product_attribute
+	 * @param Warehouse     $warehouse
+	 * @param int           $quantity
+	 * @param int           $id_stock_mvt_reason
+	 * @param bool          $is_usable
+	 * @param int|null      $id_order
+	 * @param int           $ignore_pack
+	 * @param Employee|null $employee
+	 *
+	 * @return array
+	 * @throws PrestaShopException
 	 */
 	public function removeProduct($id_product,
 								  $id_product_attribute = null,
@@ -194,7 +223,7 @@ class StockManagerCore implements StockManagerInterface
 								  $is_usable = true,
 								  $id_order = null,
 								  $ignore_pack = 0,
-								  $id_employee = null)
+								  $employee = null)
 	{
 		$return = array();
 
@@ -218,7 +247,20 @@ class StockManagerCore implements StockManagerInterface
 					// Foreach item
 					foreach ($products_pack as $product_pack)
 						if ($product_pack->advanced_stock_management == 1)
-							$return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+						{
+							$product_warehouses = Warehouse::getProductWarehouseList($product_pack->id);
+							$warehouse_stock_found = false;
+							foreach ($product_warehouses as $product_warehouse)
+								if (!$warehouse_stock_found)
+									if (Warehouse::exists($product_warehouse['id_warehouse']))
+									{
+										$current_warehouse = new Warehouse($product_warehouse['id_warehouse']);
+										$return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $current_warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+
+										// The product was found on this warehouse. Stop the stock searching.
+										$warehouse_stock_found = !empty($return[count($return) - 1]);
+									}
+						}
 				}
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
 					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
@@ -261,6 +303,7 @@ class StockManagerCore implements StockManagerInterface
 			{
 				// case CUMP mode
 				case 'WA':
+					/** @var Stock $stock */
 					// There is one and only one stock for a given product in a warehouse in this mode
 					$stock = $stock_collection->current();
 
@@ -272,9 +315,9 @@ class StockManagerCore implements StockManagerInterface
 						'price_te' => $stock->price_te,
 						'last_wa' => $stock->price_te,
 						'current_wa' => $stock->price_te,
-						'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : (int)$id_employee,
-						'employee_firstname' => $context->employee->firstname,
-						'employee_lastname' => $context->employee->lastname,
+						'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
+						'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
+						'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
 						'sign' => -1
 					);
 					$stock_params = array(
@@ -303,6 +346,7 @@ class StockManagerCore implements StockManagerInterface
 					// according to the instant available quantities for this stock
 					foreach ($stock_collection as $stock)
 					{
+						/** @var Stock $stock */
 						$left_quantity_to_check = $stock->physical_quantity;
 						if ($left_quantity_to_check <= 0)
 							continue;
@@ -388,7 +432,7 @@ class StockManagerCore implements StockManagerInterface
 									'price_te' => $stock->price_te,
 									'sign' => -1,
 									'referer' => $id_mvt_referrer,
-									'id_employee' => $context->employee->id
+									'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
 								);
 
 								// saves stock mvt
@@ -419,11 +463,11 @@ class StockManagerCore implements StockManagerInterface
 		// if we remove a usable quantity, exec hook
 		if ($is_usable)
 			Hook::exec('actionProductCoverage',
-					   	array(
-					   		'id_product' => $id_product,
-		   					'id_product_attribute' => $id_product_attribute,
-		   					'warehouse' => $warehouse
-					   	)
+					array(
+						'id_product' => $id_product,
+						'id_product_attribute' => $id_product_attribute,
+						'warehouse' => $warehouse
+					)
 			);
 
 		return $return;
@@ -509,7 +553,6 @@ class StockManagerCore implements StockManagerInterface
 				}
 			}
 		}
-
 
 		// skip if product is a pack without
 		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
@@ -651,7 +694,7 @@ class StockManagerCore implements StockManagerInterface
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				WHERE sm.`sign` = -1
 				AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
-				AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
+				AND TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
 				AND s.`id_product` = '.(int)$id_product.'
 				AND s.`id_product_attribute` = '.(int)$id_product_attribute.
 				($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'

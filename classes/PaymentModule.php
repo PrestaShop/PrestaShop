@@ -26,7 +26,7 @@
 
 abstract class PaymentModuleCore extends Module
 {
-	/** @var integer Current order's id */
+	/** @var int Current order's id */
 	public	$currentOrder;
 	public	$currencies = true;
 	public	$currencies_mode = 'checkbox';
@@ -135,8 +135,8 @@ abstract class PaymentModuleCore extends Module
 	 * Validate an order in database
 	 * Function called from a payment module
 	 *
-	 * @param integer $id_cart
-	 * @param integer $id_order_state
+	 * @param int $id_cart
+	 * @param int $id_order_state
 	 * @param float   $amount_paid    Amount really paid by customer (in the default currency)
 	 * @param string  $payment_method Payment method (eg. 'Credit card')
 	 * @param null    $message        Message to attach to order
@@ -246,7 +246,7 @@ abstract class PaymentModuleCore extends Module
 						else
 						{
 							$rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
-							$error = Tools::displayError(sprintf('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart', (int)$rule->id, $rule_name));
+							$error = sprintf(Tools::displayError('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart'), (int)$rule->id, $rule_name);
 							PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
 						}
 					}
@@ -256,6 +256,7 @@ abstract class PaymentModuleCore extends Module
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
 				{
+					/** @var Order $order */
 					$order = new Order();
 					$order->product_list = $package['product_list'];
 
@@ -304,7 +305,6 @@ abstract class PaymentModuleCore extends Module
 
 					$order->total_products = (float)$this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
 					$order->total_products_wt = (float)$this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
-
 					$order->total_discounts_tax_excl = (float)abs($this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
 					$order->total_discounts_tax_incl = (float)abs($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
 					$order->total_discounts = $order->total_discounts_tax_incl;
@@ -324,6 +324,7 @@ abstract class PaymentModuleCore extends Module
 					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
 					$order->total_paid = $order->total_paid_tax_incl;
 					$order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
+					$order->round_type = Configuration::get('PS_ROUND_TYPE');
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
@@ -391,7 +392,7 @@ abstract class PaymentModuleCore extends Module
 			{
 				// $order is the last order loop in the foreach
 				// The method addOrderPayment of the class Order make a create a paymentOrder
-				//     linked to the order reference and not to the order id
+				// linked to the order reference and not to the order id
 				if (isset($extra_vars['transaction_id']))
 					$transaction_id = $extra_vars['transaction_id'];
 				else
@@ -409,10 +410,12 @@ abstract class PaymentModuleCore extends Module
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
 
-			// Make sure CarRule caches are empty
+			// Make sure CartRule caches are empty
 			CartRule::cleanCache();
 			foreach ($order_detail_list as $key => $order_detail)
 			{
+				/** @var OrderDetail $order_detail */
+
 				$order = $order_list[$key];
 				if (!$order_creation_failed && isset($order->id))
 				{
@@ -428,6 +431,8 @@ abstract class PaymentModuleCore extends Module
 							if (self::DEBUG_MODE)
 								PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 							$msg->message = $message;
+							$msg->id_cart = (int)$id_cart;
+							$msg->id_customer = intval($order->id_customer);
 							$msg->id_order = intval($order->id);
 							$msg->private = 1;
 							$msg->add();
@@ -514,12 +519,12 @@ abstract class PaymentModuleCore extends Module
 							continue;
 
 						// IF
-						//     This is not multi-shipping
-						//     The value of the voucher is greater than the total of the order
-						//     Partial use is allowed
-						//     This is an "amount" reduction, not a reduction in % or a gift
+						//	This is not multi-shipping
+						//	The value of the voucher is greater than the total of the order
+						//	Partial use is allowed
+						//	This is an "amount" reduction, not a reduction in % or a gift
 						// THEN
-						//     The voucher is cloned with a new value corresponding to the remainder
+						//	The voucher is cloned with a new value corresponding to the remainder
 						if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
 						{
 							// Create a new voucher from the original
@@ -542,7 +547,7 @@ abstract class PaymentModuleCore extends Module
 							}
 							else
 							{
-								$voucher->reduction_amount =  ($total_reduction_value_tex + $values['tax_excl']) - $order->total_products;
+								$voucher->reduction_amount = ($total_reduction_value_tex + $values['tax_excl']) - $order->total_products;
 
 								// Add total shipping amout only if reduction amount > total shipping
 								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl)
@@ -551,7 +556,11 @@ abstract class PaymentModuleCore extends Module
 							if ($voucher->reduction_amount <= 0)
 								continue;
 
-							$voucher->id_customer = $order->id_customer;
+							if ($this->context->customer->isGuest())
+								$voucher->id_customer = 0;
+							else
+								$voucher->id_customer = $order->id_customer;
+
 							$voucher->quantity = 1;
 							$voucher->quantity_per_user = 1;
 							$voucher->free_shipping = 0;
@@ -735,7 +744,7 @@ abstract class PaymentModuleCore extends Module
 						'{discounts}' => $cart_rules_list_html,
 						'{discounts_txt}' => $cart_rules_list_txt,
 						'{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
-						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $this->context->currency, false),
+						'{total_products}' => Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
 						'{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
 						'{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
@@ -747,7 +756,9 @@ abstract class PaymentModuleCore extends Module
 						// Join PDF invoice
 						if ((int)Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number)
 						{
-							$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $this->context->smarty);
+							$order_invoice_list = $order->getInvoicesCollection();
+							Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
+							$pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
 							$file_attachement['content'] = $pdf->render(false);
 							$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
 							$file_attachement['mime'] = 'application/pdf';
@@ -787,6 +798,8 @@ abstract class PaymentModuleCore extends Module
 							}
 						}
 					}
+
+					$order->updateOrderDetailTax();
 				}
 				else
 				{
@@ -795,13 +808,6 @@ abstract class PaymentModuleCore extends Module
 					die($error);
 				}
 			} // End foreach $order_detail_list
-
-			// Update Order Details Tax in case cart rules have free shipping
-			foreach ($order->getOrderDetailList() as $detail)
-			{
-				$order_detail = new OrderDetail($detail['id_order_detail']);
-					$order_detail->updateTaxAmount($order);
-			}
 
 			// Use the last order as currentOrder
 			if (isset($order) && $order->id)
@@ -820,6 +826,11 @@ abstract class PaymentModuleCore extends Module
 		}
 	}
 
+	/**
+	 * @deprecated 1.6.0.7
+	 * @param mixed $content
+	 * @return mixed
+	 */
 	public function formatProductAndVoucherForEmail($content)
 	{
 		Tools::displayAsDeprecated();
@@ -898,7 +909,7 @@ abstract class PaymentModuleCore extends Module
 	 * @since 1.4.5
 	 * @param int $id_currency
 	 * @param array $id_module_list
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function addCurrencyPermissions($id_currency, array $id_module_list = array())
 	{
@@ -941,7 +952,7 @@ abstract class PaymentModuleCore extends Module
 		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
-		. Shop::addSqlRestriction(false, 'hm').'
+		.Shop::addSqlRestriction(false, 'hm').'
 		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
 		WHERE h.`name` = \''.pSQL($hook_payment).'\'');
@@ -953,8 +964,11 @@ abstract class PaymentModuleCore extends Module
 			return false;
 
 		if (($module_instance = Module::getInstanceByName($module_name)))
+		{
+			/** @var PaymentModule $module_instance */
 			if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id))))
 				return true;
+		}
 
 		return false;
 	}
@@ -963,7 +977,7 @@ abstract class PaymentModuleCore extends Module
 	 * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
 	 *
 	 * @param string  $template_name template name with extension
-	 * @param integer $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
+	 * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
 	 * @param array   $var           list send to smarty
 	 *
 	 * @return string

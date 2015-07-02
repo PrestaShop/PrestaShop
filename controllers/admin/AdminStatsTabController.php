@@ -186,7 +186,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				FROM `'._DB_PREFIX_.'module` m
 				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-				WHERE h.`name` LIKE \'displayAdminStatsModules\'
+				WHERE h.`name` = \'displayAdminStatsModules\'
 					AND m.`active` = 1
 				GROUP BY hm.id_module
 				ORDER BY hm.`position`';

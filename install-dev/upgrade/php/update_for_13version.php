@@ -36,21 +36,21 @@ function update_for_13version()
 	// Disable Canonical redirection
 
 	$res = true;
-	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_FORCE_SMARTY_2\'');
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_FORCE_SMARTY_2\'');
 	if ($exist)
-		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` LIKE \'PS_FORCE_SMARTY_2\'');
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` = \'PS_FORCE_SMARTY_2\'');
 	else
 		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_FORCE_SMARTY_2", "1")');
 
-	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_REWRITING_SETTINGS\'');
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_REWRITING_SETTINGS\'');
 	if ($exist)
-		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` LIKE \'PS_REWRITING_SETTINGS\'');
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` = \'PS_REWRITING_SETTINGS\'');
 	else
 		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_REWRITING_SETTINGS", "0")');
 
-	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_CANONICAL_REDIRECT\'');
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_CANONICAL_REDIRECT\'');
 	if ($exist)
-		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` LIKE \'PS_CANONICAL_REDIRECT\'');
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` = \'PS_CANONICAL_REDIRECT\'');
 	else
 		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_CANONICAL_REDIRECT", "0")');
 

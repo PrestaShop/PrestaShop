@@ -66,12 +66,12 @@ class SpecificPriceRuleCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'specific_price_rules',
 		'objectNodeName' => 'specific_price_rule',
-	        'fields' => array(
+		'fields' => array(
 			'id_shop' => 				array('xlink_resource' => 'shops', 'required' => true),
 			'id_country' => 			array('xlink_resource' => 'countries', 'required' => true),
 			'id_currency' => 			array('xlink_resource' => 'currencies', 'required' => true),
 			'id_group' => 				array('xlink_resource' => 'groups', 'required' => true),
-	      	),
+		),
 	);
 
 	public function delete()
@@ -93,7 +93,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
 			}
 	}
-	
+
 	public static function disableAnyApplication()
 	{
 		SpecificPriceRule::$rules_application_enable = false;
@@ -148,7 +148,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @param array $products
+	 * @param array|bool $products
 	 */
 	public static function applyAllRules($products = false)
 	{
@@ -157,7 +157,10 @@ class SpecificPriceRuleCore extends ObjectModel
 
 		$rules = new PrestaShopCollection('SpecificPriceRule');
 		foreach ($rules as $rule)
+		{
+			/** @var SpecificPriceRule $rule */
 			$rule->apply($products);
+		}
 	}
 
 	public function getConditions()
@@ -188,103 +191,98 @@ class SpecificPriceRuleCore extends ObjectModel
 		return $conditions_group;
 	}
 
+	/**
+	 * Return the product list affected by this specific rule.
+	 *
+	 * @param bool|array $products Products list limitation.
+	 * @return array Affected products list IDs.
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function getAffectedProducts($products = false)
 	{
 		$conditions_group = $this->getConditions();
+		$current_shop_id = Context::getContext()->shop->id;
 
-		$query = new DbQuery();
-		$query->select('p.id_product');
-		$query->from('product', 'p');
-		$query->join(Shop::addSqlAssociation('product', 'p'));
-		$query->groupBy('p.id_product');
-
-		$attributes = false;
-		$categories = false;
-		$features = false;
-		$suppliers = false;
-		$where = '1';
+		$result = array();
 
 		if ($conditions_group)
 		{
-			$where .= ' AND ((';
 			foreach ($conditions_group as $id_condition_group => $condition_group)
 			{
-				$fields = array(
-					'category' => array(
-						'name' => 'cp.id_category',
-						'values' => array()
-					),
-					'manufacturer' => array(
-						'name' => 'p.id_manufacturer',
-						'values' => array(),
-					),
-					'supplier' => array(
-						'name' => 'pss.id_supplier',
-						'values' => array()
-					),
-					'feature' => array(
-						'name' => 'fp.id_feature_value',
-						'values' => array()
-					),
-					'attribute' => array(
-						'name'=> 'pac.id_attribute',
-						'values' => array()
-					)
-				);
-				
-				foreach ($condition_group as $condition)
-				{
-					if ($condition['type'] == 'category')
-						$categories = true;
-					elseif ($condition['type'] == 'feature')
-						$features = true;
-					elseif ($condition['type'] == 'attribute')
-						$attributes = true;
-					elseif ($condition['type'] == 'supplier')
-						$suppliers = true;
-						
-					$fields[$condition['type']]['values'][] = $condition['value'];
-				}
-				
-				foreach ($fields as $field)
-				{
-					if (!$n_conditions = count($field['values']))
-						continue;
+				// Base request
+				$query = new DbQuery();
+				$query->select('p.`id_product`')
+					->from('product', 'p')
+					->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
+					->where('ps.id_shop = '.(int)$current_shop_id);
 
-					$where .= $field['name'].' IN ('.implode(',', array_map('intval', $field['values'])).') AND ';
-					if ($n_conditions > 1)
-						$query->having('COUNT('.bqSQL($field['name']).') >='.(int)$n_conditions);
+				$attributes_join_added = false;
+
+				// Add the conditions
+				foreach ($condition_group as $id_condition => $condition)
+				{
+					if ($condition['type'] == 'attribute')
+					{
+						if (!$attributes_join_added)
+						{
+							$query->select('pa.`id_product_attribute`')
+								->leftJoin('product_attribute', 'pa', 'p.`id_product` = pa.`id_product`')
+								->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
+
+							$attributes_join_added = true;
+						}
+
+						$query->leftJoin('product_attribute_combination', 'pac'.(int)$id_condition, 'pa.`id_product_attribute` = pac'.(int)$id_condition.'.`id_product_attribute`')
+							->where('pac'.(int)$id_condition.'.`id_attribute` = '.(int)$condition['value']);
+					}
+					elseif ($condition['type'] == 'manufacturer')
+						$query->where('p.id_manufacturer = '.(int)$condition['value']);
+					elseif ($condition['type'] == 'category')
+						$query->leftJoin('category_product', 'cp'.(int)$id_condition, 'p.`id_product` = cp'.(int)$id_condition.'.`id_product`')
+							->where('cp'.(int)$id_condition.'.id_category = '.(int)$condition['value']);
+					elseif ($condition['type'] == 'supplier')
+						$query->where('EXISTS(
+							SELECT
+								`ps'.(int)$id_condition.'`.`id_product`
+							FROM
+								`'._DB_PREFIX_.'product_supplier` `ps'.(int)$id_condition.'`
+							WHERE
+								`p`.`id_product` = `ps'.(int)$id_condition.'`.`id_product`
+								AND `ps'.(int)$id_condition.'`.`id_supplier` = '.(int)$condition['value'].'
+						)');
+					elseif ($condition['type'] == 'feature')
+						$query->leftJoin('feature_product', 'fp'.(int)$id_condition, 'p.`id_product` = fp'.(int)$id_condition.'.`id_product`')
+							->where('fp'.(int)$id_condition.'.`id_feature_value` = '.(int)$condition['value']);
 				}
-				
-				$where = rtrim($where, ' AND ').') OR (';
+
+				// Products limitation
+				if ($products && count($products))
+					$query->where('p.`id_product` IN ('.implode(', ', array_map('intval', $products)).')');
+
+				// Force the column id_product_attribute if not requested
+				if (!$attributes_join_added)
+					$query->select('NULL as `id_product_attribute`');
+
+				$result = array_merge($result, Db::getInstance()->executeS($query));
 			}
-			$where = rtrim($where, 'OR (').')';
-		}
-		if ($products && count($products))
-			$where .= ' AND p.id_product IN ('.implode(', ', array_map('intval', $products)).')';
-		if ($attributes)
-		{
-			$query->select('pa.id_product_attribute');
-			$query->leftJoin('product_attribute', 'pa', 'p.id_product = pa.id_product');
-			$query->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$query->leftJoin('product_attribute_combination', 'pac', 'pa.id_product_attribute = pac.id_product_attribute');
-			$query->groupBy('pa.id_product_attribute');
 		}
 		else
-			$query->select('NULL as id_product_attribute');
+		{
+			// All products without conditions
+			$query = new DbQuery();
+			$query->select('p.`id_product`')
+				->select('NULL as `id_product_attribute`')
+				->from('product', 'p')
+				->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
+				->where('ps.id_shop = '.(int)$current_shop_id);
 
-		if ($features)
-			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');			
-		if ($categories)
-			$query->leftJoin('category_product', 'cp', 'p.id_product = cp.id_product');
+			if ($products && count($products))
+				$query->where('p.`id_product` IN ('.implode(', ', array_map('intval', $products)).')');
 
-		if ($suppliers)
-			$query->leftJoin('product_supplier', 'pss', 'p.id_product = pss.id_product');
+			$result = Db::getInstance()->executeS($query);
+		}
 
-		if ($where)
-			$query->where($where);
-
-		return Db::getInstance()->executeS($query);
+		return $result;
 	}
 
 	public static function applyRuleToProduct($id_rule, $id_product, $id_product_attribute = null)

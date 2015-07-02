@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property PrestaShopBackup $object
+ */
 class AdminBackupControllerCore extends AdminController
 {
 	/** @var string The field we are sorting on */
@@ -141,7 +144,7 @@ class AdminBackupControllerCore extends AdminController
 	 * otherwise return an empty object
 	 * This method overrides the one in AdminTab because AdminTab assumes the id is a UnsignedInt
 	 * "Backups" Directory in admin directory must be writeable (CHMOD 777)
-	 * @param boolean $opt Return an empty object if load fail
+	 * @param bool $opt Return an empty object if load fail
 	 * @return object
 	 */
 	protected function loadObject($opt = false)

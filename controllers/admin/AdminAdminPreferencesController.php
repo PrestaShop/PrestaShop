@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminAdminPreferencesControllerCore extends AdminController
 {
 
@@ -64,8 +67,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_LIFETIME_FO' => array(
-						'title' => $this->l('Lifetime of front-office cookies'),
-						'hint' => $this->l('Set the amount of hours during which the front-office cookies are valid. After that amount of time, the customer will have to log in again.'),
+						'title' => $this->l('Lifetime of front office cookies'),
+						'hint' => $this->l('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -74,8 +77,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_LIFETIME_BO' => array(
-						'title' => $this->l('Lifetime of back-office cookies'),
-						'hint' => $this->l('Set the amount of hours during which the back-office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.'),
+						'title' => $this->l('Lifetime of back office cookies'),
+						'hint' => $this->l('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -123,7 +126,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
 				'icon' =>	'icon-list-alt',
-				'description' => $this->l('Notifications are numbered bubbles displayed at the very top of your back-office, right next to the shop\'s name. They display the number of new items since you last clicked on them.'),
+				'description' => $this->l('Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop\'s name. They display the number of new items since you last clicked on them.'),
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),
@@ -175,6 +178,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 
 	/**
 	 * Update PS_ATTACHMENT_MAXIMUM_SIZE
+	 *
+	 * @param $value
 	 */
 	public function updateOptionPsAttachementMaximumSize($value)
 	{

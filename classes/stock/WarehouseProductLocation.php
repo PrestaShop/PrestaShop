@@ -65,15 +65,15 @@ class WarehouseProductLocationCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 		),
- 		'hidden_fields' => array(
- 		),
- 	);
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+		),
+		'hidden_fields' => array(
+		),
+	);
 
 	/**
 	 * For a given product and warehouse, gets the location
@@ -131,9 +131,9 @@ class WarehouseProductLocationCore extends ObjectModel
 		$collection->where('id_product', '=', (int)$id_product);
 		return $collection;
 	}
-	
+
 	public static function getProducts($id_warehouse)
 	{
-		return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int)$id_warehouse);		
+		return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int)$id_warehouse);
 	}
 }

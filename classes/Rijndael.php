@@ -45,7 +45,7 @@ class RijndaelCore
 	{
 		$length = (ini_get('mbstring.func_overload') & 2) ? mb_strlen($plaintext, ini_get('default_charset')) : strlen($plaintext);
 
-        if ($length >= 1048576)
+		if ($length >= 1048576)
 			return false;
 		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->_key, $plaintext, MCRYPT_MODE_ECB, $this->_iv)).sprintf('%06d', $length);
 	}
@@ -71,4 +71,3 @@ class RijndaelCore
 		}
 	}
 }
-

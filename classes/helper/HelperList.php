@@ -32,7 +32,7 @@ class HelperListCore extends Helper
 	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	public $listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -41,7 +41,7 @@ class HelperListCore extends Helper
 	/** @var array Number of results in list per page (used in select field) */
 	public $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer Default number of results in list per page */
+	/** @var int Default number of results in list per page */
 	public $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
@@ -81,11 +81,16 @@ class HelperListCore extends Helper
 	 */
 	protected $fields_list;
 
-	/** @var boolean Content line is clickable if true */
+	/** @var bool Content line is clickable if true */
 	public $no_link = false;
 
+	/** @var Smarty_Internal_Template|string */
 	protected $header_tpl = 'list_header.tpl';
+
+	/** @var Smarty_Internal_Template|string */
 	protected $content_tpl = 'list_content.tpl';
+
+	/** @var Smarty_Internal_Template|string */
 	protected $footer_tpl = 'list_footer.tpl';
 
 	/** @var array list of required actions for each list row */
@@ -102,13 +107,15 @@ class HelperListCore extends Helper
 	/** @var bool If true, activates color on hover */
 	public $row_hover = true;
 
-	/** @var if not null, a title will be added on that list */
+	/** @var string|null If not null, a title will be added on that list */
 	public $title = null;
 
-	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
+	/** @var bool ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
 	public $ajax_params = array();
+
+	public $page;
 
 	public function __construct()
 	{
@@ -157,7 +164,7 @@ class HelperListCore extends Helper
 	 * Fetch the template for action enable
 	 *
 	 * @param string $token
-	 * @param int $id
+	 * @param string $id
 	 * @param int $value state enabled or not
 	 * @param string $active status
 	 * @param int $id_category
@@ -170,8 +177,8 @@ class HelperListCore extends Helper
 		$tpl_enable->assign(array(
 			'ajax' => $ajax,
 			'enabled' => (bool)$value,
-			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
-				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token)
+			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
+				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token)
 		));
 		return $tpl_enable->fetch();
 	}
@@ -224,7 +231,8 @@ class HelperListCore extends Helper
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
 				}
 
-				if ($is_first && isset($this->_list[$index][$action])) {
+				if ($is_first && isset($this->_list[$index][$action]))
+				{
 					$is_first = false;
 
 					if (!preg_match('/a\s*.*class/', $this->_list[$index][$action]))
@@ -372,7 +380,7 @@ class HelperListCore extends Helper
 
 		$confirm = self::$cache_lang['Copy images too?'];
 
-		if (($this->table == 'product') && !(bool)Image::getImages($this->context->language->id, (int)$id))
+		if (($this->table == 'product') && !Image::hasImages($this->context->language->id, (int)$id))
 			$confirm = '';
 
 		$tpl->assign(array(
@@ -456,7 +464,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
 
 		$tpl->assign(array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
 			'id' => $id
 		));
@@ -498,7 +506,7 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display delete action link
+	 * Display default action link
 	 */
 	public function displayDefaultLink($token = null, $id, $name = null)
 	{
@@ -506,11 +514,11 @@ class HelperListCore extends Helper
 		if (!array_key_exists('Default', self::$cache_lang))
 			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
-		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+		$tpl->assign(array(
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&default'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Default'],
 			'name' => $name,
-		)));
+		));
 
 		return $tpl->fetch();
 	}
@@ -552,6 +560,8 @@ class HelperListCore extends Helper
 
 		if ($page > $total_pages)
 			$page = $total_pages;
+
+		$this->page = (int)$page;
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
@@ -641,7 +651,7 @@ class HelperListCore extends Helper
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
 			'list_total' => $this->listTotal,
-			'sql' => isset($this->sql) && $this->sql ? str_replace("\n", " ", str_replace("\r", "", $this->sql)) : false,
+			'sql' => isset($this->sql) && $this->sql ? str_replace('\n', ' ', str_replace('\r', '', $this->sql)) : false,
 			'token' => $this->token,
 			'table' => $this->table,
 			'bulk_actions' => $this->bulk_actions,

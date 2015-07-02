@@ -498,7 +498,10 @@ function init()
 						if (data.result)
 						{
 							if (data.refresh)
+							{
 								location.reload();
+								return;
+							}
 							go = false;
 							addViewOrderDetailRow(data.view);
 							updateAmounts(data.order);
@@ -578,6 +581,7 @@ function init()
 	$('.edit_product_change_link').unbind('click').click(function(e) {
 		$('.add_product_fields, .standard_refund_fields, .order_action').hide();
 		$('.edit_product_fields').show();
+		$('.row-editing-warning').hide();
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
 		var element = $(this);
@@ -600,12 +604,12 @@ function init()
 				{
 					current_product = data;
 
-					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
+					var element_list = $('.customized-' + element.parents('.product-line-row').find('.edit_product_id_order_detail').val());
 					if (!element_list.length)
 					{
-						element_list = element.parent().parent().parent();
-						element_list.parent().parent().find('td .product_quantity_show').hide();
-						element_list.parent().parent().find('td .product_quantity_edit').show();
+						element_list = element.parents('.product-line-row');
+						element_list.find('td .product_quantity_show').hide();
+						element_list.find('td .product_quantity_edit').show();
 					}
 					else
 					{
@@ -624,6 +628,10 @@ function init()
 					element.parent().children('.edit_product_change_link').parent().hide();
 					element.parent().parent().find('button.submitProductChange').show();
 					element.parent().parent().find('.cancel_product_change_link').show();
+
+					if (+data.reduction_percent != +0)
+						element_list.find('.row-editing-warning').show();
+
 					$('.standard_refund_fields').hide();
 					$('.partial_refund_fields').hide();
 				}
@@ -638,6 +646,7 @@ function init()
 	{
 		current_product = null;
 		$('.edit_product_fields').hide();
+		$('.row-editing-warning').hide();
 		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 		if (!element_list.length)
 			element_list = $($(this).parent().parent());
@@ -701,7 +710,7 @@ function init()
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
 						$('.add_product_fields').hide();
-						$('.add_product_fields').hide();
+						$('.row-editing-warning').hide();
 						$('td.product_action').attr('colspan', 3);
 					}
 					else
@@ -896,6 +905,7 @@ function checkPartialRefundProductAmount(it)
 	if (typeof $(it).val() !== undefined && typeof new_price !== undefined &&
 		parseFloat($(it).val()) > parseFloat(old_price))
 		$(it).val(old_price);
+
 	if (order_discount_price)
 		actualizeRefundVoucher();
 }

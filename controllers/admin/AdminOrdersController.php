@@ -31,10 +31,13 @@ class BoOrder extends PaymentModule
 
 	public function __construct()
 	{
-		$this->displayName = $this->l('Back-office order');
+		$this->displayName = $this->l('Back office order');
 	}
 }
 
+/**
+ * @property Order $object
+ */
 class AdminOrdersControllerCore extends AdminController
 {
 	public $toolbar_title;
@@ -72,6 +75,7 @@ class AdminOrdersControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_orderBy = 'id_order';
 		$this->_orderWay = 'DESC';
+		$this->_use_found_rows = false;
 
 		$statuses = OrderState::getOrderStates((int)$this->context->language->id);
 		foreach ($statuses as $status)
@@ -267,6 +271,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		if ($this->display == 'view')
 		{
+			/** @var Order $order */
 			$order = $this->loadObject();
 			$customer = $this->context->customer;
 
@@ -728,10 +733,10 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cart_rule = new CartRule();
 							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
-							$languages = Language::getLanguages(false);
-							foreach ($languages as $language)
+							$language_ids = Language::getIDs(false);
+							foreach ($language_ids as $id_lang)
 								// Define a temporary name
-								$cart_rule->name[$language['id_lang']] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
+								$cart_rule->name[$id_lang] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
 
 							// Define a temporary code
 							$cart_rule->code = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
@@ -756,8 +761,8 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cart_rule->name[$language['id_lang']] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
+								foreach ($language_ids as $id_lang)
+									$cart_rule->name[$id_lang] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
 								$cart_rule->code = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
 
 								if (!$cart_rule->update())
@@ -772,7 +777,6 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{order_name}'] = $order->getUniqReference();
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
-									$customer = new Customer((int)$order->id_customer);
 									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
@@ -783,9 +787,9 @@ class AdminOrdersControllerCore extends AdminController
 					else
 					{
 						if (!empty($refunds))
-							$this->errors[] = Tools::displayError('You have to enter a quantity if you want to create a partial credit slip.');
+							$this->errors[] = Tools::displayError('Please enter a quantity to proceed with your refund.');
 						else
-							$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+							$this->errors[] = Tools::displayError('Please enter an amount to proceed with your refund.');
 					}
 
 					// Redirect if no errors
@@ -975,12 +979,12 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
 						{
 							$cartrule = new CartRule();
-							$languages = Language::getLanguages($order);
+							$language_ids = Language::getIDs((bool)$order);
 							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
-							foreach ($languages as $language)
+							foreach ($language_ids as $id_lang)
 							{
 								// Define a temporary name
-								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+								$cartrule->name[$id_lang] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 							}
 							// Define a temporary code
 							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
@@ -1018,8 +1022,8 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cartrule->name[$language['id_lang']] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
+								foreach ($language_ids as $id_lang)
+									$cartrule->name[$id_lang] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								if (!$cartrule->update())
 									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
@@ -1357,6 +1361,7 @@ class AdminOrdersControllerCore extends AdminController
 									$order_invoices_collection = $order->getInvoicesCollection();
 									foreach ($order_invoices_collection as $order_invoice)
 									{
+										/** @var OrderInvoice $order_invoice */
 										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
 										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
@@ -1393,6 +1398,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
+									/** @var OrderInvoice $order_invoice */
 									if ($discount_value > $order_invoice->total_paid_tax_incl)
 										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
@@ -1434,6 +1440,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
+									/** @var OrderInvoice $order_invoice */
 									if ($order_invoice->total_shipping_tax_incl <= 0)
 										continue;
 									$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;
@@ -1505,6 +1512,32 @@ class AdminOrdersControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 					else
 						$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
+				}
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+		elseif (Tools::isSubmit('sendStateEmail') && Tools::getValue('sendStateEmail') > 0 && Tools::getValue('id_order') > 0)
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				$order_state = new OrderState((int)Tools::getValue('sendStateEmail'));
+
+				if (!Validate::isLoadedObject($order_state))
+					$this->errors[] = Tools::displayError('An error occurred while loading order status.');
+				else
+				{
+					$history = new OrderHistory((int)Tools::getValue('id_order_history'));
+
+					$carrier = new Carrier($order->id_carrier, $order->id_lang);
+					$templateVars = array();
+					if ($order_state->id == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
+						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+
+					if ($history->sendEmail($order, $templateVars))
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=10&token='.$this->token);
+					else
+						$this->errors[] = Tools::displayError('An error occurred while sending the e-mail to the customer.');
 				}
 			}
 			else
@@ -1684,9 +1717,17 @@ class AdminOrdersControllerCore extends AdminController
 			{
 				$warehouse = new Warehouse((int)$product['id_warehouse']);
 				$product['warehouse_name'] = $warehouse->name;
+				$warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
+				if (!empty($warehouse_location))
+					$product['warehouse_location'] = $warehouse_location;
+				else
+					$product['warehouse_location'] = false;
 			}
 			else
+			{
 				$product['warehouse_name'] = '--';
+				$product['warehouse_location'] = false;
+			}
 		}
 
 		$gender = new Gender((int)$customer->id_gender, $this->context->language->id);
@@ -2118,9 +2159,17 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$warehouse = new Warehouse((int)$product['id_warehouse']);
 			$product['warehouse_name'] = $warehouse->name;
+			$warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
+			if (!empty($warehouse_location))
+				$product['warehouse_location'] = $warehouse_location;
+			else
+				$product['warehouse_location'] = false;
 		}
 		else
+		{
 			$product['warehouse_name'] = '--';
+			$product['warehouse_location'] = false;
+		}
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
@@ -2128,6 +2177,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2152,6 +2202,7 @@ class AdminOrdersControllerCore extends AdminController
 		$result = array_diff($new_cart_rules, $old_cart_rules);
 		$refresh = false;
 
+		$res = true;
 		foreach ($result as $cart_rule)
 		{
 			$refresh = true;
@@ -2200,21 +2251,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (is_null($order))
 			$order = new Order(Tools::getValue('id_order'));
 
-		$data = array(
-			'{lastname}' => $order->getCustomer()->lastname,
-			'{firstname}' => $order->getCustomer()->firstname,
-			'{id_order}' => (int)$order->id,
-			'{order_name}' => $order->getUniqReference()
-		);
-
-		Mail::Send(
-			(int)$order->id_lang,
-			'order_changed',
-			Mail::l('Your order has been changed', (int)$order->id_lang),
-			$data,
-			$order->getCustomer()->email,
-			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,
-			null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+		Hook::exec('actionOrderEdited', array('order' => $order));
 	}
 
 	public function ajaxProcessLoadProductInformation()
@@ -2245,7 +2282,8 @@ class AdminOrdersControllerCore extends AdminController
 			'product' => $product,
 			'tax_rate' => $product->getTaxesRate($address),
 			'price_tax_incl' => Product::getPriceStatic($product->id, true, $order_detail->product_attribute_id, 2),
-			'price_tax_excl' => Product::getPriceStatic($product->id, false, $order_detail->product_attribute_id, 2)
+			'price_tax_excl' => Product::getPriceStatic($product->id, false, $order_detail->product_attribute_id, 2),
+			'reduction_percent' => $order_detail->reduction_percent
 		)));
 	}
 
@@ -2341,6 +2379,7 @@ class AdminOrdersControllerCore extends AdminController
 		$old_quantity = $order_detail->product_quantity;
 
 		$order_detail->product_quantity = $product_quantity;
+		$order_detail->reduction_percent = 0;
 
 		// update taxes
 		$res &= $order_detail->updateTaxAmount($order);
@@ -2377,9 +2416,17 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$warehouse = new Warehouse((int)$product['id_warehouse']);
 			$product['warehouse_name'] = $warehouse->name;
+			$warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
+			if (!empty($warehouse_location))
+				$product['warehouse_location'] = $warehouse_location;
+			else
+				$product['warehouse_location'] = false;
 		}
 		else
+		{
 			$product['warehouse_name'] = '--';
+			$product['warehouse_location'] = false;
+		}
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
@@ -2387,6 +2434,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2485,6 +2533,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2601,6 +2650,10 @@ class AdminOrdersControllerCore extends AdminController
 			)));
 	}
 
+	/**
+	 * @param Order $order
+	 * @return array
+	 */
 	protected function getProducts($order)
 	{
 		$products = $order->getProducts();
@@ -2624,6 +2677,11 @@ class AdminOrdersControllerCore extends AdminController
 		return $products;
 	}
 
+	/**
+	 * @param OrderDetail $order_detail
+	 * @param int $qty_cancel_product
+	 * @param bool $delete
+	 */
 	protected function reinjectQuantity($order_detail, $qty_cancel_product, $delete = false)
 	{
 		// Reinject product
@@ -2718,6 +2776,11 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('This product cannot be re-stocked.');
 	}
 
+	/**
+	 * @param OrderInvoice $order_invoice
+	 * @param float $value_tax_incl
+	 * @param float $value_tax_excl
+	 */
 	protected function applyDiscountOnInvoice($order_invoice, $value_tax_incl, $value_tax_excl)
 	{
 		// Update OrderInvoice

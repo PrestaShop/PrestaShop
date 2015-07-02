@@ -29,7 +29,7 @@ abstract class Db extends DbCore
 	/**
 	 * Add SQL_NO_CACHE in SELECT queries
 	 * 
-	 * @var unknown_type
+	 * @var bool
 	 */
 	public $disableCache = true;
 
@@ -69,21 +69,22 @@ abstract class Db extends DbCore
 	public function query($sql)
 	{
 		$explain = false;
-		if (preg_match('/^\s*explain\s+/i', $sql))
+		if (preg_match('/^\s*explain\s+/i', $sql) || strpos($sql, _DB_PREFIX_.'modules_perfs'))
 			$explain = true;
 			
 		if (!$explain)
 		{
-			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $sql);
+			$uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
+			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
 			if (!isset($this->uniqQueries[$uniqSql]))
 				$this->uniqQueries[$uniqSql] = 0;
 			$this->uniqQueries[$uniqSql]++;
 
 			// No cache for query
-			if ($this->disableCache)
+			if ($this->disableCache && !stripos($sql, 'SQL_NO_CACHE'))
 				$sql = preg_replace('/^\s*select\s+/i', 'SELECT SQL_NO_CACHE ', trim($sql));
 
-			// Get tables in quer
+			// Get tables in query
 			preg_match_all('/(from|join)\s+`?'._DB_PREFIX_.'([a-z0-9_-]+)/ui', $sql, $matches);
 			foreach ($matches[2] as $table)
 			{
@@ -92,10 +93,10 @@ abstract class Db extends DbCore
 				$this->tables[$table]++;
 			}
 
-			// Execute query
 			$start = microtime(true);
 		}
 
+		// Execute query
 		$result = parent::query($sql);
 
 		if (!$explain)

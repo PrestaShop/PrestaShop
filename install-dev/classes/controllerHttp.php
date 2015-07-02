@@ -43,9 +43,6 @@ abstract class InstallControllerHttp
 	 */
 	public $errors = array();
 
-	/**
-	 * @var InstallController
-	 */
 	public $controller;
 
 	/**
@@ -343,6 +340,26 @@ abstract class InstallControllerHttp
 	}
 
 	/**
+	 * Get link to tutorial video for this language
+	 *
+	 * Enter description here ...
+	 */
+	public function getTutorialLink()
+	{
+		return $this->language->getInformation('tutorial');
+	}
+
+	/**
+	 * Get link to tailored help for this language
+	 *
+	 * Enter description here ...
+	 */
+	public function getTailoredHelp()
+	{
+		return $this->language->getInformation('tailored_help');
+	}
+
+	/**
 	 * Get link to forum for this language
 	 *
 	 * Enter description here ...
@@ -385,6 +402,8 @@ abstract class InstallControllerHttp
 	 */
 	public function ajaxJsonAnswer($success, $message = '')
 	{
+		if (!$success && empty($message))
+			$message = print_r(@error_get_last(), true);
 		die(Tools::jsonEncode(array(
 			'success' => (bool)$success,
 			'message' => $message,

@@ -87,7 +87,7 @@ a.fancybox-nav {
   @media (max-width: 767px) {
     .pb-left-column #views_block {
       width: 280px;
-      margin-left: 10px auto 0px auto; } }
+      margin: 10px auto 0px auto; } }
 
 #thumbs_list {
   overflow: hidden;
@@ -148,14 +148,50 @@ a.fancybox-nav {
           width: 68px;
           height: 68px; } }
 
+.show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+  width: 294px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 194px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 82px; } }
+  @media (max-width: 767px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 196px; } }
+
 span.view_scroll_spacer {
   float: left;
   width: 39px;
   padding-left: 12px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 18px; } }
   @media (min-width: 768px) and (max-width: 991px) {
     span.view_scroll_spacer {
-      padding-left: 6px;
-      width: 28px; } }
+      width: 30px;
+      padding-left: 3px; } }
+  @media (max-width: 767px) {
+    span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 18px; } }
+
+.show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+  width: 27px;
+  padding-left: 2px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 44px;
+      padding-left: 16px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 41px;
+      padding-left: 13px; } }
+  @media (max-width: 767px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 14px; } }
 
 #view_scroll_left,
 #view_scroll_right {
@@ -767,7 +803,7 @@ table.table-product-discounts {
 
 #old_price {
   padding-bottom: 15px;
-  font-size: 17px;
+  font-size: 13px;
   text-decoration: line-through;
   display: inline-block;
   font-family: "Open Sans", sans-serif;
@@ -843,7 +879,7 @@ table.table-product-discounts {
         padding: 0 5px;
         height: 22px;
         width: 100%;
-        border: 1px solid base-border-color;
+        border: 1px solid #d6d4d4;
         font-size: 12px;
         color: #666; }
   #send_friend_form .submit {
@@ -976,10 +1012,6 @@ Quick View Styles
 .addsharethisinner .stButton .stArrow {
   display: none !important; }
 
-@media (max-width: 1050px) and (max-width: 479px) {
-  #product.content_only div.primary_block,
-  #product.content_only section.primary_block {
-    margin-left: 0; } }
 @media (max-width: 1050px) {
   #product.content_only div.primary_block div.pb-left-column,
   #product.content_only section.primary_block div.pb-left-column {
@@ -1004,32 +1036,11 @@ Quick View Styles
   #product.content_only section.primary_block div.pb-center-column {
     width: 50%;
     float: left;
-    padding-left: 35px; } }
-  @media (max-width: 1050px) and (max-width: 479px) {
-    #product.content_only div.primary_block div.pb-center-column,
-    #product.content_only section.primary_block div.pb-center-column {
-      width: 100%;
-      float: none;
-      padding-left: 15px;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box; } }
-@media (max-width: 1050px) {
+    padding-left: 35px; }
   #product.content_only div.primary_block div.pb-right-column,
   #product.content_only section.primary_block div.pb-right-column {
     width: 50%;
-    float: left; } }
-  @media (max-width: 1050px) and (max-width: 479px) {
-    #product.content_only div.primary_block div.pb-right-column,
-    #product.content_only section.primary_block div.pb-right-column {
-      margin-top: 10px;
-      width: 100%;
-      float: none;
-      padding-left: 15px;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box; } }
-@media (max-width: 1050px) {
+    float: left; }
     #product.content_only div.primary_block div.pb-right-column .box-info-product,
     #product.content_only section.primary_block div.pb-right-column .box-info-product {
       border-top-width: 1px;

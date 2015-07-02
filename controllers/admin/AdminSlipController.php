@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderSlip $object
+ */
 class AdminSlipControllerCore extends AdminController
 {
 	public function __construct()

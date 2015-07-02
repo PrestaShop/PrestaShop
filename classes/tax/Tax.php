@@ -27,8 +27,7 @@
 
 class TaxCore extends ObjectModel
 {
-
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var float Rate (%) */
@@ -37,7 +36,7 @@ class TaxCore extends ObjectModel
 	/** @var bool active state */
 	public $active;
 
-	/** @var boolean true if the tax has been historized */
+	/** @var bool true if the tax has been historized */
 	public $deleted = 0;
 
 	/**
@@ -51,8 +50,7 @@ class TaxCore extends ObjectModel
 			'rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'active' => 		array('type' => self::TYPE_BOOL),
 			'deleted' => 		array('type' => self::TYPE_BOOL),
-
-			// Lang fields
+			/* Lang fields */
 			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
@@ -89,13 +87,13 @@ class TaxCore extends ObjectModel
 
 	public function toggleStatus()
 	{
-	    if (parent::toggleStatus())
-            return $this->_onStatusChange();
+		if (parent::toggleStatus())
+			return $this->_onStatusChange();
 
-        return false;
+		return false;
 	}
 
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
 		if (!$this->deleted && $this->isUsed())
 		{
@@ -109,8 +107,8 @@ class TaxCore extends ObjectModel
 			// change tax id in the tax rule table
 			$res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
 			return $res;
-		} 
-		elseif (parent::update($nullValues))
+		}
+		elseif (parent::update($null_values))
 			return $this->_onStatusChange();
 
 		return false;
@@ -118,10 +116,10 @@ class TaxCore extends ObjectModel
 
 	protected function _onStatusChange()
 	{
-        if (!$this->active)
-            return TaxRule::deleteTaxRuleByIdTax($this->id);
+		if (!$this->active)
+			return TaxRule::deleteTaxRuleByIdTax($this->id);
 
-        return true;
+		return true;
 	}
 
 	/**
@@ -165,18 +163,14 @@ class TaxCore extends ObjectModel
 
 	public static function excludeTaxeOption()
 	{
-		static $ps_tax = null;
-		if ($ps_tax === null)
-			$ps_tax = Configuration::get('PS_TAX');
-
-		return !$ps_tax;
+		return !Configuration::get('PS_TAX');
 	}
 
 	/**
 	* Return the tax id associated to the specified name
 	*
 	* @param string $tax_name
-	* @param boolean $active (true by default)
+	* @param bool $active (true by default)
 	*/
 	public static function getTaxIdByName($tax_name, $active = 1)
 	{
@@ -187,7 +181,7 @@ class TaxCore extends ObjectModel
 			WHERE tl.`name` = \''.pSQL($tax_name).'\' '.
 			($active == 1 ? ' AND t.`active` = 1' : ''));
 
-		return $tax ? (int)($tax['id_tax']) : false;
+		return $tax ? (int)$tax['id_tax'] : false;
 	}
 
 	/**
@@ -226,8 +220,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Return the product tax rate using the tax rules system
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 *
 	 * @deprecated since 1.5
@@ -238,8 +232,8 @@ class TaxCore extends ObjectModel
 
 		if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode]))
 		{
-		    $tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
-		    self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
+			$tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
+			self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
 		}
 
 		return self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode];
@@ -248,8 +242,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Returns the product tax
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 */
 	public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
@@ -266,4 +260,3 @@ class TaxCore extends ObjectModel
 		return $tax_calculator->getTotalRate();
 	}
 }
-

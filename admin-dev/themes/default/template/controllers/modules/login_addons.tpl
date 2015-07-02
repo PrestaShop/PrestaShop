@@ -42,7 +42,11 @@
 					<hr />
 				</div>
 				<div class="row">
-					<div class="col-md-6 col-md-push-6">
+					<div class="col-md-6">
+						<h4>{l s="Don't have an account?"}</h4>
+						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
+					</div>
+					<div class="col-md-6">
 						<h4>{l s='Connect to PrestaShop Addons'}</h4>
 						<div class="form-group">
 							<div class="input-group">
@@ -58,19 +62,24 @@
 							<a class="btn btn-link pull-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
 							<br>
 						</div>
+					</div>
+				</div>
+
+				<div class="row row-padding-top">
+					<div class="col-md-6">
+						<div class="form-group">
+							<a class="btn btn-default btn-block btn-lg _blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
+								{l s="Create an Account"}
+								<i class="icon-external-link"></i>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-6">
 						<div class="form-group">
 							<button id="addons_login_button" class="btn btn-primary btn-block btn-lg" type="submit">
 								<i class="icon-unlock"></i> {l s='Sign in'}
 							</button>
 						</div>
-					</div>
-					<div class="col-md-5 col-md-pull-6">
-						<h4>{l s="Don't have an account?"}</h4>
-						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
-						<a class="btn btn-default btn-block _blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
-							{l s="Create an Account"}
-							<i class="icon-external-link"></i>
-						</a>
 					</div>
 				</div>
 

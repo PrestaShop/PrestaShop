@@ -24,16 +24,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property ShopUrl $object
+ */
 class AdminShopUrlControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'shop_url';
+		$this->table = 'shop_url';
 		$this->className = 'ShopUrl';
-	 	$this->lang = false;
+		$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->bulk_actions = array();
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
 		if ($this->id_shop = (int)Tools::getValue('shop_id'))
@@ -97,13 +101,14 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-	 	$this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
+		$this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
 		if ($id_shop = (int)Tools::getValue('id_shop'))
 			$this->_where = 'AND a.id_shop = '.$id_shop;
+		$this->_use_found_rows = false;
 
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()
@@ -113,7 +118,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->multiple_fieldsets = true;
 		if (!$update_htaccess)
 			$desc_virtual_uri = array(
-				'<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server.').'</span>'
+				'<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.').'</span>'
 			);
 		else
 			$desc_virtual_uri = array(
@@ -125,7 +130,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'form' => array(
 					'legend' => array(
 						'title' => $this->l('URL options'),
-						'icon' => 'icon-cogs' 
+						'icon' => 'icon-cogs'
 					),
 					'input' => array(
 						array(
@@ -223,7 +228,7 @@ class AdminShopUrlControllerCore extends AdminController
 				),
 			),
 		);
-		
+
 		if (!defined('_PS_HOST_MODE_'))
 			$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
 				array(
@@ -349,7 +354,7 @@ class AdminShopUrlControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
@@ -395,6 +400,7 @@ class AdminShopUrlControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var ShopUrl $object */
 					if ($object->main)
 						$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
 					elseif ($object->toggleStatus())
@@ -413,7 +419,8 @@ class AdminShopUrlControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
-				{	
+				{
+					/** @var ShopUrl $object */
 					if (!$object->main)
 					{
 						$result = $object->setMain();
@@ -439,12 +446,14 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function processSave()
 	{
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 
-		if (str_replace('/', '', Tools::getValue('virtual_uri')) == 'c')
-			$this->errors[] = Tools::displayError('A shop virtual URL can not be "/c/", because "/c/" is the virtual url prefix for category images.');
+		$unallowed = str_replace('/', '', Tools::getValue('virtual_uri'));
+		if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed))
+			$this->errors[] = sprintf(Tools::displayError('A shop virtual URL can not be "%s"'), $unallowed);
 		$return = parent::processSave();
 		if (!$this->errors)
 		{
@@ -458,8 +467,9 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
-		
+
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 
@@ -476,6 +486,7 @@ class AdminShopUrlControllerCore extends AdminController
 		if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
 			$this->redirect_shop_url = true;
 
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
 
 		if ($object->main && !Tools::getValue('main'))
@@ -487,6 +498,10 @@ class AdminShopUrlControllerCore extends AdminController
 		return parent::processUpdate();
 	}
 
+	/**
+	 * @param ShopUrl $object
+	 * @return void
+	 */
 	protected function afterUpdate($object)
 	{
 		if ($object->id && Tools::getValue('main'))
@@ -495,10 +510,10 @@ class AdminShopUrlControllerCore extends AdminController
 		if ($this->redirect_shop_url)
 			$this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
 	}
-	
+
 	/**
 	 * @param string $token
-	 * @param integer $id
+	 * @param int $id
 	 * @param string $name
 	 * @return mixed
 	 */
@@ -523,10 +538,10 @@ class AdminShopUrlControllerCore extends AdminController
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&shop_id='.(int)$this->id_shop.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Delete'],
 		);
-		
+
 		if ($this->specificConfirmDelete !== false)
 			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
-		
+
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();

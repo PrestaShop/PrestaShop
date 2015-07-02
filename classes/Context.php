@@ -25,115 +25,102 @@
 */
 
 /**
- * @since 1.5.0
+ * Class ContextCore
+ *
+ * @since 1.5.0.1
  */
 class ContextCore
 {
-	/**
-	 * @var Context
-	 */
+	/* @var Context */
 	protected static $instance;
 
-	/**
-	 * @var Cart
-	 */
+	/** @var Cart */
 	public $cart;
 
-	/**
-	 * @var Customer
-	 */
+	/** @var Customer */
 	public $customer;
 
-	/**
-	 * @var Cookie
-	 */
+	/** @var Cookie */
 	public $cookie;
 
-	/**
-	 * @var Link
-	 */
+	/** @var Link */
 	public $link;
 
-	/**
-	 * @var Country
-	 */
+	/** @var Country */
 	public $country;
 
-	/**
-	 * @var Employee
-	 */
+	/** @var Employee */
 	public $employee;
 
-	/**
-	 * @var Controller
-	 */
+	/** @var AdminController|FrontController */
 	public $controller;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	public $override_controller_name_for_translations;
 
-	/**
-	 * @var Language
-	 */
+	/** @var Language */
 	public $language;
 
-	/**
-	 * @var Currency
-	 */
+	/** @var Currency */
 	public $currency;
 
-	/**
-	 * @var AdminTab
-	 */
+	/** @var AdminTab */
 	public $tab;
 
-	/**
-	 * @var Shop
-	 */
+	/** @var Shop */
 	public $shop;
 
-	/**
-	 * @var Theme
-	 */
+	/** @var Theme */
 	public $theme;
 
-	/**
-	 * @var Smarty
-	 */
+	/** @var Smarty */
 	public $smarty;
 
-	/**
-	 * @ var Mobile Detect
-	 */
+	/** @var Mobile_Detect */
 	public $mobile_detect;
 
+	/** @var int */
 	public $mode;
 
 	/**
-	 * @var boolean|string mobile device of the customer
+	 * Mobile device of the customer
+	 *
+	 * @var bool|null
 	 */
 	protected $mobile_device = null;
 
+	/** @var bool|null */
 	protected $is_mobile = null;
 
+	/** @var bool|null */
 	protected $is_tablet = null;
 
+	/** @var int */
 	const DEVICE_COMPUTER = 1;
 
+	/** @var int */
 	const DEVICE_TABLET = 2;
 
+	/** @var int */
 	const DEVICE_MOBILE = 4;
 
+	/** @var int */
 	const MODE_STD = 1;
 
+	/** @var int */
 	const MODE_STD_CONTRIB = 2;
 
+	/** @var int */
 	const MODE_HOST_CONTRIB = 4;
 
+	/** @var int */
 	const MODE_HOST = 8;
 
+	/**
+	 * Sets Mobile_Detect tool object
+	 *
+	 * @return Mobile_Detect
+	 */
 	public function getMobileDetect()
 	{
 		if ($this->mobile_detect === null)
@@ -144,6 +131,11 @@ class ContextCore
 		return $this->mobile_detect;
 	}
 
+	/**
+	 * Checks if visitor's device is a mobile device
+	 *
+	 * @return bool
+	 */
 	public function isMobile()
 	{
 		if ($this->is_mobile === null)
@@ -154,6 +146,11 @@ class ContextCore
 		return $this->is_mobile;
 	}
 
+	/**
+	 * Checks if visitor's device is a tablet device
+	 *
+	 * @return bool
+	 */
 	public function isTablet()
 	{
 		if ($this->is_tablet === null)
@@ -164,6 +161,11 @@ class ContextCore
 		return $this->is_tablet;
 	}
 
+	/**
+	 * Sets mobile_device context variable
+	 *
+	 * @return bool
+	 */
 	public function getMobileDevice()
 	{
 		if ($this->mobile_device === null)
@@ -175,7 +177,6 @@ class ContextCore
 					$this->mobile_device = true;
 				else
 				{
-					$mobile_detect = $this->getMobileDetect();
 					switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 					{
 						case 1: // Only for mobile device
@@ -197,13 +198,17 @@ class ContextCore
 		return $this->mobile_device;
 	}
 
+	/**
+	 * Returns mobile device type
+	 *
+	 * @return int
+	 */
 	public function getDevice()
 	{
 		static $device = null;
 
 		if ($device === null)
 		{
-			$mobile_detect = $this->getMobileDetect();
 			if ($this->isTablet())
 				$device = Context::DEVICE_TABLET;
 			elseif ($this->isMobile())
@@ -211,9 +216,16 @@ class ContextCore
 			else
 				$device = Context::DEVICE_COMPUTER;
 		}
+
 		return $device;
 	}
 
+	/**
+	 * Checks if mobile context is possible
+	 *
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function checkMobileContext()
 	{
 		// Check mobile context
@@ -246,7 +258,7 @@ class ContextCore
 	}
 
 	/**
-	 * Get a singleton context
+	 * Get a singleton instance of Context object
 	 *
 	 * @return Context
 	 */
@@ -254,11 +266,29 @@ class ContextCore
 	{
 		if (!isset(self::$instance))
 			self::$instance = new Context();
+
 		return self::$instance;
 	}
 
 	/**
-	 * Clone current context
+	 * @param $test_instance Context
+	 * Unit testing purpose only
+	 */
+	public static function setInstanceForTesting($test_instance)
+	{
+		self::$instance = $test_instance;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
+	 * Clone current context object
 	 *
 	 * @return Context
 	 */

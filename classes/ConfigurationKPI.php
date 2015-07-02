@@ -63,7 +63,7 @@ class ConfigurationKPICore extends Configuration
 		ConfigurationKPI::unsetKpiDefinition();
 		return $r;
 	}
-	
+
 	public static function getGlobalValue($key, $id_lang = null)
 	{
 		ConfigurationKPI::setKpiDefinition();

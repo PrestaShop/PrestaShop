@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CMS $object
+ */
 class AdminCmsControllerCore extends AdminController
 {
 	protected $category;
@@ -41,7 +44,9 @@ class AdminCmsControllerCore extends AdminController
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-				$this->bulk_actions = array(
+		$this->_orderBy = 'position';
+
+		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
 				'confirm' => $this->l('Delete selected items?'),
@@ -232,7 +237,7 @@ class AdminCmsControllerCore extends AdminController
 		}
 
 		if (Validate::isLoadedObject($this->object))
-			$this->context->smarty->assign('url_prev' , $this->getPreviewUrl($this->object));
+			$this->context->smarty->assign('url_prev', $this->getPreviewUrl($this->object));
 
 		$this->tpl_form_vars = array(
 			'active' => $this->object->active,
@@ -349,6 +354,7 @@ class AdminCmsControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position')))
 		{
+			/** @var CMS $object */
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object = $this->loadObject()))
@@ -366,6 +372,7 @@ class AdminCmsControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var CMS $object */
 					if ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getValue('token'));
 					else
@@ -378,21 +385,21 @@ class AdminCmsControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-        /* Delete multiple CMS content */
+		/* Delete multiple CMS content */
 		elseif (Tools::isSubmit('submitBulkdeletecms'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-                $this->action = 'bulkdelete';
-                $this->boxes = Tools::getValue($this->table.'Box');
-                if (is_array($this->boxes) && array_key_exists(0, $this->boxes))
-                {
-                    $firstCms = new CMS((int)$this->boxes[0]);
-                    $id_cms_category = (int)$firstCms->id_cms_category;
-                    if (!$res = parent::postProcess(true))
-                        return $res;
-                    Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
-                }
+				$this->action = 'bulkdelete';
+				$this->boxes = Tools::getValue($this->table.'Box');
+				if (is_array($this->boxes) && array_key_exists(0, $this->boxes))
+				{
+					$firstCms = new CMS((int)$this->boxes[0]);
+					$id_cms_category = (int)$firstCms->id_cms_category;
+					if (!$res = parent::postProcess(true))
+						return $res;
+					Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
+				}
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');

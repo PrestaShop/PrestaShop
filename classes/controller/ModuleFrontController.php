@@ -29,21 +29,20 @@
  */
 class ModuleFrontControllerCore extends FrontController
 {
-	/**
-	 * @var Module
-	 */
+	/** @var Module */
 	public $module;
 
 	public function __construct()
 	{
-		$this->controller_type = 'modulefront';
-
 		$this->module = Module::getInstanceByName(Tools::getValue('module'));
 		if (!$this->module->active)
 			Tools::redirect('index');
+
 		$this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
 		parent::__construct();
+
+		$this->controller_type = 'modulefront';
 
 		$in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
 
@@ -56,9 +55,10 @@ class ModuleFrontControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign module template
+	 * Assigns module template for page content
 	 *
-	 * @param string $template
+	 * @param string $template Template filename
+	 * @throws PrestaShopException
 	 */
 	public function setTemplate($template)
 	{
@@ -69,9 +69,10 @@ class ModuleFrontControllerCore extends FrontController
 	}
 
 	/**
-	 * Get path to front office templates for the module
+	 * Finds and returns module front template that take the highest precedence
 	 *
-	 * @return string
+	 * @param string $template Template filename
+	 * @return string|false
 	 */
 	public function getTemplatePath($template)
 	{

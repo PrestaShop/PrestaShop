@@ -12,13 +12,15 @@
     padding-right: 7px; }
   .shop-phone strong {
     color: #fff; }
+  @media (max-width: 991px) {
+    .shop-phone.is_logged {
+      display: none; } }
 
 #contact-link {
   float: right;
   border-left: 1px solid #515151; }
   @media (max-width: 479px) {
     #contact-link {
-      width: 25%;
       text-align: center; } }
   #contact-link a {
     display: block;
@@ -35,6 +37,9 @@
         padding-right: 5px; } }
     #contact-link a:hover, #contact-link a.active {
       background: #2b2b2b; }
+  @media (max-width: 767px) {
+    #contact-link.is_logged {
+      display: none; } }
 
 @media (max-width: 767px) {
   #contact_block {

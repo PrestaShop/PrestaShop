@@ -105,11 +105,10 @@
 {/if}
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
-
 {if isset($sql) && $sql}
-	<form id="sql_form" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
-		<input type="hidden" id="sql_query" name="sql" value="{$sql|escape}" />
-		<input type="hidden" id="sql_name" name="name" value="Plop" />
+	<form id="sql_form_{$list_id|escape:'html':'UTF-8'}" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
+		<input type="hidden" id="sql_query_{$list_id|escape:'html':'UTF-8'}" name="sql" value="{$sql|escape}"/>
+		<input type="hidden" id="sql_name_{$list_id|escape:'html':'UTF-8'}" name="name" value=""/>
 	</form>
 {/if}
 
@@ -119,6 +118,8 @@
 
 {if !$simple_header}
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
+	<input type="hidden" name="page" value="{$page|intval}"/>
+	<input type="hidden" name="selected_pagination" value="{$selected_pagination|intval}"/>
 	{block name="override_form_extra"}{/block}
 	<div class="panel col-lg-12">
 		<div class="panel-heading">
@@ -129,30 +130,32 @@
 				{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'modules-list' && $k != 'back'}
 						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn{if isset($btn.target) && $btn.target} _blank{/if}"{if isset($btn.href)} href="{$btn.href|escape:'html':'UTF-8'}"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
-							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true" data-placement="left">
+							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true" data-placement="top">
 								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i>
 							</span>
 						</a>
 					{/if}
 				{/foreach}
 					<a class="list-toolbar-btn" href="javascript:location.reload();">
-						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true" data-placement="left">
-							<i class="process-icon-refresh" ></i>
+						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true" data-placement="top">
+							<i class="process-icon-refresh"></i>
 						</span>
 					</a>
 				{if isset($sql) && $sql}
-					{if $smarty.const._PS_MODE_DEV_}
-						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
-							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="left" >
+					{assign var=sql_manager value=Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminRequestSql'))}
+
+					{if $sql_manager.view == 1}
+						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query_{$list_id|escape:'html':'UTF-8'}').val() + '</div>'); $(this).attr('onclick', '');">
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="top" >
 								<i class="process-icon-terminal"></i>
 							</span>
 						</a>
+						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name_{$list_id|escape:'html':'UTF-8'}').val(createSqlQueryName()); $('#sql_query_{$list_id|escape:'html':'UTF-8'}').val($('#sql_query_{$list_id|escape:'html':'UTF-8'}').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form_{$list_id|escape:'html':'UTF-8'}').submit();">
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="top" >
+								<i class="process-icon-database"></i>
+							</span>
+						</a>
 					{/if}
-					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
-						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="left" >
-							<i class="process-icon-database"></i>
-						</span>
-					</a>
 				{/if}
 				</span>
 			{/if}

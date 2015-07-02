@@ -39,10 +39,10 @@ class CartControllerCore extends FrontController
 
 	/**
 	 * This is not a public page, so the canonical redirection is disabled
+	 *
+	 * @param string $canonicalURL
 	 */
-	public function canonicalRedirection($canonicalURL = '')
-	{
-	}
+	public function canonicalRedirection($canonicalURL = ''){}
 
 	/**
 	 * Initialize cart controller
@@ -107,25 +107,37 @@ class CartControllerCore extends FrontController
 	protected function processDeleteProductInCart()
 	{
 		$customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
-		WHERE `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+		WHERE `id_cart` = '.(int)$this->context->cart->id.' AND `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
 
 		if (count($customization_product))
 		{
 			$product = new Product((int)$this->id_product);
-
+			if ($this->id_product_attribute > 0)
+		                $minimal_quantity = (int)Attribute::getAttributeMinimalQty($this->id_product_attribute);
+	        	else
+		                $minimal_quantity = (int)$product->minimal_quantity;
+            
 			$total_quantity = 0;
 			foreach ($customization_product as $custom)
 				$total_quantity += $custom['quantity'];
 
-			if ($total_quantity < $product->minimal_quantity)
+			if ($total_quantity < $minimal_quantity)
 				$this->ajaxDie(Tools::jsonEncode(array(
 						'hasError' => true,
-						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
 				)));
 		}
 
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
+			Hook::exec('actionAfterDeleteProductInCart', array(
+				'id_cart' => (int)$this->context->cart->id,
+				'id_product' => (int)$this->id_product,
+				'id_product_attribute' => (int)$this->id_product_attribute,
+				'customization_id' => (int)$this->customization_id,
+				'id_address_delivery' => (int)$this->id_address_delivery
+			));
+
 			if (!Cart::getNbProducts((int)$this->context->cart->id))
 			{
 				$this->context->cart->setDeliveryOption(null);
@@ -169,7 +181,7 @@ class CartControllerCore extends FrontController
 		if (Tools::getValue('value') === false)
 			$this->ajaxDie('{"error":true, "error_message": "No value setted"}');
 
-		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
+		$this->context->cart->allow_seperated_package = (bool)Tools::getValue('value');
 		$this->context->cart->update();
 		$this->ajaxDie('{"error":false}');
 	}
@@ -312,6 +324,8 @@ class CartControllerCore extends FrontController
 
 	/**
 	 * Remove discounts on cart
+	 *
+	 * @deprecated 1.5.3.0
 	 */
 	protected function processRemoveDiscounts()
 	{
@@ -368,25 +382,11 @@ class CartControllerCore extends FrontController
 						foreach ($addresses as $customization)
 							$product['quantity_without_customization'] -= (int)$customization['quantity'];
 				}
-				$product['price_without_quantity_discount'] = Product::getPriceStatic(
-					$product['id_product'],
-					!Product::getTaxCalculationMethod(),
-					$product['id_product_attribute'],
-					6,
-					null,
-					false,
-					false
-				);
-
-				if ($product['reduction_type'] == 'amount')
-				{
-					$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
-					$product['reduction_formatted'] = Tools::displayPrice($reduction);
-				}
 			}
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
+			$json = '';
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			$this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 

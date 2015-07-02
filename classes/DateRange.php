@@ -25,7 +25,7 @@
 */
 
 class DateRangeCore extends ObjectModel
-{	
+{
 	public $time_start;
 	public $time_end;
 
@@ -60,5 +60,3 @@ class DateRangeCore extends ObjectModel
 		return $result['id_date_range'];
 	}
 }
-
-

@@ -26,7 +26,7 @@
 
 class AttributeCore extends ObjectModel
 {
-	/** @var integer Group id which attribute belongs */
+	/** @var int Group id which attribute belongs */
 	public $id_attribute_group;
 
 	/** @var string Name */
@@ -47,7 +47,7 @@ class AttributeCore extends ObjectModel
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		)
 	);
@@ -137,8 +137,8 @@ class AttributeCore extends ObjectModel
 	/**
 	 * Get all attributes for a given language
 	 *
-	 * @param integer $id_lang Language id
-	 * @param boolean $notNull Get only not null fields if true
+	 * @param int $id_lang Language id
+	 * @param bool $notNull Get only not null fields if true
 	 * @return array Attributes
 	 */
 	public static function getAttributes($id_lang, $not_null = false)
@@ -189,9 +189,9 @@ class AttributeCore extends ObjectModel
 	 * Get quantity for a given attribute combination
 	 * Check if quantity is enough to deserve customer
 	 *
-	 * @param integer $id_product_attribute Product attribute combination id
-	 * @param integer $qty Quantity needed
-	 * @return boolean Quantity is available or not
+	 * @param int $id_product_attribute Product attribute combination id
+	 * @param int $qty Quantity needed
+	 * @return bool Quantity is available or not
 	 */
 	public static function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
 	{
@@ -261,7 +261,7 @@ class AttributeCore extends ObjectModel
 	 * Get minimal quantity for product with attributes quantity
 	 *
 	 * @acces public static
-	 * @param integer $id_product_attribute
+	 * @param int $id_product_attribute
 	 * @return mixed Minimal Quantity or false
 	 */
 	public static function getAttributeMinimalQty($id_product_attribute)
@@ -281,9 +281,9 @@ class AttributeCore extends ObjectModel
 
 	/**
 	 * Move an attribute inside its group
-	 * @param boolean $way Up (1)  or Down (0)
-	 * @param integer $position
-	 * @return boolean Update result
+	 * @param bool $way Up (1)  or Down (0)
+	 * @param int $position
+	 * @return bool Update result
 	 */
 	public function updatePosition($way, $position)
 	{
@@ -339,7 +339,7 @@ class AttributeCore extends ObjectModel
 	 */
 	public function cleanPositions($id_attribute_group, $use_last_attribute = true)
 	{
-		$sql = 'SET @i = 0; UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
+		$sql = 'SET @i = -1; UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
 
 		if ($use_last_attribute)
 			$sql .= ' `id_attribute` != '.(int)$this->id.' AND';
@@ -354,8 +354,8 @@ class AttributeCore extends ObjectModel
 	 *
 	 * Get the higher attribute position from a group attribute
 	 *
-	 * @param integer $id_attribute_group
-	 * @return integer $position
+	 * @param int $id_attribute_group
+	 * @return int $position
 	 */
 	public static function getHigherPosition($id_attribute_group)
 	{

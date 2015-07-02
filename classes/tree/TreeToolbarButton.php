@@ -162,7 +162,7 @@ abstract class TreeToolbarButtonCore
 
 	public function getTemplateFile($template)
 	{
-		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
 			$controllerName = strtolower($matches[0][1]);
 
 		if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
@@ -203,13 +203,14 @@ abstract class TreeToolbarButtonCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
-        if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-            return $directory;
-        }
-        
-        $directory .= DIRECTORY_SEPARATOR;
-        return $directory;
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }

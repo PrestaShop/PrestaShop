@@ -27,6 +27,8 @@
 class ManufacturerControllerCore extends FrontController
 {
 	public $php_self = 'manufacturer';
+
+	/** @var Manufacturer */
 	protected $manufacturer;
 
 	public function setMedia()

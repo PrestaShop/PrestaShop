@@ -34,7 +34,6 @@
 			</p>
 			<div class="clear" ></div>
 			<p id="admin-action-result"></p>
-			</p>
 		</div>
 	{/if}
 	<div class="rte{if $content_only} content_only{/if}">

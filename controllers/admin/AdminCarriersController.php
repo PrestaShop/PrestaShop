@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarriersControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_carrier';
@@ -146,6 +149,7 @@ class AdminCarriersControllerCore extends AdminController
 	{
 		$this->_select = 'b.*';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+		$this->_use_found_rows = false;
 		return parent::renderList();
 	}
 
@@ -233,7 +237,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Enable the carrier in the Front Office.')
+					'hint' => $this->l('Enable the carrier in the front office.')
 				),
 				array(
 					'type' => 'switch',
@@ -424,7 +428,8 @@ class AdminCarriersControllerCore extends AdminController
 							$current_carrier = new Carrier($id);
 							if (!Validate::isLoadedObject($current_carrier))
 								throw new PrestaShopException('Cannot load Carrier object');
-							
+
+							/** @var Carrier $new_carrier */
 							// Duplicate current Carrier
 							$new_carrier = $current_carrier->duplicateObject();
 							if (Validate::isLoadedObject($new_carrier))
@@ -594,6 +599,10 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
 	}
 
+	/**
+	 * @param Carrier $object
+	 * @return int
+	 */
 	protected function beforeDelete($object)
 	{
 		return $object->isUsed();
@@ -614,6 +623,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
 	public function changeZones($id)
 	{
+		/** @var Carrier $carrier */
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
 			die (Tools::displayError('The object cannot be loaded.'));
@@ -631,6 +641,15 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
 	/**
 	 * Modifying initial getList method to display position feature (drag and drop)
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -638,7 +657,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
 		foreach ($this->_list as $key => $list)
 			if ($list['name'] == '0')
-				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
+				$this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function ajaxProcessUpdatePositions()

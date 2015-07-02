@@ -22,26 +22,20 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="page_header_toolbar.tpl"} 
+{extends file="page_header_toolbar.tpl"}
 
 
 {block name=pageTitle}
 <h2 class="page-title">
-	{l s='Configure "%s" module' sprintf=$module_display_name}
+	{l s='Configure'}
 </h2>
+<h4 class="page-subtitle">{$module_display_name}</h4>
 {/block}
 {block name=pageBreadcrumb}
 <ul class="breadcrumb page-breadcrumb">
-	{* Shop *}
-	{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-		<li class="breadcrumb-multishop">
-			{$shop_list}
-		</li>
-	{/if}
 	{if $breadcrumbs2.container.name != ''}
 		<li class="breadcrumb-current">
 			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
-			{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
 			{$breadcrumbs2.container.name|escape}
 			{if $breadcrumbs2.container.href != ''}</a>{/if}
 		</li>
@@ -64,7 +58,7 @@
 	<div class="btn-toolbar">
 		<ul class="nav nav-pills pull-right">
 			<li>
-				<a id="desc-module-back" class="toolbar_btn" href="{$back_link}" title="{l s='Back'}">
+				<a id="desc-module-back" class="toolbar_btn" href="javascript: window.history.back();" title="{l s='Back'}">
 					<i class="process-icon-back"></i>
 					<div>{l s='Back'}</div>
 				</a>

@@ -33,7 +33,7 @@ interface WebserviceOutputInterface
 	public function setSchemaToDisplay($schema);
 	public function getSchemaToDisplay();
 	public function renderField($field);
-	public function renderNodeHeader($obj, $params ,$more_attr = null);
+	public function renderNodeHeader($obj, $params, $more_attr = null);
 	public function renderNodeFooter($obj, $params);
 	public function renderAssociationHeader($obj, $params, $assoc_name);
 	public function renderAssociationFooter($obj, $params, $assoc_name);

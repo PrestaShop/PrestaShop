@@ -60,18 +60,24 @@ class LocalizationPackCore
 			$res &= $this->_installStates($xml);
 			$res &= $this->_installTaxes($xml);
 			$res &= $this->_installCurrencies($xml, $install_mode);
-			$res &= $this->_installUnits($xml);
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
-			$res &= $this->_installLanguages($xml, $install_mode);
 			$res &= $this->updateDefaultGroupDisplayMethod($xml);
 
-			if ($res && isset($this->iso_code_lang))
+			if (($res || $install_mode) && isset($this->iso_code_lang))
 			{
-				if (!$id_lang = (int)Language::getIdByIso($this->iso_code_lang))
+				if (!($id_lang = (int)Language::getIdByIso($this->iso_code_lang, true)))
 					$id_lang = 1;
 				if (!$install_mode)
 					Configuration::updateValue('PS_LANG_DEFAULT', $id_lang);
+			}
+			elseif (!isset($this->iso_code_lang) && $install_mode)
+				$id_lang = 1;
+
+			if (!Language::isInstalled(Language::getIsoById($id_lang)))
+			{
+				$res &= $this->_installLanguages($xml, $install_mode);
+				$res &= $this->_installUnits($xml);
 			}
 
 			if ($install_mode && $res && isset($this->iso_currency))
@@ -90,11 +96,17 @@ class LocalizationPackCore
 		return $res;
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function _installStates($xml)
 	{
 		if (isset($xml->states->state))
 			foreach ($xml->states->state as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				$id_country = ($attributes['country']) ? (int)Country::getByIso(strval($attributes['country'])) : false;
 				$id_state = ($id_country) ? State::getIdByIso($attributes['iso_code'], $id_country) : State::getIdByName($attributes['name']);
@@ -158,6 +170,11 @@ class LocalizationPackCore
 		return true;
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function _installTaxes($xml)
 	{
 		if (isset($xml->taxes->tax))
@@ -165,6 +182,7 @@ class LocalizationPackCore
 			$assoc_taxes = array();
 			foreach ($xml->taxes->tax as $taxData)
 			{
+				/** @var SimpleXMLElement $taxData */
 				$attributes = $taxData->attributes();
 				if (($id_tax = Tax::getTaxIdByName($attributes['name'])))
 				{
@@ -193,11 +211,12 @@ class LocalizationPackCore
 
 			foreach ($xml->taxes->taxRulesGroup as $group)
 			{
+				/** @var SimpleXMLElement $group */
 				$group_attributes = $group->attributes();
 				if (!Validate::isGenericName($group_attributes['name']))
 					continue;
 
-				 if (TaxRulesGroup::getIdByName($group['name']))
+				if (TaxRulesGroup::getIdByName($group['name']))
 					continue;
 
 				$trg = new TaxRulesGroup();
@@ -212,6 +231,7 @@ class LocalizationPackCore
 
 				foreach ($group->taxRule as $rule)
 				{
+					/** @var SimpleXMLElement $rule */
 					$rule_attributes = $rule->attributes();
 
 					// Validation
@@ -257,12 +277,19 @@ class LocalizationPackCore
 		return true;
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @param bool $install_mode
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function _installCurrencies($xml, $install_mode = false)
 	{
 		if (isset($xml->currencies->currency))
 		{
 			foreach ($xml->currencies->currency as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				if (Currency::exists($attributes['iso_code'], (int)$attributes['iso_code_num']))
 					continue;
@@ -292,9 +319,9 @@ class LocalizationPackCore
 					PaymentModule::addCurrencyPermissions($currency->id);
 				}
 			}
-            
+
 			if (($error = Currency::refreshCurrencies()) !== null)
-                $this->_errors[] = $error;
+				$this->_errors[] = $error;
 
 			if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1)
 				$this->iso_currency = $attributes['iso_code'];
@@ -303,12 +330,18 @@ class LocalizationPackCore
 		return true;
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @param bool $install_mode
+	 * @return bool
+	 */
 	protected function _installLanguages($xml, $install_mode = false)
 	{
 		$attributes = array();
 		if (isset($xml->languages->language))
 			foreach ($xml->languages->language as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				// if we are not in an installation context or if the pack is not available in the local directory
 				if (Language::getIdByIso($attributes['iso_code']) && !$install_mode)
@@ -326,12 +359,17 @@ class LocalizationPackCore
 		return !count($this->_errors);
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 */
 	protected function _installUnits($xml)
 	{
 		$varNames = array('weight' => 'PS_WEIGHT_UNIT', 'volume' => 'PS_VOLUME_UNIT', 'short_distance' => 'PS_DIMENSION_UNIT', 'base_distance' => 'PS_BASE_DISTANCE_UNIT', 'long_distance' => 'PS_DISTANCE_UNIT');
 		if (isset($xml->units->unit))
 			foreach ($xml->units->unit as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				if (!isset($varNames[strval($attributes['type'])]))
 				{
@@ -348,15 +386,19 @@ class LocalizationPackCore
 	}
 
 	/**
-	* Install/Uninstall a module from a localization file
-	* <modules>
-	*	<module name="module_name" [install="0|1"] />
-	*/
+	 * Install/Uninstall a module from a localization file
+	 * <modules>
+	 *	<module name="module_name" [install="0|1"] />
+	 *
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 */
 	protected function installModules($xml)
 	{
 		if (isset($xml->modules))
 			foreach ($xml->modules->module as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				$name = (string)$attributes['name'];
 				if (isset($name) && $module = Module::getInstanceByName($name))
@@ -384,15 +426,19 @@ class LocalizationPackCore
 	}
 
 	/**
-	* Update a configuration variable from a localization file
-	* <configuration>
-	*	<configuration name="variable_name" value="variable_value" />
-	*/
+	 * Update a configuration variable from a localization file
+	 * <configuration>
+	 *	<configuration name="variable_name" value="variable_value" />
+	 *
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 */
 	protected function installConfiguration($xml)
 	{
 		if (isset($xml->configurations))
 			foreach ($xml->configurations->configuration as $data)
 			{
+				/** @var SimpleXMLElement $data */
 				$attributes = $data->attributes();
 				$name = (string)$attributes['name'];
 
@@ -403,12 +449,20 @@ class LocalizationPackCore
 
 		return true;
 	}
-	
+
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 */
 	protected function _installGroups($xml)
 	{
 		return $this->updateDefaultGroupDisplayMethod($xml);
 	}
 
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return bool
+	 */
 	protected function updateDefaultGroupDisplayMethod($xml)
 	{
 		if (isset($xml->group_default))
@@ -438,4 +492,3 @@ class LocalizationPackCore
 		return $this->_errors;
 	}
 }
-

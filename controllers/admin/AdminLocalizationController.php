@@ -165,6 +165,9 @@ class AdminLocalizationControllerCore extends AdminController
 				return;
 		}
 
+		if (!extension_loaded('openssl'))
+			$this->displayWarning($this->l('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.'));
+
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
 			$version = str_replace('.', '', _PS_VERSION_);
@@ -173,7 +176,7 @@ class AdminLocalizationControllerCore extends AdminController
 			if (($iso_localization_pack = Tools::getValue('iso_localization_pack')) && Validate::isFileName($iso_localization_pack))
 			{
 				if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_'))
-					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$iso_localization_pack.'.xml');
+					$pack = @Tools::file_get_contents(_PS_API_URL_.'/localization/'.$version.'/'.$iso_localization_pack.'.xml');
 				else
 					$pack = false;
 				
@@ -220,7 +223,7 @@ class AdminLocalizationControllerCore extends AdminController
 		$localizations_pack = false;
 		$this->tpl_option_vars['options_content'] = $this->renderOptions();
 
-		$xml_localization = Tools::simplexml_load_file('http://api.prestashop.com/rss/localization.xml');
+		$xml_localization = Tools::simplexml_load_file(_PS_API_URL_.'/rss/localization.xml');
 		if (!$xml_localization)
 		{
 			$localization_file = _PS_ROOT_DIR_.'/localization/localization.xml';
@@ -242,7 +245,7 @@ class AdminLocalizationControllerCore extends AdminController
 			}
 
 		if (!$localizations_pack)
-			return $this->displayWarning($this->l('Cannot connect to prestashop.com'));
+			return $this->displayWarning($this->l('Cannot connect to '._PS_API_URL_));
 
 		// Add local localization .xml files to the list if they are not already there
 		foreach (scandir(_PS_ROOT_DIR_.'/localization/') as $entry)

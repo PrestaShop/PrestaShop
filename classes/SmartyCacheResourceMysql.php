@@ -36,7 +36,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
 	 * @param string $content cached content
-	 * @param integer $mtime cache modification timestamp (epoch)
+	 * @param int $mtime cache modification timestamp (epoch)
 	 * @return void
 	 */
 	protected function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime)
@@ -62,7 +62,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @return integer|boolean timestamp (epoch) the template was modified, or false if not found
+	 * @return int|boolean timestamp (epoch) the template was modified, or false if not found
 	 */
 	protected function fetchTimestamp($id, $name, $cache_id, $compile_id)
 	{
@@ -78,9 +78,9 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @param integer|null $exp_time seconds till expiration time in seconds or null
+	 * @param int|null $exp_time seconds till expiration time in seconds or null
 	 * @param string $content content to cache
-	 * @return boolean success
+	 * @return bool success
 	 */
 	protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content)
 	{
@@ -92,7 +92,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 			"'.pSQL($cache_id, true).'",
 			"'.pSQL($content, true).'"
 		)');
-	  
+
 		return (bool)Db::getInstance()->Affected_Rows();
 	}
 
@@ -102,13 +102,14 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @param integer|null $exp_time seconds till expiration or null
-	 * @return integer number of deleted caches
+	 * @param int|null $exp_time seconds till expiration or null
+	 * @return int number of deleted caches
 	 */
 	protected function delete($name, $cache_id, $compile_id, $exp_time)
 	{
 		// delete the whole cache
-		if ($name === null && $cache_id === null && $compile_id === null && $exp_time === null) {
+		if ($name === null && $cache_id === null && $compile_id === null && $exp_time === null)
+		{
 			// returning the number of deleted caches would require a second query to count them
 			Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'smarty_cache');
 			return -1;
@@ -122,7 +123,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 		if ($cache_id !== null)
 			$where[] = '(cache_id  = "'.pSQL($cache_id, true).'" OR cache_id LIKE "'.pSQL($cache_id .'|%', true).'")';
 
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'smarty_cache WHERE ' . implode(' AND ', $where));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'smarty_cache WHERE '.implode(' AND ', $where));
 		return Db::getInstance()->Affected_Rows();
 	}
 }

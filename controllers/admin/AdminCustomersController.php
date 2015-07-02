@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Customer $object
+ */
 class AdminCustomersControllerCore extends AdminController
 {
 	protected $delete_mode;
@@ -31,6 +34,7 @@ class AdminCustomersControllerCore extends AdminController
 	protected $_defaultOrderBy = 'date_add';
 	protected $_defaultOrderWay = 'DESC';
 	protected $can_add_customer = true;
+	protected static $meaning_status = array();
 
 	public function __construct()
 	{
@@ -63,7 +67,10 @@ class AdminCustomersControllerCore extends AdminController
 		$titles_array = array();
 		$genders = Gender::getGenders($this->context->language->id);
 		foreach ($genders as $gender)
+		{
+			/** @var Gender $gender */
 			$titles_array[$gender->id_gender] = $gender->name;
+		}
 
 		$this->_select = '
 		a.date_add, gl.name as title, (
@@ -80,6 +87,7 @@ class AdminCustomersControllerCore extends AdminController
 			LIMIT 1
 		) as connect';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (a.id_gender = gl.id_gender AND gl.id_lang = '.(int)$this->context->language->id.')';
+		$this->_use_found_rows = false;
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),
@@ -166,6 +174,13 @@ class AdminCustomersControllerCore extends AdminController
 		// Check if we can add a customer
 		if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP))
 			$this->can_add_customer = false;
+
+		self::$meaning_status = array(
+			'open' => $this->l('Open'),
+			'closed' => $this->l('Closed'),
+			'pending1' => $this->l('Pending 1'),
+			'pending2' => $this->l('Pending 2')
+		);
 	}
 
 	public function postProcess()
@@ -194,15 +209,14 @@ class AdminCustomersControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
+
 		if (!$this->can_add_customer)
 			unset($this->toolbar_btn['new']);
-		elseif (!$this->display) //display import button only on listing
-		{
+		elseif (!$this->display && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
 				'desc' => $this->l('Import')
 			);
-		}
 	}
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
@@ -227,6 +241,7 @@ class AdminCustomersControllerCore extends AdminController
 				$this->toolbar_title[] = $this->l('Manage your Customers');
 				break;
 			case 'view':
+				/** @var Customer $customer */
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					array_pop($this->toolbar_title);
 					$this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
@@ -234,6 +249,7 @@ class AdminCustomersControllerCore extends AdminController
 			case 'add':
 			case 'edit':
 				array_pop($this->toolbar_title);
+				/** @var Customer $customer */
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
@@ -306,6 +322,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Customer $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -313,6 +330,7 @@ class AdminCustomersControllerCore extends AdminController
 		$list_genders = array();
 		foreach ($genders as $key => $gender)
 		{
+			/** @var Gender $gender */
 			$list_genders[$key]['id'] = 'gender_'.$gender->id;
 			$list_genders[$key]['value'] = $gender->id;
 			$list_genders[$key]['label'] = $gender->name;
@@ -504,6 +522,7 @@ class AdminCustomersControllerCore extends AdminController
 			$list_risks = array();
 			foreach ($risks as $key => $risk)
 			{
+				/** @var Risk $risk */
 				$list_risks[$key]['id_risk'] = (int)$risk->id;
 				$list_risks[$key]['name'] = $risk->name;
 			}
@@ -658,6 +677,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderView()
 	{
+		/** @var Customer $customer */
 		if (!($customer = $this->loadObject()))
 			return;
 
@@ -685,11 +705,14 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$messages = CustomerThread::getCustomerMessages((int)$customer->id);
+
 		$total_messages = count($messages);
 		for ($i = 0; $i < $total_messages; $i++)
 		{
 			$messages[$i]['message'] = substr(strip_tags(html_entity_decode($messages[$i]['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75);
 			$messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], null, true);
+			if (isset(self::$meaning_status[$messages[$i]['status']]))
+				$messages[$i]['status'] = self::$meaning_status[$messages[$i]['status']];
 		}
 
 		$groups = $customer->getGroups();
@@ -741,11 +764,11 @@ class AdminCustomersControllerCore extends AdminController
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
 				JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
 				WHERE c.id_customer = '.(int)$customer->id.'
-					AND cp.id_product NOT IN (
-							SELECT product_id
+					AND NOT EXISTS (
+							SELECT 1
 							FROM '._DB_PREFIX_.'orders o
 							JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
-							WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
+							WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
 						)';
 		$interested = Db::getInstance()->executeS($sql);
 		$total_interested = count($interested);
@@ -995,7 +1018,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	/**
 	 * @param string $token
-	 * @param integer $id
+	 * @param int $id
 	 * @param string $name
 	 * @return mixed
 	 */
@@ -1029,9 +1052,10 @@ class AdminCustomersControllerCore extends AdminController
 		$customers = array();
 		$searches = array_unique($searches);
 		foreach ($searches as $search)
-			if (!empty($search) && $results = Customer::searchByName($search))
+			if (!empty($search) && $results = Customer::searchByName($search, 50))
 				foreach ($results as $result)
-					$customers[$result['id_customer']] = $result;
+					if ($result['active'])
+						$customers[$result['id_customer']] = $result;
 
 		if (count($customers))
 			$to_return = array(

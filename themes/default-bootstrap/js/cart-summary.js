@@ -27,6 +27,7 @@ $(document).ready(function(){
 	$('.cart_quantity_up').off('click').on('click', function(e){
 		e.preventDefault();
 		upQuantity($(this).attr('id').replace('cart_quantity_up_', ''));
+		$('#' + $(this).attr('id').replace('_up_', '_down_')).removeClass('disabled');
 	});
 	$('.cart_quantity_down').off('click').on('click', function(e){
 		e.preventDefault();
@@ -65,14 +66,52 @@ $(document).ready(function(){
 			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
-			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
+			dataType: 'json',
+			data: 'controller=cart&ajax=true'
+				+ '&summary=true'
+				+ '&allowSeperatedPackage=true'
+				+ '&value='
 				+ ($(this).prop('checked') ? '1' : '0')
 				+ '&token='+static_token
 				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (typeof(getCarrierListAndUpdate) !== 'undefined')
-					getCarrierListAndUpdate();
+				if (jsonData.hasError)
+				{
+					var errors = '';
+					for(var error in jsonData.errors)
+						//IE6 bug fix
+						if(error !== 'indexOf')
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
+					if (!!$.prototype.fancybox)
+					    $.fancybox.open([
+				        {
+				            type: 'inline',
+				            autoScale: true,
+				            minHeight: 30,
+				            content: '<p class="fancybox-error">' + errors + '</p>'
+				        }],
+						{
+					        padding: 0
+					    });
+					else
+					    alert(errors);
+					$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
+				}
+				else
+				{
+					if (jsonData.refresh)
+						window.location.href = window.location.href;
+					updateCartSummary(jsonData.summary);
+					if (window.ajaxCart != undefined)
+						ajaxCart.updateCart(jsonData);
+					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
+					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+					if (typeof(getCarrierListAndUpdate) !== 'undefined')
+						getCarrierListAndUpdate();
+					if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+						updatePaymentMethodsDisplay();
+				}
 			}
 		});
 	});
@@ -419,7 +458,10 @@ function deleteProductFromSummary(id)
 			else
 			{
 				if (jsonData.refresh)
+				{
 					location.reload();
+					return;
+				}
 				if (parseInt(jsonData.summary.products.length) == 0)
 				{
 					if (typeof(orderProcess) == 'undefined' || orderProcess !== 'order-opc')
@@ -452,7 +494,7 @@ function deleteProductFromSummary(id)
 						if (jsonData.summary.products[i].id_product == productId
 							&& jsonData.summary.products[i].id_product_attribute == productAttributeId
 							&& jsonData.summary.products[i].id_address_delivery == id_address_delivery
-							&& (parseInt(jsonData.summary.products[i].customization_quantity) > 0))
+							&& (parseInt(jsonData.summary.products[i].customizationQuantityTotal) > 0))
 								exist = true;
 					}
 					// if all customization removed => delete product line
@@ -773,7 +815,7 @@ function updateCartSummary(json)
 		var reduction_type = product_list[i].reduction_type;
 		var reduction_symbol = '';
 		var initial_price_text = '';
-		initial_price = '';
+		var initial_price = '';
 
 		if (typeof(product_list[i].price_without_quantity_discount) !== 'undefined')
 			initial_price = formatCurrency(product_list[i].price_without_quantity_discount, currencyFormat, currencySign, currencyBlank);
@@ -854,7 +896,10 @@ function updateCartSummary(json)
 	else
 	{
 		if ($('.cart_discount').length == 0)
+		{
 			location.reload();
+			return;
+		}
 
 		if (priceDisplayMethod !== 0)
 			$('#total_discount').html('-' + formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));
@@ -934,7 +979,7 @@ function updateCartSummary(json)
 	}
 	else
 	{
-		if (json.carrier.id != null)
+		if (json.carrier.id != null || json.free_ship == 1)
 			$('#total_shipping').html(freeShippingTranslation);
 		else if (!hasDeliveryAddress)
 			$('.cart_total_delivery').hide();
@@ -976,6 +1021,8 @@ function updateCustomizedDatas(json)
 function updateHookShoppingCart(html)
 {
 	$('#HOOK_SHOPPING_CART').html(html);
+	if (typeof initCrossSellingbxSlider !== 'undefined')
+		initCrossSellingbxSlider();
 }
 
 function updateHookShoppingCartExtra(html)

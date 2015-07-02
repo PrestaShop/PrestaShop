@@ -27,6 +27,8 @@
     {l s='The "%1$s" theme has been successfully installed.'|sprintf:$theme_name}
 </div>
 
+{hook h='displayAfterThemeInstallation' theme_name=$theme_name}
+
 {if $doc|count > 0}
     <ul>
         {foreach $doc as $key => $item}

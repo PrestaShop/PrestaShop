@@ -233,20 +233,18 @@
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
-							<select id="cart_rule_select_1" multiple="">
-								{foreach from=$cart_rules.unselected item='cart_rule'}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-								{/foreach}
+							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search'}" value="">
+							<select id="cart_rule_select_1" class="jscroll" multiple="">
 							</select>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Combinable cart rules'}</p>
-							<select name="cart_rule_select[]" id="cart_rule_select_2" multiple>
-								{foreach from=$cart_rules.selected item='cart_rule'}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-								{/foreach}
+							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search'}" value="">
+							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 							</select>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>

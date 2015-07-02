@@ -70,12 +70,12 @@
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
-							<li>"There are <strong>%d</strong> products": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
-							<li>"List of pages in <strong>%s</strong>": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
-							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
+							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
-				</div>				
+				</div>
 				<script type="text/javascript">
 					$(document).ready(function(){
 						$('a.useSpecialSyntax').click(function(){
@@ -120,16 +120,16 @@
 											<tr>
 												<td width="40%">{$key|stripslashes}</td>
 												<td>=</td>
-												<td> 
+												<td>
 													{* Prepare name string for md5() *}
 													{capture assign="name"}{strtolower($module_name)}{if $theme_name}_{strtolower($theme_name)}{/if}_{strtolower($template_name)}_{md5($key)}{/capture}
 													{if $key|strlen < $textarea_sized}
-														<input type="text" 
+														<input type="text"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-															name="{$name|md5}" 
+															name="{$name|md5}"
 															value="{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}"' />
 													{else}
-														<textarea rows="{($key|strlen / $textarea_sized)|intval}" 
+														<textarea rows="{($key|strlen / $textarea_sized)|intval}"
 															style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 															name="{$name|md5}">{$value.trad|regex_replace:'#"#':'&quot;'|stripslashes}</textarea>
 													{/if}

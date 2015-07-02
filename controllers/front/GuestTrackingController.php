@@ -128,7 +128,11 @@ class GuestTrackingControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign template vars related to order tracking informations
+	 * Assigns template vars related to order tracking information
+	 *
+	 * @param PrestaShopCollection $order_collection
+	 *
+	 * @throws PrestaShopException
 	 */
 	protected function assignOrderTracking($order_collection)
 	{
@@ -142,6 +146,7 @@ class GuestTrackingControllerCore extends FrontController
 
 		foreach ($order_list as &$order)
 		{
+			/** @var Order $order */
 			$order->id_order_state = (int)$order->getCurrentState();
 			$order->invoice = (OrderState::invoiceAvailable((int)$order->id_order_state) && $order->invoice_number);
 			$order->order_history = $order->getHistory((int)$this->context->language->id, false, true);
@@ -175,8 +180,8 @@ class GuestTrackingControllerCore extends FrontController
 			'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 			'is_guest' => true,
 			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
-			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
+			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'use_tax' => Configuration::get('PS_TAX'),
 			));
 	}

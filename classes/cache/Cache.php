@@ -135,6 +135,23 @@ abstract class CacheCore
 	}
 
 	/**
+	 * Unit testing purpose only
+	 * @param $test_instance Cache
+	 */
+	public static function setInstanceForTesting($test_instance)
+	{
+		self::$instance = $test_instance;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * Store a data in cache
 	 *
 	 * @param string $key
@@ -232,6 +249,9 @@ abstract class CacheCore
 		if ($this->isBlacklist($query))
 			return true;
 
+		if (empty($result) || $result === false)
+			$result = array();
+
 		if (is_null($this->sql_tables_cached))
 		{
 			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
@@ -239,18 +259,44 @@ abstract class CacheCore
 				$this->sql_tables_cached = array();
 		}
 
-		// Store query results in cache if this query is not already cached
+		// Store query results in cache
 		$key = Tools::encryptIV($query);
-		if ($this->exists($key))
-			return true;
+		// no need to check the key existence before the set : if the query is already
+		// in the cache, setQuery is not invoked
 		$this->set($key, $result);
 
 		// Get all table from the query and save them in cache
 		if ($tables = $this->getTables($query))
 			foreach ($tables as $table)
+			{
 				if (!isset($this->sql_tables_cached[$table][$key]))
+				{
+					$this->adjustTableCacheSize($table);
 					$this->sql_tables_cached[$table][$key] = true;
+				}
+			}
 		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+	}
+
+	/**
+	 * Autoadjust the table cache size to avoid storing too big elements in the cache
+	 *
+	 * @param $table
+	 */
+	protected function adjustTableCacheSize($table)
+	{
+		if (isset($this->sql_tables_cached[$table])
+			&& count($this->sql_tables_cached[$table]) > 5000)
+		{
+			// make sure the cache doesn't contains too many elements : delete the first 1000
+			$table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
+			foreach($table_buffer as $fs_key => $value)
+			{
+				$this->delete($fs_key);
+				$this->delete($fs_key.'_nrows');
+				unset($this->sql_tables_cached[$table][$fs_key]);
+			}
+		}
 	}
 
 	protected function getTables($string)
@@ -265,7 +311,7 @@ abstract class CacheCore
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Delete a query from cache
 	 *
@@ -310,6 +356,12 @@ abstract class CacheCore
 
 	public static function store($key, $value)
 	{
+		// PHP is not efficient at storing array
+		// Better delete the whole cache if there are
+		// more than 1000 elements in the array
+		if (count(Cache::$local) > 1000) {
+			Cache::$local = array();
+		}
 		Cache::$local[$key] = $value;
 	}
 

@@ -28,13 +28,14 @@
 		{assign var='priceDisplayPrecision' value=2}
 	{/if}
 	{if !$priceDisplay || $priceDisplay == 2}
-		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL, $priceDisplayPrecision)}
+		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 6)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 	{elseif $priceDisplay == 1}
-		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL, $priceDisplayPrecision)}
+		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 6)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
 <div itemscope itemtype="http://schema.org/Product">
+	<meta itemprop="url" content="{$link->getProductLink($product)}">
 	<div class="primary_block row">
 		{if !$content_only}
 			<div class="container">
@@ -42,11 +43,15 @@
 			</div>
 		{/if}
 		{if isset($adminActionDisplay) && $adminActionDisplay}
-			<div id="admin-action">
-				<p>{l s='This product is not visible to your customers.'}
+			<div id="admin-action" class="container">
+				<p class="alert alert-info">{l s='This product is not visible to your customers.'}
 					<input type="hidden" id="admin-action-product-id" value="{$product->id}" />
-					<input type="submit" value="{l s='Publish'}" name="publish_button" class="exclusive" />
-					<input type="submit" value="{l s='Back'}" name="lnk_view" class="exclusive" />
+					<a id="publish_button" class="btn btn-default button button-small" href="#">
+						<span>{l s='Publish'}</span>
+					</a>
+					<a id="lnk_view" class="btn btn-default button button-small" href="#">
+						<span>{l s='Back'}</span>
+					</a>
 				</p>
 				<p id="admin-action-result"></p>
 			</div>
@@ -75,7 +80,7 @@
 				{if $have_image}
 					<span id="view_full_size">
 						{if $jqZoomEnabled && $have_image && !$content_only}
-							<a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}" itemprop="url">
+							<a class="jqzoom" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" rel="gal1" href="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'thickbox_default')|escape:'html':'UTF-8'}">
 								<img itemprop="image" src="{$link->getImageLink($product->link_rewrite, $cover.id_image, 'large_default')|escape:'html':'UTF-8'}" title="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}" alt="{if !empty($cover.legend)}{$cover.legend|escape:'html':'UTF-8'}{else}{$product->name|escape:'html':'UTF-8'}{/if}"/>
 							</a>
 						{else}
@@ -118,7 +123,7 @@
 								{/if}
 								<li id="thumbnail_{$image.id_image}"{if $smarty.foreach.thumbnails.last} class="last"{/if}>
 									<a{if $jqZoomEnabled && $have_image && !$content_only} href="javascript:void(0);" rel="{literal}{{/literal}gallery: 'gal1', smallimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'large_default')|escape:'html':'UTF-8'}',largeimage: '{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}'{literal}}{/literal}"{else} href="{$link->getImageLink($product->link_rewrite, $imageIds, 'thickbox_default')|escape:'html':'UTF-8'}"	data-fancybox-group="other-views" class="fancybox{if $image.id_image == $cover.id_image} shown{/if}"{/if} title="{$imageTitle}">
-										<img class="img-responsive" id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'cart_default')|escape:'html':'UTF-8'}" alt="{$imageTitle}" title="{$imageTitle}" height="{$cartSize.height}" width="{$cartSize.width}" itemprop="image" />
+										<img class="img-responsive" id="thumb_{$image.id_image}" src="{$link->getImageLink($product->link_rewrite, $imageIds, 'cart_default')|escape:'html':'UTF-8'}" alt="{$imageTitle}" title="{$imageTitle}"{if isset($cartSize)} height="{$cartSize.height}" width="{$cartSize.width}"{/if} itemprop="image" />
 									</a>
 								</li>
 							{/foreach}
@@ -153,7 +158,7 @@
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Reference:'} </label>
-				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
+				<span class="editable" itemprop="sku"{if !empty($product->reference) && $product->reference} content="{$product->reference}{/if}">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
 			</p>
 			{if !$product->is_virtual && $product->condition}
 			<p id="product_condition">
@@ -211,12 +216,12 @@
 				<span id="availability_value" class="label{if $product->quantity <= 0 && !$allow_oosp} label-danger{elseif $product->quantity <= 0} label-warning{else} label-success{/if}">{if $product->quantity <= 0}{if $PS_STOCK_MANAGEMENT && $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{elseif $PS_STOCK_MANAGEMENT}{$product->available_now}{/if}</span>
 			</p>
 			{if $PS_STOCK_MANAGEMENT}
-				{hook h="displayProductDeliveryTime" product=$product}
+				{if !$product->is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 				<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties || $product->quantity <= 0) || $allow_oosp || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
 			{/if}
 			<p id="availability_date"{if ($product->quantity > 0) || !$product->available_for_order || $PS_CATALOG_MODE || !isset($product->available_date) || $product->available_date < $smarty.now|date_format:'%Y-%m-%d'} style="display: none;"{/if}>
 				<span id="availability_date_label">{l s='Availability date:'}</span>
-				<span id="availability_date_value">{dateFormat date=$product->available_date full=false}</span>
+				<span id="availability_date_value">{if Validate::isDate($product->available_date)}{dateFormat date=$product->available_date full=false}{/if}</span>
 			</p>
 			<!-- Out of stock hook -->
 			<div id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
@@ -232,7 +237,6 @@
 							{l s='Print'}
 						</a>
 					</li>
-					{if $have_image && !$jqZoomEnabled}{/if}
 				</ul>
 			{/if}
 		</div>
@@ -257,7 +261,7 @@
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">{strip}
 									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
-										<span id="our_price_display" class="price" itemprop="price">{convertPrice price=$productPrice}</span>
+										<span id="our_price_display" class="price" itemprop="price" content="{$productPrice}">{convertPrice price=$productPrice|floatval}</span>
 										{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
 											{if $priceDisplay == 1} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
 										{/if}
@@ -273,14 +277,14 @@
 								<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>{strip}
 									<span id="reduction_amount_display">
 									{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|floatval !=0}
-										-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
+										-{convertPrice price=$productPriceWithoutReduction|floatval-$productPrice|floatval}
 									{/if}
 									</span>
 								{/strip}</p>
-								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 0} class="hidden"{/if}>{strip}
+								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction)} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
-										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
+										<span id="old_price_display"><span class="price">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction|floatval}{/if}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}</span>
 									{/if}
 								{/strip}</p>
 								{if $priceDisplay == 2}
@@ -301,20 +305,21 @@
 								</p>
 							{/if}
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
-								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
+								{math equation="pprice / punit_price" pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
 								{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 							{/if}
 						{/if} {*close if for show price*}
-						{hook h="displayProductPriceBlock" product=$product type="weight"}
+						{hook h="displayProductPriceBlock" product=$product type="weight" hook_origin='product_sheet'}
+                        {hook h="displayProductPriceBlock" product=$product type="after_price"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
 					<div class="product_attributes clearfix">
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
 						<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none;"{/if}>
-							<label>{l s='Quantity'}</label>
-							<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />
+							<label for="quantity_wanted">{l s='Quantity'}</label>
+							<input type="number" min="1" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />
 							<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 								<span><i class="icon-minus"></i></span>
 							</a>
@@ -417,13 +422,21 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
+											{if $quantity_discount.reduction_tax == 0 && !$quantity_discount.price}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction_with_tax)|floatval}
+											{else}
+												{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
+											{/if}
 										{else}
 											{convertPrice price=$quantity_discount.real_value|floatval}
 										{/if}
 									{else}
 										{if $display_discount_price}
-											{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+											{if $quantity_discount.reduction_tax == 0}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction_with_tax)|floatval}
+											{else}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
+											{/if}
 										{else}
 											{$quantity_discount.real_value|floatval}%
 										{/if}
@@ -432,13 +445,13 @@
 								<td>
 									<span>{l s='Up to'}</span>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
 									{else}
-										{$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 									{/if}
-									{$discountPrice=$discountPrice*$quantity_discount.quantity}
-									{$qtyProductPrice = $productPrice*$quantity_discount.quantity}
-									{convertPrice price=$qtyProductPrice-$discountPrice}
+									{$discountPrice=$discountPrice * $quantity_discount.quantity}
+									{$qtyProductPrice=$productPriceWithoutReduction|floatval * $quantity_discount.quantity}
+									{convertPrice price=$qtyProductPrice - $discountPrice}
 								</td>
 							</tr>
 							{/foreach}
@@ -464,13 +477,12 @@
 			</section>
 			<!--end Data sheet -->
 		{/if}
-		{if $product->description}
+		{if isset($product) && $product->description}
 			<!-- More info -->
 			<section class="page-product-box">
-				<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
-				{if isset($product) && $product->description}
-					<!-- full description -->
-					<div  class="rte">{$product->description}</div>
+				<h3 class="page-product-heading">{l s='More info'}</h3>
+				<!-- full description -->
+				<div  class="rte">{$product->description}</div>
 			</section>
 			<!--end  More info -->
 		{/if}
@@ -665,10 +677,6 @@
 {addJsDef availableLaterValue=$product->available_later|escape:'quotes':'UTF-8'}
 {addJsDef attribute_anchor_separator=$attribute_anchor_separator|escape:'quotes':'UTF-8'}
 {addJsDef attributesCombinations=$attributesCombinations}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef currentDate=$smarty.now|date_format:'%Y-%m-%d %H:%M:%S'}
 {if isset($combinations) && $combinations}
 	{addJsDef combinations=$combinations}
@@ -679,11 +687,11 @@
 {if isset($combinationImages) && $combinationImages}
 	{addJsDef combinationImages=$combinationImages}
 {/if}
+{addJsDef customizationId=$id_customization}
 {addJsDef customizationFields=$customizationFields}
 {addJsDef default_eco_tax=$product->ecotax|floatval}
 {addJsDef displayPrice=$priceDisplay|intval}
 {addJsDef ecotaxTax_rate=$ecotaxTax_rate|floatval}
-{addJsDef group_reduction=$group_reduction}
 {if isset($cover.id_image_only)}
 	{addJsDef idDefaultImage=$cover.id_image_only|intval}
 {else}
@@ -696,12 +704,23 @@
 {addJsDef maxQuantityToAllowDisplayOfLastQuantityMessage=$last_qties|intval}
 {addJsDef minimalQuantity=$product->minimal_quantity|intval}
 {addJsDef noTaxForThisProduct=$no_tax|boolval}
-{addJsDef customerGroupWithoutTax=$customer_group_without_tax|boolval}
+{if isset($customer_group_without_tax)}
+	{addJsDef customerGroupWithoutTax=$customer_group_without_tax|boolval}
+{else}
+	{addJsDef customerGroupWithoutTax=false}
+{/if}
+{if isset($group_reduction)}
+	{addJsDef groupReduction=$group_reduction|floatval}
+{else}
+	{addJsDef groupReduction=false}
+{/if}
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcl=($product->base_price|floatval)}
+{addJsDef productPriceTaxIncluded=($product->getPriceWithoutReduct(false)|default:'null' - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcluded=($product->getPrice(false, null, 6, null, false, false) - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcl=($product->getPrice(false, null, 6, null, false, false)|floatval)}
+{addJsDef productBasePriceTaxIncl=($product->getPrice(true, null, 6, null, false, false)|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
 {addJsDef productAvailableForOrder=$product->available_for_order|boolval}
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}

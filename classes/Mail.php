@@ -42,10 +42,10 @@ class MailCore extends ObjectModel
 	/** @var string Subject */
 	public $subject;
 
-	/** @var unsigned integer Language ID */
+	/** @var int Language ID */
 	public $id_lang;
 
-	/** @var timestamp Date */
+	/** @var int Timestamp */
 	public $date_add;
 
 	/**
@@ -82,11 +82,11 @@ class MailCore extends ObjectModel
 	 * @param bool $modeSMTP
 	 * @param string $template_path
 	 * @param bool $die
-     * @param string $bcc Bcc recipient
+	 * @param string $bcc Bcc recipient
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
-		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null)
+		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null)
 	{
 		if (!$id_shop)
 			$id_shop = Context::getContext()->shop->id;
@@ -125,8 +125,10 @@ class MailCore extends ObjectModel
 			$configuration['PS_MAIL_SMTP_PORT'] = 'default';
 
 		// Sending an e-mail can be of vital importance for the merchant, when his password is lost for example, so we must not die but do our best to send the e-mail
+
 		if (!isset($from) || !Validate::isEmail($from))
 			$from = $configuration['PS_SHOP_EMAIL'];
+
 		if (!Validate::isEmail($from))
 			$from = null;
 
@@ -262,9 +264,22 @@ class MailCore extends ObjectModel
 				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$iso_template.'.html', $die);
 				return false;
 			}
-			$template_html = file_get_contents($template_path.$iso_template.'.html');
-			$template_txt = strip_tags(html_entity_decode(file_get_contents($template_path.$iso_template.'.txt'), null, 'utf-8'));
-
+			$template_html = '';
+			$template_txt = '';
+			Hook::exec('actionEmailAddBeforeContent', array(
+				'template' => $template,
+				'template_html' => &$template_html,
+				'template_txt' => &$template_txt,
+				'id_lang' => (int)$id_lang
+			), null, true);
+			$template_html .= file_get_contents($template_path.$iso_template.'.html');
+			$template_txt .= strip_tags(html_entity_decode(file_get_contents($template_path.$iso_template.'.txt'), null, 'utf-8'));
+			Hook::exec('actionEmailAddAfterContent', array(
+				'template' => $template,
+				'template_html' => &$template_html,
+				'template_txt' => &$template_txt,
+				'id_lang' => (int)$id_lang
+			), null, true);
 			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
 					include_once($template_path.$iso.'/lang.php');
 			elseif ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
@@ -287,6 +302,12 @@ class MailCore extends ObjectModel
 			$message->setId(Mail::generateId());
 
 			$message->headers->setEncoding('Q');
+
+			if (!($reply_to && Validate::isEmail($reply_to)))
+				$reply_to = $from;
+
+			if (isset($reply_to) && $reply_to)
+				$message->setReplyTo($reply_to);
 
 			$template_vars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $template_vars);
 			$template_vars = array_map(array('Tools', 'stripslashes'), $template_vars);
@@ -314,6 +335,15 @@ class MailCore extends ObjectModel
 			$template_vars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, Context::getContext()->language->id, null, false, $id_shop);
 			$template_vars['{history_url}'] = Context::getContext()->link->getPageLink('history', true, Context::getContext()->language->id, null, false, $id_shop);
 			$template_vars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $id_shop));
+			// Get extra template_vars
+			$extra_template_vars = array();
+			Hook::exec('actionGetExtraMailTemplateVars', array(
+				'template' => $template,
+				'template_vars' => $template_vars,
+				'extra_template_vars' => &$extra_template_vars,
+				'id_lang' => (int)$id_lang
+			), null, true);
+			$template_vars = array_merge($template_vars, $extra_template_vars);
 			$swift->attachPlugin(new Swift_Plugin_Decorator(array($to_plugin => $template_vars)), 'decorator');
 			if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH || $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT)
 				$message->attach(new Swift_Message_Part($template_txt, 'text/plain', '8bit', 'utf-8'));
@@ -343,6 +373,7 @@ class MailCore extends ObjectModel
 				$mail->id_lang = (int)$id_lang;
 				foreach (array_merge($to_list->getTo(), $to_list->getCc(), $to_list->getBcc()) as $recipient)
 				{
+					/** @var Swift_Address $recipient */
 					$mail->id = null;
 					$mail->recipient = substr($recipient->getAddress(), 0, 126);
 					$mail->add();
@@ -351,9 +382,22 @@ class MailCore extends ObjectModel
 
 			return $send;
 		}
-		catch (Swift_Exception $e) {
+		catch (Swift_Exception $e)
+		{
+			PrestaShopLogger::addLog(
+				'Swift Error: '.$e->getMessage(),
+				3,
+				null,
+				'Swift_Message'
+			);
+
 			return false;
 		}
+	}
+
+	public static function eraseLog($id_mail)
+	{
+		return Db::getInstance()->delete('mail', 'id_mail = '.(int)$id_mail);
 	}
 
 	public static function eraseAllLogs()
@@ -427,11 +471,11 @@ class MailCore extends ObjectModel
 	/* Rewrite of Swift_Message::generateId() without getmypid() */
 	protected static function generateId($idstring = null)
 	{
-		$midparams =  array(
-			"utctime" => gmstrftime("%Y%m%d%H%M%S"),
-			"randint" => mt_rand(),
-			"customstr" => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
-			"hostname" => (isset($_SERVER["SERVER_NAME"]) ? $_SERVER["SERVER_NAME"] : php_uname("n")),
+		$midparams = array(
+			'utctime' => gmstrftime('%Y%m%d%H%M%S'),
+			'randint' => mt_rand(),
+			'customstr' => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
+			'hostname' => (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n')),
 		);
 		return vsprintf("<%s.%d.%s@%s>", $midparams);
 	}
@@ -482,7 +526,7 @@ class MailCore extends ObjectModel
 		else
 		{
 			$string = chunk_split(base64_encode($string), $length, $sep);
-			$string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
+			$string = preg_replace('/'.preg_quote($sep).'$/', '', $string);
 		}
 
 		return $start.$string.$end;

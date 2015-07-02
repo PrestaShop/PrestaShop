@@ -199,7 +199,7 @@ class InstallModelInstall extends InstallAbstractModel
 			}
 			else
 				$iso_codes_to_install = null;
-
+			$iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
 			$languages = $this->installLanguages($iso_codes_to_install);
 		}
 		catch (PrestashopInstallerException $e)
@@ -349,7 +349,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 			Language::loadLanguages();
 			Tools::clearCache();
-			if (!$id_lang = Language::getIdByIso($iso))
+			if (!$id_lang = Language::getIdByIso($iso, true))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
 
@@ -396,21 +396,33 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 	}
 
+	private static $_cache_localization_pack_content = null;
 	public function getLocalizationPackContent($version, $country)
 	{
-		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
-		if (!@simplexml_load_string($localization_file_content))
-			$localization_file_content = false;
-		if (!$localization_file_content)
+		if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content))
 		{
-			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
-				$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
+			$path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$version.$country.'.xml';
+			if (is_file($path_cache_file))
+				$localization_file_content = file_get_contents($path_cache_file);
+			else
+			{
+				$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
+				if (!@simplexml_load_string($localization_file_content))
+					$localization_file_content = false;
+				if (!$localization_file_content)
+				{
+					$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+					if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
+						$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
 
-			$localization_file_content = file_get_contents($localization_file);
+					$localization_file_content = file_get_contents($localization_file);
+				}
+				file_put_contents($path_cache_file, $localization_file_content);
+			}
+			InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
 		}
 
-		return $localization_file_content;
+		return isset(InstallModelInstall::$_cache_localization_pack_content[$country]) ? InstallModelInstall::$_cache_localization_pack_content[$country] : false;
 	}
 
 	/**
@@ -534,7 +546,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$employee->bo_theme = 'default';
 			$employee->default_tab = 1;
 			$employee->active = true;
-			$employee->optin = (bool)$data['send_informations'];
+			$employee->optin = true;
 			$employee->id_profile = 1;
 			$employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
 			$employee->bo_menu = 1;
@@ -672,7 +684,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$modules = array();
 		if (!InstallSession::getInstance()->safe_mode)
 		{
-			foreach($addons_modules as $addons_module)
+			foreach ($addons_modules as $addons_module)
 				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
 					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
 					{

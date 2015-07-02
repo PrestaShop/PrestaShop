@@ -191,7 +191,7 @@ $oldversion = implode('.', $arrayVersion);
 // end of fix
 
 $neededUpgradeFiles = array();
-foreach ($upgradeFiles AS $version)
+foreach ($upgradeFiles as $version)
 {
 	if (version_compare($version, $oldversion) == 1 AND version_compare(_PS_INSTALL_VERSION_, $version) != -1)
 	$neededUpgradeFiles[] = $version;
@@ -212,7 +212,7 @@ $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 
 if (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ == 'CacheFS')
 	$cache_engine = 'CacheFs';
-elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache')
+elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache' AND _PS_CACHING_SYSTEM_ != 'CacheMemcached')
 	$cache_engine = _PS_CACHING_SYSTEM_;
 else
 	$cache_engine = 'CacheMemcache';
@@ -312,7 +312,7 @@ if (empty($fail_result))
 		$fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
 	}
 	else
-		foreach ($datas AS $data)
+		foreach ($datas as $data)
 			$confFile->writeInFile($data[0], $data[1]);
 	if ($confFile->error != false)
 	{
@@ -344,7 +344,7 @@ if (empty($fail_result))
 					else
 						$parameters = array();
 					if (is_array($parameters))
-						foreach ($parameters AS &$parameter)
+						foreach ($parameters as &$parameter)
 							$parameter = str_replace('\'', '', $parameter);
 
 					/* Call a simple function */
@@ -490,7 +490,7 @@ function getConfValue($name)
 	$sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `'._DB_PREFIX_.'configuration` c
 			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
-			WHERE c.`name` LIKE \''.pSQL($name).'\'';
+			WHERE c.`name`=\''.pSQL($name).'\'';
 
 	if ($full)
 	{

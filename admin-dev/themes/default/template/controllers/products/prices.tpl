@@ -213,7 +213,7 @@ $(document).ready(function () {
 				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 				<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.6f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
 				<span class="input-group-addon">{l s='per'}</span>
-				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="255" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 			</div>
 		</div>
 	</div>
@@ -264,7 +264,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
@@ -422,17 +422,16 @@ $(document).ready(function () {
 						<div class="col-lg-3">
 							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
 						</div>
+						<div class="col-lg-6">
+							<select name="sp_reduction_type" id="sp_reduction_type">
+								<option value="amount" selected="selected">{$currency->name|escape:'html':'UTF-8'}</option>
+								<option value="percentage">{l s='%'}</option>
+							</select>
+						</div>
 						<div class="col-lg-3">
 							<select name="sp_reduction_tax" id="sp_reduction_tax">
 								<option value="0">{l s='Tax excluded'}</option>
 								<option value="1" selected="selected">{l s='Tax included'}</option>
-							</select>
-						</div>
-						<div class="col-lg-6">
-							<select name="sp_reduction_type" id="sp_reduction_type">
-								<option selected="selected">-</option>
-								<option value="amount">{l s='Currency Units'}</option>
-								<option value="percentage">{l s='Percent'}</option>
 							</select>
 						</div>
 					</div>
@@ -441,6 +440,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<script type="text/javascript">
+		var currencyName = '{$currency->name|escape:'html':'UTF-8'|@addcslashes:'\''}';
 		$(document).ready(function(){
 			product_prices['0'] = $('#sp_current_ht_price').html();
 			$('#id_product_attribute').change(function() {
@@ -469,6 +469,12 @@ $(document).ready(function () {
 				hourText: '{l s='Hour' js=1}',
 				minuteText: '{l s='Minute' js=1}',
 			});
+			$('#sp_reduction_type').on('change', function() {
+				if (this.value == 'percentage')
+					$('#sp_reduction_tax').hide();
+				else
+					$('#sp_reduction_tax').show();
+			});
 		});
 	</script>
 	<div class="table-responsive">
@@ -482,7 +488,11 @@ $(document).ready(function () {
 				<th>{l s='Country'}</th>
 				<th>{l s='Group'}</th>
 				<th>{l s='Customer'}</th>
-				<th>{l s='Fixed price'}</th>
+				{if $country_display_tax_label}
+					<th>{l s='Fixed price (tax excl.)'}</th>
+				{else}
+					<th>{l s='Fixed price'}</th>
+				{/if}
 				<th>{l s='Impact'}</th>
 				<th>{l s='Period'}</th>
 				<th>{l s='From (quantity)'}</th>

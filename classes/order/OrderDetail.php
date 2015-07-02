@@ -26,40 +26,40 @@
 
 class OrderDetailCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_detail;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
-	/** @var integer */
+	/** @var int */
 	public $product_id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_shop;
 
-	/** @var integer */
+	/** @var int */
 	public $product_attribute_id;
 
 	/** @var string */
 	public $product_name;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_in_stock;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_return;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_refunded;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_reinjected;
 
 	/** @var float */
@@ -86,11 +86,11 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $reduction_amount;
 
-    /** @var float */
-    public $reduction_amount_tax_excl;
+	/** @var float */
+	public $reduction_amount_tax_excl;
 
-    /** @var float */
-    public $reduction_amount_tax_incl;
+	/** @var float */
+	public $reduction_amount_tax_incl;
 
 	/** @var float */
 	public $group_reduction;
@@ -119,16 +119,16 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $ecotax_tax_rate;
 
-	/** @var integer */
+	/** @var int */
 	public $discount_quantity_applied;
 
 	/** @var string */
 	public $download_hash;
 
-	/** @var integer */
+	/** @var int */
 	public $download_nb;
 
-	/** @var date */
+	/** @var datetime */
 	public $download_deadline;
 
 	/** @var string $tax_name **/
@@ -146,11 +146,11 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-    /** @var float additional shipping price tax excl */
-    public $total_shipping_price_tax_excl;
+	/** @var float additional shipping price tax excl */
+	public $total_shipping_price_tax_excl;
 
-    /** @var float additional shipping price tax incl */
-    public $total_shipping_price_tax_incl;
+	/** @var float additional shipping price tax incl */
+	public $total_shipping_price_tax_incl;
 
 	/** @var float */
 	public $purchase_supplier_price;
@@ -329,7 +329,10 @@ class OrderDetailCore extends ObjectModel
 	/**
 	 * Save the tax calculator
 	 * @since 1.5.0.1
-	 * @return boolean
+	 * @deprecated Functionality moved to Order::updateOrderDetailTax
+	 *             because we need the full order object to do a good job here.
+	 *             Will no longer be supported after 1.6.1
+	 * @return bool
 	 */
 	public function saveTaxCalculator(Order $order, $replace = false)
 	{
@@ -409,6 +412,18 @@ class OrderDetailCore extends ObjectModel
 	public static function getList($id_order)
 	{
 		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order);
+	}
+
+	public function getTaxList()
+	{
+		return self::getTaxList($this->id);
+	}
+
+	public static function getTaxListStatic($id_order_detail)
+	{
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
+					WHERE `id_order_detail` = '.(int)$id_order_detail;
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/*
@@ -505,8 +520,16 @@ class OrderDetailCore extends ObjectModel
 					$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
 					$this->tax_calculator = $tax_manager->getTaxCalculator();
 
-					$this->reduction_amount_tax_incl = $this->reduction_amount;
-					$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
+					if ($this->reduction_tax)
+					{
+						$this->reduction_amount_tax_incl = $this->reduction_amount;
+						$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
+					}
+					else
+					{
+						$this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
+						$this->reduction_amount_tax_excl = $this->reduction_amount;
+					}
 				break;
 			}
 	}
@@ -702,10 +725,12 @@ class OrderDetailCore extends ObjectModel
 
 			$order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-				cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default
+				cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
 				FROM '._DB_PREFIX_.'order_detail od
 				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-				'.Shop::addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').
+				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)Context::getContext()->shop->id.')':'').'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
@@ -718,7 +743,7 @@ class OrderDetailCore extends ObjectModel
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 				ORDER BY RAND()
 				LIMIT '.(int)$limit.'
-			');
+			', true, false);
 
 			$tax_calc = Product::getTaxCalculationMethod();
 			if (is_array($order_products))

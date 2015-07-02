@@ -26,7 +26,7 @@
 
 function update_order_details()
 {
-	$res = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'order_detail` LIKE \'reduction_percent\'');
+	$res = Db::getInstance()->executeS('SHOW COLUMNS FROM `'._DB_PREFIX_.'order_detail` = \'reduction_percent\'');
 
 	if (sizeof($res) == 0)
 	{

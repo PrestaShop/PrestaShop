@@ -79,6 +79,7 @@ $(document).ready(function(){
 		// LOGIN FORM SENDING
 		$(document).on('click', '#SubmitLogin', function(e){
 			e.preventDefault();
+            var that = $(this);
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
@@ -103,7 +104,7 @@ $(document).ready(function(){
 					{
 						// update token
 						static_token = jsonData.token;
-						updateNewAccountToAddressBlock();
+						updateNewAccountToAddressBlock(that.attr('data-adv-api'));
 					}
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -134,7 +135,12 @@ $(document).ready(function(){
 			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
 
 			var callingFile = '';
-			var params = '';
+            var advApiParam = '';
+            var params = '';
+
+            if ($(this).attr('data-adv-api')) {
+                advApiParam = '&isAdvApi=1';
+            }
 
 			if (parseInt($('#opc_id_customer').val()) == 0)
 			{
@@ -176,7 +182,7 @@ $(document).ready(function(){
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
-				url: callingFile + '?rand=' + new Date().getTime(),
+				url: callingFile + '?rand=' + new Date().getTime() + advApiParam,
 				async: false,
 				cache: false,
 				dataType : "json",
@@ -244,10 +250,10 @@ $(document).ready(function(){
 							isLogged = 1;
 							$('#opc_account_saved').fadeIn('slow');
 							$('#submitAccount').hide();
-							updateAddressSelection();
+							updateAddressSelection(advApiParam);
 						}
 						else
-							updateNewAccountToAddressBlock();
+							updateNewAccountToAddressBlock(advApiParam);
 					}
 					$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow');
 				},
@@ -339,7 +345,7 @@ function updatePaymentMethodsDisplay()
 	});
 }
 
-function updateAddressSelection()
+function updateAddressSelection(is_adv_api)
 {
 	var idAddress_delivery = ($('#opc_id_address_delivery').length == 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
 	var idAddress_invoice = ($('#opc_id_address_invoice').length == 1 ? $('#opc_id_address_invoice').val() : ($('#addressesAreEquals:checked').length == 1 ? idAddress_delivery : ($('#id_address_invoice').length == 1 ? $('#id_address_invoice').val() : idAddress_delivery)));
@@ -355,7 +361,9 @@ function updateAddressSelection()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
+		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery +
+              '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token +
+              (is_adv_api ? '&isAdvApi=1' : ''),
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -382,46 +390,50 @@ function updateAddressSelection()
 			else
 			{
 				if (jsonData.refresh)
+				{
 					location.reload();
+					return;
+				}
 				// Update all product keys with the new address id
-				$('#cart_summary .address_'+deliveryAddress).each(function() {
+				$('#cart_summary .address_' + deliveryAddress).each(function() {
 					$(this)
-						.removeClass('address_'+deliveryAddress)
-						.addClass('address_'+idAddress_delivery);
-					$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
-					if ($(this).find('.cart_unit span').length > 0 && $(this).find('.cart_unit span').attr('id').length > 0)
-						$(this).find('.cart_unit span').attr('id', $(this).find('.cart_unit span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+						.removeClass('address_' + deliveryAddress)
+						.addClass('address_' + idAddress_delivery);
+					$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
+					if ($(this).find('.cart_unit ul').length > 0 && $(this).find('.cart_unit ul').attr('id').length > 0)
+						$(this).find('.cart_unit ul').attr('id', $(this).find('.cart_unit ul').attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
 
 					if ($(this).find('.cart_total span').length > 0 && $(this).find('.cart_total span').attr('id').length > 0)
-						$(this).find('.cart_total span').attr('id', $(this).find('.cart_total span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+						$(this).find('.cart_total span').attr('id', $(this).find('.cart_total span').attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
 
 					if ($(this).find('.cart_quantity_input').length > 0 && $(this).find('.cart_quantity_input').attr('name').length > 0)
 					{
 						var name = $(this).find('.cart_quantity_input').attr('name')+'_hidden';
-						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_'+idAddress_delivery));
+
+						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_' + idAddress_delivery));
 						if ($(this).find('[name="' + name + '"]').length > 0)
-							$(this).find('[name="' + name +'"]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
+							$(this).find('[name="' + name + '"]').attr('name', name.replace(/_\d+_hidden$/, '_' + idAddress_delivery + '_hidden'));
 					}
 
 					if ($(this).find('.cart_quantity_delete').length > 0 && $(this).find('.cart_quantity_delete').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_delete')
-							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 
 					if ($(this).find('.cart_quantity_down').length > 0 && $(this).find('.cart_quantity_down').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_down')
-							.attr('id', $(this).find('.cart_quantity_down').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_down').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_down').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_down').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 
 					if ($(this).find('.cart_quantity_up').length > 0 && $(this).find('.cart_quantity_up').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_up')
-							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 				});
 
@@ -655,24 +667,33 @@ function saveAddress(type)
 	if (type !== 'delivery' && type !== 'invoice')
 		return false;
 
-	var params = 'firstname=' + encodeURIComponent($('#firstname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&lastname=' + encodeURIComponent($('#lastname'+(type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	var params = 'firstname=' + encodeURIComponent($('#firstname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&lastname=' + encodeURIComponent($('#lastname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if ($('#company' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'company=' + encodeURIComponent($('#company' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if ($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'vat_number='+encodeURIComponent($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	if ($('#dni'+(type == 'invoice' ? '_invoice' : '')).length)
+	if ($('#dni' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'dni=' + encodeURIComponent($('#dni' + (type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'address1=' + encodeURIComponent($('#address1' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'address2=' + encodeURIComponent($('#address2' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'postcode=' + encodeURIComponent($('#postcode' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'city=' + encodeURIComponent($('#city' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'id_country=' + parseInt($('#id_country' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).length)
-		params += 'id_state='+encodeURIComponent($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'other=' + encodeURIComponent($('#other' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'phone=' + encodeURIComponent($('#phone' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'phone_mobile=' + encodeURIComponent($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'alias=' + encodeURIComponent($('#alias' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#address1' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'address1=' + encodeURIComponent($('#address1' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#address2' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'address2=' + encodeURIComponent($('#address2' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#postcode' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'postcode=' + encodeURIComponent($('#postcode' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#city' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'city=' + encodeURIComponent($('#city' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#id_country' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'id_country=' + parseInt($('#id_country' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#id_state' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'id_state=' + encodeURIComponent($('#id_state' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#other' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'other=' + encodeURIComponent($('#other' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#phone' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'phone=' + encodeURIComponent($('#phone' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'phone_mobile=' + encodeURIComponent($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#alias' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'alias=' + encodeURIComponent($('#alias' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if (type == 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
 		params += 'opc_id_address_delivery=' + parseInt($('#opc_id_address_delivery').val()) + '&';
 	if (type == 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)
@@ -746,9 +767,10 @@ function saveAddress(type)
 	return result;
 }
 
-function updateNewAccountToAddressBlock()
+function updateNewAccountToAddressBlock(is_adv_api)
 {
-	$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');;
+	$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -756,7 +778,8 @@ function updateNewAccountToAddressBlock()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'ajax=true&method=getAddressBlockAndCarriersAndPayments&token=' + static_token ,
+		data: 'ajax=true&method=getAddressBlockAndCarriersAndPayments&token=' + static_token +
+              (is_adv_api ? '&isAdvApi=1' : '') ,
 		success: function(json)
 		{
 			if (json.hasError)
@@ -788,17 +811,20 @@ function updateNewAccountToAddressBlock()
 						});
 					}
 					$(this).fadeIn('fast', function() {
+                        if ($('#gift-price').length == 1)
+                            $('#gift-price').html(json.gift_price);
+
 						//After login, the products are automatically associated to an address
 						$.each(json.summary.products, function() {
 							updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
 						});
 						updateAddressesDisplay(true);
-						updateCarrierList(json.carrier_data);
-						updateCarrierSelectionAndGift();
-						updatePaymentMethods(json);
-						if ($('#gift-price').length == 1)
-							$('#gift-price').html(json.gift_price);
-						$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+                        if (typeof is_adv_api === 'undefined' || !is_adv_api) {
+                            updateCarrierList(json.carrier_data);
+                            updateCarrierSelectionAndGift();
+                            updatePaymentMethods(json);
+                        }
+                        $('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 					});
 				});
 			}

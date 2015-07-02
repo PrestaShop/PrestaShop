@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property ShopGroup $object
+ */
 class AdminShopGroupControllerCore extends AdminController
 {
 	public function __construct()
@@ -94,7 +97,7 @@ class AdminShopGroupControllerCore extends AdminController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->addJqueryPlugin('cooki-plugin');
 		$data = Shop::getTree();
 
@@ -115,7 +118,7 @@ class AdminShopGroupControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
@@ -164,11 +167,11 @@ class AdminShopGroupControllerCore extends AdminController
 			);
 		}
 	}
-	
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		
+
 		if ($this->display != 'add' && $this->display != 'edit')
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
@@ -320,7 +323,9 @@ class AdminShopGroupControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
+			/** @var ShopGroup $object */
 			$object = $this->loadObject();
+
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
 			elseif ($object->haveShops())
@@ -360,5 +365,3 @@ class AdminShopGroupControllerCore extends AdminController
 		}
 	}
 }
-
-

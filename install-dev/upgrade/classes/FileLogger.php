@@ -43,7 +43,7 @@ class FileLoggerCore extends AbstractLogger
 	/**
 	* Check if the specified filename is writable and set the filename
 	*
-	* @param string filename
+	* @param string $filename
 	*/
 	public function setFilename($filename)
 	{

@@ -35,7 +35,7 @@ class PrestaShopAutoload
 	const INDEX_FILE = 'cache/class_index.php';
 
 	/**
-	 * @var Autoload
+	 * @var PrestaShopAutoload
 	 */
 	protected static $instance;
 
@@ -71,7 +71,7 @@ class PrestaShopAutoload
 	/**
 	 * Get instance of autoload (singleton)
 	 *
-	 * @return Autoload
+	 * @return PrestaShopAutoload
 	 */
 	public static function getInstance()
 	{
@@ -133,7 +133,9 @@ class PrestaShopAutoload
 	{
 		$classes = array_merge(
 			$this->getClassesFromDir('classes/'),
-			$this->getClassesFromDir('controllers/')
+			$this->getClassesFromDir('controllers/'),
+			$this->getClassesFromDir('Adapter/'),
+			$this->getClassesFromDir('Core/')
 		);
 
 		if ($this->_include_override_path)
@@ -158,7 +160,7 @@ class PrestaShopAutoload
 		}
 		// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
 		else
-			error_log('Cannot write temporary file '.$filename_tmp);
+			Tools::error_log('Cannot write temporary file '.$filename_tmp);
 		$this->index = $classes;
 	}
 
@@ -182,8 +184,11 @@ class PrestaShopAutoload
 				elseif (substr($file, -4) == '.php')
 				{
 					$content = file_get_contents($root_dir.$path.$file);
+
+					$namespacePattern = '[\\a-z0-9_]*[\\]';
 					$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
-								.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][\\a-z0-9_]*(?:\s*,\s*[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+								.'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+
 					if (preg_match($pattern, $content, $m))
 					{
 						$classes[$m['classname']] = array(

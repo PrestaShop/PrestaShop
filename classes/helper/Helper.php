@@ -50,7 +50,7 @@ class HelperCore
 	public $override_folder;
 
 	/**
-	 * @var smartyTemplate base template object
+	 * @var Smarty_Internal_Template base template object
 	 */
 	protected $tpl;
 
@@ -75,7 +75,7 @@ class HelperCore
 	 * Create a template from the override file, else from the base file.
 	 *
 	 * @param string $tpl_name filename
-	 * @return Template
+	 * @return Smarty_Internal_Template
 	 */
 	public function createTemplate($tpl_name)
 	{
@@ -141,7 +141,7 @@ class HelperCore
 	/**
 	 *
 	 * @param array $root array with the name and ID of the tree root category, if null the Shop's root category will be used
-	 * @param type $selected_cat array of selected categories
+	 * @param array $selected_cat array of selected categories
 	 *					Format
 	 *						Array
 	 * 					(
@@ -161,8 +161,6 @@ class HelperCore
 	 * @param bool $use_radio use radio tree or checkbox tree
 	 * @param bool $use_search display a find category search box
 	 * @param array $disabled_categories
-	 * @param bool $use_in_popup
-	 * @param bool $use_shop_context
 	 * @return string
 	 */
 	public function renderCategoryTree($root = null,
@@ -170,9 +168,7 @@ class HelperCore
 									   $input_name = 'categoryBox',
 									   $use_radio = false,
 									   $use_search = false,
-									   $disabled_categories = array(),
-									   $use_in_popup = false,
-									   $use_shop_context = false)
+									   $disabled_categories = array())
 	{
 		$translations = array(
 			'selected' => $this->l('Selected'),
@@ -293,16 +289,16 @@ class HelperCore
 	 *
 	 * @param mixed $string term or expression in english
 	 * @param string $class
-	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param bool $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
 	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
 	{
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		$currentClass = get_class($this);
-		if (Module::getModuleNameFromClass($currentClass))
-			return Translate::getModuleTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
+		$current_class = get_class($this);
+		if (Module::getModuleNameFromClass($current_class))
+			return Translate::getModuleTranslation(Module::$classInModule[$current_class], $string, $current_class);
 
 		return Translate::getAdminTranslation($string, get_class($this), $addslashes, $htmlentities);
 	}
@@ -322,6 +318,7 @@ class HelperCore
 		foreach ($rules['required'] as $required)
 			$required_class_fields[] = $required;
 
+		/** @var ObjectModel $object */
 		$object = new $class_name();
 		$res = $object->getFieldsRequiredDatabase();
 
@@ -361,8 +358,17 @@ class HelperCore
 		return $html;
 	}
 
+	/**
+	 * Render shop list
+	 *
+	 * @deprecated deprecated since 1.6.1.0 use HelperShop->getRenderedShopList
+	 *
+	 * @return string
+	 */
 	public static function renderShopList()
 	{
+		Tools::displayAsDeprecated();
+
 		if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2)
 			return null;
 
@@ -386,16 +392,16 @@ class HelperCore
 		$html = '<select class="shopList" onchange="location.href = \''.htmlspecialchars($url).'\'+$(this).val();">';
 		$html .= '<option value="" class="first">'.Translate::getAdminTranslation('All shops').'</option>';
 
-		foreach ($tree as $gID => $group_data)
+		foreach ($tree as $group_id => $group_data)
 		{
 			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
-				$html .= '<option class="group" value="g-'.$gID.'"'.(((empty($value) && $shop_context == Shop::CONTEXT_GROUP) || $value == 'g-'.$gID) ? ' selected="selected"' : '').($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+				$html .= '<option class="group" value="g-'.$group_id.'"'.(((empty($value) && $shop_context == Shop::CONTEXT_GROUP) || $value == 'g-'.$group_id) ? ' selected="selected"' : '').($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
 				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'"'.($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '').'>';
 			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP)
-				foreach ($group_data['shops'] as $sID => $shopData)
-					if ($shopData['active'])
-						$html .= '<option value="s-'.$sID.'" class="shop"'.(($value == 's-'.$sID) ? ' selected="selected"' : '').'>'.($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']).' - ' : '').$shopData['name'].'</option>';
+				foreach ($group_data['shops'] as $shop_id => $shop_data)
+					if ($shop_data['active'])
+						$html .= '<option value="s-'.$shop_id.'" class="shop"'.(($value == 's-'.$shop_id) ? ' selected="selected"' : '').'>'.($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']).' - ' : '').$shop_data['name'].'</option>';
 			if (!(!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
 				$html .= '</optgroup>';
 		}

@@ -49,7 +49,7 @@ class AdminSearchControllerCore extends AdminController
 				/* Handle product ID */
 				if ($searchType == 1 && (int)$this->query && Validate::isUnsignedInt((int)$this->query))
 					if (($product = new Product($this->query)) && Validate::isLoadedObject($product))
-						Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int)($product->id).'&addproduct'.'&token='.Tools::getAdminTokenLite('AdminProducts'));
+						Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int)($product->id).'&token='.Tools::getAdminTokenLite('AdminProducts'));
 
 				/* Normal catalog search */
 				$this->searchCatalog();
@@ -102,6 +102,7 @@ class AdminSearchControllerCore extends AdminController
 						$this->_list['orders'] = array();
 						foreach ($orders as $order)
 						{
+							/** @var Order $order */
 							$row = get_object_vars($order);
 							$row['id_order'] = $row['id'];
 							$customer = $order->getCustomer();
@@ -283,6 +284,7 @@ class AdminSearchControllerCore extends AdminController
 		$genders = array(0 => $this->l('?'));
 		foreach (Gender::getGenders() as $gender)
 		{
+			/** @var Gender $gender */
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}

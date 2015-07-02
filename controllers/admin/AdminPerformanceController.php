@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminPerformanceControllerCore extends AdminController
 {
 
@@ -452,9 +455,9 @@ class AdminPerformanceControllerCore extends AdminController
 			)
 		);
 
-		$this->fields_value['_MEDIA_SERVER_1_'] = (defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : Configuration::get('PS_MEDIA_SERVER_1'));
-		$this->fields_value['_MEDIA_SERVER_2_'] = (defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : Configuration::get('PS_MEDIA_SERVER_2'));
-		$this->fields_value['_MEDIA_SERVER_3_'] = (defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : Configuration::get('PS_MEDIA_SERVER_3'));
+		$this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
+		$this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
+		$this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
 	}
 
 	public function initFieldsetCiphering()
@@ -566,7 +569,12 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'CacheMemcache',
 							'value' => 'CacheMemcache',
-							'label' => $this->l('Memcached').(extension_loaded('memcache') ? '' : $warning_memcached)
+							'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcached)
+						),
+						array(
+							'id' => 'CacheMemcached',
+							'value' => 'CacheMemcached',
+							'label' => $this->l('Memcached via PHP::Memcached').(extension_loaded('memcached') ? '' : $warning_memcached)
 						),
 						array(
 							'id' => 'CacheApc',
@@ -746,7 +754,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
-					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
+					$this->errors[] = sprintf(Tools::displayError('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory));
 
 				if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
 				{
@@ -818,11 +826,23 @@ class AdminPerformanceControllerCore extends AdminController
 					Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
 					Tools::clearSmartyCache();
 					Media::clearCache();
-					Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					$redirectAdmin = true;
+
+					if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+					{
+						Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
+						$redirectAdmin = true;
+					}
+					else
+					{
+						$message = $this->l('Before being able to use this tool, you need to:');
+						$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+						$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+						$this->errors[] = Tools::displayError($message, false);
+						Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
+					}
 				}
 			}
 			else
@@ -907,6 +927,9 @@ class AdminPerformanceControllerCore extends AdminController
 					if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 						$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
+					elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached'))
+						$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcached PECL extension on your server.').'
+							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
 					elseif ($caching_system == 'CacheApc' && !extension_loaded('apc'))
 						$this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
@@ -920,10 +943,7 @@ class AdminPerformanceControllerCore extends AdminController
 						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
 							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
 						elseif (!is_writable(_PS_CACHEFS_DIRECTORY_))
-							$this->errors[] = sprintf(
-								Tools::displayError('To use CacheFS, the directory %s must be writable.'),
-								realpath(_PS_CACHEFS_DIRECTORY_)
-							);
+							$this->errors[] = sprintf(Tools::displayError('To use CacheFS, the directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
 
 					if ($caching_system == 'CacheFs')
 					{
@@ -937,6 +957,8 @@ class AdminPerformanceControllerCore extends AdminController
 						}
 					}
 					elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
+						Cache::getInstance()->flush();
+					elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached')
 						Cache::getInstance()->flush();
 				}
 

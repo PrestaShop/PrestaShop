@@ -55,11 +55,16 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+/* Custom config made by users */
+if (is_file(_PS_CUSTOM_CONFIG_FILE_))
+	include_once(_PS_CUSTOM_CONFIG_FILE_);
+
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
 	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
-	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }

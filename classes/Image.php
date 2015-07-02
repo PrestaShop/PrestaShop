@@ -28,16 +28,16 @@ class ImageCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer Image ID */
+	/** @var int Image ID */
 	public $id_image;
 
-	/** @var integer Product ID */
+	/** @var int Product ID */
 	public $id_product;
 
-	/** @var integer Position used to order images of the same product */
+	/** @var int Position used to order images of the same product */
 	public $position;
 
-	/** @var boolean Image is cover */
+	/** @var bool Image is cover */
 	public $cover;
 
 	/** @var string Legend */
@@ -66,9 +66,9 @@ class ImageCore extends ObjectModel
 		'primary' => 'id_image',
 		'multilang' => true,
 		'fields' => array(
-			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
 			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 		),
 	);
@@ -87,7 +87,23 @@ class ImageCore extends ObjectModel
 		if ($this->position <= 0)
 			$this->position = Image::getHighestPosition($this->id_product) + 1;
 
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
 		return parent::add($autodate, $null_values);
+	}
+
+	public function update($null_values = false)
+	{
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
+
+		return parent::update($null_values);
 	}
 
 	public function delete()
@@ -102,32 +118,55 @@ class ImageCore extends ObjectModel
 			return false;
 
 		// update positions
-		$result = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'image`
-			WHERE `id_product` = '.(int)$this->id_product.'
-			ORDER BY `position`
-		');
-		$i = 1;
-		if ($result)
-			foreach ($result as $row)
-			{
-				$row['position'] = $i++;
-				Db::getInstance()->update($this->def['table'], $row, '`id_image` = '.(int)$row['id_image'], 1);
-			}
+		Db::getInstance()->execute('SET @position:=0', false);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image` SET position=(@position:=@position+1)
+									WHERE `id_product` = '.(int)$this->id_product.' ORDER BY position ASC');
 
 		return true;
 	}
 
 	/**
+	 * Return first image (by position) associated with a product attribute
+	 *
+	 * @param int $id_shop Shop ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
+	 * @return array
+	 */
+	public static function getBestImageAttribute($id_shop, $id_lang, $id_product, $id_product_attribute)
+	{
+		$cache_id = 'Image::getBestImageAttribute'.'-'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
+
+		if (!Cache::isStored($cache_id))
+		{
+			$row = Db::getInstance()->getRow('
+					SELECT image_shop.`id_image` id_image, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
+						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = '.(int)$id_shop.')
+						INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$id_product_attribute.')
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
+						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					WHERE i.`id_product` = '.(int)$id_product.' ORDER BY i.`position` ASC');
+
+			Cache::store($cache_id, $row);
+		}
+		else
+			$row = Cache::retrieve($cache_id);
+		return $row;
+	}
+
+	/**
 	 * Return available images for a product
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Product Attribute ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
 	 * @return array Images
 	 */
-	public static function getImages($id_lang, $id_product, $id_product_attribute = NULL)
+	public static function getImages($id_lang, $id_product, $id_product_attribute = null)
 	{
 		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
 		$sql = 'SELECT *
@@ -137,9 +176,31 @@ class ImageCore extends ObjectModel
 		if ($id_product_attribute)
 			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
 
-		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter.'
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter.'
 			ORDER BY i.`position` ASC';
 		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * Check if a product has an image available
+	 *
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
+	 * @return bool
+	 */
+	public static function hasImages($id_lang, $id_product, $id_product_attribute = null)
+	{
+		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
+		$sql = 'SELECT 1
+			FROM `'._DB_PREFIX_.'image` i
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)';
+
+		if ($id_product_attribute)
+			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
+
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter;
+		return (bool)Db::getInstance()->getValue($sql);
 	}
 
 	/**
@@ -158,8 +219,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return number of images for a product
 	 *
-	 * @param integer $id_product Product ID
-	 * @return integer number of images
+	 * @param int $id_product Product ID
+	 * @return int number of images
 	 */
 	public static function getImagesTotal($id_product)
 	{
@@ -173,8 +234,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return highest position of images for a product
 	 *
-	 * @param integer $id_product Product ID
-	 * @return integer highest position of images
+	 * @param int $id_product Product ID
+	 * @return int highest position of images
 	 */
 	public static function getHighestPosition($id_product)
 	{
@@ -188,8 +249,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Delete product cover
 	 *
-	 * @param integer $id_product Product ID
-	 * @return boolean result
+	 * @param int $id_product Product ID
+	 * @return bool result
 	 */
 	public static function deleteCover($id_product)
 	{
@@ -198,15 +259,15 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-		
+
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 0
+			SET `cover` = NULL
 			WHERE `id_product` = '.(int)$id_product
 		) &&
 		Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image` i, `'._DB_PREFIX_.'image_shop` image_shop
-			SET image_shop.`cover` = 0
+			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.id_image = i.id_image AND i.`id_product` = '.(int)$id_product
 		));
 	}
@@ -214,23 +275,23 @@ class ImageCore extends ObjectModel
 	/**
 	 *Get product cover
 	 *
-	 * @param integer $id_product Product ID
-	 * @return boolean result
+	 * @param int $id_product Product ID
+	 * @return bool result
 	 */
 	public static function getCover($id_product)
 	{
 		return Db::getInstance()->getRow('
 			SELECT * FROM `'._DB_PREFIX_.'image` i'.
 			Shop::addSqlAssociation('image', 'i').'
-			WHERE `id_product` = '.(int)$id_product.'
+			WHERE i.`id_product` = '.(int)$id_product.'
 			AND image_shop.`cover`= 1');
 	}
 
 	/**
 	 * Copy images from a product to another
 	 *
-	 * @param integer $id_product_old Source product ID
-	 * @param boolean $id_product_new Destination product ID
+	 * @param int $id_product_old Source product ID
+	 * @param bool $id_product_new Destination product ID
 	 */
 	public static function duplicateProductImages($id_product_old, $id_product_new, $combination_images)
 	{
@@ -290,8 +351,8 @@ class ImageCore extends ObjectModel
 
 	/**
 	 * Duplicate product attribute image associations
-	 * @param integer $id_product_attribute_old
-	 * @return boolean
+	 * @param int $id_product_attribute_old
+	 * @return bool
 	 */
 	public static function duplicateAttributeImageAssociations($combination_images)
 	{
@@ -308,8 +369,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Reposition image
 	 *
-	 * @param integer $position Position
-	 * @param boolean $direction Direction
+	 * @param int $position Position
+	 * @param bool $direction Direction
 	 * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
 	 */
 	public function	positionImage($position, $direction)
@@ -378,15 +439,15 @@ class ImageCore extends ObjectModel
 				FROM '._DB_PREFIX_.'image_type
 				WHERE `name` = \''.pSQL($type).'\'
 			');
-	 	return self::$_cacheGetSize[$type];
+		return self::$_cacheGetSize[$type];
 	}
-	
+
 	public static function getWidth($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
 		return $result['width'];
 	}
-	
+
 	public static function getHeight($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
@@ -606,7 +667,7 @@ class ImageCore extends ObjectModel
 	 * If max_execution_time is provided, stops before timeout and returns string "timeout".
 	 * If any image cannot be moved, stops and returns "false"
 	 *
-	 * @param int max_execution_time
+	 * @param int $max_execution_time
 	 * @return mixed success or timeout
 	 */
 	public static function moveToNewFileSystem($max_execution_time = 0)
@@ -657,7 +718,7 @@ class ImageCore extends ObjectModel
 	/**
 	 * Try to create and delete some folders to check if moving images to new file system will be possible
 	 *
-	 * @return boolean success
+	 * @return bool success
 	 */
 	public static function testFileSystem()
 	{

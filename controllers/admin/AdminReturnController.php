@@ -24,33 +24,50 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderReturn $object
+ */
 class AdminReturnControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
 		$this->context = Context::getContext();
-	 	$this->table = 'order_return';
-	 	$this->className = 'OrderReturn';
+		$this->table = 'order_return';
+		$this->className = 'OrderReturn';
 		$this->colorOnBackground = true;
 		$this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
 		$this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
 
-        	$this->fields_list = array(
+		$this->fields_list = array(
 			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
 			'name' => array('title' => $this->l('Status'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
 			'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
- 		);
+		);
 
 		$this->fields_options = array(
 			'general' => array(
 				'title' =>	$this->l('Merchandise return (RMA) options'),
 				'fields' =>	array(
-					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns'), 'desc' => $this->l('Would you like to allow merchandise returns in your shop?'), 'cast' => 'intval', 'type' => 'bool'),
-					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity'), 'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
+					'PS_ORDER_RETURN' => array(
+						'title' => $this->l('Enable returns'),
+						'desc' => $this->l('Would you like to allow merchandise returns in your shop?'),
+						'cast' => 'intval', 'type' => 'bool'),
+					'PS_ORDER_RETURN_NB_DAYS' => array(
+						'title' => $this->l('Time limit of validity'),
+						'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'),
+						'cast' => 'intval',
+						'type' => 'text',
+						'size' => '2'),
+					'PS_RETURN_PREFIX' => array(
+						'title' => $this->l('Returns prefix'),
+						'desc' => $this->l('Prefix used for return name (e.g. RE00001).'),
+						'size' => 6,
+						'type' => 'textLang'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
@@ -59,6 +76,7 @@ class AdminReturnControllerCore extends AdminController
 		parent::__construct();
 
 		$this->_where = Shop::addSqlRestriction(false, 'o');
+		$this->_use_found_rows = false;
 	}
 
 	public function renderForm()
@@ -133,11 +151,11 @@ class AdminReturnControllerCore extends AdminController
 		);
 
 		$order = new Order($this->object->id_order);
-		$quantityDisplayed = array();
+		$quantity_displayed = array();
 		// Customized products */
-		if ($returnedCustomizations = OrderReturn::getReturnedCustomizedProducts((int)($this->object->id_order)))
-			foreach ($returnedCustomizations as $returnedCustomization)
-				$quantityDisplayed[(int)($returnedCustomization['id_order_detail'])] = isset($quantityDisplayed[(int)($returnedCustomization['id_order_detail'])]) ? $quantityDisplayed[(int)($returnedCustomization['id_order_detail'])] + (int)($returnedCustomization['product_quantity']) : (int)($returnedCustomization['product_quantity']);
+		if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int)($this->object->id_order)))
+			foreach ($returned_customizations as $returned_customization)
+				$quantity_displayed[(int)$returned_customization['id_order_detail']] = isset($quantity_displayed[(int)$returned_customization['id_order_detail']]) ? $quantity_displayed[(int)$returned_customization['id_order_detail']] + (int)$returned_customization['product_quantity'] : (int)$returned_customization['product_quantity'];
 
 		// Classic products
 		$products = OrderReturn::getOrdersReturnProducts($this->object->id, $order);
@@ -151,10 +169,10 @@ class AdminReturnControllerCore extends AdminController
 			'text_order' => sprintf($this->l('Order #%1$d from %2$s'), $order->id, Tools::displayDate($order->date_upd)),
 			'url_order' => 'index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder&token='.Tools::getAdminToken('AdminOrders'.(int)Tab::getIdFromClassName('AdminOrders').(int)$this->context->employee->id),
 			'picture_folder' => _THEME_PROD_PIC_DIR_,
-			'returnedCustomizations' => $returnedCustomizations,
+			'returnedCustomizations' => $returned_customizations,
 			'customizedDatas' => Product::getAllCustomizedDatas((int)($order->id_cart)),
 			'products' => $products,
-			'quantityDisplayed' => $quantityDisplayed,
+			'quantityDisplayed' => $quantity_displayed,
 			'id_order_return' => $this->object->id,
 			'state_order_return' => $this->object->state,
 		);

@@ -26,13 +26,13 @@
 
 class	PrestaShopLoggerCore extends ObjectModel
 {
-	/** @var integer Log id */
+	/** @var int Log id */
 	public $id_log;
 
-	/** @var integer Log severity */
+	/** @var int Log severity */
 	public $severity;
 
-	/** @var integer Error code */
+	/** @var int Error code */
 	public $error_code;
 
 	/** @var string Message */
@@ -41,10 +41,10 @@ class	PrestaShopLoggerCore extends ObjectModel
 	/** @var string Object type (eg. Order, Customer...) */
 	public $object_type;
 
-	/** @var integer Object ID */
+	/** @var int Object ID */
 	public $object_id;
-	
-	/** @var integer Object ID */
+
+	/** @var int Object ID */
 	public $id_employee;
 
 	/** @var string Object creation date */
@@ -77,11 +77,11 @@ class	PrestaShopLoggerCore extends ObjectModel
 	 * Send e-mail to the shop owner only if the minimal severity level has been reached
 	 *
 	 * @param Logger
-	 * @param unknown_type $log
+	 * @param PrestaShopLogger $log
 	 */
 	public static function sendByMail($log)
 	{
-		if (intval(Configuration::get('PS_LOGS_BY_EMAIL')) <= intval($log->severity))
+		if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity)
 			Mail::Send(
 				(int)Configuration::get('PS_LANG_DEFAULT'),
 				'log_alert',
@@ -99,31 +99,32 @@ class	PrestaShopLoggerCore extends ObjectModel
 	 * @param int $error_code
 	 * @param string $object_type
 	 * @param int $object_id
-	 * @param boolean $allow_duplicate if set to true, can log several time the same information (not recommended)
-	 * @return boolean true if succeed
+	 * @param bool $allow_duplicate if set to true, can log several time the same information (not recommended)
+	 * @return bool true if succeed
 	 */
 	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false, $id_employee = null)
 	{
 		$log = new PrestaShopLogger();
-		$log->severity = intval($severity);
-		$log->error_code = intval($error_code);
+		$log->severity = (int)$severity;
+		$log->error_code = (int)$error_code;
 		$log->message = pSQL($message);
 		$log->date_add = date('Y-m-d H:i:s');
 		$log->date_upd = date('Y-m-d H:i:s');
 
 		if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee))
 			$id_employee = Context::getContext()->employee->id;
-		
+
 		if ($id_employee !== null)
 			$log->id_employee = (int)$id_employee;
 
 		if (!empty($object_type) && !empty($object_id))
 		{
 			$log->object_type = pSQL($object_type);
-			$log->object_id = intval($object_id);
+			$log->object_id = (int)$object_id;
 		}
 
-		PrestaShopLogger::sendByMail($log);
+		if ($object_type != 'Swift_Message')
+			PrestaShopLogger::sendByMail($log);
 
 		if ($allow_duplicate || !$log->_isPresent())
 		{
@@ -149,7 +150,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 
 		return $this->hash;
 	}
-	
+
 	public static function eraseAllLogs()
 	{
 		return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
@@ -176,4 +177,3 @@ class	PrestaShopLoggerCore extends ObjectModel
 		return self::$is_present[$this->getHash()];
 	}
 }
-

@@ -24,10 +24,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * Class MySQLCore
+ */
 class MySQLCore extends Db
 {
+	/** @var resource */
+	protected $link;
+
+	/* @var resource */
+	protected $result;
+
 	/**
+	 * Tries to connect to the database
+	 *
 	 * @see DbCore::connect()
+	 * @return resource
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function connect()
 	{
@@ -46,17 +59,30 @@ class MySQLCore extends Db
 
 		return $this->link;
 	}
-	
+
+	/**
+	 * Tries to connect and create a new database
+	 *
+	 * @param string $host
+	 * @param string $user
+	 * @param string $password
+	 * @param string $dbname
+	 * @param bool $dropit If true, drops the created database.
+	 * @return bool|resource
+	 */
 	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		$link = mysql_connect($host, $user, $password);
 		$success = mysql_query('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link);
 		if ($dropit && (mysql_query('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link) !== false))
 			return true;
+
 		return $success;
 	}
 
 	/**
+	 * Destroys the database connection link
+	 *
 	 * @see DbCore::disconnect()
 	 */
 	public function disconnect()
@@ -65,7 +91,11 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Executes an SQL statement, returning a result set as a result resource object.
+	 *
 	 * @see DbCore::_query()
+	 * @param string $sql
+	 * @return resource
 	 */
 	protected function _query($sql)
 	{
@@ -73,7 +103,11 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Returns the next row from the result set.
+	 *
 	 * @see DbCore::nextRow()
+	 * @param bool|resource $result
+	 * @return array|bool
 	 */
 	public function nextRow($result = false)
 	{
@@ -82,11 +116,16 @@ class MySQLCore extends Db
 			$return = mysql_fetch_assoc($result);
 		elseif (is_resource($this->_result) && $this->_result)
 			$return = mysql_fetch_assoc($this->_result);
-		return $return;	
+
+		return $return;
 	}
 
 	/**
+	 * Returns the next row from the result set.
+	 *
 	 * @see DbCore::_numRows()
+	 * @param resource $result
+	 * @return int
 	 */
 	protected function _numRows($result)
 	{
@@ -94,7 +133,10 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Returns ID of the last inserted row.
+	 *
 	 * @see DbCore::Insert_ID()
+	 * @return int
 	 */
 	public function Insert_ID()
 	{
@@ -102,7 +144,10 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Return the number of rows affected by the last SQL query.
+	 *
 	 * @see DbCore::Affected_Rows()
+	 * @return int
 	 */
 	public function Affected_Rows()
 	{
@@ -110,7 +155,11 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Returns error message.
+	 *
 	 * @see DbCore::getMsgError()
+	 * @param bool $query
+	 * @return string
 	 */
 	public function getMsgError($query = false)
 	{
@@ -118,7 +167,10 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Returns error code.
+	 *
 	 * @see DbCore::getNumberError()
+	 * @return int
 	 */
 	public function getNumberError()
 	{
@@ -126,7 +178,10 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Returns database server version.
+	 *
 	 * @see DbCore::getVersion()
+	 * @return string
 	 */
 	public function getVersion()
 	{
@@ -134,7 +189,11 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Escapes illegal characters in a string.
+	 *
 	 * @see DbCore::_escape()
+	 * @param string $str
+	 * @return string
 	 */
 	public function _escape($str)
 	{
@@ -142,16 +201,24 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Switches to a different database.
+	 *
 	 * @see DbCore::set_db()
+	 * @param string $db_name
+	 * @return bool
 	 */
 	public function set_db($db_name)
 	{
 		return mysql_select_db($db_name, $this->link);
 	}
-	
+
 	/**
+	 * Returns all rows from the result set.
+	 *
 	 * @see DbCore::getAll()
-	*/
+	 * @param bool|resource $result
+	 * @return array
+	 */
 	protected function getAll($result = false)
 	{
 		if (!$result)
@@ -165,7 +232,15 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database and check if at least one table with same prefix exists
+	 *
 	 * @see Db::hasTableWithSamePrefix()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param string $prefix Tables prefix
+	 * @return bool
 	 */
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
@@ -180,23 +255,39 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database
+	 *
 	 * @see Db::checkConnection()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param bool $newDbLink
+	 * @param string|null $engine
+	 * @param int $timeout
+	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		ini_set('mysql.connect_timeout', $timeout);
-		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
+		if (!$link = @mysql_connect($server, $user, $pwd, $new_db_link))
 			return 1;
 		if (!@mysql_select_db($db, $link))
 			return 2;
 		@mysql_close($link);
+
 		return 0;
 	}
-		
+
+	/**
+	 * Selects best table engine.
+	 *
+	 * @return string
+	 */
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
-		
+
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 		$result = mysql_query($sql);
 		if (!$result)
@@ -204,7 +295,7 @@ class MySQLCore extends Db
 		$row = mysql_fetch_assoc($result);
 		if (!$row || strtolower($row['Value']) != 'yes')
 			$value = 'MyISAM';
-		
+
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
 		$result = mysql_query($sql);
@@ -215,9 +306,21 @@ class MySQLCore extends Db
 					$value = 'InnoDB';
 				break;
 			}
+
 		return $value;
 	}
-	
+
+	/**
+	 * Tries to connect to the database and create a table (checking creation privileges)
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @param string $db
+	 * @param string $prefix
+	 * @param string|null $engine Table engine
+	 * @return bool|string True, false or error
+	 */
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		ini_set('mysql.connect_timeout', 5);
@@ -233,7 +336,7 @@ class MySQLCore extends Db
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine, $link);
-		
+
 		if (!$result)
 			return mysql_error($link);
 
@@ -242,7 +345,13 @@ class MySQLCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database and set names to UTF-8
+	 *
 	 * @see Db::checkEncoding()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @return bool
 	 */
 	public static function tryUTF8($server, $user, $pwd)
 	{
@@ -252,6 +361,14 @@ class MySQLCore extends Db
 		return $ret;
 	}
 
+	/**
+	 * Checks if auto increment value and offset is 1
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @return bool
+	 */
 	public static function checkAutoIncrement($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);

@@ -29,16 +29,17 @@
  */
 abstract class ModuleAdminControllerCore extends AdminController
 {
-	/**
-	 * @var Module
-	 */
+	/** @var Module */
 	public $module;
-	
+
+	/**
+	 * @throws PrestaShopException
+	 */
 	public function __construct()
 	{
-		$this->controller_type = 'moduleadmin';
-		
 		parent::__construct();
+
+		$this->controller_type = 'moduleadmin';
 
 		$tab = new Tab($this->id);
 		if (!$tab->module)
@@ -49,12 +50,19 @@ abstract class ModuleAdminControllerCore extends AdminController
 			throw new PrestaShopException("Module {$tab->module} not found");
 	}
 
+	/**
+	 * Creates a template object
+	 *
+	 * @param string $tpl_name Template filename
+	 * @return Smarty_Internal_Template
+	 */
 	public function createTemplate($tpl_name)
 	{
 		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name) && $this->viewAccess())
 			return $this->context->smarty->createTemplate(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name, $this->context->smarty);
 		elseif (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess())
 			return $this->context->smarty->createTemplate($this->getTemplatePath().$this->override_folder.$tpl_name, $this->context->smarty);
+
 		return parent::createTemplate($tpl_name);
 	}
 

@@ -27,10 +27,10 @@
 class UpgraderCore
 {
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
-	public $rss_version_link = 'http://api.prestashop.com/xml/upgrader.xml';
-	public $rss_md5file_link_dir = 'http://api.prestashop.com/xml/md5/';
+	public $rss_version_link;
+	public $rss_md5file_link_dir;
 	/**
-	 * @var boolean contains true if last version is not installed
+	 * @var bool contains true if last version is not installed
 	 */
 	protected $need_upgrade = false;
 	protected $changed_files = array();
@@ -52,6 +52,9 @@ class UpgraderCore
 
 	public function __construct($autoload = false)
 	{
+		$this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
+		$this->rss_md5file_link_dir = _PS_API_URL_.'/xml/md5/';
+
 		if ($autoload)
 		{
 			$this->loadFromConfig();
@@ -70,7 +73,7 @@ class UpgraderCore
 	 *
 	 * @param string $dest directory where to save the file
 	 * @param string $filename new filename
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @TODO ftp if copy is not possible (safe_mode for example)
 	 */
@@ -79,7 +82,7 @@ class UpgraderCore
 		if (empty($this->link))
 			$this->checkPSVersion();
 
-		$destPath =  realpath($dest).DIRECTORY_SEPARATOR.$filename;
+		$destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
 		if (@copy($this->link, $destPath))
 			return true;
 		else
@@ -101,7 +104,6 @@ class UpgraderCore
 	 */
 	public function checkPSVersion($force = false)
 	{
-
 		if (class_exists('Configuration'))
 			$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
 		else
@@ -159,12 +161,12 @@ class UpgraderCore
 	/**
 	 * load the last version informations stocked in base
 	 *
-	 * @return $this
+	 * @return Upgrader
 	 */
 	public function loadFromConfig()
 	{
 		$last_version_check = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
-		if($last_version_check)
+		if ($last_version_check)
 		{
 			if (isset($last_version_check['name']))
 				$this->version_name = $last_version_check['name'];
@@ -202,9 +204,7 @@ class UpgraderCore
 			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
 			if ($checksum == false)
-			{
 				$this->changed_files = false;
-			}
 			else
 				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
 		}
@@ -247,6 +247,7 @@ class UpgraderCore
 	{
 		foreach ($node as $key => $child)
 		{
+			/** @var SimpleXMLElement $child */
 			if (is_object($child) && $child->getName() == 'dir')
 			{
 				$current_path[$level] = (string)$child['name'];
@@ -260,7 +261,7 @@ class UpgraderCore
 					for ($i = 1; $i < $level; $i++)
 					$relative_path .= $current_path[$i].'/';
 				$relative_path .= (string)$child['name'];
-				$fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR . $relative_path;
+				$fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relative_path;
 
 				$fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
@@ -284,7 +285,6 @@ class UpgraderCore
 
 	public function isAuthenticPrestashopVersion()
 	{
-
 		$this->getChangedFilesList();
 		return !$this->version_is_modified;
 	}

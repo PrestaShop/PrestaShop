@@ -32,7 +32,7 @@
 class TaxCalculatorCore
 {
 	/**
-  	 * COMBINE_METHOD sum taxes
+	 * COMBINE_METHOD sum taxes
 	 * eg: 100€ * (10% + 15%)
 	 */
 	const COMBINE_METHOD = 1;

@@ -155,6 +155,4 @@ class CountyCore extends ObjectModel
 		Tools::displayAsDeprecated();
 		return false;
 	}
-
 }
-

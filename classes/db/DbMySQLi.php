@@ -25,12 +25,24 @@
 */
 
 /**
- * @since 1.5.0
+ * Class DbMySQLiCore
+ *
+ * @since 1.5.0,1
  */
 class DbMySQLiCore extends Db
 {
+	/** @var mysqli */
+	protected $link;
+
+	/* @var mysqli_result */
+	protected $result;
+
 	/**
+	 * Tries to connect to the database
+	 *
 	 * @see DbCore::connect()
+	 * @return mysqli
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function	connect()
 	{
@@ -53,15 +65,18 @@ class DbMySQLiCore extends Db
 		return $this->link;
 	}
 
+	/**
+	 * Tries to connect and create a new database
+	 *
+	 * @param string $host
+	 * @param string|null $user
+	 * @param string|null $password
+	 * @param string|null $database
+	 * @param bool $dropit If true, drops the created database.
+	 * @return bool|mysqli_result
+	 */
 	public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
 	{
-		if (is_null($user))
-			$user = $this->user;
-		if (is_null($password))
-			$password = $this->password;
-		if (is_null($database))
-			$database = $this->database;
-
 		if (strpos($host, ':') !== false)
 		{
 			list($host, $port) = explode(':', $host);
@@ -76,6 +91,8 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Destroys the database connection link
+	 *
 	 * @see DbCore::disconnect()
 	 */
 	public function	disconnect()
@@ -84,7 +101,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Executes an SQL statement, returning a result set as a mysqli_result object or true/false.
+	 *
 	 * @see DbCore::_query()
+	 * @param string $sql
+	 * @return bool|mysqli_result
 	 */
 	protected function _query($sql)
 	{
@@ -92,7 +113,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns the next row from the result set.
+	 *
 	 * @see DbCore::nextRow()
+	 * @param bool|mysqli_result $result
+	 * @return array|bool
 	 */
 	public function nextRow($result = false)
 	{
@@ -106,8 +131,12 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns all rows from the result set.
+	 *
 	 * @see DbCore::getAll()
-	*/
+	 * @param bool|mysqli_result $result
+	 * @return array|false
+	 */
 	protected function getAll($result = false)
 	{
 		if (!$result)
@@ -130,7 +159,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns row count from the result set.
+	 *
 	 * @see DbCore::_numRows()
+	 * @param bool|mysqli_result $result
+	 * @return int
 	 */
 	protected function _numRows($result)
 	{
@@ -138,7 +171,10 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns ID of the last inserted row.
+	 *
 	 * @see DbCore::Insert_ID()
+	 * @return string|int
 	 */
 	public function	Insert_ID()
 	{
@@ -146,7 +182,10 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Return the number of rows affected by the last SQL query.
+	 *
 	 * @see DbCore::Affected_Rows()
+	 * @return int
 	 */
 	public function	Affected_Rows()
 	{
@@ -154,7 +193,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns error message.
+	 *
 	 * @see DbCore::getMsgError()
+	 * @param bool $query
+	 * @return string
 	 */
 	public function getMsgError($query = false)
 	{
@@ -162,7 +205,10 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns error code.
+	 *
 	 * @see DbCore::getNumberError()
+	 * @return int
 	 */
 	public function getNumberError()
 	{
@@ -170,7 +216,10 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Returns database server version.
+	 *
 	 * @see DbCore::getVersion()
+	 * @return string
 	 */
 	public function getVersion()
 	{
@@ -178,7 +227,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Escapes illegal characters in a string.
+	 *
 	 * @see DbCore::_escape()
+	 * @param string $str
+	 * @return string
 	 */
 	public function _escape($str)
 	{
@@ -186,7 +239,11 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Switches to a different database.
+	 *
 	 * @see DbCore::set_db()
+	 * @param string $db_name
+	 * @return bool
 	 */
 	public function set_db($db_name)
 	{
@@ -194,7 +251,15 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database and check if at least one table with same prefix exists
+	 *
 	 * @see Db::hasTableWithSamePrefix()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param string $prefix Tables prefix
+	 * @return bool
 	 */
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
@@ -208,9 +273,19 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database
+	 *
 	 * @see Db::checkConnection()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param bool $newDbLink
+	 * @param string|bool $engine
+	 * @param int $timeout
+	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		$link = mysqli_init();
 		if (!$link)
@@ -227,6 +302,11 @@ class DbMySQLiCore extends Db
 		return 0;
 	}
 
+	/**
+	 * Selects best table engine.
+	 *
+	 * @return string
+	 */
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
@@ -249,9 +329,21 @@ class DbMySQLiCore extends Db
 					$value = 'InnoDB';
 				break;
 			}
+
 		return $value;
 	}
 
+	/**
+	 * Tries to connect to the database and create a table (checking creation privileges)
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @param string $db
+	 * @param string $prefix
+	 * @param string|null $engine Table engine
+	 * @return bool|string True, false or error
+	 */
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
@@ -274,9 +366,15 @@ class DbMySQLiCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database and set names to UTF-8
+	 *
 	 * @see Db::checkEncoding()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @return bool
 	 */
-	static public function tryUTF8($server, $user, $pwd)
+	public static function tryUTF8($server, $user, $pwd)
 	{
 		$link = @new mysqli($server, $user, $pwd);
 		$ret = $link->query("SET NAMES 'UTF8'");
@@ -284,6 +382,14 @@ class DbMySQLiCore extends Db
 		return $ret;
 	}
 
+	/**
+	 * Checks if auto increment value and offset is 1
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @return bool
+	 */
 	public static function checkAutoIncrement($server, $user, $pwd)
 	{
 		$link = @new mysqli($server, $user, $pwd);

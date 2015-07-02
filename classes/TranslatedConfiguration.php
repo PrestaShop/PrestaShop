@@ -50,7 +50,7 @@ class TranslatedConfigurationCore extends Configuration
 		),
 	);
 
-	public function __construct($id = NULL, $id_lang = NULL)
+	public function __construct($id = null, $id_lang = null)
 	{
 		$this->def = ObjectModel::getDefinition($this);
 		// Check if the id configuration is set in the configuration_lang table.
@@ -65,14 +65,14 @@ class TranslatedConfigurationCore extends Configuration
 			if (empty($id_translated))
 				$id = null;
 		}
-		parent::__construct($id,$id_lang);
+		parent::__construct($id, $id_lang);
 	}
-	
+
 	public function add($autodate = true, $nullValues = false)
 	{
 		return $this->update($nullValues);
 	}
-	
+
 	public function update($nullValues = false)
 	{
 		$ishtml = false;
@@ -85,23 +85,23 @@ class TranslatedConfigurationCore extends Configuration
 			}
 		}
 		Configuration::updateValue($this->name, $this->value, $ishtml);
-		
+
 		$last_insert = Db::getInstance()->getRow('
 			SELECT `id_configuration` AS id
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE `name` = \''.pSQL($this->name).'\'');
 		if ($last_insert)
 			$this->id = $last_insert['id'];
-		
+
 		return true;
 	}
-	
+
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$query = '
 		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
 		'.$sql_join.'
-		WHERE id_configuration IN 
+		WHERE id_configuration IN
 		(	SELECT id_configuration
 			FROM '._DB_PREFIX_.$this->def['table'].'_lang
 		) '.$sql_filter.'

@@ -43,9 +43,6 @@ abstract class InstallControllerConsole
 	 */
 	public $errors = array();
 
-	/**
-	 * @var InstallController
-	 */
 	public $controller;
 
 	/**

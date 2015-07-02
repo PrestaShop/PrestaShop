@@ -26,7 +26,7 @@
 
 class LinkCore
 {
-	/** @var boolean Rewriting activation */
+	/** @var bool Rewriting activation */
 	protected $allow;
 	protected $url;
 	public static $cache = array('page' => array());
@@ -39,8 +39,8 @@ class LinkCore
 	protected static $category_disable_rewrite = null;
 
 	/**
-	  * Constructor (initialization only)
-	  */
+	 * Constructor (initialization only)
+	 */
 	public function __construct($protocol_link = null, $protocol_content = null)
 	{
 		$this->allow = (int)Configuration::get('PS_REWRITING_SETTINGS');
@@ -69,7 +69,7 @@ class LinkCore
 	public function getProductDeletePictureLink($product, $id_picture)
 	{
 		$url = $this->getProductLink($product);
-		return $url.((strpos($url, '?')) ? '&' : '?').'&deletePicture='.$id_picture;
+		return $url.((strpos($url, '?')) ? '&' : '?').'deletePicture='.$id_picture;
 	}
 
 	/**
@@ -134,12 +134,12 @@ class LinkCore
 		{
 			$params['category'] = (!$category) ? $product->category : $category;
 			$cats = array();
-			foreach ($product->getParentCategories() as $cat)
+			foreach ($product->getParentCategories($id_lang) as $cat)
 				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
 					$cats[] = $cat['link_rewrite'];
 			$params['categories'] = implode('/', $cats);
 		}
-		$anchor = $ipa ? $product->getAnchor($ipa) : '';
+		$anchor = $ipa ? $product->getAnchor($ipa, $force_routes) : '';
 
 		return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
 	}
@@ -197,7 +197,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		$url = $this->getBaseLink($id_shop, null, $relative_protocol = false).$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms_category))
@@ -360,7 +360,7 @@ class LinkCore
 	 * Use controller name to create a link
 	 *
 	 * @param string $controller
-	 * @param boolean $with_token include or not the token in the url
+	 * @param bool $with_token include or not the token in the url
 	 * @return string url
 	 */
 	public function getAdminLink($controller, $with_token = true)
@@ -478,7 +478,7 @@ class LinkCore
 	/**
 	 * Create link after language change, for the change language block
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string link
 	 */
 	public function getLanguageLink($id_lang, Context $context = null)
@@ -496,8 +496,8 @@ class LinkCore
 
 		$controller = Dispatcher::getInstance()->getController();
 
-		if (!empty(Context::getContext()->controller->php_self))
-			$controller = Context::getContext()->controller->php_self;
+		if (!empty($context->controller->php_self))
+			$controller = $context->controller->php_self;
 
 		if ($controller == 'product' && isset($params['id_product']))
 			return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
@@ -535,10 +535,10 @@ class LinkCore
 	 *
 	 * @param string $type Controller name
 	 * @param int $id_object
-	 * @param boolean $nb Show nb element per page attribute
-	 * @param boolean $sort Show sort attribute
-	 * @param boolean $pagination Show page number attribute
-	 * @param boolean $array If false return an url, if true return an array
+	 * @param bool $nb Show nb element per page attribute
+	 * @param bool $sort Show sort attribute
+	 * @param bool $pagination Show page number attribute
+	 * @param bool $array If false return an url, if true return an array
 	 */
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
 	{
@@ -565,7 +565,7 @@ class LinkCore
 		}
 
 		$vars = array();
-		$vars_nb = array('n', 'search_query');
+		$vars_nb = array('n');
 		$vars_sort = array('orderby', 'orderway');
 		$vars_pagination = array('p');
 
@@ -596,7 +596,7 @@ class LinkCore
 
 		if (!$array)
 			if (count($vars))
-				return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+				return $url.(!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
 			else
 				return $url;
 

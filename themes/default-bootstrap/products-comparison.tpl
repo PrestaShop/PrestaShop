@@ -79,7 +79,7 @@
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
 										<span class="old-price product-price">
-											{displayWtPrice p=$product->getPrice($taxes_behavior) + ($product->base_price * $product->specificPrice.reduction)}
+											{displayWtPrice p=($product->getPrice(true, null, 6, null, false, false))}
 										</span>
 										<span class="price-percent-reduction">
 											-{$product->specificPrice.reduction*100|floatval}%
@@ -131,7 +131,7 @@
 									</span>
 								{/if}
 							</p>
-							{hook h="displayProductDeliveryTime" product=$product}
+							{if !$product->is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								<div class="button-container">

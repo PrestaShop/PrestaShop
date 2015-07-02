@@ -520,8 +520,9 @@
 				$("#regenerate").closest('.form-group').hide();
 			}
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
-				$("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 5 ||
-				$("#entity > option:selected").val() == 6 || $("#entity > option:selected").val() == 7) {
+				$("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 4 ||
+				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 ||
+				$("#entity > option:selected").val() == 7) {
 				$("#forceIDs").closest('.form-group').show();
 			}
 			else {

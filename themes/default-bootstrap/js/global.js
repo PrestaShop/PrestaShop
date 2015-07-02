@@ -266,8 +266,8 @@ function display(view)
 		$('.product_list > li').each(function(index, element) {
 			html = '';
 			html = '<div class="product-container"><div class="row">';
-				html += '<div class="left-block col-xs-4 col-xs-5 col-md-4">' + $(element).find('.left-block').html() + '</div>';
-				html += '<div class="center-block col-xs-4 col-xs-7 col-md-4">';
+				html += '<div class="left-block col-xs-4 col-sm-5 col-md-4">' + $(element).find('.left-block').html() + '</div>';
+				html += '<div class="center-block col-xs-4 col-sm-7 col-md-4">';
 					html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 					html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 					var rating = $(element).find('.comments_note').html(); // check : rating
@@ -284,7 +284,7 @@ function display(view)
 						html += '<span class="availability">'+ availability +'</span>';
 					}
 				html += '</div>';
-				html += '<div class="right-block col-xs-4 col-xs-12 col-md-4"><div class="right-block-content row">';
+				html += '<div class="right-block col-xs-4 col-sm-12 col-md-4"><div class="right-block-content row">';
 					var price = $(element).find('.content_price').html();       // check : catalog mode is enabled
 					if (price != null) {
 						html += '<div class="content_price col-xs-5 col-md-12">'+ price + '</div>';

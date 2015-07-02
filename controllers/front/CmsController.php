@@ -29,6 +29,8 @@ class CmsControllerCore extends FrontController
 	public $php_self = 'cms';
 	public $assignCase;
 	public $cms;
+
+	/** @var CMSCategory */
 	public $cms_category;
 	public $ssl = false;
 
@@ -73,7 +75,7 @@ class CmsControllerCore extends FrontController
 			else
 				$this->assignCase = 1;
 		}
-		elseif (Validate::isLoadedObject($this->cms_category))
+		elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active)
 			$this->assignCase = 2;
 		else
 		{
@@ -104,12 +106,14 @@ class CmsControllerCore extends FrontController
 		$this->context->smarty->assign('id_current_lang', $this->context->language->id);
 		$this->context->smarty->assign('home_title', $parent_cat->name);
 		$this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
-		if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
-			$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
-		elseif (isset($this->cms_category->meta_title))
-			$path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
+
 		if ($this->assignCase == 1)
 		{
+			if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
+				$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
+			elseif (isset($this->cms_category->meta_title))
+				$path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
+
 			$this->context->smarty->assign(array(
 				'cms' => $this->cms,
 				'content_only' => (int)Tools::getValue('content_only'),

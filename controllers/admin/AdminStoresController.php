@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Store $object
+ */
 class AdminStoresControllerCore extends AdminController
 {
 	public function __construct()
@@ -67,8 +70,8 @@ class AdminStoresControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Parameters'),
-				'fields' =>	array(
+				'title' => $this->l('Parameters'),
+				'fields' => array(
 					'PS_STORES_DISPLAY_FOOTER' => array(
 						'title' => $this->l('Display in the footer'),
 						'hint' => $this->l('Display a link to the store locator in the footer.'),
@@ -397,15 +400,23 @@ class AdminStoresControllerCore extends AdminController
 	protected function postImage($id)
 	{
 		$ret = parent::postImage($id);
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		if (($id_store = (int)Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_.$id_store.'.jpg'))
 		{
 			$images_types = ImageType::getImagesTypes('stores');
 			foreach ($images_types as $k => $image_type)
 			{
 				ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
-							_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
-							(int)$image_type['width'], (int)$image_type['height']
+					_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'.jpg',
+					(int)$image_type['width'], (int)$image_type['height']
 				);
+
+				if ($generate_hight_dpi_images)
+					ImageManager::resize(_PS_STORE_IMG_DIR_.$id_store.'.jpg',
+						_PS_STORE_IMG_DIR_.$id_store.'-'.stripslashes($image_type['name']).'2x.jpg',
+						(int)$image_type['width']*2, (int)$image_type['height']*2
+					);
 			}
 		}
 		return $ret;
@@ -429,7 +440,8 @@ class AdminStoresControllerCore extends AdminController
 				'hint' => $this->l('Displayed in emails and page titles.'),
 				'validation' => 'isGenericName',
 				'required' => true,
-				'type' => 'text'
+				'type' => 'text',
+				'no_escape' => true,
 			),
 			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop email'),
 				'hint' => $this->l('Displayed in emails sent to customers.'),
@@ -438,7 +450,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_DETAILS' => array(
-				'title' => $this->l('Registration'),
+				'title' => $this->l('Registration number'),
 				'hint' => $this->l('Shop registration information (e.g. SIRET or RCS).'),
 				'validation' => 'isGenericName',
 				'type' => 'textarea',

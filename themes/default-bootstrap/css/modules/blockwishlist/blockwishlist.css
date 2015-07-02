@@ -7,7 +7,8 @@
   background-color: transparent;
   border-color: transparent;
   margin: auto;
-  outline: 0; }
+  outline: 0;
+  cursor: pointer; }
   #wishlist_button:before, #wishlist_button_nopop:before {
     content: "\f08a";
     font: 400 15px/31px "FontAwesome";
@@ -150,6 +151,18 @@ ul.wlp_bought_list li .lnkdel {
 
 #wishlist_button > .btn-group {
   width: 80%; }
+
+ul.product_list.grid > li .product-container .functional-buttons .wishlist .popover {
+  padding: 0;
+  min-width: 160px; }
+  ul.product_list.grid > li .product-container .functional-buttons .wishlist .popover .popover-content {
+    padding: 0;
+    min-width: 158px; }
+  ul.product_list.grid > li .product-container .functional-buttons .wishlist .popover table {
+    margin-bottom: 2px; }
+    ul.product_list.grid > li .product-container .functional-buttons .wishlist .popover table td:hover {
+      background-color: #cccccc;
+      cursor: pointer; }
 
 [id=wishlist_button] + .popover,
 .wishlist_change_button + .popover {

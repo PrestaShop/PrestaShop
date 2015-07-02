@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CMS $object
+ */
 class AdminCmsContentControllerCore extends AdminController
 {
 	/** @var object adminCMSCategories() instance */

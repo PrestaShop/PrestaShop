@@ -38,7 +38,7 @@ class OrderDiscountCore extends OrderCartRule
 			return $this->id_cart_rule;
 		return $this->{$key};
 	}
-	
+
 	public function __set($key, $value)
 	{
 		Tools::displayAsDeprecated();
@@ -48,10 +48,10 @@ class OrderDiscountCore extends OrderCartRule
 			$this->id_cart_rule = $value;
 		$this->{$key} = $value;
 	}
-	
+
 	public function __call($method, $args)
 	{
 		Tools::displayAsDeprecated();
 		return call_user_func_array(array($this->parent, $method), $args);
-	}	
+	}
 }

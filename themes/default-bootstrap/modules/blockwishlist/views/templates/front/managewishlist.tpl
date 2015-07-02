@@ -131,7 +131,7 @@
                                     {if $wishlists|count > 1}
                                         {foreach name=wl from=$wishlists item=wishlist}
                                             {if $smarty.foreach.wl.first}
-                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Move to a wishlist" data-placement="bottom">
+                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="{l s='Move to a wishlist' mod='blockwishlist'}" data-placement="bottom">
                                                     <span>{l s='Move' mod='blockwishlist'}</span>
                                                     </a>
                                                     <div hidden class="popover-content">
@@ -206,7 +206,7 @@
                                 <td class="first_item">
 									<span style="float:left;">
 										<img
-                                                src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html':'UTF-8'}"
+                                                src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small_default')|escape:'html':'UTF-8'}"
                                                 alt="{$product.name|escape:'html':'UTF-8'}"/>
 									</span>
 									<span style="float:left;">

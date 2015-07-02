@@ -81,10 +81,6 @@
 </form>
 {addJsDef taxEnabled=$use_taxes}
 {addJsDef displayPrice=$priceDisplay}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef id_carrier=$id_carrier|intval}
 {addJsDef id_state=$id_state|intval}
 {addJsDef SE_RefreshMethod=$refresh_method|intval}

@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property StockMvt $object
  */
 class AdminStockMvtControllerCore extends AdminController
 {
@@ -224,6 +225,15 @@ class AdminStockMvtControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{

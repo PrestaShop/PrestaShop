@@ -116,14 +116,23 @@
 	<configuration id="PS_PRODUCT_PICTURE_HEIGHT" name="PS_PRODUCT_PICTURE_HEIGHT">
 		<value>64</value>
 	</configuration>
-	<configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
-		<value>IN</value>
-	</configuration>
+    <configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
+      <value>#IN</value>
+    </configuration>
+    <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
+      <value>{"avoid":["vat_number","phone","phone_mobile"]}</value>
+    </configuration>
+    <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
+      <value>{"avoid":["vat_number","phone","phone_mobile"]}</value>
+    </configuration>
 	<configuration id="PS_DELIVERY_PREFIX" name="PS_DELIVERY_PREFIX">
-		<value>DE</value>
+		<value>#DE</value>
 	</configuration>
 	<configuration id="PS_DELIVERY_NUMBER" name="PS_DELIVERY_NUMBER">
 		<value>1</value>
+	</configuration>
+	<configuration id="PS_RETURN_PREFIX" name="PS_RETURN_PREFIX">
+		<value>#RE</value>
 	</configuration>
 	<configuration id="PS_INVOICE" name="PS_INVOICE">
 		<value>1</value>
@@ -722,7 +731,7 @@ Country</value>
 		<value>favicon.ico</value>
 	</configuration>
 	<configuration id="PS_STORES_ICON" name="PS_STORES_ICON">
-		<value>logo_stores.gif</value>
+		<value>logo_stores.png</value>
 	</configuration>
 	<configuration id="PS_ROOT_CATEGORY" name="PS_ROOT_CATEGORY">
 		<value>1</value>
@@ -823,5 +832,20 @@ Country</value>
 	<configuration id="PS_PACK_STOCK_TYPE" name="PS_PACK_STOCK_TYPE">
 		<value>0</value>
 	</configuration>
+	<configuration id="PS_LOG_MODULE_PERFS_MODULO" name="PS_LOG_MODULE_PERFS_MODULO">
+		<value>0</value>
+	</configuration>
+    <configuration id="PS_DISALLOW_HISTORY_REORDERING" name="PS_DISALLOW_HISTORY_REORDERING">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_DISPLAY_PRODUCT_WEIGHT" name="PS_DISPLAY_PRODUCT_WEIGHT">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_PRODUCT_WEIGHT_PRECISION" name="PS_PRODUCT_WEIGHT_PRECISION">
+      <value>2</value>
+    </configuration>
+    <configuration id="PS_ADVANCED_PAYMENT_API" name="PS_ADVANCED_PAYMENT_API">
+      <value>0</value>
+    </configuration>
   </entities>
 </entity_configuration>

@@ -404,6 +404,7 @@
 		}
 
 		@media (max-width: $screen-sm-max) { // max 991px
+			@include border-radius(0px 0 4px 4px);
 			border-left: none;
 			border-top: 1px solid $base-border-color;
 		}

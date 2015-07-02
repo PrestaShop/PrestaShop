@@ -42,10 +42,14 @@ $(document).ready(function()
 		reloadContent(true);
 	});
 
-	$(document).on('click', '#layered_form .select, #layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
+    $(document).on('click', '#layered_form input[type=checkbox], #layered_form input[type=radio]', function() {
+        reloadContent(true);
+    });
 
-		reloadContent(true);
-	});
+    // Doesn't work with document element
+    $('body').on('change', '#layered_form .select', function() {
+        reloadContent(true);
+    });
 
 	// Changing content of an input text
 	$(document).on('keyup', '#layered_form input.layered_input_range', function(e){
@@ -193,7 +197,8 @@ function initFilters()
 
 function initUniform()
 {
-	$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
+	if (!!$.prototype.uniform)
+		$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
 }
 
 function hideFilterValueAction(it)
@@ -463,7 +468,7 @@ function reloadContent(params_plus)
 	}
 
 	var slideUp = true;
-	if (params_plus == undefined || !(typeof params_plus == 'string'))
+	if (typeof params_plus === undefined || !(typeof params_plus === 'string'))
 	{
 		params_plus = '';
 		slideUp = false;

@@ -31,6 +31,11 @@
 {addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
+{addJsDef currency=$currency}
+{addJsDef currencyRate=$currencyRate|floatval}
+{addJsDef currencySign=$currency->sign|html_entity_decode:2:"UTF-8"}
+{addJsDef currencyFormat=$currency->format|intval}
+{addJsDef currencyBlank=$currency->blank|intval}
 {addJsDef isLogged=$is_logged|intval}
 {addJsDef isGuest=$is_guest|intval}
 {addJsDef page_name=$page_name|escape:'html':'UTF-8'}

@@ -126,7 +126,7 @@ class CookieCore
 	/**
 	 * Set expiration date
 	 *
-	 * @param integer $expire Expiration time from now
+	 * @param int $expire Expiration time from now
 	 */
 	public function setExpire($expire)
 	{
@@ -148,7 +148,7 @@ class CookieCore
 	 * Magic method which check if key exists in the cookie
 	 *
 	 * @param string $key key wanted
-	 * @return boolean key existence
+	 * @return bool key existence
 	 */
 	public function __isset($key)
 	{
@@ -156,10 +156,11 @@ class CookieCore
 	}
 
 	/**
-	 * Magic method wich add data into _content array
+	 * Magic method which adds data into _content array
 	 *
-	 * @param string $key key desired
-	 * @param $value value corresponding to the key
+	 * @param string $key Access key for the value
+	 * @param mixed $value Value corresponding to the key
+	 * @throws Exception
 	 */
 	public function __set($key, $value)
 	{
@@ -185,11 +186,11 @@ class CookieCore
 	}
 
 	/**
-	  * Check customer informations saved into cookie and return customer validity
-	  *
-	  * @deprecated as of version 1.5 use Customer::isLogged() instead
-	  * @return boolean customer validity
-	  */
+	 * Check customer informations saved into cookie and return customer validity
+	 *
+	 * @deprecated as of version 1.5 use Customer::isLogged() instead
+	 * @return bool customer validity
+	 */
 	public function isLogged($withGuest = false)
 	{
 		Tools::displayAsDeprecated();
@@ -206,7 +207,7 @@ class CookieCore
 	 * Check employee informations saved into cookie and return employee validity
 	 *
 	 * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
-	 * @return boolean employee validity
+	 * @return bool employee validity
 	 */
 	public function isLoggedBack()
 	{

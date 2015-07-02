@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
 	/** @var int Price display method (tax inc/tax exc) */
 	public $price_display_method;
 
-	/** @var boolean Show prices */
+	/** @var bool Show prices */
 	public $show_prices = 1;
 
 	/** @var string Object creation date */
@@ -60,7 +60,7 @@ class GroupCore extends ObjectModel
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
@@ -76,7 +76,7 @@ class GroupCore extends ObjectModel
 		if ($this->id && !isset(Group::$group_price_display_method[$this->id]))
 			self::$group_price_display_method[$this->id] = $this->price_display_method;
 	}
-	
+
 	public static function getGroups($id_lang, $id_shop = false)
 	{
 		$shop_criteria = '';
@@ -210,7 +210,10 @@ class GroupCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+		static $ps_group_feature_active = null;
+		if ($ps_group_feature_active === null)
+			$ps_group_feature_active = Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+		return $ps_group_feature_active;
 	}
 
 	/**
@@ -227,8 +230,9 @@ class GroupCore extends ObjectModel
 
 	/**
 	 * Truncate all modules restrictions for the group
-	 * @param integer id_group
-	 * @return boolean result
+	 *
+	 * @param int $id_group
+	 * @return bool
 	 */
 	public static function truncateModulesRestrictions($id_group)
 	{
@@ -239,8 +243,9 @@ class GroupCore extends ObjectModel
 
 	/**
 	 * Truncate all restrictions by module
-	 * @param integer id_module
-	 * @return boolean result
+	 *
+	 * @param int $id_module
+	 * @return bool
 	 */
 	public static function truncateRestrictionsByModule($id_module)
 	{
@@ -263,27 +268,29 @@ class GroupCore extends ObjectModel
 
 		// Delete all record for this group
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
-		
+
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 		foreach ($modules as $module)
 			foreach ($shops as $shop)
 				$sql .= '("'.(int)$module.'", "'.(int)$shop.'", "'.(int)$id_group.'"),';
 		$sql = rtrim($sql, ',');
-		
+
 		return (bool)Db::getInstance()->execute($sql);
 	}
 
 	/**
-	 * Add restrictions for a new module
+	 * Add restrictions for a new module.
 	 * We authorize every groups to the new module
-	 * @param integer id_module
+	 *
+	 * @param int $id_module
 	 * @param array $shops
+	 * @return bool
 	 */
 	public static function addRestrictionsForModule($id_module, $shops = array(1))
 	{
 		if (!is_array($shops) || !count($shops))
 			return false;
-		
+
 		$res = true;
 		foreach ($shops as $shop)
 			$res &= Db::getInstance()->execute('
@@ -295,25 +302,33 @@ class GroupCore extends ObjectModel
 	/**
 	 * Return current group object
 	 * Use context
-	 * @static
+	 *
 	 * @return Group Group object
 	 */
 	public static function getCurrent()
 	{
 		static $groups = array();
+		static $ps_unidentified_group = null;
+		static $ps_customer_group = null;
+
+		if ($ps_unidentified_group === null)
+			$ps_unidentified_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+
+		if ($ps_customer_group === null)
+			$ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
 
 		$customer = Context::getContext()->customer;
 		if (Validate::isLoadedObject($customer))
 			$id_group = (int)$customer->id_default_group;
 		else
-			$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+			$id_group = (int)$ps_unidentified_group;
 
 		if (!isset($groups[$id_group]))
 			$groups[$id_group] = new Group($id_group);
-			
+
 		if (!$groups[$id_group]->isAssociatedToShop(Context::getContext()->shop->id))
 		{
-			$id_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+			$id_group = (int)$ps_customer_group;
 			if (!isset($groups[$id_group]))
 				$groups[$id_group] = new Group($id_group);
 		}
@@ -322,13 +337,11 @@ class GroupCore extends ObjectModel
 	}
 
 	/**
-	  * Light back office search for Group
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first group and exact match
-	  * @return array Corresponding groupes
-	  */
+	 * Light back office search for Group
+	 *
+	 * @param string $query Searched string
+	 * @return array Corresponding groups
+	 */
 	public static function searchByName($query)
 	{
 		return Db::getInstance()->getRow('
@@ -336,7 +349,7 @@ class GroupCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'group` g
 			LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
 				ON (g.`id_group` = gl.`id_group`)
-			WHERE `name` LIKE \''.pSQL($query).'\'
+			WHERE `name` = \''.pSQL($query).'\'
 		');
 	}
 }

@@ -39,6 +39,11 @@
 			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
+		<div class="row-editing-warning" style="display:none;">
+			<div class="alert alert-warning">
+				<strong>{l s='Editing this product line will remove the reduction and base price.'}</strong>
+			</div>
+		</div>
 	</td>
 	<td>
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
@@ -73,7 +78,14 @@
 		</span>
 		{/if}
 	</td>
-	{if $display_warehouse}<td>{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
+	{if $display_warehouse}
+		<td>
+			{$product.warehouse_name|escape:'html':'UTF-8'}
+			{if $product.warehouse_location}
+				<br>{l s='Location'}: <strong>{$product.warehouse_location|escape:'html':'UTF-8'}</strong>
+			{/if}
+		</td>
+	{/if}
 	{if ($order->hasBeenPaid())}
 		<td class="productQuantity text-center">
 			{if !empty($product['amount_refund'])}
@@ -146,7 +158,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
+	<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px;">
 		{if $product['quantity_refundable'] > 0}
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{assign var='amount_refundable' value=$product['amount_refundable']}

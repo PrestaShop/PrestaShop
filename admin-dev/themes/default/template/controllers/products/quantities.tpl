@@ -60,8 +60,8 @@
 						</p>
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
 								<p class="help-block"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
-							{else if $product->cache_is_pack}
-								<p class="help-block">{l s='This parameter depends on the product(s) in the pack if you use an option that decrement product in pack.'}</p>
+							{elseif $product->cache_is_pack}
+								<p class="help-block">{l s='When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.'}</p>
 							{/if}
 					</div>
 				</div>
@@ -86,8 +86,8 @@
 						</p>
 						{if $product->cache_is_pack}
 							<p class="help-block">
-								{l s='You cannot use advanced stock management for this pack if'}</br>
-								{l s='- advanced stock management is not enabled for these products'}</br>
+								{l s='You cannot use advanced stock management for this pack if'}<br />
+								{l s='- advanced stock management is not enabled for these products'}<br />
 								{l s='- you have chosen to decrement products quantities.'}
 							</p>
 						{/if}
@@ -213,7 +213,7 @@
 			{/if}
 		{/if}
 		<div class="panel-footer">
-			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i></i> {l s='Save'}</button>
 			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 		</div>
@@ -285,7 +285,7 @@
 			{/if}
 		{/if}
 		<div class="panel-footer">
-			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
 			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 		</div>

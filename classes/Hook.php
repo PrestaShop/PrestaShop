@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author		PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class HookCore extends ObjectModel
 {
@@ -146,28 +146,33 @@ class HookCore extends ObjectModel
 	{
 		$cache_id = 'hook_namebyid_'.$hook_id;
 		if (!Cache::isStored($cache_id))
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `name`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `id_hook` = '.(int)$hook_id)
-			);
+		{
+			$result = Db::getInstance()->getValue('
+							SELECT `name`
+							FROM `'._DB_PREFIX_.'hook`
+							WHERE `id_hook` = '.(int)$hook_id);
+			Cache::store($cache_id, $result);
+			return $result;
+		}
 		return Cache::retrieve($cache_id);
 	}
-	
+
 	/**
 	 * Return hook live edit bool from ID
 	 */
-	public static function getLiveEditById($hook_id)
-	{
+	public static function getLiveEditById($hook_id) {
 		$cache_id = 'hook_live_editbyid_'.$hook_id;
 		if (!Cache::isStored($cache_id))
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `live_edit`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `id_hook` = '.(int)$hook_id)
-			);
+		{
+			$result = Db::getInstance()->getValue('
+							SELECT `live_edit`
+							FROM `'._DB_PREFIX_.'hook`
+							WHERE `id_hook` = '.(int)$hook_id);
+			Cache::store($cache_id, $result);
+			return $result;
+		}
 		return Cache::retrieve($cache_id);
-	}	
+	}
 
 	/**
 	 * Get list of hook alias
@@ -186,12 +191,13 @@ class HookCore extends ObjectModel
 				foreach ($hook_alias_list as $ha)
 					$hook_alias[strtolower($ha['alias'])] = $ha['name'];
 			Cache::store($cache_id, $hook_alias);
+			return $hook_alias;
 		}
 		return Cache::retrieve($cache_id);
 	}
 
 	/**
-	 * Return retrocompatible hook name
+	 * Return backward compatibility hook name
 	 *
 	 * @since 1.5.0
 	 * @param string $hook_name Hook name
@@ -222,9 +228,9 @@ class HookCore extends ObjectModel
 		{
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
-			FROM `'._DB_PREFIX_.'hook` h
-			INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
-			INNER JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
+			FROM `'._DB_PREFIX_.'hook_module` hm
+			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
 			ORDER BY hm.position');
 			$list = array();
 			foreach ($results as $result)
@@ -248,6 +254,7 @@ class HookCore extends ObjectModel
 
 			// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
 			Hook::$_hook_modules_cache = $list;
+			return $list;
 		}
 
 		return Cache::retrieve($cache_id);
@@ -302,7 +309,7 @@ class HookCore extends ObjectModel
 						$groups = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
 				}
 			}
-			
+
 			// SQL Request
 			$sql = new DbQuery();
 			$sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
@@ -360,7 +367,7 @@ class HookCore extends ObjectModel
 			if ($hook_name != 'displayPayment' && $hook_name != 'displayBackOfficeHeader')
 			{
 				Cache::store($cache_id, $list);
-				// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
+				// @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
 				self::$_hook_modules_cache_exec = $list;
 			}
 		}
@@ -396,13 +403,21 @@ class HookCore extends ObjectModel
 	 * @param string $hook_name Hook Name
 	 * @param array $hook_args Parameters for the functions
 	 * @param int $id_module Execute hook for this module only
-	 * @return string modules output
+	 * @param bool $array_return If specified, module output will be set by name in an array
+	 * @param bool $check_exceptions Check permission exceptions
+	 * @param bool $use_push Force change to be refreshed on Dashboard widgets
+	 * @param int $id_shop If specified, hook will be execute the shop with this ID
+	 *
+	 * @throws PrestaShopException
+	 *
+	 * @return string/array modules output
 	 */
-	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false, $id_shop = null)
+	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
+								$use_push = false, $id_shop = null)
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return;
-		
+
 		static $disable_non_native_modules = null;
 		if ($disable_non_native_modules === null)
 			$disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
@@ -412,7 +427,7 @@ class HookCore extends ObjectModel
 			throw new PrestaShopException('Invalid id_module or hook_name');
 
 		// If no modules associated to hook_name or recompatible hook name, we stop the function
-		
+
 		if (!$module_list = Hook::getHookModuleExecList($hook_name))
 			return '';
 
@@ -442,7 +457,6 @@ class HookCore extends ObjectModel
 		$different_shop = false;
 		if ($id_shop !== null && Validate::isUnsignedId($id_shop) && $id_shop != $context->shop->getContextShopID())
 		{
-			$old_context_shop_id = $context->shop->getContextShopID();
 			$old_context = $context->shop->getContext();
 			$old_shop = clone $context->shop;
 			$shop = new Shop((int)$id_shop);
@@ -470,15 +484,15 @@ class HookCore extends ObjectModel
 
 				$controller = Dispatcher::getInstance()->getController();
 				$controller_obj = Context::getContext()->controller;
-				
+
 				//check if current controller is a module controller
 				if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module))
 					$controller = 'module-'.$controller_obj->module->name.'-'.$controller;
-				
+
 				if (in_array($controller, $exceptions))
 					continue;
-				
-				//retro compat of controller names
+
+				//Backward compatibility of controller names
 				$matching_name = array(
 					'authentication' => 'auth',
 					'productscomparison' => 'compare'
@@ -488,7 +502,7 @@ class HookCore extends ObjectModel
 				if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee))
 					continue;
 			}
-			
+
 			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
 				continue;
 
@@ -507,11 +521,14 @@ class HookCore extends ObjectModel
 
 				// Call hook method
 				if ($hook_callable)
-					$display = $moduleInstance->{'hook'.$hook_name}($hook_args);
+					$display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
 				elseif ($hook_retro_callable)
-					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
+					$display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
+
 				// Live edit
-				if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
+				if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad')
+					&& Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'
+						.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 				{
 					$live_edit = true;
 					$output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
@@ -536,6 +553,38 @@ class HookCore extends ObjectModel
 				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
 	}
 
+	public static function coreCallHook($module, $method, $params)
+	{
+		// Define if we will log modules performances for this session
+		if (Module::$_log_modules_perfs === null)
+		{
+			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
+			Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
+			if (Module::$_log_modules_perfs)
+				Module::$_log_modules_perfs_session = mt_rand();
+		}
+
+		// Immediately return the result if we do not log performances
+		if (!Module::$_log_modules_perfs)
+			return $module->{$method}($params);
+
+		// Store time and memory before and after hook call and save the result in the database
+		$time_start = microtime(true);
+		$memory_start = memory_get_usage(true);
+
+		// Call hook
+		$r = $module->{$method}($params);
+
+		$time_end = microtime(true);
+		$memory_end = memory_get_usage(true);
+
+		Db::getInstance()->execute('
+		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+
+		return $r;
+	}
+
 	public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
 	{
 		return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
@@ -543,38 +592,37 @@ class HookCore extends ObjectModel
 				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
 					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
 						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
-			 	.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
-			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
-			 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
-			 	</span>'.$display.'</div>';
+				.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
+					<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
+					<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
+				</span>'.$display.'</div>';
 	}
-
 
 	/**
 	 * @deprecated 1.5.0
 	 */
-	public static function updateOrderStatus($newOrderStatusId, $id_order)
+	public static function updateOrderStatus($new_order_status_id, $id_order)
 	{
 		Tools::displayAsDeprecated();
-		$order = new Order((int)($id_order));
-		$newOS = new OrderState((int)($newOrderStatusId), $order->id_lang);
+		$order = new Order((int)$id_order);
+		$new_os = new OrderState((int)$new_order_status_id, $order->id_lang);
 
-		$return = ((int)($newOS->id) == Configuration::get('PS_OS_PAYMENT')) ? Hook::exec('paymentConfirm', array('id_order' => (int)($order->id))) : true;
-		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id))) && $return;
+		$return = ((int)$new_os->id == Configuration::get('PS_OS_PAYMENT')) ? Hook::exec('paymentConfirm', array('id_order' => (int)($order->id))) : true;
+		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $new_os, 'id_order' => (int)($order->id))) && $return;
 		return $return;
 	}
 
 	/**
 	 * @deprecated 1.5.0
 	 */
-	public static function postUpdateOrderStatus($newOrderStatusId, $id_order)
+	public static function postUpdateOrderStatus($new_order_status_id, $id_order)
 	{
 		Tools::displayAsDeprecated();
-		$order = new Order((int)($id_order));
-		$newOS = new OrderState((int)($newOrderStatusId), $order->id_lang);
-		$return = Hook::exec('postUpdateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id)));
+		$order = new Order((int)$id_order);
+		$new_os = new OrderState((int)$new_order_status_id, $order->id_lang);
+		$return = Hook::exec('postUpdateOrderStatus', array('newOrderStatus' => $new_os, 'id_order' => (int)($order->id)));
 		return $return;
 	}
 
@@ -666,7 +714,8 @@ class HookCore extends ObjectModel
 	 * Preload hook modules cache
 	 *
 	 * @deprecated 1.5.0 use Hook::getHookModuleList() instead
-	 * @return boolean preload_needed
+	 *
+	 * @return bool preload_needed
 	 */
 	public static function preloadHookModulesCache()
 	{
@@ -682,21 +731,21 @@ class HookCore extends ObjectModel
 	/**
 	 * Return hook ID from name
 	 *
-	 * @param string $hookName Hook name
-	 * @return integer Hook ID
+	 * @param string $hook_name Hook name
+	 * @return int Hook ID
 	 *
 	 * @deprecated since 1.5.0 use Hook::getIdByName() instead
 	 */
-	public static function get($hookName)
+	public static function get($hook_name)
 	{
 		Tools::displayAsDeprecated();
-		if (!Validate::isHookName($hookName))
+		if (!Validate::isHookName($hook_name))
 			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT `id_hook`, `name`
 		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hookName).'\'');
+		WHERE `name` = \''.pSQL($hook_name).'\'');
 
 		return ($result ? $result['id_hook'] : false);
 	}
@@ -704,10 +753,19 @@ class HookCore extends ObjectModel
 	/**
 	 * Called when quantity of a product is updated.
 	 *
-	 * @param Product
-	 * @param Order
+	 * @deprecated 1.5.3.0
+	 *
+	 * @param Cart $cart
+	 * @param Order $order
+	 * @param Customer $customer
+	 * @param Currency $currency
+	 * @param $orderStatus
+	 *
+	 * @throws PrestaShopException
+	 *
+	 * @return string
 	 */
-	public static function newOrder($cart, $order, $customer, $currency, $orderStatus)
+	public static function newOrder($cart, $order, $customer, $currency, $order_status)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('newOrder', array(
@@ -715,7 +773,7 @@ class HookCore extends ObjectModel
 			'order' => $order,
 			'customer' => $customer,
 			'currency' => $currency,
-			'orderStatus' => $orderStatus));
+			'orderStatus' => $order_status));
 	}
 
 	/**
@@ -781,4 +839,3 @@ class HookCore extends ObjectModel
 		return Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
 	}
 }
-

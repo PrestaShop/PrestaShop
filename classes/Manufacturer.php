@@ -28,7 +28,7 @@ class ManufacturerCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer manufacturer ID //FIXME is it really usefull...? */
+	/** @var int manufacturer ID //FIXME is it really usefull...? */
 	public $id_manufacturer;
 
 	/** @var string Name */
@@ -61,7 +61,7 @@ class ManufacturerCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -77,7 +77,7 @@ class ManufacturerCore extends ObjectModel
 			'date_add' => 			array('type' => self::TYPE_DATE),
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
-			// Lang fields
+			/* Lang fields */
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
@@ -110,7 +110,7 @@ class ManufacturerCore extends ObjectModel
 	{
 		$address = new Address($this->id_address);
 
-		if (Validate::isLoadedObject($address) AND !$address->delete())
+		if (Validate::isLoadedObject($address) && !$address->delete())
 			return false;
 
 		if (parent::delete())
@@ -150,16 +150,16 @@ class ManufacturerCore extends ObjectModel
 	}
 
 	/**
-	  * Return manufacturers
-	  *
-	  * @param boolean $get_nb_products [optional] return products numbers for each
-	  * @param int $id_lang
-	  * @param bool $active
-	  * @param int $p
-	  * @param int $n
-	  * @param bool $all_group
-	  * @return array Manufacturers
-	  */
+	 * Return manufacturers
+	 *
+	 * @param bool $get_nb_products [optional] return products numbers for each
+	 * @param int $id_lang
+	 * @param bool $active
+	 * @param int $p
+	 * @param int $n
+	 * @param bool $all_group
+	 * @return array Manufacturers
+	 */
 	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
 	{
 		if (!$id_lang)
@@ -190,19 +190,19 @@ class ManufacturerCore extends ObjectModel
 
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
-					FROM `'._DB_PREFIX_.'product` p
+					FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
-					WHERE product_shop.`visibility` NOT IN ("none")
+					WHERE p.`id_manufacturer` != 0 AND product_shop.`visibility` NOT IN ("none")
 					'.($active ? ' AND product_shop.`active` = 1 ' : '').'
-					'.($all_group ? '' : ' AND p.`id_product` IN (
-						SELECT cp.`id_product`
+					'.(Group::isFeatureActive() && $all_group ? '' : ' AND EXISTS (
+						SELECT 1
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
-					)
+						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
+					)').'
 					GROUP BY p.`id_manufacturer`'
-				));
+				);
 
 			$counts = array();
 			foreach ($results as $result)
@@ -210,7 +210,10 @@ class ManufacturerCore extends ObjectModel
 
 			if (count($counts))
 				foreach ($manufacturers as $key => $manufacturer)
-					$manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
+					if (array_key_exists((int)$manufacturer['id_manufacturer'], $counts))
+						$manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
+					else
+						$manufacturers[$key]['nb_products'] = 0;
 		}
 
 		$total_manufacturers = count($manufacturers);
@@ -221,11 +224,11 @@ class ManufacturerCore extends ObjectModel
 	}
 
 	/**
-	  * Return name from id
-	  *
-	  * @param integer $id_manufacturer Manufacturer ID
-	  * @return string name
-	  */
+	 * Return name from id
+	 *
+	 * @param int $id_manufacturer Manufacturer ID
+	 * @return string name
+	 */
 	static protected $cacheName = array();
 	public static function getNameById($id_manufacturer)
 	{
@@ -272,10 +275,10 @@ class ManufacturerCore extends ObjectModel
 		if ($p < 1)
 			$p = 1;
 
-	 	if (empty($order_by) || $order_by == 'position')
-	 		$order_by = 'name';
+		if (empty($order_by) || $order_by == 'position')
+			$order_by = 'name';
 
-	 	if (empty($order_way)) $order_way = 'ASC';
+		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
@@ -293,12 +296,12 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.id_manufacturer = '.(int)$id_manufacturer
 				.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				AND p.`id_product` IN (
-					SELECT cp.`id_product`
+				AND EXISTS (
+					SELECT 1
 					FROM `'._DB_PREFIX_.'category_group` cg
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-					WHERE cg.`id_group` '.$sql_groups.'
+					WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
 				)';
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -325,30 +328,26 @@ class ManufacturerCore extends ObjectModel
 			$alias = 'p.';
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'
-			.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '')
-			.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute
+			.(Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '').'
 			, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
-			pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
+			pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
 				DATEDIFF(
 					product_shop.`date_add`,
 					DATE_SUB(
-						NOW(),
+						"'.date('Y-m-d').' 00:00:00",
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 					)
-				) > 0 AS new'.(Combination::isFeatureActive() ? ',MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '')
+				) > 0 AS new'
 			.' FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').
-			(Combination::isFeatureActive() ?
-			'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-				ON (p.`id_product` = pa.`id_product`)
-			'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1') : '').'
+			(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+						ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 				ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-			LEFT JOIN `'._DB_PREFIX_.'image` i
-				ON (i.`id_product` = p.`id_product`)'.
-			Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 			LEFT JOIN `'._DB_PREFIX_.'image_lang` il
-				ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+				ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 				ON (m.`id_manufacturer` = p.`id_manufacturer`)
 			'.Product::sqlStock('p', 0);
@@ -366,7 +365,7 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
 				'.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				GROUP BY product_shop.id_product
+				GROUP BY p.id_product
 				ORDER BY '.$alias.'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
@@ -404,7 +403,7 @@ class ManufacturerCore extends ObjectModel
 	* Specify if a manufacturer already in base
 	*
 	* @param $id_manufacturer Manufacturer id
-	* @return boolean
+	* @return bool
 	*/
 	public static function manufacturerExists($id_manufacturer)
 	{

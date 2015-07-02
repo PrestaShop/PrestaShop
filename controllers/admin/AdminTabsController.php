@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tab $object
+ */
 class AdminTabsControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_tab';
@@ -238,6 +241,8 @@ class AdminTabsControllerCore extends AdminController
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
 			$this->toolbar_btn = array();
+
+			/** @var Tab $tab */
 			$tab = $this->loadObject($id);
 			$this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
@@ -245,6 +250,7 @@ class AdminTabsControllerCore extends AdminController
 			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.$this->context->language->id.')';
 			$this->_where = 'AND a.`id_parent` = '.(int)$id;
 			$this->_orderBy = 'position';
+			$this->_use_found_rows = false;
 
 			self::$currentIndex = self::$currentIndex.'&details'.$this->table;
 			$this->processFilter();
@@ -335,6 +341,7 @@ class AdminTabsControllerCore extends AdminController
 
 	protected function afterImageUpload()
 	{
+		/** @var Tab $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 		@rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');

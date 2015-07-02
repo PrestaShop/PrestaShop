@@ -28,7 +28,7 @@ class HelperKpiCore extends Helper
 {
 	public $base_folder = 'helpers/kpi/';
 	public $base_tpl = 'kpi.tpl';
-	
+
 	public $id;
 	public $icon;
 	public $chart;

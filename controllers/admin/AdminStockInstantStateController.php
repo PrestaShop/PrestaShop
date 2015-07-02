@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property Stock $object
  */
 class AdminStockInstantStateControllerCore extends AdminController
 {
@@ -226,8 +227,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$id_product_attribute = $ids[1];
 			$id_warehouse = Tools::getValue('id_warehouse', -1);
 			$this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				w.id_currency, a.price_te, SUM(a.physical_quantity) as physical_quantity, SUM(a.usable_quantity) as usable_quantity,
-				(a.price_te * SUM(a.physical_quantity)) as valuation';
+				w.id_currency, a.price_te';
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				a.id_product = pl.id_product
@@ -258,6 +258,15 @@ class AdminStockInstantStateControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -271,6 +280,23 @@ class AdminStockInstantStateControllerCore extends AdminController
 			{
 				$item = &$this->_list[$i];
 				$manager = StockManagerFactory::getManager();
+
+				// gets quantities and valuation
+				$query = new DbQuery();
+				$query->select('SUM(physical_quantity) as physical_quantity');
+				$query->select('SUM(usable_quantity) as usable_quantity');
+				$query->select('SUM(price_te * physical_quantity) as valuation');
+				$query->from('stock');
+				$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+
+				if ($this->getCurrentCoverageWarehouse() != -1)
+					$query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
+
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+				$item['physical_quantity'] = $res['physical_quantity'];
+				$item['usable_quantity'] = $res['usable_quantity'];
+				$item['valuation'] = $res['valuation'];
 				$item['real_quantity'] = $manager->getProductRealQuantities(
 					$item['id_product'],
 					$item['id_product_attribute'],
@@ -354,6 +380,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 *
 	 * @param array $n
 	 * @param array $m
+	 *
+	 * @return bool
 	 */
 	public function valuationCmp($n, $m)
 	{
@@ -368,6 +396,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 *
 	 * @param array $n
 	 * @param array $m
+	 *
+	 * @return bool
 	 */
 	public function realQuantityCmp($n, $m)
 	{

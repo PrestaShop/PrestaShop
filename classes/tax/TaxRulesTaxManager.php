@@ -34,12 +34,22 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $tax_calculator;
 
 	/**
+	 * @var Core_Business_ConfigurationInterface
+	 */
+	private $configurationManager;
+
+	/**
 	 *
 	 * @param Address $address
-	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+	 * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
 	 */
-	public function __construct(Address $address, $type)
+	public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
 	{
+		if ($configurationManager === null)
+			$this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+		else
+			$this->configurationManager = $configurationManager;
+
 		$this->address = $address;
 		$this->type = $type;
 	}
@@ -47,7 +57,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	/**
 	* Returns true if this tax manager is available for this address
 	*
-	* @return boolean
+	* @return bool
 	*/
 	public static function isAvailableForThisAddress(Address $address)
 	{
@@ -67,7 +77,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 			return $this->tax_calculator;
 
 		if ($tax_enabled === null)
-			$tax_enabled = Configuration::get('PS_TAX');
+			$tax_enabled = $this->configurationManager->get('PS_TAX');
 
 		if (!$tax_enabled)
 			return new TaxCalculator(array());
@@ -111,10 +121,11 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 				}
 
 				if ($row['behavior'] == 0)
-					 break;
+					break;
 			}
-
-			Cache::store($cache_id, new TaxCalculator($taxes, $behavior));
+			$result = new TaxCalculator($taxes, $behavior);
+			Cache::store($cache_id, $result);
+			return $result;
 		}
 
 		return Cache::retrieve($cache_id);

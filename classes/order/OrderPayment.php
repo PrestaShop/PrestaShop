@@ -70,10 +70,12 @@ class OrderPaymentCore extends ObjectModel
 	}
 
 	/**
-	* Get the detailed payment of an order
-	* @param int $id_order
-	* @return array
-	*/
+	 * Get the detailed payment of an order
+	 *
+	 * @deprecated 1.5.3.0
+	 * @param int $id_order
+	 * @return array
+	 */
 	public static function getByOrderId($id_order)
 	{
 		Tools::displayAsDeprecated();
@@ -96,10 +98,10 @@ class OrderPaymentCore extends ObjectModel
 			WHERE `order_reference` = \''.pSQL($order_reference).'\'')
 		);
 	}
-	
+
 	/**
 	 * Get Order Payments By Invoice ID
-	 * @static
+	 *
 	 * @param int $id_invoice Invoice ID
 	 * @return PrestaShopCollection Collection of OrderPayment
 	 */
@@ -108,19 +110,19 @@ class OrderPaymentCore extends ObjectModel
 		$payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `'._DB_PREFIX_.'order_invoice_payment` WHERE id_order_invoice = '.(int)$id_invoice);
 		if (!$payments)
 			return array();
-		
+
 		$payment_list = array();
 		foreach ($payments as $payment)
 			$payment_list[] = $payment['id_order_payment'];
-		
+
 		$payments = new PrestaShopCollection('OrderPayment');
 		$payments->where('id_order_payment', 'IN', $payment_list);
 		return $payments;
 	}
-	
+
 	/**
 	 * Return order invoice object linked to the payment
-	 * 
+	 *
 	 * @param int $id_order Order Id
 	 *
 	 * @since 1.5.0.13
@@ -132,11 +134,10 @@ class OrderPaymentCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_invoice_payment`
 		WHERE id_order_payment = '.(int)$this->id.'
 		AND id_order = '.(int)$id_order);
-		
+
 		if (!$res)
 			return false;
-		
+
 		return new OrderInvoice((int)$res);
 	}
 }
-

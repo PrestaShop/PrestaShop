@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminLoginControllerCore extends AdminController
 {
@@ -49,12 +49,18 @@ class AdminLoginControllerCore extends AdminController
 		$this->addjqueryPlugin('validate');
 		$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
-        // Specific Admin Theme
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
+		Media::addJsDef(array('img_dir' => _PS_IMG_));
+		Media::addJsDefL('one_error', $this->l('There is one error.'));
+		Media::addJsDefL('more_errors', $this->l('There are several errors.'));
+
+		Hook::exec('actionAdminLoginControllerSetMedia');
+
+		// Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
-	
+
 	public function initContent()
 	{
 		if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
@@ -68,7 +74,7 @@ class AdminLoginControllerCore extends AdminController
 			if ($clientIsMaintenanceOrLocal)
 				$warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
 			else
-			{	
+			{
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
 				$warningSslMessage = sprintf(
 					Translate::ppTags(
@@ -83,9 +89,9 @@ class AdminLoginControllerCore extends AdminController
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
 			$this->context->smarty->assign('wrong_install_name', true);
-		
+
 		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
-		{	
+		{
 			$rand = 'admin'.sprintf('%03d', rand(0, 999)).Tools::strtolower(Tools::passwdGen(6)).'/';
 			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
 				Tools::redirectAdmin('../'.$rand);
@@ -128,8 +134,11 @@ class AdminLoginControllerCore extends AdminController
 		$this->initHeader();
 		parent::initContent();
 		$this->initFooter();
+
+		//force to disable modals
+		$this->context->smarty->assign('modals', null);
 	}
-	
+
 	public function checkToken()
 	{
 		return true;
@@ -144,7 +153,7 @@ class AdminLoginControllerCore extends AdminController
 	{
 		return true;
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitLogin'))
@@ -152,7 +161,7 @@ class AdminLoginControllerCore extends AdminController
 		elseif (Tools::isSubmit('submitForgot'))
 			$this->processForgot();
 	}
-	
+
 	public function processLogin()
 	{
 		/* Check fields validity */
@@ -167,7 +176,7 @@ class AdminLoginControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('The password field is blank.');
 		elseif (!Validate::isPasswd($passwd))
 			$this->errors[] = Tools::displayError('Invalid password.');
-			
+
 		if (!count($this->errors))
 		{
 			// Find employee
@@ -186,7 +195,7 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				PrestaShopLogger::addLog(sprintf($this->l('BackOffice connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+				PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
 
 				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
@@ -220,7 +229,7 @@ class AdminLoginControllerCore extends AdminController
 		if (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
-	
+
 	public function processForgot()
 	{
 		if (_PS_MODE_DEMO_)
@@ -242,8 +251,8 @@ class AdminLoginControllerCore extends AdminController
 		}
 
 		if (!count($this->errors))
-		{	
-			$pwd = Tools::passwdGen();
+		{
+			$pwd = Tools::passwdGen(10, 'RANDOM');
 			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
@@ -253,7 +262,7 @@ class AdminLoginControllerCore extends AdminController
 				'{firstname}' => $employee->firstname,
 				'{passwd}' => $pwd
 			);
-						
+
 			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
@@ -273,7 +282,7 @@ class AdminLoginControllerCore extends AdminController
 					'hasErrors' => true,
 					'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
 				)));
-		
+
 		}
 		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));

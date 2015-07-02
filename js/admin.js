@@ -36,7 +36,7 @@ function str2url(str, encoding, ucfirst)
 	else
 	{
 		/* Lowercase */
-		str = str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u0101\u0103\u0105\u0430]/g, 'a');
+		str = str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E5\u0101\u0103\u0105\u0430]/g, 'a');
         str = str.replace(/[\u0431]/g, 'b');
 		str = str.replace(/[\u00E7\u0107\u0109\u010D\u0446]/g, 'c');
 		str = str.replace(/[\u010F\u0111\u0434]/g, 'd');
@@ -50,21 +50,22 @@ function str2url(str, encoding, ucfirst)
 		str = str.replace(/[\u013A\u013C\u013E\u0140\u0142\u043B]/g, 'l');
         str = str.replace(/[\u043C]/g, 'm');
 		str = str.replace(/[\u00F1\u0144\u0146\u0148\u0149\u014B\u043D]/g, 'n');
-		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6\u00F8\u014D\u014F\u0151\u043E]/g, 'o');
+		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F8\u014D\u014F\u0151\u043E]/g, 'o');
         str = str.replace(/[\u043F]/g, 'p');
 		str = str.replace(/[\u0155\u0157\u0159\u0440]/g, 'r');
 		str = str.replace(/[\u015B\u015D\u015F\u0161\u0441]/g, 's');
 		str = str.replace(/[\u00DF]/g, 'ss');
 		str = str.replace(/[\u0163\u0165\u0167\u0442]/g, 't');
-		str = str.replace(/[\u00F9\u00FA\u00FB\u00FC\u0169\u016B\u016D\u016F\u0171\u0173\u0443]/g, 'u');
+		str = str.replace(/[\u00F9\u00FA\u00FB\u0169\u016B\u016D\u016F\u0171\u0173\u0443]/g, 'u');
         str = str.replace(/[\u0432]/g, 'v');
 		str = str.replace(/[\u0175]/g, 'w');
 		str = str.replace(/[\u00FF\u0177\u00FD\u044B]/g, 'y');
 		str = str.replace(/[\u017A\u017C\u017E\u0437]/g, 'z');
-		str = str.replace(/[\u00E6]/g, 'ae');
+		str = str.replace(/[\u00E4\u00E6]/g, 'ae');
         str = str.replace(/[\u0447]/g, 'ch');
         str = str.replace(/[\u0445]/g, 'kh');
-		str = str.replace(/[\u0153]/g, 'oe');
+		str = str.replace(/[\u0153\u00F6]/g, 'oe');
+		str = str.replace(/[\u00FC]/g, 'ue');
         str = str.replace(/[\u0448]/g, 'sh');
         str = str.replace(/[\u0449]/g, 'ssh');
         str = str.replace(/[\u044F]/g, 'ya');
@@ -94,15 +95,16 @@ function str2url(str, encoding, ucfirst)
 		str = str.replace(/[\u0154\u0156\u0158\u0420]/g, 'R');
 		str = str.replace(/[\u015A\u015C\u015E\u0160\u0421]/g, 'S');
 		str = str.replace(/[\u0162\u0164\u0166\u0422]/g, 'T');
-		str = str.replace(/[\u00D9\u00DA\u00DB\u00DC\u0168\u016A\u016C\u016E\u0170\u0172\u0423]/g, 'U');
+		str = str.replace(/[\u00D9\u00DA\u00DB\u0168\u016A\u016C\u016E\u0170\u0172\u0423]/g, 'U');
         str = str.replace(/[\u0412]/g, 'V');
 		str = str.replace(/[\u0174]/g, 'W');
 		str = str.replace(/[\u0176\u042B]/g, 'Y');
 		str = str.replace(/[\u0179\u017B\u017D\u0417]/g, 'Z');
-		str = str.replace(/[\u00C6]/g, 'AE');
+		str = str.replace(/[\u00C4\u00C6]/g, 'AE');
         str = str.replace(/[\u0427]/g, 'CH');
         str = str.replace(/[\u0425]/g, 'KH');
-		str = str.replace(/[\u0152]/g, 'OE');
+		str = str.replace(/[\u0152\u00D6]/g, 'OE');
+		str = str.replace(/[\u00DC]/g, 'UE');
         str = str.replace(/[\u0428]/g, 'SH');
         str = str.replace(/[\u0429]/g, 'SHH');
         str = str.replace(/[\u042F]/g, 'YA');
@@ -918,32 +920,57 @@ $(document).ready(function()
 		return false;
 	});
 
-	// js for the buttons of swap helper
-	$("#addSwap").on('click', function(e) {
-		e.preventDefault();
-		$('#availableSwap option:selected').each( function() {
-			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-			$(this).remove();
-		});
-		$('#selectedSwap option').prop('selected', true);
-	});
+	/** make sure that all the swap id is present in the dom to prevent mistake **/
+	if (typeof $('#addSwap') !== undefined && typeof $("#removeSwap") !== undefined &&
+		typeof $('#selectedSwap') !== undefined && typeof $('#availableSwap') !== undefined)
+	{
+		bindSwapButton('add', 'available', 'selected');
+		bindSwapButton('remove', 'selected', 'available');
 
-	$("#removeSwap").on('click', function(e) {
-		e.preventDefault();
-		$('#selectedSwap option:selected').each( function() {
-			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-			$(this).remove();
-		});
-		$('#selectedSwap option').prop('selected', true);
-	});
-
-	if ($('#selectedSwap').length != 0) {
-		$('button:submit').click(function() {
-			$('#selectedSwap option').attr('selected', 'selected');
-		});
+		$('button:submit').click(bindSwapSave);
 	}
+
+	if (typeof host_mode !== 'undefined' && host_mode)
+	{
+        // http://status.prestashop.com/
+        var status_map = {
+            operational: status_operational,
+            degraded_performance: status_degraded_performance,
+            partial_outage: status_partial_outage,
+            major_outage: status_major_outage,
+        };
+
+        var components_map = {'ca1': 0, 'fr1': 1};
+
+        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
+        sp.components({
+            success: function (data) {
+                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
+                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
+            }
+        });
+    }
 });
 
+function bindSwapSave()
+{
+	if ($('#selectedSwap option').length !== 0)
+		$('#selectedSwap option').attr('selected', 'selected');
+	else
+		$('#availableSwap option').attr('selected', 'selected');
+}
+
+function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add)
+{
+	$('#'+prefix_button+'Swap').on('click', function(e) {
+		e.preventDefault();
+		$('#' + prefix_select_remove + 'Swap option:selected').each(function() {
+			$('#' + prefix_select_add + 'Swap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+}
 
 function bindTabModuleListAction()
 {
@@ -952,7 +979,6 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');
@@ -1359,7 +1385,7 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
-verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$/;
 function verifyMail(testMsg, testSubject)
 {
 	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');

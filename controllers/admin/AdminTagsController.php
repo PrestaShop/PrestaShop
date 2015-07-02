@@ -24,9 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tag $object
+ */
 class AdminTagsControllerCore extends AdminController
 {
-	public $bootstrap = true ;
+	public $bootstrap = true;
 
 	public function __construct()
 	{
@@ -81,7 +84,7 @@ class AdminTagsControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
+		$this->addRowAction('delete');
 
 		$this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
 		$this->_join = '
@@ -100,15 +103,16 @@ class AdminTagsControllerCore extends AdminController
 		{
 			if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
 			{
-				$previousProducts = $obj->getProducts();
-				$removedProducts = array();
+				/** @var Tag $obj */
+				$previous_products = $obj->getProducts();
+				$removed_products = array();
 
-				foreach ($previousProducts as $product)
+				foreach ($previous_products as $product)
 					if (!in_array($product['id_product'], $_POST['products']))
-						$removedProducts[] = $product['id_product'];
+						$removed_products[] = $product['id_product'];
 
 				if (Configuration::get('PS_SEARCH_INDEXATION'))
-					Search::removeProductsSearchIndex($removedProducts);
+					Search::removeProductsSearchIndex($removed_products);
 
 				$obj->setProducts($_POST['products']);
 			}
@@ -119,6 +123,7 @@ class AdminTagsControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Tag $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -158,5 +163,3 @@ class AdminTagsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 }
-
-

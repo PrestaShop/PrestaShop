@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Address $object
+ */
 class AdminAddressesControllerCore extends AdminController
 {
 	/** @var array countries list */
@@ -77,12 +80,14 @@ class AdminAddressesControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
 		';
 		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
+		$this->_use_found_rows = false;
 	}
 
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		if (!$this->display)
+
+		if (!$this->display && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
 				'desc' => $this->l('Import')
@@ -413,6 +418,7 @@ class AdminAddressesControllerCore extends AdminController
 		$address = new Address();
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
+		$return = false;
 		if (empty($this->errors))
 			$return = parent::processSave();
 		else
@@ -497,8 +503,11 @@ class AdminAddressesControllerCore extends AdminController
 	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			/** @var Address $object */
 			if (!$object->isUsed())
 				$this->deleted = false;
+		}
 
 		return parent::processDelete();
 	}
@@ -506,7 +515,7 @@ class AdminAddressesControllerCore extends AdminController
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean true if succcess
+	 * @return bool true if succcess
 	 */
 	protected function processBulkDelete()
 	{

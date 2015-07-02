@@ -102,6 +102,7 @@ class ConfigurationTestCore
 	public static function getDefaultTestsOp()
 	{
 		return array(
+			'new_phpversion' => false,
 			'fopen' => false,
 			'register_globals' => false,
 			'gz' => false,
@@ -136,7 +137,12 @@ class ConfigurationTestCore
 
 	public static function test_phpversion()
 	{
-		return version_compare(substr(phpversion(), 0, 5), '5.1.0', '>=');
+		return version_compare(substr(phpversion(), 0, 5), '5.2.0', '>=');
+	}
+
+	public static function test_new_phpversion()
+	{
+		return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
 	}
 
 	public static function test_mysql_support()
@@ -212,7 +218,7 @@ class ConfigurationTestCore
 			$full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
 			return false;
 		}
-		
+
 		if ($recursive)
 			while (($file = readdir($dh)) !== false)
 				if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn')
@@ -298,7 +304,7 @@ class ConfigurationTestCore
 	{
 		$absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
 		if (!file_exists($absoluteDir))
-			return true;		
+			return true;
 		return ConfigurationTest::test_dir($dir, true);
 	}
 
@@ -349,7 +355,7 @@ class ConfigurationTestCore
 	{
 		return extension_loaded('Dom');
 	}
-	
+
 	public static function test_files($full = false)
 	{
 		$return = array();

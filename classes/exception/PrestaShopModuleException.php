@@ -31,4 +31,3 @@ class PrestaShopModuleExceptionCore extends PrestaShopException
 {
 
 }
-

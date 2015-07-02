@@ -72,7 +72,7 @@ class AdminImportControllerCore extends AdminController
 		'available_now' => array('AdminImportController', 'createMultiLangField'),
 		'available_later' => array('AdminImportController', 'createMultiLangField'),
 		'category' => array('AdminImportController', 'split'),
-		'online_only' => array('AdminImportController', 'getBoolean')
+		'online_only' => array('AdminImportController', 'getBoolean'),
 	);
 
 	public $separator;
@@ -383,6 +383,7 @@ class AdminImportControllerCore extends AdminController
 					'phone' => array('label' => $this->l('Phone')),
 					'phone_mobile' => array('label' => $this->l('Mobile Phone')),
 					'vat_number' => array('label' => $this->l('VAT number')),
+					'dni' => array('label' => $this->l('DNI/NIF/NIE')),
 				);
 
 				self::$default_values = array(
@@ -687,7 +688,7 @@ class AdminImportControllerCore extends AdminController
 		$this->context->cookie->csv_selected = urlencode(Tools::getValue('csv'));
 
 		$this->tpl_view_vars = array(
-			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
+			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match', true, false),
 			'fields_value' => array(
 				'csv' => Tools::getValue('csv'),
 				'convert' => Tools::getValue('convert'),
@@ -814,7 +815,7 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function getBoolean($field)
 	{
-		return (boolean)$field;
+		return (bool)$field;
 	}
 
 	protected static function getPrice($field)
@@ -854,10 +855,10 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function createMultiLangField($field)
 	{
-		$languages = Language::getLanguages(false);
 		$res = array();
-		foreach ($languages as $lang)
-			$res[$lang['id_lang']] = $field;
+		foreach (Language::getIDs(false) as $id_lang)
+			$res[$id_lang] = $field;
+
 		return $res;
 	}
 
@@ -990,8 +991,9 @@ class AdminImportControllerCore extends AdminController
 	 * @param int $id_entity id of product or category (set in entity)
 	 * @param int $id_image (default null) id of the image if watermark enabled.
 	 * @param string $url path or url to use
-	 * @param string entity 'products' or 'categories'
-	 * @return boolean
+	 * @param string $entity 'products' or 'categories'
+	 * @param bool $regenerate
+	 * @return bool
 	 */
 	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products', $regenerate = true)
 	{
@@ -1046,28 +1048,61 @@ class AdminImportControllerCore extends AdminController
 		if (!ImageManager::checkImageMemoryLimit($url))
 			return false;
 
+		$orig_tmpfile = $tmpfile;
+
 		// 'file_exists' doesn't work on distant file, and getimagesize makes the import slower.
 		// Just hide the warning, the processing will be the same.
 		if (Tools::copy($url, $tmpfile))
 		{
-			ImageManager::resize($tmpfile, $path.'.jpg');
-			$images_types = ImageType::getImagesTypes($entity);
+			$tgt_width = $tgt_height = 0;
+			$src_width = $src_height = 0;
+			$error = 0;
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5,
+								 $src_width, $src_height);
+			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
+			{
+				$previous_path = null;
+				$path_infos = array();
+				$path_infos[] = array($tgt_width, $tgt_height, $path.'.jpg');
 				foreach ($images_types as $image_type)
 				{
-					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
+					$tmpfile = self::get_best_path($image_type['width'], $image_type['height'], $path_infos);
+
+					if (ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'],
+										 $image_type['height'], 'jpg', false, $error, $tgt_width, $tgt_height, 5,
+										 $src_width, $src_height))
+					{
+						// the last image should not be added in the candidate list if it's bigger than the original image
+						if ($tgt_width <= $src_width && $tgt_height <= $src_height)
+							$path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
+					}
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 				}
+			}
 		}
 		else
 		{
-			unlink($tmpfile);
+			@unlink($orig_tmpfile);
 			return false;
 		}
-		unlink($tmpfile);
+		unlink($orig_tmpfile);
 		return true;
+	}
+
+	private static function get_best_path($tgt_width, $tgt_height, $path_infos)
+	{
+		$path_infos = array_reverse($path_infos);
+		$path = '';
+		foreach($path_infos as $path_info)
+		{
+			list($width, $height, $path) = $path_info;
+			if ($width >= $tgt_width && $height >= $tgt_height)
+				return $path;
+		}
+		return $path;
 	}
 
 	public function categoryImport()
@@ -1081,9 +1116,15 @@ class AdminImportControllerCore extends AdminController
 		if (!Validate::isUnsignedId($id_lang))
 			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
+
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+		$regenerate = Tools::getValue('regenerate');
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
@@ -1095,7 +1136,7 @@ class AdminImportControllerCore extends AdminController
 			}
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$category = new Category((int)$info['id']);
 			else
 			{
@@ -1149,7 +1190,7 @@ class AdminImportControllerCore extends AdminController
 			else
 				$valid_link = false;
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$category->id_shop_default = 1;
 			else
 				$category->id_shop_default = (int)Context::getContext()->shop->id;
@@ -1208,13 +1249,13 @@ class AdminImportControllerCore extends AdminController
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('The root category cannot be modified.');
 				// If no id_category or update failed
-				$category->force_id = (bool)Tools::getValue('forceIDs');
+				$category->force_id = (bool)$force_ids;
 				if (!$res)
 					$res = $category->add();
 			}
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
-				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !Tools::getValue('regenerate'))))
+				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !$regenerate)))
 					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied.');
 			// If both failed, mysql error
 			if (!$res)
@@ -1231,14 +1272,14 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				// Associate category to shop
-				if (Shop::isFeatureActive())
+				if ($shop_is_feature_active)
 				{
 					Db::getInstance()->execute('
 						DELETE FROM '._DB_PREFIX_.'category_shop
 						WHERE id_category = '.(int)$category->id
 					);
 
-					if (!Shop::isFeatureActive())
+					if (!$shop_is_feature_active)
 						$info['shop'] = 1;
 					elseif (!isset($info['shop']) || empty($info['shop']))
 						$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -1263,6 +1304,9 @@ class AdminImportControllerCore extends AdminController
 
 	public function productImport()
 	{
+		if (!defined('PS_MASS_PRODUCT_CREATION'))
+			define('PS_MASS_PRODUCT_CREATION', true);
+
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -1271,22 +1315,30 @@ class AdminImportControllerCore extends AdminController
 			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
 		$shop_ids = Shop::getCompleteListOfShopsID();
+
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+		$match_ref = Tools::getValue('match_ref');
+		$regenerate = Tools::getValue('regenerate');
+		$shop_is_feature_active = Shop::isFeatureActive();
+		Module::setBatchMode(true);
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$product = new Product((int)$info['id']);
-			elseif (Tools::getValue('match_ref') && array_key_exists('reference', $info))
+			elseif ($match_ref && array_key_exists('reference', $info))
 			{
 					$datas = Db::getInstance()->getRow('
 						SELECT p.`id_product`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
 						WHERE p.`reference` = "'.pSQL($info['reference']).'"
-					');
+					', false);
 					if (isset($datas['id_product']) && $datas['id_product'])
 						$product = new Product((int)$datas['id_product']);
 					else
@@ -1297,9 +1349,12 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
+
+			$update_advanced_stock_management_value = false;
 			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
+				$update_advanced_stock_management_value = true;
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($category_data))
@@ -1311,13 +1366,13 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
-			if (!Shop::isFeatureActive())
-				$product->shop = 1;
+			if (!$shop_is_feature_active)
+				$product->shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 			elseif (!isset($product->shop) || empty($product->shop))
 				$product->shop = implode($this->multiple_value_separator, Shop::getContextListShopID());
 
-			if (!Shop::isFeatureActive())
-				$product->id_shop_default = 1;
+			if (!$shop_is_feature_active)
+				$product->id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT');
 			else
 				$product->id_shop_default = (int)Context::getContext()->shop->id;
 
@@ -1355,9 +1410,14 @@ class AdminImportControllerCore extends AdminController
 				{
 					$manufacturer = new Manufacturer();
 					$manufacturer->name = $product->manufacturer;
+					$manufacturer->active = true;
+
 					if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
+					{
 						$product->id_manufacturer = (int)$manufacturer->id;
+						$manufacturer->associateTo($product->id_shop_list);
+					}
 					else
 					{
 						$this->errors[] = sprintf(
@@ -1483,7 +1543,7 @@ class AdminImportControllerCore extends AdminController
 					$link_rewrite
 				);
 
-			if (!(Tools::getValue('match_ref') || Tools::getValue('forceIDs')) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
+			if (!($match_ref || $force_ids) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
 				$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			// replace the value of separator by coma
@@ -1511,14 +1571,14 @@ class AdminImportControllerCore extends AdminController
 					$product->quantity = 0;
 
 				// If match ref is specified && ref product && ref product already in base, trying to update
-				if (Tools::getValue('match_ref') && $product->reference && $product->existsRefInDatabase($product->reference))
+				if ($match_ref && $product->reference && $product->existsRefInDatabase($product->reference))
 				{
 					$datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`, p.`id_product`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
 						WHERE p.`reference` = "'.pSQL($product->reference).'"
-					');
+					', false);
 					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
@@ -1529,12 +1589,12 @@ class AdminImportControllerCore extends AdminController
 						SELECT product_shop.`date_add`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
-						WHERE p.`id_product` = '.(int)$product->id);
+						WHERE p.`id_product` = '.(int)$product->id, false);
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				}
 				// If no id_product or update failed
-				$product->force_id = (bool)Tools::getValue('forceIDs');
+				$product->force_id = (bool)$force_ids;
 
 				if (!$res)
 				{
@@ -1600,7 +1660,7 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
-				if (!Shop::isFeatureActive())
+				if (!$shop_is_feature_active)
 					$info['shop'] = 1;
 				elseif (!isset($info['shop']) || empty($info['shop']))
 					$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -1720,7 +1780,7 @@ class AdminImportControllerCore extends AdminController
 							{
 								// associate image to selected shops
 								$image->associateTo($shops);
-								if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
+								if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate))
 								{
 									$image->delete();
 									$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
@@ -1761,7 +1821,7 @@ class AdminImportControllerCore extends AdminController
 						{
 							$id_feature = (int)Feature::addFeatureImport($feature_name, $position);
 							$id_product = null;
-							if (Tools::getValue('forceIDs') || Tools::getValue('match_ref'))
+							if ($force_ids || $match_ref)
 								$id_product = (int)$product->id;
 							$id_feature_value = (int)FeatureValue::addFeatureValueImport($id_feature, $feature_value, $id_product, $id_lang, $custom);
 							Product::addFeatureProductImport($product->id, $id_feature, $id_feature_value);
@@ -1777,7 +1837,7 @@ class AdminImportControllerCore extends AdminController
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
-					else
+					elseif ($update_advanced_stock_management_value)
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0)
@@ -1840,7 +1900,7 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 						{
-							if (Shop::isFeatureActive())
+							if ($shop_is_feature_active)
 								foreach ($shops as $shop)
 									StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 							else
@@ -1850,7 +1910,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else // if not depends_on_stock set, use normal qty
 				{
-					if (Shop::isFeatureActive())
+					if ($shop_is_feature_active)
 						foreach ($shops as $shop)
 							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 					else
@@ -1859,12 +1919,16 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 		$this->closeCsvFile($handle);
+		Module::processDeferedFuncCall();
+		Module::processDeferedClearCache();
+		Tag::updateTagCount();
 	}
 
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
 	{
 		$category_to_create = new Category();
-		if (!Shop::isFeatureActive())
+		$shop_is_feature_active = Shop::isFeatureActive();
+		if (!$shop_is_feature_active)
 			$category_to_create->id_shop_default = 1;
 		else
 			$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
@@ -1873,9 +1937,16 @@ class AdminImportControllerCore extends AdminController
 		$category_to_create->id_parent = (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
 		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
+
 		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 			($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
-			$product->id_category[] = (int)$category_to_create->id;
+		{
+			/**
+			 * @see AdminImportController::productImport() @ Line 1480
+			 * @TODO Refactor if statement
+			 */
+			// $product->id_category[] = (int)$category_to_create->id;
+		}
 		else
 		{
 			$this->errors[] = sprintf(
@@ -1903,19 +1974,24 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$convert = Tools::getValue('convert');
+		$regenerate = Tools::getValue('regenerate');
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (count($line) == 1 && empty($line[0]))
 				continue;
 
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 			$info = array_map('trim', $info);
 
 			AdminImportController::setDefaultValues($info);
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$info['shop'] = 1;
 			elseif (!isset($info['shop']) || empty($info['shop']))
 				$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -1940,7 +2016,7 @@ class AdminImportControllerCore extends AdminController
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
-				');
+				', false);
 				if (isset($datas['id_product']) && $datas['id_product'])
 					$product = new Product((int)$datas['id_product'], false, $default_language);
 			}
@@ -1958,7 +2034,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{
-				$info['image_url'] = explode(',', $info['image_url']);
+				$info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
 
 				if (is_array($info['image_url'] ) && count($info['image_url'] ))
 					foreach ($info['image_url'] as $url)
@@ -1977,7 +2053,7 @@ class AdminImportControllerCore extends AdminController
 						if ($field_error === true && $lang_field_error === true && $image->add())
 						{
 							$image->associateTo($id_shop_list);
-							if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
+							if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate))
 							{
 								$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
 								$image->delete();
@@ -1997,9 +2073,9 @@ class AdminImportControllerCore extends AdminController
 			}
 			elseif (isset($info['image_position']) && $info['image_position'])
 			{
-				$info['image_position'] = explode(',', $info['image_position']);
+				$info['image_position'] = explode($this->multiple_value_separator, $info['image_position']);
 
-				if (is_array($info['image_position'] ) && count($info['image_position'] ))
+				if (is_array($info['image_position']) && count($info['image_position']))
 					foreach ($info['image_position'] as $position)
 					{
 						// choose images from product by position
@@ -2228,7 +2304,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					Db::getInstance()->execute('
 						INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')');
+						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
 				}
 
 				// set advanced stock managment
@@ -2265,7 +2341,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language]);
 					}
 				}
 
@@ -2273,9 +2349,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['depends_on_stock']))
 				{
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
 
@@ -2296,7 +2372,7 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 						{
-							if (Shop::isFeatureActive())
+							if ($shop_is_feature_active)
 								foreach ($id_shop_list as $shop)
 									StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
 							else
@@ -2308,7 +2384,7 @@ class AdminImportControllerCore extends AdminController
 				// if not depends_on_stock set, use normal qty
 				else
 				{
-					if (Shop::isFeatureActive())
+					if ($shop_is_feature_active)
 						foreach ($id_shop_list as $shop)
 							StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
 					else
@@ -2322,7 +2398,6 @@ class AdminImportControllerCore extends AdminController
 
 	public function customerImport()
 	{
-		$customer_exist = false;
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -2330,15 +2405,20 @@ class AdminImportControllerCore extends AdminController
 		if (!Validate::isUnsignedId($id_lang))
 			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$customer = new Customer((int)$info['id']);
 			else
 			{
@@ -2348,11 +2428,13 @@ class AdminImportControllerCore extends AdminController
 					$customer = new Customer();
 			}
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
+			$customer_exist = false;
+
+			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer))
 			{
-				$current_id_customer = $customer->id;
-				$current_id_shop = $customer->id_shop;
-				$current_id_shop_group = $customer->id_shop_group;
+				$current_id_customer = (int)$customer->id;
+				$current_id_shop = (int)$customer->id_shop;
+				$current_id_shop_group = (int)$customer->id_shop_group;
 				$customer_exist = true;
 				$customer_groups = $customer->getGroups();
 				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -2404,7 +2486,7 @@ class AdminImportControllerCore extends AdminController
 			$customers_shop = array();
 			$customers_shop['shared'] = array();
 			$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
-			if (Shop::isFeatureActive() && $id_shop_list)
+			if ($shop_is_feature_active && $id_shop_list)
 			{
 				foreach ($id_shop_list as $id_shop)
 				{
@@ -2450,16 +2532,16 @@ class AdminImportControllerCore extends AdminController
 				$res = true;
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
-					$customer->force_id = (bool)Tools::getValue('forceIDs');
+					$customer->force_id = (bool)$force_ids;
 					if ($id_shop == 'shared')
 					{
 						foreach ($id_group as $key => $id)
 						{
 							$customer->id_shop = (int)$key;
 							$customer->id_shop_group = (int)$id;
-							if ($customer_exist && ($current_id_shop_group == $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
+							if ($customer_exist && ((int)$current_id_shop_group == (int)$id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
 							{
-								$customer->id = $current_id_customer;
+								$customer->id = (int)$current_id_customer;
 								$res &= $customer->update();
 							}
 							else
@@ -2469,8 +2551,8 @@ class AdminImportControllerCore extends AdminController
 									foreach ($addresses as $address)
 									{
 										$address['id_customer'] = $customer->id;
-										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
-										Db::getInstance()->insert('address', $address);
+										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
+										Db::getInstance()->insert('address', $address, false, false);
 									}
 							}
 							if ($res && isset($customer_groups))
@@ -2481,9 +2563,9 @@ class AdminImportControllerCore extends AdminController
 					{
 						$customer->id_shop = $id_shop;
 						$customer->id_shop_group = $id_group;
-						if ($customer_exist && $id_shop == $current_id_shop)
+						if ($customer_exist && (int)$id_shop == (int)$current_id_shop)
 						{
-							$customer->id = $current_id_customer;
+							$customer->id = (int)$current_id_customer;
 							$res &= $customer->update();
 						}
 						else
@@ -2494,7 +2576,7 @@ class AdminImportControllerCore extends AdminController
 								{
 									$address['id_customer'] = $customer->id;
 									unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
-									Db::getInstance()->insert('address', $address);
+									Db::getInstance()->insert('address', $address, false, false);
 								}
 						}
 						if ($res && isset($customer_groups))
@@ -2502,8 +2584,18 @@ class AdminImportControllerCore extends AdminController
 					}
 				}
 			}
-			unset($customer_groups);
-			$customer_exist = false;
+
+			if (isset($customer_groups))
+				unset($customer_groups);
+			if (isset($current_id_customer))
+				unset($current_id_customer);
+			if (isset($current_id_shop))
+				unset($current_id_shop);
+			if (isset($current_id_shop_group))
+				unset($current_id_shop_group);
+			if (isset($addresses))
+				unset($addresses);
+
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
@@ -2524,14 +2616,28 @@ class AdminImportControllerCore extends AdminController
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
-			$address = new Address();
+
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
+				$address = new Address((int)$info['id']);
+			else
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Address::addressExists((int)$info['id']))
+					$address = new Address((int)$info['id']);
+				else
+					$address = new Address();
+			}
+
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $address);
 
 			if (isset($address->country) && is_numeric($address->country))
@@ -2687,6 +2793,8 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$address->force_id = (bool)$force_ids;
+
 				if (isset($customer_list) && count($customer_list) > 0)
 				{
 					$filter_list = array();
@@ -2696,27 +2804,14 @@ class AdminImportControllerCore extends AdminController
 							continue;
 
 						$filter_list[] = $customer['id_customer'];
-
-						unset($address->id);
 						$address->id_customer = $customer['id_customer'];
-						$res = $address->add();
-
-						if (!$res)
-							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$info['alias'],
-								(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
-							);
 					}
 				}
-				else
-				{
-					$address->force_id = (bool)Tools::getValue('forceIDs');
-					if ($address->id && $address->addressExists($address->id))
-						$res = $address->update();
-					if (!$res)
-						$res = $address->add();
-				}
+
+				if ($address->id && $address->addressExists($address->id))
+					$res = $address->update();
+				if (!$res)
+					$res = $address->add();
 			}
 			if (!$res)
 			{
@@ -2737,15 +2832,21 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+		$convert = Tools::getValue('convert');
+		$regenerate = Tools::getValue('regenerate');
+		$force_ids = Tools::getValue('forceIDs');
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$manufacturer = new Manufacturer((int)$info['id']);
 			else
 			{
@@ -2763,19 +2864,19 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id))
 					$res = $manufacturer->update();
-				$manufacturer->force_id = (bool)Tools::getValue('forceIDs');
+				$manufacturer->force_id = (bool)$force_ids;
 				if (!$res)
 					$res = $manufacturer->add();
 
 				//copying images of manufacturer
 				if (isset($manufacturer->image) && !empty($manufacturer->image))
-				if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !Tools::getValue('regenerate')))
+				if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !$regenerate))
 					$this->warnings[] = $manufacturer->image.' '.Tools::displayError('cannot be copied.');
 
 				if ($res)
 				{
 					// Associate supplier to group shop
-					if (Shop::isFeatureActive() && $manufacturer->shop)
+					if ($shop_is_feature_active && $manufacturer->shop)
 					{
 						Db::getInstance()->execute('
 							DELETE FROM '._DB_PREFIX_.'manufacturer_shop
@@ -2816,15 +2917,21 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+		$convert = Tools::getValue('convert');
+		$regenerate = Tools::getValue('regenerate');
+		$force_ids = Tools::getValue('forceIDs');
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$supplier = new Supplier((int)$info['id']);
 			else
 			{
@@ -2841,13 +2948,13 @@ class AdminImportControllerCore extends AdminController
 				$res = false;
 				if ($supplier->id && $supplier->supplierExists($supplier->id))
 					$res = $supplier->update();
-				$supplier->force_id = (bool)Tools::getValue('forceIDs');
+				$supplier->force_id = (bool)$force_ids;
 				if (!$res)
 					$res = $supplier->add();
 
 				//copying images of suppliers
 				if (isset($supplier->image) && !empty($supplier->image))
-				if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !Tools::getValue('regenerate')))
+				if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !$regenerate))
 					$this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
 
 				if (!$res)
@@ -2859,7 +2966,7 @@ class AdminImportControllerCore extends AdminController
 				else
 				{
 					// Associate supplier to group shop
-					if (Shop::isFeatureActive() && $supplier->shop)
+					if ($shop_is_feature_active && $supplier->shop)
 					{
 						Db::getInstance()->execute('
 							DELETE FROM '._DB_PREFIX_.'supplier_shop
@@ -2894,15 +3001,19 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
 				$alias = new Alias((int)$info['id']);
 			else
 			{
@@ -2920,7 +3031,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($alias->id && $alias->aliasExists($alias->id))
 					$res = $alias->update();
-				$alias->force_id = (bool)Tools::getValue('forceIDs');
+				$alias->force_id = (bool)$force_ids;
 				if (!$res)
 					$res = $alias->add();
 
@@ -2950,11 +3061,14 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
 
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+
 		// main loop, for each supply orders to import
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); ++$current_line)
 		{
 			// if convert requested
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
@@ -3028,7 +3142,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $supply_order->update();
 				else
 				{
-					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
+					$supply_order->force_id = (bool)$force_ids;
 					$res = $supply_order->add();
 				}
 
@@ -3053,11 +3167,15 @@ class AdminImportControllerCore extends AdminController
 
 		$products = array();
 		$reset = true;
+
+		$convert = Tools::getValue('convert');
+		$force_ids = Tools::getValue('forceIDs');
+
 		// main loop, for each supply orders details to import
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); ++$current_line)
 		{
 			// if convert requested
-			if (Tools::getValue('convert'))
+			if ($convert)
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
@@ -3143,7 +3261,7 @@ class AdminImportControllerCore extends AdminController
 					$supply_order_detail->reference = $product_infos['reference'];
 					$supply_order_detail->ean13 = $product_infos['ean13'];
 					$supply_order_detail->upc = $product_infos['upc'];
-					$supply_order_detail->force_id = (bool)Tools::getValue('forceIDs');
+					$supply_order_detail->force_id = (bool)$force_ids;
 					$supply_order_detail->add();
 					$supply_order->update();
 					unset($supply_order_detail);
@@ -3327,10 +3445,12 @@ class AdminImportControllerCore extends AdminController
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
 			{
+				$shop_is_feature_active = Shop::isFeatureActive();
 				// If i am a superadmin, i can truncate table
-				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
+				if ((($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
 				$import_type = false;
+				Db::getInstance()->disableCache();
 				switch ((int)Tools::getValue('entity'))
 				{
 					case $this->entities[$import_type = $this->l('Categories')]:
@@ -3425,6 +3545,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 		}
+		Db::getInstance()->enableCache();
 		return parent::postProcess();
 	}
 
@@ -3457,7 +3578,7 @@ class AdminImportControllerCore extends AdminController
 										\''.pSQL(Tools::getValue('newImportMatchs')).'\',
 										\''.pSQL($match).'\',
 										\''.pSQL(Tools::getValue('skip')).'\'
-										)');
+										)', false);
 
 			die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
 		}
@@ -3468,7 +3589,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+				.(int)Tools::getValue('idImportMatchs'), true, false);
 			die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
 				.$return[0]['skip'].'"}');
 		}
@@ -3479,7 +3600,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+				.(int)Tools::getValue('idImportMatchs'), false);
 			die;
 		}
 	}

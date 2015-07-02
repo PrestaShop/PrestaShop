@@ -82,7 +82,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.scene_thumb', function(e){
 		e.preventDefault();
-		loadScene($(this).date('id_scene'));
+		loadScene($(this).attr('data-id_scene'));
 	});
 });
 

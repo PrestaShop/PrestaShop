@@ -37,7 +37,7 @@ class CSVCore
 
 	/**
 	* Loads objects, filename and optionnaly a delimiter.
-	* @param Collection $collection collection of objects / array (of non-objects)
+	* @param array|Iterator $collection Collection of objects / arrays (of non-objects)
 	* @param string $filename : used later to save the file
 	* @param string $delimiter Optional : delimiter used
 	*/
@@ -80,8 +80,8 @@ class CSVCore
 	 */
 	public function output($data)
 	{
-    	$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
-        echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
+		$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
+		echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
 	}
 
 	/**
@@ -91,7 +91,7 @@ class CSVCore
 	 */
 	public static function wrap($data)
 	{
-		$data = Tools::safeOutput($data, '";');
+		$data = Tools::str_replace(array('"', ';'), '', $data);
 		return sprintf('"%s"', $data);
 	}
 
@@ -106,4 +106,3 @@ class CSVCore
 		header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
 	}
 }
-

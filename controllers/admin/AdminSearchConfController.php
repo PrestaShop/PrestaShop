@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Alias $object
+ */
 class AdminSearchConfControllerCore extends AdminController
 {
 	protected $toolbar_scroll = false;
@@ -70,7 +73,7 @@ class AdminSearchConfControllerCore extends AdminController
 				'title' => $this->l('Indexing'),
 				'icon' => 'icon-cogs',
 				'info' => '<p>
-						'.$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
+						'.$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
 					</p>
 					<p>
@@ -246,6 +249,7 @@ class AdminSearchConfControllerCore extends AdminController
 			);
 		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
+		if ($this->can_import) 
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
 				'desc' => $this->l('Import', null, null, false)

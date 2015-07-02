@@ -8708,7 +8708,7 @@ class HTMLPurifier_URI
     public function validate($config, $context)
     {
         // ABNF definitions from RFC 3986
-        $chars_sub_delims = '!$&\'()*+,;=';
+        $chars_sub_delims = '!$&\'()*+,;='.$config->get('URI.UnescapeCharacters');
         $chars_gen_delims = ':/?#[]@';
         $chars_pchar = $chars_sub_delims . ':@';
 

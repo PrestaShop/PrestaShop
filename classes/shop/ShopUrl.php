@@ -165,7 +165,7 @@ class ShopUrlCore extends ObjectModel
 			self::$main_domain_ssl[(int)$id_shop] = $row['domain_ssl'];
 		}
 	}
-	
+
 	public static function resetMainDomainCache()
 	{
 		self::$main_domain = array();

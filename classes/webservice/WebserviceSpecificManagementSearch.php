@@ -26,14 +26,21 @@
 
 class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManagementInterface
 {
+	/** @var WebserviceOutputBuilder */
 	protected $objOutput;
 	protected $output;
+
+	/** @var WebserviceRequest */
 	protected $wsObject;
 
-	// ------------------------------------------------
-	// GETTERS & SETTERS
-	// ------------------------------------------------
+	/* ------------------------------------------------
+	 * GETTERS & SETTERS
+	 * ------------------------------------------------ */
 
+	/**
+	 * @param WebserviceOutputBuilderCore $obj
+	 * @return WebserviceSpecificManagementInterface
+	 */
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj)
 	{
 		$this->objOutput = $obj;
@@ -86,7 +93,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 
 		$results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
 		$categories = array();
-		foreach ($results AS $result)
+		foreach ($results as $result)
 		{
 			$current = new Product($result['id_product']);
 			$objects_products[] = $current;

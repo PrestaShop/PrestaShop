@@ -46,6 +46,7 @@
         <meta meta_page="module-cheque-validation" left="0" right="0"/>
         <meta meta_page="module-bankwire-validation" left="0" right="0"/>
         <meta meta_page="module-bankwire-payment" left="0" right="0"/>
+        <meta meta_page="module-cashondelivery-validation" left="0" right="0"/>
         <meta meta_page="products-comparison" left="0" right="0"/>
     </metas>
     <modules>

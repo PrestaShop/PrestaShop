@@ -16,12 +16,16 @@
 	strong {
 		color: $light-text-color;
 	}
+	&.is_logged {
+		@media (max-width: $screen-sm-max) {
+			display: none;
+		}
+	}
 }
 #contact-link {
 	float: right;
 	border-left: 1px solid #515151;
 	@media (max-width: $screen-xs - 1) {
-		width: 25%;
 		text-align: center;
 	}
 	a {
@@ -39,6 +43,11 @@
 		}
 		&:hover, &.active {
 			background: #2b2b2b;
+		}
+	}
+	&.is_logged {
+		@media (max-width: $screen-xs-max) {
+			display: none;
 		}
 	}
 }

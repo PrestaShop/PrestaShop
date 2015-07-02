@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Group $object
+ */
 class AdminGroupsControllerCore extends AdminController
 {
 	public function __construct()
@@ -94,6 +97,7 @@ class AdminGroupsControllerCore extends AdminController
 		WHERE jc.`deleted` != 1
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 		AND jcg.`id_group` = a.`id_group`) AS nb';
+		$this->_use_found_rows = false;
 
 		$groups = Group::getGroups(Context::getContext()->language->id, true);
 		if (Shop::isFeatureActive())
@@ -206,6 +210,7 @@ class AdminGroupsControllerCore extends AdminController
 		$genders_icon = array('default' => 'unknown.gif');
 		foreach (Gender::getGenders() as $gender)
 		{
+			/** @var Gender $gender */
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}
@@ -232,6 +237,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->_select = 'c.*, a.id_group';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
 		$this->_where = 'AND a.`id_group` = '.(int)$group->id.' AND c.`deleted` != 1';
+		$this->_where .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 		self::$currentIndex = self::$currentIndex.'&id_group='.(int)$group->id.'&viewgroup';
 
 		$this->processFilter();
@@ -535,7 +541,7 @@ class AdminGroupsControllerCore extends AdminController
 
 	/**
 	 * Print enable / disable icon for show prices option
-	 * @static
+	 *
 	 * @param $id_group integer Group ID
 	 * @param $tr array Row data
 	 * @return string HTML link and icon

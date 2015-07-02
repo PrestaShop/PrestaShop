@@ -121,6 +121,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->errors = array_merge($this->errors, $this->context->customer->validateController());
 							$this->context->customer->newsletter = (int)Tools::isSubmit('newsletter');
 							$this->context->customer->optin = (int)Tools::isSubmit('optin');
+							$this->context->customer->is_guest = (Tools::isSubmit('is_new_customer') ? !Tools::getValue('is_new_customer', 1) : 0);
 							$return = array(
 								'hasError' => !empty($this->errors),
 								'errors' => $this->errors,
@@ -135,7 +136,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							break;
 
 						case 'getAddressBlockAndCarriersAndPayments':
-							if ($this->context->customer->isLogged())
+							if ($this->context->customer->isLogged() || $this->context->customer->isGuest())
 							{
 								// check if customer have addresses
 								if (!Customer::getAddressesTotalById($this->context->customer->id))
@@ -155,15 +156,29 @@ class OrderOpcControllerCore extends ParentOrderController
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 								$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
+								$is_adv_api = Tools::getValue('isAdvApi');
+
+								if ($is_adv_api)
+								{
+									$tpl = 'order-address-advanced.tpl';
+									$this->context->smarty->assign(
+										array('products' => $this->context->cart->getProducts())
+									);
+								}
+								else
+									$tpl = 'order-address.tpl';
+
 								$return = array_merge(array(
-									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
+									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.$tpl),
 									'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
 									'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
-									'carrier_data' => $this->_getCarrierList(),
-									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+									'carrier_data' => ($is_adv_api ? '' : $this->_getCarrierList()),
+									'HOOK_TOP_PAYMENT' => ($is_adv_api ? '' : Hook::exec('displayPaymentTop')),
+									'HOOK_PAYMENT' => ($is_adv_api ? '' : $this->_getPaymentMethods()),
 									'no_address' => 0,
-									'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)$this->context->cookie->id_currency)))
+									'gift_price' => Tools::displayPrice(Tools::convertPrice(
+										Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc,
+										new Currency((int)$this->context->cookie->id_currency)))
 									),
 									$this->getFormatedSummaryDetail()
 								);
@@ -412,7 +427,13 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 
-		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+		{
+			$this->addJS(_THEME_JS_DIR_ . 'advanced-payment-api.js');
+			$this->setTemplate(_PS_THEME_DIR_ . 'order-opc-advanced.tpl');
+		}
+		else
+			$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 
 	protected function _getGuestInformations()
@@ -507,10 +528,19 @@ class OrderOpcControllerCore extends ParentOrderController
 
 	protected function _assignPayment()
 	{
-		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
-			'HOOK_PAYMENT' => $this->_getPaymentMethods()
-		));
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API')) {
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
+				'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentOptions', array(), null, true),
+				'link_conditions' => $this->link_conditions
+			));
+		} else {
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
+				'HOOK_PAYMENT' => $this->_getPaymentMethods()
+			));
+		}
 	}
 
 	protected function _getPaymentMethods()
@@ -597,6 +627,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 
 		$vars = array(
+			'advanced_payment_api' => (bool)Configuration::get('PS_ADVANCED_PAYMENT_API'),
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)$this->context->cookie->checkedTOS,
 			'recyclablePackAllowed' => (int)Configuration::get('PS_RECYCLABLE_PACK'),

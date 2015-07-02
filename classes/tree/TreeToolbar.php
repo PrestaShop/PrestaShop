@@ -45,7 +45,7 @@ class TreeToolbarCore implements ITreeToolbarCore
 		if (!is_array($actions) && !$actions instanceof Traversable)
 			throw new PrestaShopException('Action value must be an traversable array');
 
-		foreach($actions as $action)
+		foreach ($actions as $action)
 			$this->addAction($action);
 	}
 
@@ -116,7 +116,7 @@ class TreeToolbarCore implements ITreeToolbarCore
 
 	public function getTemplateFile($template)
 	{
-		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
 			$controllerName = strtolower($matches[0][1]);
 
 		if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
@@ -140,6 +140,12 @@ class TreeToolbarCore implements ITreeToolbarCore
 			return $this->getTemplateDirectory().$template;
 	}
 
+	/**
+	 * @param ITreeToolbarButton $action
+	 *
+	 * @return TreeToolbar
+	 * @throws PrestaShopException
+	 */
 	public function addAction($action)
 	{
 		if (!is_object($action))
@@ -169,7 +175,10 @@ class TreeToolbarCore implements ITreeToolbarCore
 	public function render()
 	{
 		foreach ($this->getActions() as $action)
+		{
+			/** @var ITreeToolbarButton $action */
 			$action->setAttribute('data', $this->getData());
+		}
 
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateFile($this->getTemplate()),
@@ -180,13 +189,14 @@ class TreeToolbarCore implements ITreeToolbarCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
-        if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-            return $directory;
-        }
-        
-        $directory .= DIRECTORY_SEPARATOR;
-        return $directory;
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }

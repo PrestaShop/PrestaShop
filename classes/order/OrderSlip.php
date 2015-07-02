@@ -26,28 +26,28 @@
 
 class OrderSlipCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_customer;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
 	/** @var float */
 	public $conversion_rate;
 
-	/** @var integer */
+	/** @var int */
 	public $amount;
 
-	/** @var integer */
+	/** @var int */
 	public $shipping_cost;
 
-	/** @var integer */
+	/** @var int */
 	public $shipping_cost_amount;
 
-	/** @var integer */
+	/** @var int */
 	public $partial;
 
 	/** @var string Object creation date */
@@ -56,7 +56,7 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var integer */
+	/** @var int */
 	public $order_slip_type = 0;
 
 	/**
@@ -141,6 +141,11 @@ class OrderSlipCore extends ObjectModel
 		.($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
 	}
 
+	/**
+	 * @param int $orderSlipId
+	 * @param Order $order
+	 * @return array
+	 */
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$cart_rules = $order->getCartRules(true);
@@ -306,21 +311,28 @@ class OrderSlipCore extends ObjectModel
 			if ($quantity == 0)
 				continue;
 
-			$order_detail->product_quantity_refunded += $quantity;
+			if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid())
+				$order_detail->product_quantity_refunded += $quantity;
+
 			$order_detail->save();
 
 			$address = Address::initialize($order->id_address_invoice, false);
+			$id_address = (int)$address->id;
 			$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$order_detail->product_id);
 			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
 			$order_slip->{'total_products_tax_'.$inc_or_ex_1} += $price * $quantity;
 
 			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
+			{
 				if (!isset($total_products[$id_tax_rules_group]))
 					$total_products[$id_tax_rules_group] = 0;
+			}
 			else
+			{
 				if (!isset($total_products[$id_tax_rules_group.'_'.$id_address]))
 					$total_products[$id_tax_rules_group.'_'.$id_address] = 0;
+			}
 
 			$product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
 

@@ -127,6 +127,21 @@ $(document).ready(function() {
 		});
 		//sidebar menu collapse
 		sidebar.find('.menu-collapse').on('click',function(){
+			$(this).toggleClass('icon-rotate-90');
+
+			if ($(this).hasClass('icon-rotate-90')) {
+				$(this).css('margin-left', '5px');
+				$('.page-head .page-title').css('padding-left', '70px');
+				$('.page-head .breadcrumb').css('left', '70px');
+				$('.page-head .page-subtitle').css('left', '70px');
+
+			} else {
+				$(this).css('margin-left', '');
+				$('.page-head .page-title').css('padding-left', '230px');
+				$('.page-head .breadcrumb').css('left', '230px');
+				$('.page-head .page-subtitle').css('left', '230px');
+			}
+
 			$('body').toggleClass('page-sidebar-closed');
 			$('.expanded').removeClass('expanded');
 			$.ajax({
@@ -135,6 +150,22 @@ $(document).ready(function() {
 				data: "token="+employee_token+'&ajax=1&action=toggleMenu&tab=AdminEmployees&collapse='+Number($('body').hasClass('page-sidebar-closed'))
 			});
 		});
+
+		var menuCollapse = sidebar.find('.menu-collapse');
+
+		if ($('body').hasClass('page-sidebar-closed')) {
+			menuCollapse.addClass('icon-rotate-90');
+			menuCollapse.css('margin-left', '5px');
+			$('.page-head .page-title').css('padding-left', '70px');
+			$('.page-head .breadcrumb').css('left', '70px');
+			$('.page-head .page-subtitle').css('left', '70px');
+
+		} else {
+			menuCollapse.css('margin-left', '');
+			$('.page-head .page-title').css('padding-left', '230px');
+			$('.page-head .breadcrumb').css('left', '230px');
+			$('.page-head .page-subtitle').css('left', '230px');
+		}
 	}
 
 	function navTopbarReset() {
@@ -327,7 +358,7 @@ $(document).ready(function() {
 			}
 		},
 		unmatch : function() {
-			
+
 		}
 	});
 	enquire.register('screen and (max-width: 768px)', {
@@ -420,7 +451,7 @@ $(document).ready(function() {
 		}
 		$('#header_search .form-group').addClass('focus-search');
 	});
-	
+
 	//select list for search type
 	$('#header_search_options').on('click','li a', function(e){
 		e.preventDefault();

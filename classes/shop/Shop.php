@@ -146,7 +146,9 @@ class ShopCore extends ObjectModel
 			'category' => array('type' => 'shop'),
 			'category_lang' => array('type' => 'fk_shop'),
 			'cms' => array('type' => 'shop'),
+			'cms_lang' => array('type' => 'fk_shop'),
 			'cms_category' => array('type' => 'shop'),
+			'cms_category_lang' => array('type' => 'fk_shop'),
 			'contact' => array('type' => 'shop'),
 			'country' => array('type' => 'shop'),
 			'currency' => array('type' => 'shop'),
@@ -200,7 +202,8 @@ class ShopCore extends ObjectModel
 			AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
 			Cache::store($cache_id, $row);
 		}
-		$row = Cache::retrieve($cache_id);
+		else
+			$row = Cache::retrieve($cache_id);
 		if (!$row)
 			return false;
 
@@ -322,7 +325,7 @@ class ShopCore extends ObjectModel
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-					WHERE (su.domain = \''. pSQL($host).'\' OR su.domain_ssl = \''. pSQL($host).'\')
+					WHERE (su.domain = \''.pSQL($host).'\' OR su.domain_ssl = \''.pSQL($host).'\')
 						AND s.active = 1
 						AND s.deleted = 0
 					ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
@@ -331,7 +334,6 @@ class ShopCore extends ObjectModel
 
 			$through = false;
 			foreach ($result as $row)
-			{
 				// An URL matching current shop was found
 				if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri))
 				{
@@ -342,26 +344,22 @@ class ShopCore extends ObjectModel
 						$is_main_uri = true;
 					break;
 				}
-			}
 
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($through && $id_shop && !$is_main_uri)
-			{
-
 				foreach ($result as $row)
-				{
 					if ($row['id_shop'] == $id_shop && $row['main'])
 					{
 						$request_uri = substr($request_uri, strlen($found_uri));
 						$url = str_replace('//', '/', $row['domain'].$row['uri'].$request_uri);
-						$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
-						header('HTTP/1.0 '.$redirect_type.' Moved');
+						$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
+						$redirect_code = ($redirect_type == 1 ? '302' : '301');
+						$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
+						header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
 						header('Cache-Control: no-cache');
-						header('location: http://'.$url);
+						header('Location: http://'.$url);
 						exit;
 					}
-				}
-			}
 		}
 
 		$http_host = Tools::getHttpHost();
@@ -369,7 +367,7 @@ class ShopCore extends ObjectModel
 
 		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media))
 		{
-			// If in admin, we can access to the shop without right URL
+		// If in admin, we can access to the shop without right URL
 			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
 				$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
@@ -418,10 +416,14 @@ class ShopCore extends ObjectModel
 					if (count($params))
 						$url .= '?'.http_build_query($params);
 				}
-				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
-				header('HTTP/1.0 '.$redirect_type.' Moved');
-				header('location: http://'.$url);
+
+				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
+				$redirect_code = ($redirect_type == 1 ? '302' : '301');
+				$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
+				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
+				header('Location: http://'.$url);
 				exit;
+
 			}
 			elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri))
 			{
@@ -472,7 +474,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get shop URI
- 	 *
+	 *
 	 * @return string
 	 */
 	public function getBaseURI()
@@ -483,13 +485,23 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get shop URL
 	 *
-	 * @return string
+	 * @param string $auto_secure_mode if set to true, secure mode will be checked
+	 * @param string $add_base_uri if set to true, shop base uri will be added
+	 * @return string complete base url of current shop
 	 */
-	public function getBaseURL()
+	public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
 	{
-		if (!$this->domain)
+		if (($auto_secure_mode && Tools::usingSecureMode() && !$this->domain_ssl) || !$this->domain)
 			return false;
-		return 'http://'.$this->domain.$this->getBaseURI();
+
+		$url = array();
+		$url['protocol'] = $auto_secure_mode && Tools::usingSecureMode() ? 'https://' : 'http://';
+		$url['domain'] = $auto_secure_mode && Tools::usingSecureMode() ? $this->domain_ssl : $this->domain;
+
+		if ($add_base_uri)
+			$url['base_uri'] = $this->getBaseURI();
+
+		return implode('', $url);
 	}
 
 	/**
@@ -511,7 +523,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function getCategory()
 	{
-		return ($this->id_category) ? $this->id_category : 1;
+		return (int)($this->id_category ? $this->id_category : Configuration::get('PS_ROOT_CATEGORY'));
 	}
 
 	/**
@@ -553,7 +565,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * check if the table has an id_shop_default
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function checkIdShopDefault($table)
 	{
@@ -670,11 +682,18 @@ class ShopCore extends ObjectModel
 
 	public static function getCompleteListOfShopsID()
 	{
-		$list = array();
-		$sql = 'SELECT id_shop FROM '._DB_PREFIX_.'shop';
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row)
-			$list[] = $row['id_shop'];
-		return $list;
+		$cache_id = 'Shop::getCompleteListOfShopsID';
+		if (!Cache::isStored($cache_id))
+		{
+			$list = array();
+			$sql = 'SELECT id_shop FROM '._DB_PREFIX_.'shop';
+			foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row)
+				$list[] = $row['id_shop'];
+
+			Cache::store($cache_id, $list);
+			return $list;
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -938,7 +957,7 @@ class ShopCore extends ObjectModel
 
 		$group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
 		if ($share == Shop::SHARE_CUSTOMER && Shop::getContext() == Shop::CONTEXT_SHOP && $group['share_customer'])
-			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID();
+			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID().' ';
 		else
 			$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
 
@@ -1011,7 +1030,7 @@ class ShopCore extends ObjectModel
 		static $feature_active = null;
 
 		if ($feature_active === null)
-			$feature_active = (bool)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE "PS_MULTISHOP_FEATURE_ACTIVE"')
+			$feature_active = (bool)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
 				&& (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop') > 1);
 
 		return $feature_active;
@@ -1029,6 +1048,13 @@ class ShopCore extends ObjectModel
 		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;
 			$tables_import['carrier_lang'] = true;
+		}
+
+		if (isset($tables_import['cms']))
+		{
+			$tables_import['cms_lang'] = true;
+			$tables_import['cms_category'] = true;
+			$tables_import['cms_category_lang'] = true;
 		}
 
 		$tables_import['category_lang'] = true;
@@ -1110,7 +1136,6 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param int $id
 	 * @return array
 	 */

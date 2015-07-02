@@ -1,5 +1,4 @@
 <?php
-
 /*
 * 2007-2015 PrestaShop
 *
@@ -25,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Theme $object
+ */
 class AdminThemesControllerCore extends AdminController
 {
 	const MAX_NAME_LENGTH = 128;
@@ -35,16 +37,20 @@ class AdminThemesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	/** This value is used in isThemeCompatible method. only version node with an
+	/**
+	 * This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
+	 *
 	 * @since 1.4.0.11, check theme compatibility 1.4
-	 * @static
+	 * @var string
 	 */
 	public static $check_features_version = '1.4';
 
-	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
+	/**
+	 * Multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
-	 * @static
+	 *
+	 * @var array
 	 */
 	public static $check_features = array(
 		'ccc' => array(
@@ -476,7 +482,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @param string $base_theme_dir   relative path to base dir
 	 * @param string $target_theme_dir relative path to target dir
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
@@ -594,6 +600,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 		}
 
+		/** @var Theme $theme */
 		$theme = parent::processAdd();
 		if ((int)$theme->product_per_page == 0)
 		{
@@ -663,6 +670,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDelete()
 	{
+		/** @var Theme $obj */
 		$obj = $this->loadObject();
 		if ($obj)
 		{
@@ -676,6 +684,7 @@ class AdminThemesControllerCore extends AdminController
 			$themes = array();
 			foreach (Theme::getThemes() as $theme)
 			{
+				/** @var Theme $theme */
 				if ($theme->id != $obj->id)
 					$themes[] = $theme->directory;
 			}
@@ -782,8 +791,10 @@ class AdminThemesControllerCore extends AdminController
 
 			if (!in_array($extension, $extensions))
 				$this->errors[] = $this->l('File extension must be .txt or .pdf');
-			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
+			elseif ($_FILES['documentation']['error'] > 0)
 				$this->errors[] = $this->l('An error occurred during documentation upload');
+			elseif ($_FILES['documentation']['size'] > 1048576)
+				$this->errors[] = $this->l('An error occurred while uploading the documentation. Maximum size allowed is 1MB.');
 			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::MAX_NAME_LENGTH)
 				$this->errors[] = $this->l('Please enter a valid documentation name');
 		}
@@ -827,6 +838,12 @@ class AdminThemesControllerCore extends AdminController
 		return false;
 	}
 
+	/**
+	 * @param ZipArchive $obj
+	 * @param string $file
+	 * @param string $server_path
+	 * @param string $archive_path
+	 */
 	private function archiveThisFile($obj, $file, $server_path, $archive_path)
 	{
 		if (is_dir($server_path.$file))
@@ -846,7 +863,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$zip = new ZipArchive();
 		$zip_file_name = md5(time()).'.zip';
-		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
+		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE | ZipArchive::CREATE) === true)
 		{
 			if (!$zip->addFromString('Config.xml', $this->xml_file))
 				$this->errors[] = $this->l('Cannot create config file.');
@@ -1280,6 +1297,9 @@ class AdminThemesControllerCore extends AdminController
 
 		if (count($to_install) > 0)
 		{
+			foreach ($to_install as $module)
+				$fields_value['modulesToExport_module'.$module] = true;
+
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
 				'label' => $this->l('Select the theme\'s modules that you wish to export'),
@@ -1564,6 +1584,7 @@ class AdminThemesControllerCore extends AdminController
 
 		foreach ($themes as $theme_object)
 		{
+			/** @var Theme $theme_object */
 			if ($theme_object->name == $theme_name)
 				return true;
 		}
@@ -1861,7 +1882,7 @@ class AdminThemesControllerCore extends AdminController
 	 *
 	 * @param string $theme_dir theme directory
 	 *
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	protected function _isThemeCompatible($theme_dir)
 	{
@@ -1914,10 +1935,10 @@ class AdminThemesControllerCore extends AdminController
 	/**
 	 * _checkConfigForFeatures
 	 *
-	 * @param array $arrFeature array of feature code to check
+	 * @param array $arrFeatures array of feature code to check
 	 * @param mixed $configItem will precise the attribute which not matches. If empty, will check every attributes
 	 *
-	 * @return error message, or null if disabled
+	 * @return bool Error message, or null if disabled
 	 */
 	protected function _checkConfigForFeatures($arrFeatures, $configItem = array())
 	{
@@ -1979,7 +2000,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	private function getNativeModule($type = 0)
 	{
-		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_16.xml'));
+		$xml = simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
 
 		if ($xml)
 		{
@@ -2806,6 +2827,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleResponsive())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2823,6 +2845,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultLeftColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2840,6 +2863,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultRightColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else

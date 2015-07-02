@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderMessage $object
+ */
 class AdminOrderMessageControllerCore extends AdminController
 {
 	public function __construct()

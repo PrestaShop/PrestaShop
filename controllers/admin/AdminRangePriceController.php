@@ -24,20 +24,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RangePrice $object
+ */
 class AdminRangePriceControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'range_price';
-	 	$this->className = 'RangePrice';
-	 	$this->lang = false;
+		$this->table = 'range_price';
+		$this->className = 'RangePrice';
+		$this->lang = false;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-	 	$this->fields_list = array(
+		$this->fields_list = array(
 			'id_range_price' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'left', 'width' => 'auto', 'filter_key' => 'ca!name'),
 			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'type' => 'price', 'align' => 'right'),
@@ -46,6 +49,7 @@ class AdminRangePriceControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';
 		$this->_where = 'AND ca.`deleted` = 0';
+		$this->_use_found_rows = false;
 
 		parent::__construct();
 	}
@@ -124,12 +128,12 @@ class AdminRangePriceControllerCore extends AdminController
 		if ($this->_list && is_array($this->_list))
 			foreach ($this->_list as $key => $list)
 				if ($list['carrier_name'] == '0')
-					$this->_list[$key]['carrier_name'] = Configuration::get('PS_SHOP_NAME');
+					$this->_list[$key]['carrier_name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function postProcess()
 	{
-		$id = (int)Tools::getValue('id_'.$this->table);	
+		$id = (int)Tools::getValue('id_'.$this->table);
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
@@ -143,7 +147,5 @@ class AdminRangePriceControllerCore extends AdminController
 		}
 		else
 			parent::postProcess();
- 	}
+	}
 }
-
-

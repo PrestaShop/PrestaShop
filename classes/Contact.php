@@ -50,19 +50,19 @@ class ContactCore extends ObjectModel
 			'email' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
 			'customer_service' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
 
 	/**
-	  * Return available contacts
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param Context
-	  * @return array Contacts
-	  */
+	 * Return available contacts
+	 *
+	 * @param int $id_lang Language ID
+	 * @param Context
+	 * @return array Contacts
+	 */
 	public static function getContacts($id_lang)
 	{
 		$shop_ids = Shop::getContextListShopID();
@@ -83,13 +83,16 @@ class ContactCore extends ObjectModel
 	 */
 	public static function getCategoriesContacts()
 	{
+		$shop_ids = Shop::getContextListShopID();
 		return Db::getInstance()->executeS('
 			SELECT cl.*
 			FROM '._DB_PREFIX_.'contact ct
+			'.Shop::addSqlAssociation('contact', 'ct', false).'
 			LEFT JOIN '._DB_PREFIX_.'contact_lang cl
 				ON (cl.id_contact = ct.id_contact AND cl.id_lang = '.(int)Context::getContext()->language->id.')
 			WHERE ct.customer_service = 1
+			AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
+			GROUP BY ct.`id_contact`
 		');
 	}
 }
-

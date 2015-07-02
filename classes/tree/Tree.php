@@ -35,13 +35,20 @@ class TreeCore
 	protected $_attributes;
 	private   $_context;
 	protected $_data;
+	protected $_data_search;
 	protected $_headerTemplate;
 	private   $_id;
 	protected $_node_folder_template;
 	protected $_node_item_template;
 	protected $_template;
+
+	/** @var string */
 	private   $_template_directory;
 	private   $_title;
+	private   $_no_js;
+
+	/** @var TreeToolbar|ITreeToolbar */
+	private $_toolbar;
 
 	public function __construct($id, $data = null)
 	{
@@ -116,6 +123,23 @@ class TreeCore
 			$this->_context = Context::getContext();
 
 		return $this->_context;
+	}
+
+	public function setDataSearch($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$this->_data_search = $value;
+		return $this;
+	}
+
+	public function getDataSearch()
+	{
+		if (!isset($this->_data_search))
+			$this->_data_search = array();
+
+		return $this->_data_search;
 	}
 
 	public function setData($value)
@@ -202,12 +226,20 @@ class TreeCore
 		return $this->_template;
 	}
 
+	/**
+	 * @param $value
+	 *
+	 * @return Tree
+	 */
 	public function setTemplateDirectory($value)
 	{
 		$this->_template_directory = $this->_normalizeDirectory($value);
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getTemplateDirectory()
 	{
 		if (!isset($this->_template_directory))
@@ -219,9 +251,9 @@ class TreeCore
 
 	public function getTemplateFile($template)
 	{
-		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
 			$controller_name = strtolower($matches[0][1]);
-		
+
 		if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
 				$this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
@@ -245,6 +277,12 @@ class TreeCore
 				.$this->getTemplateDirectory().$template;
 		else
 			return $this->getTemplateDirectory().$template;
+	}
+
+	public function setNoJS($value)
+	{
+		$this->_no_js = $value;
+		return $this;
 	}
 
 	public function setTitle($value)
@@ -275,7 +313,12 @@ class TreeCore
 	public function getToolbar()
 	{
 		if (isset($this->_toolbar))
-			$this->_toolbar->setData($this->getData());
+		{
+			if ($this->getDataSearch())
+				$this->_toolbar->setData($this->getDataSearch());
+			else
+				$this->_toolbar->setData($this->getData());
+		}
 
 		return $this->_toolbar;
 	}
@@ -311,7 +354,10 @@ class TreeCore
 
 		$js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
 		if ($this->getContext()->controller->ajax)
-			$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+		{
+			if (!$this->_no_js)
+				$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+		}
 		else
 			$this->getContext()->controller->addJs($js_path);
 
@@ -335,7 +381,7 @@ class TreeCore
 			));
 			$template->assign('header', $headerTemplate->fetch());
 		}
-		
+
 		//Assign Tree nodes
 		$template->assign($this->getAttributes())->assign(array(
 			'id'    => $this->getId(),
@@ -396,13 +442,14 @@ class TreeCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
-        if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-            return $directory;
-        }
-        
-        $directory .= DIRECTORY_SEPARATOR;
-        return $directory;
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }

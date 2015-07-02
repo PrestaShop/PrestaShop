@@ -31,32 +31,32 @@ class OrderCore extends ObjectModel
 	const ROUND_TOTAL = 3;
 
 
-	/** @var integer Delivery address id */
+	/** @var int Delivery address id */
 	public $id_address_delivery;
 
-	/** @var integer Invoice address id */
+	/** @var int Invoice address id */
 	public $id_address_invoice;
 
 	public $id_shop_group;
 
 	public $id_shop;
 
-	/** @var integer Cart id */
+	/** @var int Cart id */
 	public $id_cart;
 
-	/** @var integer Currency id */
+	/** @var int Currency id */
 	public $id_currency;
 
-	/** @var integer Language id */
+	/** @var int Language id */
 	public $id_lang;
 
-	/** @var integer Customer id */
+	/** @var int Customer id */
 	public $id_customer;
 
-	/** @var integer Carrier id */
+	/** @var int Carrier id */
 	public $id_carrier;
 
-	/** @var integer Order Status id */
+	/** @var int Order Status id */
 	public $current_state;
 
 	/** @var string Secure key */
@@ -71,16 +71,16 @@ class OrderCore extends ObjectModel
 	/** @var float Currency exchange rate */
 	public $conversion_rate;
 
-	/** @var boolean Customer is ok for a recyclable package */
+	/** @var bool Customer is ok for a recyclable package */
 	public $recyclable = 1;
 
-	/** @var boolean True if the customer wants a gift wrapping */
+	/** @var bool True if the customer wants a gift wrapping */
 	public $gift = 0;
 
 	/** @var string Gift message if specified */
 	public $gift_message;
 
-	/** @var boolean Mobile Theme */
+	/** @var bool Mobile Theme */
 	public $mobile_theme;
 
 	/**
@@ -135,10 +135,10 @@ class OrderCore extends ObjectModel
 	/** @var float Wrapping total tax excluded */
 	public $total_wrapping_tax_excl;
 
-	/** @var integer Invoice number */
+	/** @var int Invoice number */
 	public $invoice_number;
 
-	/** @var integer Delivery number */
+	/** @var int Delivery number */
 	public $delivery_number;
 
 	/** @var string Invoice creation date */
@@ -147,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
+	/** @var bool Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -165,6 +165,11 @@ class OrderCore extends ObjectModel
 	 * @var int Round mode method used for this order
 	 */
 	public $round_mode;
+
+	/**
+	* @var int Round type method used for this order
+	*/
+	public $round_type;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -207,6 +212,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'round_mode' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'round_type' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
@@ -280,7 +286,7 @@ class OrderCore extends ObjectModel
 		$is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
 		if ($this->id_customer && !$is_admin)
 		{
-			$customer = new Customer((int)($this->id_customer));
+			$customer = new Customer((int)$this->id_customer);
 			$this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 		}
 		else
@@ -308,28 +314,36 @@ class OrderCore extends ObjectModel
 
 	public function getTaxCalculationMethod()
 	{
-		return (int)($this->_taxCalculationMethod);
+		return (int)$this->_taxCalculationMethod;
 	}
 
-	/* Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case) */
-	public function deleteProduct($order, $orderDetail, $quantity)
+	/**
+	 * Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case)
+	 *
+	 * @param $order
+	 * @param OrderDetail $order_detail
+	 * @param int $quantity
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
+	public function deleteProduct($order, $order_detail, $quantity)
 	{
-		if (!(int)($this->getCurrentState()) || !validate::isLoadedObject($orderDetail))
+		if (!(int)$this->getCurrentState() || !validate::isLoadedObject($order_detail))
 			return false;
 
 		if ($this->hasBeenDelivered())
 		{
 			if (!Configuration::get('PS_ORDER_RETURN', null, null, $this->id_shop))
 				throw new PrestaShopException('PS_ORDER_RETURN is not defined in table configuration');
-			$orderDetail->product_quantity_return += (int)($quantity);
-			return $orderDetail->update();
+			$order_detail->product_quantity_return += (int)$quantity;
+			return $order_detail->update();
 		}
 		elseif ($this->hasBeenPaid())
 		{
-			$orderDetail->product_quantity_refunded += (int)($quantity);
-			return $orderDetail->update();
+			$order_detail->product_quantity_refunded += (int)$quantity;
+			return $order_detail->update();
 		}
-		return $this->_deleteProduct($orderDetail, (int)$quantity);
+		return $this->_deleteProduct($order_detail, (int)$quantity);
 	}
 
 	/**
@@ -341,17 +355,17 @@ class OrderCore extends ObjectModel
 	public function getCartProducts()
 	{
 		$product_id_list = array();
-        	$products = $this->getProducts();
+		$products = $this->getProducts();
 		foreach ($products as &$product)
-        	{
+		{
 			$product['id_product_attribute'] = $product['product_attribute_id'];
 			$product['cart_quantity'] = $product['product_quantity'];
 			$product_id_list[] = $this->id_address_delivery.'_'
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
-	        }
-	        unset($product);
+		}
+		unset($product);
 
 		$product_list = array();
 		foreach ($products as $product)
@@ -367,15 +381,22 @@ class OrderCore extends ObjectModel
 		return $product_list;
 	}
 
-	/* DOES delete the product */
-	protected function _deleteProduct($orderDetail, $quantity)
+	/**
+	 * DOES delete the product
+	 *
+	 * @param OrderDetail $order_detail
+	 * @param int $quantity
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
+	protected function _deleteProduct($order_detail, $quantity)
 	{
-		$product_price_tax_excl = $orderDetail->unit_price_tax_excl * $quantity;
-		$product_price_tax_incl = $orderDetail->unit_price_tax_incl * $quantity;
+		$product_price_tax_excl = $order_detail->unit_price_tax_excl * $quantity;
+		$product_price_tax_incl = $order_detail->unit_price_tax_incl * $quantity;
 
 		/* Update cart */
 		$cart = new Cart($this->id_cart);
-		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
+		$cart->updateQty($quantity, $order_detail->product_id, $order_detail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
 		$cart->update();
 
 		/* Update order */
@@ -413,15 +434,15 @@ class OrderCore extends ObjectModel
 			$this->{$field} = number_format($this->{$field}, _PS_PRICE_COMPUTE_PRECISION_, '.', '');
 
 		/* Update order detail */
-		$orderDetail->product_quantity -= (int)$quantity;
-		if ($orderDetail->product_quantity == 0)
+		$order_detail->product_quantity -= (int)$quantity;
+		if ($order_detail->product_quantity == 0)
 		{
-			if (!$orderDetail->delete())
+			if (!$order_detail->delete())
 				return false;
 			if (count($this->getProductsDetail()) == 0)
 			{
 				$history = new OrderHistory();
-				$history->id_order = (int)($this->id);
+				$history->id_order = (int)$this->id;
 				$history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $this);
 				if (!$history->addWithemail())
 					return false;
@@ -430,37 +451,37 @@ class OrderCore extends ObjectModel
 		}
 		else
 		{
-			$orderDetail->total_price_tax_incl -= $product_price_tax_incl;
-			$orderDetail->total_price_tax_excl -= $product_price_tax_excl;
-			$orderDetail->total_shipping_price_tax_incl -= $shipping_diff_tax_incl;
-			$orderDetail->total_shipping_price_tax_excl -= $shipping_diff_tax_excl;
+			$order_detail->total_price_tax_incl -= $product_price_tax_incl;
+			$order_detail->total_price_tax_excl -= $product_price_tax_excl;
+			$order_detail->total_shipping_price_tax_incl -= $shipping_diff_tax_incl;
+			$order_detail->total_shipping_price_tax_excl -= $shipping_diff_tax_excl;
 		}
-		return $orderDetail->update() && $this->update();
+		return $order_detail->update() && $this->update();
 	}
 
-	public function deleteCustomization($id_customization, $quantity, $orderDetail)
+	public function deleteCustomization($id_customization, $quantity, $order_detail)
 	{
-		if (!(int)($this->getCurrentState()))
+		if (!(int)$this->getCurrentState())
 			return false;
 
 		if ($this->hasBeenDelivered())
-			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_returned` = `quantity_returned` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
+			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_returned` = `quantity_returned` + '.(int)$quantity.' WHERE `id_customization` = '.(int)$id_customization.' AND `id_cart` = '.(int)$this->id_cart.' AND `id_product` = '.(int)$order_detail->product_id);
 		elseif ($this->hasBeenPaid())
-			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_refunded` = `quantity_refunded` + '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id));
-		if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` - '.(int)($quantity).' WHERE `id_customization` = '.(int)($id_customization).' AND `id_cart` = '.(int)($this->id_cart).' AND `id_product` = '.(int)($orderDetail->product_id)))
+			return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity_refunded` = `quantity_refunded` + '.(int)$quantity.' WHERE `id_customization` = '.(int)$id_customization.' AND `id_cart` = '.(int)$this->id_cart.' AND `id_product` = '.(int)$order_detail->product_id);
+		if (!Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customization` SET `quantity` = `quantity` - '.(int)$quantity.' WHERE `id_customization` = '.(int)$id_customization.' AND `id_cart` = '.(int)$this->id_cart.' AND `id_product` = '.(int)$order_detail->product_id))
 			return false;
 		if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization` WHERE `quantity` = 0'))
 			return false;
-		return $this->_deleteProduct($orderDetail, (int)$quantity);
+		return $this->_deleteProduct($order_detail, (int)$quantity);
 	}
 
 	/**
 	 * Get order history
 	 *
-	 * @param integer $id_lang Language id
-	 * @param integer $id_order_state Filter a specific order status
-	 * @param integer $no_hidden Filter no hidden status
-	 * @param integer $filters Flag to use specific field filter
+	 * @param int $id_lang Language id
+	 * @param int $id_order_state Filter a specific order status
+	 * @param int $no_hidden Filter no hidden status
+	 * @param int $filters Flag to use specific field filter
 	 *
 	 * @return array History entries ordered by date DESC
 	 */
@@ -489,7 +510,7 @@ class OrderCore extends ObjectModel
 
 		if (!isset(self::$_historyCache[$this->id.'_'.$id_order_state.'_'.$filters]) || $no_hidden)
 		{
-			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
+			$id_lang = $id_lang ? (int)$id_lang : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
 			SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
 			FROM `'._DB_PREFIX_.'orders` o
@@ -497,13 +518,13 @@ class OrderCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
 			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)($id_lang).')
 			LEFT JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = oh.`id_employee`
-			WHERE oh.id_order = '.(int)($this->id).'
+			WHERE oh.id_order = '.(int)$this->id.'
 			'.($no_hidden ? ' AND os.hidden = 0' : '').'
 			'.($logable ? ' AND os.logable = 1' : '').'
 			'.($delivery ? ' AND os.delivery = 1' : '').'
 			'.($paid ? ' AND os.paid = 1' : '').'
 			'.($shipped ? ' AND os.shipped = 1' : '').'
-			'.((int)($id_order_state) ? ' AND oh.`id_order_state` = '.(int)($id_order_state) : '').'
+			'.((int)$id_order_state ? ' AND oh.`id_order_state` = '.(int)$id_order_state : '').'
 			ORDER BY oh.date_add DESC, oh.id_order_history DESC');
 			if ($no_hidden)
 				return $result;
@@ -519,7 +540,7 @@ class OrderCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail` od
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id)
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-		WHERE od.`id_order` = '.(int)($this->id));
+		WHERE od.`id_order` = '.(int)$this->id);
 	}
 
 	public function getFirstMessage()
@@ -564,23 +585,23 @@ class OrderCore extends ObjectModel
 	 *
 	 * @return array Products with price, quantity (with taxe and without)
 	 */
-	public function getProducts($products = false, $selectedProducts = false, $selectedQty = false)
+	public function getProducts($products = false, $selected_products = false, $selected_qty = false)
 	{
 		if (!$products)
 			$products = $this->getProductsDetail();
 
 		$customized_datas = Product::getAllCustomizedDatas($this->id_cart);
 
-		$resultArray = array();
+		$result_array = array();
 		foreach ($products as $row)
 		{
 			// Change qty if selected
-			if ($selectedQty)
+			if ($selected_qty)
 			{
 				$row['product_quantity'] = 0;
-				foreach ($selectedProducts as $key => $id_product)
+				foreach ($selected_products as $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
-						$row['product_quantity'] = (int)($selectedQty[$key]);
+						$row['product_quantity'] = (int)$selected_qty[$key];
 				if (!$row['product_quantity'])
 					continue;
 			}
@@ -604,13 +625,13 @@ class OrderCore extends ObjectModel
 			$row['id_address_delivery'] = $this->id_address_delivery;
 
 			/* Stock product */
-			$resultArray[(int)$row['id_order_detail']] = $row;
+			$result_array[(int)$row['id_order_detail']] = $row;
 		}
 
 		if ($customized_datas)
-			Product::addCustomizationPrice($resultArray, $customized_datas);
+			Product::addCustomizationPrice($result_array, $customized_datas);
 
-		return $resultArray;
+		return $result_array;
 	}
 
 	public static function getIdOrderProduct($id_customer, $id_product)
@@ -663,17 +684,18 @@ class OrderCore extends ObjectModel
 	{
 		if (isset($product['product_attribute_id']) && $product['product_attribute_id'])
 			$id_image = Db::getInstance()->getValue('
-				SELECT image_shop.id_image
-				FROM '._DB_PREFIX_.'product_attribute_image pai'.
+				SELECT `image_shop`.id_image
+				FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
 				Shop::addSqlAssociation('image', 'pai', true).'
-				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
+				WHERE id_product_attribute = '.(int)$product['product_attribute_id']. ' ORDER by i.position ASC');
 
 		if (!isset($id_image) || !$id_image)
 			$id_image = Db::getInstance()->getValue('
-				SELECT image_shop.id_image
-				FROM '._DB_PREFIX_.'image i'.
+				SELECT `image_shop`.id_image
+				FROM `'._DB_PREFIX_.'image` i'.
 				Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE id_product = '.(int)($product['product_id'])
+				WHERE i.id_product = '.(int)$product['product_id']
 			);
 
 		$product['image'] = null;
@@ -685,7 +707,7 @@ class OrderCore extends ObjectModel
 
 	public function getTaxesAverageUsed()
 	{
-		return Cart::getTaxesAverageUsed((int)($this->id_cart));
+		return Cart::getTaxesAverageUsed((int)$this->id_cart);
 	}
 
 	/**
@@ -698,7 +720,7 @@ class OrderCore extends ObjectModel
 		$sql = '
 			SELECT `product_id`, `product_attribute_id`, `download_hash`, `download_deadline`
 			FROM `'._DB_PREFIX_.'order_detail` od
-			WHERE od.`id_order` = '.(int)($this->id).'
+			WHERE od.`id_order` = '.(int)$this->id.'
 				AND `download_hash` <> \'\'';
 		return Db::getInstance()->executeS($sql);
 	}
@@ -706,8 +728,8 @@ class OrderCore extends ObjectModel
 	/**
 	* Check if order contains (only) virtual products
 	*
-	* @param boolean $strict If false return true if there are at least one product virtual
-	* @return boolean true if is a virtual order or false
+	* @param bool $strict If false return true if there are at least one product virtual
+	* @return bool true if is a virtual order or false
 	*
 	*/
 	public function isVirtual($strict = true)
@@ -718,7 +740,7 @@ class OrderCore extends ObjectModel
 		$virtual = true;
 		foreach ($products as $product)
 		{
-			$pd = ProductDownload::getIdFromIdProduct((int)($product['product_id']));
+			$pd = ProductDownload::getIdFromIdProduct((int)$product['product_id']);
 			if ($pd && Validate::isUnsignedInt($pd) && $product['download_hash'] && $product['display_filename'] != '')
 			{
 				if ($strict === false)
@@ -758,6 +780,7 @@ class OrderCore extends ObjectModel
 			WHERE o.id_customer = '.(int)$id_customer.'
 			AND ocr.id_cart_rule = '.(int)$id_cart_rule);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -788,7 +811,7 @@ class OrderCore extends ObjectModel
 
 	public function hasBeenDelivered()
 	{
-		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_DELIVERY));
+		return count($this->getHistory((int)$this->id_lang, false, false, OrderState::FLAG_DELIVERY));
 	}
 
 	/**
@@ -808,17 +831,17 @@ class OrderCore extends ObjectModel
 
 	public function hasBeenPaid()
 	{
-		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_PAID));
+		return count($this->getHistory((int)$this->id_lang, false, false, OrderState::FLAG_PAID));
 	}
 
 	public function hasBeenShipped()
 	{
-		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_SHIPPED));
+		return count($this->getHistory((int)$this->id_lang, false, false, OrderState::FLAG_SHIPPED));
 	}
 
 	public function isInPreparation()
 	{
-		return count($this->getHistory((int)($this->id_lang), Configuration::get('PS_OS_PREPARATION')));
+		return count($this->getHistory((int)$this->id_lang, Configuration::get('PS_OS_PREPARATION')));
 	}
 
 	/**
@@ -837,11 +860,11 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get customer orders
 	 *
-	 * @param integer $id_customer Customer id
-	 * @param boolean $showHiddenStatus Display or not hidden order statuses
+	 * @param int $id_customer Customer id
+	 * @param bool $show_hidden_status Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
-	public static function getCustomerOrders($id_customer, $showHiddenStatus = false, Context $context = null)
+	public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -862,7 +885,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 				INNER JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$context->language->id.')
-			WHERE oh.`id_order` = '.(int)($val['id_order']).(!$showHiddenStatus ? ' AND os.`hidden` != 1' : '').'
+			WHERE oh.`id_order` = '.(int)$val['id_order'].(!$show_hidden_status ? ' AND os.`hidden` != 1' : '').'
 				ORDER BY oh.`date_add` DESC, oh.`id_order_history` DESC
 			LIMIT 1');
 
@@ -885,7 +908,7 @@ class OrderCore extends ObjectModel
 
 		$orders = array();
 		foreach ($result as $order)
-			$orders[] = (int)($order['id_order']);
+			$orders[] = (int)$order['id_order'];
 		return $orders;
 	}
 
@@ -913,7 +936,6 @@ class OrderCore extends ObjectModel
 	/**
 	 * @deprecated since 1.5.0.2
 	 *
-	 * @static
 	 * @param $date_from
 	 * @param $date_to
 	 * @param $id_customer
@@ -929,7 +951,7 @@ class OrderCore extends ObjectModel
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
 					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
-					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
+					.($id_customer ? ' AND id_customer = '.(int)$id_customer : '').
 				' ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -942,7 +964,6 @@ class OrderCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.3
 	 *
-	 * @static
 	 * @param $id_order_state
 	 * @return array
 	 */
@@ -958,7 +979,7 @@ class OrderCore extends ObjectModel
 
 		$orders = array();
 		foreach ($result as $order)
-			$orders[] = (int)($order['id_order']);
+			$orders[] = (int)$order['id_order'];
 		return $orders;
 	}
 
@@ -1019,7 +1040,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get customer orders number
 	 *
-	 * @param integer $id_customer Customer id
+	 * @param int $id_customer Customer id
 	 * @return array Customer orders number
 	 */
 	public static function getCustomerNbOrders($id_customer)
@@ -1036,14 +1057,14 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get an order by its cart id
 	 *
-	 * @param integer $id_cart Cart id
+	 * @param int $id_cart Cart id
 	 * @return array Order details
 	 */
 	public static function getOrderByCartId($id_cart)
 	{
 		$sql = 'SELECT `id_order`
 				FROM `'._DB_PREFIX_.'orders`
-				WHERE `id_cart` = '.(int)($id_cart)
+				WHERE `id_cart` = '.(int)$id_cart
 					.Shop::addSqlRestriction();
 		$result = Db::getInstance()->getRow($sql);
 
@@ -1092,13 +1113,13 @@ class OrderCore extends ObjectModel
 
 	public function getNumberOfDays()
 	{
-		$nbReturnDays = (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS', null, null, $this->id_shop));
-		if (!$nbReturnDays)
+		$nb_return_days = (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS', null, null, $this->id_shop);
+		if (!$nb_return_days)
 			return true;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT TO_DAYS(NOW()) - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
-		WHERE `id_order` = '.(int)($this->id));
-		if ($result['days'] <= $nbReturnDays)
+		SELECT TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
+		WHERE `id_order` = '.(int)$this->id);
+		if ($result['days'] <= $nb_return_days)
 			return true;
 		return false;
 	}
@@ -1142,7 +1163,7 @@ class OrderCore extends ObjectModel
 			$sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
 			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
 
-		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+		$sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
 
 		return Db::getInstance()->execute($sql);
 	}
@@ -1175,7 +1196,7 @@ class OrderCore extends ObjectModel
 				$order_invoice->number = 0;
 			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($address);
+			$tax_calculator = $carrier->getTaxCalculator($address, $this->id, Configuration::get('PS_ATCP_SHIPWRAP'));
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1194,7 +1215,32 @@ class OrderCore extends ObjectModel
 			if (Configuration::get('PS_INVOICE'))
 				$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
-			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				$wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+			}
+			else
+			{
+				$wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+				$wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+			}
+
+			$order_invoice->saveCarrierTaxCalculator(
+				$tax_calculator->getTaxesAmount(
+					$order_invoice->total_shipping_tax_excl,
+					$order_invoice->total_shipping_tax_incl,
+					_PS_PRICE_COMPUTE_PRECISION_,
+					$this->round_mode
+				)
+			);
+			$order_invoice->saveWrappingTaxCalculator(
+				$wrapping_tax_calculator->getTaxesAmount(
+					$order_invoice->total_wrapping_tax_excl,
+					$order_invoice->total_wrapping_tax_incl,
+					_PS_PRICE_COMPUTE_PRECISION_,
+					$this->round_mode
+				)
+			);
 
 			// Update order_carrier
 			$id_order_carrier = Db::getInstance()->getValue('
@@ -1248,8 +1294,22 @@ class OrderCore extends ObjectModel
 
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
+
 			if (Configuration::get('PS_INVOICE'))
+			{
 				$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+				$invoice_number = Hook::exec('actionSetInvoice', array(
+					get_class($this) => $this,
+					get_class($order_invoice) => $order_invoice,
+					'use_existing_payment' => (bool)$use_existing_payment
+				));
+
+				if (is_numeric($invoice_number))
+					$this->invoice_number = (int)$invoice_number;
+				else
+					$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+			}
+
 			$this->update();
 		}
 	}
@@ -1291,7 +1351,7 @@ class OrderCore extends ObjectModel
 			$sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
 			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
 
-		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+		$sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
 
 		return Db::getInstance()->execute($sql);
 	}
@@ -1314,6 +1374,7 @@ class OrderCore extends ObjectModel
 		$order_invoice_collection = $this->getInvoicesCollection();
 		foreach ($order_invoice_collection as $order_invoice)
 		{
+			/** @var OrderInvoice $order_invoice */
 			if ($order_invoice->delivery_number)
 				continue;
 
@@ -1337,10 +1398,10 @@ class OrderCore extends ObjectModel
 	{
 		$sql = 'SELECT id_order
 				FROM `'._DB_PREFIX_.'orders`
-				WHERE `delivery_number` = '.(int)($id_delivery).'
+				WHERE `delivery_number` = '.(int)$id_delivery.'
 				'.Shop::addSqlRestriction();
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-		return new Order((int)($res['id_order']));
+		return new Order((int)$res['id_order']);
 	}
 
 	/**
@@ -1363,8 +1424,8 @@ class OrderCore extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT SUM(product_weight * product_quantity)
 		FROM '._DB_PREFIX_.'order_detail
-		WHERE id_order = '.(int)($this->id));
-		return (float)($result);
+		WHERE id_order = '.(int)$this->id);
+		return (float)$result;
 	}
 
 	/**
@@ -1378,7 +1439,7 @@ class OrderCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `invoice_number`, `id_order`
 		FROM `'._DB_PREFIX_.'orders`
-		WHERE invoice_number = '.(int)($id_invoice));
+		WHERE invoice_number = '.(int)$id_invoice);
 	}
 
 	public function isAssociatedAtGuest($email)
@@ -1456,12 +1517,13 @@ class OrderCore extends ObjectModel
 		$history->addWithemail();
 	}
 
-	public function addWs($autodate = true, $nullValues = false)
+	public function addWs($autodate = true, $null_values = false)
 	{
-		$paymentModule = Module::getInstanceByName($this->module);
+		/** @var PaymentModule $payment_module */
+		$payment_module = Module::getInstanceByName($this->module);
 		$customer = new Customer($this->id_customer);
-		$paymentModule->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, array(), null, false, $customer->secure_key);
-		$this->id = $paymentModule->currentOrder;
+		$payment_module->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, array(), null, false, $customer->secure_key);
+		$this->id = $payment_module->currentOrder;
 		return true;
 	}
 
@@ -1469,7 +1531,7 @@ class OrderCore extends ObjectModel
 	{
 		return (Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'order_detail`
-				WHERE `id_order` = '.(int)($this->id)) !== false);
+				WHERE `id_order` = '.(int)$this->id) !== false);
 	}
 
 	/**
@@ -1535,7 +1597,7 @@ class OrderCore extends ObjectModel
 	 * One After Another tax computation method.
 	 *
 	 * @since 1.5.0.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
 	{
@@ -1587,7 +1649,7 @@ class OrderCore extends ObjectModel
 		$order_payment->date_add = ($date ? $date : null);
 
 		// Add time to the date if needed
-		if ($order_payment->date_add != null && preg_match("/^[0-9]+-[0-9]+-[0-9]+$/", $order_payment->date_add))
+		if ($order_payment->date_add != null && preg_match('/^[0-9]+-[0-9]+-[0-9]+$/', $order_payment->date_add))
 			$order_payment->date_add .= ' '.date('H:i:s');
 
 		// Update total_paid_real value for backward compatibility reasons
@@ -1626,7 +1688,7 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
-		foreach($invoices as $key => $invoice)
+		foreach ($invoices as $key => $invoice)
 		if (!$invoice->number)
 			unset($invoices[$key]);
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
@@ -1722,8 +1784,12 @@ class OrderCore extends ObjectModel
 	{
 		$invoices = $this->getInvoicesCollection();
 		foreach ($invoices as $key => $invoice)
+		{
+			/** @var OrderInvoice $invoice */
 			if ($invoice->isPaid())
 				unset($invoices[$key]);
+		}
+
 		return $invoices;
 	}
 
@@ -1744,6 +1810,7 @@ class OrderCore extends ObjectModel
 		$payments = $this->getOrderPaymentCollection();
 		foreach ($payments as $payment)
 		{
+			/** @var OrderPayment $payment */
 			if ($payment->id_currency == $currency->id)
 				$total += $payment->amount;
 			else
@@ -1821,7 +1888,7 @@ class OrderCore extends ObjectModel
 
 			// format response
 			$tmp_tax_infos = array();
-			foreach ($taxes_infos as $tax_infos)
+			foreach ($taxes_by_tax as $tax_infos)
 			{
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] = $tax_infos['tax_amount'];
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
@@ -1907,35 +1974,33 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 *
 	 * Has invoice return true if this order has already an invoice
+	 *
 	 * @return bool
 	 */
 	public function hasInvoice()
 	{
-		if ($res = (int)Db::getInstance()->getvalue('
-				SELECT `id_order_invoice`
-				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.
-				(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')))
-			return $res;
-		return false;
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_order_invoice`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id.
+			(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')
+		);
 	}
 
 	/**
-	 *
 	 * Has Delivery return true if this order has already a delivery slip
+	 *
 	 * @return bool
 	 */
 	public function hasDelivery()
 	{
-		if ($res = (int)Db::getInstance()->getValue('
-				SELECT `id_order_invoice`
-				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.'
-				AND `delivery_number` > 0'));
-			return $res;
-		return false;
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_order_invoice`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id.'
+			AND `delivery_number` > 0'
+		);
 	}
 
 	/**
@@ -2093,7 +2158,7 @@ class OrderCore extends ObjectModel
 		return true;
 	}
 
-	public function getWsCurrentState($state)
+	public function getWsCurrentState()
 	{
 		return $this->getCurrentState();
 	}
@@ -2103,5 +2168,194 @@ class OrderCore extends ObjectModel
 		if ($this->id)
 			$this->setCurrentState($state);
 		return true;
+	}
+
+	public function getProductTaxesDetails()
+	{
+		$round_type = $this->round_type;
+		if ($round_type == 0)
+		{
+			// if this is 0, it means the field did not exist
+			// at the time the order was made.
+			// Set it to old type, which was closest to line.
+			$round_type = Order::ROUND_LINE;
+		}
+
+		// compute products discount
+		$order_discount_tax_excl = $this->total_discounts_tax_excl;
+
+		$free_shipping_tax = 0;
+		$product_specific_discounts = array();
+
+		$expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
+
+		foreach ($this->getCartRules() as $order_cart_rule)
+		{
+			if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0)
+			{
+				$free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
+				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
+				$expected_total_base += $this->total_shipping_tax_excl;
+			}
+
+			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
+			if ($cart_rule->reduction_product > 0)
+			{
+				if (empty($product_specific_discounts[$cart_rule->reduction_product]))
+					$product_specific_discounts[$cart_rule->reduction_product] = 0;
+
+				$product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
+				$order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+			}
+		}
+
+		$products_tax 	= $this->total_products_wt - $this->total_products;
+		$discounts_tax 	= $this->total_discounts_tax_incl - $this->total_discounts_tax_excl;
+
+		// We add $free_shipping_tax because when there is free shipping, the tax that would
+		// be paid if there wasn't is included in $discounts_tax.
+		$expected_total_tax = $products_tax - $discounts_tax + $free_shipping_tax;
+		$actual_total_tax = 0;
+		$actual_total_base = 0;
+
+		$order_detail_tax_rows = array();
+
+		$breakdown = array();
+
+		// Get order_details
+		$order_details = $this->getOrderDetailList();
+
+		$order_ecotax_tax = 0;
+
+		$tax_rates = array();
+
+		foreach ($order_details as $order_detail)
+		{
+			$id_order_detail = $order_detail['id_order_detail'];
+			$tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
+
+			// TODO: probably need to make an ecotax tax breakdown here instead,
+			// but it seems unlikely there will be different tax rates applied to the
+			// ecotax in the same order in the real world
+			$unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
+			$order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
+
+			$discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+
+			// share of global discount
+			$discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+			// specific discount
+			if (!empty($product_specific_discounts[$order_detail['product_id']]))
+				$discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
+
+			$quantity = $order_detail['product_quantity'];
+
+			foreach ($tax_calculator->taxes as $tax)
+				$tax_rates[$tax->id] = $tax->rate;
+
+			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
+			{
+				$total_tax_base = 0;
+				switch ($round_type)
+				{
+					case Order::ROUND_ITEM:
+						$total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						break;
+					case Order::ROUND_LINE:
+						$total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						break;
+					case Order::ROUND_TOTAL:
+						$total_tax_base = $quantity * $discounted_price_tax_excl;
+						$total_amount = $quantity * $unit_amount;
+						break;
+				}
+
+				if (!isset($breakdown[$id_tax]))
+					$breakdown[$id_tax] = array('tax_base' => 0, 'tax_amount' => 0);
+
+				$breakdown[$id_tax]['tax_base'] += $total_tax_base;
+				$breakdown[$id_tax]['tax_amount'] += $total_amount;
+
+				$order_detail_tax_rows[] = array(
+					'id_order_detail' => $id_order_detail,
+					'id_tax' => $id_tax,
+					'tax_rate' => $tax_rates[$id_tax],
+					'unit_tax_base' => $discounted_price_tax_excl,
+					'total_tax_base' => $total_tax_base,
+					'unit_amount' => $unit_amount,
+					'total_amount' => $total_amount
+				);
+			}
+		}
+
+		if (!empty($order_detail_tax_rows))
+		{
+			foreach ($breakdown as $data)
+			{
+				$actual_total_tax += Tools::ps_round($data['tax_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+				$actual_total_base += Tools::ps_round($data['tax_base'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+			}
+
+			$order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
+			$tax_rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
+			if ($tax_rounding_error !== 0)
+				Tools::spreadAmount($tax_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_amount');
+
+			$base_rounding_error = $expected_total_base - $actual_total_base;
+			if ($base_rounding_error !== 0)
+				Tools::spreadAmount($base_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_tax_base');
+		}
+
+		return $order_detail_tax_rows;
+	}
+
+	/**
+	 * The primary purpose of this method is to be
+	 * called at the end of the generation of each order
+	 * in PaymentModule::validateOrder, to fill in
+	 * the order_detail_tax table with taxes
+	 * that will add up in such a way that
+	 * the sum of the tax amounts in the product tax breakdown
+	 * is equal to the difference between products with tax and
+	 * products without tax.
+	 */
+	public function updateOrderDetailTax()
+	{
+		$order_detail_tax_rows_to_insert = $this->getProductTaxesDetails();
+
+		if (empty($order_detail_tax_rows_to_insert))
+			return;
+
+		$old_id_order_details = array();
+		$values = array();
+		foreach ($order_detail_tax_rows_to_insert as $row)
+		{
+			$old_id_order_details[] = (int)$row['id_order_detail'];
+			$values[] = '('.(int)$row['id_order_detail'].', '.(int)$row['id_tax'].', '.(float)$row['unit_amount'].', '.(float)$row['total_amount'].')';
+		}
+
+		// Remove current order_detail_tax'es
+		Db::getInstance()->execute(
+			'DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail IN ('.implode(', ', $old_id_order_details).')'
+		);
+
+		// Insert the adjusted ones instead
+		Db::getInstance()->execute(
+			'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount) VALUES '.implode(', ', $values)
+		);
+	}
+
+	public function getOrderDetailTaxes()
+	{
+		return Db::getInstance()->executeS(
+			'SELECT od.id_tax_rules_group, od.product_quantity, odt.*, t.* FROM '._DB_PREFIX_.'orders o '.
+			'INNER JOIN '._DB_PREFIX_.'order_detail od ON od.id_order = o.id_order '.
+			'INNER JOIN '._DB_PREFIX_.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail '.
+			'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
+			'WHERE o.id_order = '.(int)$this->id
+		);
 	}
 }

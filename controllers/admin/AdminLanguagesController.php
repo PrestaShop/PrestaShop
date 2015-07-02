@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Language $object
+ */
 class AdminLanguagesControllerCore extends AdminController
 {
 	public function __construct()
@@ -258,6 +261,7 @@ class AdminLanguagesControllerCore extends AdminController
 			'title' => $this->l('Save'),
 		);
 
+		/** @var Language $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -427,6 +431,8 @@ class AdminLanguagesControllerCore extends AdminController
 						// class AdminTab deal with every $_FILES content, don't do that for no_picture
 					unset($_FILES['no_picture']);
 			}
+
+			/** @var Language $object */
 			$object = $this->loadObject();
 			if (Tools::getValue('active') != (int)$object->active)
 				if (!$this->checkDisableStatus($object))
@@ -440,6 +446,8 @@ class AdminLanguagesControllerCore extends AdminController
 	 * Copy a no-product image
 	 *
 	 * @param string $language Language iso_code for no_picture image filename
+	 *
+	 * @return void|false
 	 */
 	public function copyNoPictureImage($language)
 	{
@@ -477,7 +485,7 @@ class AdminLanguagesControllerCore extends AdminController
 	 * deleteNoPictureImages will delete all default image created for the language id_language
 	 *
 	 * @param string $id_language
-	 * @return boolean true if no error
+	 * @return bool true if no error
 	 */
 	protected function deleteNoPictureImages($id_language)
 	{
@@ -499,6 +507,10 @@ class AdminLanguagesControllerCore extends AdminController
 		return !count($this->errors) ? true : false;
 	}
 
+	/**
+	 * @param Language $object
+	 * @param string   $table
+	 */
 	protected function copyFromPost(&$object, $table)
 	{
 		if ($object->id && ($object->iso_code != $_POST['iso_code']))

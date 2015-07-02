@@ -31,6 +31,9 @@ class IdentityControllerCore extends FrontController
 	public $authRedirection = 'identity';
 	public $ssl = true;
 
+	/** @var Customer */
+	protected $customer;
+
 	public function init()
 	{
 		parent::init();
@@ -90,8 +93,11 @@ class IdentityControllerCore extends FrontController
 					$this->customer->newsletter = 0;
 				elseif (!$origin_newsletter && Tools::getIsset('newsletter'))
 					if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
+					{
+						/** @var Blocknewsletter $module_newsletter */
 						if ($module_newsletter->active)
 							$module_newsletter->confirmSubscription($this->customer->email);
+					}
 
 				if (!Tools::getIsset('optin'))
 					$this->customer->optin = 0;

@@ -41,6 +41,9 @@ function refreshDashboard(module_name, use_push, extra) {
 				dashboard_use_push: Number(use_push),
 				extra: extra
 			},
+			// Ensure to get fresh data
+			headers: { "cache-control": "no-cache" },
+			cache: false,
 			global: false,
 			dataType: 'json',
 			success : function(widgets){
@@ -300,15 +303,20 @@ $(document).ready( function () {
 	bindSubmitDashConfig();
 	bindCancelDashConfig();
 
-	$('.ps_dashboard_simulation').change(function(e) {
+	$('#page-header-desc-configuration-switch_demo').tooltip().click(function(e) {
 		$.ajax({
 			url : dashboard_ajax_url,
 			data : {
 				ajax:true,
 				action:'setSimulationMode',
-				PS_DASHBOARD_SIMULATION: $(this).val()
+				PS_DASHBOARD_SIMULATION: $(this).find('i').hasClass('process-icon-toggle-on') ? 0 : 1
 			},
 			success : function(result) {
+				if ($('#page-header-desc-configuration-switch_demo i').hasClass('process-icon-toggle-on')) {
+					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-on').addClass('process-icon-toggle-off');
+				} else {
+					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-off').addClass('process-icon-toggle-on');
+				}
 				refreshDashboard(false, false);
 			}
 		});

@@ -1,38 +1,38 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AddressCore extends ObjectModel
 {
-	/** @var integer Customer id which address belongs to */
+	/** @var int Customer id which address belongs to */
 	public $id_customer = null;
 
-	/** @var integer Manufacturer id which address belongs to */
+	/** @var int Manufacturer id which address belongs to */
 	public $id_manufacturer = null;
 
-	/** @var integer Supplier id which address belongs to */
+	/** @var int Supplier id which address belongs to */
 	public $id_supplier = null;
 
 	/**
@@ -41,10 +41,10 @@ class AddressCore extends ObjectModel
 	 */
 	public $id_warehouse = null;
 
-	/** @var integer Country id */
+	/** @var int Country id */
 	public $id_country;
 
-	/** @var integer State id */
+	/** @var int State id */
 	public $id_state;
 
 	/** @var string Country name */
@@ -95,7 +95,7 @@ class AddressCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean True if address has been deleted (staying in database as deleted) */
+	/** @var bool True if address has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	protected static $_idZones = array();
@@ -128,8 +128,8 @@ class AddressCore extends ObjectModel
 			'phone_mobile' => 		array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 32),
 			'dni' => 				array('type' => self::TYPE_STRING, 'validate' => 'isDniLite', 'size' => 16),
 			'deleted' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
-			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'copy_post' => false),
-			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'copy_post' => false),
+			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
 		),
 	);
 
@@ -151,7 +151,7 @@ class AddressCore extends ObjectModel
 	/**
 	 * Build an address
 	 *
-	 * @param integer $id_address Existing address id in order to load object (optional)
+	 * @param int $id_address Existing address id in order to load object (optional)
 	 */
 	public	function __construct($id_address = null, $id_lang = null)
 	{
@@ -235,22 +235,31 @@ class AddressCore extends ObjectModel
 	/**
 	 * Get zone id for a given address
 	 *
-	 * @param integer $id_address Address id for which we want to get zone id
-	 * @return integer Zone id
+	 * @param int $id_address Address id for which we want to get zone id
+	 * @return int Zone id
 	 */
 	public static function getZoneById($id_address)
 	{
-		if(!isset($id_address) || empty($id_address))
+		if (!isset($id_address) || empty($id_address))
 			return false;
+
 		if (isset(self::$_idZones[$id_address]))
 			return self::$_idZones[$id_address];
 
+		$id_zone = Hook::exec('actionGetIDZoneByAddressID', array('id_address' => $id_address));
+
+		if (is_numeric($id_zone))
+		{
+			self::$_idZones[$id_address] = (int)$id_zone;
+			return self::$_idZones[$id_address];
+		}
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
-		FROM `'._DB_PREFIX_.'address` a
-		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
-		LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
-		WHERE a.`id_address` = '.(int)$id_address);
+			SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
+			FROM `'._DB_PREFIX_.'address` a
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
+			WHERE a.`id_address` = '.(int)$id_address);
 
 		self::$_idZones[$id_address] = (int)((int)$result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
 		return self::$_idZones[$id_address];
@@ -259,12 +268,12 @@ class AddressCore extends ObjectModel
 	/**
 	 * Check if country is active for a given address
 	 *
-	 * @param integer $id_address Address id for which we want to get country status
-	 * @return integer Country status
+	 * @param int $id_address Address id for which we want to get country status
+	 * @return int Country status
 	 */
 	public static function isCountryActiveById($id_address)
 	{
-		if(!isset($id_address) || empty($id_address))
+		if (!isset($id_address) || empty($id_address))
 			return false;
 
 		$cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
@@ -276,6 +285,7 @@ class AddressCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
 			WHERE a.`id_address` = '.(int)$id_address);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -283,7 +293,7 @@ class AddressCore extends ObjectModel
 	/**
 	 * Check if address is used (at least one order placed)
 	 *
-	 * @return integer Order count for this address
+	 * @return int Order count for this address
 	 */
 	public function isUsed()
 	{
@@ -314,7 +324,7 @@ class AddressCore extends ObjectModel
 	* Specify if an address is already in base
 	*
 	* @param int $id_address Address id
-	* @return boolean
+	* @return bool
 	*/
 	public static function addressExists($id_address)
 	{
@@ -323,6 +333,7 @@ class AddressCore extends ObjectModel
 		{
 			$id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address a WHERE a.`id_address` = '.(int)$id_address);
 			Cache::store($key, (bool)$id_address);
+			return (bool)$id_address;
 		}
 		return Cache::retrieve($key);
 	}
@@ -340,44 +351,68 @@ class AddressCore extends ObjectModel
 				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
 			);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
 
 	/**
-	* Initiliaze an address corresponding to the specified id address or if empty to the
-	* default shop configuration
-	*
-	* @param int $id_address
-	* @return Address address
-	*/
+	 * Initiliaze an address corresponding to the specified id address or if empty to the
+	 * default shop configuration
+	 *
+	 * @param int $id_address
+	 * @param bool $with_geoloc
+	 * @return Address address
+	 *
+	 * @throws PrestaShopException
+	 */
 	public static function initialize($id_address = null, $with_geoloc = false)
 	{
-		// if an id_address has been specified retrieve the address
+		$context = Context::getContext();
+
 		if ($id_address)
-		{
-			$address = new Address((int)$id_address);
-
-			if (!Validate::isLoadedObject($address))
-				throw new PrestaShopException('Invalid address #'.(int)$id_address);
-		}
-		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
-		{
-			$address = new Address();
-			$address->id_country = (int)$context->customer->geoloc_id_country;
-			$address->id_state = (int)$context->customer->id_state;
-			$address->postcode = $context->customer->postcode;
-		}
+			$context_hash = (int)$id_address;
 		else
+			if ($with_geoloc && isset($context->customer->geoloc_id_country))
+				$context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
+								$context->customer->postcode);
+			else
+				$context_hash = md5((int)$context->country->id);
+
+
+		$cache_id = 'Address::initialize_'.$context_hash;
+
+		if (!Cache::isStored($cache_id))
 		{
-			// set the default address
-			$address = new Address();
-			$address->id_country = (int)Context::getContext()->country->id;
-			$address->id_state = 0;
-			$address->postcode = 0;
+			// if an id_address has been specified retrieve the address
+			if ($id_address)
+			{
+				$address = new Address((int)$id_address);
+
+				if (!Validate::isLoadedObject($address))
+					throw new PrestaShopException('Invalid address #'.(int)$id_address);
+
+			}
+			elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
+			{
+				$address             = new Address();
+				$address->id_country = (int)$context->customer->geoloc_id_country;
+				$address->id_state   = (int)$context->customer->id_state;
+				$address->postcode   = $context->customer->postcode;
+			}
+			else
+			{
+				// set the default address
+				$address             = new Address();
+				$address->id_country = (int)$context->country->id;
+				$address->id_state   = 0;
+				$address->postcode   = 0;
+			}
+			Cache::store($cache_id, $address);
+			return $address;
 		}
 
-		return $address;
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

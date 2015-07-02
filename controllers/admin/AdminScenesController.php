@@ -24,17 +24,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Scene $object
+ */
 class AdminScenesControllerCore extends AdminController
 {
-	public $bootstrap = true ;
+	public $bootstrap = true;
 
 	public function __construct()
 	{
-	 	$this->table = 'scene';
+		$this->table = 'scene';
 		$this->className = 'Scene';
-	 	$this->lang = true;
-	 	$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
+		$this->lang = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->identifier = 'id_scene';
 		$this->fieldImageSettings = array(
@@ -90,7 +93,7 @@ class AdminScenesControllerCore extends AdminController
 						(int)$image_type['width'],
 						(int)$image_type['height']);
 				}
-				elseif (isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])
+				elseif (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !$_FILES['image']['error'])
 					ImageManager::resize(
 						$base_img_path,
 						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
@@ -106,6 +109,7 @@ class AdminScenesControllerCore extends AdminController
 	{
 		$this->initFieldsForm();
 
+		/** @var Scene $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -321,5 +325,3 @@ class AdminScenesControllerCore extends AdminController
 		parent::postProcess();
 	}
 }
-
-

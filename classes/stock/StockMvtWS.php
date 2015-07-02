@@ -147,7 +147,7 @@ class StockMvtWSCore extends ObjectModelCore
 	 */
 	public $reference;
 
- 	/**
+	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -171,71 +171,71 @@ class StockMvtWSCore extends ObjectModelCore
 		),
 	);
 
-    /**
+	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 			'management_type' => array(),
- 			'id_employee' => array('xlink_resource' => 'employees'),
- 			'id_stock' => array('xlink_resource' => 'stocks'),
- 			'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
- 			'id_order' => array('xlink_resource' => 'orders'),
- 			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
- 			'product_name' => array('getter' => 'getWSProductName', 'i18n' => true),
- 			'ean13' => array(),
- 			'upc' => array(),
- 			'reference' => array(),
- 		),
- 		'hidden_fields' => array(
- 			'referer',
- 			'employee_firstname',
- 			'employee_lastname',
- 		),
- 	);
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'management_type' => array(),
+			'id_employee' => array('xlink_resource' => 'employees'),
+			'id_stock' => array('xlink_resource' => 'stocks'),
+			'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
+			'id_order' => array('xlink_resource' => 'orders'),
+			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
+			'product_name' => array('getter' => 'getWSProductName', 'i18n' => true),
+			'ean13' => array(),
+			'upc' => array(),
+			'reference' => array(),
+		),
+		'hidden_fields' => array(
+			'referer',
+			'employee_firstname',
+			'employee_lastname',
+		),
+	);
 
- 	/**
- 	 * Associations tables for attributes that require different tables than stated in ObjectModel::definition
- 	 * @var Array
- 	 */
- 	protected $tables_assoc = array(
- 		'id_product' => array('table' => 's'),
- 		'id_product_attribute' => array('table' => 's'),
- 		'id_warehouse' => array('table' => 's'),
- 		'id_currency' => array('table' => 's'),
- 		'management_type' => array('table' => 'w'),
- 		'ean13' => array('table' => 's'),
- 		'upc' => array('table' => 's'),
+	/**
+	 * Associations tables for attributes that require different tables than stated in ObjectModel::definition
+	 * @var Array
+	 */
+	protected $tables_assoc = array(
+		'id_product' => array('table' => 's'),
+		'id_product_attribute' => array('table' => 's'),
+		'id_warehouse' => array('table' => 's'),
+		'id_currency' => array('table' => 's'),
+		'management_type' => array('table' => 'w'),
+		'ean13' => array('table' => 's'),
+		'upc' => array('table' => 's'),
 		'reference' => array('table' => 's'),
- 	);
+	);
 
 	/**
 	 * @see ObjectModel
 	 */
- 	public function __construct($id = null, $id_lang = null, $id_shop = null)
- 	{
- 		// calls parent
- 		parent::__construct($id, $id_lang, $id_shop);
+	public function __construct($id = null, $id_lang = null, $id_shop = null)
+	{
+		// calls parent
+		parent::__construct($id, $id_lang, $id_shop);
 
- 		if ((int)$this->id != 0)
- 		{
- 			$res = $this->getWebserviceObjectList(null, (' AND '.$this->def['primary'].' = '.(int)$this->id), null, null, true);
- 			if (isset($res[0]))
- 			{
- 				foreach ($this->tables_assoc as $key => $param)
- 					$this->{$key} = $res[0][$key];
- 			}
- 		}
- 	}
+		if ((int)$this->id != 0)
+		{
+			$res = $this->getWebserviceObjectList(null, (' AND '.$this->def['primary'].' = '.(int)$this->id), null, null, true);
+			if (isset($res[0]))
+			{
+				foreach ($this->tables_assoc as $key => $param)
+					$this->{$key} = $res[0][$key];
+			}
+		}
+	}
 
- 	/**
- 	 * @see ObjectModel::getWebserviceObjectList()
- 	 * Added $full for this specific object
- 	 */
+	/**
+	 * @see ObjectModel::getWebserviceObjectList()
+	 * Added $full for this specific object
+	 */
 	public function getWebserviceObjectList($join, $filter, $sort, $limit, $full = false)
 	{
 		$query = 'SELECT DISTINCT main.'.$this->def['primary'].' ';
@@ -280,10 +280,9 @@ class StockMvtWSCore extends ObjectModelCore
 	 */
 	public function getWSProductName()
 	{
-		$languages = Language::getLanguages(true);
 		$res = array();
-		foreach ($languages as $language)
-			$res[$language['id_lang']] = Product::getProductName($this->id_product, $this->id_product_attribute, $language['id_lang']);
+		foreach (Language::getIDs(true) as $id_lang)
+			$res[$id_lang] = Product::getProductName($this->id_product, $this->id_product_attribute, $id_lang);
 
 		return $res;
 	}

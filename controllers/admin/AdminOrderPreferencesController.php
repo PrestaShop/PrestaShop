@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminOrderPreferencesControllerCore extends AdminController
 {
 	public function __construct()
@@ -126,27 +129,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
-			'pdf' => array(
-				'title' => $this->l('PDF Settings'),
-				'icon' => 'icon-file-text',
-				'fields' => array(
-					'PS_PDF_IMG_INVOICE' => array(
-						'title' => $this->l('Enable product image on Invoice'),
-						'hint' => $this->l('Adds an image before product name on Invoice'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_PDF_IMG_DELIVERY' => array(
-						'title' => $this->l('Enable product image on Delivery-slip'),
-						'hint' => $this->l('Adds an image before product name on Delivery-slip'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
 				'icon' =>	'icon-gift',
@@ -188,6 +170,9 @@ class AdminOrderPreferencesControllerCore extends AdminController
 
 		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
 			unset($this->fields_options['general']['fields']['PS_ALLOW_MULTISHIPPING']);
+
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			unset($this->fields_options['gift']['fields']['PS_GIFT_WRAPPING_TAX_RULES_GROUP']);
 	}
 
 	/**

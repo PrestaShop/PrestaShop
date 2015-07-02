@@ -281,8 +281,10 @@ class GetFileControllerCore extends FrontController
 		//prevents max execution timeout, when reading large files
 		@set_time_limit(0);
 		$fp = fopen($file, 'rb');
-		while (!feof($fp))
-			echo fgets($fp, 16384);
+
+		if ($fp && is_resource($fp))
+			while (!feof($fp))
+				echo fgets($fp, 16384);
 
 		exit;
 	}
@@ -290,6 +292,8 @@ class GetFileControllerCore extends FrontController
 	/**
 	 * Display an error message with js
 	 * and redirect using js function
+	 *
+	 * @param string $msg
 	 */
 	protected function displayCustomError($msg)
 	{

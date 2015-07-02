@@ -62,12 +62,12 @@ class AliasCore extends ObjectModel
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
 				FROM `'._DB_PREFIX_.'alias` a
-				WHERE `alias` LIKE \''.pSQL($alias).'\' AND `active` = 1');
+				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
 				if ($row)
 				{
-				 	$this->id = (int)($row['id_alias']);
-				 	$this->search = $search ? trim($search) : $row['search'];
+					$this->id = (int)$row['id_alias'];
+					$this->search = $search ? trim($search) : $row['search'];
 					$this->alias = $row['alias'];
 				}
 				else
@@ -145,4 +145,3 @@ class AliasCore extends ObjectModel
 		return isset($row['id_alias']);
 	}
 }
-

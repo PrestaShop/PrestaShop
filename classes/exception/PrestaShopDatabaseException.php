@@ -34,4 +34,3 @@ class PrestaShopDatabaseExceptionCore extends PrestaShopException
 		return $this->message;
 	}
 }
-

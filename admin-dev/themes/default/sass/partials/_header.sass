@@ -7,21 +7,24 @@
 	height: 36px !important
 	.navbar-header
 		width: 100%
-#header_shopname
+
+#header_shopversion
 	@extend .navbar-brand
 	font-size: 1.3em !important
 	position: relative
 	height: 36px
-	padding-left: 45px !important
+	background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat top left
+	background-size: auto 36px
+	padding-left: 140px !important
 	@include margin(0, 5px, 0, 0)
+	#shop_version
+		font-size: 10px
 	@media (max-width: $screen-xs)
 		display: none
-	img
-		position: absolute
-		top: 0
-		width: 35px
-		height: 35px
-		@include left(0)
+#header_shopname
+	@extend .navbar-brand
+	text-decoration: none
+
 #header_notifs_icon_wrapper
 	@extend .nav
 	@extend .navbar-nav
@@ -30,11 +33,11 @@
 	> li > a
 		height: 36px
 		display: block
+		color: white
 		&:hover i
 			color: white
 	> li > a > i
 		font-size: $icon-size-base
-		color: darken(white,30%)
 		vertical-align: middle
 	.notifs
 		width: 40px
@@ -93,27 +96,40 @@
 			display: inline-block
 			@include float(left)
 	span.string-long
-		@media (max-width: $screen-md)
+		@media (max-width: $screen-lg)
 			display: none
 	span.string-short
 		display: none
-		@media (max-width: $screen-md)
+		@media (max-width: $screen-lg)
 			display: inline-block
 	a img
 		@include margin-right(5px)
-	#header_foaccess i
-		font-size: 1.2em
+	#header_foaccess
+		display: inline-block
+		i
+			font-size: 1.2em
+	.maintenance-mode
+		color: $contrasted-light-default
+		cursor: default
+		display: inline-block
+		margin-left: -13px
+		.label-tooltip
+			padding: 9px 0
+			color: $brand-warning
 #employee_infos
 	.employee_name
 		position: relative
 		@include ltr
-			padding-left: 34px !important
+			padding-right: 40px !important
 		@include rtl
-			padding-right: 34px !important
+			padding-left: 40px !important
 	.employee_avatar_small
+		.img-thumbnail
+			@include border-radius(0)
+		@include avatar(36px, 0px)
 		position: absolute
-		top: 2px
-		@include left(0)
+		top: 0px
+		@include right(0)
 	img
 		border: none
 		padding: 0
@@ -137,16 +153,32 @@
 			i
 				font-size: 1.3em
 				color: $brand-primary
+	.version
+		color: darken(white,40%)
+		text-align: center
+		font-size: 0.9em
+		padding: 0 0 3px 0
+		sup
+			font-size: 0.7em
 
 #header_quick
 	@extend .nav
 	@extend .navbar-nav
-	@extend .hidden-xs
 	@include ltr
 		@extend .navbar-left
 	@include rtl
 		@extend .navbar-right
-	
+	@extend .hidden-xs
+	@extend .hidden-sm
+
+#header_shop
+	@extend .nav
+	@extend .navbar-nav
+	@include ltr
+		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
+
 #ajax_running
 	position: absolute
 	height: 35px

@@ -67,27 +67,27 @@ $plugins = array(
 					array('new_file' => 'admin/themes.js', 'name' => 'themes'),
 				'admin-dashboard.js' =>
 					array('new_file' => 'admin/dashboard.js', 'name' => 'dashboard'),
-				'admin-products.js'
+				'admin-products.js' =>
 					array('new_file' => 'admin/products.js', 'name' => 'products'),
-				'adminImport.js'
+				'adminImport.js' =>
 					array('new_file' => 'admin/import.js', 'name' => 'import'),
-				'admin_carrier_wizard.js'
+				'admin_carrier_wizard.js' =>
 					array('new_file' => 'admin/carrier_wizard.js', 'name' => 'carrier_wizard'),
-				'admin_order.js'
+				'admin_order.js' =>
 					array('new_file' => 'admin/orders.js', 'name' => 'orders'),
-				'attributesBack.js'
+				'attributesBack.js' =>
 					array('new_file' => 'admin/attributes.js', 'name' => 'attributes'),
-				'admin-scene-cropping.js'
+				'admin-scene-cropping.js' =>
 					array('new_file' => 'admin/scenes.js', 'name' => 'scenes'),
-				'admin-dnd.js'
+				'admin-dnd.js' =>
 					array('new_file' => 'admin/dnd.js', 'name' => 'dnd'),
-				'login.js'
+				'login.js' =>
 					array('new_file' => 'admin/login.js', 'name' => 'login'),
-				'notifications.js'
+				'notifications.js' =>
 					array('new_file' => 'admin/notifications.js', 'name' => 'login'),
-				'price.js'
+				'price.js' =>
 					array('new_file' => 'admin/price.js', 'name' => 'login'),
-				'tinymce.inc.js'
+				'tinymce.inc.js' =>
 					array('new_file' => 'admin/tinymce.inc.js', 'name' => 'tinymce'),
 );
 

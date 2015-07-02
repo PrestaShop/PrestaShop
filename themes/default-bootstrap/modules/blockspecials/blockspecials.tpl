@@ -70,6 +70,7 @@
                                     {displayWtPrice p=$special.price_without_reduction}{else}{displayWtPrice p=$priceWithoutReduction_tax_excl}
                                 {/if}
                             </span>
+                            {hook h="displayProductPriceBlock" product=$special type="price"}
                         {/if}
                     </div>
                 </div>

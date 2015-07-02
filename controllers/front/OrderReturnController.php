@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,9 +18,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -41,25 +41,27 @@ class OrderReturnControllerCore extends FrontController
 
 		header('Cache-Control: no-cache, must-revalidate');
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+		
+		$id_order_return = (int)Tools::getValue('id_order_return');
 
-		if (!isset($_GET['id_order_return']) || !Validate::isUnsignedId($_GET['id_order_return']))
+		if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return))
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
 		{
-			$orderRet = new OrderReturn((int)$_GET['id_order_return']);
-			if (Validate::isLoadedObject($orderRet) && $orderRet->id_customer == $this->context->cookie->id_customer)
+			$order_return = new OrderReturn((int)$id_order_return);
+			if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer)
 			{
-				$order = new Order((int)($orderRet->id_order));
+				$order = new Order((int)($order_return->id_order));
 				if (Validate::isLoadedObject($order))
 				{
-					$state = new OrderReturnState((int)$orderRet->state);
+					$state = new OrderReturnState((int)$order_return->state);
 					$this->context->smarty->assign(array(
-						'orderRet' => $orderRet,
+						'orderRet' => $order_return,
 						'order' => $order,
 						'state_name' => $state->name[(int)$this->context->language->id],
 						'return_allowed' => false,
-						'products' => OrderReturn::getOrdersReturnProducts((int)$orderRet->id, $order),
-						'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)$orderRet->id_order),
+						'products' => OrderReturn::getOrdersReturnProducts((int)$order_return->id, $order),
+						'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)$order_return->id_order),
 						'customizedDatas' => Product::getAllCustomizedDatas((int)$order->id_cart)
 					));
 				}

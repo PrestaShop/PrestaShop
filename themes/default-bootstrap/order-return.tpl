@@ -58,13 +58,13 @@
 						{foreach from=$customizedDatas.$productId.$productAttributeId.$addressDeliveryId.$customizationId.datas key='type' item='datas'}
 							<tr class="alternate_item">
 								<td colspan="3">
-									{if $type == $smarty.const._CUSTOMIZE_FILE_}
+									{if $type == Product::CUSTOMIZE_FILE}
 									<ul class="customizationUploaded">
 										{foreach from=$datas item='data'}
 											<li><img src="{$pic_dir}{$data.value}_small" alt="" class="customizationUploaded" /></li>
 										{/foreach}
 									</ul>
-									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
+									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
 									<ul class="typedText">{counter start=0 print=false}
 										{foreach from=$datas item='data'}
 											{assign var='customizationFieldName' value="Text #"|cat:$data.id_customization_field}

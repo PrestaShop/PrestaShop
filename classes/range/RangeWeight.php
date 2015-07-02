@@ -57,7 +57,7 @@ class RangeWeightCore extends ObjectModel
 	 * 
 	 * @param bool $null_values
 	 * @param bool $autodate
-	 * @return boolean Insertion result
+	 * @return bool Insertion result
 	 */
 	public function add($autodate = true, $null_values = false)
 	{

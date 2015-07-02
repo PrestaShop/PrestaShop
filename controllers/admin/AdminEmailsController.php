@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Mail $object
+ */
 class AdminEmailsControllerCore extends AdminController
 {
 	public function __construct()
@@ -73,6 +76,7 @@ class AdminEmailsControllerCore extends AdminController
 			);
 			$this->_select .= 'l.name as language';
 			$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'lang l ON (a.id_lang = l.id_lang)';
+			$this->_use_found_rows = false;
 		}
 
 		parent::__construct();
@@ -201,7 +205,7 @@ class AdminEmailsControllerCore extends AdminController
 					<div class="alert" id="mailResultCheck" style="display:none;"></div>
 				</div></div>',
 				'buttons' => array(
-					array('title' => $this->l('Send an email test'),
+					array('title' => $this->l('Send a test email'),
 						'icon' => 'process-icon-envelope',
 						'name' => 'btEmailTest',
 						'js' => 'verifyMail()',
@@ -234,7 +238,12 @@ class AdminEmailsControllerCore extends AdminController
 	
 	public function processDelete()
 	{
-		return Mail::eraseAllLogs();
+		if ((int)$id_mail = Tools::getValue('id_mail', 0))
+			$return = Mail::eraseLog((int)$id_mail);
+		else
+			$return = Mail::eraseAllLogs();
+
+		return $return;
 	}
 
 	public function initToolbar()

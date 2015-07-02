@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Manufacturer $object
+ */
 class AdminManufacturersControllerCore extends AdminController
 {
 	public $bootstrap = true ;
@@ -49,7 +52,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'confirm' => $this->l('Delete selected items?')
 			)
 		);
-		
+
 		$this->context = Context::getContext();
 
 		$this->fieldImageSettings = array(
@@ -157,7 +160,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->content .= parent::renderList();
 	}
-	
+
 	protected function getAddressFieldsList()
 	{
 		// Sub tab addresses
@@ -487,7 +490,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
-		
+
 		$form['input'][] = array(
 			'type' => 'hidden',
 			'name' => 'id_address',
@@ -504,7 +507,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'col' => 4,
 				'hint' => $this->l('Company name for this supplier')
 			);
-		
+
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name'),
@@ -668,10 +671,12 @@ class AdminManufacturersControllerCore extends AdminController
 
 			default:
 				parent::initToolbar();
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
-					'desc' => $this->l('Import')
-				);
+
+				if ($this->can_import)
+					$this->toolbar_btn['import'] = array(
+						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
+						'desc' => $this->l('Import')
+					);
 		}
 	}
 
@@ -679,7 +684,9 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		if (!($manufacturer = $this->loadObject()))
 			return;
-		
+
+		/** @var Manufacturer $manufacturer */
+
 		$this->toolbar_btn['new'] = array(
 					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
 					'desc' => $this->l('Add address')
@@ -687,7 +694,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 		$this->toolbar_title[] = $manufacturer->name;
-		
+
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
 
 		$products = $manufacturer->getProductsLite($this->context->language->id);
@@ -808,6 +815,7 @@ class AdminManufacturersControllerCore extends AdminController
 	protected function afterImageUpload()
 	{
 		$res = true;
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
 		/* Generate image with differents size */
 		if (($id_manufacturer = (int)Tools::getValue('id_manufacturer')) &&
@@ -824,6 +832,14 @@ class AdminManufacturersControllerCore extends AdminController
 					(int)$image_type['width'],
 					(int)$image_type['height']
 				);
+
+				if ($generate_hight_dpi_images)
+					$res &= ImageManager::resize(
+						_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
+						_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'2x.jpg',
+						(int)$image_type['width']*2,
+						(int)$image_type['height']*2
+					);
 			}
 
 			$current_logo_file = _PS_TMP_IMG_DIR_.'manufacturer_mini_'.$id_manufacturer.'_'.$this->context->shop->id.'.jpg';
@@ -842,11 +858,12 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		return true;
 	}
-	
+
 	public function processSave()
 	{
-		parent::processSave();
 		if (Tools::isSubmit('submitAddaddress'))
 			$this->display = 'editaddresses';
+
+		return parent::processSave();
 	}
 }

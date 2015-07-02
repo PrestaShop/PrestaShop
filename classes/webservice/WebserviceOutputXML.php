@@ -93,16 +93,16 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 			foreach ($this->languages as $language)
 			{
 				$more_attr = '';
-				if (isset($field['synopsis_details']) || (isset($field['value']) AND is_array($field['value'])))
+				if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value'])))
 				{
 					$more_attr .= ' xlink:href="'.$this->getWsUrl().'languages/'.$language.'"';
 					if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank')
 						$more_attr .= ' format="isUnsignedId" ';
 				}
 				$node_content .= '<language id="'.$language.'"'.$more_attr.'>';
-				if (isset($field['value']) AND is_array($field['value']) AND isset($field['value'][$language]))
+				if (isset($field['value']) &&  is_array($field['value']) &&  isset($field['value'][$language]))
 					$node_content .= '<![CDATA['.$field['value'][$language].']]>';
-				$node_content .= '</language>'."";
+				$node_content .= '</language>';
 			}
 		}
 		// display not i18n fields value
@@ -111,7 +111,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 			if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank')
 			{
 				if (!is_array($field['xlink_resource']))
-					$ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource'].'/'. $field['value'] .'"';
+					$ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource'].'/'.$field['value'].'"';
 				else
 					$ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource']['resourceName'].'/'.
 					(isset($field['xlink_resource']['subResourceName']) ? $field['xlink_resource']['subResourceName'].'/'.$field['object_id'].'/' : '').$field['value'].'"';
@@ -128,14 +128,12 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		}
 
 		if (isset($field['encode']))
-			$ret .= ' encode="'.$field['encode'].'"'; 
-			
+			$ret .= ' encode="'.$field['encode'].'"';
+
 		if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank')
 		{
 			foreach ($field['synopsis_details'] as $name => $detail)
-			{
 				$ret .= ' '.$name.'="'.(is_array($detail) ? implode(' ', $detail) : $detail).'"';
-			}
 		}
 		$ret .= '>';
 		$ret .= $node_content;
@@ -147,7 +145,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		$string_attr = '';
 		if (is_array($more_attr))
 		{
-			foreach($more_attr as $key=>$attr)
+			foreach ($more_attr as $key => $attr)
 			{
 				if ($key === 'xlink_resource')
 					$string_attr .= ' xlink:href="'.$attr.'"';
@@ -195,9 +193,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 				$more .= ' readOnly="true"';
 			$more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
 			if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'])
-			{
 				$more .= ' virtualEntity="true"';
-			}
 			else
 			{
 				if (isset($params['associations'][$assoc_name]['api']))

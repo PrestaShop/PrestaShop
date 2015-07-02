@@ -25,10 +25,28 @@
 */
 
 /**
- * @since 1.5.0
+ * Class DbPDOCore
+ *
+ * @since 1.5.0.1
  */
 class DbPDOCore extends Db
 {
+	/** @var PDO */
+	protected $link;
+
+	/* @var PDOStatement */
+	protected $result;
+
+	/**
+	 * Returns a new PDO object (database link)
+	 *
+	 * @param string $host
+	 * @param string $user
+	 * @param string $password
+	 * @param string $dbname
+	 * @param int $timeout
+	 * @return PDO
+	 */
 	protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
 	{
 		$dsn = 'mysql:';
@@ -44,6 +62,16 @@ class DbPDOCore extends Db
 		return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
 	}
 
+	/**
+	 * Tries to connect and create a new database
+	 *
+	 * @param string $host
+	 * @param string $user
+	 * @param string $password
+	 * @param string $dbname
+	 * @param bool $dropit If true, drops the created database.
+	 * @return bool|int
+	 */
 	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		try {
@@ -58,7 +86,10 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Tries to connect to the database
+	 *
 	 * @see DbCore::connect()
+	 * @return PDO
 	 */
 	public function connect()
 	{
@@ -76,6 +107,8 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Destroys the database connection link
+	 *
 	 * @see DbCore::disconnect()
 	 */
 	public function disconnect()
@@ -84,7 +117,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Executes an SQL statement, returning a result set as a PDOStatement object or true/false.
+	 *
 	 * @see DbCore::_query()
+	 * @param string $sql
+	 * @return PDOStatement
 	 */
 	protected function _query($sql)
 	{
@@ -92,7 +129,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns the next row from the result set.
+	 *
 	 * @see DbCore::nextRow()
+	 * @param bool $result
+	 * @return array|false|null
 	 */
 	public function nextRow($result = false)
 	{
@@ -106,8 +147,12 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns all rows from the result set.
+	 *
 	 * @see DbCore::getAll()
-	*/
+	 * @param bool $result
+	 * @return array|false|null
+	 */
 	protected function getAll($result = false)
 	{
 		if (!$result)
@@ -120,7 +165,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns row count from the result set.
+	 *
 	 * @see DbCore::_numRows()
+	 * @param PDOStatement $result
+	 * @return int
 	 */
 	protected function _numRows($result)
 	{
@@ -128,7 +177,10 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns ID of the last inserted row.
+	 *
 	 * @see DbCore::Insert_ID()
+	 * @return string|int
 	 */
 	public function Insert_ID()
 	{
@@ -136,7 +188,10 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Return the number of rows affected by the last SQL query.
+	 *
 	 * @see DbCore::Affected_Rows()
+	 * @return int
 	 */
 	public function Affected_Rows()
 	{
@@ -144,7 +199,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns error message.
+	 *
 	 * @see DbCore::getMsgError()
+	 * @param bool $query
+	 * @return string
 	 */
 	public function getMsgError($query = false)
 	{
@@ -153,7 +212,10 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns error code.
+	 *
 	 * @see DbCore::getNumberError()
+	 * @return int
 	 */
 	public function getNumberError()
 	{
@@ -162,7 +224,10 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Returns database server version.
+	 *
 	 * @see DbCore::getVersion()
+	 * @return string
 	 */
 	public function getVersion()
 	{
@@ -170,7 +235,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Escapes illegal characters in a string.
+	 *
 	 * @see DbCore::_escape()
+	 * @param string $str
+	 * @return string
 	 */
 	public function _escape($str)
 	{
@@ -180,7 +249,11 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Switches to a different database.
+	 *
 	 * @see DbCore::set_db()
+	 * @param string $db_name
+	 * @return int
 	 */
 	public function set_db($db_name)
 	{
@@ -188,7 +261,15 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database and check if at least one table with same prefix exists
+	 *
 	 * @see Db::hasTableWithSamePrefix()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param string $prefix Tables prefix
+	 * @return bool
 	 */
 	public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
 	{
@@ -203,6 +284,17 @@ class DbPDOCore extends Db
 		return (bool)$result->fetch();
 	}
 
+	/**
+	 * Tries to connect to the database and create a table (checking creation privileges)
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @param string $db
+	 * @param string $prefix
+	 * @param string|null $engine Table engine
+	 * @return bool|string True, false or error
+	 */
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		try {
@@ -228,9 +320,19 @@ class DbPDOCore extends Db
 	}
 
 	/**
+	 * Try a connection to the database
+	 *
 	 * @see Db::checkConnection()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @param string $db Database name
+	 * @param bool $newDbLink
+	 * @param string|bool $engine
+	 * @param int $timeout
+	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);
@@ -242,6 +344,11 @@ class DbPDOCore extends Db
 		return 0;
 	}
 
+	/**
+	 * Selects best table engine.
+	 *
+	 * @return string
+	 */
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
@@ -264,11 +371,18 @@ class DbPDOCore extends Db
 					$value = 'InnoDB';
 				break;
 			}
+
 		return $value;
 	}
 
 	/**
+	 * Try a connection to the database and set names to UTF-8
+	 *
 	 * @see Db::checkEncoding()
+	 * @param string $server Server address
+	 * @param string $user Login for database connection
+	 * @param string $pwd Password for database connection
+	 * @return bool
 	 */
 	public static function tryUTF8($server, $user, $pwd)
 	{
@@ -283,6 +397,14 @@ class DbPDOCore extends Db
 		return ($result === false) ? false : true;
 	}
 
+	/**
+	 * Checks if auto increment value and offset is 1
+	 *
+	 * @param string $server
+	 * @param string $user
+	 * @param string $pwd
+	 * @return bool
+	 */
 	public static function checkAutoIncrement($server, $user, $pwd)
 	{
 		try {

@@ -28,7 +28,10 @@ class ProductControllerCore extends FrontController
 {
 	public $php_self = 'product';
 
+	/** @var Product */
 	protected $product;
+
+	/** @var Category */
 	protected $category;
 
 	public function setMedia()
@@ -255,10 +258,13 @@ class ProductControllerCore extends FrontController
 			$accessories = $this->product->getAccessories($this->context->language->id);
 			if ($this->product->cache_is_pack || count($accessories))
 					$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+			if($this->product->customizable)
+				$customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 				'customizationFields' => $customization_fields,
+				'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
 				'accessories' => $accessories,
 				'return_link' => $return_link,
 				'product' => $this->product,
@@ -350,7 +356,7 @@ class ProductControllerCore extends FrontController
 			'group_reduction' => $group_reduction,
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
-			'tax_enabled' => Configuration::get('PS_TAX'),
+			'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
 			'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
 		));
 	}
@@ -463,13 +469,13 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-				if ($row['available_date'] != '0000-00-00')
+				if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date']))
 				{
 					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
 					$combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
 				}
 				else
-					$combinations[$row['id_product_attribute']]['available_date'] = '';
+					$combinations[$row['id_product_attribute']]['available_date'] = $combinations[$row['id_product_attribute']]['date_formatted'] = '';
 
 				if (!isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = -1;
@@ -693,17 +699,25 @@ class ProductControllerCore extends FrontController
 			$row['quantity'] = &$row['from_quantity'];
 			if ($row['price'] >= 0) // The price may be directly set
 			{
-				$cur_price = (Product::$_taxCalculationMethod == PS_TAX_EXC ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+				$cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+
 				if ($row['reduction_type'] == 'amount')
-					$cur_price -= (Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+				{
+					$cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+					$row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+				}
 				else
 					$cur_price *= 1 - $row['reduction'];
+
 				$row['real_value'] = $price - $cur_price;
 			}
 			else
 			{
 				if ($row['reduction_type'] == 'amount')
-					$row['real_value'] = Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+				{
+					$row['real_value'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
+					$row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
+				}
 				else
 					$row['real_value'] = $row['reduction'] * 100;
 			}

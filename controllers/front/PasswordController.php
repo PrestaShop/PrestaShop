@@ -27,6 +27,7 @@
 class PasswordControllerCore extends FrontController
 {
 	public $php_self = 'password';
+	public $auth = false;
 
 	/**
 	 * Start forms process
@@ -79,7 +80,7 @@ class PasswordControllerCore extends FrontController
 					Tools::redirect('index.php?controller=authentication&error_regen_pwd');
 				else
 				{
-					$customer->passwd = Tools::encrypt($password = Tools::passwdGen(MIN_PASSWD_LENGTH));
+					$customer->passwd = Tools::encrypt($password = Tools::passwdGen(MIN_PASSWD_LENGTH, 'RANDOM'));
 					$customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 					if ($customer->update())
 					{
@@ -116,4 +117,3 @@ class PasswordControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'password.tpl');
 	}
 }
-

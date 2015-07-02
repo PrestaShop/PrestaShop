@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CartRule $object
+ */
 class AdminCartRulesControllerCore extends AdminController
 {
 	public function __construct()
@@ -49,6 +52,70 @@ class AdminCartRulesControllerCore extends AdminController
 		);
 
 		parent::__construct();
+	}
+
+	public function ajaxProcessLoadCartRules()
+	{
+		$type = $token = $search = '';
+		$limit = $count = $id_cart_rule = 0;
+		if (Tools::getIsset('limit'))
+			$limit = Tools::getValue('limit');
+
+		if (Tools::getIsset('type'))
+			$type = Tools::getValue('type');
+
+		if (Tools::getIsset('count'))
+			$count = Tools::getValue('count');
+
+		if (Tools::getIsset('id_cart_rule'))
+			$id_cart_rule = Tools::getValue('id_cart_rule');
+
+		if (Tools::getIsset('search'))
+			$search = Tools::getValue('search');
+
+
+		$page = floor($count / $limit);
+
+		$html = '';
+		$next_link = '';
+
+		if (($page * $limit) + 1 == $count || $count == 0)
+		{
+			if ($count == 0)
+				$count = 1;
+
+			/** @var CartRule $current_object */
+			$current_object = $this->loadObject(true);
+			$cart_rules     = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page)*$limit, $limit, $search);
+
+			if ($type == 'selected')
+			{
+				$i = 1;
+				foreach ($cart_rules['selected'] as $cart_rule)
+				{
+					$html .= '<option value="'.(int)$cart_rule['id_cart_rule'].'">&nbsp;'.Tools::safeOutput($cart_rule['name']).'</option>';
+					if ($i == $limit)
+						break;
+					$i++;
+				}
+				if ($i == $limit)
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']).'&search='.urlencode($search));
+			}
+			else
+			{
+				$i = 1;
+				foreach ($cart_rules['unselected'] as $cart_rule)
+				{
+					$html .= '<option value="'.(int)$cart_rule['id_cart_rule'].'">&nbsp;'.Tools::safeOutput($cart_rule['name']).'</option>';
+					if ($i == $limit)
+						break;
+					$i++;
+				}
+				if ($i == $limit)
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']).'&search='.urlencode($search));
+			}
+		}
+		echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
 	}
 
 	public function setMedia()
@@ -158,8 +225,11 @@ class AdminCartRulesControllerCore extends AdminController
 		foreach (array('country', 'carrier', 'group', 'product_rule_group', 'shop') as $type)
 			Db::getInstance()->delete('cart_rule_'.$type, '`id_cart_rule` = '.(int)$id_cart_rule);
 
-		Db::getInstance()->delete('cart_rule_product_rule', '`id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
-		Db::getInstance()->delete('cart_rule_product_rule_value', '`id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+
+		Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
+			WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
+		Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
+			WHERE `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule`)');
 		Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
 
 		$this->afterAdd($current_object);
@@ -174,7 +244,15 @@ class AdminCartRulesControllerCore extends AdminController
 
 		return $cart_rule;
 	}
-	/* @TODO Move this function into CartRule */
+
+	/**
+	 * @TODO Move this function into CartRule
+	 *
+	 * @param ObjectModel $currentObject
+	 *
+	 * @return void
+	 * @throws PrestaShopDatabaseException
+	 */
 	protected function afterAdd($currentObject)
 	{
 		// Add restrictions for generic entities like country, carrier and group
@@ -236,12 +314,17 @@ class AdminCartRulesControllerCore extends AdminController
 			FROM '._DB_PREFIX_.'cart_rule cr
 			WHERE cr.id_cart_rule != '.(int)$currentObject->id.'
 			AND cr.cart_rule_restriction = 0
-			AND cr.id_cart_rule NOT IN (
-				SELECT IF(id_cart_rule_1 = '.(int)$currentObject->id.', id_cart_rule_2, id_cart_rule_1)
+			AND NOT EXISTS (
+				SELECT 1
 				FROM '._DB_PREFIX_.'cart_rule_combination
-				WHERE '.(int)$currentObject->id.' = id_cart_rule_1
-				OR '.(int)$currentObject->id.' = id_cart_rule_2
-			)');
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_2 AND '.(int)$currentObject->id.' = id_cart_rule_1
+			)
+			AND NOT EXISTS (
+				SELECT 1
+				FROM '._DB_PREFIX_.'cart_rule_combination
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_1 AND '.(int)$currentObject->id.' = id_cart_rule_2
+			)
+			');
 			foreach ($ruleCombinations as $incompatibleRule)
 			{
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
@@ -256,7 +339,14 @@ class AdminCartRulesControllerCore extends AdminController
 		}
 	}
 
-	/* Retrieve the cart rule product rule groups in the POST data if available, and in the database if there is none */
+	/**
+	 * Retrieve the cart rule product rule groups in the POST data
+	 * if available, and in the database if there is none
+	 *
+	 * @param CartRule $cart_rule
+	 *
+	 * @return array
+	 */
 	public function getProductRuleGroupsDisplay($cart_rule)
 	{
 		$productRuleGroupsArray = array();
@@ -307,6 +397,7 @@ class AdminCartRulesControllerCore extends AdminController
 		Context::getContext()->smarty->assign('product_rule_group_id', $product_rule_group_id);
 		Context::getContext()->smarty->assign('product_rule_group_quantity', $product_rule_group_quantity);
 		Context::getContext()->smarty->assign('product_rules', $product_rules);
+
 		return $this->createTemplate('product_rule_group.tpl')->fetch();
 	}
 
@@ -351,7 +442,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'manufacturers':
@@ -363,7 +454,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'suppliers':
@@ -375,7 +466,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$products[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $products);
-				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			case 'categories':
@@ -392,7 +483,7 @@ class AdminCartRulesControllerCore extends AdminController
 				foreach ($results as $row)
 					$categories[in_array($row['id'], $selected) ? 'selected' : 'unselected'][] = $row;
 				Context::getContext()->smarty->assign('product_rule_itemlist', $categories);
-				$choose_content = $this->createTemplate('controllers/cart_rules/product_rule_itemlist.tpl')->fetch();
+				$choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
 				Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
 				break;
 			default :
@@ -400,7 +491,7 @@ class AdminCartRulesControllerCore extends AdminController
 				Context::getContext()->smarty->assign('product_rule_choose_content', '');
 		}
 
-		return $this->createTemplate('controllers/cart_rules/product_rule.tpl')->fetch();
+		return $this->createTemplate('product_rule.tpl')->fetch();
 	}
 
 	public function ajaxProcess()
@@ -481,6 +572,7 @@ class AdminCartRulesControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		$limit = 40;
 		$back = Tools::safeOutput(Tools::getValue('back', ''));
 		if (empty($back))
 			$back = self::$currentIndex.'&token='.$this->token;
@@ -490,6 +582,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'desc' => $this->l('Save and Stay')
 		);
 
+		/** @var CartRule $current_object */
 		$current_object = $this->loadObject(true);
 
 		// All the filter are prefilled with the correct information
@@ -519,7 +612,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$countries = $current_object->getAssociatedRestrictions('country', true, true);
 		$groups = $current_object->getAssociatedRestrictions('group', false, true);
 		$shops = $current_object->getAssociatedRestrictions('shop', false, false);
-		$cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true);
+		$cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
 		$carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
 		foreach ($carriers as &$carriers2)
 			foreach ($carriers2 as &$carrier)
@@ -588,10 +681,12 @@ class AdminCartRulesControllerCore extends AdminController
 				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
-
+		Media::addJsDef(array('baseHref' => $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.
+									 (int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0'));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
+		$this->addJqueryPlugin(array('jscroll', 'typewatch'));
 		return parent::renderForm();
 	}
 

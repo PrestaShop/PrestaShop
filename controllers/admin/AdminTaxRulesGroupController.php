@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property TaxRulesGroup $object
+ */
 class AdminTaxRulesGroupControllerCore extends AdminController
 {
 	public $tax_rule;
@@ -74,12 +77,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-        if (empty($this->display))
-		$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
-			'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
-			'desc' => $this->l('Add new tax rules group', null, null, false),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
+				'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
+				'desc' => $this->l('Add new tax rules group', null, null, false),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
@@ -147,6 +150,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'tax` t
 				ON (a.`id_tax` = t.`id_tax`)';
 		$this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
+		$this->_use_found_rows = false;
 
 		$this->show_toolbar = false;
 		$this->tpl_list_vars = array('id_tax_rules_group' => (int)$id_group);
@@ -196,7 +200,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'stay' => true
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -250,7 +254,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'name' => 'name',
 						'default' => array(
 							'value' => 0,
-							'label' => $this->l('All')
+							'label' => $this->l('All', 'AdminTaxRulesGroupController')
 						)
 					)
 				),
@@ -266,7 +270,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'name' => 'name',
 						'default' => array(
 							'value' => 0,
-							'label' => $this->l('All')
+							'label' => $this->l('All', 'AdminTaxRulesGroupController')
 						)
 					)
 				),
@@ -528,17 +532,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		);
 	}
 
-
 	/**
-	* check if the tax rule could be added in the database
-	* @param TaxRule $tr
-	*/
+	 * Check if the tax rule could be added in the database
+	 *
+	 * @param TaxRule $tr
+	 *
+	 * @return array
+	 */
 	protected function validateTaxRule(TaxRule $tr)
 	{
-		// TODO: check if the rule already exists
+		// @TODO: check if the rule already exists
 		return $tr->validateController();
 	}
-	
+
 	protected function displayAjaxUpdateTaxRule()
 	{
 		if ($this->tabAccess['view'] === '1')
@@ -552,6 +558,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * @param TaxRulesGroup $object
+	 *
+	 * @return TaxRulesGroup
+	 */
 	protected function updateTaxRulesGroup($object)
 	{
 		static $tax_rules_group = null;

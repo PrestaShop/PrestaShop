@@ -61,11 +61,9 @@ class SearchEngineCore extends ObjectModel
 					return false;
 				$str = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($array[0], '&'), strlen($varname) + 1), '=')));
 				if (!Validate::isMessage($str))
-					return false;				
+					return false;
 				return $str;
 			}
 		}
 	}
 }
-
-

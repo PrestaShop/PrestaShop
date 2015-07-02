@@ -61,7 +61,7 @@
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
 						{$field.title}
 					</legend>
-					<p>{l s='This language pack  is NOT complete and cannot be used in the front or back-office because some files are missing.'}</p>
+					<p>{l s='This language pack is NOT complete and cannot be used in the front or back office because some files are missing.'}</p>
 					<br />
 				{elseif $key == 'list_files'}
 					{foreach $field as $list}
