@@ -767,7 +767,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		}
 		else
 		{
-			if (Tools::getValue('submitDel'.$this->table))
+			if (Tools::isSubmit('submitBulkdelete'.$this->table))
 			{
 				if ($this->tabAccess['delete'] === '1')
 				{
@@ -776,7 +776,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						/** @var AttributeGroup $object */
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
+						{
+							// clean position after delete
+							AttributeGroup::cleanPositions();
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
+						}
 						$this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
 					}
 					else
@@ -784,8 +788,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				}
 				else
 					$this->errors[] = Tools::displayError('You do not have permission to delete this.');
-				// clean position after delete
-				AttributeGroup::cleanPositions();
 			}
 			elseif (Tools::isSubmit('submitAdd'.$this->table))
 			{
@@ -807,7 +809,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				parent::postProcess();
 			}
 			else
+			{
 				parent::postProcess();
+				if (Tools::isSubmit('delete'.$this->table))
+					AttributeGroup::cleanPositions();
+			}
 		}
 	}
 

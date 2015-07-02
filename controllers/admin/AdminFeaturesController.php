@@ -296,7 +296,7 @@ class AdminFeaturesControllerCore extends AdminController
 							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminFeatures').'&id_feature='.$id.'&viewfeature">'.$obj->name[$this->context->employee->id_lang].'</a>';
 
 						if (Validate::isLoadedObject($obj = new FeatureValue((int)Tools::getValue('id_feature_value'))))
-							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
+							$bread_extended[] = sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
 					}
 					else
 						$bread_extended[] = $this->l('Edit Value');
@@ -509,7 +509,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 		{
-			if( $this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add') )
+			if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add'))
 				$this->redirect_after = self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token;
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
