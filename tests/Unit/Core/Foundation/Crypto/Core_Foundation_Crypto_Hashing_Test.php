@@ -41,4 +41,10 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
         $this->hashing = new Hashing;
     }
 
+
+    public function test_simple_encrypt()
+    {
+        $this->assertTrue(is_string($this->hashing->encrypt("123", _COOKIE_KEY_)));
+    }
+
 }
