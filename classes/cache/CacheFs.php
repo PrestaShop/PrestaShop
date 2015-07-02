@@ -36,8 +36,13 @@ class CacheFsCore extends Cache
 		$this->depth = Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name= \'PS_CACHEFS_DIRECTORY_DEPTH\'', false);
 
 		$keys_filename = $this->getFilename(self::KEYS_NAME);
-		if (@filemtime($keys_filename))
-			$this->keys = unserialize(file_get_contents($keys_filename));
+		if (@filemtime($keys_filename)){
+			$file = fopen($keys_filename, 'rb');
+			flock($file, LOCK_SH);
+			$data = file_get_contents($keys_filename);
+			fclose($file);
+			$this->keys = unserialize(file_get_contents($data));
+		}
 	}
 
 	/**
@@ -45,7 +50,7 @@ class CacheFsCore extends Cache
 	 */
 	protected function _set($key, $value, $ttl = 0)
 	{
-		return (@file_put_contents($this->getFilename($key), serialize($value)));
+		return (@file_put_contents($this->getFilename($key), serialize($value), LOCK_EX));
 	}
 
 	/**
@@ -66,8 +71,11 @@ class CacheFsCore extends Cache
 			$this->_writeKeys();
 			return false;
 		}
-		$file = file_get_contents($filename);
-		return unserialize($file);
+		$file = fopen($filename, 'rb');
+		flock($file, LOCK_SH);
+		$data = file_get_contents($filename);
+		fclose($file);
+		return unserialize($data);
 	}
 
 	/**
@@ -100,7 +108,7 @@ class CacheFsCore extends Cache
 	 */
 	protected function _writeKeys()
 	{
-		@file_put_contents($this->getFilename(self::KEYS_NAME), serialize($this->keys));
+		@file_put_contents($this->getFilename(self::KEYS_NAME), serialize($this->keys), LOCK_EX);
 	}
 
 	/**
@@ -149,7 +157,6 @@ class CacheFsCore extends Cache
 	 */
 	protected function getFilename($key)
 	{
-		$key = md5($key);
 		$path = _PS_CACHEFS_DIRECTORY_;
 		for ($i = 0; $i < $this->depth; $i++)
 			$path .= $key[$i].'/';

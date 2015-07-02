@@ -602,10 +602,10 @@ abstract class DbCore
 		if ($use_cache && $this->is_cache_enabled && $array)
 		{
 			$this->last_query_hash = Tools::encryptIV($sql);
-			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false)
+			if (Cache::getInstance()->exists($this->last_query_hash) !== false)
 			{
 				$this->last_cached = true;
-				return $result;
+				return Cache::getInstance()->get($this->last_query_hash);
 			}
 		}
 
@@ -659,10 +659,10 @@ abstract class DbCore
 		if ($use_cache && $this->is_cache_enabled)
 		{
 			$this->last_query_hash = Tools::encryptIV($sql);
-			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false)
+			if (Cache::getInstance()->exists($this->last_query_hash) !== false)
 			{
 				$this->last_cached = true;
-				return $result;
+				return Cache::getInstance()->get($this->last_query_hash);
 			}
 		}
 
