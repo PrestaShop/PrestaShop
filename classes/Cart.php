@@ -2706,7 +2706,7 @@ class CartCore extends ObjectModel
 			return Cache::retrieve($cache_id);
 
 		// Order total in default currency without fees
-		$order_total = $this->getOrderTotal(true, Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING, $product_list);
+		$order_total = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
 
 		// Start with shipping cost at 0
 		$shipping_cost = 0;
