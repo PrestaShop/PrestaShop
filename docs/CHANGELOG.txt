@@ -24,6 +24,93 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.0 - (2015-07-02)
+####################################
+
+	Fixed bugs:
+
+	[-] INSTALLER : Fix syntax error in SQL file
+
+	[-] FO : Fix an issue when 5_steps + only virtuals products + advanced payment
+	[-] FO : Prevent loop if auth is set to true in FrontController
+	[-] FO : Fix #PSCSX-5573, could not change HOOK_SHOPPING_CART_EXTRA
+	[-] FO : fancybox for CGV with advanced payment api
+	[-] FO : wording
+	[-] FO : Fix input labels in registration form
+	[-] FO : Fix closing tag in smarty
+	[-] FO : unsued if statement
+	[-] FO : fix #PSCSX-5850, Short description manufacturer
+	[-] FO : Fix bug #PSCSX-5283 - Wrong reduction calculation
+	[-] FO : Fix bug #PSCSX-5990 - Missing old price
+	[-] FO : OPC - fixed bug (cgv validation removed) when update carrier data
+	[-] FO : #PSCSX-5065, url rewrite bug on color list
+
+	[-] BO : Render Payment Add button correctly
+	[-] BO : statuspage JS is included if _PS_HOST_MODE_ is true
+	[-] BO : HelperForm / Add possibilities to show success, warning and error messages
+	[-] BO : Fix PSCSX-1856, Labels edition in multishop
+	[-] BO : FixBug #PSCSX-5913 - Wrong column name
+	[-] BO : fix bug when generate Pdf delivery slip, wrong constant called with customized products
+	[-] BO : #PSCSX-5898 wording
+	[-] BO : FixBug #PSCSX-1996 - Impossible to disable shop url
+	[-] BO : unsued if statement
+	[-] BO : Fix bug #PSCSX-5364 - Missing retina option
+	[-] BO : fix warning
+	[-] BO : fix issue with image resize when original is smaller than target
+	[-] BO : fix issue with cat creation (PSCSX-5899)
+	[-] BO : fix missing check for new memcached extension
+	[-] BO : Fix bug #PSCSX-6029 - Wrong php warning message
+	[-] BO : Fixed wrong front url to live edit when rewrite url activate and also one lang configured
+	[-] BO : Fix #PSCSX-6063 php warning while display cart without customizable product
+	[-] BO : Fix PSCSX-5831
+
+	[-] CORE : FixBug #PSCSX-5698 - Wrong ecotax calculation
+	[-] CORE : Fix issue with advancedeucompliance dependencies and Tax label display
+	[-] CORE : Fix bug PSCSX-5952 - HTMLPurifier_Config not loaded
+	[-] CORE : Fix issue with PHP 5.2 and func_get_args()
+	[-] CORE : Fix PHP 5.2 Dispatcher warning on parse_url()
+
+	[-] LO : Fix states node, import failure
+	[-] LO : Fix state node
+
+	Improved/changed features:
+
+	[*] INSTALLER : Rewording the Refunded and COD statuses.
+
+	[*] FO : AuthentificationController - Avoid infinite redirect loop
+	[*] FO : Better header for payment step with advanced payment
+	[*] FO : Add title for Recyclable Packaging
+	[*] FO : Fix undefined in the page order
+
+	[*] BO : Change demo button position
+	[*] BO : Fix #PSCSX-5814, order partner modules
+	[*] BO : Fix #PSCSX-5811 Wording
+	[*] BO : Fix #PSCSX-5812, wording
+	[*] BO : Fix #PSCSX-5599, read more on recommended modules
+	[*] BO : Missing "disabled" attribute in form.tpl for "select" input type (Helpform)
+
+	[*] CORE : Better way to handle DB prefixes
+	[*] CORE : Db::escape now handle properly backquotes
+	[*] CORE : Update DB adapter accordingly to Db::escape update for backquotes
+	[*] CORE : Smarty syntax formatting
+	[*] CORE : Avoid returned password on failed login
+
+	[*] PDF : wording
+
+	[*] LO : updated wording, ES install.php
+	[*] LO : updated translation files
+	[*] LO : updated installer translation (DE, TR)
+
+	Added Features:
+
+	[+] FO : Added new dynamic hooks for AdvancedEuCompliance
+
+	[+] CORE : Added hook to blockcart tpl
+
+	
+
+
+####################################
 #   v1.6.0.14 - (2015-03-06)  #
 ####################################
 

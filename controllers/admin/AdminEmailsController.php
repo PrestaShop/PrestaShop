@@ -205,7 +205,7 @@ class AdminEmailsControllerCore extends AdminController
 					<div class="alert" id="mailResultCheck" style="display:none;"></div>
 				</div></div>',
 				'buttons' => array(
-					array('title' => $this->l('Send an email test'),
+					array('title' => $this->l('Send a test email'),
 						'icon' => 'process-icon-envelope',
 						'name' => 'btEmailTest',
 						'js' => 'verifyMail()',

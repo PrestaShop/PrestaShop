@@ -343,7 +343,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$lang = '';
 
 		$language_ids = Language::getIDs(true);
-		if (Configuration::get('PS_REWRITING_SETTINGS') && !empty($language_ids))
+		if (Configuration::get('PS_REWRITING_SETTINGS') && !empty($language_ids) && count($language_ids) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
 		unset($language_ids);
 

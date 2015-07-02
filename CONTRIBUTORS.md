@@ -1,28 +1,30 @@
+GitHub contributors:
+--------------------------------
+- (d)oekia
 - 123monsite-regis
 - 1RV34
-- adonis karavokyros
 - Adonis Karavokyros
 - Adrien
-- aFolletete
+- Adrien Astier
 - Agence CINS
-- aKorczak
 - Aleksander Palyan
 - Alessandro Corbelli
+- Alex Even
 - Alexander Grosul
 - Alexander Otchenashev
 - Alexandra Even
-- Alex Even
 - AlexEven
-- alexey-svistunov
 - Alexey Svistunov
+- alexey-svistunov
+- alexsimple
 - Alfakom-MK
-- Alfonso Jiménez
+- Alfonso Jimenez
 - Alphacom IT Solutions - Macedonia
 - amatosg
 - anat
 - Anatole
 - Andrew
-- aNiassy
+- Antonino Di Bella
 - antoniofr
 - AntonLejon
 - Arnaud Lemercier
@@ -31,11 +33,11 @@
 - Balestrino
 - bellini13
 - Benjamin PONGY
+- bercik999
 - Bersam Karbasion
 - BigZ
-- bLeveque
 - BluTiGeS
-- bMancone
+- Bruno Desprez
 - Bruno Leveque
 - bumbu
 - Burhan
@@ -46,7 +48,6 @@
 - ccauw
 - cedricfontaine
 - cedricgeffroy
-- Cédric Mouleyre
 - Chen.Zhidong
 - Chris
 - Chris Gurk
@@ -58,19 +59,24 @@
 - Comkwatt
 - Corentin Delcourt
 - Cosmin Hutanu
+- Cedric Mouleyre
 - damien
 - Damien Metzger
+- Damien PIQUET
 - DamienMetzger
 - Damon Skelhorn
+- Dan Hlavenka
 - danidomen
 - Daniel
 - Daniele Giachino
 - danoosh
 - Danoosh Mir
 - David Gasperoni
-- David-Julian BUCH
 - David Sivocha
+- David-Julian BUCH
 - Davy Rolink
+- Denver Prophit Jr.
+- Desbouche Christophe
 - DevNet
 - Dh42
 - Dimitrios Karvounaris
@@ -78,87 +84,84 @@
 - djbuch
 - djfm
 - dlage
-- dMetzger
-- (d)oekia
 - doekia
 - DOEO
 - Dragan Skrbic
-- dreammeup
 - Dream me up
+- dreammeup
 - DrySs
-- DrÿSs
-- DrÿSs'
+- DrySs'
 - dSevere
 - Dustin
 - Dvir Julius
 - Dvir-Julius
 - edamart
-- Edouard Gaulué
+- Edouard Gaulue
+- el-tenkova
 - elationbase
 - eleazar
-- emilien-puget
+- Elitius
 - Emilien Puget
+- emilien-puget
 - emily-d
-- erickturcios
 - Eric Le Lay
+- Eric Rouvier
+- erickturcios
+- Etienne Samson
 - Fabio Chelly
-- fBrignoli
 - fchellypresta
 - Felipe Uribe
 - fetis
+- fird
 - flashmaestro
 - Florian Kwakkenbos
 - fram
 - Francois Gaillard
-- François Gaillard
-- François-Marie de Jouvencel
-- Fran�ois Gaillard
-- fSerny
+- Francois-Marie de Jouvencel
+- Fran�ois Gaillard
+- Frederic BENOIST
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
-- gBrunier
-- gCharmes
 - ggedamed
+- Giant Leap Lab
 - Gordon Coubrough
-- gPoulain
 - gr4devel
 - Granger Kevin
-- Grégoire Bélorgey
 - Gregory Roussac
 - gRoussac
+- Gregoire Belorgey
+- gskema
 - Guillaume DELOINCE
 - Guillaume Lafarge
+- Guillaume Leseur
 - Gytis
-- Gytis Škėma
-- ha99y
-- hAitmansour
+- Gytis Skėma
 - Ha!*!*y
+- ha99y
+- harelguy
 - hiousi
 - htrex
 - indesign47
-- inem0o
 - iNem0o
 - ironwo0d
 - ITBpro.com
 - Ivan
 - ivancasasempere
-- Jáchym Toušek
+- J. Danse
 - janisVincent
 - Javsmile
-- jBreux
-- J. Danse
 - JEAN
 - jeanbe
 - jeckyl
-- jeromenadaud
+- Jeroen Dewaele
 - Jerome Nadaud
-- Jérôme Nadaud
+- jeromenadaud
 - jessylenne
-- jmCollin
 - Joan
 - Joan Juvanteny
-- jObregon
+- joce
+- Joe Siwiak
 - joemartin247
 - Joep Hendrix
 - Jonadabe
@@ -169,28 +172,32 @@
 - jtogrul
 - Julien
 - Julien Bouchez
-- julienbourdeau
 - Julien Bourdeau
+- Julien Deniau
+- Julien Martin
+- julienbourdeau
+- Jachym Tousek
+- Kamil Szymański
+- Kelly Karnetsky
 - kermes
-- Kévin Dunglas
 - Kevin Granger
 - kiropowered
 - kpodemski
 - Krystian Podemski
-- lBrieu
-- lCherifi
+- Kevin Dunglas
+- Ladel
 - ldecoker
-- Léo
-- lesley paone
 - Lesley Paone
-- lLefevre
 - LOIC ROSSET ltd
-- LucasC
-- Lucas Cerdan
-- Lucas CERDAN
+- luc
+- Luc Vandesype
 - Luca T.
+- Lucas CERDAN
+- LucasC
 - Lyo Nick
 - LyoNick
+- Leo
+- M-Mommsen
 - Madef
 - Madman
 - Mainmich
@@ -202,12 +209,15 @@
 - Mats Rynge
 - Matteo
 - MatthieuB
+- MaX3315
 - Maxence
 - Maxime
-- mBertholino
+- Maxime Biloe
+- Maxime Vasse
 - mchelh
 - mchojnacki
-- mDeflotte
+- mdomenjoud
+- Michael Hjulskov
 - Michel Courtade
 - Mickael Desgranges
 - Mikael Blotin
@@ -216,8 +226,7 @@
 - Mingsong Hu
 - minic studio
 - misthero
-- mMarinetti
-- M-Mommsen
+- moncef102
 - montes
 - mplh
 - MustangZhong
@@ -230,18 +239,21 @@
 - Nils-Helge Garli Hegvik
 - NinjaOfWeb
 - Nino Uzelac
-- nPellicari
+- nodexpl
 - nturato
 - oleacorner
 - Otto Nascarella
+- Pan P.
 - Panagiotis Tigas
 - panesarsandeep
 - Patanock
 - Patrick Mettraux
 - Pavel Novitsky
+- pbirnzain
+- Pedro J. Parra
 - Per Lejontand
-- peterept
 - Peter Schaeffer
+- peterept
 - Petyuska
 - PhpMadman
 - Pierre
@@ -254,6 +266,7 @@
 - prestarocket
 - Prestaspirit
 - Priyank Bolia
+- Profileo
 - Pronux
 - proydsl
 - pxls
@@ -263,39 +276,35 @@
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
-- Raphaël Malié
+- Raphael Malie
 - raulgundin
-- Rémi Gaillard
 - rGaillard
 - Rhys
+- Richard LT
 - Rimas Kudelis
-- rMalie
-- rMontagne
 - robert
+- Roland Schütz
 - romainberger
-- root
 - runningz
+- Remi Gaillard
+- s-duval
 - Sacha
-- Sacha Froment
 - Sacha FROMENT
 - sadlyblue
 - sagaradonis
-- Samir Shah
 - Sam Sanchez
+- Samir Shah
 - Samy Rabih
 - Sarah Lorenzini
-- s-duval
 - Seb
-- Sébastien
-- Sébastien Bareyre
-- Sébastien Bocahu
+- SebSept
 - Seynaeve
 - sfroment42
 - shaffe-fr
 - Shagshag
 - Shipow
-- shudrum
 - Shudrum
+- sidhujag
 - sjousse
 - sLorenzini
 - smartdatasoft
@@ -304,48 +313,95 @@
 - soware
 - Staging
 - Stanislav Yordanov
+- Stefano Kowalke
 - Stephan Obadia
 - Steven "SDF" Sulley
-- sThiebaut
+- Steven Sulley
 - Studio Kiwik
 - Sumh
+- svensson_david
 - Sylvain Gougouzian
 - Sylvain WITMEYER
+- Sebastien
+- Sebastien Bareyre
+- Sebastien Bocahu
+- Sebastien Monterisi
+- Tanguy JACQUET
 - tchauviere
-- tDidierjean
 - Thibaud Chauviere
 - thoma202
 - Thomas
-- thomas-aw
 - Thomas Blanc
 - Thomas N
 - Thomas Nabord
+- thomas-aw
 - Threef
 - timsit
 - tmackay
 - TMMeilleur
-- Tomasz Slominski
 - Tom Panier
+- Tomasz Slominski
+- Tomas Votruba
 - tucoinfo
 - Tung Dao
-- unknown
+- unlocomqx
+- Valerii Savchenko
 - vAugagneur
-- vChabot
 - Vincent Augagneur
 - Vincent Schoener
 - Vincent Terenti
 - vinvin27
 - vinzter
-- vKham
-- vSchoener
+- vitekj
 - Wayann
 - web-plus
+- webbax
+- Wojciech Grzebieniowski
 - Xavier
 - Xavier Borderie
+- Xavier Gouley
 - Xavier POITAU
+- xitromedia
 - xKnut
 - yanngarras
 - Yoozio
 - zimmi1
 - ZiZuu.com
 - Zollner Robert
+
+SVN contributors:
+--------------------------------
+- aFolletete
+- aKorczak
+- aNiassy
+- bLeveque
+- bMancone
+- dMetzger
+- dSevere
+- fBrignoli
+- Francois Gaillard
+- fSerny
+- gBrunier
+- gCharmes
+- gPoulain
+- hAitmansour
+- jBreux
+- jmCollin
+- jObregon
+- lBrieu
+- lCherifi
+- lLefevre
+- mBertholino
+- mDeflotte
+- mMarinetti
+- nPellicari
+- rGaillard
+- rMalie
+- rMontagne
+- sLorenzini
+- sThiebaut
+- tDidierjean
+- vAugagneur
+- vChabot
+- vKham
+- vSchoener
