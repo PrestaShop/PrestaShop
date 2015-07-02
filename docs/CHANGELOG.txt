@@ -299,7 +299,6 @@ Release Notes for PrestaShop 1.6
 	[-] CORE : Fix Product::getPriceStatic() quantity discounts cache
 	[-] CORE : Ensure correct parent category for home categories
 	[-] CORE : update cartrule feature active on cartrule updating
-
 	[-] LO : Fix state node
 	[-] LO : Fix states node, import failure
 	[-] LO : Fix PSCSX-4657 - metric system for El Salvador
@@ -502,7 +501,23 @@ Release Notes for PrestaShop 1.6
 
 	Improved/changed features:
 
-	[*] PDF : Update invoice.total-tab.tpl
+	[*] PERFORMANCES : Try to improve cart performances (PSCSX-5943)
+	[*] PERFORMANCES : add a few more optimisations
+	[*] PERFORMANCES : reduce the number of array_key_exists calls during ObjectModelCore construction
+	[*] PERFORMANCES : improve specificPrice cache
+	[*] PERFORMANCES : try to fix travis failures
+	[*] PERFORMANCES : optimize getRandomSpecial
+	[*] PERFORMANCES : typo fix
+	[*] PERFORMANCES : cleanup
+	[*] PERFORMANCES : add a local cache for address init
+	[*] PERFORMANCES : fix context hash
+	[*] PERFORMANCES : fix a strange issue with php 5.4 where false is not empty
+	[*] PERFORMANCES : avoid to use cache for temp tables
+	[*] PERFORMANCES : fix exists test on memcache
+	[*] PERFORMANCES : entity init should occur in every cases
+	[*] PERFORMANCES : PHP 5.2 compat
+	[*] PERFORMANCES : add missing changes in controllers
+
 	[*] PDF : wording
 	[*] PDF : (#PSCSX-5964) Rebranding of "Order-return" and "Supply-order" like invoice PDF
 	[*] PDF : Rebranding of Credit-slip and Delivery-slip PDF (#PSCSX-5964) to match Invoice PDF style
@@ -855,7 +870,32 @@ Release Notes for PrestaShop 1.6
 	[+] DBQUERY : improve to use SELECT or DELETE syntax.
 
 
-	
+
+
+	Uncategorized
+
+	[-] Installer : Fix 1.6.0.12 sql upgrade
+On multilingual shops, when the table cms_category_shop is added, a duplicate entry is triggered.
+INSERT IGNORE is now used to avoid the problem.
+	[*] Installer : Do not steal the administrator email without permission
+
+No unauthorized collection of user data. For example, sending the admin's email address back to your own servers without permission of the user is not allowed; but asking the user for an email address and collecting if they choose to submit it is fine. All actions taken in this respect MUST be of the user's doing, not automatically done by Prestashop please.
+Thank you for this consideration
+	[-] BO : The design is broken with a width between 767px and 924px
+
+Fixes a broken design problem for displays between 767px and 924px because the avatar of the employee leaves the header bar.
+	[-] FO : Fix #PSCSX-5573, could not change HOOK_SHOPPING_CART_EXTRA
+
+better approach than da33b69fee31aefaf2d934626c280b48bb120b99
+	[-] Install : Fix customisation field upgrade crash
+(For 1.6.0.12)
+	[*] PDF : Rebranding of Credit-slip and Delivery-slip PDF (#PSCSX-5964)
+to match Invoice PDF style
+	[*] PDF : (#PSCSX-5964) Rebranding of "Order-return" and "Supply-order"
+like invoice PDF
+	[*] PDF : Update invoice.total-tab.tpl
+
+Hide taxes display when no taxes applied.
 
 
 
