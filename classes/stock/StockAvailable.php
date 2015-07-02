@@ -332,6 +332,7 @@ class StockAvailableCore extends ObjectModel
 		if ($existing_id > 0)
 		{
 			Db::getInstance()->update(
+				'stock_available',
 				array('out_of_stock' => (int)$out_of_stock),
 				'id_product = '.(int)$id_product.
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
