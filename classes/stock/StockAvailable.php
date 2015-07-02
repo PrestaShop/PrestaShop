@@ -334,7 +334,6 @@ class StockAvailableCore extends ObjectModel
 			Db::getInstance()->update(
 				array('out_of_stock' => (int)$out_of_stock),
 				'id_product = '.(int)$id_product.
-				(($id_product_attribute) ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
