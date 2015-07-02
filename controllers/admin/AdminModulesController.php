@@ -584,7 +584,7 @@ class AdminModulesControllerCore extends AdminController
 				&& substr($_FILES['file']['name'], -4) != '.tgz' && substr($_FILES['file']['name'], -7) != '.tar.gz')
 				$this->errors[] = Tools::displayError('Unknown archive type.');
 			elseif (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_MODULE_DIR_.$_FILES['file']['name']))
-				$this->errors[] = Tools::displayError('An error occurred while copying archive to the module directory.');
+				$this->errors[] = Tools::displayError('An error occurred while copying the archive to the module directory.');
 			else
 				$this->extractArchive(_PS_MODULE_DIR_.$_FILES['file']['name']);
 		}
@@ -789,7 +789,7 @@ class AdminModulesControllerCore extends AdminController
 								if (!$download_ok)
 									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while downloading the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
-									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while extracting the latest version'), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded: Error while extracting the latest version.'), '<strong>'.$attr['displayName'].'</strong>');
 								else
 									$module_upgraded[] = $name;
 							}
@@ -815,11 +815,11 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name))))
 						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
 					elseif ($key == 'install' && Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
+						$this->errors[] = Tools::displayError(sprintf('This module is already installed: %s.', $module->name));
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
+						$this->errors[] = Tools::displayError(sprintf('This module has already been uninstalled: %s.', $module->name));
 					elseif ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
+						$this->errors[] = Tools::displayError(sprintf('This module needs to be installed in order to be updated: %s.', $module->name));
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -982,9 +982,9 @@ class AdminModulesControllerCore extends AdminController
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
 				if ($key == 'uninstall')
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s.'), $html_error);
 				else
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s.'), $html_error);
 				$this->context->smarty->assign('error_module', 'true');
 			}
 		}
@@ -1528,12 +1528,12 @@ class AdminModulesControllerCore extends AdminController
 		if (count($module_errors))
 		{
 			$html = $this->generateHtmlMessage($module_errors);
-			$this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s'), $html);
+			$this->errors[] = sprintf(Tools::displayError('The following module(s) were not upgraded successfully: %s.'), $html);
 		}
 		if (count($module_success))
 		{
 			$html = $this->generateHtmlMessage($module_success);
-			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully:').' %s', $html);
+			$this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully: %s.'), $html);
 		}
 
 		ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
