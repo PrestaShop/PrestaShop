@@ -324,7 +324,7 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
-		if (!$id_product_attribute)
+		if (1 || !$id_product_attribute)
 			$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, $id_shop);
 		else
 			$existing_id = 0;
@@ -335,6 +335,7 @@ class StockAvailableCore extends ObjectModel
 				'stock_available',
 				array('out_of_stock' => (int)$out_of_stock),
 				'id_product = '.(int)$id_product.
+				(($id_product_attribute) ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
 				StockAvailable::addSqlShopRestriction(null, $id_shop)
 			);
 		}
