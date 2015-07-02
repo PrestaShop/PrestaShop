@@ -26,9 +26,13 @@
 
 class Core_Foundation_Crypto_Hashing
 {
-
+    /** @var array should contain encryption methods */
     private $hash_methods = [];
 
+    /**
+     * Init $hash_methods
+     * @return void
+     */
     private function initHashMethods()
     {
         $this->hash_methods = [
@@ -53,6 +57,13 @@ class Core_Foundation_Crypto_Hashing
             ];
     }
 
+    /**
+     * check if it's the first function of the array that was used for encryption
+     * @param  string  $passwd     the password you want to check
+     * @param  string  $hash       the hash you want to check
+     * @param  string  $cookie_key the define _COOKIE_KEY_
+     * @return bool                result of the verify function
+     */
     public function isFirstHash($passwd, $hash, $cookie_key)
     {
         if (!count($this->hash_methods)) {
@@ -64,6 +75,13 @@ class Core_Foundation_Crypto_Hashing
         return $closure['verify']($passwd, $hash, $cookie_key);
     }
 
+    /**
+     * Iter on hash_methods array and return true if it match
+     * @param  string  $passwd     the password you want to check
+     * @param  string  $hash       the hash you want to check
+     * @param  string  $cookie_key the define _COOKIE_KEY_
+     * @return bool                true is returned if the function find a match else false
+     */
     public function checkHash($passwd, $hash, $cookie_key)
     {
         if (!count($this->hash_methods)) {
@@ -79,6 +97,13 @@ class Core_Foundation_Crypto_Hashing
         return false;
     }
 
+    /**
+     * encrypt the $passwd string and return the result of the 1st encryption method
+     * contained in Core_Foundation_Crypto_Hashing::hash_methods
+     * @param  string  $passwd     the password you want to encrypt
+     * @param  string  $cookie_key the define _COOKIE_KEY_
+     * @return string
+     */
     public function encrypt($passwd, $cookie_key)
     {
         if (!count($this->hash_methods)) {
