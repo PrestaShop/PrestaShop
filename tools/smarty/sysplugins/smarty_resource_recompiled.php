@@ -17,6 +17,13 @@
 abstract class Smarty_Resource_Recompiled extends Smarty_Resource
 {
     /**
+     * Flag that it's an recompiled resource
+     *
+     * @var bool
+     */
+    public $recompiled = true;
+
+    /**
      * populate Compiled Object with compiled filepath
      *
      * @param  Smarty_Template_Compiled $compiled  compiled object

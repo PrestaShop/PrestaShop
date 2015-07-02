@@ -25,7 +25,7 @@ class Smarty_Internal_Write_File
      * @throws SmartyException
      * @return boolean true
      */
-    public static function writeFile($_filepath, $_contents, Smarty $smarty)
+    public function writeFile($_filepath, $_contents, Smarty $smarty)
     {
         $_error_reporting = error_reporting();
         error_reporting($_error_reporting & ~E_NOTICE & ~E_WARNING);
@@ -55,7 +55,9 @@ class Smarty_Internal_Write_File
          */
         if (Smarty::$_IS_WINDOWS) {
             // remove original file
-            @unlink($_filepath);
+            if (is_file($_filepath)) {
+                @unlink($_filepath);
+            }
             // rename tmp file
             $success = @rename($_tmp_file, $_filepath);
         } else {
@@ -63,17 +65,17 @@ class Smarty_Internal_Write_File
             $success = @rename($_tmp_file, $_filepath);
             if (!$success) {
                 // remove original file
-                @unlink($_filepath);
+                if (is_file($_filepath)) {
+                    @unlink($_filepath);
+                }
                 // rename tmp file
                 $success = @rename($_tmp_file, $_filepath);
             }
         }
-
         if (!$success) {
             error_reporting($_error_reporting);
             throw new SmartyException("unable to write file {$_filepath}");
         }
-
         if ($smarty->_file_perms !== null) {
             // set file permissions
             chmod($_filepath, $smarty->_file_perms);

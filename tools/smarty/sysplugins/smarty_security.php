@@ -55,6 +55,12 @@ class Smarty_Security
      */
     public $trusted_uri = array();
     /**
+     * List of trusted constants names
+     *
+     * @var array
+     */
+    public $trusted_constants = array();
+    /**
      * This is an array of trusted static classes.
      * If empty access to all static classes is allowed.
      * If set to 'none' none is allowed.
@@ -62,6 +68,34 @@ class Smarty_Security
      * @var array
      */
     public $static_classes = array();
+
+    /**
+     * This is an nested array of trusted classes and static methods.
+     * If empty access to all static classes and methods is allowed.
+     * Format:
+     * array (
+     *         'class_1' => array('method_1', 'method_2'), // allowed methods listed
+     *         'class_2' => array(),                       // all methods of class allowed
+     *       )
+     * If set to null none is allowed.
+     *
+     * @var array
+     */
+    public $trusted_static_methods = array();
+
+    /**
+     * This is an array of trusted static properties.
+     * If empty access to all static classes and properties is allowed.
+     * Format:
+     * array (
+     *         'class_1' => array('prop_1', 'prop_2'), // allowed properties listed
+     *         'class_2' => array(),                   // all properties of class allowed
+     *       )
+     * If set to null none is allowed.
+     *
+     * @var array
+     */
+    public $trusted_static_properties = array();
     /**
      * This is an array of trusted PHP functions.
      * If empty all functions are allowed.
@@ -74,18 +108,18 @@ class Smarty_Security
         'count', 'sizeof',
         'in_array', 'is_array',
         'time',
-        'nl2br',
     );
     /**
      * This is an array of trusted PHP modifiers.
      * If empty all modifiers are allowed.
-     * To disable all modifier set $modifiers = null.
+     * To disable all modifier set $php_modifiers = null.
      *
      * @var array
      */
     public $php_modifiers = array(
         'escape',
-        'count'
+        'count',
+        'nl2br',
     );
     /**
      * This is an array of allowed tags.
@@ -116,6 +150,12 @@ class Smarty_Security
      */
     public $disabled_modifiers = array();
     /**
+     * This is an array of disabled special $smarty variables.
+     *
+     * @var array
+     */
+    public $disabled_special_smarty_vars = array();
+    /**
      * This is an array of trusted streams.
      * If empty all streams are allowed.
      * To disable all streams set $streams = null.
@@ -135,7 +175,18 @@ class Smarty_Security
      * @var boolean
      */
     public $allow_super_globals = true;
-
+    /**
+     * max template nesting level
+     *
+     * @var int
+     */
+    public $max_template_nesting = 0;
+    /**
+     * current template nesting level
+     *
+     * @var int
+     */
+    private $_current_template_nesting = 0;
     /**
      * Cache for $resource_dir lookup
      *
@@ -222,6 +273,46 @@ class Smarty_Security
     }
 
     /**
+     * Check if static class method/property is trusted.
+     *
+     * @param  string $class_name
+     * @param  string $params
+     * @param  object $compiler compiler object
+     *
+     * @return boolean                 true if class method is trusted
+     * @throws SmartyCompilerException if static class method is not trusted
+     */
+    public function isTrustedStaticClassAccess($class_name, $params, $compiler)
+    {
+        if (!isset($params[2])) {
+            // fall back
+            return $this->isTrustedStaticClass($class_name, $compiler);
+        }
+        if ($params[2] == 'method') {
+            $allowed = $this->trusted_static_methods;
+            $name = substr($params[0], 0, strpos($params[0], '('));
+        } else {
+            $allowed = $this->trusted_static_properties;
+            // strip '$'
+            $name = substr($params[0], 1);
+        }
+        if (isset($allowed)) {
+            if (empty($allowed)) {
+                // fall back
+                return $this->isTrustedStaticClass($class_name, $compiler);
+            }
+            if (isset($allowed[$class_name])
+                && (empty($allowed[$class_name])
+                    || in_array($name, $allowed[$class_name]))
+            ) {
+                return true;
+            }
+        }
+        $compiler->trigger_template_error("access to static class '{$class_name}' {$params[2]} '{$name}' not allowed by security setting");
+        return false; // should not, but who knows what happens to the compiler in the future?
+    }
+
+    /**
      * Check if PHP modifier is trusted.
      *
      * @param  string $modifier_name
@@ -275,6 +366,26 @@ class Smarty_Security
     }
 
     /**
+     * Check if special $smarty variable is trusted.
+     *
+     * @param  string $var_name
+     * @param  object $compiler compiler object
+     *
+     * @return boolean                 true if tag is trusted
+     * @throws SmartyCompilerException if modifier is not trusted
+     */
+    public function isTrustedSpecialSmartyVar($var_name, $compiler)
+    {
+        if (!in_array($var_name, $this->disabled_special_smarty_vars)) {
+            return true;
+        } else {
+            $compiler->trigger_template_error("special variable '\$smarty.{$var_name}' not allowed by security setting", $compiler->lex->taglineno);
+        }
+
+        return false; // should not, but who knows what happens to the compiler in the future?
+    }
+
+    /**
      * Check if modifier plugin is trusted.
      *
      * @param  string $modifier_name
@@ -303,6 +414,33 @@ class Smarty_Security
         }
 
         return false; // should not, but who knows what happens to the compiler in the future?
+    }
+
+    /**
+     * Check if constants are enabled or trusted
+     *
+     * @param  string $const    contant name
+     * @param  object $compiler compiler object
+     *
+     * @return bool
+     */
+    public function isTrustedConstant($const, $compiler)
+    {
+        if (in_array($const, array('true', 'false', 'null'))) {
+            return true;
+        }
+        if (!empty($this->trusted_constants)) {
+            if (!in_array($const, $this->trusted_constants)) {
+                $compiler->trigger_template_error("Security: access to constant '{$const}' not permitted");
+                return false;
+            }
+            return true;
+        }
+        if ($this->allow_constants) {
+            return true;
+        }
+        $compiler->trigger_template_error("Security: access to constants not permitted");
+        return false;
     }
 
     /**
@@ -476,5 +614,31 @@ class Smarty_Security
         }
 
         throw new SmartyException("directory '{$_filepath}' not allowed by security setting");
+    }
+
+    /**
+     * Start template processing
+     *
+     * @param $template
+     *
+     * @throws SmartyException
+     */
+    public function startTemplate($template)
+    {
+        if ($this->max_template_nesting > 0 && $this->_current_template_nesting ++ >= $this->max_template_nesting) {
+            throw new SmartyException("maximum template nesting level of '{$this->max_template_nesting}' exceeded when calling '{$template->template_resource}'");
+        }
+    }
+
+    /**
+     * Exit template processing
+     *
+     * @param $template
+     */
+    public function exitTemplate($template)
+    {
+        if ($this->max_template_nesting > 0) {
+            $this->_current_template_nesting --;
+        }
     }
 }
