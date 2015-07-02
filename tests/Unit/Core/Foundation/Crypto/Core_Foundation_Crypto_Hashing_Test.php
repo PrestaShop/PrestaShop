@@ -36,5 +36,9 @@ define('_COOKIE_KEY_', '2349123849231-4123');
 
 class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 {
-    
+    public function setup()
+    {
+        $this->hashing = new Hashing;
+    }
+
 }
