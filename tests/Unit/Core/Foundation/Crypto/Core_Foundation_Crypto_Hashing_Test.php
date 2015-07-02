@@ -52,4 +52,9 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_string($this->hashing->encrypt("123", _COOKIE_KEY_)));
     }
 
+    public function test_simple_first_hash()
+    {
+        $this->assertTrue($this->hashing->isFirstHash("123", $this->hashing->encrypt("123", _COOKIE_KEY_), _COOKIE_KEY_));
+        $this->assertFalse($this->hashing->isFirstHash("123", md5("123", _COOKIE_KEY_), _COOKIE_KEY_));
+    }
 }
