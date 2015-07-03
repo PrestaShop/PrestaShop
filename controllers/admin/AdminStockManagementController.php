@@ -1015,7 +1015,8 @@ class AdminStockManagementControllerCore extends AdminController
 
 						$query->select('IFNULL(CONCAT(pl.`name`, \' : \', GROUP_CONCAT(agl.`name`, \' - \', al.`name` SEPARATOR \', \')),pl.`name`) as name');
 						$query->from('product_attribute', 'a');
-						$query->join('INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.`id_product` = a.`id_product` AND pl.`id_lang` = '.(int)$lang_id.')
+						$query->join('INNER JOIN '._DB_PREFIX_.'product p ON p.`id_product` = a.`id_product`
+							INNER JOIN '._DB_PREFIX_.'product_lang pl ON (pl.`id_product` = p.`id_product` AND pl.`id_shop` = p.`id_shop_default` AND pl.`id_lang` = '.(int)$lang_id.')
 							LEFT JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.`id_product_attribute` = a.`id_product_attribute`)
 							LEFT JOIN '._DB_PREFIX_.'attribute atr ON (atr.`id_attribute` = pac.`id_attribute`)
 							LEFT JOIN '._DB_PREFIX_.'attribute_lang al ON (al.`id_attribute` = atr.`id_attribute` AND al.`id_lang` = '.(int)$lang_id.')
