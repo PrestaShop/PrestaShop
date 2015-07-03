@@ -345,13 +345,13 @@ class AdminRequestSqlControllerCore extends AdminController
 				foreach (array_keys($results[0]) as $key)
 				{
 					$tab_key[] = $key;
-					fputs($csv, $key.';');
+					fputs($csv, '"'.$this->doubleDelimiter($key, '"').'";');
 				}
 				foreach ($results as $result)
 				{
 					fputs($csv, "\n");
 					foreach ($tab_key as $name)
-						fputs($csv, '"'.strip_tags($result[$name]).'";');
+						fputs($csv, '"'.$this->doubleDelimiter(strip_tags($result[$name]), '"').'";');
 				}
 				if (file_exists($export_dir.$file))
 				{
