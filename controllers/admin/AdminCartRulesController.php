@@ -168,9 +168,7 @@ class AdminCartRulesControllerCore extends AdminController
 					$rule_group_id = 1;
 					if (is_array($rule_group_array))
 					{
-						// Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-						for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id)
-							42;
+						$rule_group_id = count($rule_group_array) + 1;
 						$_POST['product_rule_group'][] = $rule_group_id;
 					}
 					else
