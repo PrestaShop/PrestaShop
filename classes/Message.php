@@ -75,9 +75,13 @@ class MessageCore extends ObjectModel
 	public static function getMessageByCartId($id_cart)
 	{
 		return Db::getInstance()->getRow('
-			SELECT *
-			FROM `'._DB_PREFIX_.'message`
-			WHERE `id_cart` = '.(int)$id_cart
+			SELECT m.*, (COUNT(mr.id_message) = 0) AS is_new_for_me
+			FROM `'._DB_PREFIX_.'message` m
+			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr
+				ON mr.`id_message` = m.`id_message`
+			WHERE m.`id_cart` = '.(int)$id_cart.'
+			GROUP BY m.id_message
+			ORDER BY m.date_add DESC'
 		);
 	}
 
