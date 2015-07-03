@@ -796,7 +796,9 @@ var ajaxCart = {
 		else if (!hasDeliveryAddress)
 			$('.ajax_cart_shipping_cost').html(toBeDetermined);
 
-		if (hasDeliveryAddress)
+		if (!jsonData.shippingCostFloat && !jsonData.free_ship)
+			$('.ajax_cart_shipping_cost').parent().find('.unvisible').hide();
+		else if (hasDeliveryAddress)
 			$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
 
 		$('.ajax_cart_tax_cost').text(jsonData.taxCost);
