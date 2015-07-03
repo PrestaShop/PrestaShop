@@ -86,80 +86,59 @@ class AuthControllerCore extends FrontController
 	{
 		parent::initContent();
 
-		$this->context->smarty->assign('genders', Gender::getGenders());
+		/** Set $this->template value here in case it's used by Ajax */
+		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 
-		$this->assignDate();
-
-		$this->assignCountries();
-
+		/** Newsletter checkbox variable */
 		$newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
-		$this->context->smarty->assign('newsletter', $newsletter);
-		$this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
 
+		/** Calculate 'back' variable */
 		$back = Tools::getValue('back');
-		$key = Tools::safeOutput(Tools::getValue('key'));
-
+		$key  = Tools::safeOutput(Tools::getValue('key'));
 		if (!empty($key))
 			$back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
+		$is_back_url = ($back == Tools::secureReferrer(Tools::getValue('back')));
 
-		if ($back == Tools::secureReferrer(Tools::getValue('back')))
-			$this->context->smarty->assign('back', html_entity_decode($back));
-		else
-			$this->context->smarty->assign('back', Tools::safeOutput($back));
+		/** Common variables */
+		$this->context->smarty->assign(array(
+			'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
+			'genders'                      => Gender::getGenders(),
+			'vat_management'               => Configuration::get('VATNUMBER_MANAGEMENT'),
+			'newsletter'                   => $newsletter,
+			'optin'                        => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+			'multi_shipping'               => (Tools::getValue('multi-shipping') == 1),
+			'field_required'               => $this->context->customer->validateFieldsRequiredDatabase(),
+			'back'                         => $is_back_url ? html_entity_decode($back) : Tools::safeOutput($back)
+		));
+		$this->assignDate();
+		$this->assignCountries();
+		$this->assignAddressFormat();
 
-		if (Tools::getValue('display_guest_checkout'))
-		{
-			if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
-				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
-			else
-				$countries = Country::getCountries($this->context->language->id, true);
-
-			$this->context->smarty->assign(array(
-					'inOrderProcess' => true,
-					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
-					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'sl_country' => (int)$this->id_country,
-					'countries' => $countries
-				));
-		}
-
+		/** Account creation page variable */
 		if (Tools::getValue('create_account'))
 			$this->context->smarty->assign('email_create', 1);
 
-		if (Tools::getValue('multi-shipping') == 1)
-			$this->context->smarty->assign('multi_shipping', true);
-		else
-			$this->context->smarty->assign('multi_shipping', false);
+		/** Guest checkout page registration variables */
+		if (Tools::getValue('display_guest_checkout'))
+			$this->context->smarty->assign(array(
+				'inOrderProcess'            => true,
+				'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
+			));
 
-		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
-
-		$this->assignAddressFormat();
-
-		// Call a hook to display more information on form
+		/** Call a hook to display more information on form */
 		$this->context->smarty->assign(array(
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
-			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
+			'HOOK_CREATE_ACCOUNT_TOP'  => Hook::exec('displayCustomerAccountFormTop')
 		));
 
-		// Just set $this->template value here in case it's used by Ajax
-		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
-
+		/** If Ajax, return response */
 		if ($this->ajax)
-		{
-			// Call a hook to display more information on form
-			$this->context->smarty->assign(array(
-					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'genders' => Gender::getGenders()
-				));
-
-			$return = array(
+			$this->ajaxDie(Tools::jsonEncode(array(
 				'hasError' => !empty($this->errors),
-				'errors' => $this->errors,
-				'page' => $this->context->smarty->fetch($this->template),
-				'token' => Tools::getToken(false)
-			);
-			$this->ajaxDie(Tools::jsonEncode($return));
-		}
+				'errors'   => $this->errors,
+				'page'     => $this->context->smarty->fetch($this->template),
+				'token'    => Tools::getToken(false)
+			)));
 	}
 
 	/**
@@ -167,23 +146,17 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignDate()
 	{
-		$selectedYears = (int)(Tools::getValue('years', 0));
-		$years = Tools::dateYears();
-		$selectedMonths = (int)(Tools::getValue('months', 0));
-		$months = Tools::dateMonths();
-		$selectedDays = (int)(Tools::getValue('days', 0));
-		$days = Tools::dateDays();
-
+		$one_phone_at_least = (int)Configuration::get('PS_ONE_PHONE_AT_LEAST');
 		$this->context->smarty->assign(array(
-				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
-				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
-				'years' => $years,
-				'sl_year' => $selectedYears,
-				'months' => $months,
-				'sl_month' => $selectedMonths,
-				'days' => $days,
-				'sl_day' => $selectedDays
-			));
+			'one_phone_at_least' => $one_phone_at_least,
+			'onr_phone_at_least' => $one_phone_at_least, //retro compatibility
+			'years'              => Tools::dateYears(),
+			'months'             => Tools::dateMonths(),
+			'days'               => Tools::dateDays(),
+			'sl_year'            => (int)(Tools::getValue('years', 0)),
+			'sl_month'           => (int)(Tools::getValue('months', 0)),
+			'sl_day'             => (int)(Tools::getValue('days', 0))
+		));
 	}
 
 	/**
@@ -191,17 +164,17 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignCountries()
 	{
-			$this->id_country = (int)Tools::getCountry();
-			if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
-				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
-			else
-				$countries = Country::getCountries($this->context->language->id, true);
-			$this->context->smarty->assign(array(
-				'countries' => $countries,
-				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-				'sl_country' => (int)$this->id_country,
-				'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
-			));
+		$this->id_country = (int)Tools::getCountry();
+
+		if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
+			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
+		else
+			$countries = Country::getCountries($this->context->language->id, true);
+
+		$this->context->smarty->assign(array(
+			'countries'  => $countries,
+			'sl_country' => $this->id_country,
+		));
 	}
 
 	/**
@@ -209,25 +182,26 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignAddressFormat()
 	{
-		$addressItems = array();
-		$addressFormat = AddressFormat::getOrderedAddressFields((int)$this->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::getFieldsRequired();
+		$address_items = array();
+		$address_format = AddressFormat::getOrderedAddressFields($this->id_country, false, true);
+		$require_form_fields_list = AddressFormat::getFieldsRequired();
 
-		foreach ($addressFormat as $addressline)
-			foreach (explode(' ', $addressline) as $addressItem)
-				$addressItems[] = trim($addressItem);
+		foreach ($address_format as $address_line)
+			foreach (explode(' ', $address_line) as $address_item)
+				$address_items[] = trim($address_item);
 
-		// Add missing require fields for a new user susbscription form
-		foreach ($requireFormFieldsList as $fieldName)
-			if (!in_array($fieldName, $addressItems))
-				$addressItems[] = trim($fieldName);
+		// Add missing require fields for a new user subscription form
+		foreach ($require_form_fields_list as $field_name)
+			if (!in_array($field_name, $address_items))
+				$address_items[] = trim($field_name);
 
-		foreach (array('inv', 'dlv') as $addressType)
+		foreach (array('inv', 'dlv') as $address_type)
 			$this->context->smarty->assign(array(
-				$addressType.'_adr_fields' => $addressFormat,
-				$addressType.'_all_fields' => $addressItems,
-				'required_fields' => $requireFormFieldsList
+				$address_type.'_adr_fields' => $address_format,
+				$address_type.'_all_fields' => $address_items
 			));
+
+		$this->context->smarty->assign('required_fields', $require_form_fields_list);
 	}
 
 	/**
