@@ -157,8 +157,10 @@ class AdminProductsControllerCore extends AdminController
 				$this->id_current_category = $id_category;
 				$this->context->cookie->id_category_products_filter = $id_category;
 			}
-			elseif ($id_category = $this->context->cookie->id_category_products_filter)
+			elseif ($id_category = $this->context->cookie->id_category_products_filter) {
 				$this->id_current_category = $id_category;
+				$_GET['id_category'] = $id_category; //set for HelperList
+			}
 			if ($this->id_current_category)
 				$this->_category = new Category((int)$this->id_current_category);
 			else
