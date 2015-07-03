@@ -597,10 +597,11 @@ class CustomerCore extends ObjectModel
 	*
 	* @param $id_customer Customer id
 	* @return bool
+	* @deprecated since 1.4.0.2
 	*/
-	/* DEPRECATED */
 	public function customerIdExists($id_customer)
 	{
+		Tools::displayAsDeprecated('Use Customer::customerIdExistsStatic($id_customer)');
 		return Customer::customerIdExistsStatic((int)$id_customer);
 	}
 
