@@ -230,8 +230,9 @@ class CustomerCore extends ObjectModel
 	public function update($nullValues = false)
 	{
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
-
-		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
+		$previous_Customer_settings = new Customer($this->id);
+		if (($this->newsletter && !Validate::isDate($this->newsletter_date_add)) || // initial addition
+				($this->newsletter && !$previous_Customer_settings->newsletter)) // successive addition(s)
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 		if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin')
 			$this->updateGroup($this->groupBox);
