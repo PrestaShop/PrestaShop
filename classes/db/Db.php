@@ -482,7 +482,7 @@ abstract class DbCore
 				if ($value['type'] == 'sql')
 					$values[] = $string_value = $value['value'];
 				else
-					$values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+					$values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'".$this->escape($value['value'], true)."'";
 
 				if ($type == Db::ON_DUPLICATE_KEY)
 					$duplicate_key_stringified .= '`'.bqSQL($key).'` = '.$string_value.',';
