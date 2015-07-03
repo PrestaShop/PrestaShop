@@ -227,7 +227,9 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$id_product_attribute = $ids[1];
 			$id_warehouse = Tools::getValue('id_warehouse', -1);
 			$this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				w.id_currency, a.price_te';
+				w.id_currency, w.id_warehouse, w.name AS warehouse_name,
+				a.price_te, a.physical_quantity, a.usable_quantity,
+				(a.price_te * a.physical_quantity) as valuation';
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				a.id_product = pl.id_product
@@ -248,7 +250,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			if ($id_warehouse != -1)
 				$this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
 
-			$this->_group = 'GROUP BY a.price_te';
+			$this->_group = 'GROUP BY a.id_warehouse';
 
 			self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
 			return parent::renderList();
@@ -280,7 +282,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 			{
 				$item = &$this->_list[$i];
 				$manager = StockManagerFactory::getManager();
-
+				
+				/*
 				// gets quantities and valuation
 				$query = new DbQuery();
 				$query->select('SUM(physical_quantity) as physical_quantity');
@@ -297,10 +300,12 @@ class AdminStockInstantStateControllerCore extends AdminController
 				$item['physical_quantity'] = $res['physical_quantity'];
 				$item['usable_quantity'] = $res['usable_quantity'];
 				$item['valuation'] = $res['valuation'];
+				*/
+				
 				$item['real_quantity'] = $manager->getProductRealQuantities(
 					$item['id_product'],
 					$item['id_product_attribute'],
-					($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
+					$item['id_warehouse'],
 					true
 				);
 			}
