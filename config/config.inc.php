@@ -120,8 +120,8 @@ require_once(dirname(__FILE__).'/defines_uri.inc.php');
 global $_MODULES;
 $_MODULES = array();
 
-define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
-define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
+define('_PS_PRICE_DISPLAY_PRECISION_', (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
+define('_PS_PRICE_COMPUTE_PRECISION_', (int)Configuration::get('PS_PRICE_COMPUTE_PRECISION'));
 
 if (Configuration::get('PS_USE_HTMLPURIFIER'))
 	require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
