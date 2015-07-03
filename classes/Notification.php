@@ -41,13 +41,13 @@ class NotificationCore
 	 */
 	public function getLastElements()
 	{
-		global $cookie;
+		$context = Context::getContext();
 
 		$notifications = array();
 		$employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int)$cookie->id_employee);
+		WHERE `id_employee` = '.(int)$context->employee->id);
 
 		foreach ($this->types as $type)
 			$notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
@@ -135,7 +135,7 @@ class NotificationCore
 	 */
 	public function updateEmployeeLastElement($type)
 	{
-		global $cookie;
+		$context = Context::getContext();
 
 		if (in_array($type, $this->types))
 			// We update the last item viewed
@@ -145,7 +145,7 @@ class NotificationCore
 				SELECT IFNULL(MAX(`id_'.$type.'`), 0)
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
 			)
-			WHERE `id_employee` = '.(int)$cookie->id_employee);
+			WHERE `id_employee` = '.(int)$context->employee->id);
 		return false;
 	}
 }
