@@ -145,7 +145,7 @@
 					{if Configuration::get('PS_PDF_IMG_INVOICE')}
 						<td style="text-align: left;">{if isset($order_detail.image) && $order_detail.image->id}{$order_detail.image_tag}{/if}</td>
 					{/if}
-					<td style="text-align: left; width: {$product_reference_width}%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
+					<td style="text-align: left; width: {$product_reference_width}%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}{if $order_detail.product_is_pwyw_price} ({l s='customer-chosen price' pdf='true'}){/if}</td>
 					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 						<td style="text-align: right; width: 10%">

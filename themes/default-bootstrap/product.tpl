@@ -260,7 +260,10 @@
 							<div>
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">{strip}
 									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
-									{if $priceDisplay >= 0 && $priceDisplay <= 2}
+								  {if $product->pwyw_price}
+									  <span id="our_price_display" class="price" style="font-size:15px;white-space:normal;" itemprop="price">{l s='Pay What You Want'}</span><meta itemprop="priceCurrency" content="{$currency->iso_code}" />
+									  {hook h="displayProductPriceBlock" product=$product type="price"}
+								  {elseif $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="our_price_display" class="price" itemprop="price" content="{$productPrice}">{convertPrice price=$productPrice|floatval}</span>
 										{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
 											{if $priceDisplay == 1} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
@@ -315,8 +318,36 @@
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
 					<div class="product_attributes clearfix">
-						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
+
+						  {if $product->pwyw_price}
+						    <p id="price_wanted_p">
+						      <label style="display:block">{l s='Price'}</label>
+						      {* AFAICT we don't have access to in cart per-product total in this template, so the current free-price can't be given as default *}
+						      <input type="text"
+							      name="pwyw_price"
+							      id="price_wanted"
+							      class="text"
+							      size="7"
+							      maxlength="27"
+							      value="{if isset($pwyw_priceBackup)}{$pwyw_priceBackup|floatval}{elseif $product->price}{$product->price}{else}{/if}" />
+						      <span class="input-group-addon" style="width:10px;display:inline-block;">{$currency->sign}</span>
+						      <meta itemprop="priceCurrency" content="{$currency->iso_code}" />
+						      {*
+							 <!-- later, if needed -->
+							 <a id="refresh"
+							 class="btn-small pwyw_price_refresh"
+							 href="#"
+							 data-field-pwyw_price="pwyw_price"
+							 style="padding:3px">
+							 <i class="icon-refresh">&nbsp;</i></a>
+							 <!-- TODO: ajax update price -->
+						       *}
+						      <span class="clearfix"></span>
+						    </p>
+						  {/if}
+
+							<!-- quantity wanted -->
 						<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none;"{/if}>
 							<label for="quantity_wanted">{l s='Quantity'}</label>
 							<input type="number" min="1" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />

@@ -39,6 +39,7 @@
 			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
+		{if $product['pwyw_price']}<br/><span>({l s='customer-chosen price'})</span>{/if}
 		<div class="row-editing-warning" style="display:none;">
 			<div class="alert alert-warning">
 				<strong>{l s='Editing this product line will remove the reduction and base price.'}</strong>

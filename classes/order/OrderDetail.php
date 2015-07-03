@@ -65,6 +65,9 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $product_price;
 
+	/** @var bool */
+	protected $product_is_pwyw_price = false;
+
 	/** @var float */
 	public $original_product_price;
 
@@ -175,6 +178,7 @@ class OrderDetailCore extends ObjectModel
 			'product_quantity_refunded' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'product_quantity_reinjected' =>array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'product_price' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'product_is_pwyw_price' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'reduction_percent' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'reduction_amount' =>			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'reduction_amount_tax_incl' =>  array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
@@ -611,6 +615,8 @@ class OrderDetailCore extends ObjectModel
 		$this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
 		$this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
 		$this->product_weight = $product['id_product_attribute'] ? (float)$product['weight_attribute'] : (float)$product['weight'];
+		$this->product_is_pwyw_price = $product['pwyw_price'];
+
 		$this->id_warehouse = $id_warehouse;
 
 		$product_quantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id);
