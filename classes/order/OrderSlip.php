@@ -387,8 +387,24 @@ class OrderSlipCore extends ObjectModel
 
 		$res = true;
 
+		// Ensure compliance with previous hook params
+		$hook_product_list = array();
+		$hook_quantity_list = array();
+		
 		foreach ($product_list as $product)
+		{
 			$res &= $order_slip->addProductOrderSlip($product);
+			$hook_product_list[] = (int)$product['id_order_detail'];
+			$hook_quantity_list[] = (int)$product['quantity'];
+		}
+
+		if ($res)
+			Hook::exec('actionOrderSlipAdd', array(
+					'order' => $order,
+					'productList' => $hook_product_list,
+					'qtyList' => $hook_quantity_list,
+					'order_slip' => $order_slip,
+				), null, false, true, false, $order->id_shop);
 
 		return $res;
 	}
