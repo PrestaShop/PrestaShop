@@ -60,6 +60,8 @@ First-time users will be particularly interested in the following guides:
 Contributing
 --------
 
+PrestaShop is an Open Source project, and it wouldn't be possible without the help of the [hundreds of contributors][21], who submitted improvements and bugfixes over the years. Thank you all!
+
 If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository or read the [tutorials about contribution][8] on the documentation site.
 
 Current [Travis](https://travis-ci.org/) status: [![Travis](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=1.6)](https://travis-ci.org/PrestaShop/PrestaShop) (The Unit Tests are being implemented, so the status might be broken).
@@ -111,3 +113,4 @@ Thank you for downloading and using the PrestaShop open-source e-commerce soluti
 [18]: http://doc.prestashop.com/display/PS16/Troubleshooting
 [19]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [20]: http://addons.prestashop.com/
+[21]: CONTRIBUTORS.md
