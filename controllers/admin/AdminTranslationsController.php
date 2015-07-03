@@ -984,7 +984,7 @@ class AdminTranslationsControllerCore extends AdminController
 						$pattern = '\'<{'.strtolower($module_name).'}prestashop>'.strtolower($template_name).'_'.md5($key).'\'';
 					}
 
-					if (array_key_exists($post_key, $_POST) && !in_array($pattern, $array_check_duplicate))
+					if (array_key_exists($post_key, $_POST) && !in_array($pattern, $array_check_duplicate) && !empty(pSQL(str_replace(array("\r\n", "\r", "\n"), ' ', $_POST[$post_key]))))
 					{
 						if ($_POST[$post_key] == '')
 							continue;
