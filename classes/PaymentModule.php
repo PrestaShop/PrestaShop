@@ -663,9 +663,17 @@ abstract class PaymentModuleCore extends Module
 						'orderStatus' => $order_status
 					));
 
-					foreach ($this->context->cart->getProducts() as $product)
-						if ($order_status->logable)
+					foreach ($this->context->cart->getProducts() as $product) {
+						if ($order_status->logable) {
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
+						}
+
+						if ($product['quantity_available'] == 0) {
+							Hook::exec('actionProductOutOfStock', array(
+								'product' => $product
+							));
+						}
+					}
 
 					if (self::DEBUG_MODE)
 						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int)$id_cart, true);
