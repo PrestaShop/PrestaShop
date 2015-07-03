@@ -86,12 +86,16 @@ class HelperTreeCategoriesCore extends TreeCore
 			}
 			else if ($this->_children_only)
 			{
+				if (empty($root_category))
+					$root_category = Category::getRootCategory()->id;
 				$categories[$root_category] = Category::getChildren($root_category, $lang, false, $shop->id);
 				$children = $this->fillTree($categories, $root_category);
 				$this->setData($children);
 			}
 			else
 			{
+				if (empty($root_category))
+					$root_category = Category::getRootCategory()->id;
 				$new_selected_categories = array();
 				$selected_categories = $this->getSelectedCategories();
 				$categories[$root_category] = Category::getChildren($root_category, $lang, false, $shop->id);
