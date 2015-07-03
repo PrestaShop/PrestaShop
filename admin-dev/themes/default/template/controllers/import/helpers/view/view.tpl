@@ -136,7 +136,7 @@
 					<i class="process-icon-cancel text-danger"></i>
 					{l s='Cancel'}
 				</button>
-				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
+				<button id="import" name="import" type="submit" onclick="return (validateImportation([{$res}]));"  class="btn btn-default pull-right">
 					<i class="process-icon-ok text-success"></i>
 					{l s='Import .CSV data'}
 				</button>

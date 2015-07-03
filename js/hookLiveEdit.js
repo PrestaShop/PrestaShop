@@ -1,7 +1,7 @@
 var has_been_moved = false;
-var modules_list = new Array();
-var hooks_list = new Array();
-var hookable_list = new Array();
+var modules_list = [];
+var hooks_list = [];
+var hookable_list = [];
 var timer;
 $(document).ready(function() {
 	// do some place for submit button
@@ -138,7 +138,7 @@ $(document).ready(function() {
 });
 // init hookable_list 
 function getHookableList() {
-	hooks_list = new Array();
+	hooks_list = [];
 	$("input[name^=hook_list]").each(function(e){
 		hooks_list.push($(this).val());
 	}); 

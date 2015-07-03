@@ -147,7 +147,7 @@
 {block name="script"}
 var current_id_condition_group = 0;
 var last_condition_group = 0;
-var conditions = new Array();
+var conditions = [];
 
 function toggle_condition_group(id_condition_group)
 {
@@ -163,7 +163,7 @@ function add_condition(id_condition_group, type, value)
 	var id_condition = id_condition_group+'_'+type+'_'+value;
 	if (typeof conditions[id_condition] != 'undefined')
 		return false;
-	var condition = new Array();
+	var condition = [];
 	condition.type = type;
 	condition.value = value;
 	condition.id_condition_group = id_condition_group;

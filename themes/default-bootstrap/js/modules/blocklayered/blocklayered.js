@@ -23,9 +23,9 @@
 *  International Registred Trademark & Property of PrestaShop SA
 */
 
-var ajaxQueries = new Array();
+var ajaxQueries = [];
 var ajaxLoaderOn = 0;
-var sliderList = new Array();
+var sliderList = [];
 var slidersInit = false;
 
 $(document).ready(function()
@@ -326,7 +326,7 @@ function paginationButton(nbProductsIn, nbProductOut)
 			productCountRow = $.trim(productCountRow);
 			productCountRow = productCountRow.split(' ');
 
-			var backStart = new Array;
+			var backStart = [];
 			for (row in productCountRow)
 				if (parseInt(productCountRow[row]) + 0 == parseInt(productCountRow[row]))
 					backStart.push(row);
@@ -406,10 +406,10 @@ function openCloseFilter()
 
 function stopAjaxQuery() {
 	if (typeof(ajaxQueries) == 'undefined')
-		ajaxQueries = new Array();
+		ajaxQueries = [];
 	for(i = 0; i < ajaxQueries.length; i++)
 		ajaxQueries[i].abort();
-	ajaxQueries = new Array();
+	ajaxQueries = [];
 }
 
 function reloadContent(params_plus)

@@ -68,7 +68,7 @@
 									return value;
 								},
 								parse: function(data) {
-									var mytab = new Array();
+									var mytab = [];
 									for (var i = 0; i < data.length; i++)
 										mytab[mytab.length] = { data: data[i], value: data[i].name };
 									return mytab;

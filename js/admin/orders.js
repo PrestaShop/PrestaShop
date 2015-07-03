@@ -24,7 +24,7 @@
 */
 
 var current_product = null;
-var ajaxQueries = new Array();
+var ajaxQueries = [];
 
 $(document).ready(function() {
 	// Init all events
@@ -35,10 +35,10 @@ $(document).ready(function() {
 
 function stopAjaxQuery() {
 	if (typeof(ajaxQueries) == 'undefined')
-		ajaxQueries = new Array();
+		ajaxQueries = [];
 	for(i = 0; i < ajaxQueries.length; i++)
 		ajaxQueries[i].abort();
-	ajaxQueries = new Array();
+	ajaxQueries = [];
 }
 
 function updateInvoice(invoices)
@@ -349,7 +349,7 @@ function init()
 				return value;
 			},
 			parse: function(data) {
-				var products = new Array();
+				var products = [];
 				if (typeof(data.products) != 'undefined')
 					for (var i = 0; i < data.products.length; i++)
 						products[i] = { data: data.products[i], value: data.products[i].name };

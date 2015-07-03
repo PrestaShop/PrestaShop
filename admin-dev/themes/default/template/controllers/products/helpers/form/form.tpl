@@ -81,7 +81,7 @@
 
 			var has_combinations = {$has_combinations};
 
-			var toload = new Array();
+			var toload = [];
 			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' js=1}';
 			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
@@ -102,8 +102,8 @@
 				var display_multishop_checkboxes = false;
 			{/if}
 
-			var tabs_preloaded = new Array();
-			var tabs_to_preload = new Array();
+			var tabs_preloaded = [];
+			var tabs_to_preload = [];
 			var mod_evasive = {if isset($mod_evasive) && $mod_evasive}true{else}false{/if};
 			var mod_security = {if isset($mod_security) && $mod_security}true{else}false{/if};
 
@@ -167,7 +167,7 @@
 						$("#link-"+id).addClass('active');
 					});
 
-					var languages = new Array();
+					var languages = [];
 					if (btn_name == "Combinations")
 					{
 						$('#desc-product-new').hide();
@@ -216,7 +216,7 @@
 			// Listen to the load event that is fired each time an ajax call to load a tab has completed
 			$(window).bind("load", function() {
 				{* Fill an array with tabs that need to be preloaded *}
-				var tabs_to_preload = new Array();
+				var tabs_to_preload = [];
 				{foreach $tabs_preloaded as $tab_name => $value}
 					{* If the tab was not given a loading priority number it will not be preloaded *}
 					{if (is_numeric($value))}

@@ -30,13 +30,13 @@
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
 	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
-	var cart_quantity = new Array();
-	var currencies = new Array();
+	var cart_quantity = [];
+	var currencies = [];
 	var id_currency = '';
 	var id_lang = '';
 	//var txt_show_carts = '{l s='Show carts and orders for this customer.' js=1}';
 	//var txt_hide_carts = '{l s='Hide carts and orders for this customer.' js=1}';
-	var defaults_order_state = new Array();
+	var defaults_order_state = [];
 	var customization_errors = false;
 	var pic_dir = '{$pic_dir}';
 	var currency_format = 5;
@@ -104,7 +104,7 @@
 							$('#vouchers_err').html('{l s='No voucher was found'}').show();
 						else
 							$('#vouchers_err').hide();
-						var mytab = new Array();
+						var mytab = [];
 						for (var i = 0; i < data.vouchers.length; i++)
 							mytab[mytab.length] = { data: data.vouchers[i], value: data.vouchers[i].name + (data.vouchers[i].code.length > 0 ? ' - ' + data.vouchers[i].code : '')};
 						return mytab;
@@ -638,7 +638,7 @@
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
-						stock[id_product] = new Array();
+						stock[id_product] = [];
 						if (this.customizable == '1' || this.customizable == '2')
 						{
 							customization_html += '<div class="bootstrap"><div class="panel"><div class="panel-heading">{l s='Customization'}</div><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';

@@ -29,7 +29,7 @@
 <script type="text/javascript">
 {if isset($selected_categories) && !empty($selected_categories)}
 	{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
-	var selected_categories = new Array("{$imploded_selected_categories}");
+	var selected_categories = ["{$imploded_selected_categories}"];
 
 	$('#'+idTree).tree('collapseAll');
 	$('#'+idTree).find(":input").each(

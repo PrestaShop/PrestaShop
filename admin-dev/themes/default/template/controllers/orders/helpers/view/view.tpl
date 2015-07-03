@@ -46,7 +46,7 @@
 	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of products must be set' js=1}";
 	var txt_add_product_no_product_price = "{l s='Error: Product price must be set' js=1}";
 	var txt_confirm = "{l s='Are you sure?' js=1}";
-	var statesShipped = new Array();
+	var statesShipped = [];
 	var has_voucher = {if count($discounts)}1{else}0{/if};
 	{foreach from=$states item=state}
 		{if (isset($currentState->shipped) && !$currentState->shipped && $state['shipped'])}

@@ -101,7 +101,7 @@ function updateProductRuleShortDescription(item)
 		$('#' + id2 + '_match').val(length);
 }
 
-var restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop');
+var restrictions = ['country', 'carrier', 'group', 'cart_rule', 'shop'];
 for (i in restrictions)
 {
 	toggleCartRuleFilter($('#' + restrictions[i] + '_restriction'));
@@ -298,7 +298,7 @@ $('#reductionProductFilter')
 				return value;
 			},
 			parse: function(data) {
-				var mytab = new Array();
+				var mytab = [];
 				for (var i = 0; i < data.length; i++)
 					mytab[mytab.length] = { data: data[i], value: (data[i].reference + ' ' + data[i].name).trim() };
 				return mytab;
@@ -328,7 +328,7 @@ $('#customerFilter')
 				return value;
 			},
 			parse: function(data) {
-				var mytab = new Array();
+				var mytab = [];
 				for (var i = 0; i < data.length; i++)
 					mytab[mytab.length] = { data: data[i], value: data[i].cname + ' (' + data[i].email + ')' };
 				return mytab;

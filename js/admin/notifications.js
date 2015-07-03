@@ -6,7 +6,7 @@ $(document).ready(function() {
 	var html = "";		
 	var nb_notifs = 0;
 	var wrapper_id = "";
-	var type = new Array();
+	var type = [];
 	
 	$(".notifs").click(function(){
 		var wrapper_id = $(this).parent().attr("id");
