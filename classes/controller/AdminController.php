@@ -3143,6 +3143,11 @@ class AdminControllerCore extends Controller
 					if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select))
 						continue;
 
+					// Check that our object really has that column
+					$klass = $this->className;
+					$def = $klass::getDefinition($klass);
+					if ($def['primary'] !== $key && !isset($def['fields'][$key])) continue;
+
 					if (isset($array_value['filter_key']))
 						$this->_listsql .= str_replace('!', '.`', $array_value['filter_key']).'` AS `'.$key.'`, ';
 					elseif ($key == 'id_'.$this->table)
