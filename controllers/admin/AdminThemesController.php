@@ -113,10 +113,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function init()
 	{
-		// No cache for auto-refresh uploaded logo
-		header('Cache-Control: no-cache, must-revalidate');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-
 		parent::init();
 		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 

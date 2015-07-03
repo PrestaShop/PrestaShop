@@ -1758,7 +1758,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function initHeader()
 	{
-		header('Cache-Control: no-store, no-cache');
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		// Multishop
 		$is_multishop = Shop::isFeatureActive();
