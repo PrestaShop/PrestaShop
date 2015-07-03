@@ -1573,7 +1573,8 @@ class AdminModulesControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
 			'dont_filter' => $dont_filter,
-			'is_contributor' => (int)$this->context->cookie->is_contributor
+			'is_contributor' => (int)$this->context->cookie->is_contributor,
+			'maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')
 		);
 
 		if ($this->logged_on_addons)
