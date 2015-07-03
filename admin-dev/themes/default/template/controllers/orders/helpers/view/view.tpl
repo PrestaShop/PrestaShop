@@ -780,17 +780,21 @@
 				<div class="panel-heading">
 					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{sizeof($customer_thread_message)}</span>
 				</div>
-				{if (sizeof($messages))}
+				{if (sizeof($recent_customer_messages))}
 					<div class="panel panel-highlighted">
 						<div class="message-item">
-							{foreach from=$messages item=message}
+							{foreach from=$recent_customer_messages item=message}
 								<div class="message-avatar">
 									<div class="avatar-md">
 										<i class="icon-user icon-2x"></i>
 									</div>
 								</div>
+								<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;viewcustomer_thread&amp;id_customer_thread={$message['id_customer_thread']|intval}" title="{l s='View'}">
+									<i class="icon-search-plus"></i>
+									{l s='View'}
+								</a>
 								<div class="message-body">
-
+									
 									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
 										{dateFormat date=$message['date_add']} -
 									</span>
@@ -813,6 +817,12 @@
 								{/if*}
 							{/foreach}
 						</div>
+					</div>
+					<div class="row-margin-bottom">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">
+							{l s='Show all messages'}
+							<i class="icon-external-link"></i>
+						</a>
 					</div>
 				{/if}
 				<div id="messages" class="well hidden-print">
@@ -864,13 +874,11 @@
 
 							<input type="hidden" name="id_order" value="{$order->id}" />
 							<input type="hidden" name="id_customer" value="{$order->id_customer}" />
-							<button type="submit" id="submitMessage" class="btn btn-primary pull-right" name="submitMessage">
-								{l s='Send message'}
-							</button>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">
-								{l s='Show all messages'}
-								<i class="icon-external-link"></i>
-							</a>
+							<div class="row">
+								<button type="submit" id="submitMessage" class="btn btn-primary pull-right" name="submitMessage">
+									{l s='Send message'}
+								</button>
+							</div>
 						</div>
 					</form>
 				</div>
