@@ -175,6 +175,16 @@ class AdminThemesControllerCore extends AdminController
 						'name' => 'PS_LOGO_INVOICE',
 						'tab' => 'logo2',
 						'thumb' => (Configuration::get('PS_LOGO_INVOICE') !== false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE'))) ? _PS_IMG_.Configuration::get('PS_LOGO_INVOICE') : _PS_IMG_.Configuration::get('PS_LOGO')
+					),					
+					'PS_MAIL_COLOR' => array(
+						'title' => $this->l('Mail color'),
+						'desc' => $this->l('Your mail will be highlighted in this color. HTML colors only, please (e.g.').' "lightblue", "#CC6600")',
+						'type' => 'color',
+						'name' => 'PS_MAIL_COLOR',
+						'tab' => 'logo2',
+						'size' => 30,					
+						'value' => Configuration::get('PS_MAIL_COLOR')
+					
 					),
 					'PS_FAVICON' => array(
 						'title' => $this->l('Favicon'),
