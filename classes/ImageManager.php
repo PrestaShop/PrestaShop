@@ -86,7 +86,7 @@ class ImageManagerCore
 		if (Context::getContext()->controller->controller_type == 'admin')
 			return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 		else
-			return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
+			return '<img src="'.Tools::getShopDomain(true)._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 	}
 
 	/**
