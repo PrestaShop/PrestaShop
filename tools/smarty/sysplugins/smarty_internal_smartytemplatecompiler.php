@@ -11,7 +11,7 @@
 /**
  * @ignore
  */
-include 'smarty_internal_parsetree.php';
+//include 'smarty_internal_parsetree.php';
 
 /**
  * Class SmartyTemplateCompiler
@@ -50,13 +50,6 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
     public $parser;
 
     /**
-     * Smarty object
-     *
-     * @var object
-     */
-    public $smarty;
-
-    /**
      * array of vars which can be compiled in local scope
      *
      * @var array
@@ -86,14 +79,17 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
      *
      * @return bool  true if compiling succeeded, false if it failed
      */
-    protected function doCompile($_content)
+    protected function doCompile($_content, $isTemplateSource = false)
     {
         /* here is where the compiling takes place. Smarty
           tags in the templates are replaces with PHP code,
           then written to compiled files. */
         // init the lexer/parser to compile the template
-        $this->lex = new $this->lexer_class($_content, $this);
+        $this->lex = new $this->lexer_class(str_replace(array("\r\n", "\r"), "\n", $_content), $this);
         $this->parser = new $this->parser_class($this->lex, $this);
+        if ($isTemplateSource) {
+            $this->parser->insertPhpCode("<?php\n\$_smarty_tpl->properties['nocache_hash'] = '{$this->nocache_hash}';\n?>\n");
+        }
         if ($this->inheritance_child) {
             // start state on child templates
             $this->lex->yypushstate(Smarty_Internal_Templatelexer::CHILDBODY);

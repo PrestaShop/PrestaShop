@@ -28,20 +28,14 @@ if (!function_exists('smarty_mb_wordwrap')) {
         $length = 0;
         $t = '';
         $_previous = false;
+        $_space = false;
 
         foreach ($tokens as $_token) {
             $token_length = mb_strlen($_token, Smarty::$_CHARSET);
             $_tokens = array($_token);
             if ($token_length > $width) {
-                // remove last space
-                $t = mb_substr($t, 0, - 1, Smarty::$_CHARSET);
-                $_previous = false;
-                $length = 0;
-
-                if ($cut) {
+                 if ($cut) {
                     $_tokens = preg_split('!(.{' . $width . '})!S' . Smarty::$_UTF8_MODIFIER, $_token, - 1, PREG_SPLIT_NO_EMPTY + PREG_SPLIT_DELIM_CAPTURE);
-                    // broken words go on a new line
-                    $t .= $break;
                 }
             }
 
@@ -52,27 +46,23 @@ if (!function_exists('smarty_mb_wordwrap')) {
 
                 if ($length > $width) {
                     // remove space before inserted break
-                    if ($_previous && $token_length < $width) {
+                    if ($_previous) {
                         $t = mb_substr($t, 0, - 1, Smarty::$_CHARSET);
                     }
 
-                    // add the break before the token
-                    $t .= $break;
-                    $length = $token_length;
-
-                    // skip space after inserting a break
-                    if ($_space) {
-                        $length = 0;
-                        continue;
+                    if (!$_space) {
+                        // add the break before the token
+                        if (!empty($t)) {
+                            $t .= $break;
+                        }
+                        $length = $token_length;
                     }
                 } elseif ($token == "\n") {
                     // hard break must reset counters
                     $_previous = 0;
                     $length = 0;
-                } else {
-                    // remember if we had a space or not
-                    $_previous = $_space;
                 }
+                $_previous = $_space;
                 // add the token
                 $t .= $token;
             }
