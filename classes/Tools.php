@@ -742,6 +742,39 @@ class ToolsCore
 	}
 
 	/**
+	 * Implement array_replace for PHP <= 5.2
+	 *
+	 * @return array|mixed|null
+	 */
+	public static function array_replace()
+	{
+		if (!function_exists('array_replace'))
+		{
+			$args     = func_get_args();
+			$num_args = func_num_args();
+			$res      = array();
+			for ($i = 0; $i < $num_args; $i++)
+			{
+				if (is_array($args[$i]))
+				{
+					foreach ($args[$i] as $key => $val)
+						$res[$key] = $val;
+				}
+				else
+				{
+					trigger_error(__FUNCTION__.'(): Argument #'.($i + 1).' is not an array', E_USER_WARNING);
+					return null;
+				}
+			}
+			return $res;
+		}
+		else
+		{
+			return call_user_func_array('array_replace', func_get_args());
+		}
+	}
+
+	/**
 	 *
 	 * Convert amount from a currency to an other currency automatically
 	 * @param float $amount
@@ -3427,6 +3460,8 @@ exit;
 
 	public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
 	{
+		require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
+
 		static $use_html_purifier = null;
 		static $purifier = null;
 
@@ -3556,6 +3591,42 @@ exit;
 			++$position;
 		}
 		unset($row);
+	}
+
+	/**
+	 * Replaces elements from passed arrays into the first array recursively
+	 * @param array $base The array in which elements are replaced.
+	 * @param array $replacements The array from which elements will be extracted.
+	*/
+	public static function arrayReplaceRecursive($base, $replacements)
+	{
+		if (function_exists('array_replace_recursive'))
+			return array_replace_recursive($base, $replacements);
+
+		foreach (array_slice(func_get_args(), 1) as $replacements)
+		{
+			$bref_stack = array(&$base);
+			$head_stack = array($replacements);
+
+			do
+			{
+				end($bref_stack);
+
+				$bref = &$bref_stack[key($bref_stack)];
+				$head = array_pop($head_stack);
+				unset($bref_stack[key($bref_stack)]);
+				foreach (array_keys($head) as $key)
+					if (isset($key, $bref) && is_array($bref[$key]) && is_array($head[$key]))
+					{
+						$bref_stack[] = &$bref[$key];
+						$head_stack[] = $head[$key];
+					}
+					else
+						$bref[$key] = $head[$key];
+			}
+			while (count($head_stack));
+		}
+		return $base;
 	}
 }
 

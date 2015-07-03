@@ -335,7 +335,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'pdf_invoice',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email'), 'val' => '1'),
+							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'
@@ -346,7 +346,7 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'pdf_delivery',
 					'values' => array(
 						'query' => array(
-							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email'), 'val' => '1'),
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email.'), 'val' => '1'),
 							),
 						'id' => 'id',
 						'name' => 'name'

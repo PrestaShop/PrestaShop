@@ -210,7 +210,10 @@ class GroupCore extends ObjectModel
 	 */
 	public static function isFeatureActive()
 	{
-		return Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+		static $ps_group_feature_active = null;
+		if ($ps_group_feature_active === null)
+			$ps_group_feature_active = Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+		return $ps_group_feature_active;
 	}
 
 	/**

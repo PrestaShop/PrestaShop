@@ -1645,6 +1645,7 @@ class AdminControllerCore extends Controller
 		}
 		$this->layout = 'layout-ajax.tpl';
 		$this->display_header = false;
+		$this->display_header_javascript = false;
 		$this->display_footer = false;
 		return $this->display();
 	}
@@ -1663,6 +1664,7 @@ class AdminControllerCore extends Controller
 	{
 		$this->context->smarty->assign(array(
 			'display_header' => $this->display_header,
+			'display_header_javascript'=> $this->display_header_javascript,
 			'display_footer' => $this->display_footer,
 			'js_def' => Media::getJsDef(),
 		));
@@ -2250,6 +2252,16 @@ class AdminControllerCore extends Controller
 
 		if ($this->getModulesList($this->filter_modules_list))
 		{
+			$tmp = array();
+			foreach ($this->modules_list as $key => $module)
+				if ($module->active)
+				{
+					$tmp[] = $module;
+					unset($this->modules_list[$key]);
+				}
+
+			$this->modules_list = array_merge($tmp, $this->modules_list);
+
 			foreach ($this->modules_list as $key => $module)
 			{
 				if (in_array($module->name, $this->list_partners_modules))
@@ -2643,6 +2655,7 @@ class AdminControllerCore extends Controller
 		if ((int)Tools::getValue('liteDisplaying'))
 		{
 			$this->display_header = false;
+			$this->display_header_javascript = true;
 			$this->display_footer = false;
 			$this->content_only = false;
 			$this->lite_display = true;

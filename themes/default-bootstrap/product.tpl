@@ -237,7 +237,6 @@
 							{l s='Print'}
 						</a>
 					</li>
-					{if $have_image && !$jqZoomEnabled}{/if}
 				</ul>
 			{/if}
 		</div>
@@ -288,7 +287,7 @@
 								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction)} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
-										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction|floatval}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
+										<span id="old_price_display"><span class="price">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction|floatval}{/if}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}</span>
 									{/if}
 								{/strip}</p>
 								{if $priceDisplay == 2}
@@ -454,7 +453,7 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{if $quantity_discount.reduction_tax == 0}
+											{if $quantity_discount.reduction_tax == 0 && !$quantity_discount.price}
 												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction_with_tax)|floatval}
 											{else}
 												{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
@@ -752,6 +751,7 @@
 {addJsDef productPriceTaxIncluded=($product->getPriceWithoutReduct(false)|default:'null' - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcluded=($product->getPrice(false, null, 6, null, false, false) - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcl=($product->getPrice(false, null, 6, null, false, false)|floatval)}
+{addJsDef productBasePriceTaxIncl=($product->getPrice(true, null, 6, null, false, false)|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
 {addJsDef productAvailableForOrder=$product->available_for_order|boolval}
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}

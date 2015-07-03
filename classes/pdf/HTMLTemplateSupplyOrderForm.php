@@ -78,6 +78,15 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			'tax_order_summary' => $tax_order_summary,
 			'currency' => $currency,
 		));
+		
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('supply-order.addresses-tab')),
+			'product_tab' => $this->smarty->fetch($this->getTemplate('supply-order.product-tab')),
+			'tax_tab' => $this->smarty->fetch($this->getTemplate('supply-order.tax-tab')),
+			'total_tab' => $this->smarty->fetch($this->getTemplate('supply-order.total-tab')),
+		);
+		$this->smarty->assign($tpls);
 
 		return $this->smarty->fetch($this->getTemplate('supply-order'));
 	}
@@ -182,8 +191,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	{
 		$this->address = $this->address_warehouse;
 		$free_text = array();
-		$free_text[] = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
-		$free_text[] = HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
+		$free_text[] = HTMLTemplateSupplyOrderForm::l('TE: Tax excluded');
+		$free_text[] = HTMLTemplateSupplyOrderForm::l('TI: Tax included');
 
 		$this->smarty->assign(array(
 			'shop_address' => $this->getShopAddress(),

@@ -28,6 +28,14 @@
 	a
 		color: white
 		text-decoration: none
+	h4.page-subtitle
+		@include float(left)
+		position: absolute
+		margin-top: 60px
+		@include left($widthSidebarNav+20px)
+		font-family: $url-font-content-name
+		@media (max-width: $screen-tablet)
+			@include left(70px)
 	.toolbarBox
 		position: absolute
 		background-color: transparent!important

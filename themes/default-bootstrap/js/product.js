@@ -652,13 +652,13 @@ function updatePrice()
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
-	basePriceWithTax = basePriceWithTax + +combination.price;
+	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
 	{
 		basePriceWithoutTax = +combination.specific_price.price;
-		basePriceWithTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
 	}
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
@@ -686,7 +686,7 @@ function updatePrice()
 				if (combination.specific_price.id_currency == 0)
 					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
-				priceWithDiscountsWithTax -= reduction;
+				priceWithDiscountsWithTax -= reduction * (taxRate/100 + 1);
 			}
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
@@ -770,10 +770,11 @@ function updatePrice()
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
+
 	if (priceWithDiscountsDisplay.toFixed(2) != basePriceDisplay.toFixed(2))
 	{
 		$('#old_price_display span.price').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
-		$('#old_price, #old_price_display, #old_price_display_taxes').show();
+		$('#old_price, #old_price_display, #old_price_display_taxes').removeClass('hidden').show();
 
 		// Then if it's not only a group reduction we display the discount in red box
 		if (priceWithDiscountsWithoutTax != priceWithGroupReductionWithoutTax)
@@ -819,9 +820,10 @@ function updatePrice()
 		$('.unit-price').show();
 	}
 
-	// If there is a quantity discount table,
-	// we update it according to the new price
-	updateDiscountTable(basePriceDisplay);
+	if (noTaxForThisProduct || customerGroupWithoutTax)
+		updateDiscountTable(productBasePriceTaxExcl);
+	else
+		updateDiscountTable(productBasePriceTaxIncl);
 }
 
 //update display of the large image
@@ -945,6 +947,17 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
+
+		var choice = [];
+		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+		if (radio_inputs)
+			radio_inputs = '#attributes .checked > input[type=radio]';
+		else
+			radio_inputs = '#attributes input[type=radio]:checked';
+
+		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
+			choice.push(parseInt($(this).val()));
+		});
 
 		if (typeof combinations == 'undefined' || !combinations)
 			combinations = [];

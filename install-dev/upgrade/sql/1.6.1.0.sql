@@ -76,9 +76,7 @@ ALTER TABLE `PREFIX_customization` ADD KEY `id_cart` (`id_cart`);
 ALTER TABLE `PREFIX_product_sale` ADD KEY `quantity` (`quantity`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer` (`id_customer`, `active`, `date_to`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction` (`group_restriction`, `active`, `date_to`);
-ALTER TABLE `PREFIX_hook_module` DROP KEY `position`;
 ALTER TABLE `PREFIX_hook_module` ADD KEY `position` (`id_shop`, `position`);
-ALTER TABLE `PREFIX_cart_product` DROP KEY `cart_product_index`;
 ALTER IGNORE TABLE `PREFIX_cart_product` ADD PRIMARY KEY (`id_cart`,`id_product`,`id_product_attribute`,`id_address_delivery`);
 ALTER TABLE `PREFIX_cart_product` ADD KEY `id_cart_order` (`id_cart`, `date_add`, `id_product`, `id_product_attribute`);
 ALTER TABLE `PREFIX_customization` DROP KEY id_cart;
@@ -217,3 +215,9 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_INVOICE_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_DELIVERY_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
+
+ALTER TABLE `PREFIX_pack` ADD KEY `product_item` (`id_product_item`,`id_product_attribute_item`);
+
+ALTER TABLE `PREFIX_supply_order_detail` DROP KEY `id_supply_order`, DROP KEY `id_product`, ADD KEY `id_supply_order` (`id_supply_order`, `id_product`);
+
+ALTER TABLE `PREFIX_carrier` ADD KEY `reference` (`id_reference`, `deleted`, `active`);

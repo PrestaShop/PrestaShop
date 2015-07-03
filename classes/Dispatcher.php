@@ -735,9 +735,10 @@ class DispatcherCore
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
 			$controller = $this->controller_not_found;
+			$test_request_uri = preg_replace('/(=http:\/\/)/', '=', $this->request_uri);
 
 			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher)
-			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($this->request_uri, PHP_URL_PATH)))
+			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($test_request_uri, PHP_URL_PATH)))
 			{
 				// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 				if ($this->empty_route)

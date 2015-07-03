@@ -267,11 +267,11 @@ class CMSCategoryCore extends ObjectModel
 		SELECT `id_cms`
 		FROM `'._DB_PREFIX_.'cms`
 		WHERE `id_cms_category` IN ('.$list.')');
-		foreach ($result as $p)
+		foreach ($result as $c)
 		{
-			$product = new CMS($p['id_cms']);
-			if (Validate::isLoadedObject($product))
-				$product->delete();
+			$cms = new CMS((int)$c['id_cms']);
+			if (Validate::isLoadedObject($cms))
+				$cms->delete();
 		}
 		return true;
 	}

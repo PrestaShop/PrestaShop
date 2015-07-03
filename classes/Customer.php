@@ -695,7 +695,12 @@ class CustomerCore extends ObjectModel
 	public static function getDefaultGroupId($id_customer)
 	{
 		if (!Group::isFeatureActive())
-			return Configuration::get('PS_CUSTOMER_GROUP');
+		{
+			static $ps_customer_group = null;
+			if ($ps_customer_group === null)
+				$ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
+			return $ps_customer_group;
+		}
 
 		if (!isset(self::$_defaultGroupId[(int)$id_customer]))
 			self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('

@@ -45,6 +45,9 @@ abstract class ControllerCore
 	/** @var bool Set to true to display page header */
 	protected $display_header;
 
+	/** @var bool Set to true to display page header javascript */
+	protected $display_header_javascript;
+
 	/** @var string Template filename for the page content */
 	protected $template;
 
@@ -133,6 +136,9 @@ abstract class ControllerCore
 		if (is_null($this->display_header))
 			$this->display_header = true;
 
+		if (is_null($this->display_header_javascript))
+			$this->display_header_javascript = true;
+
 		if (is_null($this->display_footer))
 			$this->display_footer = true;
 
@@ -210,6 +216,16 @@ abstract class ControllerCore
 	}
 
 	/**
+	 * Sets page header javascript display
+	 *
+	 * @param bool $display
+	 */
+	public function displayHeaderJavaScript($display = true)
+	{
+		$this->display_header_javascript = $display;
+	}
+
+	/**
 	 * Sets page header display
 	 *
 	 * @param bool $display
@@ -248,12 +264,12 @@ abstract class ControllerCore
 	 * Assigns Smarty variables for the page footer
 	 */
 	abstract public function initFooter();
-	
+
 	/**
 	 * Redirects to $this->redirect_after after the process if there is no error
 	 */
 	abstract protected function redirect();
-	
+
 	/**
 	 * Set $this->redirect_after that will be used by redirect() after the process
 	 */

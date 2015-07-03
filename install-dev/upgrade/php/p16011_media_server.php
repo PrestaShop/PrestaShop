@@ -32,7 +32,7 @@ function p16011_media_server()
     {
         $total = (count($matches[1]));
         for ($i = 0; $i < $total; ++$i)
-            Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'configuration (`name`, `value`, `date_add`, `date_upd`) VALUES (PS_MEDIA_SERVER_'.$matches[1][$i].', '.$matches[2][$i].' NOW(), NOW())');
+            Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'configuration (`name`, `value`, `date_add`, `date_upd`) VALUES (\'PS_MEDIA_SERVER_'.$matches[1][$i].'\', \''.$matches[2][$i].'\', NOW(), NOW())');
     }
 
     $new_settings = preg_replace('/define\(\'_MEDIA_SERVER_[1-3]_\',\s*?\'.*?\'\s*?\);/ism', '', $new_settings);

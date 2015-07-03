@@ -324,14 +324,29 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
-		$params = array(
-			'out_of_stock' => (int)$out_of_stock,
-			'id_product' => (int)$id_product,
-			'id_product_attribute' => (int)$id_product_attribute
-		);
+		$existing_id = (int)StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, $id_shop);
 
-		StockAvailable::addSqlShopParams($params, $id_shop);
-		Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+		if ($existing_id > 0)
+		{
+			Db::getInstance()->update(
+				'stock_available',
+				array('out_of_stock' => (int)$out_of_stock),
+				'id_product = '.(int)$id_product.
+				(($id_product_attribute) ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').
+				StockAvailable::addSqlShopRestriction(null, $id_shop)
+			);
+		}
+		else
+		{
+			$params = array(
+				'out_of_stock' => (int)$out_of_stock,
+				'id_product' => (int)$id_product,
+				'id_product_attribute' => (int)$id_product_attribute
+			);
+
+			StockAvailable::addSqlShopParams($params, $id_shop);
+			Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+		}
 	}
 
 	/**

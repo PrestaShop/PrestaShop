@@ -34,8 +34,9 @@ class Adapter_EntityMetaDataRetriever
 
         if (property_exists($className, 'definition')) {
             // Legacy entity
-            $metaData->setTableName($className::$definition['table']);
-            $metaData->setPrimaryKeyFieldNames(array($className::$definition['primary']));
+            $classVars = get_class_vars($className);
+            $metaData->setTableName($classVars['definition']['table']);
+            $metaData->setPrimaryKeyFieldNames(array($classVars['definition']['primary']));
         } else {
             throw new Adapter_Exception(
                 sprintf(

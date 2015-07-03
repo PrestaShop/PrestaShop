@@ -30,9 +30,9 @@
 <table style="width: 100%">
 <tr>
 	<td style="width: 50%">
-        {if $logo_path}
-            <img src="{$logo_path}" />
-        {/if}
+		{if $logo_path}
+			<img src="{$logo_path}" />
+		{/if}
 	</td>
 	<td style="width: 50%; text-align: right;">
 		<table style="width: 100%">
