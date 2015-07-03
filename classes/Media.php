@@ -533,39 +533,94 @@ class MediaCore
 		$import_url = array();
 		foreach ($css_files_by_media as $media => $media_infos)
 		{
-			$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
+			$cache_name = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media;
+			$cache_filename = $cache_name.'.css';
+			
 			if ($media_infos['date'] > $compressed_css_files_infos[$media]['date'])
 			{
-				$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
-				$compressed_css_files[$media] = '';
+				//$cache_filename = $cache_path.'v_'.$version.'_'.$compressed_css_files_infos[$media]['key'].'_'.$media.'.css';
+				$compressed_css_files[$media] = array();
+				
+				// other files
+				$cache_key = 1;
+				
 				foreach ($media_infos['files'] as $file_infos)
 				{
 					if (file_exists($file_infos['path']))
-						$compressed_css_files[$media] .= Media::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri'], $import_url);
+					{
+						if(!isset($compressed_css_files[$media][$cache_key]))
+							$compressed_css_files[$media][$cache_key] = '@charset "UTF-8";'."\n";
+						
+						$compressed_css_files[$media][$cache_key] .= Media::minifyCSS(file_get_contents($file_infos['path']), $file_infos['uri'], $import_url);;
+					
+						if(mb_strlen($compressed_css_files[$media][$cache_key]) > 100000)
+							$cache_key++;
+					}
 					else
 						$compressed_css_files_not_found[] = $file_infos['path'];
 				}
+				
+				// import
+				$compressed_css_files[$media][0] = implode('', $import_url);
+				sort($compressed_css_files[$media]);
+				
+				// Unkown files
 				if (!empty($compressed_css_files_not_found))
+				{
 					$content = '/* WARNING ! file(s) not found : "'.
 						implode(',', $compressed_css_files_not_found).
 						'" */'."\n".$compressed_css_files[$media];
-				else
-					$content = $compressed_css_files[$media];
 
-				$content = '@charset "UTF-8";'."\n".$content;
-				$content = implode('', $import_url).$content;
-				file_put_contents($cache_filename, $content);
-				chmod($cache_filename, 0777);
+					file_put_contents($cache_filename, $content);
+					chmod($cache_filename, 0777);
+					
+					$compressed_css_files[$media] = $cache_filename;
+				}
+				// Generate cache css files
+				else
+				{
+					$caches_files = array();
+					foreach($compressed_css_files[$media] as $k => $cache_content)
+					{
+						$caches_files[] = $cache_name.'_'.$k.'.css';
+						
+						file_put_contents($cache_name.'_'.$k.'.css', $cache_content);
+						chmod($cache_name.'_'.$k.'.css', 0777);		
+					}
+					
+					$compressed_css_files[$media] = $caches_files;
+
+					Configuration::updateValue('PS_CSS_CCC_'.$media, serialize($caches_files));
+				}
 			}
-			$compressed_css_files[$media] = $cache_filename;
+			// Le cache est à jour, on charge les fichiers de celui-ci
+			else
+			{
+				if(!Configuration::get('PS_CSS_CCC_'.$media))
+					$compressed_css_files[$media] = $cache_filename;
+				else
+					$compressed_css_files[$media] = unserialize(Configuration::get('PS_CSS_CCC_'.$media));
+			}
 		}
+		
 
 		// rebuild the original css_files array
 		$css_files = array();
 		foreach ($compressed_css_files as $media => $filename)
 		{
-			$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
-			$css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
+			if(is_array($filename))
+			{
+				foreach($filename as $f)
+				{
+					$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $f);
+					$css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
+				}
+			}
+			else
+			{
+				$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
+				$css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
+			}
 		}
 		return array_merge($external_css_files, $css_files);
 	}
