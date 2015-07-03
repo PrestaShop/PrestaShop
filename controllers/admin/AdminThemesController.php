@@ -1448,7 +1448,7 @@ class AdminThemesControllerCore extends AdminController
 		if ($this->context->mode == Context::MODE_HOST)
 			return true;
 
-		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
+		if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
 			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
@@ -1510,6 +1510,11 @@ class AdminThemesControllerCore extends AdminController
 				$this->display = 'importtheme';
 			else
 				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
+		}
+		elseif ($_SERVER['REQUEST_METHOD'] == 'POST') //method is POST but no uplad info -> there is post error
+		{
+			$max_post = (int)ini_get('post_max_size');
+			$this->errors[] = sprintf($this->l('The file size exceeds the size allowed by the server. The limit is set to %s MB.'), '<b>'.$max_post.'</b>');
 		}
 	}
 
