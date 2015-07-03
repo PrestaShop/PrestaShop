@@ -188,6 +188,11 @@ class ShopCore extends ObjectModel
 		Shop::$initialized = true;
 	}
 
+	protected static function getProto()
+	{
+		return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
+	}
+
 	public function setUrl()
 	{
 		$cache_id = 'Shop::setUrl_'.(int)$this->id;
@@ -357,7 +362,7 @@ class ShopCore extends ObjectModel
 						$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
 						header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
 						header('Cache-Control: no-cache');
-						header('Location: http://'.$url);
+						header('Location: '.self::getProto().$url);
 						exit;
 					}
 		}
@@ -411,17 +416,18 @@ class ShopCore extends ObjectModel
 					if (strpos($url, 'www.') === 0 && 'www.'.$_SERVER['HTTP_HOST'] === $url || $_SERVER['HTTP_HOST'] === 'www.'.$url)
 						$url .= $_SERVER['REQUEST_URI'];
 					else
+					{
 						$url .= $default_shop->getBaseURI();
-
-					if (count($params))
-						$url .= '?'.http_build_query($params);
+						if (count($params))
+							$url .= '?'.http_build_query($params);
+					}
 				}
 
 				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
 				$redirect_code = ($redirect_type == 1 ? '302' : '301');
 				$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
 				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
-				header('Location: http://'.$url);
+				header('Location: '.self::getProto().$url);
 				exit;
 
 			}
