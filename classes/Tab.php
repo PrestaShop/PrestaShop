@@ -150,7 +150,9 @@ class TabCore extends ObjectModel
 
 	public function delete()
 	{
-		if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
+	 	if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) &&
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tab_lang WHERE `id_tab` = '.(int)$this->id) &&
+			parent::delete())
 		{
 			if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)]))
 				self::$_getIdFromClassName = null;
