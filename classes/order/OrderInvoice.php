@@ -848,7 +848,12 @@ class OrderInvoiceCore extends ObjectModel
 		if (!empty($invoice_formatted_number))
 			return $invoice_formatted_number;
 
-		return sprintf('%1$s%2$06d', Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop), $this->number);
+		$format = '%1$s%2$06d';
+
+		if (Configuration::get('PS_INVOICE_USE_YEAR'))
+			$format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s/%2$06d' : '%1$s%2$06d/%3$s';
+
+		return sprintf($format, Configuration::get('PS_INVOICE_PREFIX', (int)$id_lang, null, (int)$id_shop), $this->number, date('Y', strtotime($this->date_add)));
 	}
 
 	public function saveCarrierTaxCalculator(array $taxes_amount)
