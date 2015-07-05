@@ -3751,7 +3751,12 @@ class AdminControllerCore extends Controller
 				<title>PrestaShop Help</title>
 				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
 				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
-				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
+				<script src='//code.jquery.com/jquery-1.11.0.min.js'></script>
+				<script>
+				if (!window.jQuery) {
+					document.write('<script src=\'"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js\'><\/script>');
+				}
+				</script>
 				<script src='"._PS_JS_DIR_."admin.js'></script>
 				<script src='"._PS_JS_DIR_."tools.js'></script>
 				<script>
