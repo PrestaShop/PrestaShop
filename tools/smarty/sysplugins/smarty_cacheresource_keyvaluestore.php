@@ -36,6 +36,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      * @var array
      */
     protected $contents = array();
+
     /**
      * cache for timestamps
      *
@@ -53,10 +54,7 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     public function populate(Smarty_Template_Cached $cached, Smarty_Internal_Template $_template)
     {
-        $cached->filepath = $_template->source->uid
-            . '#' . $this->sanitize($cached->source->resource)
-            . '#' . $this->sanitize($cached->cache_id)
-            . '#' . $this->sanitize($cached->compile_id);
+        $cached->filepath = $_template->source->uid . '#' . $this->sanitize($cached->source->resource) . '#' . $this->sanitize($cached->cache_id) . '#' . $this->sanitize($cached->compile_id);
 
         $this->populateTimestamp($cached);
     }
@@ -124,6 +122,28 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
         $this->addMetaTimestamp($content);
 
         return $this->write(array($_template->cached->filepath => $content), $_template->properties['cache_lifetime']);
+    }
+
+    /**
+     * Read cached template from cache
+     *
+     * @param  Smarty_Internal_Template $_template template object
+     *
+     * @return string  content
+     */
+    public function readCachedContent(Smarty_Internal_Template $_template)
+    {
+        $content = $_template->cached->content ? $_template->cached->content : null;
+        $timestamp = null;
+        if ($content === null) {
+            if (!$this->fetch($_template->cached->filepath, $_template->source->name, $_template->cache_id, $_template->compile_id, $content, $timestamp, $_template->source->uid)) {
+                return false;
+            }
+        }
+        if (isset($content)) {
+            return $content;
+        }
+        return false;
     }
 
     /**
@@ -275,11 +295,8 @@ abstract class Smarty_CacheResource_KeyValueStore extends Smarty_CacheResource
      */
     protected function getMetaTimestamp(&$content)
     {
-        $s = unpack("N", substr($content, 0, 4));
-        $m = unpack("N", substr($content, 4, 4));
-        $content = substr($content, 8);
-
-        return $s[1] + ($m[1] / 100000000);
+        extract(unpack('N1s/N1m/a*content', $content));
+        return $s + ($m / 100000000);
     }
 
     /**

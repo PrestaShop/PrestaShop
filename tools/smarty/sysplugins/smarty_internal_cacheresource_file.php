@@ -61,8 +61,10 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
             $cached->lock_id = $_lock_dir . sha1($_cache_id . $_compile_id . $_template->source->uid) . '.lock';
         }
         $cached->filepath = $_cache_dir . $_cache_id . $_compile_id . $_filepath . '.' . basename($_source_file_path) . '.php';
-        $cached->timestamp = @filemtime($cached->filepath);
-        $cached->exists = !!$cached->timestamp;
+        $cached->timestamp = $cached->exists = is_file($cached->filepath);
+        if ($cached->exists) {
+            $cached->timestamp = filemtime($cached->filepath);
+        }
     }
 
     /**
@@ -74,8 +76,10 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
      */
     public function populateTimestamp(Smarty_Template_Cached $cached)
     {
-        $cached->timestamp = @filemtime($cached->filepath);
-        $cached->exists = !!$cached->timestamp;
+        $cached->timestamp = $cached->exists = is_file($cached->filepath);
+        if ($cached->exists) {
+            $cached->timestamp = filemtime($cached->filepath);
+        }
     }
 
     /**
@@ -106,14 +110,30 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
      */
     public function writeCachedContent(Smarty_Internal_Template $_template, $content)
     {
-        if (Smarty_Internal_Write_File::writeFile($_template->cached->filepath, $content, $_template->smarty) === true) {
-            $_template->cached->timestamp = @filemtime($_template->cached->filepath);
-            $_template->cached->exists = !!$_template->cached->timestamp;
-            if ($_template->cached->exists) {
+        $obj = new Smarty_Internal_Write_File();
+        if ($obj->writeFile($_template->cached->filepath, $content, $_template->smarty) === true) {
+            $cached = $_template->cached;
+            $cached->timestamp = $cached->exists = is_file($cached->filepath);
+            if ($cached->exists) {
+                $cached->timestamp = filemtime($cached->filepath);
                 return true;
             }
         }
+        return false;
+    }
 
+    /**
+     * Read cached template from cache
+     *
+     * @param  Smarty_Internal_Template $_template template object
+     *
+     * @return string  content
+     */
+    public function readCachedContent(Smarty_Internal_Template $_template)
+    {
+        if (is_file($_template->cached->filepath)) {
+            return file_get_contents($_template->cached->filepath);
+        }
         return false;
     }
 
@@ -147,13 +167,10 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
         $_compile_id = isset($compile_id) ? preg_replace('![^\w\|]+!', '_', $compile_id) : null;
         $_dir_sep = $smarty->use_sub_dirs ? '/' : '^';
         $_compile_id_offset = $smarty->use_sub_dirs ? 3 : 0;
-
-        /* PrestaShop */
-        if (($_dir = realpath($smarty->getCacheDir())) === false)
+        $_dir = realpath($smarty->getCacheDir()) . '/';
+        if ($_dir == '/') { //We should never want to delete this!
             return 0;
-        $_dir .= '/';
-        /* END PrestaShop */
-
+        }
         $_dir_length = strlen($_dir);
         if (isset($_cache_id)) {
             $_cache_id_parts = explode('|', $_cache_id);
@@ -194,7 +211,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
             $_cacheDirs = new RecursiveDirectoryIterator($_dir);
             $_cache = new RecursiveIteratorIterator($_cacheDirs, RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($_cache as $_file) {
-				if (substr(basename($_file->getPathname()), 0, 1) == '.' || strpos($_file, '.svn') !== false || strpos($_file, 'index.php') !== false) {
+                if (substr(basename($_file->getPathname()), 0, 1) == '.' || strpos($_file, '.svn') !== false) {
                     continue;
                 }
                 // directory ?
@@ -265,9 +282,12 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource
         } else {
             clearstatcache();
         }
-        $t = @filemtime($cached->lock_id);
-
-        return $t && (time() - $t < $smarty->locking_timeout);
+        if (is_file($cached->lock_id)) {
+            $t = @filemtime($cached->lock_id);
+            return $t && (time() - $t < $smarty->locking_timeout);
+        } else {
+            return false;
+        }
     }
 
     /**

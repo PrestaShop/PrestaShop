@@ -42,7 +42,7 @@ class Smarty_Internal_Compile_Assign extends Smarty_Internal_CompileBase
             if (isset($compiler->template->tpl_vars[trim($_attr['var'], "'")])) {
                 $compiler->template->tpl_vars[trim($_attr['var'], "'")]->nocache = true;
             } else {
-                $compiler->template->tpl_vars[trim($_attr['var'], "'")] = new Smarty_variable(null, true);
+                $compiler->template->tpl_vars[trim($_attr['var'], "'")] = new Smarty_Variable(null, true);
             }
         }
         // scope setup
@@ -66,9 +66,9 @@ class Smarty_Internal_Compile_Assign extends Smarty_Internal_CompileBase
             if ($compiler->template->smarty instanceof SmartyBC) {
                 $output = "<?php if (isset(\$_smarty_tpl->tpl_vars[$_attr[var]])) {\$_smarty_tpl->tpl_vars[$_attr[var]] = clone \$_smarty_tpl->tpl_vars[$_attr[var]];";
                 $output .= "\n\$_smarty_tpl->tpl_vars[$_attr[var]]->value = $_attr[value]; \$_smarty_tpl->tpl_vars[$_attr[var]]->nocache = $_nocache; \$_smarty_tpl->tpl_vars[$_attr[var]]->scope = $_scope;";
-                $output .= "\n} else \$_smarty_tpl->tpl_vars[$_attr[var]] = new Smarty_variable($_attr[value], $_nocache, $_scope);";
+                $output .= "\n} else \$_smarty_tpl->tpl_vars[$_attr[var]] = new Smarty_Variable($_attr[value], $_nocache, $_scope);";
             } else {
-                $output = "<?php \$_smarty_tpl->tpl_vars[$_attr[var]] = new Smarty_variable($_attr[value], $_nocache, $_scope);";
+                $output = "<?php \$_smarty_tpl->tpl_vars[$_attr[var]] = new Smarty_Variable($_attr[value], $_nocache, $_scope);";
             }
         }
         if ($_scope == Smarty::SCOPE_PARENT) {
