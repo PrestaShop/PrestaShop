@@ -27,18 +27,14 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use Exception;
-
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use Adapter_ProductPriceCalculator;
 use Adapter_AddressFactory;
 use Core_Business_ConfigurationInterface;
-
 use Address;
 use Cart;
 use Order;
 use Tools;
-
 use Phake;
 
 class FakeProduct

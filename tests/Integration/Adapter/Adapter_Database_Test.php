@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-
 use Adapter_Database;
 
 class Adapter_Database_Test extends IntegrationTestCase

@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use Phake;
-
 use Core_Foundation_Database_EntityRepository;
 use Core_Foundation_Database_EntityMetaData;
 use Core_Foundation_Database_Exception;
