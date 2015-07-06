@@ -6,14 +6,11 @@ use Configuration;
 use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
-
 use Core_Business_ContainerBuilder;
 use Core_Foundation_IoC_Container;
 use Adapter_ServiceLocator;
-
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
-
 use Phake;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase

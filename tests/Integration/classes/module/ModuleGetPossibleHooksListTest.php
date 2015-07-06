@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-
 use Module;
 use PrestaShopAutoload;
 

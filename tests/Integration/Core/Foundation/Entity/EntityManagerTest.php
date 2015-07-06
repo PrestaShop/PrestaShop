@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-
 use Core_Business_ContainerBuilder;
-
 use CMSRole;
 use CMSRoleRepository;
 use Db;

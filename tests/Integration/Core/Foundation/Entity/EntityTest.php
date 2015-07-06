@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-
 use Product;
 
 class EntityTest extends IntegrationTestCase

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Framework_Assert as Assert;
-
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShopAutoload;
 use Tools;

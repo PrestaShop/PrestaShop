@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Adapter;
 
 use Adapter_ServiceLocator;
 use Core_Foundation_IoC_Container;
-
 use PHPUnit_Framework_TestCase;
 
 class Adapter_ServiceLocatorTest extends PHPUnit_Framework_TestCase
