@@ -1872,8 +1872,7 @@ class AdminProductsController extends AdminProductsControllerCore
 					if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
 						$res = false;
 				}
-				else
-					if (!Validate::$function($value))
+				elseif (!Validate::$function($value))
 						$res = false;
 
 				if (!$res)

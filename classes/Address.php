@@ -372,8 +372,7 @@ class AddressCore extends ObjectModel
 
 		if ($id_address)
 			$context_hash = (int)$id_address;
-		else
-			if ($with_geoloc && isset($context->customer->geoloc_id_country))
+		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
 				$context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
 								$context->customer->postcode);
 			else

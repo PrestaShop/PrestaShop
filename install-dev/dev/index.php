@@ -55,7 +55,7 @@ class SynchronizeController extends InstallControllerHttp
 
 		if (Tools::getValue('submit'))
 			$this->generateSchemas();
-		else if (Tools::getValue('synchronize'))
+		elseif (Tools::getValue('synchronize'))
 			$this->synchronizeEntities();
 
 		if ($this->type == 'demo')

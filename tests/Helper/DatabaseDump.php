@@ -51,7 +51,7 @@ class DatabaseDump
             $this->host = $host_and_maybe_port[0];
             $this->port = 3306;
         }
-        else if (count($host_and_maybe_port) === 2)
+        elseif (count($host_and_maybe_port) === 2)
         {
             $this->host = $host_and_maybe_port[0];
             $this->port = $host_and_maybe_port[1];

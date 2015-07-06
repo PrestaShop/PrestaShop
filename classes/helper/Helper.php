@@ -181,11 +181,9 @@ class HelperCore
 
 		if (Tools::isSubmit('id_shop'))
 			$id_shop = Tools::getValue('id_shop');
-		else
-			if (Context::getContext()->shop->id)
+		elseif (Context::getContext()->shop->id)
 				$id_shop = Context::getContext()->shop->id;
-			else
-				if (!Shop::isFeatureActive())
+			elseif (!Shop::isFeatureActive())
 					$id_shop = Configuration::get('PS_SHOP_DEFAULT');
 				else
 					$id_shop = 0;

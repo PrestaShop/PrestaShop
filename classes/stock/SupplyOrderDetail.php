@@ -297,8 +297,7 @@ class SupplyOrderDetailCore extends ObjectModel
 			if ($value = $this->{$field})
 				if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
 					$errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
-				else
-					if ($field == 'passwd')
+				elseif ($field == 'passwd')
 						if ($value = Tools::getValue($field))
 							$this->{$field} = Tools::encrypt($value);
 					else

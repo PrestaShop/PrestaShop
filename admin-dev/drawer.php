@@ -64,7 +64,7 @@ if (Context::getContext()->cookie->shopContext)
 				Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 			}
 		}
-		else if (Shop::getShop($split[1]) && Context::getContext()->employee->hasAuthOnShop($split[1]))
+		elseif (Shop::getShop($split[1]) && Context::getContext()->employee->hasAuthOnShop($split[1]))
 		{
 			$shop_id = $split[1];
 			Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);

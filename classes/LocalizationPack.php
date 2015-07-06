@@ -411,8 +411,7 @@ class LocalizationPackCore
 							if (!$module->install())
 								$this->_errors[] = Tools::displayError('An error occurred while installing the module:').$name;
 					}
-					else
-						if (Module::isInstalled($name))
+					elseif (Module::isInstalled($name))
 							if (!$module->uninstall())
 								$this->_errors[] = Tools::displayError('An error occurred while uninstalling the module:').$name;
 

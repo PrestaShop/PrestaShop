@@ -50,7 +50,7 @@ class Core_Foundation_Database_EntityRepository
 		if (0 === strpos($method, 'findOneBy')) {
 			$one = true;
 			$by  = substr($method, 9);
-		} else if (0 === strpos($method, 'findBy')) {
+		} elseif (0 === strpos($method, 'findBy')) {
 			$one = false;
 			$by  = substr($method, 6);
 		} else {
@@ -99,7 +99,7 @@ class Core_Foundation_Database_EntityRepository
 					$this->entityMetaData->getEntityClassName()
 				)
 			);
-		} else if (count($primary) > 1) {
+		} elseif (count($primary) > 1) {
 			throw new Core_Foundation_Database_Exception(
 				sprintf(
 					'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
@@ -152,7 +152,7 @@ class Core_Foundation_Database_EntityRepository
 	{
 		if (count($rows) === 0) {
 			return null;
-		} else if (count($rows) > 1) {
+		} elseif (count($rows) > 1) {
 			throw new Core_Foundation_Database_Exception('Too many rows returned.');
 		} else {
 			$data = $rows[0];

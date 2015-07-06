@@ -911,8 +911,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
 					$return &= $carrier->deleteZone((int)$zone['id_zone']);
 			}
-		else
-			if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
+		elseif (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
 				$return &= $carrier->addZone((int)$zone['id_zone']);
 
 			return $return;

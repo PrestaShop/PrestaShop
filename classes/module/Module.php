@@ -2835,7 +2835,7 @@ abstract class ModuleCore
 
 		if ($orig_path && !$file = PrestaShopAutoload::getInstance()->getClassPath($classname))
 			return true;
-		else if (!$orig_path && Module::getModuleIdByName($classname))
+		elseif (!$orig_path && Module::getModuleIdByName($classname))
 			$path = 'modules'.DIRECTORY_SEPARATOR.$classname.DIRECTORY_SEPARATOR.$classname.'.php';
 
 		// Check if override file is writable

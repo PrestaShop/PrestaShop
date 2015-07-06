@@ -634,8 +634,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
 					$carrier->deleteZone($zone['id_zone']);
 			}
-			else
-				if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
+			elseif (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
 					$carrier->addZone($zone['id_zone']);
 	}
 

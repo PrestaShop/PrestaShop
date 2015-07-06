@@ -3047,8 +3047,7 @@ class AdminTranslationsControllerCore extends AdminController
 								}
 							}
 						}
-						else
-							if (Tools::file_exists_cache($file_path))
+						elseif (Tools::file_exists_cache($file_path))
 								$tabs_array = $this->parsePdfClass($file_path, 'php', $GLOBALS[$name_var], $prefix_key, $tabs_array, $missing_translations_pdf);
 					}
 

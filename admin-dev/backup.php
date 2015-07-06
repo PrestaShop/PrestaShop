@@ -53,7 +53,7 @@ if ($backupfile === false OR strncmp($backupdir, $backupfile, strlen($backupdir)
 
 if (substr($backupfile, -4) == '.bz2')
     $contentType = 'application/x-bzip2';
-else if (substr($backupfile, -3) == '.gz')
+elseif (substr($backupfile, -3) == '.gz')
     $contentType = 'application/x-gzip';
 else
     $contentType = 'text/x-sql';
