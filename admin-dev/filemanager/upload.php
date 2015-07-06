@@ -66,11 +66,18 @@ if (!empty($_FILES))
 		else
 			$is_img = false;
 
+		if(move_uploaded_file($tempFile, $targetFile))
+		{
+			chmod($targetFile, 0755);
+		}
+		else
+		{
+			header('HTTP/1.1 406 write error', true, 406);
+			exit();
+		}
+		
 		if ($is_img)
 		{
-			move_uploaded_file($tempFile, $targetFile);
-			chmod($targetFile, 0755);
-
 			$memory_error = false;
 			if (!create_img_gd($targetFile, $targetFileThumb, 122, 91))
 				$memory_error = false;
@@ -125,11 +132,6 @@ if (!empty($_FILES))
 				header('HTTP/1.1 406 Not enought Memory', true, 406);
 				exit();
 			}
-		}
-		else
-		{
-			move_uploaded_file($tempFile, $targetFile);
-			chmod($targetFile, 0755);
 		}
 	} else
 	{
