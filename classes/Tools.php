@@ -1771,8 +1771,11 @@ class ToolsCore
 
 	public static function iconv($from, $to, $string)
 	{
-		if (function_exists('iconv'))
-			return iconv($from, $to.'//TRANSLIT', str_replace('¥', '&yen;', str_replace('£', '&pound;', str_replace('€', '&euro;', $string))));
+		if (function_exists('iconv')) {
+			$search = array('€', '£', '¥');
+			$replace = array('&euro;', '&pound;', '&yen;');
+			return iconv($from, $to.'//TRANSLIT', str_replace($search, $replace, $string));
+		}
 		return html_entity_decode(htmlentities($string, ENT_NOQUOTES, $from), ENT_NOQUOTES, $to);
 	}
 
