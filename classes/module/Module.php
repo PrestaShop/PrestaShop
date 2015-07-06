@@ -1338,7 +1338,7 @@ abstract class ModuleCore
 				if (class_exists($module, false))
 				{
 					$tmp_module = Adapter_ServiceLocator::get($module);
-					
+
 					$item = new stdClass();
 					$item->id = $tmp_module->id;
 					$item->warning = $tmp_module->warning;
@@ -2758,7 +2758,9 @@ abstract class ModuleCore
 			}
 
 			// Insert the methods from module override in override
-			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
+			$offset_start = strstr($module_file[$module_class->getStartLine() + 1], '{') ? 1 : 0;
+			$offset_end = $offset_start ? 2 : 1;
+			$copy_from = array_slice($module_file, $module_class->getStartLine() + $offset_start, $module_class->getEndLine() - $module_class->getStartLine() - $offset_end);
 			array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
 			$code = implode('', $override_file);
 
