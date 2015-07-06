@@ -256,7 +256,7 @@ class AdminStatesControllerCore extends AdminController
 		WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
 		ORDER BY s.`name` ASC');
 
-		if (is_array($states) AND !empty($states))
+		if (is_array($states) and !empty($states))
 		{
 			$list = '';
 			if ((bool)Tools::getValue('no_empty') != true)
@@ -266,7 +266,7 @@ class AdminStatesControllerCore extends AdminController
 			}
 
 			foreach ($states as $state)
-				$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
+				$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) and $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
 		}
 		else
 			$list = 'false';

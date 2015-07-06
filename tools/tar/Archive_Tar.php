@@ -1822,7 +1822,7 @@ class Archive_Tar extends PEAR
     {
         $v_result_str = "";
 
-        While (strlen($v_binary_data = $this->_readBlock()) != 0) {
+        while (strlen($v_binary_data = $this->_readBlock()) != 0) {
             if (!$this->_readHeader($v_binary_data, $v_header)) {
                 return null;
             }

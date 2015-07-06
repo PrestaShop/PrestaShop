@@ -2607,7 +2607,7 @@ abstract class ModuleCore
 			if ((int)$result > 0)
 				continue;
 
-			$meta = New Meta();
+			$meta = new Meta();
 			$meta->page = $page;
 			$meta->configurable = 1;
 			$meta->save();

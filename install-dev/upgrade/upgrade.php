@@ -34,8 +34,8 @@ $engineType = 'ENGINE_TYPE';
 // setting the memory limit to 128M only if current is lower
 $memory_limit = ini_get('memory_limit');
 if (substr($memory_limit,-1) != 'G'
-	AND ((substr($memory_limit,-1) == 'M' AND substr($memory_limit,0, -1) < 128)
-	OR is_numeric($memory_limit) AND (intval($memory_limit) < 131072) AND $memory_limit > 0)
+	and ((substr($memory_limit,-1) == 'M' and substr($memory_limit,0, -1) < 128)
+	or is_numeric($memory_limit) and (intval($memory_limit) < 131072) and $memory_limit > 0)
 )
 	@ini_set('memory_limit','128M');
 
@@ -87,7 +87,7 @@ if (function_exists('date_default_timezone_set'))
 	date_default_timezone_set('Europe/Paris');
 
 // if _PS_ROOT_DIR_ is defined, use it instead of "guessing" the module dir.
-if (defined('_PS_ROOT_DIR_') AND !defined('_PS_MODULE_DIR_'))
+if (defined('_PS_ROOT_DIR_') and !defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/modules/');
 elseif (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_', _PS_INSTALL_PATH_.'/../modules/');
@@ -165,7 +165,7 @@ if (empty ($fail_result))
 	if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_))
 	{
 			while (false !== ($file = readdir($handle)))
-					if ($file != '.' AND $file != '..')
+					if ($file != '.' and $file != '..')
 							$upgradeFiles[] = str_replace(".sql", "", $file);
 			closedir($handle);
 	}
@@ -193,7 +193,7 @@ $oldversion = implode('.', $arrayVersion);
 $neededUpgradeFiles = array();
 foreach ($upgradeFiles as $version)
 {
-	if (version_compare($version, $oldversion) == 1 AND version_compare(_PS_INSTALL_VERSION_, $version) != -1)
+	if (version_compare($version, $oldversion) == 1 and version_compare(_PS_INSTALL_VERSION_, $version) != -1)
 	$neededUpgradeFiles[] = $version;
 }
 
@@ -210,9 +210,9 @@ require_once(_PS_INSTALL_PATH_.'upgrade/classes/AddConfToFile.php');
 $oldLevel = error_reporting(E_ALL);
 $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 
-if (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ == 'CacheFS')
+if (defined('_PS_CACHING_SYSTEM_') and _PS_CACHING_SYSTEM_ == 'CacheFS')
 	$cache_engine = 'CacheFs';
-elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache' AND _PS_CACHING_SYSTEM_ != 'CacheMemcached')
+elseif (defined('_PS_CACHING_SYSTEM_') and _PS_CACHING_SYSTEM_ != 'CacheMemcache' and _PS_CACHING_SYSTEM_ != 'CacheMemcached')
 	$cache_engine = _PS_CACHING_SYSTEM_;
 else
 	$cache_engine = 'CacheMemcache';
@@ -274,14 +274,14 @@ require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
 Context::getContext()->smarty = $smarty;
 
-if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
+if(isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate')
 {
 	require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
 	deactivate_custom_modules();
 }
 $sqlContentVersion = array();
 if (empty($fail_result))
-	foreach($neededUpgradeFiles AS $version)
+	foreach($neededUpgradeFiles as $version)
 	{
 		$file = _PS_INSTALLER_SQL_UPGRADE_DIR_.$version.'.sql';
 		if (!file_exists($file))
@@ -360,7 +360,7 @@ if (empty($fail_result))
 						$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
 						$phpRes = call_user_func_array($func_name, $parameters);
 					}
-					if ((is_array($phpRes) AND !empty($phpRes['error'])) OR $phpRes === false )
+					if ((is_array($phpRes) and !empty($phpRes['error'])) or $phpRes === false )
 					{
 						$warningExist = true;
 						$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));
@@ -411,7 +411,7 @@ if (empty($fail_result))
 	foreach ($arrayToClean as $dir)
 		if (file_exists($dir))
 			foreach (scandir($dir) as $file)
-				if ($file[0] != '.' AND $file != 'index.php' AND $file != '.htaccess')
+				if ($file[0] != '.' and $file != 'index.php' and $file != '.htaccess')
 					unlink($dir.DIRECTORY_SEPARATOR.$file);
 
 	// delete cache filesystem if activated

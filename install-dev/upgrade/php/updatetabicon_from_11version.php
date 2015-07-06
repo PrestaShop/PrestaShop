@@ -38,7 +38,7 @@ function updatetabicon_from_11version()
 			foreach ($rows as $tab)
 			{
 				if (file_exists(_PS_ROOT_DIR_.'/img/t/'.$tab['id_tab'].'.gif') 
-					AND !file_exists(_PS_ROOT_DIR_.'/img/t/'.$tab['class_name'].'.gif'))
+					and !file_exists(_PS_ROOT_DIR_.'/img/t/'.$tab['class_name'].'.gif'))
 					$result &= rename(_PS_ROOT_DIR_.'/img/t/'.$tab['id_tab'].'.gif',_PS_ROOT_DIR_.'/img/t/'.$tab['class_name'].'.gif');
 			}
 		}

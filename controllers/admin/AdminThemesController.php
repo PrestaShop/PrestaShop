@@ -259,7 +259,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if ((int)$this->object->id > 0)
 			{
-				$theme = New Theme((int)$this->object->id);
+				$theme = new Theme((int)$this->object->id);
 				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, m.`page`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
@@ -455,7 +455,7 @@ class AdminThemesControllerCore extends AdminController
 					'ajax' => true
 				),
 			);
-			$helper_list = New HelperList();
+			$helper_list = new HelperList();
 			$helper_list->tpl_vars = array('icon' => 'icon-columns');
 			$helper_list->title = $this->l('Appearance of columns');
 			$helper_list->no_link = true;
@@ -629,7 +629,7 @@ class AdminThemesControllerCore extends AdminController
 		if (Tools::getIsset('id_theme') && Tools::getIsset('name') && Tools::getIsset('directory'))
 		{
 
-			$theme = New Theme((int)Tools::getValue('id_theme'));
+			$theme = new Theme((int)Tools::getValue('id_theme'));
 			$theme->name = Tools::getValue('name');
 			$theme->directory = Tools::getValue('directory');
 			$theme->default_left_column = Tools::getValue('default_left_column');
@@ -968,7 +968,7 @@ class AdminThemesControllerCore extends AdminController
 
 		foreach ($metas as $row)
 		{
-			$meta_obj = New Meta((int)$row['id_meta']);
+			$meta_obj = new Meta((int)$row['id_meta']);
 
 			$meta_xml = $metas_xml->addChild('meta');
 			$meta_xml->addAttribute('meta_page', $meta_obj->page);
@@ -1139,7 +1139,7 @@ class AdminThemesControllerCore extends AdminController
 						}
 					}
 
-				$theme_to_export = New Theme((int)Tools::getValue('id_theme_export'));
+				$theme_to_export = new Theme((int)Tools::getValue('id_theme_export'));
 				$metas = $theme_to_export->getMetas();
 
 				$this->generateXML($theme_to_export, $metas);
@@ -1218,7 +1218,7 @@ class AdminThemesControllerCore extends AdminController
 
 		$this->formatHelperArray($to_install);
 
-		$theme = New Theme(Tools::getValue('id_theme_export'));
+		$theme = new Theme(Tools::getValue('id_theme_export'));
 
 		$fields_form = array(
 			'form' => array(
@@ -2183,7 +2183,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function renderChooseThemeModule()
 	{
-		$theme = New Theme((int)Tools::getValue('id_theme'));
+		$theme = new Theme((int)Tools::getValue('id_theme'));
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
@@ -2288,7 +2288,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 				);
 			$shops = array();
-			$shop = New Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 			$tmp['id_shop'] = $shop->id;
 			$tmp['id_theme'] = $shop->id_theme;
 			$shops[] = $tmp;
@@ -2300,7 +2300,7 @@ class AdminThemesControllerCore extends AdminController
 
 			foreach ($shops as $shop)
 			{
-				$shop_theme = New Theme((int)$shop['id_theme']);
+				$shop_theme = new Theme((int)$shop['id_theme']);
 				if ((int)Tools::getValue('id_theme') == (int)$shop['id_theme'])
 					continue;
 
@@ -2438,7 +2438,7 @@ class AdminThemesControllerCore extends AdminController
 			return;
 		}
 
-		$theme = New Theme((int)Tools::getValue('id_theme'));
+		$theme = new Theme((int)Tools::getValue('id_theme'));
 
 		if (count($shops_asso) == 1)
 			$shops = $shops_asso;
@@ -2543,7 +2543,7 @@ class AdminThemesControllerCore extends AdminController
 						}
 					}
 				}
-				$shop = New Shop((int)$id_shop);
+				$shop = new Shop((int)$id_shop);
 				$shop->id_theme = (int)Tools::getValue('id_theme');
 				$this->context->shop->id_theme = $shop->id_theme;
 				$this->context->shop->update();

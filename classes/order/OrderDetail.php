@@ -340,7 +340,7 @@ class OrderDetailCore extends ObjectModel
 		if ($this->tax_calculator == null)
 			return true;
 
-		if (!($this->tax_calculator instanceOf TaxCalculator))
+		if (!($this->tax_calculator instanceof TaxCalculator))
 			return false;
 
 		if (count($this->tax_calculator->taxes) == 0)

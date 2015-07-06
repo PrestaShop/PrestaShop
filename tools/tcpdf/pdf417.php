@@ -531,7 +531,7 @@ class PDF417 {
 	 */
 	public function __construct($code, $ecl=-1, $aspectratio=2, $macro=array()) {
 		$barcode_array = array();
-		if ((is_null($code)) OR ($code == '\0') OR ($code == '')) {
+		if ((is_null($code)) or ($code == '\0') or ($code == '')) {
 			return false;
 		}
 		// get the input sequence array
@@ -601,7 +601,7 @@ class PDF417 {
 		$rows = ceil($nce / $cols);
 		$size = ($cols * $rows);
 		// adjust rows
-		if (($rows < 3) OR ($rows > 90)) {
+		if (($rows < 3) or ($rows > 90)) {
 			if ($rows < 3) {
 				$rows = 3;
 			} elseif ($rows > 90) {
@@ -751,7 +751,7 @@ class PDF417 {
 			--$maxecl;
 		}
 		// check for automatic levels
-		if (($ecl < 0) OR ($ecl > 8)) {
+		if (($ecl < 0) or ($ecl > 8)) {
 			if ($numcw < 41) {
 				$ecl = 2;
 			} elseif ($numcw < 161) {
@@ -837,7 +837,7 @@ class PDF417 {
 						$prevtxtseq = substr($prevseq, $txtoffset, ($txtseq[1] - $txtoffset));
 						if (strlen($prevtxtseq) > 0) {
 							// add BYTE sequence
-							if ((strlen($prevtxtseq) == 1) AND ((count($sequence_array) > 0) AND ($sequence_array[(count($sequence_array) - 1)][0] == 900))) {
+							if ((strlen($prevtxtseq) == 1) and ((count($sequence_array) > 0) and ($sequence_array[(count($sequence_array) - 1)][0] == 900))) {
 								$sequence_array[] = array(913, $prevtxtseq);
 							} elseif ((strlen($prevtxtseq) % 6) == 0) {
 								$sequence_array[] = array(924, $prevtxtseq);
@@ -886,9 +886,9 @@ class PDF417 {
 						// the sub-mode is changed
 						for ($s = 0; $s < 4; ++$s) {
 							// search new sub-mode
-							if (($s != $submode) AND (($k = array_search($chval, $this->textsubmodes[$s])) !== false)) {
+							if (($s != $submode) and (($k = array_search($chval, $this->textsubmodes[$s])) !== false)) {
 								// $s is the new submode
-								if (((($i + 1) == $codelen) OR ((($i + 1) < $codelen) AND (array_search(ord($code{($i + 1)}), $this->textsubmodes[$submode]) !== false))) AND (($s == 3) OR (($s == 0) AND ($submode == 1)))) {
+								if (((($i + 1) == $codelen) or ((($i + 1) < $codelen) and (array_search(ord($code{($i + 1)}), $this->textsubmodes[$submode]) !== false))) and (($s == 3) or (($s == 0) and ($submode == 1)))) {
 									// shift (temporary change only for this char)
 									if ($s == 3) {
 										// shift to puntuaction

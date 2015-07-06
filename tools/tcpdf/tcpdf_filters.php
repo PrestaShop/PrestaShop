@@ -295,7 +295,7 @@ class TCPDF_FILTERS {
 		// previous val
 		$prev_index = 0;
 		// while we encounter EOD marker (257), read code_length bits
-		while (($data_length > 0) AND (($index = bindec(substr($bitstring, 0, $bitlen))) != 257)) {
+		while (($data_length > 0) and (($index = bindec(substr($bitstring, 0, $bitlen))) != 257)) {
 			// remove read bits from string
 			$bitstring = substr($bitstring, $bitlen);
 			// update number of bits

@@ -674,7 +674,7 @@ class AdminProductsController extends AdminProductsControllerCore
 								Tools::getValue('attribute_location'),
 								Tools::getValue('attribute_upc'),
 								Tools::getValue('attribute_minimal_quantity'),
-								Array(),
+								array(),
 								Tools::getValue('available_date_attribute')
 							);
 							StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);

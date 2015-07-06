@@ -33,7 +33,7 @@ function reorderpositions()
 	/* Clean products positions */
 	$cat = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');
 	if ($cat)
-		foreach($cat AS $categ)
+		foreach($cat as $categ)
 		{
 			$id_category = $categ['id_category'];
 			$result = Db::getInstance()->executeS('
@@ -51,7 +51,7 @@ function reorderpositions()
 		}
 	
 	$cat_parent = Db::getInstance()->executeS('SELECT DISTINCT c.id_parent FROM `'._DB_PREFIX_.'category` c WHERE id_category != 1');
-	foreach($cat_parent AS $parent)
+	foreach($cat_parent as $parent)
 	{
 		$result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
@@ -59,7 +59,7 @@ function reorderpositions()
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.$ps_lang_default.')
 							WHERE c.id_parent = '.(int)($parent['id_parent']).'
 							ORDER BY name ASC');
-		foreach($result AS $i => $categ)
+		foreach($result as $i => $categ)
 		{
 			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category`
@@ -76,7 +76,7 @@ function reorderpositions()
 							ORDER BY name ASC');
 		
 		// Remove number from category name
-		foreach($result AS $i => $categ)
+		foreach($result as $i => $categ)
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c 
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
 			SET `name` = \''.preg_replace('/^[0-9]+\./', '',$categ['name']).'\' 
@@ -86,7 +86,7 @@ function reorderpositions()
 	/* Clean CMS positions */
 	$cms_cat = Db::getInstance()->executeS('SELECT id_cms_category FROM `'._DB_PREFIX_.'cms_category` WHERE active=1');
 	if ($cms_cat)
-		foreach($cms_cat AS $i => $categ)
+		foreach($cms_cat as $i => $categ)
 		{
 			$id_category_parent = $categ['id_cms_category'];
 			$result &= Db::getInstance()->executeS('

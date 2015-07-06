@@ -36,7 +36,7 @@ class	AddConfToFile
 		$this->file = $file;
 		$this->mode = $mode;
 		$this->checkFile($file);
-		if ($mode == 'w' AND !$this->error)
+		if ($mode == 'w' and !$this->error)
 			if (!$res = @fwrite($this->fd, '<?php'."\n"))
 				$this->error = 6;
 	}

@@ -296,7 +296,7 @@ class TCPDF_PARSER {
 			}
 			case '<':   // \x3C LESS-THAN SIGN
 			case '>': { // \x3E GREATER-THAN SIGN
-				if (isset($this->pdfdata{($offset + 1)}) AND ($this->pdfdata{($offset + 1)} == $char)) {
+				if (isset($this->pdfdata{($offset + 1)}) and ($this->pdfdata{($offset + 1)} == $char)) {
 					// dictionary object
 					$objtype = $char.$char;
 					$offset += 2;
@@ -316,7 +316,7 @@ class TCPDF_PARSER {
 					// hexadecimal string object
 					$objtype = $char;
 					++$offset;
-					if (($char == '<') AND (preg_match('/^([0-9A-Fa-f]+)[>]/iU', substr($this->pdfdata, $offset), $matches) == 1)) {
+					if (($char == '<') and (preg_match('/^([0-9A-Fa-f]+)[>]/iU', substr($this->pdfdata, $offset), $matches) == 1)) {
 						$objval = $matches[1];
 						$offset += strlen($matches[0]);
 					}
@@ -388,7 +388,7 @@ class TCPDF_PARSER {
 	 */
 	protected function getIndirectObject($obj_ref, $offset=0, $decoding=true) {
 		$obj = explode('_', $obj_ref);
-		if (($obj === false) OR (count($obj) != 2)) {
+		if (($obj === false) or (count($obj) != 2)) {
 			$this->Error('Invalid object reference: '.$obj);
 			return;
 		}
@@ -407,7 +407,7 @@ class TCPDF_PARSER {
 			$element = $this->getRawObject($offset);
 			$offset = $element[2];
 			// decode stream using stream's dictionary information
-			if ($decoding AND ($element[0] == 'stream') AND (isset($objdata[($i - 1)][0])) AND ($objdata[($i - 1)][0] == '<<')) {
+			if ($decoding and ($element[0] == 'stream') and (isset($objdata[($i - 1)][0])) and ($objdata[($i - 1)][0] == '<<')) {
 				$element[3] = $this->decodeStream($objdata[($i - 1)][1], substr($element[1], 1));
 			}
 			$objdata[$i] = $element;
@@ -455,14 +455,14 @@ class TCPDF_PARSER {
 		$filters = array();
 		foreach ($sdic as $k => $v) {
 			if ($v[0] == '/') {
-				if (($v[1] == 'Length') AND (isset($sdic[($k + 1)])) AND ($sdic[($k + 1)][0] == 'numeric')) {
+				if (($v[1] == 'Length') and (isset($sdic[($k + 1)])) and ($sdic[($k + 1)][0] == 'numeric')) {
 					// get declared stream lenght
 					$declength = intval($sdic[($k + 1)][1]);
 					if ($declength < $slength) {
 						$stream = substr($stream, 0, $declength);
 						$slength = $declength;
 					}
-				} elseif (($v[1] == 'Filter') AND (isset($sdic[($k + 1)]))) {
+				} elseif (($v[1] == 'Filter') and (isset($sdic[($k + 1)]))) {
 					// resolve indirect object
 					$objval = $this->getObjectVal($sdic[($k + 1)]);
 					if ($objval[0] == '/') {
