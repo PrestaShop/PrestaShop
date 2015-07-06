@@ -124,3 +124,9 @@ if (Tools::isSubmit('getZones')) {
     $array = array('hasError' => false, 'errors' => '', 'data' => $html);
     die(Tools::jsonEncode($array));
 }
+
+if (Tools::isSubmit('getEmailHTML') && $email = Tools::getValue('email'))
+{
+    $email_html = AdminTranslationsController::getEmailHTML($email);
+    die($email_html);
+}

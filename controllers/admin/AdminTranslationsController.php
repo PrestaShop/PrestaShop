@@ -1289,12 +1289,12 @@ class AdminTranslationsControllerCore extends AdminController
      * Get all translations informations for all type of translations
      *
      * array(
-     * 	'type' => array(
-     * 		'name' => string : title for the translation type,
-     * 		'var' => string : name of var for the translation file,
-     * 		'dir' => string : dir of translation file
-     * 		'file' => string : file name of translation file
-     * 	)
+     *  'type' => array(
+     *      'name' => string : title for the translation type,
+     *      'var' => string : name of var for the translation file,
+     *      'dir' => string : dir of translation file
+     *      'file' => string : file name of translation file
+     *  )
      * )
      */
     public function getTranslationsInformations()
@@ -1572,11 +1572,11 @@ class AdminTranslationsControllerCore extends AdminController
         return '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>#title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>#title</title>
 </head>
 <body>
-	#content
+    #content
 </body>
 </html>';
     }
@@ -1720,17 +1720,17 @@ class AdminTranslationsControllerCore extends AdminController
     public function displayToggleButton($closed = false)
     {
         $str_output = '
-		<script type="text/javascript">';
+        <script type="text/javascript">';
         if (Tools::getValue('type') == 'mails') {
             $str_output .= '$(document).ready(function(){
-				toggleDiv(\''.$this->type_selected.'_div\'); toggleButtonValue(this.id, openAll, closeAll);
-				});';
+                toggleDiv(\''.$this->type_selected.'_div\'); toggleButtonValue(this.id, openAll, closeAll);
+                });';
         }
         $str_output .= '
-			var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
-			var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
-		</script>
-		<button type="button" class="btn btn-default" id="buttonall" data-status="open" onclick="toggleDiv(\''.$this->type_selected.'_div\', $(this).data(\'status\')); toggleButtonValue(this.id, openAll, closeAll);"><i class="process-icon-compress"></i> <span>'.$this->l('Close all fieldsets').'</span></button>';
+            var openAll = \''.html_entity_decode($this->l('Expand all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
+            var closeAll = \''.html_entity_decode($this->l('Close all fieldsets'), ENT_NOQUOTES, 'UTF-8').'\';
+        </script>
+        <button type="button" class="btn btn-default" id="buttonall" data-status="open" onclick="toggleDiv(\''.$this->type_selected.'_div\', $(this).data(\'status\')); toggleButtonValue(this.id, openAll, closeAll);"><i class="process-icon-compress"></i> <span>'.$this->l('Close all fieldsets').'</span></button>';
         return $str_output;
     }
 
@@ -2326,12 +2326,12 @@ class AdminTranslationsControllerCore extends AdminController
             $translation_missing_badge_type = 'badge-danger';
         }
         $str_return .= '<div class="mails_field">
-			<h4>
-			<span class="badge">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).' <i class="icon-envelope-o"></i></span>
-			<a href="javascript:void(0);" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.'</a>
-			<span class="pull-right badge '.$translation_missing_badge_type.'">'.$mails['empty_values'].' '.$this->l('missing translation(s)').'</span>
-			</h4>
-			<div name="mails_div" id="'.$id_html.'" class="panel-group">';
+            <h4>
+            <span class="badge">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).' <i class="icon-envelope-o"></i></span>
+            <a href="javascript:void(0);" onclick="$(\'#'.$id_html.'\').slideToggle();">'.$title.'</a>
+            <span class="pull-right badge '.$translation_missing_badge_type.'">'.$mails['empty_values'].' '.$this->l('missing translation(s)').'</span>
+            </h4>
+            <div name="mails_div" id="'.$id_html.'" class="panel-group">';
 
         if (!empty($mails['files'])) {
             $topic_already_displayed = array();
@@ -2349,12 +2349,12 @@ class AdminTranslationsControllerCore extends AdminController
                             $topic_already_displayed[] = $subject_key;
                             $value_subject_mail = isset($mails['subject'][$subject_mail]) ? $mails['subject'][$subject_mail] : '';
                             $str_return .= '
-							<div class="label-subject row">
-								<label class="control-label col-lg-3">'.sprintf($this->l('Email subject'));
+                            <div class="label-subject row">
+                                <label class="control-label col-lg-3">'.sprintf($this->l('Email subject'));
                             if (isset($value_subject_mail['use_sprintf']) && $value_subject_mail['use_sprintf']) {
                                 $str_return .= '<span class="useSpecialSyntax" title="'.$this->l('This expression uses a special syntax:').' '.$value_subject_mail['use_sprintf'].'">
-									<i class="icon-exclamation-triangle"></i>
-								</span>';
+                                    <i class="icon-exclamation-triangle"></i>
+                                </span>';
                             }
                             $str_return .= '</label><div class="col-lg-9">';
                             if (isset($value_subject_mail['trad']) && $value_subject_mail['trad']) {
@@ -2367,16 +2367,16 @@ class AdminTranslationsControllerCore extends AdminController
                         }
                     } else {
                         $str_return .= '
-							<hr><div class="alert alert-info">'
+                            <hr><div class="alert alert-info">'
                             .sprintf($this->l('No Subject was found for %s in the database.'), $mail_name)
                             .'</div>';
                     }
                     // tab menu
                     $str_return .= '<hr><ul class="nav nav-pills">
-						<li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$this->l('View HTML version').'</a></li>
-						<li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('Edit HTML version').'</a></li>
-						<li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$this->l('View/Edit TXT version').'</a></li>
-						</ul>';
+                        <li class="active"><a href="#'.$mail_name.'-html" data-toggle="tab">'.$this->l('View HTML version').'</a></li>
+                        <li><a href="#'.$mail_name.'-editor" data-toggle="tab">'.$this->l('Edit HTML version').'</a></li>
+                        <li><a href="#'.$mail_name.'-text" data-toggle="tab">'.$this->l('View/Edit TXT version').'</a></li>
+                        </ul>';
                     // tab-content
                     $str_return .= '<div class="tab-content">';
 
@@ -2408,9 +2408,9 @@ class AdminTranslationsControllerCore extends AdminController
             }
         } else {
             $str_return .= '<p class="error">
-				'.$this->l('There was a problem getting the mail files.').'<br>
-				'.sprintf($this->l('English language files must exist in %s folder'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
-			</p>';
+                '.$this->l('There was a problem getting the mail files.').'<br>
+                '.sprintf($this->l('English language files must exist in %s folder'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
+            </p>';
         }
 
         $str_return .= '</div><!-- #'.$id_html.' --></div><!-- end .mails_field -->';
@@ -2431,10 +2431,10 @@ class AdminTranslationsControllerCore extends AdminController
     protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         return '<div class="block-mail" >
-					<div class="mail-form">
-						<div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '').$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
-					</div>
-				</div>';
+                    <div class="mail-form">
+                        <div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '').$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
+                    </div>
+                </div>';
     }
 
     /**
@@ -2456,17 +2456,17 @@ class AdminTranslationsControllerCore extends AdminController
         $this->cleanMailContent($content, $lang, $title);
         $name_for_module = $name_for_module ? $name_for_module.'|' : '';
         return '<div class="block-mail" >
-					<div class="mail-form">
-						<div class="form-group">
-							<label class="control-label col-lg-3">'.$this->l('HTML "title" tag').'</label>
-							<div class="col-lg-9">
-								<input class="form-control" type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
-								<p class="help-block">'.(isset($title['en']) ? $title['en'] : '').'</p>
-							</div>
-						</div>
-						<div class="thumbnail email-html-frame" data-email-src="'.$url.'?'.(rand(0, 1000000000)).'"></div>
-					</div>
-				</div>';
+                    <div class="mail-form">
+                        <div class="form-group">
+                            <label class="control-label col-lg-3">'.$this->l('HTML "title" tag').'</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" type="text" name="title_'.$group_name.'_'.$mail_name.'" value="'.(isset($title[$lang]) ? $title[$lang] : '').'" />
+                                <p class="help-block">'.(isset($title['en']) ? $title['en'] : '').'</p>
+                            </div>
+                        </div>
+                        <div class="thumbnail email-html-frame" data-email-src="'.$url.'"></div>
+                    </div>
+                </div>';
     }
 
     protected function displayMailEditor($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
@@ -2573,13 +2573,13 @@ class AdminTranslationsControllerCore extends AdminController
         $ad = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_);
         //return false;
         return '
-			<script type="text/javascript">
-				var iso = \''.$iso_tiny_mce.'\' ;
-				var pathCSS = \''._THEME_CSS_DIR_.'\' ;
-				var ad = \''.$ad.'\' ;
-			</script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/admin/tinymce.inc.js"></script>';
+            <script type="text/javascript">
+                var iso = \''.$iso_tiny_mce.'\' ;
+                var pathCSS = \''._THEME_CSS_DIR_.'\' ;
+                var ad = \''.$ad.'\' ;
+            </script>
+            <script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
+            <script type="text/javascript" src="'.__PS_BASE_URI__.'js/admin/tinymce.inc.js"></script>';
     }
 
     /**
@@ -3115,5 +3115,20 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         return false;
+    }
+
+    public static function getEmailHTML($email)
+    {
+        if (defined('_PS_HOST_MODE_') && strpos($email, _PS_MAIL_DIR_) !== false) {
+            $email_file = $email;
+        } elseif (__PS_BASE_URI__ != '/') {
+            $email_file = str_replace(__PS_BASE_URI__, '', _PS_ROOT_DIR_.'/').$email;
+        } else {
+            $email_file = _PS_ROOT_DIR_.$email;
+        }
+
+        $email_html = file_get_contents($email_file);
+
+        return $email_html;
     }
 }
