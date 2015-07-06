@@ -903,7 +903,7 @@ class AdminTranslationsControllerCore extends AdminController
 						foreach ($checks as $check)
 							$this->errors[] = sprintf(Tools::displayError('Please check rights for folder and files in %s'), $check);
 						if (!unlink($file))
-							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);						
+							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
 					}
 				}
 				else
@@ -2468,7 +2468,7 @@ class AdminTranslationsControllerCore extends AdminController
 								<p class="help-block">'.(isset($title['en']) ? $title['en'] : '').'</p>
 							</div>
 						</div>
-						<div class="thumbnail email-html-frame" data-email-src="'.$url.'?'.(rand(0, 1000000000)).'"></div>
+						<div class="thumbnail email-html-frame" data-email-src="'.$url.'"></div>
 					</div>
 				</div>';
 	}
@@ -3115,5 +3115,23 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 
 		return false;
+	}
+
+	public static function getEmailHTML($email)
+	{
+		if(defined('_PS_HOST_MODE_') && strpos($email, _PS_MAIL_DIR_) !== false)
+		{
+			$email_file = $email;
+		}
+		elseif (__PS_BASE_URI__ != '/')
+		{
+			$email_file = str_replace(__PS_BASE_URI__, '', _PS_ROOT_DIR_.'/').$email;
+		}
+		else
+		{
+			$email_file = _PS_ROOT_DIR_.$email;
+		}
+		$email_html = file_get_contents($email_file);
+		return $email_html;
 	}
 }
