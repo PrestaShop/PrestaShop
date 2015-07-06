@@ -1627,10 +1627,6 @@ class AdminControllerCore extends Controller
 		return false;
 	}
 
-	public function displayNoSmarty()
-	{
-	}
-
 	/**
 	 * @return void
 	 */
