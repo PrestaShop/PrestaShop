@@ -34,5 +34,3 @@ function update_order_details()
 		  Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `reduction_amount` DECIMAL(20, 6) NOT NULL default \'0.000000\' AFTER `reduction_percent`');
 	}
 }
-
-

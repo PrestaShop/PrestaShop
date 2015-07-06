@@ -69,4 +69,3 @@ class FileLoggerCore extends AbstractLogger
 		return $this->filename;
 	}
 }
-

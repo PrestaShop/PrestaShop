@@ -749,5 +749,3 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 		}
 	}
 }
-
-

@@ -43,4 +43,3 @@ function gridextjs_deprecated()
 
 	return true;
 }
-

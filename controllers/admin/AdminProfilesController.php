@@ -114,5 +114,3 @@ class AdminProfilesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 }
-
-

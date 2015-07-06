@@ -56,3 +56,4 @@ class HTMLPurifier_ConfigSchema_Interchange_Id
 }
 
 // vim: et sw=4 sts=4
+

@@ -31,4 +31,3 @@ function remove_tab($tabname)
 	FROM `'._DB_PREFIX_.'tab` t LEFT JOIN `'._DB_PREFIX_.'tab_lang` l ON (t.id_tab = l.id_tab)
 	WHERE t.`class_name` = "'.pSQL($tabname).'"');
 }
-

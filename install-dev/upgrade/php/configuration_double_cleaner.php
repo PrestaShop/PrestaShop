@@ -44,4 +44,3 @@ function configuration_double_cleaner()
 		SELECT id_configuration
 		FROM '._DB_PREFIX_.'configuration)');
 }
-

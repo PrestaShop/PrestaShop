@@ -146,5 +146,3 @@ class AdminRangeWeightControllerCore extends AdminController
 			parent::postProcess();
 	}
 }
-
-

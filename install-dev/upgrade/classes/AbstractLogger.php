@@ -107,4 +107,3 @@ abstract class AbstractLoggerCore
 		$this->log($message, self::ERROR);
 	}
 }
-

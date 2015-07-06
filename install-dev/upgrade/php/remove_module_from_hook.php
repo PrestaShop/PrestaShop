@@ -49,4 +49,3 @@ function remove_module_from_hook($module_name, $hook_name)
 	
 	return $result;
 }
-

@@ -60,4 +60,3 @@ class DiscountControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
 	}
 }
-

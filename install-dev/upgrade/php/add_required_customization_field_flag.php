@@ -40,4 +40,3 @@ function add_required_customization_field_flag()
 	}
 	return true;
 }
-

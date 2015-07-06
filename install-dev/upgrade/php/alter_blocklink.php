@@ -32,4 +32,3 @@ function alter_blocklink()
 	DB::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'blocklink` CHANGE  `id_link`  `id_blocklink` INT( 10 ) UNSIGNED NOT NULL');
 			
 }
-

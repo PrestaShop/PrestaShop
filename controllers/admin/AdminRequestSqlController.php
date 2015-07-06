@@ -491,5 +491,3 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 	}
 }
-
-

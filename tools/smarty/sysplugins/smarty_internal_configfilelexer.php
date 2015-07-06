@@ -640,4 +640,3 @@ class Smarty_Internal_Configfilelexer
         $this->token = Smarty_Internal_Configfileparser::TPC_TRIPPLE_TEXT;
     }
 }
-

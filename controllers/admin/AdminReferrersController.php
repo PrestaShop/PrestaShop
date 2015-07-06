@@ -492,5 +492,3 @@ class AdminReferrersControllerCore extends AdminController
 		return parent::renderView();
 	}
 }
-
-

@@ -51,4 +51,3 @@ function delivery_number_set()
 	// Add configuration var
 	Configuration::updateValue('PS_DELIVERY_NUMBER', (int)($number));
 }
-

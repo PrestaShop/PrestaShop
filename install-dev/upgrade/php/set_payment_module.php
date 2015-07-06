@@ -49,5 +49,3 @@ function set_payment_module()
 		fclose($fd);
 	}
 }
-
-

@@ -35,4 +35,3 @@ VALUES ((SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \'crosss
 }
 
 }
-

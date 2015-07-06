@@ -51,4 +51,3 @@ function update_module_loyalty()
 		}
 	}
 }
-

@@ -93,4 +93,3 @@ class OrderReturnControllerCore extends FrontController
 		$this->smartyOutputContent($this->template);
 	}
 }
-

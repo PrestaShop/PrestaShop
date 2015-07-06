@@ -109,4 +109,3 @@ function generate_tax_rules()
 	}
 	return $res;
 }
-

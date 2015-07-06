@@ -199,4 +199,3 @@ class AdminSlipControllerCore extends AdminController
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
 }
-

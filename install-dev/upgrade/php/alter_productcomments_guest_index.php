@@ -36,4 +36,3 @@ function alter_productcomments_guest_index()
 	ALTER TABLE `'._DB_PREFIX_.'product_comment`
 	DROP INDEX `id_guest`, ADD INDEX `id_guest` (`id_guest`);');
 }
-
