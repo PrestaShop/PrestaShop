@@ -79,18 +79,10 @@ var PaymentOptionHandler = function() {
         }
         this.selected_option = elem;
         this.selected_option.addClass('payment_selected');
-        this.selected_option.children('a:first').css({
-            'border': '1px solid #55c65e',
-            'border-radius': '4px'
-        });
         this.selected_option.children('a:first').children('.payment_option_selected:first').fadeIn();
     };
 
     this.unselectOption = function() {
-        this.selected_option.children('a:first').css({
-            'border': '1px solid #d6d4d4',
-            'border-radius': '4px'
-        });
         this.selected_option.children('a:first').children('.payment_option_selected:first').fadeOut();
         this.selected_option.removeClass('payment_selected');
     };
