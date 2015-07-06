@@ -98,7 +98,7 @@ function smartyMaxWords($params, &$smarty)
 	$params['s'] = str_replace('...', ' ...', html_entity_decode($params['s'], ENT_QUOTES, 'UTF-8'));
 	$words = explode(' ', $params['s']);
 
-	foreach($words AS &$word)
+	foreach($words as &$word)
 		if(Tools::strlen($word) > $params['n'])
 			$word = Tools::substr(trim(chunk_split($word, $params['n']-1, '- ')), 0, -1);
 

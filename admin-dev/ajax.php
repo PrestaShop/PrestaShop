@@ -36,10 +36,10 @@ $context = Context::getContext();
 if (Tools::isSubmit('ajaxReferrers'))
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
 
-if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
+if (Tools::getValue('page') == 'prestastore' and @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 
-if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
+if (Tools::isSubmit('getAvailableFields') and Tools::isSubmit('entity'))
 {
 	$jsonArray = array();
 	$import = new AdminImportController();

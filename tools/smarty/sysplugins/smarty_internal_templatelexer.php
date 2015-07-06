@@ -21,7 +21,7 @@ class Smarty_Internal_Templatelexer
     public $line;
     public $taglineno;
     public $state = 1;
-    private $heredoc_id_stack = Array();
+    private $heredoc_id_stack = array();
     public $yyTraceFILE;
     public $yyTracePrompt;
     public $state_name = array(1 => 'TEXT', 2 => 'SMARTY', 3 => 'LITERAL', 4 => 'DOUBLEQUOTEDSTRING', 5 => 'CHILDBODY');
@@ -330,7 +330,7 @@ class Smarty_Internal_Templatelexer
     function yy_r1_14($yy_subpatterns)
     {
 
-        if (in_array($this->value, Array('<?', '<?=', '<?php'))) {
+        if (in_array($this->value, array('<?', '<?=', '<?php'))) {
             $this->token = Smarty_Internal_Templateparser::TP_PHPSTARTTAG;
         } elseif ($this->value == '<?xml') {
             $this->token = Smarty_Internal_Templateparser::TP_XMLTAG;
@@ -1025,7 +1025,7 @@ class Smarty_Internal_Templatelexer
     function yy_r3_3($yy_subpatterns)
     {
 
-        if (in_array($this->value, Array('<?', '<?=', '<?php'))) {
+        if (in_array($this->value, array('<?', '<?=', '<?php'))) {
             $this->token = Smarty_Internal_Templateparser::TP_PHPSTARTTAG;
         } else {
             $this->token = Smarty_Internal_Templateparser::TP_FAKEPHPSTARTTAG;

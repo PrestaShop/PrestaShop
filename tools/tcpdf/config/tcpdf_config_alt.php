@@ -37,7 +37,7 @@
  */
 
 // DOCUMENT_ROOT fix for IIS Webserver
-if ((!isset($_SERVER['DOCUMENT_ROOT'])) OR (empty($_SERVER['DOCUMENT_ROOT']))) {
+if ((!isset($_SERVER['DOCUMENT_ROOT'])) or (empty($_SERVER['DOCUMENT_ROOT']))) {
 	if(isset($_SERVER['SCRIPT_FILENAME'])) {
 		$_SERVER['DOCUMENT_ROOT'] = str_replace( '\\', '/', substr($_SERVER['SCRIPT_FILENAME'], 0, 0-strlen($_SERVER['PHP_SELF'])));
 	} elseif(isset($_SERVER['PATH_TRANSLATED'])) {
@@ -61,8 +61,8 @@ if (substr($k_path_main, -1) != '/') {
 define ('K_PATH_MAIN', $k_path_main);
 
 // Automatic calculation for the following K_PATH_URL constant
-if (isset($_SERVER['HTTP_HOST']) AND (!empty($_SERVER['HTTP_HOST']))) {
-	if(isset($_SERVER['HTTPS']) AND (!empty($_SERVER['HTTPS'])) AND strtolower($_SERVER['HTTPS'])!='off') {
+if (isset($_SERVER['HTTP_HOST']) and (!empty($_SERVER['HTTP_HOST']))) {
+	if(isset($_SERVER['HTTPS']) and (!empty($_SERVER['HTTPS'])) and strtolower($_SERVER['HTTPS'])!='off') {
 		$k_path_url = 'https://';
 	} else {
 		$k_path_url = 'http://';

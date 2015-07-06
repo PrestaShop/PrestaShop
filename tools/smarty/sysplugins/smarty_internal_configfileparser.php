@@ -124,7 +124,7 @@ class Smarty_Internal_Configfileparser #line 80 "smarty_internal_configfileparse
         return $res;
     }
 
-    private static $escapes_single = Array('\\' => '\\',
+    private static $escapes_single = array('\\' => '\\',
                                            '\'' => '\'');
 
     private static function parse_single_quoted_string($qstr)
@@ -174,7 +174,7 @@ class Smarty_Internal_Configfileparser #line 80 "smarty_internal_configfileparse
     private function add_global_vars(Array $vars)
     {
         if (!isset($this->compiler->config_data['vars'])) {
-            $this->compiler->config_data['vars'] = Array();
+            $this->compiler->config_data['vars'] = array();
         }
         foreach ($vars as $var) {
             $this->set_var($var, $this->compiler->config_data);
@@ -184,7 +184,7 @@ class Smarty_Internal_Configfileparser #line 80 "smarty_internal_configfileparse
     private function add_section_vars($section_name, Array $vars)
     {
         if (!isset($this->compiler->config_data['sections'][$section_name]['vars'])) {
-            $this->compiler->config_data['sections'][$section_name]['vars'] = Array();
+            $this->compiler->config_data['sections'][$section_name]['vars'] = array();
         }
         foreach ($vars as $var) {
             $this->set_var($var, $this->compiler->config_data['sections'][$section_name]);
@@ -465,7 +465,7 @@ class Smarty_Internal_Configfileparser #line 80 "smarty_internal_configfileparse
 
     public function __destruct()
     {
-        while ($this->yystack !== Array()) {
+        while ($this->yystack !== array()) {
             $this->yy_pop_parser_stack();
         }
         if (is_resource($this->yyTraceFILE)) {
@@ -803,19 +803,19 @@ class Smarty_Internal_Configfileparser #line 80 "smarty_internal_configfileparse
     #line 166 "smarty_internal_configfileparser.y"
     function yy_r7()
     {
-        $this->_retvalue = array_merge($this->yystack[$this->yyidx + - 1]->minor, Array($this->yystack[$this->yyidx + 0]->minor));
+        $this->_retvalue = array_merge($this->yystack[$this->yyidx + - 1]->minor, array($this->yystack[$this->yyidx + 0]->minor));
     }
     #line 704 "smarty_internal_configfileparser.php"
     #line 170 "smarty_internal_configfileparser.y"
     function yy_r8()
     {
-        $this->_retvalue = Array();
+        $this->_retvalue = array();
     }
     #line 709 "smarty_internal_configfileparser.php"
     #line 176 "smarty_internal_configfileparser.y"
     function yy_r9()
     {
-        $this->_retvalue = Array("key" => $this->yystack[$this->yyidx + - 2]->minor, "value" => $this->yystack[$this->yyidx + 0]->minor);
+        $this->_retvalue = array("key" => $this->yystack[$this->yyidx + - 2]->minor, "value" => $this->yystack[$this->yyidx + 0]->minor);
     }
     #line 714 "smarty_internal_configfileparser.php"
     #line 181 "smarty_internal_configfileparser.y"

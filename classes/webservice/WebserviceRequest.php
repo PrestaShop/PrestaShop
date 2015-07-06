@@ -1675,7 +1675,7 @@ class WebserviceRequestCore
 			&& strpos($this->urlFragments['language'], ']') === $length_values - 1)
 		{
 			if (strpos($this->urlFragments['language'], '|') !== false
-				XOR strpos($this->urlFragments['language'], ',') !== false)
+				xor strpos($this->urlFragments['language'], ',') !== false)
 			{
 				$params_values = str_replace(array(']', '['), '', $this->urlFragments['language']);
 				// it's a list

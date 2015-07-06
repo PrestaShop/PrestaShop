@@ -318,7 +318,7 @@ class Smarty_Internal_Configfilelexer
     function yy_r2_7($yy_subpatterns)
     {
 
-        if (!$this->smarty->config_booleanize || !in_array(strtolower($this->value), Array("true", "false", "on", "off", "yes", "no"))) {
+        if (!$this->smarty->config_booleanize || !in_array(strtolower($this->value), array("true", "false", "on", "off", "yes", "no"))) {
             $this->yypopstate();
             $this->yypushstate(self::NAKED_STRING_VALUE);
             return true; //reprocess in new state

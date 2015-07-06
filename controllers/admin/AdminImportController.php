@@ -2461,7 +2461,7 @@ class AdminImportControllerCore extends AdminController
 					if (!$id_group)
 					{
 						$my_group = new Group();
-						$my_group->name = Array($id_lang => $group);
+						$my_group->name = array($id_lang => $group);
 						if ($id_lang != $default_language_id)
 							$my_group->name = $my_group->name + array($default_language_id => $group);
 						$my_group->price_display_method = 1;

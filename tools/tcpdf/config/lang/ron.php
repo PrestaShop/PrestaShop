@@ -31,7 +31,7 @@
 // Romanian, Moldavian, Moldovan
 
 global $l;
-$l = Array();
+$l = array();
 
 // PAGE META DESCRIPTORS --------------------------------------
 
