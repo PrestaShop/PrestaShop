@@ -983,6 +983,13 @@ class AdminCustomersControllerCore extends AdminController
 		$customer->newsletter = $customer->newsletter ? 0 : 1;
 		if (!$customer->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
+
+		Hook::exec('actionProcessCustomerNewsletter', array(
+			'active' => (bool)$customer->newsletter,
+			'customer' => $customer,
+			'email' => $customer->email
+		));
+
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
@@ -997,6 +1004,13 @@ class AdminCustomersControllerCore extends AdminController
 		$customer->optin = $customer->optin ? 0 : 1;
 		if (!$customer->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');
+
+		Hook::exec('actionProcessCustomerOptin', array(
+			'active' => (bool)$customer->optin,
+			'customer' => $customer,
+			'email' => $customer->email
+		));
+
 		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
 	}
 
