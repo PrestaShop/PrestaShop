@@ -2436,7 +2436,7 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		return '<div class="block-mail" >
 					<div class="mail-form">
-						<div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '' ).$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
+						<div><textarea class="rte noEditor" name="'.$group_name.'[txt]['.($name_for_module ? $name_for_module.'|' : '').$mail_name.']">'.Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang]))).'</textarea></div>
 					</div>
 				</div>';
 	}
@@ -2756,7 +2756,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		// Or if is folder, we scan folder for check if found in folder and subfolder
 		elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
-			foreach(scandir($dir.'/'.$file ) as $temp)
+			foreach(scandir($dir.'/'.$file) as $temp)
 				if ($temp[0] != '.')
 					$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
 

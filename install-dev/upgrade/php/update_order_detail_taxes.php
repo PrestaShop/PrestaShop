@@ -47,7 +47,7 @@ function update_order_detail_taxes()
 			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
 			WHERE tl.`name` = \''.pSQL($alternative_tax_name).'\' ');
 			
-		if ( $id_tax || $id_tax_alt)
+		if ($id_tax || $id_tax_alt)
 		{
 			$create_tax = !(bool)Db::getInstance()->getValue('SELECT count(*) 
 				FROM `'._DB_PREFIX_.'tax` 

@@ -584,7 +584,7 @@ class ProductControllerCore extends FrontController
 		elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop))
 		{
 			$this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
-			if (Validate::isLoadedObject( $this->category) && $this->category->active && $this->category->isAssociatedToShop())
+			if (Validate::isLoadedObject($this->category) && $this->category->active && $this->category->isAssociatedToShop())
 				$path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
 		}
 		if (!isset($path) || !$path)

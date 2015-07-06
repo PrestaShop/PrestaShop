@@ -176,7 +176,7 @@ class UploaderCore
 			else
 				$file_path = $this->getFilePath(isset($dest) ? $dest : $file['name']);
 
-			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] ))
+			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name']))
 					move_uploaded_file($file['tmp_name'], $file_path);
 			else
 				// Non-multipart uploads (PUT method support)

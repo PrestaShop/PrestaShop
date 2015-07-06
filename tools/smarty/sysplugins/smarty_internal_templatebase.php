@@ -328,7 +328,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
                             break;
 
                         case 'cli':
-                            if ( /* ^phpunit */
+                            if (/* ^phpunit */
                             !empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS']) /* phpunit$ */
                             ) {
                                 $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = '304 Not Modified';
@@ -342,7 +342,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
                 } else {
                     switch (PHP_SAPI) {
                         case 'cli':
-                            if ( /* ^phpunit */
+                            if (/* ^phpunit */
                             !empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS']) /* phpunit$ */
                             ) {
                                 $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = 'Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->cached->timestamp) . ' GMT';

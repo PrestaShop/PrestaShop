@@ -486,7 +486,7 @@ class imageLib
           break;
 
         case 't':
-          $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
+          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = 0;
           break;
 
@@ -497,17 +497,17 @@ class imageLib
 
         case 'l':
           $cropStartX = 0;
-          $cropStartY = ( $optimalHeight/ 2) - ( $newHeight/2 );
+          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           break;
 
         case 'm':
-          $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
-          $cropStartY = ( $optimalHeight/ 2) - ( $newHeight/2 );
+          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
+          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           break;
 
         case 'r':
           $cropStartX = $optimalWidth - $newWidth;
-          $cropStartY = ( $optimalHeight/ 2) - ( $newHeight/2 );
+          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           break;
 
         case 'bl':
@@ -516,7 +516,7 @@ class imageLib
           break;
 
         case 'b':
-          $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
+          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
           $cropStartY = $optimalHeight - $newHeight;
           break;
 
@@ -528,20 +528,20 @@ class imageLib
         case 'auto':
           // *** If image is a portrait crop from top, not center. v1.5
           if ($optimalHeight > $optimalWidth) {
-            $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
+            $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
             $cropStartY = ($this->cropFromTopPercent /100) * $optimalHeight;
           } else {
 
             // *** Else crop from the center
-            $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
-            $cropStartY = ( $optimalHeight/ 2) - ( $newHeight/2 );
+            $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
+            $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           }
           break;
 
         default:
           // *** Default to center
-          $cropStartX = ( $optimalWidth / 2) - ( $newWidth /2 );
-          $cropStartY = ( $optimalHeight/ 2) - ( $newHeight/2 );
+          $cropStartX = ($optimalWidth / 2) - ($newWidth /2);
+          $cropStartY = ($optimalHeight/ 2) - ($newHeight/2);
           break;
       }
     }
@@ -769,8 +769,8 @@ class imageLib
       $optimalRatio = $widthRatio;
     }
 
-    $optimalHeight = round( $this->height / $optimalRatio );
-    $optimalWidth  = round( $this->width  / $optimalRatio );
+    $optimalHeight = round($this->height / $optimalRatio);
+    $optimalWidth  = round($this->width  / $optimalRatio);
 
     return array('optimalWidth' => $optimalWidth, 'optimalHeight' => $optimalHeight);
   }
@@ -1072,13 +1072,13 @@ class imageLib
   {
     if ($this->imageResized) {
 
-      $total = imagecolorstotal( $this->imageResized );
-      for ( $i = 0; $i < $total; $i++ ) {
-        $index = imagecolorsforindex( $this->imageResized, $i );
-        $red = ( $index["red"] * 0.393 + $index["green"] * 0.769 + $index["blue"] * 0.189 ) / 1.351;
-        $green = ( $index["red"] * 0.349 + $index["green"] * 0.686 + $index["blue"] * 0.168 ) / 1.203;
-        $blue = ( $index["red"] * 0.272 + $index["green"] * 0.534 + $index["blue"] * 0.131 ) / 2.140;
-        imagecolorset( $this->imageResized, $i, $red, $green, $blue );
+      $total = imagecolorstotal($this->imageResized);
+      for ($i = 0; $i < $total; $i++) {
+        $index = imagecolorsforindex($this->imageResized, $i);
+        $red = ($index["red"] * 0.393 + $index["green"] * 0.769 + $index["blue"] * 0.189) / 1.351;
+        $green = ($index["red"] * 0.349 + $index["green"] * 0.686 + $index["blue"] * 0.168) / 1.203;
+        $blue = ($index["red"] * 0.272 + $index["green"] * 0.534 + $index["blue"] * 0.131) / 2.140;
+        imagecolorset($this->imageResized, $i, $red, $green, $blue);
       }
 
 
@@ -1414,7 +1414,7 @@ class imageLib
     imagefill($cornerImg, 0, 0, $imagebgColor);
 
 
-    imagefilledellipse($cornerImg, $radius, $radius, $radius * 2, $radius * 2, $maskColor );
+    imagefilledellipse($cornerImg, $radius, $radius, $radius * 2, $radius * 2, $maskColor);
 
 
     // *** Map to top left corner
@@ -2059,8 +2059,8 @@ class imageLib
       chr(0x80).chr(0x04).
       chr(($len >> 24) & 0xff).
       chr(($len >> 16) & 0xff).
-      chr(($len >> 8 ) & 0xff).
-      chr(($len ) & 0xff).
+      chr(($len >> 8) & 0xff).
+      chr(($len) & 0xff).
       $val;
   }
 
@@ -2348,7 +2348,7 @@ class imageLib
     $minalpha = 127;
     for ($x = 0; $x < $w; $x++)
       for ($y = 0; $y < $h; $y++) {
-        $alpha = ( imagecolorat($img, $x, $y) >> 24 ) & 0xFF;
+        $alpha = (imagecolorat($img, $x, $y) >> 24) & 0xFF;
         if ($alpha < $minalpha) {
           $minalpha = $alpha;
         }
@@ -2359,15 +2359,15 @@ class imageLib
       for ($y = 0; $y < $h; $y++) {
         //get current alpha value (represents the TANSPARENCY!)
         $colorxy = imagecolorat($img, $x, $y);
-        $alpha = ( $colorxy >> 24 ) & 0xFF;
+        $alpha = ($colorxy >> 24) & 0xFF;
         //calculate new alpha
         if ($minalpha !== 127) {
-          $alpha = 127 + 127 * $opacity * ( $alpha - 127 ) / ( 127 - $minalpha );
+          $alpha = 127 + 127 * $opacity * ($alpha - 127) / (127 - $minalpha);
         } else {
           $alpha += 127 * $opacity;
         }
         //get the color index with new alpha
-        $alphacolorxy = imagecolorallocatealpha($img, ( $colorxy >> 16 ) & 0xFF, ( $colorxy >> 8 ) & 0xFF, $colorxy & 0xFF, $alpha);
+        $alphacolorxy = imagecolorallocatealpha($img, ($colorxy >> 16) & 0xFF, ($colorxy >> 8) & 0xFF, $colorxy & 0xFF, $alpha);
         //set pixel with the new color + opacity
         if (!imagesetpixel($img, $x, $y, $alphacolorxy)) {
 
@@ -3032,22 +3032,22 @@ class imageLib
     // BITMAPFILEHEADER [14 bytes] - http://msdn.microsoft.com/library/en-us/gdi/bitmaps_62uq.asp
     $BITMAPFILEHEADER  = 'BM';                                    // WORD    bfType;
     $BITMAPFILEHEADER .= $this->LittleEndian2String($bmpSize, 4); // DWORD   bfSize;
-    $BITMAPFILEHEADER .= $this->LittleEndian2String(       0, 2); // WORD    bfReserved1;
-    $BITMAPFILEHEADER .= $this->LittleEndian2String(       0, 2); // WORD    bfReserved2;
-    $BITMAPFILEHEADER .= $this->LittleEndian2String(      54, 4); // DWORD   bfOffBits;
+    $BITMAPFILEHEADER .= $this->LittleEndian2String(0, 2); // WORD    bfReserved1;
+    $BITMAPFILEHEADER .= $this->LittleEndian2String(0, 2); // WORD    bfReserved2;
+    $BITMAPFILEHEADER .= $this->LittleEndian2String(54, 4); // DWORD   bfOffBits;
 
     // BITMAPINFOHEADER - [40 bytes] http://msdn.microsoft.com/library/en-us/gdi/bitmaps_1rw2.asp
-    $BITMAPINFOHEADER  = $this->LittleEndian2String(      40, 4); // DWORD  biSize;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String( $imageX, 4); // LONG   biWidth;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String( $imageY, 4); // LONG   biHeight;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(       1, 2); // WORD   biPlanes;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(      24, 2); // WORD   biBitCount;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(       0, 4); // DWORD  biCompression;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(       0, 4); // DWORD  biSizeImage;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(    2835, 4); // LONG   biXPelsPerMeter;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(    2835, 4); // LONG   biYPelsPerMeter;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(       0, 4); // DWORD  biClrUsed;
-    $BITMAPINFOHEADER .= $this->LittleEndian2String(       0, 4); // DWORD  biClrImportant;
+    $BITMAPINFOHEADER  = $this->LittleEndian2String(40, 4); // DWORD  biSize;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String($imageX, 4); // LONG   biWidth;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String($imageY, 4); // LONG   biHeight;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(1, 2); // WORD   biPlanes;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(24, 2); // WORD   biBitCount;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biCompression;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biSizeImage;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(2835, 4); // LONG   biXPelsPerMeter;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(2835, 4); // LONG   biYPelsPerMeter;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biClrUsed;
+    $BITMAPINFOHEADER .= $this->LittleEndian2String(0, 4); // DWORD  biClrImportant;
 
     return $BITMAPFILEHEADER.$BITMAPINFOHEADER.$BMP;
   }

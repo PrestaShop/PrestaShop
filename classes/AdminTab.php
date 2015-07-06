@@ -1450,12 +1450,12 @@ abstract class AdminTabCore
 			<script type="text/javascript">
 				var token = \''.($token != null ? $token : $this->token).'\';
 				var come_from = \''.$this->table.'\';
-				var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
+				var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0').'\';
 			</script>
 			<script type="text/javascript" src="../js/admin/dnd.js"></script>
 			';
 		}
-		echo '<table'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? Tools::substr($this->identifier, 3, Tools::strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">
+		echo '<table'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? Tools::substr($this->identifier, 3, Tools::strlen($this->identifier)) : '').'"' : '').' class="table'.((array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC')) ? ' tableDnD'  : '').'" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr class="nodrag nodrop">
 					<th>';
@@ -2042,7 +2042,7 @@ abstract class AdminTabCore
 					echo '<img src="../themes/'.$theme['name'].'/preview.jpg" alt="'.Tools::strtolower($theme['name']).'">';
 				echo '</label>';
 			echo '</td>';
-			if (isset($field['max']) && ($i + 1 ) % $field['max'] == 0)
+			if (isset($field['max']) && ($i + 1) % $field['max'] == 0)
 				echo '</tr><tr>';
 			$i++;
 		}

@@ -1149,7 +1149,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			// get currency id
 			$id_currency = (int)Tools::getValue('id_currency', 0);
-			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
+			if ($id_currency <= 0 || (!($result = Currency::getCurrency($id_currency)) || empty($result)))
 				$this->errors[] = Tools::displayError('The selected currency is not valid.');
 
 			// get delivery date

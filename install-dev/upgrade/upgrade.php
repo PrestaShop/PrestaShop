@@ -360,7 +360,7 @@ if (empty($fail_result))
 						$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
 						$phpRes = call_user_func_array($func_name, $parameters);
 					}
-					if ((is_array($phpRes) and !empty($phpRes['error'])) or $phpRes === false )
+					if ((is_array($phpRes) and !empty($phpRes['error'])) or $phpRes === false)
 					{
 						$warningExist = true;
 						$logger->logError('PHP error: '.$query."\r\n".(empty($phpRes['msg'])?'':' - '.$phpRes['msg']));

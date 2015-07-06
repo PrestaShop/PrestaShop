@@ -1043,7 +1043,7 @@ class ToolsCore
 		$i = 0;
 		foreach ($backtrace as $id => $trace)
 		{
-			if ((int)$limit && (++$i > $limit ))
+			if ((int)$limit && (++$i > $limit))
 				break;
 			$relative_file = (isset($trace['file'])) ? 'in /'.ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
 			$current_line = (isset($trace['line'])) ? ':'.$trace['line'] : '';
@@ -1879,7 +1879,7 @@ class ToolsCore
 		{
 			$tmp_value = floor($value + 0.5);
 
-			if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value )) ||
+			if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
 				($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
 				($mode == PS_ROUND_HALF_ODD  && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0)))
 				$tmp_value  = $tmp_value - 1.0;
@@ -1888,7 +1888,7 @@ class ToolsCore
 		{
 			$tmp_value  = ceil($value - 0.5);
 
-			if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value )) ||
+			if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
 				($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
 				($mode == PS_ROUND_HALF_ODD  && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0)))
 				$tmp_value  = $tmp_value + 1.0;
@@ -2841,7 +2841,7 @@ exit;
 		else
 		{
 			$value_length = strlen($value);
-			$qty = (int)substr($value, 0, $value_length - 1 );
+			$qty = (int)substr($value, 0, $value_length - 1);
 			$unit = Tools::strtolower(substr($value, $value_length - 1));
 			switch ($unit)
 			{

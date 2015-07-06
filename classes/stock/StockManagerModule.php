@@ -33,7 +33,7 @@ abstract class StockManagerModuleCore extends Module
 
 	public function install()
 	{
-		return (parent::install() && $this->registerHook('stockManager') );
+		return (parent::install() && $this->registerHook('stockManager'));
 	}
 
 	public function hookStockManager()

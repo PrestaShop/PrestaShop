@@ -173,7 +173,7 @@ class ManufacturerCore extends ObjectModel
 		'.Shop::addSqlAssociation('manufacturer', 'm').'
 		INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int)$id_lang.')
 		'.($active ? 'WHERE m.`active` = 1' : '')
-		.($group_by ? ' GROUP BY m.`id_manufacturer`' : '' ).'
+		.($group_by ? ' GROUP BY m.`id_manufacturer`' : '').'
 		ORDER BY m.`name` ASC
 		'.($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : ''));
 		if ($manufacturers === false)

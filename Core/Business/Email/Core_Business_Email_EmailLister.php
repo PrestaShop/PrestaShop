@@ -56,7 +56,7 @@ class Core_Business_Email_EmailLister
 				$tmp = explode('.', $mail->getFilename());
 
 				// Check for filename existence (left part) and if extension is html (right part)
-				if ( ($tmp === false || !isset($tmp[0])) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
+				if (($tmp === false || !isset($tmp[0])) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
 					continue;
 				}
 

@@ -554,7 +554,7 @@ class AdminStockManagementControllerCore extends AdminController
 			return;
 
 		// Global checks when add / remove / transfer product
-		if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock') || Tools::isSubmit('transferstock') ) && Tools::isSubmit('is_post'))
+		if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock') || Tools::isSubmit('transferstock')) && Tools::isSubmit('is_post'))
 		{
 			// get product ID
 			$id_product = (int)Tools::getValue('id_product', 0);
@@ -582,7 +582,7 @@ class AdminStockManagementControllerCore extends AdminController
 		}
 
 		// Global checks when add / remove product
-		if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock') ) && Tools::isSubmit('is_post'))
+		if ((Tools::isSubmit('addstock') || Tools::isSubmit('removestock')) && Tools::isSubmit('is_post'))
 		{
 			// get warehouse id
 			$id_warehouse = (int)Tools::getValue('id_warehouse', 0);
@@ -611,7 +611,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 			// get product unit price currency id
 			$id_currency = (int)Tools::getValue('id_currency', 0);
-			if ($id_currency <= 0 || ( !($result = Currency::getCurrency($id_currency)) || empty($result) ))
+			if ($id_currency <= 0 || (!($result = Currency::getCurrency($id_currency)) || empty($result)))
 				$this->errors[] = Tools::displayError('The selected currency is not valid.');
 
 			// if all is ok, add stock

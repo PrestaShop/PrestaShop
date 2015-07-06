@@ -376,7 +376,7 @@ class MetaCore extends ObjectModel
 				WHERE id_lang = '.(int)$id_lang.'
 					AND id_cms = '.(int)$id_cms.
 					((int)Context::getContext()->shop->id ?
-						' AND id_shop = '.(int)Context::getContext()->shop->id : '' );
+						' AND id_shop = '.(int)Context::getContext()->shop->id : '');
 
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
