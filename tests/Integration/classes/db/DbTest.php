@@ -27,7 +27,6 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\Classes\Db;
 
-
 use Db;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 

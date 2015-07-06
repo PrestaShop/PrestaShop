@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Tax;
 
-
 use PHPUnit_Framework_TestCase;
 use Tax;
 use TaxCalculator;

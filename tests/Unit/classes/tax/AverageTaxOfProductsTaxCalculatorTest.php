@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Tax;
 
-
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use AverageTaxOfProductsTaxCalculator;
 use Phake;

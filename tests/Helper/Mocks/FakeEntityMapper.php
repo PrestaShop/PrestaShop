@@ -3,7 +3,6 @@
 
 namespace PrestaShop\PrestaShop\Tests\Helper\Mocks;
 
-
 use Adapter_EntityMapper;
 use Exception;
 use ObjectModel;
