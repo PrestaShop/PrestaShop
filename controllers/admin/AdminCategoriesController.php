@@ -209,6 +209,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->_filter = $this->original_filter;
 
 		$this->addRowAction('view');
+		$this->addRowAction('products');
 		$this->addRowAction('add');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
@@ -862,4 +863,22 @@ class AdminCategoriesControllerCore extends AdminController
 			}
 		}
 	}
+
+	public function displayProductsLink($token = null, $id, $name = null)
+	{
+		if (!array_key_exists('ViewProducts', self::$cache_lang))
+			self::$cache_lang['ViewProducts'] = $this->l('View products');
+
+		$tpl = $this->createTemplate('helpers/list/list_action_view.tpl');	
+
+		$tpl->assign(array(
+			'href' => $this->context->link->getAdminLink('AdminProducts', true).'&id_category='.(int)$id,
+			'action' => self::$cache_lang['ViewProducts'],
+			'id' => $id
+		));
+
+		return $tpl->fetch();
+	}
+
+
 }
