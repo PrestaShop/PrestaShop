@@ -48,5 +48,3 @@ function module_reinstall_blockmyaccount()
 	}
 	return true;
 }
-
-

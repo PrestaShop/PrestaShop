@@ -50,4 +50,3 @@ function update_feature_detachable_cache()
 	}
 	return $res;
 }
-

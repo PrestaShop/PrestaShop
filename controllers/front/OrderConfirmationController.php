@@ -150,4 +150,3 @@ class OrderConfirmationControllerCore extends FrontController
 		return false;
 	}
 }
-

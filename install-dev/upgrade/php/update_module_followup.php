@@ -32,4 +32,3 @@ function update_module_followup()
 
 	Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'log_email` ADD INDEX `date_add`(`date_add`), ADD INDEX `id_cart`(`id_cart`);');
 }
-

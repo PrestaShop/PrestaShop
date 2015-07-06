@@ -138,5 +138,3 @@ class AdminDeliverySlipControllerCore extends AdminController
 		));
 	}
 }
-
-

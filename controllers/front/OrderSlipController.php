@@ -54,4 +54,3 @@ class OrderSlipControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'order-slip.tpl');
 	}
 }
-

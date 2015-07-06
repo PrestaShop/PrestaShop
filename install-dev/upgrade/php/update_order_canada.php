@@ -125,4 +125,3 @@ function update_order_canada_ps_round($val){
 			return round($val, 2);
 	}
 }
-

@@ -108,5 +108,3 @@ class AdminOrderMessageControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 }
-
-

@@ -37,5 +37,3 @@ function module_blockwishlist_multishop()
 	}
 	return true;
 }
-
-

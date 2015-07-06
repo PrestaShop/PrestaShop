@@ -48,5 +48,3 @@ function module_reinstall_blocksearch()
 	}
 	return true;
 }
-
-

@@ -64,4 +64,3 @@ class BestSalesControllerCore extends FrontController
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
 	}
 }
-

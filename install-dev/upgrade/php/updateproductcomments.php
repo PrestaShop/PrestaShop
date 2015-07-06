@@ -53,5 +53,3 @@ function updateproductcomments()
 		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'product_comment` ADD `title` VARCHAR(64) NULL AFTER `id_guest`;');
 	}
 }
-
-

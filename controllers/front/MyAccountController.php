@@ -56,4 +56,3 @@ class MyAccountControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'my-account.tpl');
 	}
 }
-

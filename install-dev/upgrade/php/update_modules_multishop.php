@@ -60,4 +60,3 @@ function update_modules_multishop()
 	}
 	return true;
 }
-

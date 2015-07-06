@@ -55,4 +55,3 @@ function migrate_tabs_multi_shop()
 	// ===== hide AdminShopUrl and AdminShop =====
 	Db::getInstance()->update('tab', array('id_parent' => '-1'), 'id_tab IN ('.get_tab_id('AdminShop').', '.get_tab_id('AdminShopUrl').')');	
 }
-

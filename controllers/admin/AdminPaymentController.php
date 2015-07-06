@@ -297,4 +297,3 @@ class AdminPaymentControllerCore extends AdminController
 		}
 	}
 }
-

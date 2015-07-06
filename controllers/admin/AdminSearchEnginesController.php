@@ -100,5 +100,3 @@ class AdminSearchEnginesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 }
-
-

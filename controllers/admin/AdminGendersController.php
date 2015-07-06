@@ -232,5 +232,3 @@ class AdminGendersControllerCore extends AdminController
 		return true;
 	}
 }
-
-

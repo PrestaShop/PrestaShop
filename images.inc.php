@@ -159,4 +159,3 @@ function deleteImage($id_item, $id_image = NULL)
 		unlink(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg');
 	return true;
 }
-

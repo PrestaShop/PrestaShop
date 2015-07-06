@@ -256,4 +256,3 @@ class CategoryControllerCore extends FrontController
 		return $this->category;
 	}
 }
-

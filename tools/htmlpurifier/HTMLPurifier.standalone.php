@@ -21868,6 +21868,3 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
         return $var;
     }
 }
-
-
-

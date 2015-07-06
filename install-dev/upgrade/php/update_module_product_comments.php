@@ -44,4 +44,3 @@ function update_module_product_comments()
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 	}
 }
-

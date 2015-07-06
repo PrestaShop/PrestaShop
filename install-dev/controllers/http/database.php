@@ -181,4 +181,3 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
 		$this->displayTemplate('database');
 	}
 }
-

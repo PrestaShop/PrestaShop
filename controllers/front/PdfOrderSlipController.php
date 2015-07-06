@@ -55,4 +55,3 @@ class PdfOrderSlipControllerCore extends FrontController
 		$pdf->render();
 	}
 }
-
