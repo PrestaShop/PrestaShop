@@ -138,12 +138,12 @@ abstract class XML_Feed_Parser_Type
     {
         if (preg_match('/^[A-Za-z]+:\/\//', $link)) {
             return $link;
-        } else if (preg_match('/^\//', $link)) {
+        } elseif (preg_match('/^\//', $link)) {
             /* Extract domain and suffix link to that */
             preg_match('/^([A-Za-z]+:\/\/.*)?\/*/', $base, $results);
             $firstLayer = $results[0];
             return $firstLayer . "/" . $link;
-        } else if (preg_match('/^\.\.\//', $base)) {
+        } elseif (preg_match('/^\.\.\//', $base)) {
             /* Step up link to find place to be */
             preg_match('/^((\.\.\/)+)(.*)$/', $link, $bases);
             $suffix = $bases[3];
@@ -153,7 +153,7 @@ abstract class XML_Feed_Parser_Type
                 array_pop($url);
             }
             return implode("/", $url) . "/" . $suffix;
-        } else if (preg_match('/^(?!\/$)/', $base)) {
+        } elseif (preg_match('/^(?!\/$)/', $base)) {
             $base = preg_replace('/(.*\/).*$/', '$1', $base)  ;
             return $base . $link;
         } else {
@@ -336,7 +336,7 @@ abstract class XML_Feed_Parser_Type
         if (function_exists('iconv')) {
           $current_encoding = $node->ownerDocument->encoding;
           $value = iconv($current_encoding, 'UTF-8', $node->nodeValue);
-        } else if ($current_encoding == 'iso-8859-1') {
+        } elseif ($current_encoding == 'iso-8859-1') {
           $value = utf8_encode($node->nodeValue);
         } else {
           $value = $node->nodeValue;
@@ -415,7 +415,7 @@ abstract class XML_Feed_Parser_Type
                     }
                 }
                 return $value;
-            } else if ($test->length > 0) {
+            } elseif ($test->length > 0) {
                 return $test->item(0)->nodeValue;
             }
         }

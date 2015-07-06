@@ -325,7 +325,7 @@
         if ($v_size == 2) {
           $v_options[PCLZIP_OPT_REMOVE_PATH] = $v_arg_list[1];
         }
-        else if ($v_size > 2) {
+        elseif ($v_size > 2) {
           PclZip::privErrorLog(PCLZIP_ERR_INVALID_PARAMETER,
 		                       "Invalid number / type of arguments");
           return 0;
@@ -358,7 +358,7 @@
     }
 
     // ----- Look if the $p_filelist is a string
-    else if (is_string($p_filelist)) {
+    elseif (is_string($p_filelist)) {
       // ----- Create a list from the string
       $v_string_list = explode(PCLZIP_SEPARATOR, $p_filelist);
     }
@@ -510,7 +510,7 @@
         if ($v_size == 2) {
           $v_options[PCLZIP_OPT_REMOVE_PATH] = $v_arg_list[1];
         }
-        else if ($v_size > 2) {
+        elseif ($v_size > 2) {
           // ----- Error log
           PclZip::privErrorLog(PCLZIP_ERR_INVALID_PARAMETER, "Invalid number / type of arguments");
 
@@ -545,7 +545,7 @@
     }
 
     // ----- Look if the $p_filelist is a string
-    else if (is_string($p_filelist)) {
+    elseif (is_string($p_filelist)) {
       // ----- Create a list from the string
       $v_string_list = explode(PCLZIP_SEPARATOR, $p_filelist);
     }
@@ -787,7 +787,7 @@
         if ($v_size == 2) {
           $v_remove_path = $v_arg_list[1];
         }
-        else if ($v_size > 2) {
+        elseif ($v_size > 2) {
           // ----- Error log
           PclZip::privErrorLog(PCLZIP_ERR_INVALID_PARAMETER, "Invalid number / type of arguments");
 
@@ -948,7 +948,7 @@
         if ($v_size == 2) {
           $v_remove_path = $v_arg_list[1];
         }
-        else if ($v_size > 2) {
+        elseif ($v_size > 2) {
           // ----- Error log
           PclZip::privErrorLog(PCLZIP_ERR_INVALID_PARAMETER, "Invalid number / type of arguments");
 
@@ -1175,7 +1175,7 @@
     }
 
     // ----- Look if the $p_archive is a string (so a filename)
-    else if (is_string($p_archive))
+    elseif (is_string($p_archive))
     {
 
       // ----- Check that $p_archive is a valid zip file
@@ -1239,7 +1239,7 @@
     }
 
     // ----- Look if the $p_archive_to_add is a string (so a filename)
-    else if (is_string($p_archive_to_add))
+    elseif (is_string($p_archive_to_add))
     {
 
       // ----- Create a temporary archive
@@ -1545,7 +1545,7 @@
           if (is_string($p_options_list[$i+1])) {
               $v_result_list[$p_options_list[$i]][0] = $p_options_list[$i+1];
           }
-          else if (is_array($p_options_list[$i+1])) {
+          elseif (is_array($p_options_list[$i+1])) {
               $v_result_list[$p_options_list[$i]] = $p_options_list[$i+1];
           }
           else {
@@ -1642,10 +1642,10 @@
               // ----- Parse items
               $v_work_list = explode(",", $p_options_list[$i+1]);
           }
-          else if (is_integer($p_options_list[$i+1])) {
+          elseif (is_integer($p_options_list[$i+1])) {
               $v_work_list[0] = $p_options_list[$i+1].'-'.$p_options_list[$i+1];
           }
-          else if (is_array($p_options_list[$i+1])) {
+          elseif (is_array($p_options_list[$i+1])) {
               $v_work_list = $p_options_list[$i+1];
           }
           else {
@@ -2018,10 +2018,10 @@
         if (@is_file($v_descr['filename'])) {
           $v_descr['type'] = 'file';
         }
-        else if (@is_dir($v_descr['filename'])) {
+        elseif (@is_dir($v_descr['filename'])) {
           $v_descr['type'] = 'folder';
         }
-        else if (@is_link($v_descr['filename'])) {
+        elseif (@is_link($v_descr['filename'])) {
           // skip
           continue;
         }
@@ -2032,7 +2032,7 @@
       }
       
       // ----- Look for string added as file
-      else if (isset($v_descr['content'])) {
+      elseif (isset($v_descr['content'])) {
         $v_descr['type'] = 'virtual_file';
       }
       
@@ -2575,14 +2575,14 @@
     }
     
     // ----- Look for regular folder
-    else if ($p_filedescr['type']=='folder') {
+    elseif ($p_filedescr['type']=='folder') {
       $p_header['external'] = 0x00000010;
       $p_header['mtime'] = @filemtime($p_filename);
       $p_header['size'] = filesize($p_filename);
     }
     
     // ----- Look for virtual file
-    else if ($p_filedescr['type'] == 'virtual_file') {
+    elseif ($p_filedescr['type'] == 'virtual_file') {
       $p_header['external'] = 0x00000000;
       $p_header['size'] = strlen($p_filedescr['content']);
     }
@@ -2592,7 +2592,7 @@
     if (isset($p_filedescr['mtime'])) {
       $p_header['mtime'] = $p_filedescr['mtime'];
     }
-    else if ($p_filedescr['type'] == 'virtual_file') {
+    elseif ($p_filedescr['type'] == 'virtual_file') {
       $p_header['mtime'] = time();
     }
     else {
@@ -2709,7 +2709,7 @@
       }
 
       // ----- Look for a virtual file (a file from string)
-      else if ($p_filedescr['type'] == 'virtual_file') {
+      elseif ($p_filedescr['type'] == 'virtual_file') {
           
         $v_content = $p_filedescr['content'];
 
@@ -2744,7 +2744,7 @@
       }
 
       // ----- Look for a directory
-      else if ($p_filedescr['type'] == 'folder') {
+      elseif ($p_filedescr['type'] == 'folder') {
         // ----- Look for directory last '/'
         if (@substr($p_header['stored_filename'], -1) != '/') {
           $p_header['stored_filename'] .= '/';
@@ -2962,7 +2962,7 @@
         $v_stored_filename = basename($p_filename);
       }
       // ----- Look for partial path remove
-      else if ($p_remove_dir != "") {
+      elseif ($p_remove_dir != "") {
         if (substr($p_remove_dir, -1) != '/')
           $p_remove_dir .= "/";
 
@@ -3400,7 +3400,7 @@
       */
 
       // ----- Look for extract by preg rule
-      else if (   (isset($p_options[PCLZIP_OPT_BY_PREG]))
+      elseif (   (isset($p_options[PCLZIP_OPT_BY_PREG]))
                && ($p_options[PCLZIP_OPT_BY_PREG] != "")) {
 
           if (preg_match($p_options[PCLZIP_OPT_BY_PREG], $v_header['stored_filename'])) {
@@ -3409,7 +3409,7 @@
       }
 
       // ----- Look for extract by index rule
-      else if (   (isset($p_options[PCLZIP_OPT_BY_INDEX]))
+      elseif (   (isset($p_options[PCLZIP_OPT_BY_INDEX]))
                && ($p_options[PCLZIP_OPT_BY_INDEX] != 0)) {
           
           // ----- Look if the index is in the list
@@ -3644,7 +3644,7 @@
     }
 
     // ----- Look for path to remove
-    else if ($p_remove_path != "")
+    elseif ($p_remove_path != "")
     {
       if (PclZipUtilPathInclusion($p_remove_path, $p_entry['filename']) == 2)
       {
@@ -3745,7 +3745,7 @@
 		    }
       }
       // ----- Look if file is write protected
-      else if (!is_writeable($p_entry['filename']))
+      elseif (!is_writeable($p_entry['filename']))
       {
 
         // ----- Change the file status
@@ -3766,7 +3766,7 @@
       }
 
       // ----- Look if the extracted file is older
-      else if (filemtime($p_entry['filename']) > $p_entry['mtime'])
+      elseif (filemtime($p_entry['filename']) > $p_entry['mtime'])
       {
         // ----- Change the file status
         if (   (isset($p_options[PCLZIP_OPT_REPLACE_NEWER]))
@@ -3797,7 +3797,7 @@
     else {
       if ((($p_entry['external']&0x00000010)==0x00000010) || (substr($p_entry['filename'], -1) == '/'))
         $v_dir_to_check = $p_entry['filename'];
-      else if (!strstr($p_entry['filename'], "/"))
+      elseif (!strstr($p_entry['filename'], "/"))
         $v_dir_to_check = "";
       else
         $v_dir_to_check = dirname($p_entry['filename']);
@@ -4781,7 +4781,7 @@
       */
 
       // ----- Look for extract by preg rule
-      else if (   (isset($p_options[PCLZIP_OPT_BY_PREG]))
+      elseif (   (isset($p_options[PCLZIP_OPT_BY_PREG]))
                && ($p_options[PCLZIP_OPT_BY_PREG] != "")) {
 
           if (preg_match($p_options[PCLZIP_OPT_BY_PREG], $v_header_list[$v_nb_extracted]['stored_filename'])) {
@@ -4790,7 +4790,7 @@
       }
 
       // ----- Look for extract by index rule
-      else if (   (isset($p_options[PCLZIP_OPT_BY_INDEX]))
+      elseif (   (isset($p_options[PCLZIP_OPT_BY_INDEX]))
                && ($p_options[PCLZIP_OPT_BY_INDEX] != 0)) {
 
           // ----- Look if the index is in the list
@@ -4959,7 +4959,7 @@
     }
     
     // ----- Remove every files : reset the file
-    else if ($v_central_dir['entries'] != 0) {
+    elseif ($v_central_dir['entries'] != 0) {
         $this->privCloseFd();
 
         if (($v_result = $this->privOpenFd('wb')) != 1) {
@@ -5410,10 +5410,10 @@
           // ----- Ignore this directory
           // Should be the first $i=0, but no check is done
         }
-        else if ($v_list[$i] == "..") {
+        elseif ($v_list[$i] == "..") {
 		  $v_skip++;
         }
-        else if ($v_list[$i] == "") {
+        elseif ($v_list[$i] == "") {
 		  // ----- First '/' i.e. root slash
 		  if ($i == 0) {
             $v_result = "/".$v_result;
@@ -5425,7 +5425,7 @@
 		    }
 		  }
 		  // ----- Last '/' i.e. indicates a directory
-		  else if ($i == (sizeof($v_list)-1)) {
+		  elseif ($i == (sizeof($v_list)-1)) {
             $v_result = $v_list[$i];
 		  }
 		  // ----- Double '/' inside the path
@@ -5529,7 +5529,7 @@
         // ----- There are exactly the same
         $v_result = 2;
       }
-      else if ($i < $v_list_dir_size) {
+      elseif ($i < $v_list_dir_size) {
         // ----- The path is shorter than the dir
         $v_result = 0;
       }
@@ -5565,7 +5565,7 @@
         $p_size -= $v_read_size;
       }
     }
-    else if ($p_mode==1)
+    elseif ($p_mode==1)
     {
       while ($p_size != 0)
       {
@@ -5575,7 +5575,7 @@
         $p_size -= $v_read_size;
       }
     }
-    else if ($p_mode==2)
+    elseif ($p_mode==2)
     {
       while ($p_size != 0)
       {
@@ -5585,7 +5585,7 @@
         $p_size -= $v_read_size;
       }
     }
-    else if ($p_mode==3)
+    elseif ($p_mode==3)
     {
       while ($p_size != 0)
       {
@@ -5624,7 +5624,7 @@
       if (!@copy($p_src, $p_dest)) {
         $v_result = 0;
       }
-      else if (!@unlink($p_src)) {
+      elseif (!@unlink($p_src)) {
         $v_result = 0;
       }
     }

@@ -439,8 +439,7 @@ class AdminCartsControllerCore extends AdminController
 					if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int)$id_product_attribute, (int)$qty))
 						$errors[] = Tools::displayError('There is not enough product in stock.');
 				}
-				else
-					if (!$product->checkQty((int)$qty))
+				elseif (!$product->checkQty((int)$qty))
 						$errors[] = Tools::displayError('There is not enough product in stock.');
 				if (!($id_customization = (int)Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields())
 					$errors[] = Tools::displayError('Please fill in all the required fields.');
@@ -508,8 +507,7 @@ class AdminCartsControllerCore extends AdminController
 					$message->save();
 				}
 			}
-			else
-				if (Validate::isLoadedObject($message))
+			elseif (Validate::isLoadedObject($message))
 					$message->delete();
 			echo Tools::jsonEncode($this->ajaxReturnVars());
 		}

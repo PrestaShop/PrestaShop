@@ -2361,7 +2361,7 @@ class QRcode {
 		}
 		if ($version <= 9) {
 			$l = 0;
-		} else if ($version <= 26) {
+		} elseif ($version <= 26) {
 			$l = 1;
 		} else {
 			$l = 2;

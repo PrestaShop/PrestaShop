@@ -110,8 +110,7 @@ function check_files_extensions_on_path($path,$ext){
         if (function_exists('mb_strtolower'))
             if(!in_array(mb_strtolower($fileinfo['extension']),$ext))
                 unlink($path);
-        else
-            if(!in_array(Tools::strtolower($fileinfo['extension']),$ext))
+        elseif(!in_array(Tools::strtolower($fileinfo['extension']),$ext))
                 unlink($path);
     }else{
         $files = scandir($path);
@@ -129,11 +128,10 @@ function check_files_extensions_on_phar( $phar, &$files, $basepath, $ext ) {
             if (function_exists('mb_strtolower'))
                 if(in_array(mb_strtolower($file->getExtension()),$ext))
                     $files[] = $basepath.$file->getFileName( );
-            else
-                if(in_array(Tools::strtolower($file->getExtension()),$ext))
+            elseif(in_array(Tools::strtolower($file->getExtension()),$ext))
                     $files[] = $basepath.$file->getFileName( );
         }
-        else if( $file->isDir() )
+        elseif( $file->isDir() )
         {
             $iterator = new DirectoryIterator( $file );
             check_files_extensions_on_phar($iterator, $files, $basepath.$file->getFileName().'/', $ext);

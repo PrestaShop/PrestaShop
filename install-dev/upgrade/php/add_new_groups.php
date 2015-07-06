@@ -42,9 +42,9 @@ function add_new_groups($french, $standard)
 	// we add the different id_group in the configuration
 	if (strtolower($standard) == 'visitor')
 		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_UNIDENTIFIED_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-	else if (strtolower($standard) == 'guest')
+	elseif (strtolower($standard) == 'guest')
 		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_GUEST_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-	else if (strtolower($standard) == 'test')
+	elseif (strtolower($standard) == 'test')
 		$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_TEST", "'.(int)$last_id.'", NOW(), NOW())');
 
 	// Add shop association

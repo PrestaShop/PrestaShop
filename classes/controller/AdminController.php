@@ -3715,8 +3715,7 @@ class AdminControllerCore extends Controller
 							$delete_ok = false;
 						}
 					}
-					else
-						if (!$to_delete->delete())
+					elseif (!$to_delete->delete())
 						{
 							$result = false;
 							$delete_ok = false;

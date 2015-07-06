@@ -225,7 +225,7 @@ class XML_Feed_Parser implements Iterator
         if (isset($this->current_item) && 
             $this->current_item <= $this->feed->numberEntries - 1) {
             ++$this->current_item;
-        } else if (! isset($this->current_item)) {
+        } elseif (! isset($this->current_item)) {
             $this->current_item = 0;
         } else {
             return false;

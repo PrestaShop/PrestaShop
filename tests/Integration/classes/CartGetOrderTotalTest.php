@@ -363,12 +363,12 @@ class CartGetOrderTotalTest extends IntegrationTestCase
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = false;
         }
-        else if ($type === 'after tax')
+        elseif ($type === 'after tax')
         {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = true;
         }
-        else if ($type === '%')
+        elseif ($type === '%')
         {
             $cartRule->reduction_percent = $amount;
         }

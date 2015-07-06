@@ -312,7 +312,7 @@ class imageLib
     $cropPos = 'm';
     if (is_array($option) && fix_strtolower($option[0]) == 'crop') {
       $cropPos = $option[1];         # get the crop option
-    } else if (strpos($option, '-') !== false) {
+    } elseif (strpos($option, '-') !== false) {
       // *** Or pass in a hyphen seperated option
       $optionPiecesArray = explode('-', $option);
       $cropPos = end($optionPiecesArray);
@@ -701,7 +701,7 @@ class imageLib
                 $dimensionsArray = $this->getSizeByFixedWidth($newWidth, $newHeight);
         $optimalWidth = $dimensionsArray['optimalWidth'];
         $optimalHeight = $dimensionsArray['optimalHeight'];
-      } else if ($newHeight > $newWidth) {
+      } elseif ($newHeight > $newWidth) {
           //$optimalWidth = $this->getSizeByFixedHeight($newHeight);
             //$optimalHeight= $newHeight;
                 $dimensionsArray = $this->getSizeByFixedHeight($newWidth, $newHeight);
@@ -871,7 +871,7 @@ class imageLib
       } else {
         throw new Exception('Crop resize option array is badly formatted.');
       }
-    } else if (strpos($option, 'crop') !== false) {
+    } elseif (strpos($option, 'crop') !== false) {
       return 'crop';
     }
 
@@ -2821,7 +2821,7 @@ class imageLib
       } else {
         $rgbArray = $value;
       }
-    } else if (fix_strtolower($value) == 'transparent') {
+    } elseif (fix_strtolower($value) == 'transparent') {
 
       $rgbArray = array(
         'r' => 255,

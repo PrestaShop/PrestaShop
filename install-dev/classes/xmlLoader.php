@@ -453,7 +453,7 @@ class InstallXmlLoader
 			$entity_id = 0;
 			if (!$xml->fields['primary'])
 				$primary = 'id_'.$entity;
-			else if (strpos((string)$xml->fields['primary'], ',') === false)
+			elseif (strpos((string)$xml->fields['primary'], ',') === false)
 				$primary = (string)$xml->fields['primary'];
 			unset($xml);
 
@@ -543,7 +543,7 @@ class InstallXmlLoader
 		$entity_id = 0;
 		if (!$xml->fields['primary'])
 			$primary = 'id_'.$entity;
-		else if (strpos((string)$xml->fields['primary'], ',') === false)
+		elseif (strpos((string)$xml->fields['primary'], ',') === false)
 			$primary = (string)$xml->fields['primary'];
 
 		if ($primary)
@@ -686,14 +686,14 @@ class InstallXmlLoader
 			if (!is_writable(dirname($target_file)))
 				$this->setError($this->language->l('Cannot create image "%1$s" (bad permissions on folder "%2$s")', $identifier.'-'.$type['name'], dirname($target_file)));
 			// If a file named folder/entity-type.jpg exists just copy it, this is an optimisation in order to prevent to much resize
-			else if (file_exists($origin_file))
+			elseif (file_exists($origin_file))
 			{
 				if (!@copy($origin_file, $target_file))
 					$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier.'-'.$type['name'], 'product'));
 				@chmod($target_file, 0644);
 			}
 			// Resize the image if no cache was prepared in fixtures
-			else if (!ImageManager::resize($path.$identifier.'.jpg', $target_file, $type['width'], $type['height']))
+			elseif (!ImageManager::resize($path.$identifier.'.jpg', $target_file, $type['width'], $type['height']))
 				$this->setError($this->language->l('Cannot create image "%1$s" for entity "%2$s"', $identifier.'-'.$type['name'], 'product'));
 		}
 	}
@@ -763,7 +763,7 @@ class InstallXmlLoader
 			{
 				if (is_dir($dir.$file))
 					$classes = array_merge($classes, $this->getClasses($dir.$file.'/'));
-				else if (preg_match('#^(.+)\.php$#', $file, $m))
+				elseif (preg_match('#^(.+)\.php$#', $file, $m))
 					$classes[] = $m[1];
 			}
 

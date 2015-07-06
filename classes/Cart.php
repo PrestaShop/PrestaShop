@@ -1515,8 +1515,7 @@ class CartCore extends ObjectModel
 				if (!isset($products_total[$id_tax_rules_group]))
 					$products_total[$id_tax_rules_group] = 0;
 			}
-			else
-				if (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
+			elseif (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
 					$products_total[$id_tax_rules_group.'_'.$id_address] = 0;
 
 			switch ($ps_round_type)
@@ -1675,7 +1674,7 @@ class CartCore extends ObjectModel
 				$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
 			}
 		}
-		else if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		elseif (Configuration::get('PS_ATCP_SHIPWRAP'))
 		{
 			// With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
 			// when asked for the pre tax price.
@@ -2304,8 +2303,7 @@ class CartCore extends ObjectModel
 				return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1; // return -1 or 1
 			else
 				return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1; // return -1 or 1
-		else
-			if ($order_way)
+		elseif ($order_way)
 				return ($option1['position'] < $option2['position']) * 2 - 1; // return -1 or 1
 			else
 				return ($option1['position'] >= $option2['position']) * 2 - 1; // return -1 or 1

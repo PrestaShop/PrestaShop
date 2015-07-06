@@ -141,7 +141,7 @@ try
 		// Replace existing shop if necessary
 		if (!$shop_id)
 			$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-		else if ($context->shop->id != $shop_id)
+		elseif ($context->shop->id != $shop_id)
 			$context->shop = new Shop($shop_id);
 	}
 }

@@ -65,7 +65,7 @@ class HelperTreeCategoriesCore extends TreeCore
 			$tree[$category['id_category']] = $category;
 			if (!empty($categories[$category['id_category']]))
 				$tree[$category['id_category']]['children'] = $this->fillTree($categories, $category['id_category']);
-			else if ($result = Category::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id))
+			elseif ($result = Category::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id))
 				$tree[$category['id_category']]['children'] = array($result[0]['id_category'] => $result[0]);
 		}
 		return $tree;
@@ -84,7 +84,7 @@ class HelperTreeCategoriesCore extends TreeCore
 					$root_category, $lang, false, null, $this->useShopRestriction()));
 				$this->setDataSearch(Category::getAllCategoriesName($root_category, $lang, false, null, $this->useShopRestriction()));
 			}
-			else if ($this->_children_only)
+			elseif ($this->_children_only)
 			{
 				if (empty($root_category))
 					$root_category = Category::getRootCategory()->id;
@@ -246,11 +246,9 @@ class HelperTreeCategoriesCore extends TreeCore
 		{
 			if (Tools::isSubmit('id_shop'))
 				$this->setShop(new Shop(Tools::getValue('id_shop')));
-			else
-				if ($this->getContext()->shop->id)
+			elseif ($this->getContext()->shop->id)
 					$this->setShop(new Shop($this->getContext()->shop->id));
-				else
-					if (!Shop::isFeatureActive())
+				elseif (!Shop::isFeatureActive())
 						$this->setShop(new Shop(Configuration::get('PS_SHOP_DEFAULT')));
 					else
 						$this->setShop(new Shop(0));
