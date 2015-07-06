@@ -2035,7 +2035,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				$info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
 
-				if (is_array($info['image_url'] ) && count($info['image_url'] ))
+				if (is_array($info['image_url']) && count($info['image_url']))
 					foreach ($info['image_url'] as $url)
 					{
 						$url = trim($url);

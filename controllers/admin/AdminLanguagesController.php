@@ -423,7 +423,7 @@ class AdminLanguagesControllerCore extends AdminController
 				return;
 		}
 
-		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
+		if ((isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{
 				if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)

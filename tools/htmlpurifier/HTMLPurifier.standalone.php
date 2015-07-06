@@ -4051,7 +4051,7 @@ class HTMLPurifier_Encoder
     public static function unichr($code)
     {
         if ($code > 1114111 or $code < 0 or
-          ($code >= 55296 and $code <= 57343) ) {
+          ($code >= 55296 and $code <= 57343)) {
             // bits are set outside the "valid" range as defined
             // by UNICODE 4.1.0
             return '';
@@ -5116,7 +5116,7 @@ class HTMLPurifier_Generator
             }
             $attr = $this->generateAttributes($token->attr, $token->name);
              return '<' . $token->name . ($attr ? ' ' : '') . $attr .
-                ( $this->_xhtml ? ' /': '' ) // <br /> v. <br>
+                ($this->_xhtml ? ' /': '') // <br /> v. <br>
                 . '>';
 
         } elseif ($token instanceof HTMLPurifier_Token_Text) {

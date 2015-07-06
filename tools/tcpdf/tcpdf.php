@@ -7277,7 +7277,7 @@ class TCPDF {
 		$pc = 0; // previous character
 		// for each character
 		while ($i < $nb) {
-			if (($maxh > 0) and ($this->y >= $maxy) ) {
+			if (($maxh > 0) and ($this->y >= $maxy)) {
 				break;
 			}
 			//Get the current character
@@ -7383,7 +7383,7 @@ class TCPDF {
 				} else {
 					$l += $this->GetCharWidth($c);
 				}
-				if (($l > $wmax) or (($c == 173) and (($l + $tmp_shy_replacement_width) > $wmax)) ) {
+				if (($l > $wmax) or (($c == 173) and (($l + $tmp_shy_replacement_width) > $wmax))) {
 					// we have reached the end of column
 					if ($sep == -1) {
 						// check if the line was already started
@@ -16110,7 +16110,7 @@ class TCPDF {
 				//	a. If this new level would be valid, then this embedding code is valid. Remember (push) the current embedding level and override status. Reset the current level to this new level, and reset the override status to neutral.
 				//	b. If the new level would not be valid, then this code is invalid. Do not change the current level or override status.
 				$next_level = $cel + 2 - ($cel % 2);
-				if ( $next_level < 62 ) {
+				if ($next_level < 62) {
 					$remember[] = array('num' => $this->unicode->uni_LRE, 'cel' => $cel, 'dos' => $dos);
 					$cel = $next_level;
 					$dos = 'N';
@@ -16134,7 +16134,7 @@ class TCPDF {
 				//	a. If this new level would be valid, then this embedding code is valid. Remember (push) the current embedding level and override status. Reset the current level to this new level, and reset the override status to left-to-right.
 				//	b. If the new level would not be valid, then this code is invalid. Do not change the current level or override status.
 				$next_level = $cel + 2 - ($cel % 2);
-				if ( $next_level < 62 ) {
+				if ($next_level < 62) {
 					$remember[] = array('num' => $this->unicode->uni_LRO, 'cel' => $cel, 'dos' => $dos);
 					$cel = $next_level;
 					$dos = 'L';
@@ -16144,7 +16144,7 @@ class TCPDF {
 			} elseif ($ta[$i] == $this->unicode->uni_PDF) {
 				// X7. With each PDF, determine the matching embedding or override code. If there was a valid matching code, restore (pop) the last remembered (pushed) embedding level and directional override.
 				if (count($remember)) {
-					$last = count($remember ) - 1;
+					$last = count($remember) - 1;
 					if (($remember[$last]['num'] == $this->unicode->uni_RLE) or
 						($remember[$last]['num'] == $this->unicode->uni_LRE) or
 						($remember[$last]['num'] == $this->unicode->uni_RLO) or
@@ -22294,9 +22294,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					}
 				}
 				// move $key index forward to skip THEAD block
-				while ( ($key < $maxel) and (!(
+				while (($key < $maxel) and (!(
 					($dom[$key]['tag'] and $dom[$key]['opening'] and ($dom[$key]['value'] == 'tr') and (!isset($dom[$key]['thead']) or !$dom[$key]['thead']))
-					or ($dom[$key]['tag'] and (!$dom[$key]['opening']) and ($dom[$key]['value'] == 'table'))) )) {
+					or ($dom[$key]['tag'] and (!$dom[$key]['opening']) and ($dom[$key]['value'] == 'table'))))) {
 					++$key;
 				}
 			}
@@ -22392,7 +22392,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$fontdescent = $this->getFontDescent($fontname, $fontstyle, $fontsize);
 					if (($fontname != $curfontname) or ($fontstyle != $curfontstyle) or ($fontsize != $curfontsize)
 						or ($this->cell_height_ratio != $dom[$key]['line-height'])
-						or ($dom[$key]['tag'] and $dom[$key]['opening'] and ($dom[$key]['value'] == 'li')) ) {
+						or ($dom[$key]['tag'] and $dom[$key]['opening'] and ($dom[$key]['value'] == 'li'))) {
 						if (($key < ($maxel - 1)) and (
 								($dom[$key]['tag'] and $dom[$key]['opening'] and ($dom[$key]['value'] == 'li'))
 								or ($this->cell_height_ratio != $dom[$key]['line-height'])
@@ -29152,7 +29152,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				//$attribs['spreadMethod']
 				if (((!isset($attribs['cx'])) and (!isset($attribs['cy'])))
 					or ((isset($attribs['cx']) and (substr($attribs['cx'], -1) == '%'))
-						or (isset($attribs['cy']) and (substr($attribs['cy'], -1) == '%')) )) {
+						or (isset($attribs['cy']) and (substr($attribs['cy'], -1) == '%')))) {
 					$this->svggradients[$this->svggradientid]['mode'] = 'percentage';
 				} else {
 					$this->svggradients[$this->svggradientid]['mode'] = 'measure';

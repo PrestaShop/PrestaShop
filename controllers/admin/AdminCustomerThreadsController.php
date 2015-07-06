@@ -985,7 +985,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				if (isset($matches1[1]) && isset($matches2[1]))
 					$match_found = true;
 
-				$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
+				$new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
 				if ($match_found || $new_ct)
 				{

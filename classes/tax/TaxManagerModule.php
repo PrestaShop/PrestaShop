@@ -30,7 +30,7 @@ abstract class TaxManagerModuleCore extends Module
 
 	public function install()
 	{
-		return (parent::install() && $this->registerHook('taxManager') );
+		return (parent::install() && $this->registerHook('taxManager'));
 	}
 
 	public function hookTaxManager($args)

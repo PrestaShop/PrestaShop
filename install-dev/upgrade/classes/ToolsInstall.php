@@ -106,7 +106,7 @@ class ToolsInstall
 				$children[$elementName] = $value;
 		}
 
-		if (count($children) > 0 )
+		if (count($children) > 0)
 		{
 			if (!$flattenChildren)
 				$return[$childrenKey] = $children;

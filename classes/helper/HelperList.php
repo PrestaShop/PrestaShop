@@ -191,7 +191,7 @@ class HelperListCore extends Helper
 				if (isset($this->position_group_identifier))
 					$position_group_identifier = Tools::getIsset($this->position_group_identifier) ? Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
 				else
-					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id ));
+					$position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id));
 			else
 				$position_group_identifier = Category::getRootCategory()->id;
 
@@ -663,7 +663,7 @@ class HelperListCore extends Helper
 		$this->header_tpl->assign(array_merge(array(
 			'ajax' => $ajax,
 			'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
-			'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value ),
+			'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
 			'filters_has_value' => $has_value,
 			'currentIndex' => $this->currentIndex,
 			'action' => $action,

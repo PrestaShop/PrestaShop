@@ -66,7 +66,7 @@ function create_img($imgfile, $imgthumb, $newwidth, $newheight="") {
 function makeSize($size) {
    $units = array('B','KB','MB','GB','TB');
    $u = 0;
-   while ( (round($size / 1024) > 0) && ($u < 4) ) {
+   while ((round($size / 1024) > 0) && ($u < 4)) {
      $size = $size / 1024;
      $u++;
    }
@@ -120,20 +120,20 @@ function check_files_extensions_on_path($path,$ext){
     }
 }
 
-function check_files_extensions_on_phar( $phar, &$files, $basepath, $ext ) {
-    foreach( $phar as $file )
+function check_files_extensions_on_phar($phar, &$files, $basepath, $ext) {
+    foreach($phar as $file)
     {
-        if( $file->isFile() )
+        if($file->isFile())
         {
             if (function_exists('mb_strtolower'))
                 if(in_array(mb_strtolower($file->getExtension()),$ext))
-                    $files[] = $basepath.$file->getFileName( );
+                    $files[] = $basepath.$file->getFileName();
             elseif(in_array(Tools::strtolower($file->getExtension()),$ext))
-                    $files[] = $basepath.$file->getFileName( );
+                    $files[] = $basepath.$file->getFileName();
         }
-        elseif( $file->isDir() )
+        elseif($file->isDir())
         {
-            $iterator = new DirectoryIterator( $file );
+            $iterator = new DirectoryIterator($file);
             check_files_extensions_on_phar($iterator, $files, $basepath.$file->getFileName().'/', $ext);
         }
     }
@@ -141,16 +141,16 @@ function check_files_extensions_on_phar( $phar, &$files, $basepath, $ext ) {
 
 function fix_filename($str,$transliteration){
     if($transliteration){
-	if( function_exists( 'transliterator_transliterate' ) )
+	if(function_exists('transliterator_transliterate'))
 	{
-	   $str = transliterator_transliterate( 'Accents-Any', $str );
+	   $str = transliterator_transliterate('Accents-Any', $str);
 	}
 	else
 	{
 	   $str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
 	}
 
-	$str = preg_replace( "/[^a-zA-Z0-9\.\[\]_| -]/", '', $str );
+	$str = preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str);
     }
 
     $str=str_replace(array('"',"'","/","\\"),"",$str);
@@ -159,12 +159,12 @@ function fix_filename($str,$transliteration){
     // Empty or incorrectly transliterated filename.
     // Here is a point: a good file UNKNOWN_LANGUAGE.jpg could become .jpg in previous code.
     // So we add that default 'file' name to fix that issue.
-    if( strpos( $str, '.' ) === 0 )
+    if(strpos($str, '.') === 0)
     {
        $str = 'file'.$str;
     }
 
-    return trim( $str );
+    return trim($str);
 }
 
 function fix_dirname($str){
@@ -172,7 +172,7 @@ function fix_dirname($str){
 }
 
 function fix_strtoupper($str){
-    if( function_exists( 'mb_strtoupper' ) )
+    if(function_exists('mb_strtoupper'))
 	return mb_strtoupper($str);
     else
 	return strtoupper($str);
@@ -180,7 +180,7 @@ function fix_strtoupper($str){
 
 
 function fix_strtolower($str){
-    if( function_exists( 'mb_strtoupper' ) )
+    if(function_exists('mb_strtoupper'))
 	return mb_strtolower($str);
     else
 	return strtolower($str);
@@ -234,8 +234,8 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte){
 	$image_width = $image_properties[0];
 	$image_height = $image_properties[1];
 	$image_bits = $image_properties['bits'];
-	$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits )  * 2);
-	$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits ) * 2);
+	$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits)  * 2);
+	$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits) * 2);
 	$memory_needed = intval($memory_usage + $image_memory_usage + $thumb_memory_usage);
 
         if($memory_needed > $memory_limit){

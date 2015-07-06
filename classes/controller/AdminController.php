@@ -541,14 +541,14 @@ class AdminControllerCore extends Controller
 		{
 			$this->addMetaTitle($tabs[0]['name']);
 			$breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-			$breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
+			$breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
 			if (!isset($tabs[1]))
 				$breadcrumbs2['tab']['icon'] = 'icon-'.$tabs[0]['class_name'];
 		}
 		if (isset($tabs[1]))
 		{
 			$breadcrumbs2['container']['name'] = $tabs[1]['name'];
-			$breadcrumbs2['container']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[1]['class_name']);
+			$breadcrumbs2['container']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink($tabs[1]['class_name']);
 			$breadcrumbs2['container']['icon'] = 'icon-'.$tabs[1]['class_name'];
 		}
 
@@ -4214,7 +4214,7 @@ class AdminControllerCore extends Controller
 				{
 					$return .= '<li><a class="'.$option_name.' action_module';
 					$return .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
-					$return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
+					$return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i>&nbsp;'.$option['text'].'</a></li>';
 				}
 				elseif ($output_type == 'array')
 				{
@@ -4243,7 +4243,7 @@ class AdminControllerCore extends Controller
 					if (isset($option['style']))
 						$html .= ' style="'.$option['style'].'"';
 
-					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
