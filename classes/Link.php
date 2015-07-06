@@ -508,7 +508,7 @@ class LinkCore
 		elseif ($controller == 'manufacturer' && isset($params['id_manufacturer']))
 			return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang);
 		elseif ($controller == 'cms' && isset($params['id_cms']))
-			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang);
+			return $this->getCMSLink((int)$params['id_cms'], null, null, (int)$id_lang);
 		elseif ($controller == 'cms' && isset($params['id_cms_category']))
 			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
 		elseif (isset($params['fc']) && $params['fc'] == 'module')
