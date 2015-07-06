@@ -303,7 +303,7 @@
 				<tr class="cart_total_price">
 					<td colspan="{$col_span_subtotal}" class="total_price_container text-right">
 						<span>{l s='Total'}</span>
-                        <div id="hookDisplayProductPriceBlock-price">
+                        <div class="hookDisplayProductPriceBlock-price">
                             {hook h="displayCartTotalPriceLabel"}
                         </div>
 					</td>
