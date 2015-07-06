@@ -1672,6 +1672,8 @@ class AdminModulesControllerCore extends AdminController
 		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
 			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
+		$this->fillModuleData($module, 'array');
+		
 		$this->context->smarty->assign(array(
 			'displayName' => $module->displayName,
 			'image' => $module->image,
@@ -1685,7 +1687,9 @@ class AdminModulesControllerCore extends AdminController
 			'url' => $url,
 			'price' => $module->price,
 			'author' => $module->author,
-			'version' => $module->version
+			'version' => $module->version,
+			'options' => $module->optionsHtml,
+			'installed' => (bool)$module->installed
 		));
 
 		die (Tools::jsonEncode(array(
