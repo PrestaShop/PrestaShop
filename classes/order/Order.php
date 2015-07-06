@@ -2365,8 +2365,9 @@ class OrderCore extends ObjectModel
 	 */
 	public function refreshShippingCost()
 	{
-		if (empty($this->id))
+		if (empty($this->id)) {
 			return false;
+		}
 
 		$fake_cart = new Cart($this->id_cart);
 		$new_cart = $fake_cart->duplicate();
@@ -2374,6 +2375,12 @@ class OrderCore extends ObjectModel
 
 		//assign order id_address_delivery to cart
 		$new_cart->id_address_delivery = $this->id_address_delivery;
+
+		//assgign id_carrier
+		$new_cart->id_carrier = $this->id_carrier;
+
+		//declare new cart delivery_option
+		$delivery_option = array((int)$this->id_address_delivery => $this->id_carrier.',');
 
 		//remove all products : cart (maybe change in the meantime)
 		foreach($new_cart->getProducts() as $product){
@@ -2386,8 +2393,8 @@ class OrderCore extends ObjectModel
 		}
 
 		//get new shipping cost
-		$base_total_shipping_tax_incl = $new_cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
-		$base_total_shipping_tax_excl = $new_cart->getOrderTotal(false, Cart::ONLY_SHIPPING);
+		$base_total_shipping_tax_incl = $new_cart->getTotalShippingCost($delivery_option, true);
+		$base_total_shipping_tax_excl = $new_cart->getTotalShippingCost($delivery_option, false);
 
 		//calculate diff price, then apply new order totals
 		$diff_shipping_tax_incl = $this->total_shipping_tax_incl - $base_total_shipping_tax_incl;
@@ -2406,7 +2413,7 @@ class OrderCore extends ObjectModel
 		$order_carrier = new OrderCarrier((int)$this->getIdOrderCarrier());
 		$order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
 		$order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
-		$order_carrier->save();
+		$order_carrier->update();
 
 		//remove fake cart
 		$new_cart->delete();
