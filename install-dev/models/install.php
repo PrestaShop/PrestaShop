@@ -580,84 +580,83 @@ class InstallModelInstall extends InstallAbstractModel
 
 		return true;
 	}
+	
+	public function getModulesList() {
+		return array(
+			'socialsharing',
+			'blockbanner',
+			'bankwire',
+			'blockbestsellers',
+			'blockcart',
+			'blocksocial',
+			'blockcategories',
+			'blockcurrencies',
+			'blockfacebook',
+			'blocklanguages',
+			'blocklayered',
+			'blockcms',
+			'blockcmsinfo',
+			'blockcontact',
+			'blockcontactinfos',
+			'blockmanufacturer',
+			'blockmyaccount',
+			'blockmyaccountfooter',
+			'blocknewproducts',
+			'blocknewsletter',
+			'blockpaymentlogo',
+			'blocksearch',
+			'blockspecials',
+			'blockstore',
+			'blocksupplier',
+			'blocktags',
+			'blocktopmenu',
+			'blockuserinfo',
+			'blockviewed',
+			'cheque',
+			'dashactivity',
+			'dashtrends',
+			'dashgoals',
+			'dashproducts',
+			'graphnvd3',
+			'gridhtml',
+			'homeslider',
+			'homefeatured',
+			'productpaymentlogos',
+			'pagesnotfound',
+			'sekeywords',
+			'statsbestcategories',
+			'statsbestcustomers',
+			'statsbestproducts',
+			'statsbestsuppliers',
+			'statsbestvouchers',
+			'statscarrier',
+			'statscatalog',
+			'statscheckup',
+			'statsdata',
+			'statsequipment',
+			'statsforecast',
+			'statslive',
+			'statsnewsletter',
+			'statsorigin',
+			'statspersonalinfos',
+			'statsproduct',
+			'statsregistrations',
+			'statssales',
+			'statssearch',
+			'statsstock',
+			'statsvisits',
+			'themeconfigurator',
+		);
+	}
 
-	public function getModulesList()
+	public function getModulesListFromDisk()
 	{
 		$modules = array();
-		if (false)
-		{
-			foreach (scandir(_PS_MODULE_DIR_) as $module)
-				if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_.$module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php'))
-					$modules[] = $module;
-		}
-		else
-		{
-			$modules = array(
-				'socialsharing',
-				'blockbanner',
-				'bankwire',
-				'blockbestsellers',
-				'blockcart',
-				'blocksocial',
-				'blockcategories',
-				'blockcurrencies',
-				'blockfacebook',
-				'blocklanguages',
-				'blocklayered',
-				'blockcms',
-				'blockcmsinfo',
-				'blockcontact',
-				'blockcontactinfos',
-				'blockmanufacturer',
-				'blockmyaccount',
-				'blockmyaccountfooter',
-				'blocknewproducts',
-				'blocknewsletter',
-				'blockpaymentlogo',
-				'blocksearch',
-				'blockspecials',
-				'blockstore',
-				'blocksupplier',
-				'blocktags',
-				'blocktopmenu',
-				'blockuserinfo',
-				'blockviewed',
-				'cheque',
-				'dashactivity',
-				'dashtrends',
-				'dashgoals',
-				'dashproducts',
-				'graphnvd3',
-				'gridhtml',
-				'homeslider',
-				'homefeatured',
-				'productpaymentlogos',
-				'pagesnotfound',
-				'sekeywords',
-				'statsbestcategories',
-				'statsbestcustomers',
-				'statsbestproducts',
-				'statsbestsuppliers',
-				'statsbestvouchers',
-				'statscarrier',
-				'statscatalog',
-				'statscheckup',
-				'statsdata',
-				'statsequipment',
-				'statsforecast',
-				'statslive',
-				'statsnewsletter',
-				'statsorigin',
-				'statspersonalinfos',
-				'statsproduct',
-				'statsregistrations',
-				'statssales',
-				'statssearch',
-				'statsstock',
-				'statsvisits',
-				'themeconfigurator',
-			);
-		}
+
+		foreach (scandir(_PS_MODULE_DIR_) as $module)
+			if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_.$module) && file_exists(_PS_MODULE_DIR_.$module.'/'.$module.'.php'))
+				$modules[] = $module;
+
 		return $modules;
 	}
 

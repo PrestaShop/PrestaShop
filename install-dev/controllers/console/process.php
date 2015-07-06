@@ -235,8 +235,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function processInstallModules()
 	{
 		$this->initializeContext();
+		$modules = null;
 
-		return $this->model_install->installModules();
+		if ($this->datas->allmodules) {
+			$modules = $this->model_install->getModulesListFromDisk();
+		}
+
+		return $this->model_install->installModules($modules);
 	}
 
 	/**

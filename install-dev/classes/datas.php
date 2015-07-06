@@ -156,6 +156,11 @@ class Datas
 			'default' => 1,
 			'help' => 'send an email to the administrator after installation',
 		),
+		'allmodules' => array(
+			'name' => 'allmodules',
+			'default' => 0,
+			'help' => 'installs all modules instead of only stock modules',
+		),
 	);
 
 	protected $datas = array();
