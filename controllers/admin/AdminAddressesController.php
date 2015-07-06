@@ -430,10 +430,15 @@ class AdminAddressesControllerCore extends AdminController
 
 		if ($this->action == 'save' && ($id_order = (int)Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type))
 		{
-			if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order))
+			if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order)){
 				$this->errors[] = Tools::displayError('An error occurred while linking this address to its order.');
-			else
-				Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
+			} else {
+				//update order shipping cost
+				$order = new Order($id_order);
+				$order->refreshShippingCost();
+
+				Tools::redirectAdmin(urldecode(Tools::getValue('back')) . '&conf=4');
+			}
 		}
 		return $return;
 	}
