@@ -1643,6 +1643,8 @@ class AdminModulesControllerCore extends AdminController
             $url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
         }
 
+		$this->fillModuleData($module, 'array');
+
         $this->context->smarty->assign(array(
             'displayName' => $module->displayName,
             'image' => $module->image,
@@ -1654,7 +1656,9 @@ class AdminModulesControllerCore extends AdminController
             'additional_description' => $module->additional_description,
             'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
             'url' => $url,
-            'price' => $module->price
+            'price' => $module->price,			
+			'options' => $module->optionsHtml,
+			'installed' => (bool)$module->installed
         ));
         $this->smartyOutputContent('controllers/modules/quickview.tpl');
     }
@@ -1673,7 +1677,7 @@ class AdminModulesControllerCore extends AdminController
 			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
 		$this->fillModuleData($module, 'array');
-		
+
 		$this->context->smarty->assign(array(
 			'displayName' => $module->displayName,
 			'image' => $module->image,
