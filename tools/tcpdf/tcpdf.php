@@ -7867,7 +7867,7 @@ class TCPDF {
 			unset($imgdata);
 			$cached_file = true;
 			$imsize = @getimagesize($file);
-			if ($imsize === FALSE) {
+			if ($imsize === false) {
 				unlink($file);
 				$cached_file = false;
 			}
@@ -7888,7 +7888,7 @@ class TCPDF {
 			} else {
 				$imsize = false;
 			}
-			if ($imsize === FALSE) {
+			if ($imsize === false) {
 				if (function_exists('curl_init')) {
 					// try to get remote file data using cURL
 					$cs = curl_init(); // curl session
@@ -7906,7 +7906,7 @@ class TCPDF {
 					curl_setopt($cs, CURLOPT_USERAGENT, 'TCPDF');
 					$imgdata = curl_exec($cs);
 					curl_close($cs);
-					if ($imgdata !== FALSE) {
+					if ($imgdata !== false) {
 						// copy image to cache
 						$file = $this->getObjFilename('img');
 						$fp = fopen($file, 'w');
@@ -7915,7 +7915,7 @@ class TCPDF {
 						unset($imgdata);
 						$cached_file = true;
 						$imsize = @getimagesize($file);
-						if ($imsize === FALSE) {
+						if ($imsize === false) {
 							unlink($file);
 							$cached_file = false;
 						}
@@ -7928,7 +7928,7 @@ class TCPDF {
 				}
 			}
 		}
-		if ($imsize === FALSE) {
+		if ($imsize === false) {
 			if (substr($file, 0, -34) == K_PATH_CACHE.'msk') { // mask file
 				// get measures from specified data
 				$pw = $this->getHTMLUnitToUnits($w, 0, $this->pdfunit, true) * $this->imgscale * $this->k;

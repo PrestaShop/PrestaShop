@@ -312,12 +312,12 @@ abstract class XML_Feed_Parser_Type
         $return = '';
         foreach ($node->attributes as $attribute) {
             if ($attribute->name == 'src' or $attribute->name == 'href') {
-                $attribute->value = $this->addBase(htmlentities($attribute->value, NULL, 'utf-8'), $attribute);
+                $attribute->value = $this->addBase(htmlentities($attribute->value, null, 'utf-8'), $attribute);
             }
             if ($attribute->name == 'base') {
                 continue;
             }
-            $return .= $attribute->name . '="' . htmlentities($attribute->value, NULL, 'utf-8') .'" ';
+            $return .= $attribute->name . '="' . htmlentities($attribute->value, null, 'utf-8') .'" ';
         }
         if (! empty($return)) {
             return ' ' . trim($return);
@@ -342,8 +342,8 @@ abstract class XML_Feed_Parser_Type
           $value = $node->nodeValue;
         }
 
-        $decoded = html_entity_decode($value, NULL, 'UTF-8');
-        return htmlentities($decoded, NULL, 'UTF-8');
+        $decoded = html_entity_decode($value, null, 'UTF-8');
+        return htmlentities($decoded, null, 'UTF-8');
     }
 
     /**

@@ -60,7 +60,7 @@ else
 }
 
 
-$input_xml = NULL;
+$input_xml = null;
 
 // if a XML is in PUT or in POST
 if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST'))
