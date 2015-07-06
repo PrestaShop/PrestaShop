@@ -96,7 +96,7 @@ class CacheMemcacheCore extends Cache
 	{
 		if (!$this->is_connected)
 			return false;
-		return ($this->memcache->get($key) !== FALSE);
+		return ($this->memcache->get($key) !== false);
 	}
 
 	/**

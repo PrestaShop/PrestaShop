@@ -3109,11 +3109,11 @@ class imageLib
   {
 
     //Ouverture du fichier en mode binaire
-    if (! $f1 = fopen($filename,"rb")) return FALSE;
+    if (! $f1 = fopen($filename,"rb")) return false;
 
     //1 : Chargement des ent�tes FICHIER
     $FILE = unpack("vfile_type/Vfile_size/Vreserved/Vbitmap_offset", fread($f1,14));
-    if ($FILE['file_type'] != 19778) return FALSE;
+    if ($FILE['file_type'] != 19778) return false;
 
     //2 : Chargement des ent�tes BMP
     $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel'.
@@ -3203,7 +3203,7 @@ class imageLib
           $COLOR[1] = $PALETTE[$COLOR[1]+1];
         }
         else
-          return FALSE;
+          return false;
 
         imagesetpixel($res,$X,$Y,$COLOR[1]);
         $X++;

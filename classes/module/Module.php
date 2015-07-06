@@ -2732,7 +2732,7 @@ abstract class ModuleCore
 				}
 
 				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
-				if ($module_file === NULL)
+				if ($module_file === null)
 					throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
 			}
 
@@ -2743,7 +2743,7 @@ abstract class ModuleCore
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 
 				$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
-				if ($module_file === NULL)
+				if ($module_file === null)
 					throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
 			}
 
@@ -2753,7 +2753,7 @@ abstract class ModuleCore
 					throw new Exception(sprintf(Tools::displayError('The constant %1$s in the class %2$s is already defined.'), $constant, $classname));
 
 				$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
-				if ($module_file === NULL)
+				if ($module_file === null)
 					throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
 			}
 
@@ -2794,7 +2794,7 @@ abstract class ModuleCore
 				foreach ($module_class->getMethods() as $method)
 				{
 					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
-					if ($module_file === NULL)
+					if ($module_file === null)
 						throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
 				}
 
@@ -2802,7 +2802,7 @@ abstract class ModuleCore
 				foreach ($module_class->getProperties() as $property)
 				{
 					$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
-					if ($module_file === NULL)
+					if ($module_file === null)
 						throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
 				}
 
@@ -2810,7 +2810,7 @@ abstract class ModuleCore
 				foreach ($module_class->getConstants() as $constant => $value)
 				{
 					$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
-					if ($module_file === NULL)
+					if ($module_file === null)
 						throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
 				}
 			}

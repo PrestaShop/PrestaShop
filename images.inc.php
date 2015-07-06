@@ -80,7 +80,7 @@ function imageResize($sourceFile, $destFile, $destWidth = null, $destHeight = nu
 /**
  * @deprecated 1.5.0
  */
-function imageCut($srcFile, $destFile, $destWidth = NULL, $destHeight = NULL, $fileType = 'jpg', $destX = 0, $destY = 0)
+function imageCut($srcFile, $destFile, $destWidth = null, $destHeight = null, $fileType = 'jpg', $destX = 0, $destY = 0)
 {
 	Tools::displayAsDeprecated();
 	if (isset($srcFile['tmp_name']))
@@ -118,7 +118,7 @@ function returnDestImage($type, $ressource, $filename)
 /**
  *  @deprecated 1.5.0
  */
-function deleteImage($id_item, $id_image = NULL)
+function deleteImage($id_item, $id_image = null)
 {
 	Tools::displayAsDeprecated();
 

@@ -110,7 +110,7 @@ class AdminAttachmentsControllerCore extends AdminController
 	{
 		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
 		{
-			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			$link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
 			Tools::redirectLink($link);
 		}
 		return $this->displayWarning($this->l('File not found'));
@@ -121,7 +121,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
 		{
 			/** @var Attachment $obj */
-			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
+			$link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
 
 			if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))
 				$size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);

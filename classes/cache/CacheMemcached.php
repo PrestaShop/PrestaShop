@@ -71,7 +71,7 @@ class CacheMemcachedCore extends Cache
 		foreach ($servers as $server)
 			$this->memcached->addServer($server['ip'], $server['port'], (int) $server['weight']);
 
-		$this->is_connected =  in_array('255.255.255', $this->memcached->getVersion(), TRUE) === FALSE;
+		$this->is_connected =  in_array('255.255.255', $this->memcached->getVersion(), true) === false;
 	}
 
 	/**
@@ -102,7 +102,7 @@ class CacheMemcachedCore extends Cache
 	{
 		if (!$this->is_connected)
 			return false;
-		return ($this->memcached->get($key) !== FALSE);
+		return ($this->memcached->get($key) !== false);
 	}
 
 	/**

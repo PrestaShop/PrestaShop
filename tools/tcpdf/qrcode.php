@@ -708,7 +708,7 @@ class QRcode {
 		}
 		$ret = $this->splitString();
 		if ($ret < 0) {
-			return NULL;
+			return null;
 		}
 		$this->encodeMask(-1);
 	}
@@ -721,7 +721,7 @@ class QRcode {
 		$spec = array(0, 0, 0, 0, 0);
 		$this->datacode = $this->getByteStream($this->items);
 		if (is_null($this->datacode)) {
-			return NULL;
+			return null;
 		}
 		$spec = $this->getEccSpec($this->version, $this->level, $spec);
 		$this->b1 = $this->rsBlockNum1($spec);
@@ -731,7 +731,7 @@ class QRcode {
 		$this->blocks = $this->rsBlockNum($spec);
 		$ret = $this->init($spec);
 		if ($ret < 0) {
-			return NULL;
+			return null;
 		}
 		$this->count = 0;
 		$this->width = $this->getWidth($this->version);
@@ -767,8 +767,8 @@ class QRcode {
 		} else {
 			$masked = $this->makeMask($this->width, $this->frame, $mask, $this->level);
 		}
-		if ($masked == NULL) {
-			return NULL;
+		if ($masked == null) {
+			return null;
 		}
 		$this->data = $masked;
 	}
@@ -838,7 +838,7 @@ class QRcode {
 				}
 			}
 			if (($x < 0) OR ($y < 0)) {
-				return NULL;
+				return null;
 			}
 			$this->x = $x;
 			$this->y = $y;
@@ -882,7 +882,7 @@ class QRcode {
 		$dl = $this->rsDataCodes2($spec);
 		$el = $this->rsEccCodes2($spec);
 		$rs = $this->init_rs(8, 0x11d, 0, 1, $el, 255 - $dl - $el);
-		if ($rs == NULL) {
+		if ($rs == null) {
 			return -1;
 		}
 		$endfor = $this->rsBlockNum2($spec);
@@ -1515,7 +1515,7 @@ class QRcode {
 			$setData = array_merge($setData, array_fill(0, ($size - count($setData)), 0));
 		}
 		if (!$this->check($mode, $size, $setData)) {
-			return NULL;
+			return null;
 		}
 		$inputitem = array();
 		$inputitem['mode'] = $mode;
@@ -2593,13 +2593,13 @@ class QRcode {
 	 */
 	protected function newFrame($version) {
 		if (($version < 1) OR ($version > QRSPEC_VERSION_MAX)) {
-			return NULL;
+			return null;
 		}
 		if (!isset($this->frames[$version])) {
 			$this->frames[$version] = $this->createFrame($version);
 		}
 		if (is_null($this->frames[$version])) {
-			return NULL;
+			return null;
 		}
 		return $this->frames[$version];
 	}
@@ -2783,7 +2783,7 @@ class QRcode {
 		}
 		if ($sr != 1) {
 			// field generator polynomial is not primitive!
-			return NULL;
+			return null;
 		}
 		// Form RS code generator polynomial from its roots
 		$rs['genpoly'] = array_fill(0, ($nroots + 1), 0);

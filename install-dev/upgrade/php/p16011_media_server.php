@@ -41,6 +41,6 @@ function p16011_media_server()
         copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
         && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
     ))
-        return True;
+        return true;
     return false;
 }
