@@ -55,5 +55,3 @@ define('lang_Extract', 'packa upp här'); // extract here
 define('lang_File_info', 'fil information'); // file info
 define('lang_Edit_image', 'editera bild'); // edit image
 define('lang_Duplicate', 'Duplicera'); // Duplicate
-
-?>

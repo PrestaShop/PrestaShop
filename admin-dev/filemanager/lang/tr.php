@@ -55,4 +55,3 @@ define('lang_Extract', 'buraya çıkart');
 define('lang_File_info', 'dosya bilgisi');
 define('lang_Edit_image', 'resmi düzenle');
 define('lang_Duplicate', 'Çoğalt');
-?>

@@ -55,5 +55,3 @@ define('lang_Extract', 'extract here');
 define('lang_File_info', 'file info');
 define('lang_Edit_image', 'edit image');
 define('lang_Duplicate', 'Duplicate');
-
-?>

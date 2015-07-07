@@ -55,5 +55,3 @@ define('lang_Extract', 'extract disini');
 define('lang_File_info', 'info berkas');
 define('lang_Edit_image', 'edit gambar');
 define('lang_Duplicate', 'Duplikat');
-
-?>

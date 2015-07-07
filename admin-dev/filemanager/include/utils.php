@@ -307,5 +307,3 @@ function get_file_by_url($url) {
 
     return $data;
 }
-
-?>

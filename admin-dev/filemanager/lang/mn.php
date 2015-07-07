@@ -55,5 +55,3 @@ define('lang_Extract', 'энд задла');
 define('lang_File_info', 'файлын мэдээлэл');
 define('lang_Edit_image', 'зураг засварлах');
 define('lang_Duplicate', 'Давхардуулах');
-
-?>

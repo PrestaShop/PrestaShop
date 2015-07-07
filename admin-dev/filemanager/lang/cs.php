@@ -51,4 +51,3 @@ define('lang_OK', 'OK');
 define('lang_Cancel', 'Zrušit');
 define('lang_Sorting', 'řazení');
 define('lang_Duplicate', 'Duplicate');
-?>

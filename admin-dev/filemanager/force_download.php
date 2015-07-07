@@ -24,4 +24,3 @@ header('Content-Disposition: attachment; filename="'.($name).'"');
 readfile($path.$name);
 
 exit;
-?>
