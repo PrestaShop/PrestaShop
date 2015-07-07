@@ -33,19 +33,19 @@ class TreeCore
 	const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item.tpl';
 
 	protected $_attributes;
-	private   $_context;
+	private $_context;
 	protected $_data;
 	protected $_data_search;
 	protected $_headerTemplate;
-	private   $_id;
+	private $_id;
 	protected $_node_folder_template;
 	protected $_node_item_template;
 	protected $_template;
 
 	/** @var string */
-	private   $_template_directory;
-	private   $_title;
-	private   $_no_js;
+	private $_template_directory;
+	private $_title;
+	private $_no_js;
 
 	/** @var TreeToolbar|ITreeToolbar */
 	private $_toolbar;

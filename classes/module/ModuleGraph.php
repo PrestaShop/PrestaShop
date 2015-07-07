@@ -29,13 +29,13 @@ abstract class ModuleGraphCore extends Module
 	protected $_employee;
 
 	/** @var array of integers graph data */
-	protected	$_values = array();
+	protected $_values = array();
 
 	/** @var array of strings graph legends (X axis) */
-	protected	$_legend = array();
+	protected $_legend = array();
 
 	/**@var array string graph titles */
-	protected	$_titles = array('main' => null, 'x' => null, 'y' => null);
+	protected $_titles = array('main' => null, 'x' => null, 'y' => null);
 
 	/** @var ModuleGraphEngine graph engine */
 	protected $_render;

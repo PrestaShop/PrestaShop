@@ -78,7 +78,7 @@ class BlowfishCore extends Crypt_Blowfish
 class Crypt_Blowfish
 {
 
-	var $_P = array(
+	public $_P = array(
 		0x243F6A88, 0x85A308D3, 0x13198A2E, 0x03707344,
 		0xA4093822, 0x299F31D0, 0x082EFA98, 0xEC4E6C89,
 		0x452821E6, 0x38D01377, 0xBE5466CF, 0x34E90C6C,
@@ -86,7 +86,7 @@ class Crypt_Blowfish
 		0x9216D5D9, 0x8979FB1B
 	);
 
-	var $_S = array(
+	public $_S = array(
 		array(
 			0xD1310BA6, 0x98DFB5AC, 0x2FFD72DB, 0xD01ADFB7,
 			0xB8E1AFED, 0x6A267E96, 0xBA7C9045, 0xF12C7F99,
@@ -353,7 +353,7 @@ class Crypt_Blowfish
 		)
 	);
 
-	var $_iv = null;
+	public $_iv = null;
 
 	protected $_unpackMode = PS_UNPACK_NATIVE;
 

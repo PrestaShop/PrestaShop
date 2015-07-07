@@ -60,7 +60,7 @@ class CMSCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectNodeName' => 'content',
 		'objectsNodeName' => 'content_management_system',
 	);

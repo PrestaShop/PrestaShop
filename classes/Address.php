@@ -153,7 +153,7 @@ class AddressCore extends ObjectModel
 	 *
 	 * @param int $id_address Existing address id in order to load object (optional)
 	 */
-	public	function __construct($id_address = null, $id_lang = null)
+	public function __construct($id_address = null, $id_lang = null)
 	{
 		parent::__construct($id_address);
 

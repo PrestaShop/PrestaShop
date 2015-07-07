@@ -79,7 +79,7 @@ class SupplierCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'link_rewrite' => array('sqlId' => 'link_rewrite'),
 		),
@@ -177,7 +177,7 @@ class SupplierCore extends ObjectModel
 	 * @param int $id_supplier Supplier ID
 	 * @return string name
 	 */
-	static protected $cache_name = array();
+	protected static $cache_name = array();
 	public static function getNameById($id_supplier)
 	{
 		if (!isset(self::$cache_name[$id_supplier]))

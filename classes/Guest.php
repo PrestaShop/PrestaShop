@@ -67,7 +67,7 @@ class GuestCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_customer' => array('xlink_resource' => 'customers'),
 		),

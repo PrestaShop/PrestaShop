@@ -42,9 +42,9 @@ class PaymentCCCore extends OrderPayment
 	public $card_holder;
 	public $date_add;
 
-	protected	$fieldsRequired = array('id_currency', 'amount');
-	protected	$fieldsSize = array('transaction_id' => 254, 'card_number' => 254, 'card_brand' => 254, 'card_expiration' => 254, 'card_holder' => 254);
-	protected	$fieldsValidate = array(
+	protected $fieldsRequired = array('id_currency', 'amount');
+	protected $fieldsSize = array('transaction_id' => 254, 'card_number' => 254, 'card_brand' => 254, 'card_expiration' => 254, 'card_holder' => 254);
+	protected $fieldsValidate = array(
 		'id_order' => 'isUnsignedId', 'id_currency' => 'isUnsignedId', 'amount' => 'isPrice',
 		'transaction_id' => 'isAnything', 'card_number' => 'isAnything', 'card_brand' => 'isAnything', 'card_expiration' => 'isAnything', 'card_holder' => 'isAnything');
 

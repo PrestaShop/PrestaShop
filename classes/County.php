@@ -55,7 +55,7 @@ class CountyCore extends ObjectModel
 	const USE_COUNTY_TAX = 1;
 	const USE_STATE_TAX = 2;
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_state' => array('xlink_resource'=> 'states'),
 		),

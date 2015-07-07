@@ -2369,7 +2369,7 @@ abstract class ModuleCore
 	 * @param int null $compile_id
 	 * @return int Number of template cleared
 	 */
-	static public function _deferedClearCache($template_path, $cache_id, $compile_id)
+	public static function _deferedClearCache($template_path, $cache_id, $compile_id)
 	{
 		Tools::enableCache();
 		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $template_path, $cache_id, $compile_id);

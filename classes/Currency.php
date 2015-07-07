@@ -80,7 +80,7 @@ class CurrencyCore extends ObjectModel
 	);
 
 	/** @var array Currency cache */
-	static protected $currencies = array();
+	protected static $currencies = array();
 	protected static $countActiveCurrencies = array();
 
 	protected $webserviceParameters = array(

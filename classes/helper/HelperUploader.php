@@ -33,19 +33,19 @@ class HelperUploaderCore extends Uploader
 	const TYPE_IMAGE                 = 'image';
 	const TYPE_FILE                  = 'file';
 
-	private   $_context;
-	private   $_drop_zone;
-	private   $_id;
-	private   $_files;
-	private   $_name;
-	private   $_max_files;
-	private   $_multiple;
-	private   $_post_max_size;
+	private $_context;
+	private $_drop_zone;
+	private $_id;
+	private $_files;
+	private $_name;
+	private $_max_files;
+	private $_multiple;
+	private $_post_max_size;
 	protected $_template;
-	private   $_template_directory;
-	private   $_title;
-	private   $_url;
-	private   $_use_ajax;
+	private $_template_directory;
+	private $_title;
+	private $_url;
+	private $_use_ajax;
 
 	public function setContext($value)
 	{

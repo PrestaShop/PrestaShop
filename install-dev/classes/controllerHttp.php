@@ -222,7 +222,7 @@ abstract class InstallControllerHttp
 	 * @param string $step Step name
 	 * @return int
 	 */
-	static public function getStepOffset($step)
+	public static function getStepOffset($step)
 	{
 		static $flip = null;
 
