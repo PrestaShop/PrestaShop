@@ -377,7 +377,7 @@ class AdminDashboardControllerCore extends AdminController
 	public function ajaxProcessSetSimulationMode()
 	{
 		Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int)Tools::getValue('PS_DASHBOARD_SIMULATION'));
-		die ('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
+		die('k'.Configuration::get('PS_DASHBOARD_SIMULATION').'k');
 	}
 
 	public function ajaxProcessGetBlogRss()

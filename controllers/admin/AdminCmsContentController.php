@@ -334,7 +334,7 @@ class AdminCmsContentControllerCore extends AdminController
 					die('error: saving');
 			}
 			else
-				die ('error: parameters');
+				die('error: parameters');
 		}
 	}
 

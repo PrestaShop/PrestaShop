@@ -1121,7 +1121,7 @@ class ProductCore extends ObjectModel
 			$front = false;
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+			die(Tools::displayError());
 		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		elseif ($order_by == 'name')
@@ -2358,7 +2358,7 @@ class ProductCore extends ObjectModel
 		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+			die(Tools::displayError());
 		$current_date = date('Y-m-d H:i:s');
 		$ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 

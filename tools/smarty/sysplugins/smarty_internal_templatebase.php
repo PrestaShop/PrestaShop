@@ -775,7 +775,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
     {
         $_filter_name = "smarty_{$type}filter_{$name}";
         if (isset($this->smarty->registered_filters[$type][$_filter_name])) {
-            unset ($this->smarty->registered_filters[$type][$_filter_name]);
+            unset($this->smarty->registered_filters[$type][$_filter_name]);
         }
 
         return $this;

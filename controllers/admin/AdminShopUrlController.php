@@ -139,11 +139,11 @@ class AdminShopUrlControllerCore extends AdminController
 							'name' => 'id_shop',
 							'onchange' => 'checkMainUrlInfo(this.value);',
 							'options' => array(
-								'optiongroup' => array (
+								'optiongroup' => array(
 									'query' =>  Shop::getTree(),
 									'label' => 'name'
 								),
-								'options' => array (
+								'options' => array(
 									'query' => 'shops',
 									'id' => 'id_shop',
 									'name' => 'name'

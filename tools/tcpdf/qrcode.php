@@ -1224,7 +1224,7 @@ class QRcode {
 		if (QR_FIND_FROM_RANDOM !== false) {
 			$howManuOut = 8 - (QR_FIND_FROM_RANDOM % 9);
 			for ($i = 0; $i <  $howManuOut; ++$i) {
-				$remPos = rand (0, count($checked_masks)-1);
+				$remPos = rand(0, count($checked_masks)-1);
 				unset($checked_masks[$remPos]);
 				$checked_masks = array_values($checked_masks);
 			}
@@ -2528,7 +2528,7 @@ class QRcode {
 	 */
 	protected function createFrame($version) {
 		$width = $this->capacity[$version][QRCAP_WIDTH];
-		$frameLine = str_repeat ("\0", $width);
+		$frameLine = str_repeat("\0", $width);
 		$frame = array_fill(0, $width, $frameLine);
 		// Finder pattern
 		$frame = $this->putFinderPattern($frame, 0, 0);

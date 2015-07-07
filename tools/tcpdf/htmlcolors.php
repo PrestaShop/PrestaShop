@@ -42,7 +42,7 @@
 /**
  * Array of WEB safe colors
  */
-$webcolor = array (
+$webcolor = array(
 'aliceblue' => 'f0f8ff',
 'antiquewhite' => 'faebd7',
 'aqua' => '00ffff',

@@ -1080,12 +1080,12 @@ class AdminCustomersControllerCore extends AdminController
 			$note = Tools::htmlentitiesDecodeUTF8(Tools::getValue('note'));
 			$customer = new Customer((int)Tools::getValue('id_customer'));
 			if (!Validate::isLoadedObject($customer))
-				die ('error:update');
+				die('error:update');
 			if (!empty($note) && !Validate::isCleanHtml($note))
-				die ('error:validation');
+				die('error:validation');
 			$customer->note = $note;
 			if (!$customer->update())
-				die ('error:update');
+				die('error:update');
 			die('ok');
 		}
 	}

@@ -283,7 +283,7 @@ class WebserviceOutputBuilderCore
 	public function getResourcesList($key_permissions)
 	{
 		if (is_null($this->wsResource))
-			throw new WebserviceException ('You must set web service resource for get the resources list.', array(82, 500));
+			throw new WebserviceException('You must set web service resource for get the resources list.', array(82, 500));
 		$output = '';
 		$more_attr = array('shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME')));
 		$output .= $this->objectRender->renderNodeHeader('api', array(), $more_attr);
@@ -742,9 +742,9 @@ class WebserviceOutputBuilderCore
 	protected function validateObjectAndMethod($object, $method)
 	{
 		if (is_string($object) && !class_exists($object))
-			throw new WebserviceException ('The object you want to set in '.__METHOD__.' is not allowed.', array(98, 500));
+			throw new WebserviceException('The object you want to set in '.__METHOD__.' is not allowed.', array(98, 500));
 		if (!method_exists($object, $method))
-			throw new WebserviceException ('The method you want to set in '.__METHOD__.' is not allowed.', array(99, 500));
+			throw new WebserviceException('The method you want to set in '.__METHOD__.' is not allowed.', array(99, 500));
 	}
 	public function getSpecificField()
 	{

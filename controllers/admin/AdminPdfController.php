@@ -58,7 +58,7 @@ class AdminPdfControllerCore extends AdminController
 		elseif (Tools::isSubmit('id_order_invoice'))
 			$this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
 		else
-			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
+			die(Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
 
 	public function processGenerateOrderSlipPDF()
@@ -85,7 +85,7 @@ class AdminPdfControllerCore extends AdminController
 			$this->generateDeliverySlipPDFByIdOrder((int)$order->id);
 		}
 		else
-			die (Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
+			die(Tools::displayError('The order ID -- or the invoice order ID -- is missing.'));
 	}
 
 	public function processGenerateInvoicesPDF()
@@ -115,7 +115,7 @@ class AdminPdfControllerCore extends AdminController
 	{
 		$id_order_slips_list = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
 		if (!count($id_order_slips_list))
-			die (Tools::displayError('No order slips were found.'));
+			die(Tools::displayError('No order slips were found.'));
 
 		$order_slips = array();
 		foreach ($id_order_slips_list as $id_order_slips)
@@ -137,7 +137,7 @@ class AdminPdfControllerCore extends AdminController
 	public function processGenerateSupplyOrderFormPDF()
 	{
 		if (!Tools::isSubmit('id_supply_order'))
-			die (Tools::displayError('The supply order ID is missing.'));
+			die(Tools::displayError('The supply order ID is missing.'));
 
 		$id_supply_order = (int)Tools::getValue('id_supply_order');
 		$supply_order = new SupplyOrder($id_supply_order);

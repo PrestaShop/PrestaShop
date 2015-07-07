@@ -313,7 +313,7 @@ class CustomerCore extends ObjectModel
 	public function getByEmail($email, $passwd = null, $ignore_guest = true)
 	{
 		if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT *
@@ -387,7 +387,7 @@ class CustomerCore extends ObjectModel
 		if (!Validate::isEmail($email))
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
-				die (Tools::displayError('Invalid email'));
+				die(Tools::displayError('Invalid email'));
 			return false;
 		}
 
@@ -481,7 +481,7 @@ class CustomerCore extends ObjectModel
 	public static function checkPassword($id_customer, $passwd)
 	{
 		if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd))
-			die (Tools::displayError());
+			die(Tools::displayError());
 		$cache_id = 'Customer::checkPassword'.(int)$id_customer.'-'.$passwd;
 		if (!Cache::isStored($cache_id))
 		{

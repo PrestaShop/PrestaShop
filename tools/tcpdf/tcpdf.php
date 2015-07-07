@@ -10347,7 +10347,7 @@ class TCPDF {
 			fclose($fp);
 			// get font info
 			$fmetric['Flags'] = $flags;
-			preg_match ('#/FullName[\s]*\(([^\)]*)#', $font, $matches);
+			preg_match('#/FullName[\s]*\(([^\)]*)#', $font, $matches);
 			$fmetric['name'] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $matches[1]);
 			preg_match('#/FontBBox[\s]*{([^}]*)#', $font, $matches);
 			$fmetric['bbox'] = trim($matches[1]);
@@ -11416,7 +11416,7 @@ class TCPDF {
 		}
 		// array of table names to preserve (loca and glyf tables will be added later)
 		// the cmap table is not needed and shall not be present, since the mapping from character codes to glyph descriptions is provided separately
-		$table_names = array ('head', 'hhea', 'hmtx', 'maxp', 'cvt ', 'fpgm', 'prep'); // minimum required table names
+		$table_names = array('head', 'hhea', 'hmtx', 'maxp', 'cvt ', 'fpgm', 'prep'); // minimum required table names
 		// get the tables to preserve
 		$offset = 12;
 		foreach ($table as $tag => $val) {
@@ -20501,7 +20501,7 @@ class TCPDF {
 	public function fixHTMLCode($html, $default_css='', $tagvs='', $tidy_options='') {
 		// configure parameters for HTML Tidy
 		if ($tidy_options === '') {
-			$tidy_options = array (
+			$tidy_options = array(
 				'clean' => 1,
 				'drop-empty-paras' => 0,
 				'drop-proprietary-attributes' => 1,

@@ -112,7 +112,7 @@ class PrestaShopBackupCore
 			$backupfile = $backupdir.DIRECTORY_SEPARATOR;
 
 		if ($backupfile === false || strncmp($backupdir, $backupfile, strlen($backupdir)) != 0)
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		return $backupfile;
 	}
@@ -191,7 +191,7 @@ class PrestaShopBackupCore
 			$ignore_insert_table = array();
 
 		// Generate some random number, to make it extra hard to guess backup file names
-		$rand = dechex (mt_rand(0, min(0xffffffff, mt_getrandmax())));
+		$rand = dechex(mt_rand(0, min(0xffffffff, mt_getrandmax())));
 		$date = time();
 		$backupfile = $this->getRealBackupPath().$date.'-'.$rand.'.sql';
 

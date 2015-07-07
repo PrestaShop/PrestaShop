@@ -296,7 +296,7 @@
 
         // ----- Parse the options
         $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options,
-                                            array (PCLZIP_OPT_REMOVE_PATH => 'optional',
+                                            array(PCLZIP_OPT_REMOVE_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
                                                    PCLZIP_OPT_ADD_PATH => 'optional',
                                                    PCLZIP_CB_PRE_ADD => 'optional',
@@ -382,7 +382,7 @@
     
     // ----- For each file in the list check the attributes
     $v_supported_attributes
-    = array ( PCLZIP_ATT_FILE_NAME => 'mandatory'
+    = array( PCLZIP_ATT_FILE_NAME => 'mandatory'
              ,PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional'
              ,PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional'
              ,PCLZIP_ATT_FILE_MTIME => 'optional'
@@ -479,7 +479,7 @@
 
         // ----- Parse the options
         $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options,
-                                            array (PCLZIP_OPT_REMOVE_PATH => 'optional',
+                                            array(PCLZIP_OPT_REMOVE_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
                                                    PCLZIP_OPT_ADD_PATH => 'optional',
                                                    PCLZIP_CB_PRE_ADD => 'optional',
@@ -565,7 +565,7 @@
     
     // ----- For each file in the list check the attributes
     $v_supported_attributes
-    = array ( PCLZIP_ATT_FILE_NAME => 'mandatory'
+    = array( PCLZIP_ATT_FILE_NAME => 'mandatory'
              ,PCLZIP_ATT_FILE_NEW_SHORT_NAME => 'optional'
              ,PCLZIP_ATT_FILE_NEW_FULL_NAME => 'optional'
              ,PCLZIP_ATT_FILE_MTIME => 'optional'
@@ -732,7 +732,7 @@
 
         // ----- Parse the options
         $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options,
-                                            array (PCLZIP_OPT_PATH => 'optional',
+                                            array(PCLZIP_OPT_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
                                                    PCLZIP_OPT_ADD_PATH => 'optional',
@@ -893,7 +893,7 @@
 
         // ----- Parse the options
         $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options,
-                                            array (PCLZIP_OPT_PATH => 'optional',
+                                            array(PCLZIP_OPT_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_PATH => 'optional',
                                                    PCLZIP_OPT_REMOVE_ALL_PATH => 'optional',
                                                    PCLZIP_OPT_EXTRACT_AS_STRING => 'optional',
@@ -963,10 +963,10 @@
     // ----- Trick
     // Here I want to reuse extractByRule(), so I need to parse the $p_index
     // with privParseOptions()
-    $v_arg_trick = array (PCLZIP_OPT_BY_INDEX, $p_index);
+    $v_arg_trick = array(PCLZIP_OPT_BY_INDEX, $p_index);
     $v_options_trick = array();
     $v_result = $this->privParseOptions($v_arg_trick, sizeof($v_arg_trick), $v_options_trick,
-                                        array (PCLZIP_OPT_BY_INDEX => 'optional' ));
+                                        array(PCLZIP_OPT_BY_INDEX => 'optional' ));
     if ($v_result != 1) {
         return 0;
     }
@@ -1028,7 +1028,7 @@
 
       // ----- Parse the options
       $v_result = $this->privParseOptions($v_arg_list, $v_size, $v_options,
-                                        array (PCLZIP_OPT_BY_NAME => 'optional',
+                                        array(PCLZIP_OPT_BY_NAME => 'optional',
                                                PCLZIP_OPT_BY_EREG => 'optional',
                                                PCLZIP_OPT_BY_PREG => 'optional',
                                                PCLZIP_OPT_BY_INDEX => 'optional' ));
@@ -1287,7 +1287,7 @@
   // --------------------------------------------------------------------------------
   function errorName($p_with_code=false)
   {
-    $v_name = array ( PCLZIP_ERR_NO_ERROR => 'PCLZIP_ERR_NO_ERROR',
+    $v_name = array( PCLZIP_ERR_NO_ERROR => 'PCLZIP_ERR_NO_ERROR',
                       PCLZIP_ERR_WRITE_OPEN_FAIL => 'PCLZIP_ERR_WRITE_OPEN_FAIL',
                       PCLZIP_ERR_READ_OPEN_FAIL => 'PCLZIP_ERR_READ_OPEN_FAIL',
                       PCLZIP_ERR_INVALID_PARAMETER => 'PCLZIP_ERR_INVALID_PARAMETER',

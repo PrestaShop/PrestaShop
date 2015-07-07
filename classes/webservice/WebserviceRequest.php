@@ -643,7 +643,7 @@ class WebserviceRequestCore
 		if (!(error_reporting() & $errno) || $display_errors)
 			return;
 
-		$errortype = array (
+		$errortype = array(
 			E_ERROR				=> 'Error',
 			E_WARNING			=> 'Warning',
 			E_PARSE				=> 'Parse',

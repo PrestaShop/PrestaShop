@@ -461,7 +461,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		ksort($controllers);
 
 		foreach ($file_list as $k => $v)
-			if (! array_key_exists ($v, $controllers))
+			if (! array_key_exists($v, $controllers))
 				$content .= '<option value="'.$v.'">'.$v.'</option>';
 
 		$content .= '<option disabled="disabled">'.$this->l('____________ CORE ____________').'</option>';
