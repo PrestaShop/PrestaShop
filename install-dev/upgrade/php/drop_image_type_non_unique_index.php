@@ -26,8 +26,8 @@
 
 function drop_image_type_non_unique_index()
 {
-	$index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'image_type` WHERE column_name="name" AND non_unique=1');
-	if (is_array($index) && count($index))
-		foreach ($index as $ind)
-			Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'image_type` DROP INDEX `'.pSQL($ind['Key_name']).'`');
+    $index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'image_type` WHERE column_name="name" AND non_unique=1');
+    if (is_array($index) && count($index))
+        foreach ($index as $ind)
+            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'image_type` DROP INDEX `'.pSQL($ind['Key_name']).'`');
 }

@@ -26,109 +26,109 @@
 
 class Core_Foundation_FileSystem_FileSystem
 {
-	/**
-	 * Replaces directory separators with the system's native one
-	 * and trims the trailing separator.
-	 */
-	public function normalizePath($path)
-	{
-		return rtrim(
-			str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path),
-			DIRECTORY_SEPARATOR
-		);
-	}
+    /**
+     * Replaces directory separators with the system's native one
+     * and trims the trailing separator.
+     */
+    public function normalizePath($path)
+    {
+        return rtrim(
+            str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path),
+            DIRECTORY_SEPARATOR
+        );
+    }
 
-	private function joinTwoPaths($a, $b)
-	{
-		return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
-	}
+    private function joinTwoPaths($a, $b)
+    {
+        return $this->normalizePath($a) . DIRECTORY_SEPARATOR . $this->normalizePath($b);
+    }
 
-	/**
-	 * Joins an arbitrary number of paths, normalizing them along the way.
-	 */
-	public function joinPaths()
-	{
-		if (func_num_args() < 2) {
-			throw new Core_Foundation_FileSystem_Exception('joinPaths requires at least 2 arguments.');
-		} elseif (func_num_args() === 2) {
-			return $this->joinTwoPaths(func_get_arg(0), func_get_arg(1));
-		} elseif (func_num_args() > 2) {
-			return $this->joinPaths(
-				func_get_arg(0),
-				call_user_func_array(
-					array($this, 'joinPaths'),
-					array_slice(func_get_args(), 1)
-				)
-			);
-		}
-	}
+    /**
+     * Joins an arbitrary number of paths, normalizing them along the way.
+     */
+    public function joinPaths()
+    {
+        if (func_num_args() < 2) {
+            throw new Core_Foundation_FileSystem_Exception('joinPaths requires at least 2 arguments.');
+        } elseif (func_num_args() === 2) {
+            return $this->joinTwoPaths(func_get_arg(0), func_get_arg(1));
+        } elseif (func_num_args() > 2) {
+            return $this->joinPaths(
+                func_get_arg(0),
+                call_user_func_array(
+                    array($this, 'joinPaths'),
+                    array_slice(func_get_args(), 1)
+                )
+            );
+        }
+    }
 
-	/**
-	 * Performs a depth first listing of directory entries.
-	 * Throws exception if $path is not a file.
-	 * If $path is a file and not a directory, just gets the file info for it
-	 * and return it in an array.
-	 * @return an array of SplFileInfo object indexed by file path
-	 */
-	public function listEntriesRecursively($path)
-	{
-		if (!file_exists($path)) {
-			throw new Core_Foundation_FileSystem_Exception(
-				sprintf(
-					'No such file or directory: %s',
-					$path
-				)
-			);
-		}
+    /**
+     * Performs a depth first listing of directory entries.
+     * Throws exception if $path is not a file.
+     * If $path is a file and not a directory, just gets the file info for it
+     * and return it in an array.
+     * @return an array of SplFileInfo object indexed by file path
+     */
+    public function listEntriesRecursively($path)
+    {
+        if (!file_exists($path)) {
+            throw new Core_Foundation_FileSystem_Exception(
+                sprintf(
+                    'No such file or directory: %s',
+                    $path
+                )
+            );
+        }
 
-		if (!is_dir($path)) {
-			throw new Core_Foundation_FileSystem_Exception(
-				sprintf(
-					'%s is not a directory',
-					$path
-				)
-			);
-		}
+        if (!is_dir($path)) {
+            throw new Core_Foundation_FileSystem_Exception(
+                sprintf(
+                    '%s is not a directory',
+                    $path
+                )
+            );
+        }
 
-		$entries = array();
+        $entries = array();
 
-		foreach (scandir($path) as $entry) {
-			if ($entry === '.' || $entry === '..') {
-				continue;
-			}
+        foreach (scandir($path) as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
 
-			$newPath = $this->joinPaths($path, $entry);
-			$info = new SplFileInfo($newPath);
+            $newPath = $this->joinPaths($path, $entry);
+            $info = new SplFileInfo($newPath);
 
-			$entries[$newPath] = $info;
+            $entries[$newPath] = $info;
 
-			if ($info->isDir()) {
-				$entries = array_merge(
-					$entries,
-					$this->listEntriesRecursively($newPath)
-				);
-			}
-		}
+            if ($info->isDir()) {
+                $entries = array_merge(
+                    $entries,
+                    $this->listEntriesRecursively($newPath)
+                );
+            }
+        }
 
-		return $entries;
-	}
+        return $entries;
+    }
 
-	/**
-	 * Filter used by listFilesRecursively.
-	 */
-	private function matchOnlyFiles(SplFileInfo $info)
-	{
-		return $info->isFile();
-	}
+    /**
+     * Filter used by listFilesRecursively.
+     */
+    private function matchOnlyFiles(SplFileInfo $info)
+    {
+        return $info->isFile();
+    }
 
-	/**
-	 * Same as listEntriesRecursively but returns only files.
-	 */
-	public function listFilesRecursively($path)
-	{
-		return array_filter(
-			$this->listEntriesRecursively($path),
-			array($this, 'matchOnlyFiles')
-		);
-	}
+    /**
+     * Same as listEntriesRecursively but returns only files.
+     */
+    public function listFilesRecursively($path)
+    {
+        return array_filter(
+            $this->listEntriesRecursively($path),
+            array($this, 'matchOnlyFiles')
+        );
+    }
 }

@@ -26,32 +26,32 @@
 
 function fd($var)
 {
-	return (Tools::fd($var));
+    return (Tools::fd($var));
 }
 
 function p($var)
 {
-	return (Tools::p($var));
+    return (Tools::p($var));
 }
 
 function d($var)
 {
-	Tools::d($var);
+    Tools::d($var);
 }
 
 function ppp($var)
 {
-	return (Tools::p($var));
+    return (Tools::p($var));
 }
 
 function ddd($var)
 {
-	Tools::d($var);
+    Tools::d($var);
 }
 
 function epr($var, $message_type = null, $destination = null, $extra_headers = null)
 {
-	return Tools::error_log($var, $message_type, $destination, $extra_headers);
+    return Tools::error_log($var, $message_type, $destination, $extra_headers);
 }
 
 /**
@@ -63,21 +63,21 @@ function epr($var, $message_type = null, $destination = null, $extra_headers = n
  */
 function pSQL($string, $htmlOK = false)
 {
-	return Db::getInstance()->escape($string, $htmlOK);
+    return Db::getInstance()->escape($string, $htmlOK);
 }
 
 function bqSQL($string)
 {
-	return str_replace('`', '\`', pSQL($string));
+    return str_replace('`', '\`', pSQL($string));
 }
 
 function displayFatalError()
 {
-	$error = null;
-	if (function_exists('error_get_last'))
-		$error = error_get_last();
-	if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR )))
-		echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
+    $error = null;
+    if (function_exists('error_get_last'))
+        $error = error_get_last();
+    if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR )))
+        echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
 }
 
 /**
@@ -85,6 +85,6 @@ function displayFatalError()
  */
 function nl2br2($string)
 {
-	Tools::displayAsDeprecated();
-	return Tools::nl2br($string);
+    Tools::displayAsDeprecated();
+    return Tools::nl2br($string);
 }

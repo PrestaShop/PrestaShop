@@ -26,23 +26,23 @@
 
 class Adapter_Database implements Core_Foundation_Database_DatabaseInterface
 {
-	/**
-	 * Perform a SELECT sql statement
-	 * @param $sqlString
-	 * @return array|false
-	 * @throws PrestaShopDatabaseException
-	 */
-	public function select($sqlString)
+    /**
+     * Perform a SELECT sql statement
+     * @param $sqlString
+     * @return array|false
+     * @throws PrestaShopDatabaseException
+     */
+    public function select($sqlString)
     {
         return Db::getInstance()->executeS($sqlString);
     }
 
-	/**
-	 * Escape $unsafe to be used into a SQL statement
-	 * @param $unsafeData
-	 * @return string
-	 */
-	public function escape($unsafeData)
+    /**
+     * Escape $unsafe to be used into a SQL statement
+     * @param $unsafeData
+     * @return string
+     */
+    public function escape($unsafeData)
     {
         // Prepare required params
         $html_ok = true;

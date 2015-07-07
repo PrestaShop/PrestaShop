@@ -34,59 +34,59 @@ class ConfigurationCoreTest extends IntegrationTestCase
 {
     public $default;
 
-	protected function setUp()
-	{
-		$configuration = array();
-		$id_shops = array(1, 2);
-		$id_shop_groups = array(1, 2);
-		$id_langs = array(0, 1, 2);
-		foreach ($id_langs as $id_lang)
-		{
-			$configuration['configuration'][$id_lang] = array(
-				'global' => array(),
-				'group' => array(),
-				'shop' => array()
-			);
+    protected function setUp()
+    {
+        $configuration = array();
+        $id_shops = array(1, 2);
+        $id_shop_groups = array(1, 2);
+        $id_langs = array(0, 1, 2);
+        foreach ($id_langs as $id_lang)
+        {
+            $configuration['configuration'][$id_lang] = array(
+                'global' => array(),
+                'group' => array(),
+                'shop' => array()
+            );
 
-			foreach ($id_shop_groups as $id_group)
-				$configuration['configuration'][$id_lang]['group'][$id_group] = array();
-			foreach ($id_shops as $id_shop)
-				$configuration['configuration'][$id_lang]['shop'][$id_shop] = array();
+            foreach ($id_shop_groups as $id_group)
+                $configuration['configuration'][$id_lang]['group'][$id_group] = array();
+            foreach ($id_shops as $id_shop)
+                $configuration['configuration'][$id_lang]['shop'][$id_shop] = array();
 
-		}
+        }
 
-		$configuration['configuration'][0]['global']['PS_TEST_NOT_OVERRIDDEN'] = 'RESULT_NOT_OVERRIDDEN';
+        $configuration['configuration'][0]['global']['PS_TEST_NOT_OVERRIDDEN'] = 'RESULT_NOT_OVERRIDDEN';
 
-		$configuration['configuration'][0]['global']['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN';
-		foreach ($id_shop_groups as $id_group)
-				$configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN_'.$id_group;
+        $configuration['configuration'][0]['global']['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN';
+        foreach ($id_shop_groups as $id_group)
+                $configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_OVERRIDDEN'] = 'RESULT_GROUP_OVERRIDDEN_'.$id_group;
 
-		$configuration['configuration'][0]['global']['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN';
-		foreach ($id_shops as $id_shop)
-				$configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN_'.$id_shop;
+        $configuration['configuration'][0]['global']['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN';
+        foreach ($id_shops as $id_shop)
+                $configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_SHOP_OVERRIDDEN'] = 'RESULT_SHOP_OVERRIDDEN_'.$id_shop;
 
-		$configuration['configuration'][0]['global']['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN';
-		foreach ($id_shop_groups as $id_group)
-				$configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_'.$id_group;
-		foreach ($id_shops as $id_shop)
-				$configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop;
+        $configuration['configuration'][0]['global']['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN';
+        foreach ($id_shop_groups as $id_group)
+                $configuration['configuration'][0]['group'][$id_group]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_GROUP_'.$id_group;
+        foreach ($id_shops as $id_shop)
+                $configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop;
 
 
         $this->default = ReflexionHelper::getProperty(new Configuration(), '_cache');
         ReflexionHelper::setProperty(new Configuration(), '_cache', $configuration);
-	}
+    }
 
     public function teardown()
     {
         ReflexionHelper::setProperty(new Configuration(), '_cache', $this->default);
     }
 
-	public function testGetGlobalValue()
-	{
-		$this->assertEquals('RESULT_NOT_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_NOT_OVERRIDDEN'));
-		$this->assertEquals('RESULT_GROUP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_OVERRIDDEN'));
-		$this->assertEquals('RESULT_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_SHOP_OVERRIDDEN'));
-		$this->assertEquals('RESULT_GROUP_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN'));
-		$this->assertFalse(Configuration::getGlobalValue('PS_TEST_DOES_NOT_EXIST'));
-	}
+    public function testGetGlobalValue()
+    {
+        $this->assertEquals('RESULT_NOT_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_NOT_OVERRIDDEN'));
+        $this->assertEquals('RESULT_GROUP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_OVERRIDDEN'));
+        $this->assertEquals('RESULT_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_SHOP_OVERRIDDEN'));
+        $this->assertEquals('RESULT_GROUP_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN'));
+        $this->assertFalse(Configuration::getGlobalValue('PS_TEST_DOES_NOT_EXIST'));
+    }
 }

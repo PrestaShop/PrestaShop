@@ -32,19 +32,19 @@ use PrestaShopAutoload;
 
 class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 {
-	/**
-	 * Test if a module return the good possible hooks list.
-	 * This test is done on the bankwire generic module.
-	 */
-	public function testGetRightListForModule()
-	{
-		$module = Module::getInstanceByName('bankwire');
-		$possible_hooks_list = $module->getPossibleHooksList();
+    /**
+     * Test if a module return the good possible hooks list.
+     * This test is done on the bankwire generic module.
+     */
+    public function testGetRightListForModule()
+    {
+        $module = Module::getInstanceByName('bankwire');
+        $possible_hooks_list = $module->getPossibleHooksList();
 
-		$this->assertCount(3, $possible_hooks_list);
+        $this->assertCount(3, $possible_hooks_list);
 
-		$this->assertEquals('displayPayment', $possible_hooks_list[0]['name']);
-		$this->assertEquals('displayPaymentEU', $possible_hooks_list[1]['name']);
-		$this->assertEquals('displayPaymentReturn', $possible_hooks_list[2]['name']);
-	}
+        $this->assertEquals('displayPayment', $possible_hooks_list[0]['name']);
+        $this->assertEquals('displayPaymentEU', $possible_hooks_list[1]['name']);
+        $this->assertEquals('displayPaymentReturn', $possible_hooks_list[2]['name']);
+    }
 }

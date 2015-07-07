@@ -32,11 +32,11 @@
  */
 class InstallFixturesFashion extends InstallXmlLoader
 {
-	public function createEntityCustomer($identifier, array $data, array $data_lang)
-	{
-		if ($identifier == 'John')
-			$data['passwd'] = Tools::encrypt('123456789');
+    public function createEntityCustomer($identifier, array $data, array $data_lang)
+    {
+        if ($identifier == 'John')
+            $data['passwd'] = Tools::encrypt('123456789');
 
-		return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
-	}
+        return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
+    }
 }

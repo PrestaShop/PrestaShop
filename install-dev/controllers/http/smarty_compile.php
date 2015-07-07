@@ -27,13 +27,13 @@
 define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
 if (Tools::getValue('bo'))
 {
-	if (!is_dir(_PS_ROOT_DIR_.'/admin/'))
-		exit;
-	define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
-	$directory = _PS_ADMIN_DIR_.'themes/default/';
+    if (!is_dir(_PS_ROOT_DIR_.'/admin/'))
+        exit;
+    define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
+    $directory = _PS_ADMIN_DIR_.'themes/default/';
 }
 else
-	$directory = _PS_THEME_DIR_;
+    $directory = _PS_THEME_DIR_;
 
 require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
 
@@ -41,4 +41,4 @@ $smarty->setTemplateDir($directory);
 ob_start();
 $smarty->compileAllTemplates('.tpl', false);
 if (ob_get_level() && ob_get_length() > 0)
-	ob_end_clean();
+    ob_end_clean();

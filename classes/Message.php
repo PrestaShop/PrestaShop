@@ -26,77 +26,77 @@
 
 class MessageCore extends ObjectModel
 {
-	public $id;
+    public $id;
 
-	/** @var string message content */
-	public $message;
+    /** @var string message content */
+    public $message;
 
-	/** @var int Cart ID (if applicable) */
-	public $id_cart;
+    /** @var int Cart ID (if applicable) */
+    public $id_cart;
 
-	/** @var int Order ID (if applicable) */
-	public $id_order;
+    /** @var int Order ID (if applicable) */
+    public $id_order;
 
-	/** @var int Customer ID (if applicable) */
-	public $id_customer;
+    /** @var int Customer ID (if applicable) */
+    public $id_customer;
 
-	/** @var int Employee ID (if applicable) */
-	public $id_employee;
+    /** @var int Employee ID (if applicable) */
+    public $id_employee;
 
-	/** @var bool Message is not displayed to the customer */
-	public $private;
+    /** @var bool Message is not displayed to the customer */
+    public $private;
 
-	/** @var string Object creation date */
-	public $date_add;
+    /** @var string Object creation date */
+    public $date_add;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'message',
-		'primary' => 'id_message',
-		'fields' => array(
-			'message' => 		array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
-			'id_cart' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_order' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_customer' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_employee' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'private' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'date_add' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-		),
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'message',
+        'primary' => 'id_message',
+        'fields' => array(
+            'message' =>        array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
+            'id_cart' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_order' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_customer' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_employee' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'private' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'date_add' =>        array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        ),
+    );
 
-	/**
-	 * Return the last message from cart
-	 *
-	 * @param int $id_cart Cart ID
-	 * @return array Message
-	 */
-	public static function getMessageByCartId($id_cart)
-	{
-		return Db::getInstance()->getRow('
+    /**
+     * Return the last message from cart
+     *
+     * @param int $id_cart Cart ID
+     * @return array Message
+     */
+    public static function getMessageByCartId($id_cart)
+    {
+        return Db::getInstance()->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'message`
 			WHERE `id_cart` = '.(int)$id_cart
-		);
-	}
+        );
+    }
 
-	/**
-	 * Return messages from Order ID
-	 *
-	 * @param int $id_order Order ID
-	 * @param bool $private return WITH private messages
-	 * @return array Messages
-	 */
-	public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
-	{
-		if (!Validate::isBool($private))
-			die(Tools::displayError());
+    /**
+     * Return messages from Order ID
+     *
+     * @param int $id_order Order ID
+     * @param bool $private return WITH private messages
+     * @return array Messages
+     */
+    public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
+    {
+        if (!Validate::isBool($private))
+            die(Tools::displayError());
 
-		if (!$context)
-			$context = Context::getContext();
+        if (!$context)
+            $context = Context::getContext();
 
-		return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
 			FROM `'._DB_PREFIX_.'message` m
@@ -110,24 +110,24 @@ class MessageCore extends ObjectModel
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
-	}
+    }
 
-	/**
-	 * Return messages from Cart ID
-	 *
-	 * @param int $id_order Order ID
-	 * @param bool $private return WITH private messages
-	 * @return array Messages
-	 */
-	public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)
-	{
-		if (!Validate::isBool($private))
-			die(Tools::displayError());
+    /**
+     * Return messages from Cart ID
+     *
+     * @param int $id_order Order ID
+     * @param bool $private return WITH private messages
+     * @return array Messages
+     */
+    public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)
+    {
+        if (!Validate::isBool($private))
+            die(Tools::displayError());
 
-		if (!$context)
-			$context = Context::getContext();
+        if (!$context)
+            $context = Context::getContext();
 
-		return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
 			FROM `'._DB_PREFIX_.'message` m
@@ -139,23 +139,23 @@ class MessageCore extends ObjectModel
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
-	}
+    }
 
-	/**
-	 * Registered a message 'readed'
-	 *
-	 * @param int $id_message Message ID
-	 * @param int $id_emplyee Employee ID
-	 */
-	public static function markAsReaded($id_message, $id_employee)
-	{
-		if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee))
-			die(Tools::displayError());
+    /**
+     * Registered a message 'readed'
+     *
+     * @param int $id_message Message ID
+     * @param int $id_emplyee Employee ID
+     */
+    public static function markAsReaded($id_message, $id_employee)
+    {
+        if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee))
+            die(Tools::displayError());
 
-		$result = Db::getInstance()->execute('
+        $result = Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
 			('.(int)$id_message.', '.(int)$id_employee.', NOW());
 		');
-		return $result;
-	}
+        return $result;
+    }
 }

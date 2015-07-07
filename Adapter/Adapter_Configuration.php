@@ -27,13 +27,13 @@
 class Adapter_Configuration implements Core_Business_ConfigurationInterface
 {
 
-	/**
-	 * Returns constant defined by given $key if exists or check directly into PrestaShop
-	 * Configuration
-	 * @param $key
-	 * @return mixed
-	 */
-	public function get($key)
+    /**
+     * Returns constant defined by given $key if exists or check directly into PrestaShop
+     * Configuration
+     * @param $key
+     * @return mixed
+     */
+    public function get($key)
     {
         if (defined($key)) {
             return constant($key);

@@ -29,37 +29,37 @@
  */
 class InstallControllerHttpLicense extends InstallControllerHttp
 {
-	/**
-	 * Process license form
-	 *
-	 * @see InstallAbstractModel::process()
-	 */
-	public function processNextStep()
-	{
-		$this->session->licence_agrement = Tools::getValue('licence_agrement');
-		$this->session->configuration_agrement = Tools::getValue('configuration_agrement');
-	}
+    /**
+     * Process license form
+     *
+     * @see InstallAbstractModel::process()
+     */
+    public function processNextStep()
+    {
+        $this->session->licence_agrement = Tools::getValue('licence_agrement');
+        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
+    }
 
-	/**
-	 * Licence agrement must be checked to validate this step
-	 *
-	 * @see InstallAbstractModel::validate()
-	 */
-	public function validate()
-	{
-		return $this->session->licence_agrement;
-	}
+    /**
+     * Licence agrement must be checked to validate this step
+     *
+     * @see InstallAbstractModel::validate()
+     */
+    public function validate()
+    {
+        return $this->session->licence_agrement;
+    }
 
-	public function process()
-	{
-	
-	}
-	
-	/**
-	 * Display license step
-	 */
-	public function display()
-	{
-		$this->displayTemplate('license');
-	}
+    public function process()
+    {
+    
+    }
+    
+    /**
+     * Display license step
+     */
+    public function display()
+    {
+        $this->displayTemplate('license');
+    }
 }

@@ -29,98 +29,98 @@
  */
 class PDFCore
 {
-	public $filename;
-	public $pdf_renderer;
-	public $objects;
-	public $template;
+    public $filename;
+    public $pdf_renderer;
+    public $objects;
+    public $template;
 
-	const TEMPLATE_INVOICE = 'Invoice';
-	const TEMPLATE_ORDER_RETURN = 'OrderReturn';
-	const TEMPLATE_ORDER_SLIP = 'OrderSlip';
-	const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
-	const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
+    const TEMPLATE_INVOICE = 'Invoice';
+    const TEMPLATE_ORDER_RETURN = 'OrderReturn';
+    const TEMPLATE_ORDER_SLIP = 'OrderSlip';
+    const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+    const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
-	/**
-	 * @param $objects
-	 * @param $template
-	 * @param $smarty
-	 * @param string $orientation
-	 */
-	public function __construct($objects, $template, $smarty, $orientation = 'P')
-	{
-		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
-		$this->template = $template;
-		$this->smarty = $smarty;
+    /**
+     * @param $objects
+     * @param $template
+     * @param $smarty
+     * @param string $orientation
+     */
+    public function __construct($objects, $template, $smarty, $orientation = 'P')
+    {
+        $this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
+        $this->template = $template;
+        $this->smarty = $smarty;
 
-		$this->objects = $objects;
-		if (!($objects instanceof Iterator) && !is_array($objects))
-			$this->objects = array($objects);
-	}
+        $this->objects = $objects;
+        if (!($objects instanceof Iterator) && !is_array($objects))
+            $this->objects = array($objects);
+    }
 
-	/**
-	 * Render PDF
-	 *
-	 * @param bool $display
-	 * @return mixed
-	 * @throws PrestaShopException
-	 */
-	public function render($display = true)
-	{
-		$render = false;
-		$this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
-		foreach ($this->objects as $object)
-		{
-			$template = $this->getTemplateObject($object);
-			if (!$template)
-				continue;
+    /**
+     * Render PDF
+     *
+     * @param bool $display
+     * @return mixed
+     * @throws PrestaShopException
+     */
+    public function render($display = true)
+    {
+        $render = false;
+        $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
+        foreach ($this->objects as $object)
+        {
+            $template = $this->getTemplateObject($object);
+            if (!$template)
+                continue;
 
-			if (empty($this->filename))
-			{
-				$this->filename = $template->getFilename();
-				if (count($this->objects) > 1)
-					$this->filename = $template->getBulkFilename();
-			}
+            if (empty($this->filename))
+            {
+                $this->filename = $template->getFilename();
+                if (count($this->objects) > 1)
+                    $this->filename = $template->getBulkFilename();
+            }
 
-			$template->assignHookData($object);
+            $template->assignHookData($object);
 
-			$this->pdf_renderer->createHeader($template->getHeader());
-			$this->pdf_renderer->createFooter($template->getFooter());
-			$this->pdf_renderer->createContent($template->getContent());
-			$this->pdf_renderer->writePage();
-			$render = true;
+            $this->pdf_renderer->createHeader($template->getHeader());
+            $this->pdf_renderer->createFooter($template->getFooter());
+            $this->pdf_renderer->createContent($template->getContent());
+            $this->pdf_renderer->writePage();
+            $render = true;
 
-			unset($template);
-		}
+            unset($template);
+        }
 
-		if ($render)
-		{
-			// clean the output buffer
-			if (ob_get_level() && ob_get_length() > 0)
-				ob_clean();
-			return $this->pdf_renderer->render($this->filename, $display);
-		}
-	}
+        if ($render)
+        {
+            // clean the output buffer
+            if (ob_get_level() && ob_get_length() > 0)
+                ob_clean();
+            return $this->pdf_renderer->render($this->filename, $display);
+        }
+    }
 
-	/**
-	 * Get correct PDF template classes
-	 *
-	 * @param mixed $object
-	 * @return HTMLTemplate|false
-	 * @throws PrestaShopException
-	 */
-	public function getTemplateObject($object)
-	{
-		$class = false;
-		$class_name = 'HTMLTemplate'.$this->template;
+    /**
+     * Get correct PDF template classes
+     *
+     * @param mixed $object
+     * @return HTMLTemplate|false
+     * @throws PrestaShopException
+     */
+    public function getTemplateObject($object)
+    {
+        $class = false;
+        $class_name = 'HTMLTemplate'.$this->template;
 
-		if (class_exists($class_name))
-		{
-			$class = new $class_name($object, $this->smarty);
+        if (class_exists($class_name))
+        {
+            $class = new $class_name($object, $this->smarty);
 
-			if (!($class instanceof HTMLTemplate))
-				throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
-		}
+            if (!($class instanceof HTMLTemplate))
+                throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
+        }
 
-		return $class;
-	}
+        return $class;
+    }
 }
