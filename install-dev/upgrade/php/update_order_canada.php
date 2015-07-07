@@ -106,7 +106,7 @@ function update_order_canada()
 	}
 }
 
-function update_order_canada_ps_round($val){
+function update_order_canada_ps_round($val) {
 	static $ps_price_round_mode;
 	if (empty($ps_price_round_mode))
 	{

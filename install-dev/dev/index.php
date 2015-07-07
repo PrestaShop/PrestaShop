@@ -30,9 +30,9 @@ include_once(_PS_INSTALL_PATH_.'classes/controllerHttp.php');
 
 class SynchronizeController extends InstallControllerHttp
 {
-	public function validate(){}
-	public function display(){}
-	public function processNextStep(){}
+	public function validate() {}
+	public function display() {}
+	public function processNextStep() {}
 
 	/**
 	 * @var InstallXmlLoader

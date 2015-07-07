@@ -42,7 +42,7 @@ class CartControllerCore extends FrontController
 	 *
 	 * @param string $canonicalURL
 	 */
-	public function canonicalRedirection($canonicalURL = ''){}
+	public function canonicalRedirection($canonicalURL = '') {}
 
 	/**
 	 * Initialize cart controller

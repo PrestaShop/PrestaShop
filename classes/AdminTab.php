@@ -1201,7 +1201,7 @@ abstract class AdminTabCore
 	 *
 	 * @param string $warn Warning message to display
 	 */
-	public function	displayWarning($warn)
+	public function displayWarning($warn)
 	{
 		$str_output = '';
 		if (!empty($warn))
