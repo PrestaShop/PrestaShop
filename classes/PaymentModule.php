@@ -621,36 +621,6 @@ abstract class PaymentModuleCore extends Module
 						$cart_rules_list_html = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list);
 					}
 
-					// Specify order id for message
-					$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
-					if ($old_message)
-					{
-						$update_message = new Message((int)$old_message['id_message']);
-						$update_message->id_order = (int)$order->id;
-						$update_message->update();
-
-						// Add this message in the customer thread
-						$customer_thread = new CustomerThread();
-						$customer_thread->id_contact = 0;
-						$customer_thread->id_customer = (int)$order->id_customer;
-						$customer_thread->id_shop = (int)$this->context->shop->id;
-						$customer_thread->id_order = (int)$order->id;
-						$customer_thread->id_lang = (int)$this->context->language->id;
-						$customer_thread->email = $this->context->customer->email;
-						$customer_thread->status = 'open';
-						$customer_thread->token = Tools::passwdGen(12);
-						$customer_thread->add();
-
-						$customer_message = new CustomerMessage();
-						$customer_message->id_customer_thread = $customer_thread->id;
-						$customer_message->id_employee = 0;
-						$customer_message->message = $update_message->message;
-						$customer_message->private = 0;
-
-						if (!$customer_message->add())
-							$this->errors[] = Tools::displayError('An error occurred while saving message');
-					}
-
 					if (self::DEBUG_MODE)
 						PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int)$id_cart, true);
 
