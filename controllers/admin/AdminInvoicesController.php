@@ -182,8 +182,9 @@ class AdminInvoicesControllerCore extends AdminController
 		 ');
 
         $status_stats = array();
-        foreach ($result as $row)
+        foreach ($result as $row) {
             $status_stats[$row['id_order_state']] = $row['nbOrders'];
+        }
 
         $this->tpl_form_vars = array(
             'statusStats' => $status_stats,
@@ -228,43 +229,44 @@ class AdminInvoicesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('submitAddinvoice_date'))
-        {
-            if (!Validate::isDate(Tools::getValue('date_from')))
+        if (Tools::isSubmit('submitAddinvoice_date')) {
+            if (!Validate::isDate(Tools::getValue('date_from'))) {
                 $this->errors[] = $this->l('Invalid "From" date');
+            }
 
-            if (!Validate::isDate(Tools::getValue('date_to')))
+            if (!Validate::isDate(Tools::getValue('date_to'))) {
                 $this->errors[] = $this->l('Invalid "To" date');
+            }
 
-            if (!count($this->errors))
-            {
-                if (count(OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
+            if (!count($this->errors)) {
+                if (count(OrderInvoice::getByDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to')))) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicesPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
+                }
 
                 $this->errors[] = $this->l('No invoice has been found for this period.');
             }
-        }
-        elseif (Tools::isSubmit('submitAddinvoice_status'))
-        {
-            if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array))
+        } elseif (Tools::isSubmit('submitAddinvoice_status')) {
+            if (!is_array($status_array = Tools::getValue('id_order_state')) || !count($status_array)) {
                 $this->errors[] = $this->l('You must select at least one order status.');
-            else
-            {
-                foreach ($status_array as $id_order_state)
-                    if (count(OrderInvoice::getByStatus((int)$id_order_state)))
+            } else {
+                foreach ($status_array as $id_order_state) {
+                    if (count(OrderInvoice::getByStatus((int)$id_order_state))) {
                         Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicesPDF2&id_order_state='.implode('-', $status_array));
+                    }
+                }
 
                 $this->errors[] = $this->l('No invoice has been found for this status.');
             }
-        }
-        else
+        } else {
             parent::postProcess();
+        }
     }
 
     public function beforeUpdateOptions()
     {
-        if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber())
+        if ((int)Tools::getValue('PS_INVOICE_START_NUMBER') != 0 && (int)Tools::getValue('PS_INVOICE_START_NUMBER') <= Order::getLastInvoiceNumber()) {
             $this->errors[] = $this->l('Invalid invoice number.').Order::getLastInvoiceNumber().')';
+        }
     }
 
     protected function getInvoicesModels()
@@ -279,8 +281,7 @@ class AdminInvoicesControllerCore extends AdminController
         $templates_override = $this->getInvoicesModelsFromDir(_PS_THEME_DIR_.'pdf/');
         $templates_default = $this->getInvoicesModelsFromDir(_PS_PDF_DIR_);
 
-        foreach (array_merge($templates_default, $templates_override) as $template)
-        {
+        foreach (array_merge($templates_default, $templates_override) as $template) {
             $template_name = basename($template, '.tpl');
             $models[] = array('value' => $template_name, 'name' => $template_name);
         }
@@ -291,11 +292,13 @@ class AdminInvoicesControllerCore extends AdminController
     {
         $templates = false;
 
-        if (is_dir($directory))
+        if (is_dir($directory)) {
             $templates = glob($directory.'invoice-*.tpl');
+        }
 
-        if (!$templates)
+        if (!$templates) {
             $templates = array();
+        }
 
         return $templates;
     }

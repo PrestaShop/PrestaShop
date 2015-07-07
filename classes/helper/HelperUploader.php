@@ -55,8 +55,9 @@ class HelperUploaderCore extends Uploader
 
     public function getContext()
     {
-        if (!isset($this->_context))
+        if (!isset($this->_context)) {
             $this->_context = Context::getContext();
+        }
 
         return $this->_context;
     }
@@ -69,8 +70,9 @@ class HelperUploaderCore extends Uploader
 
     public function getDropZone()
     {
-        if (!isset($this->_drop_zone))
+        if (!isset($this->_drop_zone)) {
             $this->setDropZone("$('#".$this->getId()."-add-button')");
+        }
 
         return $this->_drop_zone;
     }
@@ -83,8 +85,9 @@ class HelperUploaderCore extends Uploader
 
     public function getId()
     {
-        if (!isset($this->_id) || trim($this->_id) === '')
+        if (!isset($this->_id) || trim($this->_id) === '') {
             $this->_id = $this->getName();
+        }
 
         return $this->_id;
     }
@@ -97,8 +100,9 @@ class HelperUploaderCore extends Uploader
 
     public function getFiles()
     {
-        if (!isset($this->_files))
+        if (!isset($this->_files)) {
             $this->_files = array();
+        }
 
         return $this->_files;
     }
@@ -140,8 +144,9 @@ class HelperUploaderCore extends Uploader
 
     public function getPostMaxSize()
     {
-        if (!isset($this->_post_max_size))
+        if (!isset($this->_post_max_size)) {
             $this->_post_max_size = parent::getPostMaxSize();
+        }
 
         return $this->_post_max_size;
     }
@@ -154,8 +159,9 @@ class HelperUploaderCore extends Uploader
 
     public function getTemplate()
     {
-        if (!isset($this->_template))
+        if (!isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_TEMPLATE);
+        }
 
         return $this->_template;
     }
@@ -168,36 +174,39 @@ class HelperUploaderCore extends Uploader
 
     public function getTemplateDirectory()
     {
-        if (!isset($this->_template_directory))
+        if (!isset($this->_template_directory)) {
             $this->_template_directory = self::DEFAULT_TEMPLATE_DIRECTORY;
+        }
 
         return $this->_normalizeDirectory($this->_template_directory);
     }
 
     public function getTemplateFile($template)
     {
-        if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
+        if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false) {
             $controller_name = strtolower($matches[0][1]);
+        }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template))
+                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 .$this->getTemplateDirectory().$template;
-        elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
+        } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
             && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
+                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
                 .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
-        elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                .$this->getTemplateDirectory().$template))
+        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                     .$this->getTemplateDirectory().$template;
-        elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template))
+        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 .$this->getTemplateDirectory().$template;
-        else
+        } else {
             return $this->getTemplateDirectory().$template;
+        }
     }
 
     public function setTitle($value)
@@ -241,8 +250,9 @@ class HelperUploaderCore extends Uploader
             && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
         if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-            .'template'))
+            .'template')) {
             $bo_theme = 'default';
+        }
 
         $this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
             .'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
@@ -255,8 +265,9 @@ class HelperUploaderCore extends Uploader
         $this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
         $this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
 
-        if ($this->useAjax() && !isset($this->_template))
+        if ($this->useAjax() && !isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_AJAX_TEMPLATE);
+        }
 
         $template = $this->getContext()->smarty->createTemplate(
             $this->getTemplateFile($this->getTemplate()), $this->getContext()->smarty

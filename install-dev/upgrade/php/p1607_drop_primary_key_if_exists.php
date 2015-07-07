@@ -26,8 +26,9 @@
 
 function p1607_drop_primary_key_if_exists()
 {
-    if (Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'order_detail_tax` WHERE Key_name = "PRIMARY"'))
+    if (Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'order_detail_tax` WHERE Key_name = "PRIMARY"')) {
         Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail_tax` DROP PRIMARY KEY');
+    }
 
     return true;
 }

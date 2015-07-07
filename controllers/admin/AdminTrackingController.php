@@ -36,15 +36,12 @@ class AdminTrackingControllerCore extends AdminController
 
     public function postprocess()
     {
-        if (Tools::getValue('id_product') && Tools::isSubmit('statusproduct'))
-        {
+        if (Tools::getValue('id_product') && Tools::isSubmit('statusproduct')) {
             $this->table = 'product';
             $this->identifier = 'id_product';
             $this->action = 'status';
             $this->className = 'Product';
-        }
-        elseif (Tools::getValue('id_category') && Tools::isSubmit('statuscategory'))
-        {
+        } elseif (Tools::getValue('id_category') && Tools::isSubmit('statuscategory')) {
             $this->table = 'category';
             $this->identifier = 'id_category';
             $this->action = 'status';
@@ -61,22 +58,24 @@ class AdminTrackingControllerCore extends AdminController
         $this->initTabModuleList();
         $this->initPageHeaderToolbar();
 
-        if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory'))
+        if ($id_category = Tools::getValue('id_category') && Tools::getIsset('viewcategory')) {
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_category='.(int)$id_category.'&viewcategory');
+        }
 
         $this->_helper_list = new HelperList();
 
-        if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+        if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
             $this->warnings[] = $this->l('List of products without available quantities for sale are not displayed because stock management is disabled.');
+        }
 
         $methods = get_class_methods($this);
         $tpl_vars['arrayList'] = array();
-        foreach ($methods as $method_name)
-            if (preg_match('#getCustomList(.+)#', $method_name, $matches))
-            {
+        foreach ($methods as $method_name) {
+            if (preg_match('#getCustomList(.+)#', $method_name, $matches)) {
                 $this->clearListOptions();
                 $this->content .= call_user_func(array($this, $matches[0]));
             }
+        }
         $this->context->smarty->assign(array(
             'content' => $this->content,
             'url_post' => self::$currentIndex.'&token='.$this->token,
@@ -125,8 +124,9 @@ class AdminTrackingControllerCore extends AdminController
 
     public function getCustomListProductsAttributesNoStock()
     {
-        if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+        if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
             return;
+        }
 
         $this->table = 'product';
         $this->list_id = 'no_stock_products_attributes';
@@ -168,8 +168,9 @@ class AdminTrackingControllerCore extends AdminController
 
     public function getCustomListProductsNoStock()
     {
-        if (!Configuration::get('PS_STOCK_MANAGEMENT'))
+        if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
             return;
+        }
 
         $this->table = 'product';
         $this->list_id = 'no_stock_products';
@@ -244,15 +245,15 @@ class AdminTrackingControllerCore extends AdminController
     {
         $this->processFilter();
 
-        if (!($this->fields_list && is_array($this->fields_list)))
+        if (!($this->fields_list && is_array($this->fields_list))) {
             return false;
+        }
         $this->getList($this->context->language->id);
 
         $helper = new HelperList();
 
         // Empty list is ok
-        if (!is_array($this->_list))
-        {
+        if (!is_array($this->_list)) {
             $this->displayWarning($this->l('Bad SQL query', 'Helper').'<br />'.htmlspecialchars($this->_list_error));
             return false;
         }
@@ -262,10 +263,10 @@ class AdminTrackingControllerCore extends AdminController
         $helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
         // For compatibility reasons, we have to check standard actions in class attributes
-        foreach ($this->actions_available as $action)
-        {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
+        foreach ($this->actions_available as $action) {
+            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
                 $this->actions[] = $action;
+            }
         }
         $helper->is_cms = $this->is_cms;
         $list = $helper->generateList($this->_list, $this->fields_list);
@@ -302,17 +303,21 @@ class AdminTrackingControllerCore extends AdminController
 
     protected function clearFilters()
     {
-        if (Tools::isSubmit('submitResetempty_categories'))
+        if (Tools::isSubmit('submitResetempty_categories')) {
             $this->processResetFilters('empty_categories');
+        }
 
-        if (Tools::isSubmit('submitResetno_stock_products_attributes'))
+        if (Tools::isSubmit('submitResetno_stock_products_attributes')) {
             $this->processResetFilters('no_stock_products_attributes');
+        }
 
-        if (Tools::isSubmit('submitResetno_stock_products'))
+        if (Tools::isSubmit('submitResetno_stock_products')) {
             $this->processResetFilters('no_stock_products');
+        }
 
-        if (Tools::isSubmit('submitResetdisabled_products'))
+        if (Tools::isSubmit('submitResetdisabled_products')) {
             $this->processResetFilters('disabled_products');
+        }
     }
 
     public function clearListOptions()

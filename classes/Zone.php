@@ -55,8 +55,7 @@ class ZoneCore extends ObjectModel
     public static function getZones($active = false)
     {
         $cache_id = 'Zone::getZones_'.(bool)$active;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT *
 				FROM `'._DB_PREFIX_.'zone`
@@ -91,8 +90,7 @@ class ZoneCore extends ObjectModel
     */
     public function delete()
     {
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             // Delete regarding delivery preferences
             $result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int)$this->id);
             $result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int)$this->id);

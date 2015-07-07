@@ -70,60 +70,60 @@ class ToolsInstall
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
     {
         $return = array();
-        if (!($xml instanceof SimpleXMLElement))
+        if (!($xml instanceof SimpleXMLElement)) {
             return $return;
+        }
 
         $name = $xml->getName();
         $_value = trim((string)$xml);
-        if (strlen($_value) == 0)
+        if (strlen($_value) == 0) {
             $_value = null;
+        }
 
-        if ($_value !== null)
-        {
-            if (!$flattenValues)
+        if ($_value !== null) {
+            if (!$flattenValues) {
                 $return[$valueKey] = $_value;
-            else
+            } else {
                 $return = $_value;
+            }
         }
 
         $children = array();
         $first = true;
-        foreach($xml->children() as $elementName => $child)
-        {
+        foreach ($xml->children() as $elementName => $child) {
             $value = ToolsInstall::simpleXMLToArray($child, $flattenValues, $flattenAttributes, $flattenChildren, $valueKey, $attributesKey, $childrenKey);
-            if (isset($children[$elementName]))
-            {
-                if ($first)
-                {
+            if (isset($children[$elementName])) {
+                if ($first) {
                     $temp = $children[$elementName];
                     unset($children[$elementName]);
                     $children[$elementName][] = $temp;
                     $first=false;
                 }
                 $children[$elementName][] = $value;
-            }
-            else
+            } else {
                 $children[$elementName] = $value;
+            }
         }
 
-        if (count($children) > 0)
-        {
-            if (!$flattenChildren)
+        if (count($children) > 0) {
+            if (!$flattenChildren) {
                 $return[$childrenKey] = $children;
-            else
+            } else {
                 $return = array_merge($return, $children);
+            }
         }
 
         $attributes = array();
-        foreach($xml->attributes() as $name => $value)
+        foreach ($xml->attributes() as $name => $value) {
             $attributes[$name] = trim($value);
+        }
 
-        if (count($attributes) > 0)
-        {
-            if (!$flattenAttributes)
+        if (count($attributes) > 0) {
+            if (!$flattenAttributes) {
                 $return[$attributesKey] = $attributes;
-            else
+            } else {
                 $return = array_merge($return, $attributes);
+            }
         }
 
         return $return;

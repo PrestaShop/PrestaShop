@@ -104,10 +104,8 @@ class AdminMetaControllerCore extends AdminController
         );
 
         $url_description = '';
-        if (!defined('_PS_HOST_MODE_'))
-        {
-            if ($this->checkConfiguration($this->ht_file))
-            {
+        if (!defined('_PS_HOST_MODE_')) {
+            if ($this->checkConfiguration($this->ht_file)) {
                 $general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
                     'title' => $this->l('Disable Apache\'s MultiViews option'),
                     'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
@@ -123,9 +121,7 @@ class AdminMetaControllerCore extends AdminController
                     'cast' => 'intval',
                     'type' => 'bool',
                 );
-            }
-            else
-            {
+            } else {
                 $url_description = $this->l('Before you can use this tool, you need to:');
                 $url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
                 $url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
@@ -134,13 +130,10 @@ class AdminMetaControllerCore extends AdminController
 
         // Options to generate robot.txt
         $robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).');
-        if ($this->checkConfiguration($this->rb_file))
-        {
+        if ($this->checkConfiguration($this->rb_file)) {
             $robots_description .= $this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
             $robots_submit = array('name' => 'submitRobots', 'title' => $this->l('Generate robots.txt file'));
-        }
-        else
-        {
+        } else {
             $robots_description .= $this->l('Before you can use this tool, you need to:');
             $robots_description .= $this->l('1) Create a blank robots.txt file in your root directory.');
             $robots_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
@@ -151,22 +144,20 @@ class AdminMetaControllerCore extends AdminController
             'description' => $robots_description,
         );
 
-        if (isset($robots_submit))
+        if (isset($robots_submit)) {
             $robots_options['submit'] = $robots_submit;
+        }
 
-        if (!defined('_PS_HOST_MODE_'))
-        {
+        if (!defined('_PS_HOST_MODE_')) {
             // Options for shop URL if multishop is disabled
             $shop_url_options = array(
                 'title' => $this->l('Set shop URL'),
                 'fields' => array(),
             );
 
-            if (!Shop::isFeatureActive())
-            {
+            if (!Shop::isFeatureActive()) {
                 $this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
-                if ($this->url)
-                {
+                if ($this->url) {
                     $shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
                     $shop_url_options['fields'] = array(
                         'domain' => array(
@@ -190,9 +181,9 @@ class AdminMetaControllerCore extends AdminController
                     );
                     $shop_url_options['submit'] = array('title' => $this->l('Save'));
                 }
-            }
-            else
+            } else {
                 $shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
+            }
         }
 
         // List of options
@@ -205,9 +196,9 @@ class AdminMetaControllerCore extends AdminController
             )
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['shop_url'] = $shop_url_options;
-        else
+        } else {
             $this->fields_options['manage_domain_name'] = array(
                 'title' => $this->l('Manage domain name'),
                 'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
@@ -220,12 +211,13 @@ class AdminMetaControllerCore extends AdminController
                     )
                 )
             );
+        }
 
         // Add display route options to options form
-        if (Configuration::get('PS_REWRITING_SETTINGS') || Tools::getValue('PS_REWRITING_SETTINGS'))
-        {
-            if (Configuration::get('PS_REWRITING_SETTINGS'))
+        if (Configuration::get('PS_REWRITING_SETTINGS') || Tools::getValue('PS_REWRITING_SETTINGS')) {
+            if (Configuration::get('PS_REWRITING_SETTINGS')) {
                 $this->addAllRouteFields();
+            }
             $this->fields_options['routes']['title'] = $this->l('Schema of URLs');
             $this->fields_options['routes']['description'] = $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.');
             $this->fields_options['routes']['submit'] = array('title' => $this->l('Save'));
@@ -236,12 +228,13 @@ class AdminMetaControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_meta'] = array(
                 'href' => self::$currentIndex.'&addmeta&token='.$this->token,
                 'desc' => $this->l('Add a new page', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -250,8 +243,9 @@ class AdminMetaControllerCore extends AdminController
     {
         parent::initProcess();
         // This is a composite page, we don't want the "options" display mode
-        if ($this->display == 'options')
+        if ($this->display == 'options') {
             $this->display = '';
+        }
     }
 
     public function setMedia()
@@ -264,8 +258,9 @@ class AdminMetaControllerCore extends AdminController
     public function addFieldRoute($route_id, $title)
     {
         $keywords = array();
-        foreach (Dispatcher::getInstance()->default_routes[$route_id]['keywords'] as $keyword => $data)
+        foreach (Dispatcher::getInstance()->default_routes[$route_id]['keywords'] as $keyword => $data) {
             $keywords[] = ((isset($data['param'])) ? '<span class="red">'.$keyword.'*</span>' : $keyword);
+        }
 
         $this->fields_options['routes']['fields']['PS_ROUTE_'.$route_id] = array(
             'title' =>    $title,
@@ -282,10 +277,13 @@ class AdminMetaControllerCore extends AdminController
         $files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 
         $is_index = false;
-        if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite))
-            foreach ($this->object->url_rewrite as $rewrite)
-                if ($is_index != true)
+        if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite)) {
+            foreach ($this->object->url_rewrite as $rewrite) {
+                if ($is_index != true) {
                     $is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
+                }
+            }
+        }
 
         $pages = array(
             'common' => array(
@@ -298,8 +296,7 @@ class AdminMetaControllerCore extends AdminController
             ),
         );
 
-        foreach ($files as $name => $file)
-        {
+        foreach ($files as $name => $file) {
             $k = (preg_match('#^module-#', $file)) ? 'module' : 'common';
             $pages[$k]['query'][] = array(
                 'id' => $file,
@@ -392,63 +389,58 @@ class AdminMetaControllerCore extends AdminController
     {
         /* PrestaShop demo mode */
         if (_PS_MODE_DEMO_ && Tools::isSubmit('submitOptionsmeta')
-            && (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL')))
-        {
+            && (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL'))) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
 
-        if (Tools::isSubmit('submitAddmeta'))
-        {
+        if (Tools::isSubmit('submitAddmeta')) {
             $default_language = Configuration::get('PS_LANG_DEFAULT');
-            if (Tools::getValue('page') != 'index')
-            {
+            if (Tools::getValue('page') != 'index') {
                 $defaultLangIsValidated = Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
                 $englishLangIsValidated = Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
-            }
-            else
-            {    // index.php can have empty rewrite rule
+            } else {    // index.php can have empty rewrite rule
                 $defaultLangIsValidated = !Tools::getValue('url_rewrite_'.$default_language) || Validate::isLinkRewrite(Tools::getValue('url_rewrite_'.$default_language));
                 $englishLangIsValidated = !Tools::getValue('url_rewrite_1') || Validate::isLinkRewrite(Tools::getValue('url_rewrite_1'));
             }
 
-            if (!$defaultLangIsValidated && !$englishLangIsValidated)
-            {
+            if (!$defaultLangIsValidated && !$englishLangIsValidated) {
                 $this->errors[] = Tools::displayError('The URL rewrite field must be filled in either the default or English language.');
                 return false;
             }
 
-            foreach (Language::getIDs(false) as $id_lang)
-            {
+            foreach (Language::getIDs(false) as $id_lang) {
                 $current = Tools::getValue('url_rewrite_'.$id_lang);
-                if (strlen($current) == 0)
+                if (strlen($current) == 0) {
                     // Prioritize default language first
-                    if ($defaultLangIsValidated)
+                    if ($defaultLangIsValidated) {
                         $_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_'.$default_language);
-                    else
+                    } else {
                         $_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_1');
+                    }
+                }
             }
 
             Hook::exec('actionAdminMetaSave');
-        }
-        elseif (Tools::isSubmit('submitRobots'))
+        } elseif (Tools::isSubmit('submitRobots')) {
             $this->generateRobotsFile();
+        }
 
-        if (Tools::isSubmit('PS_ROUTE_product_rule'))
+        if (Tools::isSubmit('PS_ROUTE_product_rule')) {
             Tools::clearCache($this->context->smarty);
+        }
 
-        if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0)
+        if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0) {
             Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
+        }
 
         $ret = parent::postProcess();
 
-        if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret))
-        {
+        if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret)) {
             /** @var Theme $ret */
             $themes = Theme::getThemes();
             $theme_meta_value = array();
-            foreach ($themes as $theme)
-            {
+            foreach ($themes as $theme) {
                 /** @var Theme $theme */
                 $theme_meta_value[] = array(
                     'id_theme' => (int)$theme->id,
@@ -456,10 +448,10 @@ class AdminMetaControllerCore extends AdminController
                     'left_column' => (int)$theme->default_left_column,
                     'right_column' => (int)$theme->default_right_column
                 );
-
             }
-            if (count($theme_meta_value) > 0)
+            if (count($theme_meta_value) > 0) {
                 Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
+            }
         }
 
         return $ret;
@@ -467,10 +459,9 @@ class AdminMetaControllerCore extends AdminController
 
     public function generateRobotsFile()
     {
-        if (!$write_fd = @fopen($this->rb_file, 'w'))
+        if (!$write_fd = @fopen($this->rb_file, 'w')) {
             $this->errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
-        else
-        {
+        } else {
             Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
                 'rb_data' => &$this->rb_data
             ));
@@ -489,37 +480,38 @@ class AdminMetaControllerCore extends AdminController
             fwrite($write_fd, "User-agent: *\n");
 
             // Private pages
-            if (count($this->rb_data['GB']))
-            {
+            if (count($this->rb_data['GB'])) {
                 fwrite($write_fd, "# Private pages\n");
-                foreach ($this->rb_data['GB'] as $gb)
+                foreach ($this->rb_data['GB'] as $gb) {
                     fwrite($write_fd, 'Disallow: /*'.$gb."\n");
+                }
             }
 
             // Directories
-            if (count($this->rb_data['Directories']))
-            {
+            if (count($this->rb_data['Directories'])) {
                 fwrite($write_fd, "# Directories\n");
-                foreach ($this->rb_data['Directories'] as $dir)
+                foreach ($this->rb_data['Directories'] as $dir) {
                     fwrite($write_fd, 'Disallow: */'.$dir."\n");
+                }
             }
 
             // Files
-            if (count($this->rb_data['Files']))
-            {
+            if (count($this->rb_data['Files'])) {
                 $language_ids = Language::getIDs();
                 fwrite($write_fd, "# Files\n");
-                foreach ($this->rb_data['Files'] as $iso_code => $files)
-                    foreach ($files as $file)
-                        if (!empty($language_ids))
+                foreach ($this->rb_data['Files'] as $iso_code => $files) {
+                    foreach ($files as $file) {
+                        if (!empty($language_ids)) {
                             fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
-                        else
+                        } else {
                             fwrite($write_fd, 'Disallow: /'.$file."\n");
+                        }
+                    }
+                }
             }
 
             // Sitemap
-            if (file_exists($this->sm_file) && filesize($this->sm_file))
-            {
+            if (file_exists($this->sm_file) && filesize($this->sm_file)) {
                 fwrite($write_fd, "# Sitemap\n");
                 $sitemap_filename = basename($this->sm_file);
                 fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
@@ -544,10 +536,11 @@ class AdminMetaControllerCore extends AdminController
 
     public function renderList()
     {
-        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
             $this->displayInformation($this->l('You can only display the page list in a shop context.'));
-        else
+        } else {
             return parent::renderList();
+        }
     }
 
     /**
@@ -558,28 +551,27 @@ class AdminMetaControllerCore extends AdminController
     public function checkAndUpdateRoute($route_id)
     {
         $default_routes = Dispatcher::getInstance()->default_routes;
-        if (!isset($default_routes[$route_id]))
+        if (!isset($default_routes[$route_id])) {
             return;
+        }
 
         $rule = Tools::getValue('PS_ROUTE_'.$route_id);
-        if (!Validate::isRoutePattern($rule))
+        if (!Validate::isRoutePattern($rule)) {
             $this->errors[] = sprintf('The route %s is not valid', htmlspecialchars($rule));
-        else
-        {
-            if (!$rule || $rule == $default_routes[$route_id]['rule'])
-            {
+        } else {
+            if (!$rule || $rule == $default_routes[$route_id]['rule']) {
                 Configuration::updateValue('PS_ROUTE_'.$route_id, '');
                 return;
             }
 
             $errors = array();
-            if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
-            {
-                foreach ($errors as $error)
+            if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors)) {
+                foreach ($errors as $error) {
                     $this->errors[] = sprintf('Keyword "{%1$s}" required for route "%2$s" (rule: "%3$s")', $error, $route_id, htmlspecialchars($rule));
-            }
-            else
+                }
+            } else {
                 Configuration::updateValue('PS_ROUTE_'.$route_id, $rule);
+            }
         }
     }
 
@@ -593,17 +585,15 @@ class AdminMetaControllerCore extends AdminController
         $this->updateOptionDomain(Tools::getValue('domain'));
         $this->updateOptionDomainSsl(Tools::getValue('domain_ssl'));
 
-        if (Tools::getIsset('uri'))
+        if (Tools::getIsset('uri')) {
             $this->updateOptionUri(Tools::getValue('uri'));
+        }
 
-        if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC')))
-        {
+        if (Tools::generateHtaccess($this->ht_file, null, null, '', Tools::getValue('PS_HTACCESS_DISABLE_MULTIVIEWS'), false, Tools::getValue('PS_HTACCESS_DISABLE_MODSEC'))) {
             Tools::enableCache();
             Tools::clearCache($this->context->smarty);
             Tools::restoreCacheSettings();
-        }
-        else
-        {
+        } else {
             Configuration::updateValue('PS_REWRITING_SETTINGS', 0);
             // Message copied/pasted from the information tip
             $message = $this->l('Before being able to use this tool, you need to:');
@@ -657,16 +647,14 @@ class AdminMetaControllerCore extends AdminController
      */
     public function updateOptionDomain($value)
     {
-        if (!Shop::isFeatureActive() && $this->url && $this->url->domain != $value)
-        {
-            if (Validate::isCleanHtml($value))
-            {
+        if (!Shop::isFeatureActive() && $this->url && $this->url->domain != $value) {
+            if (Validate::isCleanHtml($value)) {
                 $this->url->domain = $value;
                 $this->url->update();
                 Configuration::updateGlobalValue('PS_SHOP_DOMAIN', $value);
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('This domain is not valid.');
+            }
         }
     }
 
@@ -679,16 +667,14 @@ class AdminMetaControllerCore extends AdminController
      */
     public function updateOptionDomainSsl($value)
     {
-        if (!Shop::isFeatureActive() && $this->url && $this->url->domain_ssl != $value)
-        {
-            if (Validate::isCleanHtml($value))
-            {
+        if (!Shop::isFeatureActive() && $this->url && $this->url->domain_ssl != $value) {
+            if (Validate::isCleanHtml($value)) {
                 $this->url->domain_ssl = $value;
                 $this->url->update();
                 Configuration::updateGlobalValue('PS_SHOP_DOMAIN_SSL', $value);
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('The SSL domain is not valid.');
+            }
         }
     }
 
@@ -701,8 +687,7 @@ class AdminMetaControllerCore extends AdminController
      */
     public function updateOptionUri($value)
     {
-        if (!Shop::isFeatureActive() && $this->url && $this->url->physical_uri != $value)
-        {
+        if (!Shop::isFeatureActive() && $this->url && $this->url->physical_uri != $value) {
             $this->url->physical_uri = $value;
             $this->url->update();
         }
@@ -714,11 +699,11 @@ class AdminMetaControllerCore extends AdminController
     public function renderOptions()
     {
         // If friendly url is not active, do not display custom routes form
-        if (Configuration::get('PS_REWRITING_SETTINGS'))
+        if (Configuration::get('PS_REWRITING_SETTINGS')) {
             $this->addAllRouteFields();
+        }
 
-        if ($this->fields_options && is_array($this->fields_options))
-        {
+        if ($this->fields_options && is_array($this->fields_options)) {
             $helper = new HelperOptions($this);
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
@@ -759,8 +744,9 @@ class AdminMetaControllerCore extends AdminController
      */
     public function checkConfiguration($file)
     {
-        if (file_exists($file))
+        if (file_exists($file)) {
             return is_writable($file);
+        }
         return is_writable(dirname($file));
     }
 
@@ -781,16 +767,17 @@ class AdminMetaControllerCore extends AdminController
 
         // Rewrite files
         $tab['Files'] = array();
-        if (Configuration::get('PS_REWRITING_SETTINGS'))
-        {
+        if (Configuration::get('PS_REWRITING_SETTINGS')) {
             $sql = 'SELECT ml.url_rewrite, l.iso_code
 					FROM '._DB_PREFIX_.'meta m
 					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
 					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
 					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
-            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
-                foreach ($results as $row)
+            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+                foreach ($results as $row) {
                     $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
+                }
+            }
         }
 
         $tab['GB'] = array(
@@ -798,8 +785,9 @@ class AdminMetaControllerCore extends AdminController
             '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
         );
 
-        foreach ($disallow_controllers as $controller)
+        foreach ($disallow_controllers as $controller) {
             $tab['GB'][] = 'controller='.$controller;
+        }
 
         return $tab;
     }

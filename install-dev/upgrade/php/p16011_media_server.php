@@ -28,11 +28,11 @@ function p16011_media_server()
 {
     $new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 
-    if (preg_match_all('/define\(\'_MEDIA_SERVER_([1-3])_\',\s*?\'(.*?)\'\s*?\)/ism', $new_settings, $matches))
-    {
+    if (preg_match_all('/define\(\'_MEDIA_SERVER_([1-3])_\',\s*?\'(.*?)\'\s*?\)/ism', $new_settings, $matches)) {
         $total = (count($matches[1]));
-        for ($i = 0; $i < $total; ++$i)
+        for ($i = 0; $i < $total; ++$i) {
             Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'configuration (`name`, `value`, `date_add`, `date_upd`) VALUES (\'PS_MEDIA_SERVER_'.$matches[1][$i].'\', \''.$matches[2][$i].'\', NOW(), NOW())');
+        }
     }
 
     $new_settings = preg_replace('/define\(\'_MEDIA_SERVER_[1-3]_\',\s*?\'.*?\'\s*?\);/ism', '', $new_settings);
@@ -40,7 +40,8 @@ function p16011_media_server()
     if ($new_settings == $prev_settings || (
         copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
         && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
-    ))
+    )) {
         return true;
+    }
     return false;
 }

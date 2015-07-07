@@ -210,18 +210,22 @@ class CustomerCore extends ObjectModel
         $this->secure_key = md5(uniqid(rand(), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
 
-        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
+        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
+        }
 
-        if ($this->id_default_group == Configuration::get('PS_CUSTOMER_GROUP'))
-            if ($this->is_guest)
+        if ($this->id_default_group == Configuration::get('PS_CUSTOMER_GROUP')) {
+            if ($this->is_guest) {
                 $this->id_default_group = (int)Configuration::get('PS_GUEST_GROUP');
-            else
+            } else {
                 $this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+            }
+        }
 
         /* Can't create a guest customer, if this feature is disabled */
-        if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
+        if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED')) {
             return false;
+        }
         $success = parent::add($autodate, $null_values);
         $this->updateGroup($this->groupBox);
         return $success;
@@ -231,16 +235,16 @@ class CustomerCore extends ObjectModel
     {
         $this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 
-        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
+        if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
-        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin')
+        }
+        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
             $this->updateGroup($this->groupBox);
+        }
 
-        if ($this->deleted)
-        {
+        if ($this->deleted) {
             $addresses = $this->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
-            foreach ($addresses as $address)
-            {
+            foreach ($addresses as $address) {
                 $obj = new Address((int)$address['id_address']);
                 $obj->delete();
             }
@@ -251,11 +255,9 @@ class CustomerCore extends ObjectModel
 
     public function delete()
     {
-        if (!count(Order::getCustomerOrders((int)$this->id)))
-        {
+        if (!count(Order::getCustomerOrders((int)$this->id))) {
             $addresses = $this->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
-            foreach ($addresses as $address)
-            {
+            foreach ($addresses as $address) {
                 $obj = new Address((int)$address['id_address']);
                 $obj->delete();
             }
@@ -268,22 +270,22 @@ class CustomerCore extends ObjectModel
         $carts = Db::getInstance()->executes('SELECT id_cart
 															FROM '._DB_PREFIX_.'cart
 															WHERE id_customer='.(int)$this->id);
-        if ($carts)
-            foreach ($carts as $cart)
-            {
+        if ($carts) {
+            foreach ($carts as $cart) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart WHERE id_cart='.(int)$cart['id_cart']);
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_product WHERE id_cart='.(int)$cart['id_cart']);
             }
+        }
 
         $cts = Db::getInstance()->executes('SELECT id_customer_thread
 															FROM '._DB_PREFIX_.'customer_thread
 															WHERE id_customer='.(int)$this->id);
-        if ($cts)
-            foreach ($cts as $ct)
-            {
+        if ($cts) {
+            foreach ($cts as $ct) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_thread WHERE id_customer_thread='.(int)$ct['id_customer_thread']);
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_message WHERE id_customer_thread='.(int)$ct['id_customer_thread']);
             }
+        }
 
         CartRule::deleteByIdCustomer((int)$this->id);
         return parent::delete();
@@ -312,8 +314,9 @@ class CustomerCore extends ObjectModel
      */
     public function getByEmail($email, $passwd = null, $ignore_guest = true)
     {
-        if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
+        if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd))) {
             die(Tools::displayError());
+        }
 
         $result = Db::getInstance()->getRow('
 		SELECT *
@@ -324,12 +327,15 @@ class CustomerCore extends ObjectModel
 		AND `deleted` = 0
 		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
 
-        if (!$result)
+        if (!$result) {
             return false;
+        }
         $this->id = $result['id_customer'];
-        foreach ($result as $key => $value)
-            if (property_exists($this, $key))
+        foreach ($result as $key => $value) {
+            if (property_exists($this, $key)) {
                 $this->{$key} = $value;
+            }
+        }
         return $this;
     }
 
@@ -357,11 +363,11 @@ class CustomerCore extends ObjectModel
      */
     public static function isBanned($id_customer)
     {
-        if (!Validate::isUnsignedId($id_customer))
+        if (!Validate::isUnsignedId($id_customer)) {
             return true;
+        }
         $cache_id = 'Customer::isBanned_'.(int)$id_customer;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = (bool)!Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `id_customer`
 			FROM `'._DB_PREFIX_.'customer`
@@ -384,10 +390,10 @@ class CustomerCore extends ObjectModel
      */
     public static function customerExists($email, $return_id = false, $ignore_guest = true)
     {
-        if (!Validate::isEmail($email))
-        {
-            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
+        if (!Validate::isEmail($email)) {
+            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 die(Tools::displayError('Invalid email'));
+            }
             return false;
         }
 
@@ -410,8 +416,7 @@ class CustomerCore extends ObjectModel
     public static function customerHasAddress($id_customer, $id_address)
     {
         $key = (int)$id_customer.'-'.(int)$id_address;
-        if (!array_key_exists($key, self::$_customerHasAddress))
-        {
+        if (!array_key_exists($key, self::$_customerHasAddress)) {
             self::$_customerHasAddress[$key] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
@@ -425,8 +430,9 @@ class CustomerCore extends ObjectModel
     public static function resetAddressCache($id_customer, $id_address)
     {
         $key = (int)$id_customer.'-'.(int)$id_address;
-        if (array_key_exists($key, self::$_customerHasAddress))
+        if (array_key_exists($key, self::$_customerHasAddress)) {
             unset(self::$_customerHasAddress[$key]);
+        }
     }
 
     /**
@@ -439,8 +445,7 @@ class CustomerCore extends ObjectModel
     {
         $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
         $cache_id = 'Customer::getAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 					FROM `'._DB_PREFIX_.'address` a
 					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
@@ -480,11 +485,11 @@ class CustomerCore extends ObjectModel
      */
     public static function checkPassword($id_customer, $passwd)
     {
-        if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd))
+        if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd)) {
             die(Tools::displayError());
+        }
         $cache_id = 'Customer::checkPassword'.(int)$id_customer.'-'.$passwd;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_customer`
 			FROM `'._DB_PREFIX_.'customer`
@@ -513,8 +518,9 @@ class CustomerCore extends ObjectModel
         $sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
         $sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
 
-        if ($limit)
+        if ($limit) {
             $sql .= ' LIMIT 0, '.(int)$limit;
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -566,8 +572,9 @@ class CustomerCore extends ObjectModel
 
     public function getLastEmails()
     {
-        if (!$this->id)
+        if (!$this->id) {
             return array();
+        }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT m.*, l.name as language
 		FROM `'._DB_PREFIX_.'mail` m
@@ -579,8 +586,9 @@ class CustomerCore extends ObjectModel
 
     public function getLastConnections()
     {
-        if (!$this->id)
+        if (!$this->id) {
             return array();
+        }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
 		FROM `'._DB_PREFIX_.'guest` g
@@ -607,8 +615,7 @@ class CustomerCore extends ObjectModel
     public static function customerIdExistsStatic($id_customer)
     {
         $cache_id = 'Customer::customerIdExistsStatic'.(int)$id_customer;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance()->getValue('
 			SELECT `id_customer`
 			FROM '._DB_PREFIX_.'customer c
@@ -626,13 +633,12 @@ class CustomerCore extends ObjectModel
      */
     public function updateGroup($list)
     {
-        if ($list && !empty($list))
-        {
+        if ($list && !empty($list)) {
             $this->cleanGroups();
             $this->addGroups($list);
-        }
-        else
+        } else {
             $this->addGroups(array($this->id_default_group));
+        }
     }
 
     public function cleanGroups()
@@ -642,8 +648,7 @@ class CustomerCore extends ObjectModel
 
     public function addGroups($groups)
     {
-        foreach ($groups as $group)
-        {
+        foreach ($groups as $group) {
             $row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
             Db::getInstance()->insert('customer_group', $row, false, true, Db::INSERT_IGNORE);
         }
@@ -651,21 +656,23 @@ class CustomerCore extends ObjectModel
 
     public static function getGroupsStatic($id_customer)
     {
-        if (!Group::isFeatureActive())
+        if (!Group::isFeatureActive()) {
             return array(Configuration::get('PS_CUSTOMER_GROUP'));
+        }
 
-        if ($id_customer == 0)
+        if ($id_customer == 0) {
             self::$_customer_groups[$id_customer] = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
+        }
 
-        if (!isset(self::$_customer_groups[$id_customer]))
-        {
+        if (!isset(self::$_customer_groups[$id_customer])) {
             self::$_customer_groups[$id_customer] = array();
             $result = Db::getInstance()->executeS('
 			SELECT cg.`id_group`
 			FROM '._DB_PREFIX_.'customer_group cg
 			WHERE cg.`id_customer` = '.(int)$id_customer);
-            foreach ($result as $group)
+            foreach ($result as $group) {
                 self::$_customer_groups[$id_customer][] = (int)$group['id_group'];
+            }
         }
         return self::$_customer_groups[$id_customer];
     }
@@ -694,36 +701,39 @@ class CustomerCore extends ObjectModel
 
     public static function getDefaultGroupId($id_customer)
     {
-        if (!Group::isFeatureActive())
-        {
+        if (!Group::isFeatureActive()) {
             static $ps_customer_group = null;
-            if ($ps_customer_group === null)
+            if ($ps_customer_group === null) {
                 $ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
+            }
             return $ps_customer_group;
         }
 
-        if (!isset(self::$_defaultGroupId[(int)$id_customer]))
+        if (!isset(self::$_defaultGroupId[(int)$id_customer])) {
             self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
 				SELECT `id_default_group`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `id_customer` = '.(int)$id_customer
             );
+        }
         return self::$_defaultGroupId[(int)$id_customer];
     }
 
     public static function getCurrentCountry($id_customer, Cart $cart = null)
     {
-        if (!$cart)
+        if (!$cart) {
             $cart = Context::getContext()->cart;
-        if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
+        }
+        if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $id_address = (int)Db::getInstance()->getValue('
 				SELECT `id_address`
 				FROM `'._DB_PREFIX_.'address`
 				WHERE `id_customer` = '.(int)$id_customer.'
 				AND `deleted` = 0 ORDER BY `id_address`'
             );
-        else
+        } else {
             $id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        }
         $ids = Address::getCountryAndState($id_address);
         return (int)$ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT');
     }
@@ -747,19 +757,21 @@ class CustomerCore extends ObjectModel
 
     public function transformToCustomer($id_lang, $password = null)
     {
-        if (!$this->isGuest())
+        if (!$this->isGuest()) {
             return false;
-        if (empty($password))
+        }
+        if (empty($password)) {
             $password = Tools::passwdGen(8, 'RANDOM');
-        if (!Validate::isPasswd($password))
+        }
+        if (!Validate::isPasswd($password)) {
             return false;
+        }
 
         $this->is_guest = 0;
         $this->passwd = Tools::encrypt($password);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
-        if ($this->update())
-        {
+        if ($this->update()) {
             $vars = array(
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
@@ -789,8 +801,9 @@ class CustomerCore extends ObjectModel
 
     public function setWsPasswd($passwd)
     {
-        if ($this->id == 0 || $this->passwd != $passwd)
+        if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = Tools::encrypt($passwd);
+        }
         return true;
     }
 
@@ -803,8 +816,9 @@ class CustomerCore extends ObjectModel
      */
     public function isLogged($with_guest = false)
     {
-        if (!$with_guest && $this->is_guest == 1)
+        if (!$with_guest && $this->is_guest == 1) {
             return false;
+        }
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
         return ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd));
@@ -817,8 +831,9 @@ class CustomerCore extends ObjectModel
      */
     public function logout()
     {
-        if (isset(Context::getContext()->cookie))
+        if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->logout();
+        }
         $this->logged = 0;
     }
 
@@ -830,16 +845,18 @@ class CustomerCore extends ObjectModel
      */
     public function mylogout()
     {
-        if (isset(Context::getContext()->cookie))
+        if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->mylogout();
+        }
         $this->logged = 0;
     }
 
     public function getLastCart($with_order = true)
     {
         $carts = Cart::getCustomerCarts((int)$this->id, $with_order);
-        if (!count($carts))
+        if (!count($carts)) {
             return false;
+        }
         $cart = array_shift($carts);
         $cart = new Cart((int)$cart['id_cart']);
         return ($cart->nbProducts() === 0 ? (int)$cart->id : false);
@@ -880,8 +897,9 @@ class CustomerCore extends ObjectModel
     public function setWsGroups($result)
     {
         $groups = array();
-        foreach ($result as $row)
+        foreach ($result as $row) {
             $groups[] = $row['id'];
+        }
         $this->cleanGroups();
         $this->addGroups($groups);
         return true;

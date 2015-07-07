@@ -30,19 +30,19 @@ function fix_cms_shop_1520()
     $db = Db::getInstance();
     //test if cms_shop with 2 underscore is present to rename it.
     $result = $db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'_cms_shop"');
-    if (!is_array($result) || !count($result) || !$result)
-    {
+    if (!is_array($result) || !count($result) || !$result) {
         $res &= create_table_cms_shop();
-        if ($res)
+        if ($res) {
             insert_table_cms_to_cms_shop();
+        }
     }
     //test if cms_shop with 1 underscore is present and create if not.
     $result = $db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'cms_shop"');
-    if (!is_array($result) || !count($result) || !$result)
-    {
+    if (!is_array($result) || !count($result) || !$result) {
         $res &= create_table_cms_shop();
-        if ($res)
+        if ($res) {
             insert_table_cms_to_cms_shop();
+        }
     }
 }
 

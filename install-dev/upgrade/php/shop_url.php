@@ -27,21 +27,24 @@
 function shop_url()
 {
     $host = Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name="CANONICAL_URL"');
-    if (!$host)
+    if (!$host) {
         $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+    }
 
     $res = true;
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_SHOP_DOMAIN\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($host).'" WHERE `name` = \'PS_SHOP_DOMAIN\'');
-    else
+    } else {
         $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN", "'.pSQL($host).'")');
+    }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($host).'" WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
-    else
+    } else {
         $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN_SSL", "'.pSQL($host).'")');
+    }
 
     return $res;
 }

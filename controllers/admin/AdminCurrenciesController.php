@@ -219,8 +219,7 @@ class AdminCurrenciesControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -237,32 +236,32 @@ class AdminCurrenciesControllerCore extends AdminController
 
     protected function checkDeletion($object)
     {
-        if (Validate::isLoadedObject($object))
-        {
-            if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+        if (Validate::isLoadedObject($object)) {
+            if ($object->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
                 $this->errors[] = $this->l('You cannot delete the default currency');
-            else
+            } else {
                 return true;
-        }
-        else
+            }
+        } else {
             $this->errors[] = Tools::displayError('An error occurred while deleting the object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+        }
 
         return false;
     }
 
     protected function checkDisableStatus($object)
     {
-        if (Validate::isLoadedObject($object))
-        {
-            if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT'))
+        if (Validate::isLoadedObject($object)) {
+            if ($object->active && $object->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
                 $this->errors[] = $this->l('You cannot disable the default currency');
-            else
+            } else {
                 return true;
-        }
-        else
+            }
+        } else {
             $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').'
 				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+        }
 
         return false;
     }
@@ -273,20 +272,20 @@ class AdminCurrenciesControllerCore extends AdminController
     public function processDelete()
     {
         $object = $this->loadObject();
-        if (!$this->checkDeletion($object))
+        if (!$this->checkDeletion($object)) {
             return false;
+        }
         return parent::processDelete();
     }
 
     protected function processBulkDelete()
     {
-        if (is_array($this->boxes) && !empty($this->boxes))
-        {
-            foreach ($this->boxes as $id_currency)
-            {
+        if (is_array($this->boxes) && !empty($this->boxes)) {
+            foreach ($this->boxes as $id_currency) {
                 $object = new Currency((int)$id_currency);
-                if (!$this->checkDeletion($object))
+                if (!$this->checkDeletion($object)) {
                     return false;
+                }
             }
         }
 
@@ -299,21 +298,21 @@ class AdminCurrenciesControllerCore extends AdminController
     public function processStatus()
     {
         $object = $this->loadObject();
-        if (!$this->checkDisableStatus($object))
+        if (!$this->checkDisableStatus($object)) {
             return false;
+        }
 
         return parent::processStatus();
     }
 
     protected function processBulkDisableSelection()
     {
-        if (is_array($this->boxes) && !empty($this->boxes))
-        {
-            foreach ($this->boxes as $id_currency)
-            {
+        if (is_array($this->boxes) && !empty($this->boxes)) {
+            foreach ($this->boxes as $id_currency) {
                 $object = new Currency((int)$id_currency);
-                if (!$this->checkDisableStatus($object))
+                if (!$this->checkDisableStatus($object)) {
                     return false;
+                }
             }
         }
         return parent::processBulkDisableSelection();
@@ -324,8 +323,9 @@ class AdminCurrenciesControllerCore extends AdminController
      */
     public function processExchangeRates()
     {
-        if (!$this->errors = Currency::refreshCurrencies())
+        if (!$this->errors = Currency::refreshCurrencies()) {
             Tools::redirectAdmin(self::$currentIndex.'&conf=6&token='.$this->token);
+        }
     }
 
     /**
@@ -333,28 +333,31 @@ class AdminCurrenciesControllerCore extends AdminController
      */
     public function initProcess()
     {
-        if (Tools::isSubmit('SubmitExchangesRates'))
-        {
-            if ($this->tabAccess['edit'] === '1')
+        if (Tools::isSubmit('SubmitExchangesRates')) {
+            if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'exchangeRates';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
-        if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num')))
-                $this->errors[] = Tools::displayError('This currency already exists.');
-        if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0)
-                $this->errors[] = Tools::displayError('The currency conversion rate can not be equal to 0.');
+        if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num'))) {
+            $this->errors[] = Tools::displayError('This currency already exists.');
+        }
+        if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0) {
+            $this->errors[] = Tools::displayError('The currency conversion rate can not be equal to 0.');
+        }
         parent::initProcess();
     }
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_currency'] = array(
                 'href' => self::$currentIndex.'&addcurrency&token='.$this->token,
                 'desc' => $this->l('Add new currency', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }

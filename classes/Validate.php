@@ -59,21 +59,22 @@ class ValidateCore
      */
     public static function isModuleUrl($url, &$errors)
     {
-        if (!$url || $url == 'http://')
+        if (!$url || $url == 'http://') {
             $errors[] = Tools::displayError('Please specify module URL');
-        elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz')
+        } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
             $errors[] = Tools::displayError('Unknown archive type');
-        else
-        {
-            if ((strpos($url, 'http')) === false)
+        } else {
+            if ((strpos($url, 'http')) === false) {
                 $url = 'http://'.$url;
-            if (!is_array(@get_headers($url)))
+            }
+            if (!is_array(@get_headers($url))) {
                 $errors[] = Tools::displayError('Invalid URL');
+            }
         }
-        if (!count($errors))
+        if (!count($errors)) {
             return true;
+        }
         return false;
-
     }
 
     /**
@@ -324,8 +325,9 @@ class ValidateCore
      */
     public static function isLinkRewrite($link)
     {
-        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
             return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\pL\pS-]+$/u'), $link);
+        }
         return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
     }
 
@@ -337,8 +339,9 @@ class ValidateCore
      */
     public static function isRoutePattern($pattern)
     {
-        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
+        if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
             return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
+        }
         return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
     }
 
@@ -402,11 +405,13 @@ class ValidateCore
         $events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
         $events .= '|onselectstart|onstart|onstop';
 
-        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/('.$events.')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html))
+        if (preg_match('/<[\s]*script/ims', $html) || preg_match('/('.$events.')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
             return false;
+        }
 
-        if (!$allow_iframe && preg_match('/<[\s]*(i?frame|form|input|embed|object)/ims', $html))
+        if (!$allow_iframe && preg_match('/<[\s]*(i?frame|form|input|embed|object)/ims', $html)) {
             return false;
+        }
 
         return true;
     }
@@ -482,8 +487,9 @@ class ValidateCore
      */
     public static function isDate($date)
     {
-        if (!preg_match('/^([0-9]{4})-((?:0?[0-9])|(?:1[0-2]))-((?:0?[0-9])|(?:[1-2][0-9])|(?:3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches))
+        if (!preg_match('/^([0-9]{4})-((?:0?[0-9])|(?:1[0-2]))-((?:0?[0-9])|(?:[1-2][0-9])|(?:3[01]))( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $matches)) {
             return false;
+        }
         return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
     }
 
@@ -495,14 +501,15 @@ class ValidateCore
      */
     public static function isBirthDate($date)
     {
-        if (empty($date) || $date == '0000-00-00')
+        if (empty($date) || $date == '0000-00-00') {
             return true;
-        if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date))
-        {
+        }
+        if (preg_match('/^([0-9]{4})-((?:0?[1-9])|(?:1[0-2]))-((?:0?[1-9])|(?:[1-2][0-9])|(?:3[01]))([0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $date, $birth_date)) {
             if ($birth_date[1] > date('Y') && $birth_date[2] > date('m') && $birth_date[3] > date('d')
                 || $birth_date[1] == date('Y') && $birth_date[2] == date('m') && $birth_date[3] > date('d')
-                || $birth_date[1] == date('Y') && $birth_date[2] > date('m'))
+                || $birth_date[1] == date('Y') && $birth_date[2] > date('m')) {
                 return false;
+            }
             return true;
         }
         return false;
@@ -571,8 +578,9 @@ class ValidateCore
      */
     public static function isZipCodeFormat($zip_code)
     {
-        if (!empty($zip_code))
+        if (!empty($zip_code)) {
             return preg_match('/^[NLCnlc 0-9-]+$/', $zip_code);
+        }
         return true;
     }
 
@@ -758,8 +766,9 @@ class ValidateCore
      */
     public static function isAbsoluteUrl($url)
     {
-        if (!empty($url))
+        if (!empty($url)) {
             return preg_match('/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+        }
         return true;
     }
 
@@ -989,10 +998,13 @@ class ValidateCore
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids))
-            foreach ($ids as $id)
-                if ($id == 0 || !Validate::isUnsignedInt($id))
+        if (count($ids)) {
+            foreach ($ids as $id) {
+                if ($id == 0 || !Validate::isUnsignedInt($id)) {
                     return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -1003,18 +1015,22 @@ class ValidateCore
      */
     public static function isSceneZones($zones)
     {
-        foreach ($zones as $zone)
-        {
-            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1']))
+        foreach ($zones as $zone) {
+            if (!isset($zone['x1']) || !Validate::isUnsignedInt($zone['x1'])) {
                 return false;
-            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1']))
+            }
+            if (!isset($zone['y1']) || !Validate::isUnsignedInt($zone['y1'])) {
                 return false;
-            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width']))
+            }
+            if (!isset($zone['width']) || !Validate::isUnsignedInt($zone['width'])) {
                 return false;
-            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height']))
+            }
+            if (!isset($zone['height']) || !Validate::isUnsignedInt($zone['height'])) {
                 return false;
-            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product']))
+            }
+            if (!isset($zone['id_product']) || !Validate::isUnsignedInt($zone['id_product'])) {
                 return false;
+            }
         }
         return true;
     }
@@ -1026,8 +1042,9 @@ class ValidateCore
      */
     public static function isStockManagement($stock_management)
     {
-        if (!in_array($stock_management, array('WA', 'FIFO', 'LIFO')))
+        if (!in_array($stock_management, array('WA', 'FIFO', 'LIFO'))) {
             return false;
+        }
         return true;
     }
 
@@ -1039,14 +1056,15 @@ class ValidateCore
      */
     public static function isSiret($siret)
     {
-        if (Tools::strlen($siret) != 14)
+        if (Tools::strlen($siret) != 14) {
             return false;
+        }
         $sum = 0;
-        for ($i = 0; $i != 14; $i++)
-        {
+        for ($i = 0; $i != 14; $i++) {
             $tmp = ((($i + 1) % 2) + 1) * intval($siret[$i]);
-            if ($tmp >= 10)
+            if ($tmp >= 10) {
                 $tmp -= 9;
+            }
             $sum += $tmp;
         }
         return ($sum % 10 === 0);

@@ -33,13 +33,13 @@ function add_missing_rewrite_value()
 	WHERE ml.`url_rewrite` = \'\'
 	AND m.`page` != "index"
 	');
-    if (sizeof($pages) && is_array($pages))
-        foreach ($pages as $page)
-        {
+    if (sizeof($pages) && is_array($pages)) {
+        foreach ($pages as $page) {
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'meta_lang`
 			SET `url_rewrite` = "'.pSQL(Tools::str2url($page['title'])).'"
 			WHERE `id_meta` = '.(int)$page['id_meta'].'
 			AND `id_lang` = '.(int)$page['id_lang']);
         }
+    }
 }

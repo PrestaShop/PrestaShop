@@ -24,18 +24,18 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_ADMIN_DIR_')) define('_PS_ADMIN_DIR_', getcwd().'/..');
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', getcwd().'/..');
+}
 
-if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::getIdFromClassName('AdminReferrers').(int)Tools::getValue('id_employee')))
-{
-    if (Tools::isSubmit('ajaxProductFilter'))
+if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::getIdFromClassName('AdminReferrers').(int)Tools::getValue('id_employee'))) {
+    if (Tools::isSubmit('ajaxProductFilter')) {
         Referrer::getAjaxProduct(
             (int)Tools::getValue('id_referrer'),
             (int)Tools::getValue('id_product'),
             new Employee((int)Tools::getValue('id_employee'))
         );
-    elseif (Tools::isSubmit('ajaxFillProducts'))
-    {
+    } elseif (Tools::isSubmit('ajaxFillProducts')) {
         $json_array = array();
         $result = Db::getInstance()->executeS('
 			SELECT p.id_product, pl.name
@@ -45,8 +45,9 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::
 			'.(Tools::getValue('filter') != 'undefined' ? 'WHERE name LIKE "%'.pSQL(Tools::getValue('filter')).'%"' : '')
         );
 
-        foreach ($result as $row)
+        foreach ($result as $row) {
             $json_array[] = '{id_product:'.(int)$row['id_product'].',name:\''.addslashes($row['name']).'\'}';
+        }
 
         die('['.implode(',', $json_array).']');
     }
@@ -164,12 +165,13 @@ class AdminReferrersControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if(empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_referrer'] = array(
                 'href' => self::$currentIndex.'&addreferrer&token='.$this->token,
                 'desc' => $this->l('Add new referrer', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
         
         parent::initPageHeaderToolbar();
     }
@@ -228,15 +230,16 @@ class AdminReferrersControllerCore extends AdminController
             'submit' => array('title' => $this->l('Save')),
         ));
 
-        if (Module::isInstalled('trackingfront'))
+        if (Module::isInstalled('trackingfront')) {
             $this->fields_form[0]['form']['desc'] = array(
                 $this->l('Affiliates can access their data with this name and password.'),
                 $this->l('Front access:').' <a class="btn btn-link" href="'.$uri.'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> '.$uri.'modules/trackingfront/stats.php</a>'
             );
-        else
+        } else {
             $this->fields_form[0]['form']['desc'] = array(
                 sprintf($this->l('Please install the "%s" module in order to give your affiliates access their own statistics.'), Module::getModuleName('trackingfront'))
             );
+        }
 
         $this->fields_form[1] = array('form' => array(
             'legend' => array(
@@ -266,8 +269,7 @@ class AdminReferrersControllerCore extends AdminController
             'submit' => array('title' => $this->l('Save'))
         ));
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form[1]['form']['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -361,8 +363,9 @@ class AdminReferrersControllerCore extends AdminController
 
         $this->multiple_fieldsets = true;
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $this->fields_value = array(
             'click_fee' => number_format((float)($this->getFieldValue($obj, 'click_fee')), 2),
@@ -413,15 +416,15 @@ class AdminReferrersControllerCore extends AdminController
 
     public function displaySettings()
     {
-        if (!Tools::isSubmit('viewreferrer'))
-        {
+        if (!Tools::isSubmit('viewreferrer')) {
             $tpl = $this->createTemplate('form_settings.tpl');
 
             $statsdata = Module::getInstanceByName('statsdata');
 
             $statsdata_name = false;
-            if (Validate::isLoadedObject($statsdata))
+            if (Validate::isLoadedObject($statsdata)) {
                 $statsdata_name = $statsdata->displayName;
+            }
             $tpl->assign(array(
                 'statsdata_name' => $statsdata_name,
                 'current' => self::$currentIndex,
@@ -440,8 +443,7 @@ class AdminReferrersControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->enableCalendar())
-        {
+        if ($this->enableCalendar()) {
             // Warning, instantiating a controller here changes the controller in the Context...
             $calendar_tab = new AdminStatsController();
             $calendar_tab->postProcess();
@@ -449,15 +451,20 @@ class AdminReferrersControllerCore extends AdminController
             $this->context->controller = $this;
         }
 
-        if (Tools::isSubmit('submitSettings'))
-            if ($this->tabAccess['edit'] === '1')
-                if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)Tools::getValue('tracking_dt')))
+        if (Tools::isSubmit('submitSettings')) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)Tools::getValue('tracking_dt'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.Tools::getValue('token'));
+                }
+            }
+        }
 
-        if (ModuleGraph::getDateBetween() != Configuration::get('PS_REFERRERS_CACHE_LIKE') || Tools::isSubmit('submitRefreshCache'))
+        if (ModuleGraph::getDateBetween() != Configuration::get('PS_REFERRERS_CACHE_LIKE') || Tools::isSubmit('submitRefreshCache')) {
             Referrer::refreshCache();
-        if (Tools::isSubmit('submitRefreshIndex'))
+        }
+        if (Tools::isSubmit('submitRefreshIndex')) {
             Referrer::refreshIndex();
+        }
 
         return parent::postProcess();
     }

@@ -41,8 +41,9 @@ class AdminOrderMessageControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -98,12 +99,13 @@ class AdminOrderMessageControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_order_message'] = array(
                 'href' => self::$currentIndex.'&addorder_message&token='.$this->token,
                 'desc' => $this->l('Add new order message'),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }

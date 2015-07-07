@@ -26,7 +26,6 @@
 
 class Adapter_Configuration implements Core_Business_ConfigurationInterface
 {
-
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
      * Configuration

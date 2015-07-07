@@ -41,8 +41,9 @@ class AdminQuickAccessesControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -125,24 +126,25 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_quick_access'] = array(
                 'href' => self::$currentIndex.'&addquick_access&token='.$this->token,
                 'desc' => $this->l('Add new quick access', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
 
     public function initProcess()
     {
-        if ((isset($_GET['new_window'.$this->table]) || isset($_GET['new_window'])) && Tools::getValue($this->identifier))
-        {
-            if ($this->tabAccess['edit'] === '1')
+        if ((isset($_GET['new_window'.$this->table]) || isset($_GET['new_window'])) && Tools::getValue($this->identifier)) {
+            if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'newWindow';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
         parent::initProcess();
@@ -165,37 +167,33 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function addQuickLink()
     {
-        if (!isset($this->className) || empty($this->className))
+        if (!isset($this->className) || empty($this->className)) {
             return false;
+        }
         $this->validateRules();
 
-        if (count($this->errors) <= 0)
-        {
+        if (count($this->errors) <= 0) {
             $this->object = new $this->className();
             $this->copyFromPost($this->object, $this->table);
             $exists = Db::getInstance()->getValue('SELECT id_quick_access FROM '._DB_PREFIX_.'quick_access WHERE link = "'.pSQL($this->object->link).'"');
-            if ($exists)
+            if ($exists) {
                 return true;
+            }
             $this->beforeAdd($this->object);
 
-            if (method_exists($this->object, 'add') && !$this->object->add())
-            {
-
+            if (method_exists($this->object, 'add') && !$this->object->add()) {
                 $this->errors[] = Tools::displayError('An error occurred while creating an object.').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-
             }
             /* voluntary do affectation here */
-            elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
-            {
+            elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
                 PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                 $this->afterAdd($this->object);
             }
         }
 
         $this->errors = array_unique($this->errors);
-        if (!empty($this->errors))
-        {
+        if (!empty($this->errors)) {
             $this->errors['has_errors'] = true;
             $this->ajaxDie(Tools::jsonEncode($this->errors));
             return false;
@@ -211,8 +209,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function ajaxProcessGetUrl()
     {
-        if (Tools::strtolower(Tools::getValue('method')) === 'add')
-        {
+        if (Tools::strtolower(Tools::getValue('method')) === 'add') {
             $params['new_window'] = 0;
             $params['name_'.(int)Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
             $params['link'] = 'index.php?'.Tools::getValue('url');
@@ -220,9 +217,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             unset($_POST['name']);
             $_POST = array_merge($_POST, $params);
             die($this->addQuickLink());
-        }
-        elseif (Tools::strtolower(Tools::getValue('method')) === 'remove')
-        {
+        } elseif (Tools::strtolower(Tools::getValue('method')) === 'remove') {
             $params['deletequick_access'] = 1;
             $_POST = array_merge($_POST, $params);
             die($this->processDelete());
@@ -231,18 +226,18 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function processNewWindow()
     {
-        if (Validate::isLoadedObject($object = $this->loadObject()))
-        {
+        if (Validate::isLoadedObject($object = $this->loadObject())) {
             /** @var QuickAccess $object */
-            if ($object->toggleNewWindow())
+            if ($object->toggleNewWindow()) {
                 $this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
-            else
+            } else {
                 $this->errors[] = Tools::displayError('An error occurred while updating new window property.');
-        }
-        else
+            }
+        } else {
             $this->errors[] = Tools::displayError('An error occurred while updating the new window property for this object.').
                 ' <b>'.$this->table.'</b> '.
                 Tools::displayError('(cannot load object)');
+        }
 
         return $object;
     }

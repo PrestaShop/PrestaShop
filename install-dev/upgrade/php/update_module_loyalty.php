@@ -32,22 +32,22 @@ function update_module_loyalty()
     $ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name="PS_LOYALTY_POINT_VALUE"');
-    if ($ps_loyalty_point_value !== false)
-    {
+    if ($ps_loyalty_point_value !== false) {
         $category_list = '';
         $categories = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');
-        foreach($categories as $category)
+        foreach ($categories as $category) {
             $category_list .= $category['id_category'].',';
+        }
 
-        if (!empty($category_list))
-        {
+        if (!empty($category_list)) {
             $category_list = rtrim($category_list, ',');
 
             $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
-            if ($exist)
+            if ($exist) {
                 $res = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($category_list).'" WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
-            else
+            } else {
                 $res = Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_LOYALTY_VOUCHER_CATEGORY", "'.pSQL($category_list).'"');
+            }
         }
     }
 }

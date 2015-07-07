@@ -116,8 +116,7 @@ class AdminContactsControllerCore extends AdminController
             )
         );
         
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -131,14 +130,14 @@ class AdminContactsControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         $this->initToolbar();
-        if(empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_contact'] = array(
                 'href' => self::$currentIndex.'&addcontact&token='.$this->token,
                 'desc' => $this->l('Add new contact', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
-    
 }

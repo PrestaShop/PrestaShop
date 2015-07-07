@@ -52,8 +52,7 @@ class AdminOutstandingControllerCore  extends AdminController
         $this->_use_found_rows = false;
 
         $risks = array();
-        foreach (Risk::getRisks() as $risk)
-        {
+        foreach (Risk::getRisks() as $risk) {
             /** @var Risk $risk */
             $risks[$risk->id] = $risk->name;
         }
@@ -140,14 +139,17 @@ class AdminOutstandingControllerCore  extends AdminController
     public function printOutstandingCalculation($id_invoice, $tr)
     {
         $order_invoice = new OrderInvoice($id_invoice);
-        if (!Validate::isLoadedObject($order_invoice))
+        if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('object OrderInvoice cannot be loaded');
+        }
         $order = new Order($order_invoice->id_order);
-        if (!Validate::isLoadedObject($order))
+        if (!Validate::isLoadedObject($order)) {
             throw new PrestaShopException('object Order cannot be loaded');
+        }
         $customer = new Customer((int)$order->id_customer);
-        if (!Validate::isLoadedObject($order_invoice))
+        if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('object Customer cannot be loaded');
+        }
 
         return '<b>'.Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency).'</b>';
     }
@@ -159,11 +161,13 @@ class AdminOutstandingControllerCore  extends AdminController
     public function renderView()
     {
         $order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
-        if (!Validate::isLoadedObject($order_invoice))
+        if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('object OrderInvoice cannot be loaded');
+        }
         $order = new Order($order_invoice->id_order);
-        if (!Validate::isLoadedObject($order))
+        if (!Validate::isLoadedObject($order)) {
             throw new PrestaShopException('object Order cannot be loaded');
+        }
 
         $link = $this->context->link->getAdminLink('AdminOrders');
         $link .= '&vieworder&id_order='.$order->id;

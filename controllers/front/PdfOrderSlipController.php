@@ -35,18 +35,19 @@ class PdfOrderSlipControllerCore extends FrontController
 
     public function postProcess()
     {
-        if (!$this->context->customer->isLogged())
+        if (!$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication&back=order-follow');
+        }
 
-        if (isset($_GET['id_order_slip']) && Validate::isUnsignedId($_GET['id_order_slip']))
+        if (isset($_GET['id_order_slip']) && Validate::isUnsignedId($_GET['id_order_slip'])) {
             $this->order_slip = new OrderSlip($_GET['id_order_slip']);
+        }
 
-        if (!isset($this->order_slip) || !Validate::isLoadedObject($this->order_slip))
+        if (!isset($this->order_slip) || !Validate::isLoadedObject($this->order_slip)) {
             die(Tools::displayError('Order return not found.'));
-
-        elseif ($this->order_slip->id_customer != $this->context->customer->id)
+        } elseif ($this->order_slip->id_customer != $this->context->customer->id) {
             die(Tools::displayError('Order return not found.'));
-
+        }
     }
 
     public function display()

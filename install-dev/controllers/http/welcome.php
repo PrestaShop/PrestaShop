@@ -31,7 +31,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
 {
     public function processNextStep()
     {
-
     }
 
     public function validate()
@@ -44,8 +43,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
      */
     public function process()
     {
-        if (Tools::getValue('language'))
-        {
+        if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
             $this->redirect('welcome');
         }
@@ -57,11 +55,9 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
     public function display()
     {
         $this->can_upgrade = false;
-        if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
-        {
+        if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
             @include_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
-            if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<'))
-            {
+            if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<')) {
                 $this->can_upgrade = true;
                 $this->ps_version = _PS_VERSION_;
             }

@@ -29,18 +29,17 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
     $res = true;
     $name_lang = array();
     $template_lang = array();
-    foreach (explode('|', $name) as $item)
-    {
+    foreach (explode('|', $name) as $item) {
         $temp = explode(':', $item);
         $name_lang[$temp[0]] = $temp[1];
     }
 
-    if ($template)
-        foreach (explode('|', $template) as $item)
-        {
+    if ($template) {
+        foreach (explode('|', $template) as $item) {
             $temp = explode(':', $item);
             $template_lang[$temp[0]] = $temp[1];
         }
+    }
 
     $res &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`)
@@ -51,8 +50,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 		FROM `'._DB_PREFIX_.'order_state`');
 
     $languages = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
-    foreach ($languages as $lang)
-    {
+    foreach ($languages as $lang) {
         $iso_code = $lang['iso_code'];
         $iso_code_name = isset($name_lang[$iso_code])?$iso_code:'en';
         $iso_code_template = isset($template_lang[$iso_code])?$iso_code:'en';
@@ -66,8 +64,9 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
     }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \''.pSQL($conf_name).'\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)$id_order_state.'" WHERE `name` LIKE \''.pSQL($conf_name).'\'');
-    else
+    } else {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("'.pSQL($conf_name).'", "'.(int)$id_order_state.'"');
+    }
 }

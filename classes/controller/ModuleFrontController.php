@@ -35,8 +35,9 @@ class ModuleFrontControllerCore extends FrontController
     public function __construct()
     {
         $this->module = Module::getInstanceByName(Tools::getValue('module'));
-        if (!$this->module->active)
+        if (!$this->module->active) {
             Tools::redirect('index');
+        }
 
         $this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
@@ -51,7 +52,6 @@ class ModuleFrontControllerCore extends FrontController
 
         $tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
         $this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
-
     }
 
     /**
@@ -62,8 +62,9 @@ class ModuleFrontControllerCore extends FrontController
      */
     public function setTemplate($template)
     {
-        if (!$path = $this->getTemplatePath($template))
+        if (!$path = $this->getTemplatePath($template)) {
             throw new PrestaShopException("Template '$template' not found");
+        }
 
         $this->template = $path;
     }
@@ -76,12 +77,13 @@ class ModuleFrontControllerCore extends FrontController
      */
     public function getTemplatePath($template)
     {
-        if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template))
+        if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template)) {
             return _PS_THEME_DIR_.'modules/'.$this->module->name.'/'.$template;
-        elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template))
+        } elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template)) {
             return _PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/front/'.$template;
-        elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template))
+        } elseif (Tools::file_exists_cache(_PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template)) {
             return _PS_MODULE_DIR_.$this->module->name.'/views/templates/front/'.$template;
+        }
 
         return false;
     }

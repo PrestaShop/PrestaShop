@@ -29,7 +29,6 @@
  */
 class AdminPerformanceControllerCore extends AdminController
 {
-
     public function __construct()
     {
         $this->bootstrap = true;
@@ -389,7 +388,7 @@ class AdminPerformanceControllerCore extends AdminController
             )
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $this->fields_form[3]['form']['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Apache optimization'),
@@ -408,6 +407,7 @@ class AdminPerformanceControllerCore extends AdminController
                     ),
                 ),
             );
+        }
 
         $this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
         $this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
@@ -469,7 +469,7 @@ class AdminPerformanceControllerCore extends AdminController
         $warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
         $warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
 
-        if (defined('_RIJNDAEL_KEY_') && defined('_RIJNDAEL_IV_'))
+        if (defined('_RIJNDAEL_KEY_') && defined('_RIJNDAEL_IV_')) {
             $this->fields_form[5]['form'] = array(
 
                 'legend' => array(
@@ -504,6 +504,7 @@ class AdminPerformanceControllerCore extends AdminController
                     'title' => $this->l('Save')
                 )
             );
+        }
 
         $this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
     }
@@ -617,8 +618,7 @@ class AdminPerformanceControllerCore extends AdminController
         $this->initFieldsetFeaturesDetachables();
         $this->initFieldsetCCC();
 
-        if (!defined('_PS_HOST_MODE_'))
-        {
+        if (!defined('_PS_HOST_MODE_')) {
             $this->initFieldsetMediaServer();
             $this->initFieldsetCiphering();
             $this->initFieldsetCaching();
@@ -666,109 +666,108 @@ class AdminPerformanceControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
 
         Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
-        if (Tools::isSubmit('submitAddServer'))
-        {
-            if ($this->tabAccess['add'] === '1')
-            {
-                if (!Tools::getValue('memcachedIp'))
+        if (Tools::isSubmit('submitAddServer')) {
+            if ($this->tabAccess['add'] === '1') {
+                if (!Tools::getValue('memcachedIp')) {
                     $this->errors[] = Tools::displayError('The Memcached IP is missing.');
-                if (!Tools::getValue('memcachedPort'))
+                }
+                if (!Tools::getValue('memcachedPort')) {
                     $this->errors[] = Tools::displayError('The Memcached port is missing.');
-                if (!Tools::getValue('memcachedWeight'))
+                }
+                if (!Tools::getValue('memcachedWeight')) {
                     $this->errors[] = Tools::displayError('The Memcached weight is missing.');
-                if (!count($this->errors))
-                {
+                }
+                if (!count($this->errors)) {
                     if (CacheMemcache::addServer(pSQL(Tools::getValue('memcachedIp')),
                         (int)Tools::getValue('memcachedPort'),
-                        (int)Tools::getValue('memcachedWeight')))
+                        (int)Tools::getValue('memcachedWeight'))) {
                         Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('The Memcached server cannot be added.');
+                    }
                 }
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            }
         }
 
-        if (Tools::getValue('deleteMemcachedServer'))
-        {
-            if ($this->tabAccess['add'] === '1')
-            {
-                if (CacheMemcache::deleteServer((int)Tools::getValue('deleteMemcachedServer')))
+        if (Tools::getValue('deleteMemcachedServer')) {
+            if ($this->tabAccess['add'] === '1') {
+                if (CacheMemcache::deleteServer((int)Tools::getValue('deleteMemcachedServer'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
-                else
+                } else {
                     $this->errors[] = Tools::displayError('There was an error when attempting to delete the Memcached server.');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            }
         }
 
         $redirectAdmin = false;
-        if ((bool)Tools::getValue('smarty_up'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+        if ((bool)Tools::getValue('smarty_up')) {
+            if ($this->tabAccess['edit'] === '1') {
                 Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
 
-                if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type'))
+                if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type')) {
                     Tools::clearSmartyCache();
+                }
 
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
                 Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
                 $redirectAdmin = true;
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
-        if ((bool)Tools::getValue('features_detachables_up'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if (Tools::isSubmit('combination'))
-                    if ((!Tools::getValue('combination') && Combination::isCurrentlyUsed()) === false)
+        if ((bool)Tools::getValue('features_detachables_up')) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (Tools::isSubmit('combination')) {
+                    if ((!Tools::getValue('combination') && Combination::isCurrentlyUsed()) === false) {
                         Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', (bool)Tools::getValue('combination'));
+                    }
+                }
 
-                if (Tools::isSubmit('customer_group'))
-                    if ((!Tools::getValue('customer_group') && Group::isCurrentlyUsed()) === false)
+                if (Tools::isSubmit('customer_group')) {
+                    if ((!Tools::getValue('customer_group') && Group::isCurrentlyUsed()) === false) {
                         Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', (bool)Tools::getValue('customer_group'));
+                    }
+                }
 
                 Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', (bool)Tools::getValue('feature'));
                 $redirectAdmin = true;
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
-        if ((bool)Tools::getValue('ccc_up'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+        if ((bool)Tools::getValue('ccc_up')) {
+            if ($this->tabAccess['edit'] === '1') {
                 $theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
-                if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
+                if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory)) {
                     $this->errors[] = sprintf(Tools::displayError('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory));
+                }
 
-                if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
-                {
+                if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE')) {
                     $version = (int)Configuration::get('PS_CCCCSS_VERSION');
-                    if (Configuration::get('PS_CSS_THEME_CACHE') != $tmp)
+                    if (Configuration::get('PS_CSS_THEME_CACHE') != $tmp) {
                         Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+                    }
                 }
 
 
-                if ($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE'))
-                {
+                if ($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE')) {
                     $version = (int)Configuration::get('PS_CCCJS_VERSION');
-                    if (Configuration::get('PS_JS_THEME_CACHE') != $tmp)
+                    if (Configuration::get('PS_JS_THEME_CACHE') != $tmp) {
                         Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
+                    }
                 }
 
                 if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
@@ -776,17 +775,14 @@ class AdminPerformanceControllerCore extends AdminController
                     !Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
                     !Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
                     !Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
-                    !Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
+                    !Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL'))) {
                     $this->errors[] = Tools::displayError('Unknown error.');
-                else
-                {
+                } else {
                     $redirectAdmin = true;
-                    if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
-                    {
-                        if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+                    if (Configuration::get('PS_HTACCESS_CACHE_CONTROL')) {
+                        if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                             Tools::generateHtaccess();
-                        else
-                        {
+                        } else {
                             $message = $this->l('Before being able to use this tool, you need to:');
                             $message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
                             $message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
@@ -795,31 +791,32 @@ class AdminPerformanceControllerCore extends AdminController
                         }
                     }
                 }
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
-        if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_')))
+        if ((bool)Tools::getValue('media_server_up') && !defined('_PS_HOST_MODE_')) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (Tools::getValue('_MEDIA_SERVER_1_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_1_'))) {
                     $this->errors[] = Tools::displayError('Media server #1 is invalid');
-                if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_')))
+                }
+                if (Tools::getValue('_MEDIA_SERVER_2_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_2_'))) {
                     $this->errors[] = Tools::displayError('Media server #2 is invalid');
-                if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_')))
+                }
+                if (Tools::getValue('_MEDIA_SERVER_3_') != null && !Validate::isFileName(Tools::getValue('_MEDIA_SERVER_3_'))) {
                     $this->errors[] = Tools::displayError('Media server #3 is invalid');
-                if (!count($this->errors))
-                {
+                }
+                if (!count($this->errors)) {
                     $base_urls = array();
                     $base_urls['_MEDIA_SERVER_1_'] = Tools::getValue('_MEDIA_SERVER_1_');
                     $base_urls['_MEDIA_SERVER_2_'] = Tools::getValue('_MEDIA_SERVER_2_');
                     $base_urls['_MEDIA_SERVER_3_'] = Tools::getValue('_MEDIA_SERVER_3_');
-                    if ($base_urls['_MEDIA_SERVER_1_'] || $base_urls['_MEDIA_SERVER_2_'] || $base_urls['_MEDIA_SERVER_3_'])
+                    if ($base_urls['_MEDIA_SERVER_1_'] || $base_urls['_MEDIA_SERVER_2_'] || $base_urls['_MEDIA_SERVER_3_']) {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 1);
-                    else
+                    } else {
                         Configuration::updateValue('PS_MEDIA_SERVERS', 0);
+                    }
                     rewriteSettingsFile($base_urls, null, null);
                     Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
                     Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
@@ -827,16 +824,13 @@ class AdminPerformanceControllerCore extends AdminController
                     Tools::clearSmartyCache();
                     Media::clearCache();
 
-                    if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
-                    {
+                    if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                         Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
                         unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
                         $redirectAdmin = true;
-                    }
-                    else
-                    {
+                    } else {
                         $message = $this->l('Before being able to use this tool, you need to:');
                         $message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
                         $message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
@@ -844,25 +838,20 @@ class AdminPerformanceControllerCore extends AdminController
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
                     }
                 }
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
-        if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+        if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM')) {
+            if ($this->tabAccess['edit'] === '1') {
                 $algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
                 $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
                 $new_settings = $prev_settings;
-                if ($algo)
-                {
-                    if (!function_exists('mcrypt_encrypt'))
+                if ($algo) {
+                    if (!function_exists('mcrypt_encrypt')) {
                         $this->errors[] = Tools::displayError('The "Mcrypt" PHP extension is not activated on this server.');
-                    else
-                    {
-                        if (!strstr($new_settings, '_RIJNDAEL_KEY_'))
-                        {
+                    } else {
+                        if (!strstr($new_settings, '_RIJNDAEL_KEY_')) {
                             $key_size = mcrypt_get_key_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
                             $key = Tools::passwdGen($key_size);
                             $new_settings = preg_replace(
@@ -871,8 +860,7 @@ class AdminPerformanceControllerCore extends AdminController
                                 $new_settings
                             );
                         }
-                        if (!strstr($new_settings, '_RIJNDAEL_IV_'))
-                        {
+                        if (!strstr($new_settings, '_RIJNDAEL_IV_')) {
                             $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
                             $iv = base64_encode(mcrypt_create_iv($iv_size, MCRYPT_RAND));
                             $new_settings = preg_replace(
@@ -883,108 +871,99 @@ class AdminPerformanceControllerCore extends AdminController
                         }
                     }
                 }
-                if (!count($this->errors))
-                {
+                if (!count($this->errors)) {
                     // If there is not settings file modification or if the backup and replacement of the settings file worked
                     if ($new_settings == $prev_settings || (
                         copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
                         && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
-                    ))
-                    {
+                    )) {
                         Configuration::updateValue('PS_CIPHER_ALGORITHM', $algo);
                         $redirectAdmin = true;
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('The settings file cannot be overwritten.');
+                    }
                 }
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
-        if ((bool)Tools::getValue('cache_up'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+        if ((bool)Tools::getValue('cache_up')) {
+            if ($this->tabAccess['edit'] === '1') {
                 $new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
                 $cache_active = (bool)Tools::getValue('cache_active');
 
-                if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
-                {
+                if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system'))) {
                     $new_settings = preg_replace(
                         '/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
                         'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
                         $new_settings
                     );
-                }
-                else
-                {
+                } else {
                     $cache_active = false;
                     $this->errors[] = Tools::displayError('The caching system is missing.');
                 }
-                if ($cache_active)
-                {
-                    if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
+                if ($cache_active) {
+                    if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache')) {
                         $this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
-                    elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached'))
+                    } elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached')) {
                         $this->errors[] = Tools::displayError('To use Memcached, you must install the Memcached PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
-                    elseif ($caching_system == 'CacheApc' && !extension_loaded('apc'))
+                    } elseif ($caching_system == 'CacheApc' && !extension_loaded('apc')) {
                         $this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
-                    elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache'))
+                    } elseif ($caching_system == 'CacheXcache' && !extension_loaded('xcache')) {
                         $this->errors[] = Tools::displayError('To use Xcache, you must install the Xcache extension on your server.').'
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
-                    elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
+                    } elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size')) {
                         $this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
 							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
-                    elseif ($caching_system == 'CacheFs')
-                        if (!is_dir(_PS_CACHEFS_DIRECTORY_))
+                    } elseif ($caching_system == 'CacheFs') {
+                        if (!is_dir(_PS_CACHEFS_DIRECTORY_)) {
                             @mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
-                        elseif (!is_writable(_PS_CACHEFS_DIRECTORY_))
+                        } elseif (!is_writable(_PS_CACHEFS_DIRECTORY_)) {
                             $this->errors[] = sprintf(Tools::displayError('To use CacheFS, the directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
+                        }
+                    }
 
-                    if ($caching_system == 'CacheFs')
-                    {
-                        if (!($depth = Tools::getValue('ps_cache_fs_directory_depth')))
+                    if ($caching_system == 'CacheFs') {
+                        if (!($depth = Tools::getValue('ps_cache_fs_directory_depth'))) {
                             $this->errors[] = Tools::displayError('Please set a directory depth.');
-                        if (!count($this->errors))
-                        {
+                        }
+                        if (!count($this->errors)) {
                             CacheFs::deleteCacheDirectory();
                             CacheFs::createCacheDirectories((int)$depth);
                             Configuration::updateValue('PS_CACHEFS_DIRECTORY_DEPTH', (int)$depth);
                         }
+                    } elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache') {
+                        Cache::getInstance()->flush();
+                    } elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached') {
+                        Cache::getInstance()->flush();
                     }
-                    elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
-                        Cache::getInstance()->flush();
-                    elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached')
-                        Cache::getInstance()->flush();
                 }
 
-                if (!count($this->errors))
-                {
+                if (!count($this->errors)) {
                     $new_settings = preg_replace('/define\(\'_PS_CACHE_ENABLED_\', \'([01]?)\'\);/Ui', 'define(\'_PS_CACHE_ENABLED_\', \''.(int)$cache_active.'\');', $new_settings);
                     // If there is not settings file modification or if the backup and replacement of the settings file worked
                     if ($new_settings == $prev_settings || (
                         copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
                         && (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
-                    ))
-                    {
-                        if (function_exists('opcache_invalidate'))
+                    )) {
+                        if (function_exists('opcache_invalidate')) {
                             opcache_invalidate(_PS_ROOT_DIR_.'/config/settings.inc.php');
+                        }
                         $redirectAdmin = true;
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('The settings file cannot be overwritten.');
+                    }
                 }
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
 
-        if ((bool)Tools::getValue('empty_smarty_cache'))
-        {
+        if ((bool)Tools::getValue('empty_smarty_cache')) {
             $redirectAdmin = true;
             Tools::clearSmartyCache();
             Tools::clearXMLCache();
@@ -992,15 +971,13 @@ class AdminPerformanceControllerCore extends AdminController
             Tools::generateIndex();
         }
 
-        if (Tools::isSubmit('submitAddconfiguration'))
-        {
+        if (Tools::isSubmit('submitAddconfiguration')) {
             Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
             Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
             Tools::generateIndex();
         }
 
-        if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
-        {
+        if ($redirectAdmin && (!isset($this->errors) || !count($this->errors))) {
             Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
             Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
         }
@@ -1009,22 +986,20 @@ class AdminPerformanceControllerCore extends AdminController
     public function displayAjaxTestServer()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
+        if (_PS_MODE_DEMO_) {
             die(Tools::displayError('This functionality has been disabled.'));
+        }
         /* PrestaShop demo mode*/
-        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server')
-        {
+        if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server') {
             $host = pSQL(Tools::getValue('sHost', ''));
             $port = (int)Tools::getValue('sPort', 0);
 
-            if ($host != '' && $port != 0)
-            {
+            if ($host != '' && $port != 0) {
                 $res = 0;
 
                 if (function_exists('memcache_get_server_status') &&
                     function_exists('memcache_connect') &&
-                    @fsockopen($host, $port))
-                {
+                    @fsockopen($host, $port)) {
                     $memcache = @memcache_connect($host, $port);
                     $res = @memcache_get_server_status($memcache, $host, $port);
                 }

@@ -98,8 +98,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             )
         );
 
-        if (isset($params['has_discount']) && $params['has_discount'])
-        {
+        if (isset($params['has_discount']) && $params['has_discount']) {
             $layout['before_discount'] = array('width' => 0);
             $layout['product']['width'] -= 7;
             $layout['reference']['width'] -= 3;
@@ -107,19 +106,21 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $total_width = 0;
         $free_columns_count = 0;
-        foreach ($layout as $data)
-        {
-            if ($data['width'] === 0)
+        foreach ($layout as $data) {
+            if ($data['width'] === 0) {
                 ++$free_columns_count;
+            }
 
             $total_width += $data['width'];
         }
 
         $delta = 100 - $total_width;
 
-        foreach ($layout as $row => $data)
-            if ($data['width'] === 0)
+        foreach ($layout as $row => $data) {
+            if ($data['width'] === 0) {
                 $layout[$row]['width'] = $delta / $free_columns_count;
+            }
+        }
 
         $layout['_colCount'] = count($layout);
 
@@ -139,19 +140,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $invoice_address = new Address((int)$this->order->id_address_invoice);
         $country = new Country((int)$invoice_address->id_country);
 
-        if ($this->order_invoice->invoice_address)
+        if ($this->order_invoice->invoice_address) {
             $formatted_invoice_address = $this->order_invoice->invoice_address;
-        else
+        } else {
             $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
+        }
 
         $delivery_address = null;
         $formatted_delivery_address = '';
-        if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery)
-        {
-            if ($this->order_invoice->delivery_address)
+        if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
+            if ($this->order_invoice->delivery_address) {
                 $formatted_delivery_address = $this->order_invoice->delivery_address;
-            else
-            {
+            } else {
                 $delivery_address = new Address((int)$this->order->id_address_delivery);
                 $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
             }
@@ -162,16 +162,12 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $order_details = $this->order_invoice->getProducts();
 
         $has_discount = false;
-        foreach ($order_details as $id => &$order_detail)
-        {
+        foreach ($order_details as $id => &$order_detail) {
             // Find out if column 'price before discount' is required
-            if ($order_detail['reduction_amount_tax_excl'] > 0)
-            {
+            if ($order_detail['reduction_amount_tax_excl'] > 0) {
                 $has_discount = true;
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
-            }
-            elseif ($order_detail['reduction_percent'] > 0)
-            {
+            } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
                 $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - 15);
             }
@@ -179,8 +175,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             // Set tax_code
             $taxes = OrderDetail::getTaxListStatic($id);
             $tax_temp = array();
-            foreach ($taxes as $tax)
-            {
+            foreach ($taxes as $tax) {
                 $obj = new Tax($tax['id_tax']);
                 $tax_temp[] = sprintf($this->l('%1$s%2$s%%'), ($obj->rate + 0), '&nbsp;');
             }
@@ -191,12 +186,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         unset($tax_temp);
         unset($order_detail);
 
-        if (Configuration::get('PS_PDF_IMG_INVOICE'))
-        {
-            foreach ($order_details as &$order_detail)
-            {
-                if ($order_detail['image'] != null)
-                {
+        if (Configuration::get('PS_PDF_IMG_INVOICE')) {
+            foreach ($order_details as &$order_detail) {
+                if ($order_detail['image'] != null) {
                     $name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
                     $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
@@ -207,10 +199,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_.$name))
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
                         $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
-                    else
+                    } else {
                         $order_detail['image_size'] = false;
+                    }
                 }
             }
             unset($order_detail); // don't overwrite the last order_detail later
@@ -218,10 +211,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $cart_rules = $this->order->getCartRules($this->order_invoice->id);
         $free_shipping = false;
-        foreach ($cart_rules as $key => $cart_rule)
-        {
-            if ($cart_rule['free_shipping'])
-            {
+        foreach ($cart_rules as $key => $cart_rule) {
+            if ($cart_rule['free_shipping']) {
                 $free_shipping = true;
                 /**
                  * Adjust cart rule value to remove the amount of the shipping.
@@ -234,19 +225,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                  * Don't display cart rules that are only about free shipping and don't create
                  * a discount on products.
                  */
-                if ($cart_rules[$key]['value'] == 0)
+                if ($cart_rules[$key]['value'] == 0) {
                     unset($cart_rules[$key]);
+                }
             }
         }
 
         $product_taxes = 0;
-        foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details)
+        foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details) {
             $product_taxes += $details['total_amount'];
+        }
 
         $product_discounts_tax_excl = $this->order_invoice->total_discount_tax_excl;
         $product_discounts_tax_incl = $this->order_invoice->total_discount_tax_incl;
-        if ($free_shipping)
-        {
+        if ($free_shipping) {
             $product_discounts_tax_excl -= $this->order_invoice->total_shipping_tax_excl;
             $product_discounts_tax_incl -= $this->order_invoice->total_shipping_tax_incl;
         }
@@ -282,15 +274,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl
         );
 
-        foreach ($footer as $key => $value)
+        foreach ($footer as $key => $value) {
             $footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+        }
 
         /**
          * Need the $round_mode for the tests.
          */
         $round_type = null;
-        switch ($this->order->round_type)
-        {
+        switch ($this->order->round_type) {
             case Order::ROUND_TOTAL:
                 $round_type = 'total';
                 break;
@@ -311,8 +303,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $layout = $this->computeLayout(array('has_discount' => $has_discount));
 
         $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', array('order' => $this->order));
-        if (!$legal_free_text)
+        if (!$legal_free_text) {
             $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
+        }
 
         $data = array(
             'order' => $this->order,
@@ -333,8 +326,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'legal_free_text' => $legal_free_text,
         );
 
-        if (Tools::getValue('debug'))
+        if (Tools::getValue('debug')) {
             die(json_encode($data));
+        }
 
         $this->smarty->assign($data);
 
@@ -384,8 +378,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'carrier' => $debug ? null : $carrier
         );
 
-        if ($debug)
+        if ($debug) {
             return $data;
+        }
 
         $this->smarty->assign($data);
 
@@ -406,19 +401,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
         );
 
-        foreach ($breakdowns as $type => $bd)
-        {
-            if (empty($bd))
+        foreach ($breakdowns as $type => $bd) {
+            if (empty($bd)) {
                 unset($breakdowns[$type]);
+            }
         }
 
-        if (empty($breakdowns))
+        if (empty($breakdowns)) {
             $breakdowns = false;
+        }
 
-        if (isset($breakdowns['product_tax']))
-        {
-            foreach ($breakdowns['product_tax'] as &$bd)
+        if (isset($breakdowns['product_tax'])) {
+            foreach ($breakdowns['product_tax'] as &$bd) {
                 $bd['total_tax_excl'] = $bd['total_price_tax_excl'];
+            }
         }
 
         if (isset($breakdowns['ecotax_tax'])) {
@@ -466,8 +462,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $template = $this->getTemplate($file.'.'.$iso_country);
 
         // else use the default one
-        if (!$template)
+        if (!$template) {
             $template = $this->getTemplate($file);
+        }
 
         return $template;
     }

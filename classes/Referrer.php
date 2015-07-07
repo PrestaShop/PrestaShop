@@ -80,8 +80,9 @@ class ReferrerCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        if (!($result = parent::add($autodate, $null_values)))
+        if (!($result = parent::add($autodate, $null_values))) {
             return false;
+        }
         Referrer::refreshCache(array(array('id_referrer' => $this->id)));
         Referrer::refreshIndex(array(array('id_referrer' => $this->id)));
         return $result;
@@ -89,8 +90,9 @@ class ReferrerCore extends ObjectModel
 
     public static function cacheNewSource($id_connections_source)
     {
-        if (!$id_connections_source)
+        if (!$id_connections_source) {
             return;
+        }
 
         $sql = 'INSERT INTO '._DB_PREFIX_.'referrer_cache (id_referrer, id_connections_source) (
 					SELECT id_referrer, id_connections_source
@@ -130,8 +132,7 @@ class ReferrerCore extends ObjectModel
     public function getStatsVisits($id_product, $employee)
     {
         $join = $where = '';
-        if ($id_product)
-        {
+        if ($id_product) {
             $join = 'LEFT JOIN `'._DB_PREFIX_.'page` p ON cp.`id_page` = p.`id_page`
 					 LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
             $where = ' AND pt.`name` = \'product\'
@@ -168,8 +169,7 @@ class ReferrerCore extends ObjectModel
     public function getRegistrations($id_product, $employee)
     {
         $join = $where = '';
-        if ($id_product)
-        {
+        if ($id_product) {
             $join = 'LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
 					 LEFT JOIN `'._DB_PREFIX_.'page` p ON cp.`id_page` = p.`id_page`
 					 LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
@@ -205,8 +205,7 @@ class ReferrerCore extends ObjectModel
     public function getStatsSales($id_product, $employee)
     {
         $join = $where = '';
-        if ($id_product)
-        {
+        if ($id_product) {
             $join =    'LEFT JOIN '._DB_PREFIX_.'order_detail od ON oo.id_order = od.id_order';
             $where = ' AND od.product_id = '.(int)$id_product;
         }
@@ -230,21 +229,22 @@ class ReferrerCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
         $implode = array();
-        foreach ($result as $row)
-            if ((int)$row['id_order'])
+        foreach ($result as $row) {
+            if ((int)$row['id_order']) {
                 $implode[] = (int)$row['id_order'];
+            }
+        }
 
-        if ($implode)
-        {
+        if ($implode) {
             $sql = 'SELECT COUNT(id_order) AS orders, SUM(total_paid_real / conversion_rate) AS sales
 					FROM '._DB_PREFIX_.'orders
 					WHERE id_order IN ('.implode($implode, ',').')
 						'.Shop::addSqlRestriction(Shop::SHARE_ORDER).'
 						AND valid = 1';
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-        }
-        else
+        } else {
             return array('orders' => 0, 'sales' => 0);
+        }
     }
 
     /**
@@ -256,15 +256,15 @@ class ReferrerCore extends ObjectModel
      */
     public static function refreshCache($referrers = null, $employee = null)
     {
-        if (!$referrers || !is_array($referrers))
+        if (!$referrers || !is_array($referrers)) {
             $referrers = Db::getInstance()->executeS('SELECT id_referrer FROM '._DB_PREFIX_.'referrer');
-        foreach ($referrers as $row)
-        {
+        }
+        foreach ($referrers as $row) {
             $referrer = new Referrer($row['id_referrer']);
-            foreach (Shop::getShops(true, null, true) as $shop_id)
-            {
-                if (!$referrer->isAssociatedToShop($shop_id))
+            foreach (Shop::getShops(true, null, true) as $shop_id) {
+                if (!$referrer->isAssociatedToShop($shop_id)) {
                     continue;
+                }
 
                 $stats_visits = $referrer->getStatsVisits(null, $employee);
                 $registrations = $referrer->getRegistrations(null, $employee);
@@ -295,8 +295,7 @@ class ReferrerCore extends ObjectModel
      */
     public static function refreshIndex($referrers = null)
     {
-        if (!$referrers || !is_array($referrers))
-        {
+        if (!$referrers || !is_array($referrers)) {
             Db::getInstance()->execute('TRUNCATE '._DB_PREFIX_.'referrer_cache');
             Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'referrer_cache (id_referrer, id_connections_source) (
@@ -304,10 +303,8 @@ class ReferrerCore extends ObjectModel
 				FROM '._DB_PREFIX_.'referrer r
 				LEFT JOIN '._DB_PREFIX_.'connections_source cs ON ('.self::$_join.')
 			)');
-        }
-        else
-            foreach ($referrers as $row)
-            {
+        } else {
+            foreach ($referrers as $row) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'referrer_cache WHERE id_referrer = '.(int)$row['id_referrer']);
                 Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'referrer_cache (id_referrer, id_connections_source) (
@@ -318,6 +315,7 @@ class ReferrerCore extends ObjectModel
 					AND id_connections_source IS NOT NULL
 				)');
             }
+        }
     }
 
     public static function getAjaxProduct($id_referrer, $id_product, $employee = null)
@@ -331,8 +329,9 @@ class ReferrerCore extends ObjectModel
         $stats_sales = $referrer->getStatsSales($id_product, $employee);
 
         // If it's a product and it has no visits nor orders
-        if ((int)$id_product && !$stats_visits['visits'] && !$stats_sales['orders'])
+        if ((int)$id_product && !$stats_visits['visits'] && !$stats_sales['orders']) {
             exit;
+        }
 
         $json_array = array(
             'id_product' => (int)$product->id,

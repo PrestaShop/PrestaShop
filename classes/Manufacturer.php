@@ -110,11 +110,11 @@ class ManufacturerCore extends ObjectModel
     {
         $address = new Address($this->id_address);
 
-        if (Validate::isLoadedObject($address) && !$address->delete())
+        if (Validate::isLoadedObject($address) && !$address->delete()) {
             return false;
+        }
 
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             CartRule::cleanProductRuleIntegrity('manufacturers', $this->id);
             return $this->deleteImage();
         }
@@ -127,12 +127,12 @@ class ManufacturerCore extends ObjectModel
      */
     public function deleteSelection($selection)
     {
-        if (!is_array($selection))
+        if (!is_array($selection)) {
             die(Tools::displayError());
+        }
 
         $result = true;
-        foreach ($selection as $id)
-        {
+        foreach ($selection as $id) {
             $this->id = (int)$id;
             $this->id_address = Manufacturer::getManufacturerAddress();
             $result = $result && $this->delete();
@@ -143,8 +143,9 @@ class ManufacturerCore extends ObjectModel
 
     protected function getManufacturerAddress()
     {
-        if (!(int)$this->id)
+        if (!(int)$this->id) {
             return false;
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address WHERE `id_manufacturer` = '.(int)$this->id);
     }
@@ -162,10 +163,12 @@ class ManufacturerCore extends ObjectModel
      */
     public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
     {
-        if (!$id_lang)
+        if (!$id_lang) {
             $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-        if (!Group::isFeatureActive())
+        }
+        if (!Group::isFeatureActive()) {
             $all_group = true;
+        }
 
         $manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT m.*, ml.`description`, ml.`short_description`
@@ -176,14 +179,13 @@ class ManufacturerCore extends ObjectModel
         .($group_by ? ' GROUP BY m.`id_manufacturer`' : '').'
 		ORDER BY m.`name` ASC
 		'.($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : ''));
-        if ($manufacturers === false)
+        if ($manufacturers === false) {
             return false;
+        }
 
-        if ($get_nb_products)
-        {
+        if ($get_nb_products) {
             $sql_groups = '';
-            if (!$all_group)
-            {
+            if (!$all_group) {
                 $groups = FrontController::getCurrentCustomerGroups();
                 $sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
             }
@@ -205,21 +207,26 @@ class ManufacturerCore extends ObjectModel
                 );
 
             $counts = array();
-            foreach ($results as $result)
+            foreach ($results as $result) {
                 $counts[(int)$result['id_manufacturer']] = (int)$result['nb_products'];
+            }
 
-            if (count($counts))
-                foreach ($manufacturers as $key => $manufacturer)
-                    if (array_key_exists((int)$manufacturer['id_manufacturer'], $counts))
+            if (count($counts)) {
+                foreach ($manufacturers as $key => $manufacturer) {
+                    if (array_key_exists((int)$manufacturer['id_manufacturer'], $counts)) {
                         $manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
-                    else
+                    } else {
                         $manufacturers[$key]['nb_products'] = 0;
+                    }
+                }
+            }
         }
 
         $total_manufacturers = count($manufacturers);
         $rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
-        for ($i = 0; $i < $total_manufacturers; $i++)
+        for ($i = 0; $i < $total_manufacturers; $i++) {
             $manufacturers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($manufacturers[$i]['name']) : 0);
+        }
         return $manufacturers;
     }
 
@@ -232,13 +239,14 @@ class ManufacturerCore extends ObjectModel
     protected static $cacheName = array();
     public static function getNameById($id_manufacturer)
     {
-        if (!isset(self::$cacheName[$id_manufacturer]))
+        if (!isset(self::$cacheName[$id_manufacturer])) {
             self::$cacheName[$id_manufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `name`
 				FROM `'._DB_PREFIX_.'manufacturer`
 				WHERE `id_manufacturer` = '.(int)$id_manufacturer.'
 				AND `active` = 1'
             );
+        }
 
         return self::$cacheName[$id_manufacturer];
     }
@@ -251,8 +259,9 @@ class ManufacturerCore extends ObjectModel
 			WHERE `name` = \''.pSQL($name).'\''
         );
 
-        if (isset($result['id_manufacturer']))
+        if (isset($result['id_manufacturer'])) {
             return (int)$result['id_manufacturer'];
+        }
 
         return false;
     }
@@ -265,30 +274,36 @@ class ManufacturerCore extends ObjectModel
     public static function getProducts($id_manufacturer, $id_lang, $p, $n, $order_by = null, $order_way = null,
         $get_total = false, $active = true, $active_category = true, Context $context = null)
     {
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
             $front = false;
+        }
 
-        if ($p < 1)
+        if ($p < 1) {
             $p = 1;
+        }
 
-        if (empty($order_by) || $order_by == 'position')
+        if (empty($order_by) || $order_by == 'position') {
             $order_by = 'name';
+        }
 
-        if (empty($order_way)) $order_way = 'ASC';
+        if (empty($order_way)) {
+            $order_way = 'ASC';
+        }
 
-        if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
+        if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
             die(Tools::displayError());
+        }
 
         $groups = FrontController::getCurrentCustomerGroups();
         $sql_groups = count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1';
 
         /* Return only the number of products */
-        if ($get_total)
-        {
+        if ($get_total) {
             $sql = '
 				SELECT p.`id_product`
 				FROM `'._DB_PREFIX_.'product` p
@@ -307,25 +322,23 @@ class ManufacturerCore extends ObjectModel
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
             return (int)count($result);
         }
-        if (strpos($order_by, '.') > 0)
-        {
+        if (strpos($order_by, '.') > 0) {
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
         }
         $alias = '';
-        if ($order_by == 'price')
+        if ($order_by == 'price') {
             $alias = 'product_shop.';
-        elseif ($order_by == 'name')
+        } elseif ($order_by == 'name') {
             $alias = 'pl.';
-        elseif ($order_by == 'manufacturer_name')
-        {
+        } elseif ($order_by == 'manufacturer_name') {
             $order_by = 'name';
             $alias = 'm.';
-        }
-        elseif ($order_by == 'quantity')
+        } elseif ($order_by == 'quantity') {
             $alias = 'stock.';
-        else
+        } else {
             $alias = 'p.';
+        }
 
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'
             .(Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.`id_product_attribute`,0) id_product_attribute' : '').'
@@ -352,14 +365,15 @@ class ManufacturerCore extends ObjectModel
 				ON (m.`id_manufacturer` = p.`id_manufacturer`)
 			'.Product::sqlStock('p', 0);
 
-            if (Group::isFeatureActive() || $active_category)
-            {
-                $sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
-                if (Group::isFeatureActive())
-                    $sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.$sql_groups.')';
-                if ($active_category)
-                    $sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+        if (Group::isFeatureActive() || $active_category) {
+            $sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
+            if (Group::isFeatureActive()) {
+                $sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.$sql_groups.')';
             }
+            if ($active_category) {
+                $sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+            }
+        }
 
         $sql .= '
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
@@ -371,11 +385,13 @@ class ManufacturerCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        if (!$result)
+        if (!$result) {
             return false;
+        }
 
-        if ($order_by == 'price')
+        if ($order_by == 'price') {
             Tools::orderbyPrice($result, $order_way);
+        }
 
         return Product::getProductsProperties($id_lang, $result);
     }
@@ -384,8 +400,9 @@ class ManufacturerCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
             $front = false;
+        }
 
         return Db::getInstance()->executeS('
 		SELECT p.`id_product`,  pl.`name`
@@ -446,8 +463,9 @@ class ManufacturerCore extends ObjectModel
     {
         $ids = array();
 
-        foreach ($id_addresses as $id)
+        foreach ($id_addresses as $id) {
             $ids[] = (int)$id['id'];
+        }
 
         $result1 = (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'address`
@@ -457,13 +475,14 @@ class ManufacturerCore extends ObjectModel
         );
 
         $result2 = true;
-        if (count($ids))
+        if (count($ids)) {
             $result2 = (Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'address`
 				SET id_customer = 0, id_supplier = 0, id_manufacturer = '.(int)$this->id.'
 				WHERE id_address IN('.implode(',', $ids).')
 				AND deleted = 0') !== false
             );
+        }
 
         return ($result1 && $result2);
     }

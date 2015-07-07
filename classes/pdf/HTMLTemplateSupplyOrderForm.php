@@ -100,10 +100,11 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $logo = '';
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID())))
+        if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID()))) {
             $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID());
-        elseif (Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID())))
+        } elseif (Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID()))) {
             $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID());
+        }
 
         return $logo;
     }
@@ -145,8 +146,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        foreach ($results as &$result)
-        {
+        foreach ($results as &$result) {
             $result['base_te'] = Tools::ps_round($result['base_te'], 2);
             $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
             $result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
@@ -166,8 +166,9 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         $path_logo = $this->getLogo();
         $width = $height = 0;
 
-        if (!empty($path_logo))
+        if (!empty($path_logo)) {
             list($width, $height) = getimagesize($path_logo);
+        }
 
         $this->smarty->assign(array(
             'logo_path' => $path_logo,
@@ -211,8 +212,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     protected function roundSupplyOrderDetails(&$collection)
     {
-        foreach ($collection as $supply_order_detail)
-        {
+        foreach ($collection as $supply_order_detail) {
             /** @var SupplyOrderDetail $supply_order_detail */
             $supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
             $supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);

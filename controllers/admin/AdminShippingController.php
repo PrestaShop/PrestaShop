@@ -35,9 +35,11 @@ class AdminShippingControllerCore extends AdminController
         $this->table = 'delivery';
 
         $carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-        foreach ($carriers as $key => $carrier)
-            if ($carrier['is_free'])
+        foreach ($carriers as $key => $carrier) {
+            if ($carrier['is_free']) {
                 unset($carriers[$key]);
+            }
+        }
 
         $carrier_default_sort = array(
             array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
@@ -121,15 +123,11 @@ class AdminShippingControllerCore extends AdminController
     public function postProcess()
     {
         /* Shipping fees */
-        if (Tools::isSubmit('submitFees'.$this->table))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if (($id_carrier = (int)(Tools::getValue('id_carrier'))) && $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2'))))
-                {
+        if (Tools::isSubmit('submitFees'.$this->table)) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (($id_carrier = (int)(Tools::getValue('id_carrier'))) && $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2')))) {
                     $carrier = new Carrier($id_carrier);
-                    if (Validate::isLoadedObject($carrier))
-                    {
+                    if (Validate::isLoadedObject($carrier)) {
                         /* Get configuration values */
                         $shipping_method = $carrier->getShippingMethod();
                         $rangeTable = $carrier->getRangeTable();
@@ -139,18 +137,20 @@ class AdminShippingControllerCore extends AdminController
 
                         /* Build prices list */
                         $priceList = array();
-                        foreach ($_POST as $key => $value)
-                            if (strstr($key, 'fees_'))
-                            {
+                        foreach ($_POST as $key => $value) {
+                            if (strstr($key, 'fees_')) {
                                 $tmpArray = explode('_', $key);
 
                                 $price = number_format(abs(str_replace(',', '.', $value)), 6, '.', '');
                                 $current = 0;
-                                foreach ($currentList as $item)
-                                    if ($item['id_zone'] == $tmpArray[1] && $item['id_'.$rangeTable] == $tmpArray[2])
+                                foreach ($currentList as $item) {
+                                    if ($item['id_zone'] == $tmpArray[1] && $item['id_'.$rangeTable] == $tmpArray[2]) {
                                         $current = $item;
-                                if ($current && $price == $current['price'])
+                                    }
+                                }
+                                if ($current && $price == $current['price']) {
                                     continue;
+                                }
 
                                 $priceList[] = array(
                                     'id_range_price' => ($shipping_method == Carrier::SHIPPING_METHOD_PRICE) ? (int)$tmpArray[2] : null,
@@ -160,22 +160,23 @@ class AdminShippingControllerCore extends AdminController
                                     'price' => $price,
                                 );
                             }
+                        }
                         /* Update delivery prices */
                         $carrier->addDeliveryPrice($priceList);
                         Tools::redirectAdmin(self::$currentIndex.'&conf=6&id_carrier='.$carrier->id.'&token='.$this->token);
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
-                }
-                elseif (isset($id_carrier2))
+                    }
+                } elseif (isset($id_carrier2)) {
                     $_POST['id_carrier'] = $id_carrier2;
-                else
+                } else {
                     $this->errors[] = Tools::displayError('An error occurred while attempting to update fees (cannot load carrier object).');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        else
+            }
+        } else {
             return parent::postProcess();
+        }
     }
 }

@@ -80,11 +80,11 @@ class StateCore extends ObjectModel
      */
     public static function getNameById($id_state)
     {
-        if (!$id_state)
+        if (!$id_state) {
             return false;
+        }
         $cache_id = 'State::getNameById_'.(int)$id_state;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `name`
 				FROM `'._DB_PREFIX_.'state`
@@ -104,11 +104,11 @@ class StateCore extends ObjectModel
      */
     public static function getIdByName($state)
     {
-        if (empty($state))
+        if (empty($state)) {
             return false;
+        }
         $cache_id = 'State::getIdByName_'.pSQL($state);
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance()->getValue('
 				SELECT `id_state`
 				FROM `'._DB_PREFIX_.'state`
@@ -142,20 +142,21 @@ class StateCore extends ObjectModel
     */
     public function delete()
     {
-        if (!$this->isUsed())
-        {
+        if (!$this->isUsed()) {
             // Database deletion
             $result = Db::getInstance()->delete($this->def['table'], '`'.$this->def['primary'].'` = '.(int)$this->id);
-            if (!$result)
+            if (!$result) {
                 return false;
+            }
 
             // Database deletion for multilingual fields related to the object
-            if (!empty($this->def['multilang']))
+            if (!empty($this->def['multilang'])) {
                 Db::getInstance()->delete(bqSQL($this->def['table']).'_lang', '`'.$this->def['primary'].'` = '.(int)$this->id);
+            }
             return $result;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -185,8 +186,9 @@ class StateCore extends ObjectModel
 
     public static function getStatesByIdCountry($id_country)
     {
-        if (empty($id_country))
+        if (empty($id_country)) {
             die(Tools::displayError());
+        }
 
         return Db::getInstance()->executeS('
 			SELECT *
@@ -202,8 +204,9 @@ class StateCore extends ObjectModel
 
     public static function getIdZone($id_state)
     {
-        if (!Validate::isUnsignedId($id_state))
+        if (!Validate::isUnsignedId($id_state)) {
             die(Tools::displayError());
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`

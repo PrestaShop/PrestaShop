@@ -36,8 +36,7 @@ function set_product_suppliers()
 		WHERE `id_supplier` > 0
 	');
 
-    while ($row = Db::getInstance()->nextRow($resource))
-    {
+    while ($row = Db::getInstance()->nextRow($resource)) {
         //Set default supplier for product
         Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'product_supplier`
@@ -58,8 +57,7 @@ function set_product_suppliers()
         );
 
         //Add each attribute to stock_available
-        foreach ($attributes as $attribute)
-        {
+        foreach ($attributes as $attribute) {
             // set supplier for attribute
             Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_supplier`

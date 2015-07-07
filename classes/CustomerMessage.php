@@ -94,26 +94,28 @@ class CustomerMessageCore extends ObjectModel
 
     public static function getTotalCustomerMessages($where = null)
     {
-        if (is_null($where))
+        if (is_null($where)) {
             return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message
 				LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
 				WHERE 1'.Shop::addSqlRestriction()
             );
-        else
+        } else {
             return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message cm
 				LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`)
 				WHERE '.$where.Shop::addSqlRestriction()
             );
+        }
     }
 
     public function delete()
     {
-        if (!empty($this->file_name))
+        if (!empty($this->file_name)) {
             @unlink(_PS_UPLOAD_DIR_.$this->file_name);
+        }
         return parent::delete();
     }
 }

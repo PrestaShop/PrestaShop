@@ -199,8 +199,9 @@ class StockMvtCore extends ObjectModel
         $query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
 
         // if filer by warehouse
-        if (!is_null($id_warehouse))
+        if (!is_null($id_warehouse)) {
             $query->where('s.id_warehouse = '.(int)$id_warehouse);
+        }
 
         // orders the movements by date
         $query->orderBy('date_add DESC');
@@ -209,10 +210,10 @@ class StockMvtCore extends ObjectModel
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($query);
 
         // fills the movements array
-        while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res))
-        {
-            if ($quantity_total >= $quantity)
+        while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res)) {
+            if ($quantity_total >= $quantity) {
                 break;
+            }
             $quantity_total += (int)$row['physical_quantity'];
             $movements[] = $row;
         }
@@ -236,17 +237,18 @@ class StockMvtCore extends ObjectModel
         $query->innerJoin('stock', 's', 's.id_stock = sm.id_stock');
         $query->innerJoin('warehouse', 'w', 'w.id_warehouse = s.id_warehouse');
         $query->where('sm.sign = 1');
-        if ($id_product_attribute)
+        if ($id_product_attribute) {
             $query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
-        else
+        } else {
             $query->where('s.id_product = '.(int)$id_product);
+        }
         $query->orderBy('date_add DESC');
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if ($res != false)
+        if ($res != false) {
             return $res['0'];
+        }
         return false;
     }
-
 }

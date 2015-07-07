@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
 class DbTest extends IntegrationTestCase
 {
-
     private $first_slave;
 
     private $second_slave;
@@ -83,7 +82,8 @@ class DbTest extends IntegrationTestCase
     {
         Db::$_slave_servers_loaded = true;
         Db::$_servers = array();
-        for ($i = 0; $i <= $nb_servers; $i++)
+        for ($i = 0; $i <= $nb_servers; $i++) {
             Db::$_servers[] = array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_);
+        }
     }
 }

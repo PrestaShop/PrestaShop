@@ -42,8 +42,7 @@ class DiscountControllerCore extends FrontController
         $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
         $nb_cart_rules = count($cart_rules);
 
-        foreach ($cart_rules as &$discount)
-        {
+        foreach ($cart_rules as &$discount) {
             $discount['value'] = Tools::convertPriceFull(
                                             $discount['value'],
                                             new Currency((int)$discount['reduction_currency']),

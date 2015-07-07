@@ -40,15 +40,17 @@ class AdminShopUrlControllerCore extends AdminController
         $this->bulk_actions = array();
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
-        if ($this->id_shop = (int)Tools::getValue('shop_id'))
+        if ($this->id_shop = (int)Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
-        else
+        } else {
             $this->id_shop = (int)Tools::getValue('id_shop');
+        }
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->fields_list = array(
             'id_shop_url' => array(
@@ -104,8 +106,9 @@ class AdminShopUrlControllerCore extends AdminController
         $this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
         $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
-        if ($id_shop = (int)Tools::getValue('id_shop'))
+        if ($id_shop = (int)Tools::getValue('id_shop')) {
             $this->_where = 'AND a.id_shop = '.$id_shop;
+        }
         $this->_use_found_rows = false;
 
         return parent::renderList();
@@ -116,15 +119,16 @@ class AdminShopUrlControllerCore extends AdminController
         $update_htaccess = Tools::modRewriteActive() && ((file_exists('.htaccess') && is_writable('.htaccess')) || is_writable(dirname('.htaccess')));
 
         $this->multiple_fieldsets = true;
-        if (!$update_htaccess)
+        if (!$update_htaccess) {
             $desc_virtual_uri = array(
                 '<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.').'</span>'
             );
-        else
+        } else {
             $desc_virtual_uri = array(
                 $this->l('You can use this option if you want to create a store with a URL that doesn\'t exist on your server (e.g. if you want your store to be available with the URL www.example.com/my-store/shoes/, you have to set shoes/ in this field, assuming that my-store/ is your Physical URL).'),
                 '<strong>'.$this->l('URL rewriting must be activated on your server to use this feature.').'</strong>'
             );
+        }
         $this->fields_form = array(
             array(
                 'form' => array(
@@ -229,7 +233,7 @@ class AdminShopUrlControllerCore extends AdminController
             ),
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
                 array(
                     array(
@@ -241,6 +245,7 @@ class AdminShopUrlControllerCore extends AdminController
                     )
                 )
             );
+        }
 
         $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
             array(
@@ -262,16 +267,18 @@ class AdminShopUrlControllerCore extends AdminController
             )
         );
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         self::$currentIndex = self::$currentIndex.($obj->id ? '&shop_id='.(int)$obj->id_shop : '');
 
         $current_shop = Shop::initialize();
 
         $list_shop_with_url = array();
-        foreach (Shop::getShops(false, null, true) as $id)
+        foreach (Shop::getShops(false, null, true) as $id) {
             $list_shop_with_url[$id] = (bool)count(ShopUrl::getShopUrls($id));
+        }
 
         $this->tpl_form_vars = array(
             'js_shop_url' => Tools::jsonEncode($list_shop_with_url)
@@ -291,13 +298,14 @@ class AdminShopUrlControllerCore extends AdminController
     {
         parent::initPageHeaderToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit')
-        {
-            if ($this->id_object)
+        if ($this->display != 'add' && $this->display != 'edit') {
+            if ($this->id_object) {
                 $this->loadObject();
+            }
 
-            if (!$this->id_shop && $this->object && $this->object->id_shop)
+            if (!$this->id_shop && $this->object && $this->object->id_shop) {
                 $this->id_shop = $this->object->id_shop;
+            }
 
             $this->page_header_toolbar_btn['edit'] = array(
                 'desc' => $this->l('Edit this shop'),
@@ -315,13 +323,14 @@ class AdminShopUrlControllerCore extends AdminController
     {
         parent::initToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit')
-        {
-            if ($this->id_object)
+        if ($this->display != 'add' && $this->display != 'edit') {
+            if ($this->id_object) {
                 $this->loadObject();
+            }
 
-            if (!$this->id_shop && $this->object && $this->object->id_shop)
+            if (!$this->id_shop && $this->object && $this->object->id_shop) {
                 $this->id_shop = $this->object->id_shop;
+            }
 
             $this->toolbar_btn['new'] = array(
                 'desc' => $this->l('Add a new URL'),
@@ -337,22 +346,22 @@ class AdminShopUrlControllerCore extends AdminController
         $this->addJqueryPlugin('cooki-plugin');
         $data = Shop::getTree();
 
-        foreach ($data as $key_group => &$group)
-            foreach ($group['shops'] as $key_shop => &$shop)
-            {
+        foreach ($data as $key_group => &$group) {
+            foreach ($group['shops'] as $key_shop => &$shop) {
                 $current_shop = new Shop($shop['id_shop']);
                 $urls = $current_shop->getUrls();
 
-                foreach ($urls as $key_url => &$url)
-                {
+                foreach ($urls as $key_url => &$url) {
                     $title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
-                    if (strlen($title) > 23)
+                    if (strlen($title) > 23) {
                         $title = substr($title, 0, 23).'...';
+                    }
 
                     $url['name'] = $title;
                     $shop['urls'][$url['id_shop_url']] = $url;
                 }
             }
+        }
 
         $shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
@@ -374,8 +383,7 @@ class AdminShopUrlControllerCore extends AdminController
             ->setData($data);
         $shops_tree = $shops_tree->render(null, false, false);
 
-        if (!$this->display && $this->id_shop)
-        {
+        if (!$this->display && $this->id_shop) {
             $shop = new Shop($this->id_shop);
             $this->toolbar_title[] = $shop->name;
         }
@@ -394,52 +402,46 @@ class AdminShopUrlControllerCore extends AdminController
 
         $result = true;
 
-        if ((Tools::isSubmit('status'.$this->table) || Tools::isSubmit('status')) && Tools::getValue($this->identifier))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if (Validate::isLoadedObject($object = $this->loadObject()))
-                {
+        if ((Tools::isSubmit('status'.$this->table) || Tools::isSubmit('status')) && Tools::getValue($this->identifier)) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ShopUrl $object */
-                    if ($object->main)
+                    if ($object->main) {
                         $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
-                    elseif ($object->toggleStatus())
+                    } elseif ($object->toggleStatus()) {
                         Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('An error occurred while updating the status.');
-                }
-                else
+                    }
+                } else {
                     $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        elseif (Tools::isSubmit('main'.$this->table) && Tools::getValue($this->identifier))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if (Validate::isLoadedObject($object = $this->loadObject()))
-                {
+            }
+        } elseif (Tools::isSubmit('main'.$this->table) && Tools::getValue($this->identifier)) {
+            if ($this->tabAccess['edit'] === '1') {
+                if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ShopUrl $object */
-                    if (!$object->main)
-                    {
+                    if (!$object->main) {
                         $result = $object->setMain();
                         Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
-                }
-                else
+                    }
+                } else {
                     $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        else
+            }
+        } else {
             $result = parent::postProcess();
+        }
 
-        if ($this->redirect_after)
+        if ($this->redirect_after) {
             $this->redirect_after .= '&shop_id='.(int)$this->id_shop;
+        }
 
         return $result;
     }
@@ -448,15 +450,16 @@ class AdminShopUrlControllerCore extends AdminController
     {
         /** @var ShopUrl $object */
         $object = $this->loadObject(true);
-        if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+        if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'))) {
             $this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
+        }
 
         $unallowed = str_replace('/', '', Tools::getValue('virtual_uri'));
-        if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed))
+        if ($unallowed == 'c' || $unallowed == 'img' || is_numeric($unallowed)) {
             $this->errors[] = sprintf(Tools::displayError('A shop virtual URL can not be "%s"'), $unallowed);
+        }
         $return = parent::processSave();
-        if (!$this->errors)
-        {
+        if (!$this->errors) {
             Tools::generateHtaccess();
             Tools::clearSmartyCache();
             Media::clearCache();
@@ -470,11 +473,13 @@ class AdminShopUrlControllerCore extends AdminController
         /** @var ShopUrl $object */
         $object = $this->loadObject(true);
 
-        if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
+        if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri'))) {
             $this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
+        }
 
-        if (Tools::getValue('main') && !Tools::getValue('active'))
+        if (Tools::getValue('main') && !Tools::getValue('active')) {
             $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+        }
 
         return parent::processAdd();
     }
@@ -483,17 +488,20 @@ class AdminShopUrlControllerCore extends AdminController
     {
         $this->redirect_shop_url = false;
         $current_url = parse_url($_SERVER['REQUEST_URI']);
-        if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
+        if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/')) {
             $this->redirect_shop_url = true;
+        }
 
         /** @var ShopUrl $object */
         $object = $this->loadObject(true);
 
-        if ($object->main && !Tools::getValue('main'))
+        if ($object->main && !Tools::getValue('main')) {
             $this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
+        }
 
-        if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
+        if (($object->main || Tools::getValue('main')) && !Tools::getValue('active')) {
             $this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+        }
 
         return parent::processUpdate();
     }
@@ -504,11 +512,13 @@ class AdminShopUrlControllerCore extends AdminController
      */
     protected function afterUpdate($object)
     {
-        if ($object->id && Tools::getValue('main'))
+        if ($object->id && Tools::getValue('main')) {
             $object->setMain();
+        }
 
-        if ($this->redirect_shop_url)
+        if ($this->redirect_shop_url) {
             $this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
+        }
     }
 
     /**
@@ -521,17 +531,21 @@ class AdminShopUrlControllerCore extends AdminController
     {
         $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 
-        if (!array_key_exists('Delete', self::$cache_lang))
+        if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+        }
 
-        if (!array_key_exists('DeleteItem', self::$cache_lang))
+        if (!array_key_exists('DeleteItem', self::$cache_lang)) {
             self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
+        }
 
-        if (!array_key_exists('Name', self::$cache_lang))
+        if (!array_key_exists('Name', self::$cache_lang)) {
             self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
+        }
 
-        if (!is_null($name))
+        if (!is_null($name)) {
             $name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+        }
 
         $data = array(
             $this->identifier => $id,
@@ -539,8 +553,9 @@ class AdminShopUrlControllerCore extends AdminController
             'action' => self::$cache_lang['Delete'],
         );
 
-        if ($this->specificConfirmDelete !== false)
+        if ($this->specificConfirmDelete !== false) {
             $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
+        }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 

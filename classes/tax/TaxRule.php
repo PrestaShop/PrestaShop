@@ -63,8 +63,9 @@ class TaxRuleCore extends ObjectModel
 
     public static function deleteByGroupId($id_group)
     {
-        if (empty($id_group))
+        if (empty($id_group)) {
             die(Tools::displayError());
+        }
 
         return Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'tax_rule`
@@ -124,8 +125,7 @@ class TaxRuleCore extends ObjectModel
     public static function isTaxInUse($id_tax)
     {
         $cache_id = 'TaxRule::isTaxInUse_'.(int)$id_tax;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax);
             Cache::store($cache_id, $result);
             return $result;
@@ -144,23 +144,17 @@ class TaxRuleCore extends ObjectModel
 
         $from = $zip_codes[0];
         $to = isset($zip_codes[1]) ? $zip_codes[1]: 0;
-        if (count($zip_codes) == 2)
-        {
+        if (count($zip_codes) == 2) {
             $from = $zip_codes[0];
             $to   = $zip_codes[1];
-            if ($zip_codes[0] > $zip_codes[1])
-            {
+            if ($zip_codes[0] > $zip_codes[1]) {
                 $from = $zip_codes[1];
                 $to   = $zip_codes[0];
-            }
-            elseif ($zip_codes[0] == $zip_codes[1])
-            {
+            } elseif ($zip_codes[0] == $zip_codes[1]) {
                 $from = $zip_codes[0];
                 $to   = 0;
             }
-        }
-        elseif (count($zip_codes) == 1)
-        {
+        } elseif (count($zip_codes) == 1) {
             $from = $zip_codes[0];
             $to = 0;
         }

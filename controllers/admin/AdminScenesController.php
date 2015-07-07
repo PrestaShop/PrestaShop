@@ -71,34 +71,33 @@ class AdminScenesControllerCore extends AdminController
     protected function afterImageUpload()
     {
         /* Generate image with differents size */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
-        if ($obj->id && (isset($_FILES['image']) || isset($_FILES['thumb'])))
-        {
+        if ($obj->id && (isset($_FILES['image']) || isset($_FILES['thumb']))) {
             $base_img_path = _PS_SCENE_IMG_DIR_.$obj->id.'.jpg';
             $images_types = ImageType::getImagesTypes('scenes');
 
-            foreach ($images_types as $k => $image_type)
-            {
-                if ($image_type['name'] == 'm_scene_default')
-                {
-                    if (isset($_FILES['thumb']) && !$_FILES['thumb']['error'])
+            foreach ($images_types as $k => $image_type) {
+                if ($image_type['name'] == 'm_scene_default') {
+                    if (isset($_FILES['thumb']) && !$_FILES['thumb']['error']) {
                         $base_thumb_path = _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'.jpg';
-                    else
+                    } else {
                         $base_thumb_path = $base_img_path;
+                    }
                     ImageManager::resize(
                         $base_thumb_path,
                         _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
                         (int)$image_type['width'],
                         (int)$image_type['height']);
-                }
-                elseif (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !$_FILES['image']['error'])
+                } elseif (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !$_FILES['image']['error']) {
                     ImageManager::resize(
                         $base_img_path,
                         _PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
                         (int)$image_type['width'],
                         (int)$image_type['height']);
+                }
             }
         }
 
@@ -110,8 +109,9 @@ class AdminScenesControllerCore extends AdminController
         $this->initFieldsForm();
 
         /** @var Scene $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $this->tpl_form_vars['products'] = $obj->getProducts(true, $this->context->language->id, false, $this->context);
 
@@ -120,12 +120,13 @@ class AdminScenesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_scene'] = array(
                 'href' => self::$currentIndex.'&addscene&token='.$this->token,
                 'desc' => $this->l('Add new image map', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -134,12 +135,13 @@ class AdminScenesControllerCore extends AdminController
     {
         parent::initToolbar();
 
-        if (in_array($this->display, array('add', 'edit')))
+        if (in_array($this->display, array('add', 'edit'))) {
             $this->toolbar_btn = array_merge(array('save-and-stay' => array(
                 'short' => 'SaveAndStay',
                 'href' => '#',
                 'desc' => $this->l('Save and stay'),
             )), $this->toolbar_btn);
+        }
     }
 
     public function initFieldsForm()
@@ -148,12 +150,13 @@ class AdminScenesControllerCore extends AdminController
         $scene_image_types = ImageType::getImagesTypes('scenes');
         $large_scene_image_type = null;
         $thumb_scene_image_type = null;
-        foreach ($scene_image_types as $scene_image_type)
-        {
-            if ($scene_image_type['name'] == 'scene_default')
+        foreach ($scene_image_types as $scene_image_type) {
+            if ($scene_image_type['name'] == 'scene_default') {
                 $large_scene_image_type = $scene_image_type;
-            if ($scene_image_type['name'] == 'm_scene_default')
+            }
+            if ($scene_image_type['name'] == 'm_scene_default') {
                 $thumb_scene_image_type = $scene_image_type;
+            }
         }
         $fields_form = array(
             'legend' => array(
@@ -216,8 +219,7 @@ class AdminScenesControllerCore extends AdminController
                 $this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).')
                 .'</div>';
 
-        if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg'))
-        {
+        if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.$obj->id.'-scene_default.jpg')) {
             $this->addJqueryPlugin('autocomplete');
             $this->addJqueryPlugin('imgareaselect');
             $this->addJs(_PS_JS_DIR_.'admin/scenes.js');
@@ -242,8 +244,9 @@ class AdminScenesControllerCore extends AdminController
 				</div>
 				';
 
-            if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg'))
+            if ($obj->id && file_exists(_PS_SCENE_IMG_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg')) {
                 $image_to_map_desc .= '</div><hr/><img class="thumbnail" id="large_scene_image" style="clear:both;border:1px solid black;" alt="" src="'._THEME_SCENE_DIR_.'thumbs/'.$obj->id.'-m_scene_default.jpg?rand='.(int)rand().'" />';
+            }
 
             $img_alt_desc = '';
             $img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
@@ -261,12 +264,15 @@ class AdminScenesControllerCore extends AdminController
             );
 
             $selected_cat = array();
-            if (Tools::isSubmit('categories'))
-                foreach (Tools::getValue('categories') as $row)
+            if (Tools::isSubmit('categories')) {
+                foreach (Tools::getValue('categories') as $row) {
                     $selected_cat[] = $row;
-            elseif ($obj->id)
-                foreach (Scene::getIndexedCategories($obj->id) as $row)
+                }
+            } elseif ($obj->id) {
+                foreach (Scene::getIndexedCategories($obj->id) as $row) {
                     $selected_cat[] = $row['id_category'];
+                }
+            }
 
             $this->fields_form['input'][] = array(
                     'type'  => 'categories',
@@ -280,12 +286,11 @@ class AdminScenesControllerCore extends AdminController
                         'use_checkbox'        => true
                     )
                 );
-        }
-        else
+        } else {
             $image_to_map_desc .= '<span>'.$this->l('Please add a picture to continue mapping the image.').'</span>';
+        }
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -301,26 +306,28 @@ class AdminScenesControllerCore extends AdminController
             'desc' => $image_to_map_desc,
         );
 
-        if (isset($input_img_alt))
+        if (isset($input_img_alt)) {
             $this->fields_form['input'][] = $input_img_alt;
+        }
     }
 
     public function postProcess()
     {
-        if (Tools::isSubmit('save_image_map'))
-        {
-            if (!Tools::isSubmit('categories') || !count(Tools::getValue('categories')))
+        if (Tools::isSubmit('save_image_map')) {
+            if (!Tools::isSubmit('categories') || !count(Tools::getValue('categories'))) {
                 $this->errors[] = Tools::displayError('You should select at least one category.');
-            if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
+            }
+            if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones'))) {
                 $this->errors[] = Tools::displayError('You should create at least one zone.');
+            }
         }
 
-        if (Tools::isSubmit('delete'.$this->table))
-        {
-            if (Validate::isLoadedObject($object = $this->loadObject()))
+        if (Tools::isSubmit('delete'.$this->table)) {
+            if (Validate::isLoadedObject($object = $this->loadObject())) {
                 $object->deleteImage(false);
-            else
+            } else {
                 return false;
+            }
         }
         parent::postProcess();
     }

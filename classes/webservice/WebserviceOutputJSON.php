@@ -54,8 +54,9 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 
     public function setSchemaToDisplay($schema)
     {
-        if (is_string($schema))
+        if (is_string($schema)) {
             $this->schemaToDisplay = $schema;
+        }
         return $this;
     }
 
@@ -90,21 +91,23 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
     {
         $is_association = (isset($field['is_association']) && $field['is_association'] == true);
 
-        if (is_array($field['value']))
-        {
+        if (is_array($field['value'])) {
             $tmp = array();
-            foreach ($this->languages as $id_lang)
+            foreach ($this->languages as $id_lang) {
                 $tmp[] = array('id' => $id_lang, 'value' => $field['value'][$id_lang]);
-            if (count($tmp) == 1)
+            }
+            if (count($tmp) == 1) {
                 $field['value'] = $tmp[0]['value'];
-            else
+            } else {
                 $field['value'] = $tmp;
+            }
         }
         // Case 1 : fields of the current entity (not an association)
-        if (!$is_association)
+        if (!$is_association) {
             $this->currentEntity[$field['sqlId']]  = $field['value'];
-        else // Case 2 : fields of an associated entity to the current one
+        } else { // Case 2 : fields of an associated entity to the current one
             $this->currentAssociatedEntity[] = array('name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']);
+        }
         return '';
     }
 
@@ -112,38 +115,42 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
     {
         // api ?
         static $isAPICall = false;
-        if ($node_name == 'api' && ($isAPICall == false))
+        if ($node_name == 'api' && ($isAPICall == false)) {
             $isAPICall = true;
-        if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api')))
+        }
+        if ($isAPICall && !in_array($node_name, array('description', 'schema', 'api'))) {
             $this->content[] = $node_name;
-        if (isset($more_attr, $more_attr['id']))
+        }
+        if (isset($more_attr, $more_attr['id'])) {
             $this->content[$params['objectsNodeName']][] = array('id' => $more_attr['id']);
+        }
         return '';
     }
 
     public function getNodeName($params)
     {
         $node_name = '';
-        if (isset($params['objectNodeName']))
+        if (isset($params['objectNodeName'])) {
             $node_name = $params['objectNodeName'];
+        }
         return $node_name;
     }
 
     public function renderNodeFooter($node_name, $params)
     {
-        if (isset($params['objectNodeName']) && $params['objectNodeName'] == $node_name)
-        {
-            if (array_key_exists('display', $_GET))
+        if (isset($params['objectNodeName']) && $params['objectNodeName'] == $node_name) {
+            if (array_key_exists('display', $_GET)) {
                 $this->content[$params['objectsNodeName']][] = $this->currentEntity;
-            else
+            } else {
                 $this->content[$params['objectNodeName']] = $this->currentEntity;
+            }
             $this->currentEntity = array();
         }
-        if (count($this->currentAssociatedEntity))
-        {
+        if (count($this->currentAssociatedEntity)) {
             $current = array();
-            foreach ($this->currentAssociatedEntity as $element)
+            foreach ($this->currentAssociatedEntity as $element) {
                 $current[$element['key']] = $element['value'];
+            }
             //$this->currentEntity['associations'][$element['name']][][$element['key']] = $element['value'];
             $this->currentEntity['associations'][$element['name']][] = $current;
             $this->currentAssociatedEntity = array();
@@ -164,12 +171,36 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
         return $this;
     }
 
-    public function renderAssociationWrapperHeader() { return ''; }
-    public function renderAssociationWrapperFooter() { return ''; }
-    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false) { return ''; }
-    public function renderAssociationFooter($obj, $params, $assoc_name) { return; }
-    public function renderErrorsHeader() { return ''; }
-    public function renderErrorsFooter() { return ''; }
-    public function renderAssociationField($field) { return ''; }
-    public function renderi18nField($field) { return ''; }
+    public function renderAssociationWrapperHeader()
+    {
+        return '';
+    }
+    public function renderAssociationWrapperFooter()
+    {
+        return '';
+    }
+    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false)
+    {
+        return '';
+    }
+    public function renderAssociationFooter($obj, $params, $assoc_name)
+    {
+        return;
+    }
+    public function renderErrorsHeader()
+    {
+        return '';
+    }
+    public function renderErrorsFooter()
+    {
+        return '';
+    }
+    public function renderAssociationField($field)
+    {
+        return '';
+    }
+    public function renderi18nField($field)
+    {
+        return '';
+    }
 }

@@ -40,8 +40,9 @@ class AdminGendersControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -96,12 +97,13 @@ class AdminGendersControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if(empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_gender'] = array(
                 'href' => self::$currentIndex.'&addgender&token='.$this->token,
                 'desc' => $this->l('Add new title', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -175,8 +177,9 @@ class AdminGendersControllerCore extends AdminController
         );
 
         /** @var Gender $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $this->fields_value = array(
             'img_width' => $this->default_image_width,
@@ -194,19 +197,14 @@ class AdminGendersControllerCore extends AdminController
 
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir']))
-        {
-            if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height')))
+        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
+            if (!Validate::isInt(Tools::getValue('img_width')) || !Validate::isInt(Tools::getValue('img_height'))) {
                 $this->errors[] = Tools::displayError('Width and height must be numeric values.');
-            else
-            {
-                if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0)
-                {
+            } else {
+                if ((int)Tools::getValue('img_width') > 0 && (int)Tools::getValue('img_height') > 0) {
                     $width = (int)Tools::getValue('img_width');
                     $height = (int)Tools::getValue('img_height');
-                }
-                else
-                {
+                } else {
                     $width = null;
                     $height = null;
                 }
@@ -221,12 +219,12 @@ class AdminGendersControllerCore extends AdminController
         parent::afterImageUpload();
 
         if (($id_gender = (int)Tools::getValue('id_gender')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_.$id_gender.'.jpg'))
-        {
+             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_.$id_gender.'.jpg')) {
             $current_file = _PS_TMP_IMG_DIR_.'gender_mini_'.$id_gender.'_'.$this->context->shop->id.'.jpg';
 
-            if (file_exists($current_file))
+            if (file_exists($current_file)) {
                 unlink($current_file);
+            }
         }
 
         return true;

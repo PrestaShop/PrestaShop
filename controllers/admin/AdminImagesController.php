@@ -64,20 +64,23 @@ class AdminImagesControllerCore extends AdminController
         );
 
         // Scenes tab has been removed by default from the installation, but may still exists in updates
-        if (Tab::getIdFromClassName('AdminScenes'))
+        if (Tab::getIdFromClassName('AdminScenes')) {
             $this->fields_list['scenes'] = array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false);
+        }
 
         // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
         $this->display_move = false;
         $dir = _PS_PROD_IMG_DIR_;
-        if (is_dir($dir))
-            if ($dh = opendir($dir))
-            {
-                while (($file = readdir($dh)) !== false && $this->display_move == false)
-                        if (!is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file[0] != '.' && is_numeric($file[0]))
-                            $this->display_move = true;
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false && $this->display_move == false) {
+                    if (!is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file[0] != '.' && is_numeric($file[0])) {
+                        $this->display_move = true;
+                    }
+                }
                 closedir($dh);
             }
+        }
 
         $this->fields_options = array(
             'images' => array(
@@ -180,7 +183,7 @@ class AdminImagesControllerCore extends AdminController
             ),
         );
 
-        if ($this->display_move)
+        if ($this->display_move) {
             $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
                 'title' => $this->l('Use the legacy image filesystem'),
                 'hint' => $this->l('This should be set to yes unless you successfully moved images in "Images" page under the "Preferences" menu.'),
@@ -190,6 +193,7 @@ class AdminImagesControllerCore extends AdminController
                 'type' => 'bool',
                 'visibility' => Shop::CONTEXT_ALL
             );
+        }
 
         $this->fields_form = array(
             'legend' => array(
@@ -356,52 +360,48 @@ class AdminImagesControllerCore extends AdminController
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
-        if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/'))
+        if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/')) {
             $this->warnings[] = sprintf($this->l('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.'), _PS_PROD_IMG_DIR_.'duplicates/');
+        }
 
-        if (Tools::isSubmit('submitRegenerate'.$this->table))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if ($this->_regenerateThumbnails(Tools::getValue('type'), Tools::getValue('erase')))
+        if (Tools::isSubmit('submitRegenerate'.$this->table)) {
+            if ($this->tabAccess['edit'] === '1') {
+                if ($this->_regenerateThumbnails(Tools::getValue('type'), Tools::getValue('erase'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=9'.'&token='.$this->token);
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        elseif (Tools::isSubmit('submitMoveImages'.$this->table))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
-                if ($this->_moveImagesToNewFileSystem())
+            }
+        } elseif (Tools::isSubmit('submitMoveImages'.$this->table)) {
+            if ($this->tabAccess['edit'] === '1') {
+                if ($this->_moveImagesToNewFileSystem()) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=25'.'&token='.$this->token);
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        elseif (Tools::isSubmit('submitOptions'.$this->table))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+            }
+        } elseif (Tools::isSubmit('submitOptions'.$this->table)) {
+            if ($this->tabAccess['edit'] === '1') {
                 if ((int)Tools::getValue('PS_JPEG_QUALITY') < 0
-                    || (int)Tools::getValue('PS_JPEG_QUALITY') > 100)
+                    || (int)Tools::getValue('PS_JPEG_QUALITY') > 100) {
                     $this->errors[] = Tools::displayError('Incorrect value for the selected JPEG image compression.');
-                elseif ((int)Tools::getValue('PS_PNG_QUALITY') < 0
-                    || (int)Tools::getValue('PS_PNG_QUALITY') > 9)
+                } elseif ((int)Tools::getValue('PS_PNG_QUALITY') < 0
+                    || (int)Tools::getValue('PS_PNG_QUALITY') > 9) {
                     $this->errors[] = Tools::displayError('Incorrect value for the selected PNG image compression.');
-                elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
+                } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
-                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY')))
+                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))) {
                     $this->errors[] = Tools::displayError('Unknown error.');
-                else
+                } else {
                     $this->confirmations[] = $this->_conf[6];
+                }
                 return parent::postProcess();
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-        }
-        else
+            }
+        } else {
             return parent::postProcess();
+        }
     }
 
     public static function printEntityActiveIcon($value, $object)
@@ -411,8 +411,9 @@ class AdminImagesControllerCore extends AdminController
 
     protected function _childValidation()
     {
-        if (!Tools::getValue('id_image_type') && Validate::isImageTypeName($typeName = Tools::getValue('name')) && ImageType::typeAlreadyExists($typeName))
+        if (!Tools::getValue('id_image_type') && Validate::isImageTypeName($typeName = Tools::getValue('name')) && ImageType::typeAlreadyExists($typeName)) {
             $this->errors[] = Tools::displayError('This name already exists.');
+        }
     }
 
     /**
@@ -430,8 +431,9 @@ class AdminImagesControllerCore extends AdminController
         );
 
         $formats = array();
-        foreach ($types as $i => $type)
+        foreach ($types as $i => $type) {
             $formats[$i] = ImageType::getImagesTypes($i);
+        }
 
         $this->context->smarty->assign(array(
             'types' => $types,
@@ -450,34 +452,40 @@ class AdminImagesControllerCore extends AdminController
      */
     protected function _deleteOldImages($dir, $type, $product = false)
     {
-        if (!is_dir($dir))
+        if (!is_dir($dir)) {
             return false;
+        }
         $toDel = scandir($dir);
 
-        foreach ($toDel as $d)
-            foreach ($type as $imageType)
+        foreach ($toDel as $d) {
+            foreach ($type as $imageType) {
                 if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
-                    if (file_exists($dir.$d))
+                    || preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d)) {
+                    if (file_exists($dir.$d)) {
                         unlink($dir.$d);
+                    }
+                }
+            }
+        }
 
         // delete product images using new filesystem.
-        if ($product)
-        {
+        if ($product) {
             $productsImages = Image::getAllImages();
-            foreach ($productsImages as $image)
-            {
+            foreach ($productsImages as $image) {
                 $imageObj = new Image($image['id_image']);
                 $imageObj->id_product = $image['id_product'];
-                if (file_exists($dir.$imageObj->getImgFolder()))
-                {
+                if (file_exists($dir.$imageObj->getImgFolder())) {
                     $toDel = scandir($dir.$imageObj->getImgFolder());
-                    foreach ($toDel as $d)
-                        foreach ($type as $imageType)
-                            if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d)))
-                                if (file_exists($dir.$imageObj->getImgFolder().$d))
+                    foreach ($toDel as $d) {
+                        foreach ($type as $imageType) {
+                            if (preg_match('/^[0-9]+\-'.$imageType['name'].'\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
+                                if (file_exists($dir.$imageObj->getImgFolder().$d)) {
                                     unlink($dir.$imageObj->getImgFolder().$d);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -493,68 +501,69 @@ class AdminImagesControllerCore extends AdminController
      */
     protected function _regenerateNewImages($dir, $type, $productsImages = false)
     {
-        if (!is_dir($dir))
+        if (!is_dir($dir)) {
             return false;
+        }
 
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
-        if (!$productsImages)
-        {
-            foreach (scandir($dir) as $image)
-                if (preg_match('/^[0-9]*\.jpg$/', $image))
-                    foreach ($type as $k => $imageType)
-                    {
+        if (!$productsImages) {
+            foreach (scandir($dir) as $image) {
+                if (preg_match('/^[0-9]*\.jpg$/', $image)) {
+                    foreach ($type as $k => $imageType) {
                         // Customizable writing dir
                         $newDir = $dir;
-                        if ($imageType['name'] == 'thumb_scene')
+                        if ($imageType['name'] == 'thumb_scene') {
                             $newDir .= 'thumbs/';
-                        if (!file_exists($newDir))
+                        }
+                        if (!file_exists($newDir)) {
                             continue;
-                        if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg'))
-                        {
-                            if (!file_exists($dir.$image) || !filesize($dir.$image))
+                        }
+                        if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg')) {
+                            if (!file_exists($dir.$image) || !filesize($dir.$image)) {
                                 $this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
-                            else
-                            {
-                                if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+                            } else {
+                                if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
                                     $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+                                }
 
-                                if ($generate_hight_dpi_images)
-                                {
-                                    if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2))
+                                if ($generate_hight_dpi_images) {
+                                    if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2)) {
                                         $this->errors[] = sprintf(Tools::displayError('Failed to resize image file to high resolution (%s)'), $dir.$image);
+                                    }
                                 }
                             }
                         }
-                        if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
+                        if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
                             return 'timeout';
+                        }
                     }
-        }
-        else
-        {
-            foreach (Image::getAllImages() as $image)
-            {
+                }
+            }
+        } else {
+            foreach (Image::getAllImages() as $image) {
                 $imageObj = new Image($image['id_image']);
                 $existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
-                if (file_exists($existing_img) && filesize($existing_img))
-                {
-                    foreach ($type as $imageType)
-                        if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
-                        {
-                            if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+                if (file_exists($existing_img) && filesize($existing_img)) {
+                    foreach ($type as $imageType) {
+                        if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg')) {
+                            if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
                                 $this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
+                            }
 
-                            if ($generate_hight_dpi_images)
-                            {
-                                if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2))
+                            if ($generate_hight_dpi_images) {
+                                if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2)) {
                                     $this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
+                                }
                             }
                         }
-                }
-                else
+                    }
+                } else {
                     $this->errors[] = sprintf(Tools::displayError('Original image is missing or empty (%1$s) for product ID %2$d'), $existing_img, (int)$imageObj->id_product);
-                if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+                }
+                if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
                     return 'timeout';
+                }
             }
         }
 
@@ -574,22 +583,25 @@ class AdminImagesControllerCore extends AdminController
         $errors = false;
         $generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
-        foreach ($type as $image_type)
-            foreach ($languages as $language)
-            {
+        foreach ($type as $image_type) {
+            foreach ($languages as $language) {
                 $file = $dir.$language['iso_code'].'.jpg';
-                if (!file_exists($file))
+                if (!file_exists($file)) {
                     $file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT')).'.jpg';
-                if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg'))
-                {
-                    if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
+                }
+                if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg')) {
+                    if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height'])) {
                         $errors = true;
+                    }
 
-                    if ($generate_hight_dpi_images)
-                        if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2))
+                    if ($generate_hight_dpi_images) {
+                        if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2)) {
                             $errors = true;
+                        }
+                    }
                 }
             }
+        }
         return $errors;
     }
 
@@ -602,22 +614,22 @@ class AdminImagesControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 		WHERE h.`name` = \'actionWatermark\' AND m.`active` = 1');
 
-        if ($result && count($result))
-        {
+        if ($result && count($result)) {
             $productsImages = Image::getAllImages();
-            foreach ($productsImages as $image)
-            {
+            foreach ($productsImages as $image) {
                 $imageObj = new Image($image['id_image']);
-                if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg'))
-                    foreach ($result as $module)
-                    {
+                if (file_exists($dir.$imageObj->getExistingImgPath().'.jpg')) {
+                    foreach ($result as $module) {
                         $moduleInstance = Module::getInstanceByName($module['name']);
-                        if ($moduleInstance && is_callable(array($moduleInstance, 'hookActionWatermark')))
+                        if ($moduleInstance && is_callable(array($moduleInstance, 'hookActionWatermark'))) {
                             call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $type));
+                        }
 
-                        if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+                        if (time() - $this->start_time > $this->max_execution_time - 4) { // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
                             return 'timeout';
+                        }
                     }
+                }
             }
         }
     }
@@ -639,39 +651,44 @@ class AdminImagesControllerCore extends AdminController
         );
 
         // Launching generation process
-        foreach ($process as $proc)
-        {
-            if ($type != 'all' && $type != $proc['type'])
+        foreach ($process as $proc) {
+            if ($type != 'all' && $type != $proc['type']) {
                 continue;
+            }
 
             // Getting format generation
             $formats = ImageType::getImagesTypes($proc['type']);
-            if ($type != 'all')
-            {
+            if ($type != 'all') {
                 $format = strval(Tools::getValue('format_'.$type));
-                if ($format != 'all')
-                    foreach ($formats as $k => $form)
-                        if ($form['id_image_type'] != $format)
+                if ($format != 'all') {
+                    foreach ($formats as $k => $form) {
+                        if ($form['id_image_type'] != $format) {
                             unset($formats[$k]);
+                        }
+                    }
+                }
             }
 
-            if ($deleteOldImages)
+            if ($deleteOldImages) {
                 $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
-            if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true)
-            {
-                if (!count($this->errors))
-                    $this->errors[] = sprintf(Tools::displayError('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.'), $proc['type'], $proc['dir']);
             }
-            elseif ($return == 'timeout')
+            if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true) {
+                if (!count($this->errors)) {
+                    $this->errors[] = sprintf(Tools::displayError('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.'), $proc['type'], $proc['dir']);
+                }
+            } elseif ($return == 'timeout') {
                 $this->errors[] = Tools::displayError('Only part of the images have been regenerated. The server timed out before finishing.');
-            else
-            {
-                if ($proc['type'] == 'products')
-                    if ($this->_regenerateWatermark($proc['dir'], $formats) == 'timeout')
+            } else {
+                if ($proc['type'] == 'products') {
+                    if ($this->_regenerateWatermark($proc['dir'], $formats) == 'timeout') {
                         $this->errors[] = Tools::displayError('Server timed out. The watermark may not have been applied to all images.');
-                if (!count($this->errors))
-                    if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
+                    }
+                }
+                if (!count($this->errors)) {
+                    if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages)) {
                         $this->errors[] = sprintf(Tools::displayError('Cannot write "No picture" image to (%s) images folder. Please check the folder\'s writing permissions.'), $proc['type']);
+                    }
+                }
             }
         }
         return (count($this->errors) > 0 ? false : true);
@@ -690,12 +707,13 @@ class AdminImagesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_image_type'] = array(
                 'href' => self::$currentIndex.'&addimage_type&token='.$this->token,
                 'desc' => $this->l('Add new image type', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -705,25 +723,24 @@ class AdminImagesControllerCore extends AdminController
      */
     protected function _moveImagesToNewFileSystem()
     {
-        if (!Image::testFileSystem())
+        if (!Image::testFileSystem()) {
             $this->errors[] = Tools::displayError('Error: Your server configuration is not compatible with the new image system. No images were moved.');
-        else
-        {
+        } else {
             ini_set('max_execution_time', $this->max_execution_time); // ini_set may be disabled, we need the real value
             $this->max_execution_time = (int)ini_get('max_execution_time');
             $result = Image::moveToNewFileSystem($this->max_execution_time);
-            if ($result === 'timeout')
+            if ($result === 'timeout') {
                 $this->errors[] = Tools::displayError('Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.');
-            elseif ($result === false)
+            } elseif ($result === false) {
                 $this->errors[] = Tools::displayError('Error: Some -- or all -- images cannot be moved.');
+            }
         }
         return (count($this->errors) > 0 ? false : true);
     }
 
     public function initContent()
     {
-        if ($this->display != 'edit' && $this->display != 'add')
-        {
+        if ($this->display != 'edit' && $this->display != 'add') {
             $this->initRegenerate();
             $this->initMoveImages();
 
@@ -733,8 +750,9 @@ class AdminImagesControllerCore extends AdminController
             ));
         }
 
-        if ($this->display == 'edit')
+        if ($this->display == 'edit') {
             $this->warnings[] = $this->l('After modification, do not forget to regenerate thumbnails');
+        }
 
         parent::initContent();
     }

@@ -67,11 +67,11 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if (!$this->deleted && $this->isUsed())
-        {
+        if (!$this->deleted && $this->isUsed()) {
             $current_tax_rules_group = new TaxRulesGroup((int)$this->id);
-            if ((!$new_tax_rules_group = $current_tax_rules_group->duplicateObject()) || !$current_tax_rules_group->historize($new_tax_rules_group))
+            if ((!$new_tax_rules_group = $current_tax_rules_group->duplicateObject()) || !$current_tax_rules_group->historize($new_tax_rules_group)) {
                 return false;
+            }
 
             $this->id = (int)$new_tax_rules_group->id;
         }
@@ -113,7 +113,6 @@ class TaxRulesGroupCore extends ObjectModel
 		UPDATE '._DB_PREFIX_.'carrier_tax_rules_group_shop
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
 		WHERE id_tax_rules_group='.(int)$this->id);
-
     }
 
     public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
@@ -142,7 +141,6 @@ class TaxRulesGroupCore extends ObjectModel
             .Shop::addSqlAssociation('tax_rules_group', 'g').' WHERE deleted = 0'
             .($only_active ? ' AND g.`active` = 1' : '').'
 			ORDER BY name ASC');
-
     }
 
     /**
@@ -175,8 +173,9 @@ class TaxRulesGroupCore extends ObjectModel
         );
 
         $res = array();
-        foreach ($rows as $row)
+        foreach ($rows as $row) {
             $res[$row['id_tax_rules_group']] = $row['rate'];
+        }
 
         return $res;
     }
@@ -199,9 +198,11 @@ class TaxRulesGroupCore extends ObjectModel
     public function hasUniqueTaxRuleForCountry($id_country, $id_state, $id_tax_rule = false)
     {
         $rules = TaxRule::getTaxRulesByGroupId((int)Context::getContext()->language->id, (int)$this->id);
-        foreach ($rules as $rule)
-            if ($rule['id_country'] == $id_country && $id_state == $rule['id_state'] && !$rule['behavior'] && (int)$id_tax_rule != $rule['id_tax_rule'])
+        foreach ($rules as $rule) {
+            if ($rule['id_country'] == $id_country && $id_state == $rule['id_state'] && !$rule['behavior'] && (int)$id_tax_rule != $rule['id_tax_rule']) {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -222,8 +223,9 @@ class TaxRulesGroupCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $rate = 0;
-        foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax)
+        foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax) {
             $rate += (float)$tax->rate;
+        }
 
         return $rate;
     }

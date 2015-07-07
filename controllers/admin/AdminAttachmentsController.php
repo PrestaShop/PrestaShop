@@ -96,20 +96,20 @@ class AdminAttachmentsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_attachment'] = array(
                 'href' => self::$currentIndex.'&addattachment&token='.$this->token,
                 'desc' => $this->l('Add new attachment', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
 
     public function renderView()
     {
-        if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
-        {
+        if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj)) {
             $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
             Tools::redirectLink($link);
         }
@@ -118,13 +118,13 @@ class AdminAttachmentsControllerCore extends AdminController
 
     public function renderForm()
     {
-        if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
-        {
+        if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj)) {
             /** @var Attachment $obj */
             $link = $this->context->link->getPageLink('attachment', true, null, 'id_attachment='.$obj->id);
 
-            if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))
+            if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file)) {
                 $size = round(filesize(_PS_DOWNLOAD_DIR_.$obj->file) / 1024);
+            }
         }
 
         $this->fields_form = array(
@@ -169,19 +169,17 @@ class AdminAttachmentsControllerCore extends AdminController
     {
         parent::getList((int)$id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-        if (count($this->_list))
-        {
+        if (count($this->_list)) {
             $this->product_attachements = Attachment::getProductAttached((int)$id_lang, $this->_list);
 
             $list_product_list = array();
-            foreach ($this->_list as $list)
-            {
+            foreach ($this->_list as $list) {
                 $product_list = '';
 
-                if (isset($this->product_attachements[$list['id_attachment']]))
-                {
-                    foreach ($this->product_attachements[$list['id_attachment']] as $product)
+                if (isset($this->product_attachements[$list['id_attachment']])) {
+                    foreach ($this->product_attachements[$list['id_attachment']] as $product) {
                         $product_list .= $product.', ';
+                    }
 
                     $product_list = rtrim($product_list, ', ');
                 }
@@ -199,46 +197,41 @@ class AdminAttachmentsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
 
-        if (Tools::isSubmit('submitAdd'.$this->table))
-        {
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
             $id = (int)Tools::getValue('id_attachment');
-            if ($id && $a = new Attachment($id))
-            {
+            if ($id && $a = new Attachment($id)) {
                 $_POST['file'] = $a->file;
                 $_POST['mime'] = $a->mime;
             }
-            if (!count($this->errors))
-            {
-                if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name']))
-                {
-                    if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+            if (!count($this->errors)) {
+                if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
                         $this->errors[] = sprintf(
                             $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
                             (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
                             number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
                         );
-                    else
-                    {
-                        do $uniqid = sha1(microtime());
-                        while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
-                        if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid))
+                    } else {
+                        do {
+                            $uniqid = sha1(microtime());
+                        } while (file_exists(_PS_DOWNLOAD_DIR_.$uniqid));
+                        if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_.$uniqid)) {
                             $this->errors[] = $this->l('Failed to copy the file.');
+                        }
                         $_POST['file_name'] = $_FILES['file']['name'];
                         @unlink($_FILES['file']['tmp_name']);
-                        if (!sizeof($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_.$a->file))
+                        if (!sizeof($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_.$a->file)) {
                             unlink(_PS_DOWNLOAD_DIR_.$a->file);
+                        }
                         $_POST['file'] = $uniqid;
                         $_POST['mime'] = $_FILES['file']['type'];
                     }
-                }
-                elseif (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1)
-                {
+                } elseif (array_key_exists('file', $_FILES) && (int)$_FILES['file']['error'] === 1) {
                     $max_upload = (int)ini_get('upload_max_filesize');
                     $max_post = (int)ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);
@@ -247,15 +240,16 @@ class AdminAttachmentsControllerCore extends AdminController
                         '<b>'.$_FILES['file']['name'].'</b> ',
                         '<b>'.$upload_mb.'</b>'
                     );
-                }
-                elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file)))
+                } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file))) {
                     $this->errors[] = $this->l('Upload error. Please check your server configurations for the maximum upload size allowed.');
+                }
             }
             $this->validateRules();
         }
         $return = parent::postProcess();
-        if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_.$uniqid))
+        if (!$return && isset($uniqid) && file_exists(_PS_DOWNLOAD_DIR_.$uniqid)) {
             unlink(_PS_DOWNLOAD_DIR_.$uniqid);
+        }
         return $return;
     }
 }

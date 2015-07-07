@@ -50,14 +50,16 @@ class DbPDOCore extends Db
     protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
     {
         $dsn = 'mysql:';
-        if ($dbname)
+        if ($dbname) {
             $dsn .= 'dbname='.$dbname.';';
-        if (preg_match('/^(.*):([0-9]+)$/', $host, $matches))
+        }
+        if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
             $dsn .= 'host='.$matches[1].';port='.$matches[2];
-        elseif (preg_match('#^.*:(/.*)$#', $host, $matches))
+        } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
             $dsn .= 'unix_socket='.$matches[1];
-        else
+        } else {
             $dsn .= 'host='.$host;
+        }
 
         return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
     }
@@ -77,8 +79,9 @@ class DbPDOCore extends Db
         try {
             $link = DbPDO::_getPDO($host, $user, $password, false);
             $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
-            if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false))
+            if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
                 return true;
+            }
         } catch (PDOException $e) {
             return false;
         }
@@ -100,8 +103,9 @@ class DbPDOCore extends Db
         }
 
         // UTF-8 support
-        if ($this->link->exec('SET NAMES \'utf8\'') === false)
+        if ($this->link->exec('SET NAMES \'utf8\'') === false) {
             die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+        }
 
         return $this->link;
     }
@@ -137,11 +141,13 @@ class DbPDOCore extends Db
      */
     public function nextRow($result = false)
     {
-        if (!$result)
+        if (!$result) {
             $result = $this->result;
+        }
 
-        if (!is_object($result))
+        if (!is_object($result)) {
             return false;
+        }
 
         return $result->fetch(PDO::FETCH_ASSOC);
     }
@@ -155,11 +161,13 @@ class DbPDOCore extends Db
      */
     protected function getAll($result = false)
     {
-        if (!$result)
+        if (!$result) {
             $result = $this->result;
+        }
 
-        if (!is_object($result))
+        if (!is_object($result)) {
             return false;
+        }
 
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -303,15 +311,15 @@ class DbPDOCore extends Db
             return false;
         }
 
-        if ($engine === null)
+        if ($engine === null) {
             $engine = 'MyISAM';
+        }
 
         $result = $link->query('
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine);
-        if (!$result)
-        {
+        if (!$result) {
             $error = $link->errorInfo();
             return $error[2];
         }
@@ -355,22 +363,25 @@ class DbPDOCore extends Db
 
         $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
         $result = $this->link->query($sql);
-        if (!$result)
+        if (!$result) {
             $value = 'MyISAM';
+        }
         $row = $result->fetch();
-        if (!$row || strtolower($row['Value']) != 'yes')
+        if (!$row || strtolower($row['Value']) != 'yes') {
             $value = 'MyISAM';
+        }
 
         /* MySQL >= 5.6 */
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
-        while ($row = $result->fetch())
-            if ($row['Engine'] == 'InnoDB')
-            {
-                if (in_array($row['Support'], array('DEFAULT', 'YES')))
+        while ($row = $result->fetch()) {
+            if ($row['Engine'] == 'InnoDB') {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
+                }
                 break;
             }
+        }
 
         return $value;
     }

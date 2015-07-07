@@ -95,19 +95,20 @@ class FeatureCore extends ObjectModel
     public function deleteSelection($selection)
     {
         /* Also delete Attributes */
-        foreach ($selection as $value)
-        {
+        foreach ($selection as $value) {
             $obj = new Feature($value);
-            if (!$obj->delete())
+            if (!$obj->delete()) {
                 return false;
+            }
         }
         return true;
     }
 
     public function add($autodate = true, $nullValues = false)
     {
-        if ($this->position <= 0)
+        if ($this->position <= 0) {
             $this->position = Feature::getHigherPosition() + 1;
+        }
 
         $return = parent::add($autodate, true);
         Hook::exec('actionFeatureSave', array('id_feature' => $this->id));
@@ -138,8 +139,9 @@ class FeatureCore extends ObjectModel
         );
 
         $return = parent::delete();
-        if ($return)
+        if ($return) {
             Hook::exec('actionFeatureDelete', array('id_feature' => $this->id));
+        }
 
         /* Reinitializing position */
         $this->cleanPositions();
@@ -153,11 +155,12 @@ class FeatureCore extends ObjectModel
 
         $result = 1;
         $fields = $this->getFieldsLang();
-        foreach ($fields as $field)
-        {
-            foreach (array_keys($field) as $key)
-                if (!Validate::isTableOrIdentifier($key))
+        foreach ($fields as $field) {
+            foreach (array_keys($field) as $key) {
+                if (!Validate::isTableOrIdentifier($key)) {
                     die(Tools::displayError());
+                }
+            }
 
             $sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
 					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
@@ -205,25 +208,23 @@ class FeatureCore extends ObjectModel
 			WHERE `name` = \''.pSQL($name).'\'
 			GROUP BY `id_feature`
 		');
-        if (empty($rq))
-        {
+        if (empty($rq)) {
             // Feature doesn't exist, create it
             $feature = new Feature();
             $feature->name = array_fill_keys(Language::getIDs(), (string)$name);
-            if ($position)
+            if ($position) {
                 $feature->position = (int)$position;
-            else
+            } else {
                 $feature->position = Feature::getHigherPosition() + 1;
+            }
             $feature->add();
             return $feature->id;
-        }
-        elseif (isset($rq['id_feature']) && $rq['id_feature'])
-        {
-            if (is_numeric($position) && $feature = new Feature((int)$rq['id_feature']))
-            {
+        } elseif (isset($rq['id_feature']) && $rq['id_feature']) {
+            if (is_numeric($position) && $feature = new Feature((int)$rq['id_feature'])) {
                 $feature->position = (int)$position;
-                if (Validate::isLoadedObject($feature))
+                if (Validate::isLoadedObject($feature)) {
                     $feature->update();
+                }
             }
 
             return (int)$rq['id_feature'];
@@ -232,17 +233,20 @@ class FeatureCore extends ObjectModel
 
     public static function getFeaturesForComparison($list_ids_product, $id_lang)
     {
-        if (!Feature::isFeatureActive())
+        if (!Feature::isFeatureActive()) {
             return false;
+        }
 
         $ids = '';
-        foreach ($list_ids_product as $id)
+        foreach ($list_ids_product as $id) {
             $ids .= (int)$id.',';
+        }
 
         $ids = rtrim($ids, ',');
 
-        if (empty($ids))
+        if (empty($ids)) {
             return false;
+        }
 
         return Db::getInstance()->executeS('
 			SELECT f.*, fl.*
@@ -281,15 +285,19 @@ class FeatureCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'feature`
 			WHERE `id_feature` = '.(int)($id_feature ? $id_feature : $this->id).'
 			ORDER BY `position` ASC'
-        ))
+        )) {
             return false;
+        }
 
-        foreach ($res as $feature)
-            if ((int)$feature['id_feature'] == (int)$this->id)
+        foreach ($res as $feature) {
+            if ((int)$feature['id_feature'] == (int)$this->id) {
                 $moved_feature = $feature;
+            }
+        }
 
-        if (!isset($moved_feature) || !isset($position))
+        if (!isset($moved_feature) || !isset($position)) {
             return false;
+        }
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases

@@ -85,12 +85,13 @@ class AdminWarehousesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if(empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_warehouse'] = array(
                 'href' => self::$currentIndex.'&addwarehouse&token='.$this->token,
                 'desc' => $this->l('Add new warehouse', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -142,8 +143,9 @@ class AdminWarehousesControllerCore extends AdminController
     {
         /** @var Warehouse $obj */
         // loads current warehouse
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         // gets the manager of the warehouse
         $query = new DbQuery();
@@ -153,16 +155,18 @@ class AdminWarehousesControllerCore extends AdminController
         $employees_array = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         // sets the title of the toolbar
-        if (Tools::isSubmit('add'.$this->table))
+        if (Tools::isSubmit('add'.$this->table)) {
             $this->toolbar_title = $this->l('Stock: Create a warehouse');
-        else
+        } else {
             $this->toolbar_title = $this->l('Stock: Warehouse management');
+        }
 
         $tmp_addr = new Address();
         $res = $tmp_addr->getFieldsRequiredDatabase();
         $required_fields = array();
-        foreach ($res as $row)
+        foreach ($res as $row) {
             $required_fields[(int)$row['id_required_field']] = $row['field_name'];
+        }
 
         // sets the fields of the form
         $this->fields_form = array(
@@ -297,8 +301,7 @@ class AdminWarehousesControllerCore extends AdminController
         );
 
         // Shop Association
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -308,8 +311,7 @@ class AdminWarehousesControllerCore extends AdminController
         }
 
         // if it is still possible to change currency valuation and management type
-        if (Tools::isSubmit('addwarehouse') || Tools::isSubmit('submitAddwarehouse'))
-        {
+        if (Tools::isSubmit('addwarehouse') || Tools::isSubmit('submitAddwarehouse')) {
             // adds input management type
             $this->fields_form['input'][] = array(
                 'type' => 'select',
@@ -350,9 +352,9 @@ class AdminWarehousesControllerCore extends AdminController
                     'name' => 'name'
                 )
             );
-        }
-        else // else hide input
-        {
+        } else {
+            // else hide input
+
             $this->fields_form['input'][] = array(
                 'type' => 'hidden',
                 'name' => 'management_type'
@@ -370,20 +372,22 @@ class AdminWarehousesControllerCore extends AdminController
 
         $address = null;
         // loads current address for this warehouse - if possible
-        if ($obj->id_address > 0)
+        if ($obj->id_address > 0) {
             $address = new Address($obj->id_address);
+        }
 
         // loads current shops associated with this warehouse
         $shops = $obj->getShops();
         $ids_shop = array();
-        foreach ($shops as $shop)
+        foreach ($shops as $shop) {
             $ids_shop[] = $shop['id_shop'];
+        }
 
         // loads current carriers associated with this warehouse
         $carriers = $obj->getCarriers(true);
 
         // if an address is available : force specific fields values
-        if ($address != null)
+        if ($address != null) {
             $this->fields_value = array(
                 'id_address' => $address->id,
                 'phone' => $address->phone,
@@ -394,18 +398,20 @@ class AdminWarehousesControllerCore extends AdminController
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
             );
-        else // loads default country
+        } else { // loads default country
             $this->fields_value = array(
                 'id_address' => 0,
                 'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
             );
+        }
 
         // loads shops and carriers
         $this->fields_value['ids_shops[]'] = $ids_shop;
         $this->fields_value['ids_carriers'] = $carriers;
 
-        if (!Validate::isLoadedObject($obj))
+        if (!Validate::isLoadedObject($obj)) {
             $this->fields_value['id_currency'] = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        }
 
         return parent::renderForm();
     }
@@ -429,8 +435,9 @@ class AdminWarehousesControllerCore extends AdminController
         if (!Validate::isLoadedObject($warehouse) ||
             !Validate::isLoadedObject($employee) ||
             !Validate::isLoadedObject($currency) ||
-            !Validate::isLoadedObject($address))
+            !Validate::isLoadedObject($address)) {
             return parent::renderView();
+        }
 
         // assigns to our view
         $this->tpl_view_vars = array(
@@ -460,18 +467,18 @@ class AdminWarehousesControllerCore extends AdminController
     {
         // handles address association
         $address = new Address($object->id_address);
-        if (Validate::isLoadedObject($address))
-        {
+        if (Validate::isLoadedObject($address)) {
             $address->id_warehouse = (int)$object->id;
             $address->save();
         }
 
         // handles carriers associations
         $ids_carriers_selected = Tools::getValue('ids_carriers_selected');
-        if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+        if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected)) {
             $object->setCarriers($ids_carriers_selected);
-        else
+        } else {
             $object->setCarriers(Tools::getValue('ids_carriers_available'));
+        }
 
         return true;
     }
@@ -495,12 +502,11 @@ class AdminWarehousesControllerCore extends AdminController
 
         // foreach item in the list to render
         $nb_items = count($this->_list);
-        for ($i = 0; $i < $nb_items; ++$i)
-        {
+        for ($i = 0; $i < $nb_items; ++$i) {
             // depending on the management type, translates the management type
             $item = &$this->_list[$i];
-            switch ($item['management_type']) // management type can be either WA/FIFO/LIFO
-            {
+            switch ($item['management_type']) {// management type can be either WA/FIFO/LIFO
+
                 case 'WA':
                     $item['management_type'] = $this->l('WA: Weighted Average');
                 break;
@@ -518,8 +524,7 @@ class AdminWarehousesControllerCore extends AdminController
 
     public function initContent()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
@@ -528,8 +533,7 @@ class AdminWarehousesControllerCore extends AdminController
 
     public function initProcess()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
@@ -541,10 +545,10 @@ class AdminWarehousesControllerCore extends AdminController
      */
     public function processAdd()
     {
-        if (Tools::isSubmit('submitAdd'.$this->table))
-        {
-            if (!($obj = $this->loadObject(true)))
-                    return;
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
+            if (!($obj = $this->loadObject(true))) {
+                return;
+            }
 
             $this->updateAddress();
 
@@ -558,10 +562,12 @@ class AdminWarehousesControllerCore extends AdminController
     protected function updateAddress()
     {
         // updates/creates address if it does not exist
-        if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
-            $address = new Address((int)Tools::getValue('id_address')); // updates address
-        else
-            $address = new Address(); // creates address
+        if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0) {
+            $address = new Address((int)Tools::getValue('id_address'));
+        } // updates address
+        else {
+            $address = new Address();
+        } // creates address
             // sets the address
         $address->alias = Tools::getValue('reference', null);
         $address->lastname = 'warehouse'; // skip problem with numeric characters in warehouse name
@@ -574,29 +580,32 @@ class AdminWarehousesControllerCore extends AdminController
         $address->id_state = Tools::getValue('id_state', null);
         $address->city = Tools::getValue('city', null);
 
-        if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
+        if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country)) {
             $this->errors[] = Tools::displayError('Country is invalid');
+        }
         $contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
         $id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
-        if ($contains_state && !$id_state)
+        if ($contains_state && !$id_state) {
             $this->errors[] = Tools::displayError('This country requires you to choose a State.');
+        }
 
         // validates the address
         $validation = $address->validateController();
 
         // checks address validity
-        if (count($validation) > 0) // if not valid
-        {
-            foreach ($validation as $item)
+        if (count($validation) > 0) {
+            // if not valid
+
+            foreach ($validation as $item) {
                 $this->errors[] = $item;
+            }
             $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
-        }
-        else // valid
-        {
-            if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+        } else {
+            // valid
+
+            if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0) {
                 $address->update();
-            else
-            {
+            } else {
                 $address->save();
                 $_POST['id_address'] = $address->id;
             }
@@ -608,18 +617,18 @@ class AdminWarehousesControllerCore extends AdminController
      */
     public function processDelete()
     {
-        if (Tools::isSubmit('delete'.$this->table))
-        {
+        if (Tools::isSubmit('delete'.$this->table)) {
             /** @var Warehouse $obj */
             // check if the warehouse exists and can be deleted
-            if (!($obj = $this->loadObject(true)))
+            if (!($obj = $this->loadObject(true))) {
                 return;
-            elseif ($obj->getQuantitiesOfProducts() > 0) // not possible : products
+            } elseif ($obj->getQuantitiesOfProducts() > 0) { // not possible : products
                 $this->errors[] = $this->l('It is not possible to delete a warehouse when there are products in it.');
-            elseif (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
+            } elseif (SupplyOrder::warehouseHasPendingOrders($obj->id)) { // not possible : supply orders
                 $this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
-            else // else, it can be deleted
-            {
+            } else {
+                // else, it can be deleted
+
                 // sets the address of the warehouse as deleted
                 $address = new Address($obj->id_address);
                 $address->deleted = 1;
@@ -640,18 +649,20 @@ class AdminWarehousesControllerCore extends AdminController
     public function processUpdate()
     {
         // loads object
-        if (!($object = $this->loadObject(true)))
+        if (!($object = $this->loadObject(true))) {
             return;
+        }
 
         /** @var Warehouse $object */
 
         $this->updateAddress();
         // handles carriers associations
         $ids_carriers_selected = Tools::getValue('ids_carriers_selected');
-        if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+        if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected)) {
             $object->setCarriers($ids_carriers_selected);
-        else
+        } else {
             $object->setCarriers(Tools::getValue('ids_carriers_available'));
+        }
 
         return parent::processUpdate();
     }
@@ -659,8 +670,9 @@ class AdminWarehousesControllerCore extends AdminController
     protected function updateAssoShop($id_object)
     {
         parent::updateAssoShop($id_object);
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         /** @var Warehouse $obj */
         $obj->resetStockAvailable();

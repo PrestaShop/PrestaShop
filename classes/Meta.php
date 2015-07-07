@@ -56,8 +56,9 @@ class MetaCore extends ObjectModel
     public static function getPages($exclude_filled = false, $add_page = false)
     {
         $selected_pages = array();
-        if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true))
+        if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
             die(Tools::displayError('Cannot scan root directory'));
+        }
 
         // Exclude pages forbidden
         $exlude_pages = array(
@@ -65,47 +66,47 @@ class MetaCore extends ObjectModel
             'pagination', 'product', 'product-sort', 'statistics'
         );
 
-        foreach ($files as $file)
-        {
-            if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages))
-            {
+        foreach ($files as $file) {
+            if ($file != 'index.php' && !in_array(strtolower(str_replace('Controller.php', '', $file)), $exlude_pages)) {
                 $class_name = str_replace('.php', '', $file);
                 $reflection = class_exists($class_name) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
                 $properties = $reflection ? $reflection->getDefaultProperties() : array();
-                if (isset($properties['php_self']))
+                if (isset($properties['php_self'])) {
                     $selected_pages[$properties['php_self']] = $properties['php_self'];
-                elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file))
+                } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
                     $selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
-                elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file))
+                } elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file)) {
                     $selected_pages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
+                }
             }
         }
 
         // Add modules controllers to list (this function is cool !)
-        foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
-        {
+        foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file) {
             $filename = Tools::strtolower(basename($file, '.php'));
-            if ($filename == 'index')
+            if ($filename == 'index') {
                 continue;
+            }
 
             $module = Tools::strtolower(basename(dirname(dirname(dirname($file)))));
             $selected_pages[$module.' - '.$filename] = 'module-'.$module.'-'.$filename;
         }
 
         // Exclude page already filled
-        if ($exclude_filled)
-        {
+        if ($exclude_filled) {
             $metas = Meta::getMetas();
-            foreach ($metas as $meta)
-                if (in_array($meta['page'], $selected_pages))
+            foreach ($metas as $meta) {
+                if (in_array($meta['page'], $selected_pages)) {
                     unset($selected_pages[array_search($meta['page'], $selected_pages)]);
+                }
+            }
         }
         // Add selected page
-        if ($add_page)
-        {
+        if ($add_page) {
             $name = $add_page;
-            if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $add_page, $m))
+            if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $add_page, $m)) {
                 $add_page = $m[1].' - '.$m[2];
+            }
             $selected_pages[$add_page] = $name;
             asort($selected_pages);
         }
@@ -144,27 +145,29 @@ class MetaCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if (!parent::update($null_values))
+        if (!parent::update($null_values)) {
             return false;
+        }
 
         return Tools::generateHtaccess();
     }
 
     public function delete()
     {
-        if (!parent::delete())
+        if (!parent::delete()) {
             return false;
+        }
 
         return Tools::generateHtaccess();
     }
 
     public function deleteSelection($selection)
     {
-        if (!is_array($selection))
+        if (!is_array($selection)) {
             die(Tools::displayError());
+        }
         $result = true;
-        foreach ($selection as $id)
-        {
+        foreach ($selection as $id) {
             $this->id = (int)$id;
             $result = $result && $this->delete();
         }
@@ -193,20 +196,20 @@ class MetaCore extends ObjectModel
     public static function getMetaTags($id_lang, $page_name, $title = '')
     {
         global $maintenance;
-        if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP'))))))
-        {
-            if ($page_name == 'product' && ($id_product = Tools::getValue('id_product')))
+        if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))))) {
+            if ($page_name == 'product' && ($id_product = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($id_product, $id_lang, $page_name);
-            elseif ($page_name == 'category' && ($id_category = Tools::getValue('id_category')))
+            } elseif ($page_name == 'category' && ($id_category = Tools::getValue('id_category'))) {
                 return Meta::getCategoryMetas($id_category, $id_lang, $page_name, $title);
-            elseif ($page_name == 'manufacturer' && ($id_manufacturer = Tools::getValue('id_manufacturer')))
+            } elseif ($page_name == 'manufacturer' && ($id_manufacturer = Tools::getValue('id_manufacturer'))) {
                 return Meta::getManufacturerMetas($id_manufacturer, $id_lang, $page_name);
-            elseif ($page_name == 'supplier' && ($id_supplier = Tools::getValue('id_supplier')))
+            } elseif ($page_name == 'supplier' && ($id_supplier = Tools::getValue('id_supplier'))) {
                 return Meta::getSupplierMetas($id_supplier, $id_lang, $page_name);
-            elseif ($page_name == 'cms' && ($id_cms = Tools::getValue('id_cms')))
+            } elseif ($page_name == 'cms' && ($id_cms = Tools::getValue('id_cms'))) {
                 return Meta::getCmsMetas($id_cms, $id_lang, $page_name);
-            elseif ($page_name == 'cms' && ($id_cms_category = Tools::getValue('id_cms_category')))
+            } elseif ($page_name == 'cms' && ($id_cms_category = Tools::getValue('id_cms_category'))) {
                 return Meta::getCmsCategoryMetas($id_cms_category, $id_lang, $page_name);
+            }
         }
 
         return Meta::getHomeMetas($id_lang, $page_name);
@@ -247,10 +250,10 @@ class MetaCore extends ObjectModel
 				WHERE pl.id_lang = '.(int)$id_lang.'
 					AND pl.id_product = '.(int)$id_product.'
 					AND product_shop.active = 1';
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-        {
-            if (empty($row['meta_description']))
+        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+            if (empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['description_short']);
+            }
             return Meta::completeMetaTags($row, $row['name']);
         }
 
@@ -268,8 +271,9 @@ class MetaCore extends ObjectModel
      */
     public static function getCategoryMetas($id_category, $id_lang, $page_name, $title = '')
     {
-        if (!empty($title))
+        if (!empty($title)) {
             $title = ' - '.$title;
+        }
         $page_number = (int)Tools::getValue('p');
         $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
@@ -277,26 +281,27 @@ class MetaCore extends ObjectModel
 					AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl');
 
         $cache_id = 'Meta::getCategoryMetas'.(int)$id_category.'-'.(int)$id_lang;
-        if (!Cache::isStored($cache_id))
-        {
-            if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-            {
-                if (empty($row['meta_description']))
+        if (!Cache::isStored($cache_id)) {
+            if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+                if (empty($row['meta_description'])) {
                     $row['meta_description'] = strip_tags($row['description']);
+                }
 
                 // Paginate title
-                if (!empty($row['meta_title']))
+                if (!empty($row['meta_title'])) {
                     $row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-                else
+                } else {
                     $row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+                }
 
-                if (!empty($title))
+                if (!empty($title)) {
                     $row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+                }
 
                 $result = Meta::completeMetaTags($row, $row['name']);
-            }
-            else
+            } else {
                 $result = Meta::getHomeMetas($id_lang, $page_name);
+            }
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -320,10 +325,10 @@ class MetaCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (ml.`id_manufacturer` = m.`id_manufacturer`)
 				WHERE ml.id_lang = '.(int)$id_lang.'
 					AND ml.id_manufacturer = '.(int)$id_manufacturer;
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-        {
-            if (!empty($row['meta_description']))
+        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+            if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
+            }
             $row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
             $row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
             return Meta::completeMetaTags($row, $row['meta_title']);
@@ -348,12 +353,13 @@ class MetaCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (sl.`id_supplier` = s.`id_supplier`)
 				WHERE sl.id_lang = '.(int)$id_lang.'
 					AND sl.id_supplier = '.(int)$id_supplier;
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-        {
-            if (!empty($row['meta_description']))
+        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+            if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
-            if (!empty($row['meta_title']))
+            }
+            if (!empty($row['meta_title'])) {
                 $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+            }
             return Meta::completeMetaTags($row, $row['name']);
         }
 
@@ -378,8 +384,7 @@ class MetaCore extends ObjectModel
                     ((int)Context::getContext()->shop->id ?
                         ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
 
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-        {
+        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
             $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
@@ -404,8 +409,7 @@ class MetaCore extends ObjectModel
 					AND id_cms_category = '.(int)$id_cms_category.
                     ((int)Context::getContext()->shop->id ?
                         ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
-        {
+        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
             $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
@@ -418,15 +422,19 @@ class MetaCore extends ObjectModel
      */
     public static function completeMetaTags($meta_tags, $default_value, Context $context = null)
     {
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
 
-        if (empty($meta_tags['meta_title']))
+        if (empty($meta_tags['meta_title'])) {
             $meta_tags['meta_title'] = $default_value.' - '.Configuration::get('PS_SHOP_NAME');
-        if (empty($meta_tags['meta_description']))
+        }
+        if (empty($meta_tags['meta_description'])) {
             $meta_tags['meta_description'] = Configuration::get('PS_META_DESCRIPTION', $context->language->id) ? Configuration::get('PS_META_DESCRIPTION', $context->language->id) : '';
-        if (empty($meta_tags['meta_keywords']))
+        }
+        if (empty($meta_tags['meta_keywords'])) {
             $meta_tags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
+        }
         return $meta_tags;
     }
 }

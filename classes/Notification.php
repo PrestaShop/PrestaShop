@@ -49,8 +49,9 @@ class NotificationCore
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `id_employee` = '.(int)$cookie->id_employee);
 
-        foreach ($this->types as $type)
+        foreach ($this->types as $type) {
             $notifications[$type] = Notification::getLastElementsIdsByType($type, $employee_infos['id_last_'.$type]);
+        }
 
         return $notifications;
     }
@@ -65,8 +66,7 @@ class NotificationCore
      */
     public static function getLastElementsIdsByType($type, $id_last_element)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'order':
                 $sql = '
 					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`
@@ -103,13 +103,13 @@ class NotificationCore
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
         $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
         $json = array('total' => $total, 'results' => array());
-        foreach ($result as $value)
-        {
+        foreach ($result as $value) {
             $customer_name = '';
-            if (isset($value['firstname']) && isset($value['lastname']))
+            if (isset($value['firstname']) && isset($value['lastname'])) {
                 $customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
-            elseif (isset($value['email']))
+            } elseif (isset($value['email'])) {
                 $customer_name = Tools::safeOutput($value['email']);
+            }
 
             $json['results'][] = array(
                 'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
@@ -137,7 +137,7 @@ class NotificationCore
     {
         global $cookie;
 
-        if (in_array($type, $this->types))
+        if (in_array($type, $this->types)) {
             // We update the last item viewed
             return Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'employee`
@@ -146,6 +146,7 @@ class NotificationCore
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`
 			)
 			WHERE `id_employee` = '.(int)$cookie->id_employee);
+        }
         return false;
     }
 }

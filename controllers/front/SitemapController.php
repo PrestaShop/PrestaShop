@@ -47,21 +47,19 @@ class SitemapControllerCore extends FrontController
         $this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
         $this->context->smarty->assign('voucherAllowed', (int)CartRule::isFeatureActive());
 
-        if (Module::isInstalled('blockmanufacturer') && Module::isEnabled('blockmanufacturer'))
-        {
+        if (Module::isInstalled('blockmanufacturer') && Module::isEnabled('blockmanufacturer')) {
             $blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
             $this->context->smarty->assign('display_manufacturer_link', isset($blockmanufacturer->active) ? (bool)$blockmanufacturer->active : false);
-        }
-        else
+        } else {
             $this->context->smarty->assign('display_manufacturer_link', 0);
+        }
 
-        if (Module::isInstalled('blocksupplier') && Module::isEnabled('blocksupplier'))
-        {
+        if (Module::isInstalled('blocksupplier') && Module::isEnabled('blocksupplier')) {
             $blocksupplier = Module::getInstanceByName('blocksupplier');
             $this->context->smarty->assign('display_supplier_link', isset($blocksupplier->active) ? (bool)$blocksupplier->active : false);
-        }
-        else
+        } else {
             $this->context->smarty->assign('display_supplier_link', 0);
+        }
 
         $this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
         $this->context->smarty->assign('PS_DISPLAY_BEST_SELLERS', Configuration::get('PS_DISPLAY_BEST_SELLERS'));

@@ -42,8 +42,9 @@ class AdminStatesControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
@@ -59,10 +60,12 @@ class AdminStatesControllerCore extends AdminController
         $countries_array = $zones_array = array();
         $this->zones = Zone::getZones();
         $this->countries = Country::getCountries($this->context->language->id, false, true, false);
-        foreach ($this->zones as $zone)
+        foreach ($this->zones as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
-        foreach ($this->countries as $country)
+        }
+        foreach ($this->countries as $country) {
             $countries_array[$country['id_country']] = $country['name'];
+        }
 
         $this->fields_list = array(
             'id_state' => array(
@@ -111,12 +114,13 @@ class AdminStatesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_state'] = array(
                 'href' => self::$currentIndex.'&addstate&token='.$this->token,
                 'desc' => $this->l('Add new state', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -203,48 +207,46 @@ class AdminStatesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway'))
+        if (Tools::isSubmit($this->table.'Orderby') || Tools::isSubmit($this->table.'Orderway')) {
             $this->filter = true;
+        }
 
         // Idiot-proof controls
-        if (!Tools::getValue('id_'.$this->table))
-        {
-            if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country')))
+        if (!Tools::getValue('id_'.$this->table)) {
+            if (Validate::isStateIsoCode(Tools::getValue('iso_code')) && State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'))) {
                 $this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
-        }
-        elseif (Validate::isStateIsoCode(Tools::getValue('iso_code')))
-        {
+            }
+        } elseif (Validate::isStateIsoCode(Tools::getValue('iso_code'))) {
             $id_state = State::getIdByIso(Tools::getValue('iso_code'), Tools::getValue('id_country'));
-            if ($id_state && $id_state != Tools::getValue('id_'.$this->table))
+            if ($id_state && $id_state != Tools::getValue('id_'.$this->table)) {
                 $this->errors[] = Tools::displayError('This ISO code already exists. You cannot create two states with the same ISO code.');
+            }
         }
 
         /* Delete state */
-        if (Tools::isSubmit('delete'.$this->table))
-        {
-            if ($this->tabAccess['delete'] === '1')
-            {
-                if (Validate::isLoadedObject($object = $this->loadObject()))
-                {
+        if (Tools::isSubmit('delete'.$this->table)) {
+            if ($this->tabAccess['delete'] === '1') {
+                if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var State $object */
-                    if (!$object->isUsed())
-                    {
-                        if ($object->delete())
+                    if (!$object->isUsed()) {
+                        if ($object->delete()) {
                             Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.(Tools::getValue('token') ? Tools::getValue('token') : $this->token));
+                        }
                         $this->errors[] = Tools::displayError('An error occurred during deletion.');
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('This state was used in at least one address. It cannot be removed.');
-                }
-                else
+                    }
+                } else {
                     $this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
+            }
         }
 
-        if (!count($this->errors))
+        if (!count($this->errors)) {
             parent::postProcess();
+        }
     }
 
     protected function displayAjaxStates()
@@ -256,22 +258,20 @@ class AdminStatesControllerCore extends AdminController
 		WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
 		ORDER BY s.`name` ASC');
 
-        if (is_array($states) and !empty($states))
-        {
+        if (is_array($states) and !empty($states)) {
             $list = '';
-            if ((bool)Tools::getValue('no_empty') != true)
-            {
+            if ((bool)Tools::getValue('no_empty') != true) {
                 $empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '-';
                 $list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
             }
 
-            foreach ($states as $state)
+            foreach ($states as $state) {
                 $list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) and $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
-        }
-        else
+            }
+        } else {
             $list = 'false';
+        }
 
         die($list);
     }
-
 }

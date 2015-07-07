@@ -36,17 +36,14 @@
 
 $localizationPacksRoot = realpath(dirname(__FILE__) . '/../../localization');
 
-if (!$localizationPacksRoot)
-{
+if (!$localizationPacksRoot) {
     die("Could not find the folder containing the localization files (should be 'localization' at the root of the PrestaShop folder).\n");
 }
 
 $euLocalizationFiles = array();
 
-foreach (scandir($localizationPacksRoot) as $entry)
-{
-    if (!preg_match('/\.xml$/', $entry))
-    {
+foreach (scandir($localizationPacksRoot) as $entry) {
+    if (!preg_match('/\.xml$/', $entry)) {
         continue;
     }
 
@@ -56,25 +53,19 @@ foreach (scandir($localizationPacksRoot) as $entry)
     $localizationPack = simplexml_load_file($localizationPackFile);
 
     // Some packs do not have taxes
-    if (!$localizationPack->taxes->tax)
-    {
+    if (!$localizationPack->taxes->tax) {
         continue;
     }
 
-    foreach ($localizationPack->taxes->tax as $tax)
-    {
-        if ((string)$tax['eu-tax-group'] === 'virtual')
-        {
-            if (!isset($euLocalizationFiles[$localizationPackFile]))
-            {
+    foreach ($localizationPack->taxes->tax as $tax) {
+        if ((string)$tax['eu-tax-group'] === 'virtual') {
+            if (!isset($euLocalizationFiles[$localizationPackFile])) {
                 $euLocalizationFiles[$localizationPackFile] = array(
                     'virtualTax' => $tax,
                     'pack' => $localizationPack,
                     'iso_code_country' => basename($entry, '.xml')
                 );
-            }
-            else
-            {
+            } else {
                 die("Too many taxes with eu-tax-group=\"virtual\" found in `$localizationPackFile`.\n");
             }
         }
@@ -87,8 +78,7 @@ function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attribute
 
     $insertBefore = $taxes->xpath('//taxRulesGroup[1]')[0];
 
-    if (!$insertBefore)
-    {
+    if (!$insertBefore) {
         die("Could not find any `taxRulesGroup`, don't know where to append the tax.\n");
     }
 
@@ -107,13 +97,11 @@ function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attribute
 
     $newAttributes = array();
 
-    foreach ($tax->attributes() as $attribute)
-    {
+    foreach ($tax->attributes() as $attribute) {
         $name = $attribute->getName();
 
         // This attribute seems to cause trouble, skip it.
-        if ($name === 'account_number' || in_array($name, $attributesToRemove))
-        {
+        if ($name === 'account_number' || in_array($name, $attributesToRemove)) {
             continue;
         }
 
@@ -124,8 +112,7 @@ function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attribute
 
     $newAttributes = array_merge($newAttributes, $attributesToUpdate);
 
-    foreach ($newAttributes as $name => $value)
-    {
+    foreach ($newAttributes as $name => $value) {
         $newTax->addAttribute($name, $value);
     }
 
@@ -142,29 +129,22 @@ function addTaxRule(SimpleXMLElement $taxRulesGroup, SimpleXMLElement $tax, $iso
     return $taxRule;
 }
 
-foreach ($euLocalizationFiles as $path => $file)
-{
+foreach ($euLocalizationFiles as $path => $file) {
     $nodesToKill = array();
 
     // Get max tax id, and list of nodes to kill
     $taxId = 0;
-    foreach ($file['pack']->taxes->tax as $tax)
-    {
-        if ((string)$tax['auto-generated'] === "1" && (string)$tax['from-eu-tax-group'] === 'virtual')
-        {
+    foreach ($file['pack']->taxes->tax as $tax) {
+        if ((string)$tax['auto-generated'] === "1" && (string)$tax['from-eu-tax-group'] === 'virtual') {
             $nodesToKill[] = $tax;
-        }
-        else
-        {
+        } else {
             // We only count the ids of the taxes we're not going to remove!
             $taxId = max($taxId, (int)$tax['id']);
         }
     }
 
-    foreach ($file['pack']->taxes->taxRulesGroup as $trg)
-    {
-        if ((string)$trg['auto-generated'] === "1" && (string)$trg['eu-tax-group'] === 'virtual')
-        {
+    foreach ($file['pack']->taxes->taxRulesGroup as $trg) {
+        if ((string)$trg['auto-generated'] === "1" && (string)$trg['eu-tax-group'] === 'virtual') {
             $nodesToKill[] = $trg;
         }
     }
@@ -181,10 +161,8 @@ foreach ($euLocalizationFiles as $path => $file)
 
     addTaxRule($taxRulesGroup, $file['virtualTax'], $file['iso_code_country']);
 
-    foreach ($euLocalizationFiles as $foreignPath => $foreignFile)
-    {
-        if ($foreignPath === $path)
-        {
+    foreach ($euLocalizationFiles as $foreignPath => $foreignFile) {
+        if ($foreignPath === $path) {
             // We already added the tax that belongs to this pack
             continue;
         }
@@ -200,8 +178,7 @@ foreach ($euLocalizationFiles as $path => $file)
         $taxId++;
     }
 
-    foreach ($nodesToKill as $node)
-    {
+    foreach ($nodesToKill as $node) {
         unset($node[0]);
     }
 

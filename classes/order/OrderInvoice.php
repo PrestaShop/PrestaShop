@@ -166,16 +166,17 @@ class OrderInvoiceCore extends ObjectModel
 
     public static function getInvoiceByNumber($id_invoice)
     {
-        if (is_numeric($id_invoice))
+        if (is_numeric($id_invoice)) {
             $id_invoice = (int)$id_invoice;
-        elseif (is_string($id_invoice))
-        {
+        } elseif (is_string($id_invoice)) {
             $matches = array();
-            if (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id_invoice, $matches))
+            if (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id_invoice, $matches)) {
                 $id_invoice = $matches[1];
+            }
         }
-        if (!$id_invoice)
+        if (!$id_invoice) {
             return false;
+        }
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_order_invoice`
@@ -193,24 +194,26 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getProducts($products = false, $selected_products = false, $selected_qty = false)
     {
-        if (!$products)
+        if (!$products) {
             $products = $this->getProductsDetail();
+        }
 
         $order = new Order($this->id_order);
         $customized_datas = Product::getAllCustomizedDatas($order->id_cart);
 
         $result_array = array();
-        foreach ($products as $row)
-        {
+        foreach ($products as $row) {
             // Change qty if selected
-            if ($selected_qty)
-            {
+            if ($selected_qty) {
                 $row['product_quantity'] = 0;
-                foreach ($selected_products as $key => $id_product)
-                    if ($row['id_order_detail'] == $id_product)
+                foreach ($selected_products as $key => $id_product) {
+                    if ($row['id_order_detail'] == $id_product) {
                         $row['product_quantity'] = (int)$selected_qty[$key];
-                if (!$row['product_quantity'])
+                    }
+                }
+                if (!$row['product_quantity']) {
                     continue;
+                }
             }
 
             $this->setProductImageInformations($row);
@@ -218,8 +221,7 @@ class OrderInvoiceCore extends ObjectModel
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
-            if ($row['download_hash'] && !empty($row['download_hash']))
-            {
+            if ($row['download_hash'] && !empty($row['download_hash'])) {
                 $row['filename'] = ProductDownload::getFilenameFromIdProduct((int)$row['product_id']);
                 // Get the display filename
                 $row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
@@ -234,8 +236,9 @@ class OrderInvoiceCore extends ObjectModel
             $row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) / 100;
             $row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
-            if ($round_mode == Order::ROUND_ITEM)
+            if ($round_mode == Order::ROUND_ITEM) {
                 $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+            }
 
             $row['total_ecotax_tax_excl'] = $row['ecotax_tax_excl'] * $row['product_quantity'];
             $row['total_ecotax_tax_incl'] = $row['ecotax_tax_incl'] * $row['product_quantity'];
@@ -249,8 +252,9 @@ class OrderInvoiceCore extends ObjectModel
                 'total_ecotax_tax_excl',
                 'total_ecotax_tax_incl',
                 'total_ecotax_tax'
-            ) as $ecotax_field)
+            ) as $ecotax_field) {
                 $row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+            }
 
             // Aliases
             $row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'];
@@ -262,8 +266,9 @@ class OrderInvoiceCore extends ObjectModel
             $result_array[(int)$row['id_order_detail']] = $row;
         }
 
-        if ($customized_datas)
+        if ($customized_datas) {
             Product::addCustomizationPrice($result_array, $customized_datas);
+        }
 
         return $result_array;
     }
@@ -271,10 +276,11 @@ class OrderInvoiceCore extends ObjectModel
     protected function setProductCustomizedDatas(&$product, $customized_datas)
     {
         $product['customizedDatas'] = null;
-        if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']]))
+        if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
-        else
+        } else {
             $product['customizationQuantityTotal'] = 0;
+        }
     }
 
     /**
@@ -286,10 +292,11 @@ class OrderInvoiceCore extends ObjectModel
     {
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
             && (int)$product['advanced_stock_management'] == 1
-            && (int)$product['id_warehouse'] > 0)
+            && (int)$product['id_warehouse'] > 0) {
             $product['current_stock'] = StockManagerFactory::getManager()->getProductPhysicalQuantities($product['product_id'], $product['product_attribute_id'], null, true);
-        else
+        } else {
             $product['current_stock'] = '--';
+        }
     }
 
     /**
@@ -299,25 +306,28 @@ class OrderInvoiceCore extends ObjectModel
      */
     protected function setProductImageInformations(&$product)
     {
-        if (isset($product['product_attribute_id']) && $product['product_attribute_id'])
+        if (isset($product['product_attribute_id']) && $product['product_attribute_id']) {
             $id_image = Db::getInstance()->getValue('
 				SELECT image_shop.id_image
 				FROM '._DB_PREFIX_.'product_attribute_image pai'.
                 Shop::addSqlAssociation('image', 'pai', true).'
 				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
+        }
 
-        if (!isset($id_image) || !$id_image)
+        if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue('
 				SELECT image_shop.id_image
 				FROM '._DB_PREFIX_.'image i'.
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
 				WHERE i.id_product = '.(int)$product['product_id']);
+        }
 
         $product['image'] = null;
         $product['image_size'] = null;
 
-        if ($id_image)
+        if ($id_image) {
             $product['image'] = new Image($id_image);
+        }
     }
 
     /**
@@ -347,16 +357,18 @@ class OrderInvoiceCore extends ObjectModel
 
     public function getOrder()
     {
-        if (!$this->order)
+        if (!$this->order) {
             $this->order = new Order($this->id_order);
+        }
 
         return $this->order;
     }
 
     public function getProductTaxesBreakdown($order = null)
     {
-        if (!$order)
+        if (!$order) {
             $order = $this->getOrder();
+        }
 
         $sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
 
@@ -367,13 +379,10 @@ class OrderInvoiceCore extends ObjectModel
 
         $details = $order->getProductTaxesDetails();
 
-        if ($sum_composite_taxes)
-        {
+        if ($sum_composite_taxes) {
             $grouped_details = array();
-            foreach ($details as $row)
-            {
-                if (!isset($grouped_details[$row['id_order_detail']]))
-                {
+            foreach ($details as $row) {
+                if (!isset($grouped_details[$row['id_order_detail']])) {
                     $grouped_details[$row['id_order_detail']] = array(
                         'tax_rate' => 0,
                         'total_tax_base' => 0,
@@ -390,11 +399,9 @@ class OrderInvoiceCore extends ObjectModel
             $details = $grouped_details;
         }
 
-        foreach ($details as $row)
-        {
+        foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
-            if (!isset($breakdown[$rate]))
-            {
+            if (!isset($breakdown[$rate])) {
                 $breakdown[$rate] = array(
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
@@ -407,8 +414,7 @@ class OrderInvoiceCore extends ObjectModel
             $breakdown[$rate]['total_amount'] += $row['total_amount'];
         }
 
-        foreach ($breakdown as $rate => $data)
-        {
+        foreach ($breakdown as $rate => $data) {
             $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
             $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
         }
@@ -428,18 +434,20 @@ class OrderInvoiceCore extends ObjectModel
     public function getShippingTaxesBreakdown($order)
     {
         // No shipping breakdown if no shipping!
-        if ($this->total_shipping_tax_excl == 0)
+        if ($this->total_shipping_tax_excl == 0) {
             return array();
+        }
 
         // No shipping breakdown if it's free!
-        foreach ($order->getCartRules() as $cart_rule)
-            if ($cart_rule['free_shipping'])
+        foreach ($order->getCartRules() as $cart_rule) {
+            if ($cart_rule['free_shipping']) {
                 return array();
+            }
+        }
 
         $shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 
-        if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') || Configuration::get('PS_ATCP_SHIPWRAP'))
-        {
+        if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') || Configuration::get('PS_ATCP_SHIPWRAP')) {
             $shipping_breakdown = Db::getInstance()->executeS(
                 'SELECT t.id_tax, t.rate, oit.amount as total_amount
 				 FROM `'._DB_PREFIX_.'tax` t
@@ -449,15 +457,11 @@ class OrderInvoiceCore extends ObjectModel
 
             $sum_of_split_taxes = 0;
             $sum_of_tax_bases = 0;
-            foreach ($shipping_breakdown as &$row)
-            {
-                if (Configuration::get('PS_ATCP_SHIPWRAP'))
-                {
+            foreach ($shipping_breakdown as &$row) {
+                if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                     $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
                     $sum_of_tax_bases += $row['total_tax_excl'];
-                }
-                else
-                {
+                } else {
                     $row['total_tax_excl'] = $this->total_shipping_tax_excl;
                 }
 
@@ -468,16 +472,16 @@ class OrderInvoiceCore extends ObjectModel
 
             $delta_amount = $shipping_tax_amount - $sum_of_split_taxes;
 
-            if ($delta_amount != 0)
+            if ($delta_amount != 0) {
                 Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_amount');
+            }
 
             $delta_base = $this->total_shipping_tax_excl - $sum_of_tax_bases;
 
-            if ($delta_base != 0)
+            if ($delta_base != 0) {
                 Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_tax_excl');
-        }
-        else
-        {
+            }
+        } else {
             $shipping_breakdown = array(
                 array(
                     'total_tax_excl' => $this->total_shipping_tax_excl,
@@ -498,8 +502,9 @@ class OrderInvoiceCore extends ObjectModel
      */
     public function getWrappingTaxesBreakdown()
     {
-        if ($this->total_wrapping_tax_excl == 0)
+        if ($this->total_wrapping_tax_excl == 0) {
             return array();
+        }
 
         $wrapping_tax_amount = $this->total_wrapping_tax_incl - $this->total_wrapping_tax_excl;
 
@@ -513,15 +518,11 @@ class OrderInvoiceCore extends ObjectModel
         $sum_of_split_taxes = 0;
         $sum_of_tax_bases = 0;
         $total_tax_rate = 0;
-        foreach ($wrapping_breakdown as &$row)
-        {
-            if (Configuration::get('PS_ATCP_SHIPWRAP'))
-            {
+        foreach ($wrapping_breakdown as &$row) {
+            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
                 $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
                 $sum_of_tax_bases += $row['total_tax_excl'];
-            }
-            else
-            {
+            } else {
                 $row['total_tax_excl'] = $this->total_wrapping_tax_excl;
             }
 
@@ -533,16 +534,17 @@ class OrderInvoiceCore extends ObjectModel
 
         $delta_amount = $wrapping_tax_amount - $sum_of_split_taxes;
 
-        if ($delta_amount != 0)
+        if ($delta_amount != 0) {
             Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_amount');
+        }
 
         $delta_base = $this->total_wrapping_tax_excl - $sum_of_tax_bases;
 
-        if ($delta_base != 0)
+        if ($delta_base != 0) {
             Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_tax_excl');
+        }
 
-        if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP'))
-        {
+        if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP')) {
             $wrapping_breakdown = array(
                 array(
                     'total_tax_excl' => $this->total_wrapping_tax_excl,
@@ -571,13 +573,13 @@ class OrderInvoiceCore extends ObjectModel
 		GROUP BY `ecotax_tax_rate`');
 
         $taxes = array();
-        foreach ($result as $row)
-            if ($row['ecotax_tax_excl'] > 0)
-            {
+        foreach ($result as $row) {
+            if ($row['ecotax_tax_excl'] > 0) {
                 $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), _PS_PRICE_DISPLAY_PRECISION_);
                 $row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
                 $taxes[] = $row;
             }
+        }
         return $taxes;
     }
 
@@ -653,8 +655,9 @@ class OrderInvoiceCore extends ObjectModel
     public static function getCarrier($id_order_invoice)
     {
         $carrier = false;
-        if ($id_carrier = OrderInvoice::getCarrierId($id_order_invoice))
+        if ($id_carrier = OrderInvoice::getCarrierId($id_order_invoice)) {
             $carrier = new Carrier((int)$id_carrier);
+        }
 
         return $carrier;
     }
@@ -680,8 +683,9 @@ class OrderInvoiceCore extends ObjectModel
     public static function retrieveOneById($id)
     {
         $order_invoice = new OrderInvoice($id);
-        if (!Validate::isLoadedObject($order_invoice))
+        if (!Validate::isLoadedObject($order_invoice)) {
             throw new PrestaShopException('Can\'t load Order Invoice object for id: '.$id);
+        }
         return $order_invoice;
     }
 
@@ -693,12 +697,10 @@ class OrderInvoiceCore extends ObjectModel
     public function getTotalPaid()
     {
         $cache_id = 'order_invoice_paid_'.(int)$this->id;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $amount = 0;
             $payments = OrderPayment::getByInvoiceId($this->id);
-            foreach ($payments as $payment)
-            {
+            foreach ($payments as $payment) {
                 /** @var OrderPayment $payment */
                 $amount += $payment->amount;
             }
@@ -734,12 +736,14 @@ class OrderInvoiceCore extends ObjectModel
         $query->where('oip1.id_order_invoice = '.$this->id);
 
         $invoices = Db::getInstance()->executeS($query);
-        if (!$invoices)
+        if (!$invoices) {
             return array();
+        }
 
         $invoice_list = array();
-        foreach ($invoices as $invoice)
+        foreach ($invoices as $invoice) {
             $invoice_list[] = $invoice['id_order_invoice'];
+        }
 
         $payments = new PrestaShopCollection('OrderInvoice');
         $payments->where('id_order_invoice', 'IN', $invoice_list);
@@ -768,8 +772,7 @@ class OrderInvoiceCore extends ObjectModel
 
         $row = Db::getInstance()->getRow($query);
 
-        switch ($mod)
-        {
+        switch ($mod) {
             case OrderInvoice::TAX_EXCL:
                 return $row['total_paid_tax_excl'];
             case OrderInvoice::TAX_INCL:
@@ -789,8 +792,7 @@ class OrderInvoiceCore extends ObjectModel
     {
         static $cache;
 
-        if (!isset($cache[$this->id]))
-        {
+        if (!isset($cache[$this->id])) {
             $res = Db::getInstance()->getRow('
 			SELECT SUM(sub.paid) paid, SUM(sub.to_paid) to_paid
 			FROM (
@@ -845,8 +847,9 @@ class OrderInvoiceCore extends ObjectModel
             'number' => (int)$this->number
         ));
 
-        if (!empty($invoice_formatted_number))
+        if (!empty($invoice_formatted_number)) {
             return $invoice_formatted_number;
+        }
 
         return sprintf('%1$s%2$06d', Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop), $this->number);
     }
@@ -854,8 +857,7 @@ class OrderInvoiceCore extends ObjectModel
     public function saveCarrierTaxCalculator(array $taxes_amount)
     {
         $is_correct = true;
-        foreach ($taxes_amount as $id_tax => $amount)
-        {
+        foreach ($taxes_amount as $id_tax => $amount) {
             $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
 					VALUES ('.(int)$this->id.', \'shipping\', '.(int)$id_tax.', '.(float)$amount.')';
 
@@ -868,8 +870,7 @@ class OrderInvoiceCore extends ObjectModel
     public function saveWrappingTaxCalculator(array $taxes_amount)
     {
         $is_correct = true;
-        foreach ($taxes_amount as $id_tax => $amount)
-        {
+        foreach ($taxes_amount as $id_tax => $amount) {
             $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
 					VALUES ('.(int)$this->id.', \'wrapping\', '.(int)$id_tax.', '.(float)$amount.')';
 

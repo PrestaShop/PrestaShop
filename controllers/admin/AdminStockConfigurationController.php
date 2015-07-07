@@ -132,8 +132,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         if (Tools::isSubmit('submitAddsupply_order_state') ||
             Tools::isSubmit('addsupply_order_state') ||
             Tools::isSubmit('updatesupply_order_state') ||
-            Tools::isSubmit('deletesupply_order_state'))
-        {
+            Tools::isSubmit('deletesupply_order_state')) {
             $this->table = 'supply_order_state';
             $this->className = 'SupplyOrderState';
             $this->identifier = 'id_supply_order_state';
@@ -152,8 +151,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         if (Tools::isSubmit('addstock_mvt_reason') ||
             Tools::isSubmit('updatestock_mvt_reason') ||
             Tools::isSubmit('submitAddstock_mvt_reason') ||
-            Tools::isSubmit('submitUpdatestock_mvt_reason'))
-        {
+            Tools::isSubmit('submitUpdatestock_mvt_reason')) {
             $this->toolbar_title = $this->l('Stock: Add stock movement label');
 
             $this->fields_form = array(
@@ -200,8 +198,7 @@ class AdminStockConfigurationControllerCore extends AdminController
         elseif (Tools::isSubmit('addsupply_order_state') ||
                  Tools::isSubmit('updatesupply_order_state') ||
                  Tools::isSubmit('submitAddsupply_order_state') ||
-                 Tools::isSubmit('submitUpdatesupply_order_state'))
-        {
+                 Tools::isSubmit('submitUpdatesupply_order_state')) {
             $this->fields_form = array(
                     'legend' => array(
                         'title' => $this->l('Supply Order Status'),
@@ -307,17 +304,15 @@ class AdminStockConfigurationControllerCore extends AdminController
                     )
                 );
 
-                if (Tools::isSubmit('addsupply_order_state'))
-                    $this->toolbar_title = $this->l('Stock: Add supply order status');
-                else
-                {
-                    $this->toolbar_title = $this->l('Stock: Update supply order status');
+            if (Tools::isSubmit('addsupply_order_state')) {
+                $this->toolbar_title = $this->l('Stock: Add supply order status');
+            } else {
+                $this->toolbar_title = $this->l('Stock: Update supply order status');
 
-                    $id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
+                $id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
 
                     // only some fields are editable for initial states
-                    if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6)))
-                    {
+                    if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6))) {
                         $this->fields_form = array(
                             'legend' => array(
                                 'title' => $this->l('Supply order status'),
@@ -344,19 +339,21 @@ class AdminStockConfigurationControllerCore extends AdminController
                         );
                     }
 
-                    if (!($obj = new SupplyOrderState((int)$id_supply_order_state)))
-                        return;
+                if (!($obj = new SupplyOrderState((int)$id_supply_order_state))) {
+                    return;
+                }
 
-                    $this->fields_value = array(
+                $this->fields_value = array(
                         'color' => $obj->color,
                         'editable' => $obj->editable,
                         'delivery_note' => $obj->delivery_note,
                         'receipt_state' => $obj->receipt_state,
                         'pending_receipt' => $obj->pending_receipt,
                     );
-                    foreach ($this->getLanguages() as $language)
-                            $this->fields_value['name'][$language['id_lang']] = $this->getFieldValue($obj, 'name', $language['id_lang']);
+                foreach ($this->getLanguages() as $language) {
+                    $this->fields_value['name'][$language['id_lang']] = $this->getFieldValue($obj, 'name', $language['id_lang']);
                 }
+            }
         }
 
         return parent::renderForm();
@@ -374,8 +371,9 @@ class AdminStockConfigurationControllerCore extends AdminController
         $this->displayInformation($this->l('This interface allows you to configure your supply order status and stock movement labels.').'<br />');
 
         // Checks access
-        if (!($this->tabAccess['add'] === '1'))
+        if (!($this->tabAccess['add'] === '1')) {
             unset($this->toolbar_btn['new']);
+        }
 
         /**
          * First list
@@ -497,20 +495,21 @@ class AdminStockConfigurationControllerCore extends AdminController
         // SupplyOrderState
         if (Tools::isSubmit('submitAddsupply_order_state') ||
             Tools::isSubmit('deletesupply_order_state') ||
-            Tools::isSubmit('submitUpdatesupply_order_state'))
-        {
-            if (Tools::isSubmit('deletesupply_order_state'))
+            Tools::isSubmit('submitUpdatesupply_order_state')) {
+            if (Tools::isSubmit('deletesupply_order_state')) {
                 $this->action = 'delete';
-            else
+            } else {
                 $this->action = 'save';
+            }
             $this->table = 'supply_order_state';
             $this->className = 'SupplyOrderState';
             $this->identifier = 'id_supply_order_state';
             $this->_defaultOrderBy = 'id_supply_order_state';
         }
         // StockMvtReason
-        elseif (Tools::isSubmit('delete'.$this->table))
+        elseif (Tools::isSubmit('delete'.$this->table)) {
             $this->deleted = true;
+        }
 
         return parent::postProcess();
     }
@@ -533,25 +532,24 @@ class AdminStockConfigurationControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         //If there is a field product_name in the list, check if this field is null and display standard message
-        foreach ($this->fields_list as $key => $value)
-            if ($key == 'product_name')
-            {
+        foreach ($this->fields_list as $key => $value) {
+            if ($key == 'product_name') {
                 $nb_items = count($this->_list);
 
-                for ($i = 0; $i < $nb_items; ++$i)
-                {
+                for ($i = 0; $i < $nb_items; ++$i) {
                     $item = &$this->_list[$i];
 
-                    if (empty($item['product_name']))
+                    if (empty($item['product_name'])) {
                         $item['product_name'] = $this->l('The name of this product is not available. It may have been deleted from the system.');
+                    }
                 }
             }
+        }
     }
     
     public function initContent()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate the Advanced Stock Management feature before you can use this feature.');
             return false;
         }
@@ -560,8 +558,7 @@ class AdminStockConfigurationControllerCore extends AdminController
     
     public function initProcess()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate the Advanced Stock Management feature before you can use this feature.');
             return false;
         }
@@ -575,10 +572,11 @@ class AdminStockConfigurationControllerCore extends AdminController
         $sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `editable` = NOT `editable` WHERE id_supply_order_state='.$id_supply_order_state;
         $result = Db::getInstance()->execute($sql);
 
-        if ($result)
+        if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
-        else
+        } else {
             echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+        }
     }
 
     public function ajaxProcessDeliveryNoteSupplyOrderState()
@@ -588,10 +586,11 @@ class AdminStockConfigurationControllerCore extends AdminController
         $sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `delivery_note` = NOT `delivery_note` WHERE id_supply_order_state='.$id_supply_order_state;
         $result = Db::getInstance()->execute($sql);
 
-        if ($result)
+        if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
-        else
+        } else {
             echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+        }
     }
 
     public function ajaxProcessPendingReceiptSupplyOrderState()
@@ -601,10 +600,11 @@ class AdminStockConfigurationControllerCore extends AdminController
         $sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `pending_receipt` = NOT `pending_receipt` WHERE id_supply_order_state='.$id_supply_order_state;
         $result = Db::getInstance()->execute($sql);
 
-        if ($result)
+        if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
-        else
+        } else {
             echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+        }
     }
 
     public function ajaxProcessReceiptStateSupplyOrderState()
@@ -614,10 +614,11 @@ class AdminStockConfigurationControllerCore extends AdminController
         $sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `receipt_state` = NOT `receipt_state` WHERE id_supply_order_state='.$id_supply_order_state;
         $result = Db::getInstance()->execute($sql);
 
-        if ($result)
+        if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
-        else
+        } else {
             echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+        }
     }
 
     public function ajaxProcessEnclosedSupplyOrderState()
@@ -627,9 +628,10 @@ class AdminStockConfigurationControllerCore extends AdminController
         $sql = 'UPDATE '._DB_PREFIX_.'supply_order_state SET `enclosed`= NOT `enclosed` WHERE id_supply_order_state='.$id_supply_order_state;
         $result = Db::getInstance()->execute($sql);
 
-        if ($result)
+        if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
-        else
+        } else {
             echo json_encode(array('success' => 0, 'text' => $this->l('An error occurred while updating this meta.')));
+        }
     }
 }

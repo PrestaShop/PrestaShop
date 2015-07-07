@@ -41,10 +41,11 @@ abstract class AbstractLoggerCore
 
     public function __construct($level = self::INFO)
     {
-        if (array_key_exists((int)$level, $this->level_value))
+        if (array_key_exists((int)$level, $this->level_value)) {
             $this->level = $level;
-        else
+        } else {
             $this->level = self::INFO;
+        }
     }
 
     /**
@@ -63,8 +64,9 @@ abstract class AbstractLoggerCore
      */
     public function log($message, $level = self::DEBUG)
     {
-        if ($level >= $this->level)
+        if ($level >= $this->level) {
             $this->logMessage($message, $level);
+        }
     }
 
     /**

@@ -78,8 +78,9 @@ class ConfigurationCore extends ObjectModel
      */
     public function getFieldsLang()
     {
-        if (!is_array($this->value))
+        if (!is_array($this->value)) {
             return true;
+        }
         return parent::getFieldsLang();
     }
 
@@ -93,10 +94,12 @@ class ConfigurationCore extends ObjectModel
      */
     public static function getIdByName($key, $id_shop_group = null, $id_shop = null)
     {
-        if ($id_shop === null)
+        if ($id_shop === null) {
             $id_shop = Shop::getContextShopID(true);
-        if ($id_shop_group === null)
+        }
+        if ($id_shop_group === null) {
             $id_shop_group = Shop::getContextShopGroupID(true);
+        }
 
         $sql = 'SELECT `'.bqSQL(self::$definition['primary']).'`
 				FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
@@ -109,11 +112,11 @@ class ConfigurationCore extends ObjectModel
     {
         static $loaded = null;
 
-        if ($loaded !== null)
+        if ($loaded !== null) {
             return $loaded;
+        }
 
-        if (isset(self::$_cache) && isset(self::$_cache[self::$definition['table']]) && count(self::$_cache[self::$definition['table']]))
-        {
+        if (isset(self::$_cache) && isset(self::$_cache[self::$definition['table']]) && count(self::$_cache[self::$definition['table']])) {
             $loaded = true;
             return $loaded;
         }
@@ -143,23 +146,24 @@ class ConfigurationCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl ON (c.`'.bqSQL(self::$definition['primary']).'` = cl.`'.bqSQL(self::$definition['primary']).'`)';
         $db = Db::getInstance();
         $result = $db->executeS($sql, false);
-        while ($row = $db->nextRow($result))
-        {
+        while ($row = $db->nextRow($result)) {
             $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
             self::$types[$row['name']] = ($lang) ? 'lang' : 'normal';
-            if (!isset(self::$_cache[self::$definition['table']][$lang]))
+            if (!isset(self::$_cache[self::$definition['table']][$lang])) {
                 self::$_cache[self::$definition['table']][$lang] = array(
                     'global' => array(),
                     'group' => array(),
                     'shop' => array(),
                 );
+            }
 
-            if ($row['id_shop'])
+            if ($row['id_shop']) {
                 self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-            elseif ($row['id_shop_group'])
+            } elseif ($row['id_shop_group']) {
                 self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
-            else
+            } else {
                 self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
+            }
         }
     }
 
@@ -172,31 +176,36 @@ class ConfigurationCore extends ObjectModel
      */
     public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
     {
-        if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_)
+        if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_) {
             return false;
+        }
 
         // If conf if not initialized, try manual query
-        if (!isset(self::$_cache[self::$definition['table']]))
-        {
+        if (!isset(self::$_cache[self::$definition['table']])) {
             Configuration::loadConfiguration();
-            if (!self::$_cache[self::$definition['table']])
+            if (!self::$_cache[self::$definition['table']]) {
                 return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
+            }
         }
         $id_lang = (int)$id_lang;
-        if ($id_shop === null || !Shop::isFeatureActive())
+        if ($id_shop === null || !Shop::isFeatureActive()) {
             $id_shop = Shop::getContextShopID(true);
-        if ($id_shop_group === null || !Shop::isFeatureActive())
+        }
+        if ($id_shop_group === null || !Shop::isFeatureActive()) {
             $id_shop_group = Shop::getContextShopGroupID(true);
+        }
 
-        if (!isset(self::$_cache[self::$definition['table']][$id_lang]))
+        if (!isset(self::$_cache[self::$definition['table']][$id_lang])) {
             $id_lang = 0;
+        }
 
-        if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop))
+        if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop)) {
             return self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key];
-        elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
+        } elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group)) {
             return self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group][$key];
-        elseif (Configuration::hasKey($key, $id_lang))
+        } elseif (Configuration::hasKey($key, $id_lang)) {
             return self::$_cache[self::$definition['table']][$id_lang]['global'][$key];
+        }
         return false;
     }
 
@@ -216,8 +225,9 @@ class ConfigurationCore extends ObjectModel
     public static function getInt($key, $id_shop_group = null, $id_shop = null)
     {
         $results_array = array();
-        foreach (Language::getIDs() as $id_lang)
+        foreach (Language::getIDs() as $id_lang) {
             $results_array[$id_lang] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
+        }
 
         return $results_array;
     }
@@ -233,8 +243,9 @@ class ConfigurationCore extends ObjectModel
     {
         $shops = Shop::getShops(false, null, true);
         $resultsArray = array();
-        foreach ($shops as $id_shop)
+        foreach ($shops as $id_shop) {
             $resultsArray[$id_shop] = Configuration::get($key, $id_lang, null, $id_shop);
+        }
         return $resultsArray;
     }
 
@@ -251,18 +262,22 @@ class ConfigurationCore extends ObjectModel
      */
     public static function getMultiple($keys, $id_lang = null, $id_shop_group = null, $id_shop = null)
     {
-        if (!is_array($keys))
+        if (!is_array($keys)) {
             throw new PrestaShopException('keys var is not an array');
+        }
 
         $id_lang = (int)$id_lang;
-        if ($id_shop === null)
+        if ($id_shop === null) {
             $id_shop = Shop::getContextShopID(true);
-        if ($id_shop_group === null)
+        }
+        if ($id_shop_group === null) {
             $id_shop_group = Shop::getContextShopGroupID(true);
+        }
 
         $results = array();
-        foreach ($keys as $key)
+        foreach ($keys as $key) {
             $results[$key] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
+        }
         return $results;
     }
 
@@ -277,19 +292,21 @@ class ConfigurationCore extends ObjectModel
      */
     public static function hasKey($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
     {
-        if (!is_int($key) && !is_string($key))
+        if (!is_int($key) && !is_string($key)) {
             return false;
+        }
 
         $id_lang = (int)$id_lang;
 
-        if ($id_shop)
+        if ($id_shop) {
             return isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop])
                 && (isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key])
                     || array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop]));
-        elseif ($id_shop_group)
+        } elseif ($id_shop_group) {
             return isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group])
                 && (isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group][$key])
                     || array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group]));
+        }
 
         return isset(self::$_cache[self::$definition['table']][$id_lang]['global'])
             && (isset(self::$_cache[self::$definition['table']][$id_lang]['global'][$key])
@@ -306,25 +323,29 @@ class ConfigurationCore extends ObjectModel
      */
     public static function set($key, $values, $id_shop_group = null, $id_shop = null)
     {
-        if (!Validate::isConfigName($key))
+        if (!Validate::isConfigName($key)) {
             die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+        }
 
-        if ($id_shop === null)
+        if ($id_shop === null) {
             $id_shop = Shop::getContextShopID(true);
-        if ($id_shop_group === null)
+        }
+        if ($id_shop_group === null) {
             $id_shop_group = Shop::getContextShopGroupID(true);
+        }
 
-        if (!is_array($values))
+        if (!is_array($values)) {
             $values = array($values);
+        }
 
-        foreach ($values as $lang => $value)
-        {
-            if ($id_shop)
+        foreach ($values as $lang => $value) {
+            if ($id_shop) {
                 self::$_cache[self::$definition['table']][$lang]['shop'][$id_shop][$key] = $value;
-            elseif ($id_shop_group)
+            } elseif ($id_shop_group) {
                 self::$_cache[self::$definition['table']][$lang]['group'][$id_shop_group][$key] = $value;
-            else
+            } else {
                 self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
+            }
         }
     }
 
@@ -353,45 +374,45 @@ class ConfigurationCore extends ObjectModel
      */
     public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
     {
-        if (!Validate::isConfigName($key))
+        if (!Validate::isConfigName($key)) {
             die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
+        }
 
-        if ($id_shop === null || !Shop::isFeatureActive())
+        if ($id_shop === null || !Shop::isFeatureActive()) {
             $id_shop = Shop::getContextShopID(true);
-        if ($id_shop_group === null || !Shop::isFeatureActive())
+        }
+        if ($id_shop_group === null || !Shop::isFeatureActive()) {
             $id_shop_group = Shop::getContextShopGroupID(true);
+        }
 
-        if (!is_array($values))
+        if (!is_array($values)) {
             $values = array($values);
+        }
 
-        if ($html)
-        {
-            foreach ($values as &$value)
+        if ($html) {
+            foreach ($values as &$value) {
                 $value = Tools::purifyHTML($value);
+            }
             unset($value);
         }
 
         $result = true;
-        foreach ($values as $lang => $value)
-        {
+        foreach ($values as $lang => $value) {
             $stored_value = Configuration::get($key, $lang, $id_shop_group, $id_shop);
             // if there isn't a $stored_value, we must insert $value
-            if ((!is_numeric($value) && $value === $stored_value) || (is_numeric($value) && $value == $stored_value && Configuration::hasKey($key, $lang)))
+            if ((!is_numeric($value) && $value === $stored_value) || (is_numeric($value) && $value == $stored_value && Configuration::hasKey($key, $lang))) {
                 continue;
+            }
 
             // If key already exists, update value
-            if (Configuration::hasKey($key, $lang, $id_shop_group, $id_shop))
-            {
-                if (!$lang)
-                {
+            if (Configuration::hasKey($key, $lang, $id_shop_group, $id_shop)) {
+                if (!$lang) {
                     // Update config not linked to lang
                     $result &= Db::getInstance()->update(self::$definition['table'], array(
                         'value' => pSQL($value, $html),
                         'date_upd' => date('Y-m-d H:i:s'),
                     ), '`name` = \''.pSQL($key).'\''.Configuration::sqlRestriction($id_shop_group, $id_shop), 1, true);
-                }
-                else
-                {
+                } else {
                     // Update multi lang
                     $sql = 'UPDATE `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang` cl
 							SET cl.value = \''.pSQL($value, $html).'\',
@@ -407,24 +428,24 @@ class ConfigurationCore extends ObjectModel
                 }
             }
             // If key does not exists, create it
-            else
-            {
-                if (!$configID = Configuration::getIdByName($key, $id_shop_group, $id_shop))
-                {
+            else {
+                if (!$configID = Configuration::getIdByName($key, $id_shop_group, $id_shop)) {
                     $newConfig = new Configuration();
                     $newConfig->name = $key;
-                    if ($id_shop)
+                    if ($id_shop) {
                         $newConfig->id_shop = (int)$id_shop;
-                    if ($id_shop_group)
+                    }
+                    if ($id_shop_group) {
                         $newConfig->id_shop_group = (int)$id_shop_group;
-                    if (!$lang)
+                    }
+                    if (!$lang) {
                         $newConfig->value = $value;
+                    }
                     $result &= $newConfig->add(true, true);
                     $configID = $newConfig->id;
                 }
 
-                if ($lang)
-                {
+                if ($lang) {
                     $result &= Db::getInstance()->insert(self::$definition['table'].'_lang', array(
                         self::$definition['primary'] => $configID,
                         'id_lang' => (int)$lang,
@@ -448,8 +469,9 @@ class ConfigurationCore extends ObjectModel
      */
     public static function deleteByName($key)
     {
-        if (!Validate::isConfigName($key))
+        if (!Validate::isConfigName($key)) {
             return false;
+        }
 
         $result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang`
@@ -475,13 +497,15 @@ class ConfigurationCore extends ObjectModel
      */
     public static function deleteFromContext($key)
     {
-        if (Shop::getContext() == Shop::CONTEXT_ALL)
+        if (Shop::getContext() == Shop::CONTEXT_ALL) {
             return;
+        }
 
         $id_shop = null;
         $id_shop_group = Shop::getContextShopGroupID(true);
-        if (Shop::getContext() == Shop::CONTEXT_SHOP)
+        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
             $id_shop = Shop::getContextShopID(true);
+        }
 
         $id = Configuration::getIdByName($key, $id_shop_group, $id_shop);
         Db::getInstance()->execute('
@@ -503,40 +527,37 @@ class ConfigurationCore extends ObjectModel
      */
     public static function hasContext($key, $id_lang, $context)
     {
-        if (Shop::getContext() == Shop::CONTEXT_ALL)
+        if (Shop::getContext() == Shop::CONTEXT_ALL) {
             $id_shop = $id_shop_group = null;
-        elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
-        {
+        } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $id_shop_group = Shop::getContextShopGroupID(true);
             $id_shop = null;
-        }
-        else
-        {
+        } else {
             $id_shop_group = Shop::getContextShopGroupID(true);
             $id_shop = Shop::getContextShopID(true);
         }
 
-        if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $id_lang, null, $id_shop))
+        if ($context == Shop::CONTEXT_SHOP && Configuration::hasKey($key, $id_lang, null, $id_shop)) {
             return true;
-        elseif ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_shop_group))
+        } elseif ($context == Shop::CONTEXT_GROUP && Configuration::hasKey($key, $id_lang, $id_shop_group)) {
             return true;
-        elseif ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang))
+        } elseif ($context == Shop::CONTEXT_ALL && Configuration::hasKey($key, $id_lang)) {
             return true;
+        }
         return false;
     }
 
     public static function isOverridenByCurrentContext($key)
     {
-        if (Configuration::isLangKey($key))
-        {
+        if (Configuration::isLangKey($key)) {
             $testContext = false;
-            foreach (Language::getIDs(false) as $id_lang)
+            foreach (Language::getIDs(false) as $id_lang) {
                 if ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $id_lang, Shop::CONTEXT_SHOP))
-                    || (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $id_lang, Shop::CONTEXT_GROUP)))
-                        $testContext = true;
-        }
-        else
-        {
+                    || (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $id_lang, Shop::CONTEXT_GROUP))) {
+                    $testContext = true;
+                }
+            }
+        } else {
             $testContext = ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
                             || (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
         }
@@ -564,12 +585,13 @@ class ConfigurationCore extends ObjectModel
      */
     protected static function sqlRestriction($id_shop_group, $id_shop)
     {
-        if ($id_shop)
+        if ($id_shop) {
             return ' AND id_shop = '.(int)$id_shop;
-        elseif ($id_shop_group)
+        } elseif ($id_shop_group) {
             return ' AND id_shop_group = '.(int)$id_shop_group.' AND (id_shop IS NULL OR id_shop = 0)';
-        else
+        } else {
             return ' AND (id_shop_group IS NULL OR id_shop_group = 0) AND (id_shop IS NULL OR id_shop = 0)';
+        }
     }
 
     /**

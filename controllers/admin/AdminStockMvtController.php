@@ -115,13 +115,14 @@ class AdminStockMvtControllerCore extends AdminController
     {
         $this->page_header_toolbar_title = $this->l('Stock movement');
 
-        if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+        if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1) {
             $this->page_header_toolbar_btn['export-stock-mvt-csv'] = array(
                 'short' => $this->l('Export this list as CSV', null, null, false),
                 'href' => $this->context->link->getAdminLink('AdminStockMvt').'&csv&id_warehouse='.(int)$this->getCurrentWarehouseId(),
                 'desc' => $this->l('Export (CSV)', null, null, false),
                 'imgclass' => 'export'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -168,8 +169,7 @@ class AdminStockMvtControllerCore extends AdminController
 
         // overrides where depending on the warehouse
         $id_warehouse = (int)$this->getCurrentWarehouseId();
-        if ($id_warehouse > 0)
-        {
+        if ($id_warehouse > 0) {
             $this->_where = ' AND w.id_warehouse = '.$id_warehouse;
             self::$currentIndex .= '&id_warehouse='.$id_warehouse;
         }
@@ -189,15 +189,13 @@ class AdminStockMvtControllerCore extends AdminController
         $list = parent::renderList();
 
         // if export requested
-        if (Tools::isSubmit('csv'))
-        {
-            if (count($this->_list) > 0)
-            {
+        if (Tools::isSubmit('csv')) {
+            if (count($this->_list) > 0) {
                 $this->renderCSV();
                 die;
-            }
-            else
+            } else {
                 $this->displayWarning($this->l('There is nothing to export as a CSV.'));
+            }
         }
 
         return $list;
@@ -212,11 +210,11 @@ class AdminStockMvtControllerCore extends AdminController
     {
         static $warehouse = 0;
 
-        if ($warehouse == 0)
-        {
+        if ($warehouse == 0) {
             $warehouse = -1;
-            if ((int)Tools::getValue('id_warehouse'))
+            if ((int)Tools::getValue('id_warehouse')) {
                 $warehouse = (int)Tools::getValue('id_warehouse');
+            }
         }
 
         return $warehouse;
@@ -237,25 +235,26 @@ class AdminStockMvtControllerCore extends AdminController
      */
     public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
     {
-        if (Tools::isSubmit('csv'))
+        if (Tools::isSubmit('csv')) {
             $limit = false;
+        }
 
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         //If there is a field product_name in the list, check if this field is null and display standard message
-        foreach ($this->fields_list as $key => $value)
-            if ($key == 'product_name')
-            {
+        foreach ($this->fields_list as $key => $value) {
+            if ($key == 'product_name') {
                 $nb_items = count($this->_list);
 
-                for ($i = 0; $i < $nb_items; ++$i)
-                {
+                for ($i = 0; $i < $nb_items; ++$i) {
                     $item = &$this->_list[$i];
 
-                    if (empty($item['product_name']))
+                    if (empty($item['product_name'])) {
                         $item['product_name'] = $this->l('The name of this product is not available. It may have been deleted from the system.');
+                    }
                 }
             }
+        }
     }
 
     /**
@@ -263,13 +262,14 @@ class AdminStockMvtControllerCore extends AdminController
      */
     public function initToolbar()
     {
-        if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
+        if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1) {
             $this->toolbar_btn['export-stock-mvt-csv'] = array(
                 'short' => 'Export this list as CSV',
                 'href' => $this->context->link->getAdminLink('AdminStockMvt').'&amp;csv&amp;id_warehouse='.(int)$this->getCurrentWarehouseId(),
                 'desc' => $this->l('Export (CSV)'),
                 'imgclass' => 'export'
             );
+        }
 
         parent::initToolbar();
         unset($this->toolbar_btn['new']);
@@ -280,14 +280,16 @@ class AdminStockMvtControllerCore extends AdminController
      */
     public function renderCSV()
     {
-        if (!$this->_list)
+        if (!$this->_list) {
             return;
+        }
 
         // header
-        if (Tools::getValue('id_warehouse') != -1)
+        if (Tools::getValue('id_warehouse') != -1) {
             $filename = $this->l('stock_mvt').'_'.Warehouse::getWarehouseNameById((int)Tools::getValue('id_warehouse')).'.csv';
-        else
+        } else {
             $filename = $this->l('stock_mvt').'.csv';
+        }
         header('Content-type: text/csv');
         header('Cache-Control: no-store, no-cache');
         header('Content-disposition: attachment; filename="'.$filename);
@@ -299,8 +301,7 @@ class AdminStockMvtControllerCore extends AdminController
 
 
         // puts rows
-        foreach ($this->_list as $row)
-        {
+        foreach ($this->_list as $row) {
             $row_csv = array($row['id_order'], $row['id_supply_order'], $row['employee_firstname'],
                              $row['employee_lastname'], $row['physical_quantity'], $row['date_add'],
                              $row['sign'], $row['price_te'], $row['product_name'],
@@ -314,8 +315,7 @@ class AdminStockMvtControllerCore extends AdminController
     
     public function initContent()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
@@ -324,12 +324,10 @@ class AdminStockMvtControllerCore extends AdminController
     
     public function initProcess()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
         parent::initProcess();
     }
-
 }

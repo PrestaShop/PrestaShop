@@ -46,31 +46,32 @@ class OrderConfirmationControllerCore extends FrontController
         $is_guest = false;
 
         /* check if the cart has been made by a Guest customer, for redirect link */
-        if (Cart::isGuestCartByCartId($this->id_cart))
-        {
+        if (Cart::isGuestCartByCartId($this->id_cart)) {
             $is_guest = true;
             $redirectLink = 'index.php?controller=guest-tracking';
-        }
-        else
+        } else {
             $redirectLink = 'index.php?controller=history';
+        }
 
         $this->id_module = (int)(Tools::getValue('id_module', 0));
         $this->id_order = Order::getOrderByCartId((int)($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $order = new Order((int)($this->id_order));
-        if ($is_guest)
-        {
+        if ($is_guest) {
             $customer = new Customer((int)$order->id_customer);
             $redirectLink .= '&id_order='.$order->reference.'&email='.urlencode($customer->email);
         }
-        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key))
+        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
+        }
         $this->reference = $order->reference;
-        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key)
+        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
             Tools::redirect($redirectLink);
+        }
         $module = Module::getInstanceById((int)($this->id_module));
-        if ($order->module != $module->name)
+        if ($order->module != $module->name) {
             Tools::redirect($redirectLink);
+        }
     }
 
     /**
@@ -87,8 +88,7 @@ class OrderConfirmationControllerCore extends FrontController
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
         ));
 
-        if ($this->context->customer->is_guest)
-        {
+        if ($this->context->customer->is_guest) {
             $this->context->smarty->assign(array(
                 'id_order' => $this->id_order,
                 'reference_order' => $this->reference,
@@ -107,14 +107,12 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function displayPaymentReturn()
     {
-        if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module))
-        {
+        if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module)) {
             $params = array();
             $order = new Order($this->id_order);
             $currency = new Currency($order->id_currency);
 
-            if (Validate::isLoadedObject($order))
-            {
+            if (Validate::isLoadedObject($order)) {
                 $params['total_to_pay'] = $order->getOrdersTotalPaid();
                 $params['currency'] = $currency->sign;
                 $params['objOrder'] = $order;
@@ -131,14 +129,12 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function displayOrderConfirmation()
     {
-        if (Validate::isUnsignedId($this->id_order))
-        {
+        if (Validate::isUnsignedId($this->id_order)) {
             $params = array();
             $order = new Order($this->id_order);
             $currency = new Currency($order->id_currency);
 
-            if (Validate::isLoadedObject($order))
-            {
+            if (Validate::isLoadedObject($order)) {
                 $params['total_to_pay'] = $order->getOrdersTotalPaid();
                 $params['currency'] = $currency->sign;
                 $params['objOrder'] = $order;

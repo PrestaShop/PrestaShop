@@ -97,21 +97,23 @@ class CombinationCore extends ObjectModel
 
     public function delete()
     {
-        if (!parent::delete())
+        if (!parent::delete()) {
             return false;
+        }
 
         // Removes the product from StockAvailable, for the current shop
         StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
 
-        if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
-            foreach ($specific_prices as $specific_price)
-            {
+        if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id)) {
+            foreach ($specific_prices as $specific_price) {
                 $price = new SpecificPrice((int)$specific_price['id_specific_price']);
                 $price->delete();
             }
+        }
 
-        if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
+        if (!$this->hasMultishopEntries() && !$this->deleteAssociations()) {
             return false;
+        }
 
         $this->deleteFromSupplier($this->id_product);
         Product::updateDefaultAttribute($this->id_product);
@@ -127,19 +129,22 @@ class CombinationCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        if ($this->default_on)
+        if ($this->default_on) {
             $this->default_on = 1;
-        else
+        } else {
             $this->default_on = null;
+        }
 
-        if (!parent::add($autodate, $null_values))
+        if (!parent::add($autodate, $null_values)) {
             return false;
+        }
 
         $product = new Product((int)$this->id_product);
-        if ($product->getType() == Product::PTYPE_VIRTUAL)
+        if ($product->getType() == Product::PTYPE_VIRTUAL) {
             StockAvailable::setProductOutOfStock((int)$this->id_product, 1, null, (int)$this->id);
-        else
+        } else {
             StockAvailable::setProductOutOfStock((int)$this->id_product, StockAvailable::outOfStock((int)$this->id_product), null, $this->id);
+        }
 
         SpecificPriceRule::applyAllRules(array((int)$this->id_product));
 
@@ -150,10 +155,11 @@ class CombinationCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if ($this->default_on)
+        if ($this->default_on) {
             $this->default_on = 1;
-        else
+        } else {
             $this->default_on = null;
+        }
 
         $return = parent::update($null_values);
         Product::updateDefaultAttribute($this->id_product);
@@ -173,11 +179,11 @@ class CombinationCore extends ObjectModel
     public function setAttributes($ids_attribute)
     {
         $result = $this->deleteAssociations();
-        if ($result && !empty($ids_attribute))
-        {
+        if ($result && !empty($ids_attribute)) {
             $sql_values = array();
-            foreach ($ids_attribute as $value)
+            foreach ($ids_attribute as $value) {
                 $sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
+            }
 
             $result = Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
@@ -190,8 +196,9 @@ class CombinationCore extends ObjectModel
     public function setWsProductOptionValues($values)
     {
         $ids_attributes = array();
-        foreach ($values as $value)
+        foreach ($values as $value) {
             $ids_attributes[] = $value['id'];
+        }
         return $this->setAttributes($ids_attributes);
     }
 
@@ -220,21 +227,23 @@ class CombinationCore extends ObjectModel
     {
         if (Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_product_attribute` = '.(int)$this->id) === false)
-        return false;
+			WHERE `id_product_attribute` = '.(int)$this->id) === false) {
+            return false;
+        }
 
-        if (is_array($ids_image) && count($ids_image))
-        {
+        if (is_array($ids_image) && count($ids_image)) {
             $sql_values = array();
 
-            foreach ($ids_image as $value)
+            foreach ($ids_image as $value) {
                 $sql_values[] = '('.(int)$this->id.', '.(int)$value.')';
+            }
 
-            if (is_array($sql_values) && count($sql_values))
+            if (is_array($sql_values) && count($sql_values)) {
                 Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES '.implode(',', $sql_values)
                 );
+            }
         }
         return true;
     }
@@ -242,8 +251,9 @@ class CombinationCore extends ObjectModel
     public function setWsImages($values)
     {
         $ids_images = array();
-        foreach ($values as $value)
+        foreach ($values as $value) {
             $ids_images[] = (int)$value['id'];
+        }
         return $this->setImages($ids_images);
     }
 
@@ -265,8 +275,9 @@ class CombinationCore extends ObjectModel
     {
         static $feature_active = null;
 
-        if ($feature_active === null)
+        if ($feature_active === null) {
             $feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+        }
         return $feature_active;
     }
 
@@ -291,8 +302,9 @@ class CombinationCore extends ObjectModel
      */
     public static function getIdByReference($id_product, $reference)
     {
-        if (empty($reference))
+        if (empty($reference)) {
             return 0;
+        }
 
         $query = new DbQuery();
         $query->select('pa.id_product_attribute');

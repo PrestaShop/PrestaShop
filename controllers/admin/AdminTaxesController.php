@@ -54,8 +54,9 @@ class AdminTaxesControllerCore extends AdminController
             );
 
         $ecotax_desc = '';
-        if (Configuration::get('PS_USE_ECOTAX'))
+        if (Configuration::get('PS_USE_ECOTAX')) {
             $ecotax_desc = $this->l('If you disable the ecotax, the ecotax for all your products will be set to 0.');
+        }
 
         $this->fields_options = array(
             'general' => array(
@@ -97,7 +98,7 @@ class AdminTaxesControllerCore extends AdminController
             ),
         );
 
-        if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX'))
+        if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX')) {
             $this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
                 'title' => $this->l('Ecotax'),
                 'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
@@ -106,6 +107,7 @@ class AdminTaxesControllerCore extends AdminController
                 'identifier' => 'id_tax_rules_group',
                 'list' => TaxRulesGroup::getTaxRulesGroupsForOptions()
                 );
+        }
 
         parent::__construct();
 
@@ -114,12 +116,13 @@ class AdminTaxesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tax'] = array(
                 'href' => self::$currentIndex.'&addtax&token='.$this->token,
                 'desc' => $this->l('Add new tax', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -136,14 +139,17 @@ class AdminTaxesControllerCore extends AdminController
      */
     public function displayDeleteLink($token = null, $id)
     {
-        if (!array_key_exists('Delete', self::$cache_lang))
+        if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->l('Delete');
+        }
 
-        if (!array_key_exists('DeleteItem', self::$cache_lang))
+        if (!array_key_exists('DeleteItem', self::$cache_lang)) {
             self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
+        }
 
-        if (TaxRule::isTaxInUse($id))
+        if (TaxRule::isTaxInUse($id)) {
             $confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?', null, true, false);
+        }
 
         $this->context->smarty->assign(array(
             'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -166,8 +172,9 @@ class AdminTaxesControllerCore extends AdminController
      */
     public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
     {
-        if ($value && TaxRule::isTaxInUse($id))
+        if ($value && TaxRule::isTaxInUse($id)) {
             $confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?', null, true, false);
+        }
         $tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
         $tpl_enable->assign(array(
             'enabled' => (bool)$value,
@@ -233,59 +240,56 @@ class AdminTaxesControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->action == 'save')
-        {
+        if ($this->action == 'save') {
             /* Checking fields validity */
             $this->validateRules();
-            if (!count($this->errors))
-            {
+            if (!count($this->errors)) {
                 $id = (int)(Tools::getValue('id_'.$this->table));
 
                 /* Object update */
-                if (isset($id) && !empty($id))
-                {
+                if (isset($id) && !empty($id)) {
                     /** @var Tax $object */
                     $object = new $this->className($id);
-                    if (Validate::isLoadedObject($object))
-                    {
+                    if (Validate::isLoadedObject($object)) {
                         $this->copyFromPost($object, $this->table);
                         $result = $object->update(false, false);
 
-                        if (!$result)
+                        if (!$result) {
                             $this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b>';
-                        elseif ($this->postImage($object->id))
+                        } elseif ($this->postImage($object->id)) {
                             Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=4'.'&token='.$this->token);
-                    }
-                    else
+                        }
+                    } else {
                         $this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                    }
                 }
 
                 /* Object creation */
-                else
-                {
+                else {
                     /** @var Tax $object */
                     $object = new $this->className();
                     $this->copyFromPost($object, $this->table);
-                    if (!$object->add())
+                    if (!$object->add()) {
                         $this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
-                    elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect)
+                    } elseif (($_POST['id_'.$this->table] = $object->id /* voluntary */) && $this->postImage($object->id) && $this->_redirect) {
                         Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$object->id.'&conf=3'.'&token='.$this->token);
+                    }
                 }
             }
-        }
-        else
+        } else {
             parent::postProcess();
+        }
     }
 
     public function updateOptionPsUseEcotax($value)
     {
         $old_value = (int)Configuration::get('PS_USE_ECOTAX');
 
-        if ($old_value != $value)
-        {
+        if ($old_value != $value) {
             // Reset ecotax
-            if ($value == 0)
+            if ($value == 0) {
                 Product::resetEcoTax();
+            }
 
             Configuration::updateValue('PS_USE_ECOTAX', (int)$value);
         }

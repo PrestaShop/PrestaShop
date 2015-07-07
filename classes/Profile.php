@@ -65,8 +65,9 @@ class ProfileCore extends ObjectModel
     */
     public static function getProfile($id_profile, $id_lang = null)
     {
-        if (!$id_lang)
+        if (!$id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `name`
@@ -79,8 +80,7 @@ class ProfileCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        if (parent::add($autodate, true))
-        {
+        if (parent::add($autodate, true)) {
             $result = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)');
             $result &= Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'module_access
@@ -94,11 +94,12 @@ class ProfileCore extends ObjectModel
 
     public function delete()
     {
-        if (parent::delete())
+        if (parent::delete()) {
             return (
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
                 && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
             );
+        }
         return false;
     }
 
@@ -111,19 +112,19 @@ class ProfileCore extends ObjectModel
 
     public static function getProfileAccesses($id_profile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_tab', 'class_name')))
+        if (!in_array($type, array('id_tab', 'class_name'))) {
             return false;
+        }
 
-        if (!isset(self::$_cache_accesses[$id_profile]))
+        if (!isset(self::$_cache_accesses[$id_profile])) {
             self::$_cache_accesses[$id_profile] = array();
+        }
 
-        if (!isset(self::$_cache_accesses[$id_profile][$type]))
-        {
+        if (!isset(self::$_cache_accesses[$id_profile][$type])) {
             self::$_cache_accesses[$id_profile][$type] = array();
             // Super admin profile has full auth
-            if ($id_profile == _PS_ADMIN_PROFILE_)
-            {
-                foreach (Tab::getTabs(Context::getContext()->language->id) as $tab)
+            if ($id_profile == _PS_ADMIN_PROFILE_) {
+                foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
                     self::$_cache_accesses[$id_profile][$type][$tab[$type]] = array(
                         'id_profile' => _PS_ADMIN_PROFILE_,
                         'id_tab' => $tab['id_tab'],
@@ -133,17 +134,17 @@ class ProfileCore extends ObjectModel
                         'edit' => '1',
                         'delete' => '1',
                     );
-            }
-            else
-            {
+                }
+            } else {
                 $result = Db::getInstance()->executeS('
 				SELECT *
 				FROM `'._DB_PREFIX_.'access` a
 				LEFT JOIN `'._DB_PREFIX_.'tab` t ON t.id_tab = a.id_tab
 				WHERE `id_profile` = '.(int)$id_profile);
 
-                foreach ($result as $row)
+                foreach ($result as $row) {
                     self::$_cache_accesses[$id_profile][$type][$row[$type]] = $row;
+                }
             }
         }
 

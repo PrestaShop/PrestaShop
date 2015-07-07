@@ -66,7 +66,9 @@ class CookieCore
         $this->_standalone = $standalone;
         $this->_expire = is_null($expire) ? time() + 1728000 : (int)$expire;
         $this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri).$path, '/\\').'/';
-        if ($this->_path{0} != '/') $this->_path = '/'.$this->_path;
+        if ($this->_path{0} != '/') {
+            $this->_path = '/'.$this->_path;
+        }
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace('%2F', '/', $this->_path);
         $this->_path = str_replace('%7E', '~', $this->_path);
@@ -74,12 +76,13 @@ class CookieCore
         $this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name.$this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
-        if ($this->_standalone)
+        if ($this->_standalone) {
             $this->_cipherTool = new Blowfish(str_pad('', 56, md5('ps'.__FILE__)), str_pad('', 56, md5('iv'.__FILE__)));
-        elseif (!Configuration::get('PS_CIPHER_ALGORITHM') || !defined('_RIJNDAEL_KEY_'))
+        } elseif (!Configuration::get('PS_CIPHER_ALGORITHM') || !defined('_RIJNDAEL_KEY_')) {
             $this->_cipherTool = new Blowfish(_COOKIE_KEY_, _COOKIE_IV_);
-        else
+        } else {
             $this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
+        }
         $this->_secure = (bool)$secure;
 
         $this->update();
@@ -94,32 +97,34 @@ class CookieCore
     {
         $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 
-        if (!preg_match($r, Tools::getHttpHost(false, false), $out) || !isset($out[4]))
+        if (!preg_match($r, Tools::getHttpHost(false, false), $out) || !isset($out[4])) {
             return false;
+        }
 
         if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.
             '{1}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]).)'.
-            '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4]))
+            '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4])) {
             return false;
-        if (!strstr(Tools::getHttpHost(false, false), '.'))
+        }
+        if (!strstr(Tools::getHttpHost(false, false), '.')) {
             return false;
+        }
 
         $domain = false;
-        if ($shared_urls !== null)
-        {
-            foreach ($shared_urls as $shared_url)
-            {
-                if ($shared_url != $out[4])
+        if ($shared_urls !== null) {
+            foreach ($shared_urls as $shared_url) {
+                if ($shared_url != $out[4]) {
                     continue;
-                if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res))
-                {
+                }
+                if (preg_match('/^(?:.*\.)?([^.]*(?:.{2,4})?\..{2,3})$/Ui', $shared_url, $res)) {
                     $domain = '.'.$res[1];
                     break;
                 }
             }
         }
-        if (!$domain)
+        if (!$domain) {
             $domain = $out[4];
+        }
         return $domain;
     }
 
@@ -164,12 +169,15 @@ class CookieCore
      */
     public function __set($key, $value)
     {
-        if (is_array($value))
+        if (is_array($value)) {
             die(Tools::displayError());
-        if (preg_match('/¤|\|/', $key.$value))
+        }
+        if (preg_match('/¤|\|/', $key.$value)) {
             throw new Exception('Forbidden chars in cookie');
-        if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value)))
+        }
+        if (!$this->_modified && (!isset($this->_content[$key]) || (isset($this->_content[$key]) && $this->_content[$key] != $value))) {
             $this->_modified = true;
+        }
         $this->_content[$key] = $value;
     }
 
@@ -180,8 +188,9 @@ class CookieCore
      */
     public function __unset($key)
     {
-        if (isset($this->_content[$key]))
+        if (isset($this->_content[$key])) {
             $this->_modified = true;
+        }
         unset($this->_content[$key]);
     }
 
@@ -194,12 +203,14 @@ class CookieCore
     public function isLogged($withGuest = false)
     {
         Tools::displayAsDeprecated();
-        if (!$withGuest && $this->is_guest == 1)
+        if (!$withGuest && $this->is_guest == 1) {
             return false;
+        }
 
         /* Customer is valid only if it can be load and if cookie password is the same as database one */
-        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int)($this->id_customer), $this->passwd))
+        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int)($this->id_customer), $this->passwd)) {
             return true;
+        }
         return false;
     }
 
@@ -268,8 +279,7 @@ class CookieCore
      */
     public function update($nullValues = false)
     {
-        if (isset($_COOKIE[$this->_name]))
-        {
+        if (isset($_COOKIE[$this->_name])) {
             /* Decrypt cookie content */
             $content = $this->_cipherTool->decrypt($_COOKIE[$this->_name]);
             //printf("\$content = %s<br />", $content);
@@ -283,35 +293,36 @@ class CookieCore
 
             /* Unserialize cookie content */
             $tmpTab = explode('¤', $content);
-            foreach ($tmpTab as $keyAndValue)
-            {
+            foreach ($tmpTab as $keyAndValue) {
                 $tmpTab2 = explode('|', $keyAndValue);
-                if (count($tmpTab2) == 2)
+                if (count($tmpTab2) == 2) {
                     $this->_content[$tmpTab2[0]] = $tmpTab2[1];
+                }
             }
             /* Blowfish fix */
-            if (isset($this->_content['checksum']))
+            if (isset($this->_content['checksum'])) {
                 $this->_content['checksum'] = (int)($this->_content['checksum']);
+            }
             //printf("\$this->_content['checksum'] = %s<br />", $this->_content['checksum']);
             //die();
             /* Check if cookie has not been modified */
-            if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum)
+            if (!isset($this->_content['checksum']) || $this->_content['checksum'] != $checksum) {
                 $this->logout();
+            }
 
-            if (!isset($this->_content['date_add']))
+            if (!isset($this->_content['date_add'])) {
                 $this->_content['date_add'] = date('Y-m-d H:i:s');
-        }
-        else
+            }
+        } else {
             $this->_content['date_add'] = date('Y-m-d H:i:s');
+        }
 
         //checks if the language exists, if not choose the default language
-        if (!$this->_standalone && !Language::getLanguage((int)$this->id_lang))
-        {
+        if (!$this->_standalone && !Language::getLanguage((int)$this->id_lang)) {
             $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
             $this->detect_language = true;
         }
-
     }
 
     /**
@@ -319,20 +330,18 @@ class CookieCore
      */
     protected function _setcookie($cookie = null)
     {
-        if ($cookie)
-        {
+        if ($cookie) {
             $content = $this->_cipherTool->encrypt($cookie);
             $time = $this->_expire;
-        }
-        else
-        {
+        } else {
             $content = 0;
             $time = 1;
         }
-        if (PHP_VERSION_ID <= 50200) /* PHP version > 5.2.0 */
+        if (PHP_VERSION_ID <= 50200) { /* PHP version > 5.2.0 */
             return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure);
-        else
+        } else {
             return setcookie($this->_name, $content, $time, $this->_path, $this->_domain, $this->_secure, true);
+        }
     }
 
     public function __destruct()
@@ -345,15 +354,19 @@ class CookieCore
      */
     public function write()
     {
-        if (!$this->_modified || headers_sent() || !$this->_allow_writing)
+        if (!$this->_modified || headers_sent() || !$this->_allow_writing) {
             return;
+        }
 
         $cookie = '';
 
         /* Serialize cookie content */
-        if (isset($this->_content['checksum'])) unset($this->_content['checksum']);
-        foreach ($this->_content as $key => $value)
+        if (isset($this->_content['checksum'])) {
+            unset($this->_content['checksum']);
+        }
+        foreach ($this->_content as $key => $value) {
             $cookie .= $key.'|'.$value.'¤';
+        }
 
         /* Add checksum to cookie */
         $cookie .= 'checksum|'.crc32($this->_salt.$cookie);
@@ -368,11 +381,14 @@ class CookieCore
     public function getFamily($origin)
     {
         $result = array();
-        if (count($this->_content) == 0)
+        if (count($this->_content) == 0) {
             return $result;
-        foreach ($this->_content as $key => $value)
-            if (strncmp($key, $origin, strlen($origin)) == 0)
+        }
+        foreach ($this->_content as $key => $value) {
+            if (strncmp($key, $origin, strlen($origin)) == 0) {
                 $result[$key] = $value;
+            }
+        }
         return $result;
     }
 
@@ -382,8 +398,9 @@ class CookieCore
     public function unsetFamily($origin)
     {
         $family = $this->getFamily($origin);
-        foreach (array_keys($family) as $member)
+        foreach (array_keys($family) as $member) {
             unset($this->$member);
+        }
     }
 
     public function getAll()

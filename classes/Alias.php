@@ -48,30 +48,23 @@ class AliasCore extends ObjectModel
         $this->def = Alias::getDefinition($this);
         $this->setDefinitionRetrocompatibility();
 
-        if ($id)
+        if ($id) {
             parent::__construct($id);
-        elseif ($alias && Validate::isValidSearch($alias))
-        {
-            if (!Alias::isFeatureActive())
-            {
+        } elseif ($alias && Validate::isValidSearch($alias)) {
+            if (!Alias::isFeatureActive()) {
                 $this->alias = trim($alias);
                 $this->search = trim($search);
-            }
-            else
-            {
+            } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
 				FROM `'._DB_PREFIX_.'alias` a
 				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
-                if ($row)
-                {
+                if ($row) {
                     $this->id = (int)$row['id_alias'];
                     $this->search = $search ? trim($search) : $row['search'];
                     $this->alias = $row['alias'];
-                }
-                else
-                {
+                } else {
                     $this->alias = trim($alias);
                     $this->search = trim($search);
                 }
@@ -85,8 +78,7 @@ class AliasCore extends ObjectModel
         $this->alias = Tools::replaceAccentedChars($this->alias);
         $this->search = Tools::replaceAccentedChars($this->search);
 
-        if (parent::add($autodate, $nullValues))
-        {
+        if (parent::add($autodate, $nullValues)) {
             // Set cache of feature detachable to true
             Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', '1');
             return true;
@@ -96,8 +88,7 @@ class AliasCore extends ObjectModel
 
     public function delete()
     {
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', Alias::isCurrentlyUsed($this->def['table'], true));
             return true;
@@ -107,8 +98,9 @@ class AliasCore extends ObjectModel
 
     public function getAliases()
     {
-        if (!Alias::isFeatureActive())
+        if (!Alias::isFeatureActive()) {
             return '';
+        }
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias

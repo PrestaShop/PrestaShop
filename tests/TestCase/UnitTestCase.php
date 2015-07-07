@@ -94,5 +94,4 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $container = $container_builder->build();
         Adapter_ServiceLocator::setServiceContainerInstance($container);
     }
-
 }

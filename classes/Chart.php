@@ -43,8 +43,7 @@ class ChartCore
     /** @prototype void public static function init(void) */
     public static function init()
     {
-        if (!self::$poolId)
-        {
+        if (!self::$poolId) {
             ++self::$poolId;
             return true;
         }
@@ -68,29 +67,36 @@ class ChartCore
     {
         $this->granularity = $granularity;
 
-        if (Validate::isDate($from))
+        if (Validate::isDate($from)) {
             $from = strtotime($from);
+        }
         $this->from = $from;
-        if (Validate::isDate($to))
+        if (Validate::isDate($to)) {
             $to = strtotime($to);
+        }
         $this->to = $to;
 
-        if ($granularity == 'd')
+        if ($granularity == 'd') {
             $this->format = '%d/%m/%y';
-        if ($granularity == 'w')
+        }
+        if ($granularity == 'w') {
             $this->format = '%d/%m/%y';
-        if ($granularity == 'm')
+        }
+        if ($granularity == 'm') {
             $this->format = '%m/%y';
-        if ($granularity == 'y')
+        }
+        if ($granularity == 'y') {
             $this->format = '%y';
+        }
 
         $this->timeMode = true;
     }
 
     public function getCurve($i)
     {
-        if (!array_key_exists($i, $this->curves))
+        if (!array_key_exists($i, $this->curves)) {
             $this->curves[$i] = new Curve();
+        }
         return $this->curves[$i];
     }
 
@@ -102,24 +108,26 @@ class ChartCore
 
     public function fetch()
     {
-        if ($this->timeMode)
-        {
+        if ($this->timeMode) {
             $options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
-            if ($this->granularity == 'd')
-                foreach ($this->curves as $curve)
-                {
+            if ($this->granularity == 'd') {
+                foreach ($this->curves as $curve) {
                     /** @var Curve $curve */
-                    for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i))
-                        if (!$curve->getPoint($i))
+                    for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i)) {
+                        if (!$curve->getPoint($i)) {
                             $curve->setPoint($i, 0);
+                        }
+                    }
                 }
+            }
         }
 
         $jsCurves = array();
-        foreach ($this->curves as $curve)
+        foreach ($this->curves as $curve) {
             $jsCurves[] = $curve->getValues($this->timeMode);
+        }
 
-        if (count($jsCurves))
+        if (count($jsCurves)) {
             return '
 			<div id="flot'.self::$poolId.'" style="width:'.$this->width.'px;height:'.$this->height.'px"></div>
 			<script type="text/javascript">
@@ -127,8 +135,9 @@ class ChartCore
 					$.plot($(\'#flot'.self::$poolId.'\'), ['.implode(',', $jsCurves).'], {'.$options.'});
 				});
 			</script>';
-        else
+        } else {
             return ErrorFacade::Display(PS_ERROR_UNDEFINED, 'No values for this chart.');
+        }
     }
 }
 
@@ -148,8 +157,9 @@ class Curve
     {
         ksort($this->values);
         $string = '';
-        foreach ($this->values as $key => $value)
+        foreach ($this->values as $key => $value) {
             $string .= '['.addslashes((string)$key).($time_mode ? '000' : '').','.(float)$value.'],';
+        }
         return '{data:['.rtrim($string, ',').']'.(!empty($this->label) ? ',label:"'.$this->label.'"' : '').''.(!empty($this->type) ? ','.$this->type : '').'}';
     }
 
@@ -167,15 +177,18 @@ class Curve
     public function setType($type)
     {
         $this->type = '';
-        if ($type == 'bars')
+        if ($type == 'bars') {
             $this->type = 'bars:{show:true,lineWidth:10}';
-        if ($type == 'steps')
+        }
+        if ($type == 'steps') {
             $this->type = 'lines:{show:true,steps:true}';
+        }
     }
 
     public function getPoint($x)
     {
-        if (array_key_exists((string)$x, $this->values))
+        if (array_key_exists((string)$x, $this->values)) {
             return $this->values[(string)$x];
+        }
     }
 }

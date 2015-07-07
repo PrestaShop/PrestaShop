@@ -184,8 +184,9 @@ class SupplyOrderCore extends ObjectModel
 
         $res = parent::update($null_values);
 
-        if ($res && !$this->is_template)
+        if ($res && !$this->is_template) {
             $this->addHistory();
+        }
 
         return $res;
     }
@@ -199,8 +200,9 @@ class SupplyOrderCore extends ObjectModel
 
         $res = parent::add($autodate, $null_values);
 
-        if ($res && !$this->is_template)
+        if ($res && !$this->is_template) {
             $this->addHistory();
+        }
 
         return $res;
     }
@@ -217,18 +219,19 @@ class SupplyOrderCore extends ObjectModel
         $this->total_ti = 0;
         $is_discount = false;
 
-        if (is_numeric($this->discount_rate) && (float)$this->discount_rate >= 0)
+        if (is_numeric($this->discount_rate) && (float)$this->discount_rate >= 0) {
             $is_discount = true;
+        }
 
         // gets all product entries in this order
         $entries = $this->getEntriesCollection();
 
-        foreach ($entries as $entry)
-        {
+        foreach ($entries as $entry) {
             /** @var SupplyOrderDetail $entry */
             // applys global discount rate on each product if possible
-            if ($is_discount)
+            if ($is_discount) {
                 $entry->applyGlobalDiscount((float)$this->discount_rate);
+            }
 
             // adds new prices to the total
             $this->total_te += $entry->price_with_discount_te;
@@ -238,8 +241,9 @@ class SupplyOrderCore extends ObjectModel
         }
 
         // applies global discount rate if possible
-        if ($is_discount)
+        if ($is_discount) {
             $this->discount_value_te = $this->total_te - $this->total_with_discount_te;
+        }
     }
 
     /**
@@ -250,8 +254,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public function getEntries($id_lang = null)
     {
-        if ($id_lang == null)
+        if ($id_lang == null) {
             $id_lang = Context::getContext()->language->id;
+        }
 
         // build query
         $query = new DbQuery();
@@ -373,8 +378,9 @@ class SupplyOrderCore extends ObjectModel
     {
         $products = $this->getEntriesCollection();
 
-        foreach ($products as $p)
+        foreach ($products as $p) {
             $p->delete();
+        }
     }
 
     /**
@@ -385,8 +391,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public static function warehouseHasPendingOrders($id_warehouse)
     {
-        if (!$id_warehouse)
+        if (!$id_warehouse) {
             return false;
+        }
 
         $query = new DbQuery();
         $query->select('COUNT(so.id_supply_order) as supply_orders');
@@ -407,8 +414,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public static function supplierHasPendingOrders($id_supplier)
     {
-        if (!$id_supplier)
+        if (!$id_supplier) {
             return false;
+        }
 
         $query = new DbQuery();
         $query->select('COUNT(so.id_supply_order) as supply_orders');
@@ -429,8 +437,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public static function exists($match)
     {
-        if (!$match)
+        if (!$match) {
             return false;
+        }
 
         $query = new DbQuery();
         $query->select('id_supply_order');
@@ -449,8 +458,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public static function getSupplyOrderByReference($reference)
     {
-        if (!$reference)
+        if (!$reference) {
             return false;
+        }
 
         $query = new DbQuery();
         $query->select('id_supply_order');
@@ -458,8 +468,9 @@ class SupplyOrderCore extends ObjectModel
         $query->where('so.reference = "'.pSQL($reference).'"');
         $id_supply_order = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
-        if (!$id_supply_order)
+        if (!$id_supply_order) {
             return false;
+        }
 
         $supply_order = new SupplyOrder($id_supply_order);
         return $supply_order;
@@ -471,16 +482,16 @@ class SupplyOrderCore extends ObjectModel
     public function hydrate(array $data, $id_lang = null)
     {
         $this->id_lang = $id_lang;
-        if (isset($data[$this->def['primary']]))
+        if (isset($data[$this->def['primary']])) {
             $this->id = $data[$this->def['primary']];
-        foreach ($data as $key => $value)
-        {
-            if (array_key_exists($key, $this))
-            {
+        }
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this)) {
                 // formats prices and floats
                 if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice')
+                    $this->def['fields'][$key]['validate'] == 'isPrice') {
                     $value = Tools::ps_round($value, 6);
+                }
                 $this->$key = $value;
             }
         }
@@ -495,8 +506,9 @@ class SupplyOrderCore extends ObjectModel
      */
     public static function getReferenceById($id_supply_order)
     {
-        if (!$id_supply_order)
+        if (!$id_supply_order) {
             return false;
+        }
 
         $query = new DbQuery();
         $query->select('so.reference');
@@ -556,5 +568,4 @@ class SupplyOrderCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
-
 }

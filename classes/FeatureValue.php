@@ -119,16 +119,17 @@ class FeatureValueCore extends ObjectModel
      */
     public static function selectLang($lang, $id_lang)
     {
-        foreach ($lang as $tab)
-            if ($tab['id_lang'] == $id_lang)
+        foreach ($lang as $tab) {
+            if ($tab['id_lang'] == $id_lang) {
                 return $tab['value'];
+            }
+        }
     }
 
     public static function addFeatureValueImport($id_feature, $value, $id_product = null, $id_lang = null, $custom = false)
     {
         $id_feature_value = false;
-        if (!is_null($id_product) && $id_product)
-        {
+        if (!is_null($id_product) && $id_product) {
             $id_feature_value = Db::getInstance()->getValue('
 				SELECT fp.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_product fp
@@ -137,16 +138,17 @@ class FeatureValueCore extends ObjectModel
 				AND fv.`custom` = '.(int)$custom.'
 				AND fp.`id_product` = '.(int)$id_product);
 
-            if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang)
+            if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang) {
                 Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'feature_value_lang
 				SET `value` = \''.pSQL($value).'\'
 				WHERE `id_feature_value` = '.(int)$id_feature_value.'
 				AND `value` != \''.pSQL($value).'\'
 				AND `id_lang` = '.(int)$id_lang);
+            }
         }
 
-        if (!$custom)
+        if (!$custom) {
             $id_feature_value = Db::getInstance()->getValue('
 				SELECT fv.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_value fv
@@ -155,9 +157,11 @@ class FeatureValueCore extends ObjectModel
 				AND fv.`id_feature` = '.(int)$id_feature.'
 				AND fv.`custom` = 0
 				GROUP BY fv.`id_feature_value`');
+        }
 
-        if ($id_feature_value)
+        if ($id_feature_value) {
             return (int)$id_feature_value;
+        }
 
         // Feature doesn't exist, create it
         $feature_value = new FeatureValue();
@@ -172,8 +176,9 @@ class FeatureValueCore extends ObjectModel
     public function add($autodate = true, $nullValues = false)
     {
         $return = parent::add($autodate, $nullValues);
-        if ($return)
+        if ($return) {
             Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+        }
         return $return;
     }
 
@@ -186,16 +191,18 @@ class FeatureValueCore extends ObjectModel
         );
         $return = parent::delete();
 
-        if ($return)
+        if ($return) {
             Hook::exec('actionFeatureValueDelete', array('id_feature_value' => $this->id));
+        }
         return $return;
     }
 
     public function update($nullValues = false)
     {
         $return = parent::update($nullValues);
-        if ($return)
+        if ($return) {
             Hook::exec('actionFeatureValueSave', array('id_feature_value' => $this->id));
+        }
         return $return;
     }
 }

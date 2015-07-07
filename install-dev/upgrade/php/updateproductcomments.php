@@ -26,8 +26,7 @@
 
 function updateproductcomments()
 {
-    if (Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'product_comment') !== false)
-    {
+    if (Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'product_comment') !== false) {
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS '._DB_PREFIX_.'product_comment_criterion_lang (
 											`id_product_comment_criterion` INT( 11 ) UNSIGNED NOT NULL ,
 											`id_lang` INT(11) UNSIGNED NOT NULL ,

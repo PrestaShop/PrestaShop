@@ -69,13 +69,16 @@ class InstallControllerHttpSystem extends InstallControllerHttp
      */
     public function display()
     {
-        if (!isset($this->tests['required']))
+        if (!isset($this->tests['required'])) {
             $this->tests['required'] = $this->model_system->checkRequiredTests();
-        if (!isset($this->tests['optional']))
+        }
+        if (!isset($this->tests['optional'])) {
             $this->tests['optional'] = $this->model_system->checkOptionalTests();
+        }
 
-        if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER')))
+        if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
             $user = 'Apache';
+        }
 
         // Generate display array
         $this->tests_render = array(
@@ -136,14 +139,18 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             ),
         );
 
-        foreach ($this->tests_render['required'] as &$category)
-            foreach ($category['checks'] as $id => $check)
-                if ($this->tests['required']['checks'][$id] != 'ok')
+        foreach ($this->tests_render['required'] as &$category) {
+            foreach ($category['checks'] as $id => $check) {
+                if ($this->tests['required']['checks'][$id] != 'ok') {
                     $category['success'] = 0;
+                }
+            }
+        }
         
         // If required tests failed, disable next button
-        if (!$this->tests['required']['success'])
+        if (!$this->tests['required']['success']) {
             $this->next_button = false;
+        }
 
         $this->displayTemplate('system');
     }

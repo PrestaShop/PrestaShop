@@ -92,8 +92,9 @@ class ProductDownloadCore extends ObjectModel
     public function getFields()
     {
         $fields = parent::getFields();
-        if (!$fields['date_expiration'])
+        if (!$fields['date_expiration']) {
             $fields['date_expiration'] = '0000-00-00 00:00:00';
+        }
 
         return $fields;
     }
@@ -105,8 +106,7 @@ class ProductDownloadCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if (parent::update($null_values))
-        {
+        if (parent::update($null_values)) {
             // Refresh cache of feature detachable because the row can be deactive
             Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
@@ -117,8 +117,9 @@ class ProductDownloadCore extends ObjectModel
     public function delete($delete_file = false)
     {
         $result = parent::delete();
-        if ($result && $delete_file)
+        if ($result && $delete_file) {
             return $this->deleteFile();
+        }
         return $result;
     }
 
@@ -130,8 +131,9 @@ class ProductDownloadCore extends ObjectModel
      */
     public function deleteFile($id_product_download = null)
     {
-        if (!$this->checkFile())
+        if (!$this->checkFile()) {
             return false;
+        }
 
         return unlink(_PS_DOWNLOAD_DIR_.$this->filename)
             && Db::getInstance()->delete('product_download', 'id_product_download = '.(int)$id_product_download);
@@ -144,7 +146,9 @@ class ProductDownloadCore extends ObjectModel
      */
     public function checkFile()
     {
-        if (!$this->filename) return false;
+        if (!$this->filename) {
+            return false;
+        }
         return file_exists(_PS_DOWNLOAD_DIR_.$this->filename);
     }
 
@@ -166,10 +170,12 @@ class ProductDownloadCore extends ObjectModel
      */
     public static function getIdFromIdProduct($id_product)
     {
-        if (!ProductDownload::isFeatureActive())
+        if (!ProductDownload::isFeatureActive()) {
             return false;
-        if (array_key_exists((int)$id_product, self::$_productIds))
+        }
+        if (array_key_exists((int)$id_product, self::$_productIds)) {
             return self::$_productIds[$id_product];
+        }
         self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
@@ -255,8 +261,9 @@ class ProductDownloadCore extends ObjectModel
     {
         $link = $this->getTextLink($admin, $hash);
         $html = '<a href="'.$link.'" title=""';
-        if ($class)
+        if ($class) {
             $html .= ' class="'.$class.'"';
+        }
         $html .= '>'.$this->display_filename.'</a>';
         return $html;
     }
@@ -268,8 +275,9 @@ class ProductDownloadCore extends ObjectModel
      */
     public function getDeadline()
     {
-        if (!(int)$this->nb_days_accessible)
+        if (!(int)$this->nb_days_accessible) {
             return '0000-00-00 00:00:00';
+        }
         $timestamp = strtotime('+'.(int)$this->nb_days_accessible.' day');
         return date('Y-m-d H:i:s', $timestamp);
     }
@@ -292,9 +300,9 @@ class ProductDownloadCore extends ObjectModel
      */
     public static function getNewFilename()
     {
-        do
+        do {
             $filename = sha1(microtime());
-        while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+        } while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
         return $filename;
     }
 

@@ -26,7 +26,6 @@
 
 class AdminNotFoundControllerCore extends AdminController
 {
-
     public function __construct()
     {
         $this->bootstrap = true;

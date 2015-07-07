@@ -31,77 +31,86 @@ class GetFileControllerCore extends FrontController
 
     public function init()
     {
-        if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file'))
-        {
+        if (isset($this->context->employee) && $this->context->employee->isLoggedBack() && Tools::getValue('file')) {
             // Admin can directly access to file
             $filename = Tools::getValue('file');
-            if (!Validate::isSha1($filename))
+            if (!Validate::isSha1($filename)) {
                 die(Tools::displayError());
+            }
             $file = _PS_DOWNLOAD_DIR_.strval(preg_replace('/\.{2,}/', '.', $filename));
             $filename = ProductDownload::getFilenameFromFilename(Tools::getValue('file'));
-            if (empty($filename))
-            {
+            if (empty($filename)) {
                 $newFileName = Tools::getValue('filename');
-                if (!empty($newFileName))
+                if (!empty($newFileName)) {
                     $filename = Tools::getValue('filename');
-                else
+                } else {
                     $filename = 'file';
+                }
             }
 
-            if (!file_exists($file))
+            if (!file_exists($file)) {
                 Tools::redirect('index.php');
-        }
-        else
-        {
-            if (!($key = Tools::getValue('key')))
+            }
+        } else {
+            if (!($key = Tools::getValue('key'))) {
                 $this->displayCustomError('Invalid key.');
+            }
 
             Tools::setCookieLanguage();
-            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order'))
+            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
                 Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
-            elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
-            {
+            } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
                 $order = new Order((int)Tools::getValue('id_order'));
-                if (!Validate::isLoadedObject($order))
+                if (!Validate::isLoadedObject($order)) {
                     $this->displayCustomError('Invalid key.');
-                if ($order->secure_key != Tools::getValue('secure_key'))
+                }
+                if ($order->secure_key != Tools::getValue('secure_key')) {
                     $this->displayCustomError('Invalid key.');
+                }
             }
 
             /* Key format: <sha1-filename>-<hashOrder> */
             $tmp = explode('-', $key);
-            if (count($tmp) != 2)
+            if (count($tmp) != 2) {
                 $this->displayCustomError('Invalid key.');
+            }
 
             $filename = $tmp[0];
             $hash = $tmp[1];
 
-            if (!($info = OrderDetail::getDownloadFromHash($hash)))
+            if (!($info = OrderDetail::getDownloadFromHash($hash))) {
                 $this->displayCustomError('This product does not exist in our store.');
+            }
 
             /* Product no more present in catalog */
-            if (!isset($info['id_product_download']) || empty($info['id_product_download']))
+            if (!isset($info['id_product_download']) || empty($info['id_product_download'])) {
                 $this->displayCustomError('This product has been deleted.');
+            }
 
-            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename']))
+            if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename'])) {
                 $this->displayCustomError('This file no longer exists.');
+            }
 
             if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
-                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0))
+                ($info['product_quantity_refunded'] > 0 || $info['product_quantity_return'] > 0)) {
                 $this->displayCustomError('This product has been refunded.');
+            }
 
             $now = time();
 
             $product_deadline = strtotime($info['download_deadline']);
-            if ($now > $product_deadline && $info['download_deadline'] != '0000-00-00 00:00:00')
+            if ($now > $product_deadline && $info['download_deadline'] != '0000-00-00 00:00:00') {
                 $this->displayCustomError('The product deadline is in the past.');
+            }
 
             $customer_deadline = strtotime($info['date_expiration']);
-            if ($now > $customer_deadline && $info['date_expiration'] != '0000-00-00 00:00:00')
+            if ($now > $customer_deadline && $info['date_expiration'] != '0000-00-00 00:00:00') {
                 $this->displayCustomError('Expiration date has passed, you cannot download this product');
+            }
 
-            if ($info['download_nb'] >= $info['nb_downloadable'] && $info['nb_downloadable'])
+            if ($info['download_nb'] >= $info['nb_downloadable'] && $info['nb_downloadable']) {
                 $this->displayCustomError('You have reached the maximum number of allowed downloads.');
+            }
 
             /* Access is authorized -> increment download value for the customer */
             OrderDetail::incrementDownload($info['id_order_detail']);
@@ -112,25 +121,23 @@ class GetFileControllerCore extends FrontController
 
         /* Detect mime content type */
         $mimeType = false;
-        if (function_exists('finfo_open'))
-        {
+        if (function_exists('finfo_open')) {
             $finfo = @finfo_open(FILEINFO_MIME);
             $mimeType = @finfo_file($finfo, $file);
             @finfo_close($finfo);
-        }
-        elseif (function_exists('mime_content_type'))
+        } elseif (function_exists('mime_content_type')) {
             $mimeType = @mime_content_type($file);
-        elseif (function_exists('exec'))
-        {
+        } elseif (function_exists('exec')) {
             $mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
-            if (!$mimeType)
+            if (!$mimeType) {
                 $mimeType = trim(@exec('file --mime '.escapeshellarg($file)));
-            if (!$mimeType)
+            }
+            if (!$mimeType) {
                 $mimeType = trim(@exec('file -bi '.escapeshellarg($file)));
+            }
         }
 
-        if (empty($mimeType))
-        {
+        if (empty($mimeType)) {
             $bName = basename($filename);
             $bName = explode('.', $bName);
             $bName = strtolower($bName[count($bName) - 1]);
@@ -264,14 +271,16 @@ class GetFileControllerCore extends FrontController
             'movie' => 'video/x-sgi-movie',
             'ice' => 'x-conference-xcooltalk');
 
-            if (isset($mimeTypes[$bName]))
+            if (isset($mimeTypes[$bName])) {
                 $mimeType = $mimeTypes[$bName];
-            else
+            } else {
                 $mimeType = 'application/octet-stream';
+            }
         }
 
-        if (ob_get_level() && ob_get_length() > 0)
+        if (ob_get_level() && ob_get_length() > 0) {
             ob_end_clean();
+        }
 
         /* Set headers for download */
         header('Content-Transfer-Encoding: binary');
@@ -282,9 +291,11 @@ class GetFileControllerCore extends FrontController
         @set_time_limit(0);
         $fp = fopen($file, 'rb');
 
-        if ($fp && is_resource($fp))
-            while (!feof($fp))
+        if ($fp && is_resource($fp)) {
+            while (!feof($fp)) {
                 echo fgets($fp, 16384);
+            }
+        }
 
         exit;
     }
@@ -310,7 +321,8 @@ class GetFileControllerCore extends FrontController
         ?>
 		<script type="text/javascript">
 		//<![CDATA[
-		alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8'); ?>");
+		alert("<?php echo isset($translations[$msg]) ? html_entity_decode($translations[$msg], ENT_QUOTES, 'utf-8') : html_entity_decode($msg, ENT_QUOTES, 'utf-8');
+        ?>");
 		window.location.href = '<?php echo __PS_BASE_URI__ ?>';
 		//]]>
 		</script>

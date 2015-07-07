@@ -29,7 +29,6 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp
 {
-    
     public $list_countries = array();
     
     /**
@@ -37,8 +36,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
      */
     public function processNextStep()
     {
-        if (Tools::isSubmit('shop_name'))
-        {
+        if (Tools::isSubmit('shop_name')) {
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
             $this->session->shop_activity = Tools::getValue('shop_activity');
@@ -51,8 +49,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
             $this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
             $this->session->admin_email = trim(Tools::getValue('admin_email'));
             $this->session->send_informations = Tools::getValue('send_informations');
-            if ($this->session->send_informations)
-            {
+            if ($this->session->send_informations) {
                 $params = http_build_query(array(
                     'email' => $this->session->admin_email,
                     'method' => 'addMemberToNewsletter',
@@ -64,11 +61,13 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
             }
 
             // If password fields are empty, but are already stored in session, do not fill them again
-            if (!$this->session->admin_password || trim(Tools::getValue('admin_password')))
+            if (!$this->session->admin_password || trim(Tools::getValue('admin_password'))) {
                 $this->session->admin_password = trim(Tools::getValue('admin_password'));
+            }
 
-            if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm')))
+            if (!$this->session->admin_password_confirm || trim(Tools::getValue('admin_password_confirm'))) {
                 $this->session->admin_password_confirm = trim(Tools::getValue('admin_password_confirm'));
+            }
         }
     }
 
@@ -79,49 +78,56 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
     {
         // List of required fields
         $required_fields = array('shop_name', 'shop_country', 'shop_timezone', 'admin_firstname', 'admin_lastname', 'admin_email', 'admin_password');
-        foreach ($required_fields as $field)
-            if (!$this->session->$field)
+        foreach ($required_fields as $field) {
+            if (!$this->session->$field) {
                 $this->errors[$field] = $this->l('Field required');
+            }
+        }
 
         // Check shop name
-        if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name))
+        if ($this->session->shop_name && !Validate::isGenericName($this->session->shop_name)) {
             $this->errors['shop_name'] = $this->l('Invalid shop name');
-        elseif (strlen($this->session->shop_name) > 64)
+        } elseif (strlen($this->session->shop_name) > 64) {
             $this->errors['shop_name'] = $this->l('The field %s is limited to %d characters', $this->l('shop name'), 64);
+        }
             
         // Check admin name
-        if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname))
+        if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname)) {
             $this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
-        elseif (strlen($this->session->admin_firstname) > 32)
+        } elseif (strlen($this->session->admin_firstname) > 32) {
             $this->errors['admin_firstname'] = $this->l('The field %s is limited to %d characters', $this->l('firstname'), 32);
+        }
         
-        if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname))
+        if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname)) {
             $this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
-        elseif (strlen($this->session->admin_lastname) > 32)
+        } elseif (strlen($this->session->admin_lastname) > 32) {
             $this->errors['admin_lastname'] = $this->l('The field %s is limited to %d characters', $this->l('lastname'), 32);
+        }
         
         // Check passwords
-        if ($this->session->admin_password)
-        {
-            if (!Validate::isPasswdAdmin($this->session->admin_password))
+        if ($this->session->admin_password) {
+            if (!Validate::isPasswdAdmin($this->session->admin_password)) {
                 $this->errors['admin_password'] = $this->l('The password is incorrect (alphanumeric string with at least 8 characters)');
-            elseif ($this->session->admin_password != $this->session->admin_password_confirm)
+            } elseif ($this->session->admin_password != $this->session->admin_password_confirm) {
                 $this->errors['admin_password'] = $this->l('Password and its confirmation are different');
+            }
         }
 
         // Check email
-        if ($this->session->admin_email && !Validate::isEmail($this->session->admin_email))
+        if ($this->session->admin_email && !Validate::isEmail($this->session->admin_email)) {
             $this->errors['admin_email'] = $this->l('This e-mail address is invalid');
+        }
 
         return count($this->errors) ? false : true;
     }
 
     public function process()
     {
-        if (Tools::getValue('uploadLogo'))
+        if (Tools::getValue('uploadLogo')) {
             $this->processUploadLogo();
-        elseif (Tools::getValue('timezoneByIso'))
+        } elseif (Tools::getValue('timezoneByIso')) {
             $this->processTimezoneByIso();
+        }
     }
 
     /**
@@ -130,15 +136,14 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
     public function processUploadLogo()
     {
         $error = '';
-        if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name'])
-        {
+        if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name']) {
             $file = $_FILES['fileToUpload'];
             $error = ImageManager::validateUpload($file, 300000);
-            if (!strlen($error))
-            {
+            if (!strlen($error)) {
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-                if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))
+                if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                     return false;
+                }
                 
                 list($width, $height, $type) = getimagesize($tmp_name);
                 
@@ -147,27 +152,26 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
                 $newwidth = $width * $percent;
                 $newheight = $height * $percent;
                 
-                if (!is_writable(_PS_ROOT_DIR_.'/img/'))
+                if (!is_writable(_PS_ROOT_DIR_.'/img/')) {
                     $error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
-                if (!$error)
-                {
+                }
+                if (!$error) {
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
                     $src_image = ImageManager::create($type, $tmp_name);
                     $dest_image = imagecreatetruecolor($src_width, $src_height);
                     $white = imagecolorallocate($dest_image, 255, 255, 255);
                     imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
                     imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
-                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95))
+                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_.'/img/logo.jpg', 95)) {
                         $error = $this->l('An error occurred during logo copy.');
-                    else
-                    {
+                    } else {
                         imagedestroy($dest_image);
                         @chmod($filename, 0664);
                     }
                 }
-            }
-            else
+            } else {
                 $error = $this->l('An error occurred during logo upload.');
+            }
         }
 
         $this->ajaxJsonAnswer(($error) ? false : true, $error);
@@ -189,16 +193,19 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
      */
     public function getTimezones()
     {
-        if (!is_null($this->cache_timezones))
+        if (!is_null($this->cache_timezones)) {
             return;
+        }
 
-        if (!file_exists(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml'))
+        if (!file_exists(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml')) {
             return array();
+        }
 
         $xml = simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml');
         $timezones = array();
-        foreach ($xml->entities->timezone as $timezone)
+        foreach ($xml->entities->timezone as $timezone) {
             $timezones[] = (string)$timezone['name'];
+        }
         return $timezones;
     }
 
@@ -210,13 +217,15 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
      */
     public function getTimezoneByIso($iso)
     {
-        if (!file_exists(_PS_INSTALL_DATA_PATH_.'iso_to_timezone.xml'))
+        if (!file_exists(_PS_INSTALL_DATA_PATH_.'iso_to_timezone.xml')) {
             return '';
+        }
 
         $xml = simplexml_load_file(_PS_INSTALL_DATA_PATH_.'iso_to_timezone.xml');
         $timezones = array();
-        foreach ($xml->relation as $relation)
+        foreach ($xml->relation as $relation) {
             $timezones[(string)$relation['iso']] = (string)$relation['zone'];
+        }
         return isset($timezones[$iso]) ? $timezones[$iso] : '';
     }
 
@@ -263,20 +272,21 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
             'ca', 'ru', 'cn',
         );
 
-        foreach ($top_countries as $iso)
+        foreach ($top_countries as $iso) {
             $this->list_countries[] = array('iso' => $iso, 'name' => $countries[$iso]);
+        }
         $this->list_countries[] = array('iso' => 0, 'name' => '-----------------');
 
-        foreach ($countries as $iso => $lang)
-            if (!in_array($iso, $top_countries))
+        foreach ($countries as $iso => $lang) {
+            if (!in_array($iso, $top_countries)) {
                 $this->list_countries[] = array('iso' => $iso, 'name' => $lang);
+            }
+        }
 
         // Try to detect default country
-        if (!$this->session->shop_country)
-        {
+        if (!$this->session->shop_country) {
             $detect_language = $this->language->detectLanguage();
-            if (isset($detect_language['primarytag']))
-            {
+            if (isset($detect_language['primarytag'])) {
                 $this->session->shop_country = strtolower(isset($detect_language['subtag']) ? $detect_language['subtag'] : $detect_language['primarytag']);
                 $this->session->shop_timezone = $this->getTimezoneByIso($this->session->shop_country);
             }
@@ -296,8 +306,9 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
      */
     public function displayError($field)
     {
-        if (!isset($this->errors[$field]))
+        if (!isset($this->errors[$field])) {
             return;
+        }
 
         return '<span class="result aligned errorTxt">'.$this->errors[$field].'</span>';
     }

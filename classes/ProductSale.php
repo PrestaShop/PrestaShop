@@ -64,21 +64,27 @@ class ProductSaleCore
     public static function getBestSales($id_lang, $page_number = 0, $nb_products = 10, $order_by = null, $order_way = null)
     {
         $context = Context::getContext();
-        if ($page_number < 0) $page_number = 0;
-        if ($nb_products < 1) $nb_products = 10;
+        if ($page_number < 0) {
+            $page_number = 0;
+        }
+        if ($nb_products < 1) {
+            $nb_products = 10;
+        }
         $final_order_by = $order_by;
         $order_table = '';
 
-        if (is_null($order_by))
-        {
+        if (is_null($order_by)) {
             $order_by = 'quantity';
             $order_table = 'ps';
         }
 
-        if ($order_by == 'date_add' || $order_by == 'date_upd')
+        if ($order_by == 'date_add' || $order_by == 'date_upd') {
             $order_table = 'product_shop';
+        }
 
-        if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
+        if (is_null($order_way) || $order_by == 'sales') {
+            $order_way = 'DESC';
+        }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
@@ -96,9 +102,10 @@ class ProductSaleCore
                 .' FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false);
-        if (Combination::isFeatureActive())
+        if (Combination::isFeatureActive()) {
             $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
 							ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')';
+        }
 
         $sql .=    ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
@@ -113,29 +120,31 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				'.Product::sqlStock('p', 0);
 
-            $sql .= '
+        $sql .= '
 				WHERE product_shop.`active` = 1
 					AND p.`visibility` != \'none\'';
 
-            if (Group::isFeatureActive())
-            {
-                $groups = FrontController::getCurrentCustomerGroups();
-                $sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+        if (Group::isFeatureActive()) {
+            $groups = FrontController::getCurrentCustomerGroups();
+            $sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
 					JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
 					WHERE cp.`id_product` = p.`id_product`)';
-            }
+        }
 
-            if ($final_order_by != 'price')
-                $sql .= '
+        if ($final_order_by != 'price') {
+            $sql .= '
 					ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 					LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        if ($final_order_by == 'price')
+        if ($final_order_by == 'price') {
             Tools::orderbyPrice($result, $order_way);
-        if (!$result)
+        }
+        if (!$result) {
             return false;
+        }
         return Product::getProductsProperties($id_lang, $result);
     }
 
@@ -149,10 +158,15 @@ class ProductSaleCore
     */
     public static function getBestSalesLight($id_lang, $page_number = 0, $nb_products = 10, Context $context = null)
     {
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
-        if ($page_number < 0) $page_number = 0;
-        if ($nb_products < 1) $nb_products = 10;
+        }
+        if ($page_number < 0) {
+            $page_number = 0;
+        }
+        if ($nb_products < 1) {
+            $nb_products = 10;
+        }
 
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
@@ -184,8 +198,7 @@ class ProductSaleCore
 		WHERE product_shop.`active` = 1
 		AND p.`visibility` != \'none\'';
 
-        if (Group::isFeatureActive())
-        {
+        if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
 				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
@@ -196,8 +209,9 @@ class ProductSaleCore
 		ORDER BY ps.quantity DESC
 		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             return false;
+        }
 
         return Product::getProductsProperties($id_lang, $result);
     }
@@ -214,22 +228,24 @@ class ProductSaleCore
     public static function getNbrSales($id_product)
     {
         $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM '._DB_PREFIX_.'product_sale WHERE `id_product` = '.(int)$id_product);
-        if (!$result || empty($result) || !array_key_exists('sale_nbr', $result))
+        if (!$result || empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
+        }
         return (int)$result['sale_nbr'];
     }
 
     public static function removeProductSale($id_product, $qty = 1)
     {
         $total_sales = ProductSale::getNbrSales($id_product);
-        if ($total_sales > 1)
+        if ($total_sales > 1) {
             return Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'product_sale
 				SET `quantity` = CAST(`quantity` AS SIGNED) - '.(int)$qty.', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
 				WHERE `id_product` = '.(int)$id_product
             );
-        elseif ($total_sales == 1)
+        } elseif ($total_sales == 1) {
             return Db::getInstance()->delete('product_sale', 'id_product = '.(int)$id_product);
+        }
         return true;
     }
 }

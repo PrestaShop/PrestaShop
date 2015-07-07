@@ -87,5 +87,4 @@ class SupplyOrderHistoryCore extends ObjectModel
             'id_state' => array('xlink_resource' => 'supply_order_states'),
         ),
     );
-
 }

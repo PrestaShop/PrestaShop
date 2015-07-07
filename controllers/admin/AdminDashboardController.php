@@ -33,8 +33,9 @@ class AdminDashboardControllerCore extends AdminController
 
         parent::__construct();
 
-        if (Tools::isSubmit('profitability_conf') || Tools::isSubmit('submitOptionsconfiguration'))
+        if (Tools::isSubmit('profitability_conf') || Tools::isSubmit('submitOptionsconfiguration')) {
             $this->fields_options = $this->getOptionFields();
+        }
     }
 
     public function setMedia()
@@ -77,19 +78,18 @@ class AdminDashboardControllerCore extends AdminController
             'carriers' => array('title' => $this->l('Average shipping fees per shipping method'), 'id' => 'carriers'),
             'other' => array('title' => $this->l('Other settings'), 'id' => 'other')
         );
-        foreach ($forms as &$form)
-        {
+        foreach ($forms as &$form) {
             $form['icon'] = 'tab-preferences';
             $form['fields'] = array();
             $form['submit'] = array('title' => $this->l('Save'));
         }
 
-        foreach ($modules as $module)
-            if (isset($module->tab) && $module->tab == 'payments_gateways' && $module->id)
-            {
+        foreach ($modules as $module) {
+            if (isset($module->tab) && $module->tab == 'payments_gateways' && $module->id) {
                 $moduleClass = Module::getInstanceByName($module->name);
-                if (!$moduleClass->isEnabledForShopContext())
+                if (!$moduleClass->isEnabledForShopContext()) {
                     continue;
+                }
 
                 $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED'] = array(
                     'title' => $module->displayName,
@@ -110,8 +110,7 @@ class AdminDashboardControllerCore extends AdminController
                     'suffix' => '%'
                 );
 
-                if (Currency::isMultiCurrencyActivated())
-                {
+                if (Currency::isMultiCurrencyActivated()) {
                     $forms['payment']['fields']['CONF_'.strtoupper($module->name).'_FIXED_FOREIGN'] = array(
                         'title' => $module->displayName,
                         'desc' => sprintf($this->l('Choose a fixed fee for each order placed with a foreign currency with %s.'), $module->displayName),
@@ -132,9 +131,9 @@ class AdminDashboardControllerCore extends AdminController
                     );
                 }
             }
+        }
 
-        foreach ($carriers as $carrier)
-        {
+        foreach ($carriers as $carrier) {
             $forms['carriers']['fields']['CONF_'.strtoupper($carrier['id_reference']).'_SHIP'] = array(
                 'title' => $carrier['name'],
                 'desc' => sprintf($this->l('For the carrier named %s, indicate the domestic delivery costs  in percentage of the price charged to customers.'), $carrier['name']),
@@ -187,8 +186,9 @@ class AdminDashboardControllerCore extends AdminController
 
     public function renderView()
     {
-        if (Tools::isSubmit('profitability_conf'))
+        if (Tools::isSubmit('profitability_conf')) {
             return parent::renderOptions();
+        }
 
         // $translations = array(
         // 	'Calendar' => $this->l('Calendar', 'AdminStatsTab'),
@@ -200,10 +200,8 @@ class AdminDashboardControllerCore extends AdminController
         // 	'Save' => $this->l('Save', 'AdminStatsTab')
         // );
 
-        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d')))
-        {
-            switch ($this->context->employee->preselect_date_range)
-            {
+        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+            switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');
                     $date_to = date('Y-m-d');
@@ -245,11 +243,13 @@ class AdminDashboardControllerCore extends AdminController
         $stats_compare_from = $this->context->employee->stats_compare_from;
         $stats_compare_to = $this->context->employee->stats_compare_to;
 
-        if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00')
+        if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00') {
             $stats_compare_from = null;
+        }
 
-        if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00')
+        if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00') {
             $stats_compare_to = null;
+        }
 
         $calendar_helper->setCompareDateFrom($stats_compare_from);
         $calendar_helper->setCompareDateTo($stats_compare_to);
@@ -281,10 +281,8 @@ class AdminDashboardControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('submitDateRealTime'))
-        {
-            if ($use_realtime = (int)Tools::getValue('submitDateRealTime'))
-            {
+        if (Tools::isSubmit('submitDateRealTime')) {
+            if ($use_realtime = (int)Tools::getValue('submitDateRealTime')) {
                 $this->context->employee->stats_date_from = date('Y-m-d');
                 $this->context->employee->stats_date_to = date('Y-m-d');
                 $this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
@@ -295,31 +293,29 @@ class AdminDashboardControllerCore extends AdminController
             Configuration::updateValue('PS_DASHBOARD_USE_PUSH', $use_realtime);
         }
 
-        if (Tools::isSubmit('submitDateRange'))
-        {
+        if (Tools::isSubmit('submitDateRange')) {
             if (!Validate::isDate(Tools::getValue('date_from'))
-                || !Validate::isDate(Tools::getValue('date_to')))
+                || !Validate::isDate(Tools::getValue('date_to'))) {
                 $this->errors[] = Tools::displayError('The selected date range is not valid.');
+            }
 
-            if (Tools::getValue('datepicker_compare'))
+            if (Tools::getValue('datepicker_compare')) {
                 if (!Validate::isDate(Tools::getValue('compare_date_from'))
-                    || !Validate::isDate(Tools::getValue('compare_date_to')))
+                    || !Validate::isDate(Tools::getValue('compare_date_to'))) {
                     $this->errors[] = Tools::displayError('The selected date range is not valid.');
+                }
+            }
 
-            if (!count($this->errors))
-            {
+            if (!count($this->errors)) {
                 $this->context->employee->stats_date_from = Tools::getValue('date_from');
                 $this->context->employee->stats_date_to = Tools::getValue('date_to');
                 $this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
 
-                if (Tools::getValue('datepicker_compare'))
-                {
+                if (Tools::getValue('datepicker_compare')) {
                     $this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
                     $this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
                     $this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
-                }
-                else
-                {
+                } else {
                     $this->context->employee->stats_compare_from = null;
                     $this->context->employee->stats_compare_to = null;
                     $this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
@@ -335,19 +331,20 @@ class AdminDashboardControllerCore extends AdminController
     protected function getWarningDomainName()
     {
         $warning = false;
-        if (Shop::isFeatureActive())
+        if (Shop::isFeatureActive()) {
             return;
+        }
 
         $shop = Context::getContext()->shop;
-        if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && !defined('_PS_HOST_MODE_'))
-        {
+        if ($_SERVER['HTTP_HOST'] != $shop->domain && $_SERVER['HTTP_HOST'] != $shop->domain_ssl && Tools::getValue('ajax') == false && !defined('_PS_HOST_MODE_')) {
             $warning = $this->l('You are currently connected under the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />';
-            if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE'))
+            if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
                 $warning .= sprintf($this->l('This is different from the shop domain name set in the Multistore settings: "%s".'), $shop->domain).'
 				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminShopUrl&id_shop_url='.(int)$shop->id.'&updateshop_url&token='.Tools::getAdminTokenLite('AdminShopUrl').'">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
-            else
+            } else {
                 $warning .= $this->l('This is different from the domain name set in the "SEO & URLs" tab.').'
 				'.preg_replace('@{link}(.*){/link}@', '<a href="index.php?controller=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#meta_fieldset_shop_url">$1</a>', $this->l('If this is your main domain, please {link}change it now{/link}.'));
+            }
         }
         return $warning;
     }
@@ -355,11 +352,11 @@ class AdminDashboardControllerCore extends AdminController
     public function ajaxProcessRefreshDashboard()
     {
         $id_module = null;
-        if ($module = Tools::getValue('module'))
-        {
+        if ($module = Tools::getValue('module')) {
             $module_obj = Module::getInstanceByName($module);
-            if (Validate::isLoadedObject($module_obj))
+            if (Validate::isLoadedObject($module_obj)) {
                 $id_module = $module_obj->id;
+            }
         }
 
         $params = array(
@@ -383,23 +380,23 @@ class AdminDashboardControllerCore extends AdminController
     public function ajaxProcessGetBlogRss()
     {
         $return = array('has_errors' => false, 'rss' => array());
-        if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400))
-            if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', _PS_API_URL_.'/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
+        if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400)) {
+            if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', _PS_API_URL_.'/rss/blog/blog-'.$this->context->language->iso_code.'.xml')) {
                 $return['has_errors'] = true;
+            }
+        }
 
-        if (!$return['has_errors'])
-        {
+        if (!$return['has_errors']) {
             $rss = simpleXML_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
             $articles_limit = 2;
-            foreach ($rss->channel->item as $item)
-            {
+            foreach ($rss->channel->item as $item) {
                 if ($articles_limit > 0 && Validate::isCleanHtml((string)$item->title) && Validate::isCleanHtml((string)$item->description)
-                    && isset($item->link) && isset($item->title))
-                {
-                    if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB)))
+                    && isset($item->link) && isset($item->title)) {
+                    if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                         $utm_content = 'cloud';
-                    else
+                    } else {
                         $utm_content = 'download';
+                    }
 
                     $shop_default_country_id = (int)Configuration::get('PS_COUNTRY_DEFAULT');
                     $shop_default_iso_country = (string)Tools::strtoupper(Country::getIsoById($shop_default_country_id));
@@ -412,15 +409,14 @@ class AdminDashboardControllerCore extends AdminController
                     $url_query = parse_url($item->link, PHP_URL_QUERY);
                     parse_str($url_query, $link_query_params);
 
-                    if ($link_query_params)
-                    {
+                    if ($link_query_params) {
                         $full_url_params = array_merge($link_query_params, $analytics_params);
                         $base_url = explode('?', (string)$item->link);
                         $base_url = (string)$base_url[0];
                         $article_link = $base_url.'?'.http_build_query($full_url_params);
-                    }
-                    else
+                    } else {
                         $article_link = (string)$item->link.'?'.http_build_query($analytics_params);
+                    }
 
                     $return['rss'][] = array(
                         'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
@@ -428,9 +424,9 @@ class AdminDashboardControllerCore extends AdminController
                         'short_desc' => Tools::truncateString(strip_tags((string)$item->description), 150),
                         'link' => (string)$article_link,
                     );
-                }
-                else
+                } else {
                     break;
+                }
                 $articles_limit --;
             }
         }
@@ -449,25 +445,28 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to
         );
 
-        if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module))
-        {
-            if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig'))
+        if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module)) {
+            if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'validateDashConfig')) {
                 $return['errors'] = $module_obj->validateDashConfig($configs);
-            if (!count($return['errors']))
-            {
-                if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
-                    $return['has_errors'] = $module_obj->saveDashConfig($configs);
-                elseif (is_array($configs) && count($configs))
-                    foreach ($configs as $name => $value)
-                        if (Validate::isConfigName($name))
-                            Configuration::updateValue($name, $value);
             }
-            else
+            if (!count($return['errors'])) {
+                if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig')) {
+                    $return['has_errors'] = $module_obj->saveDashConfig($configs);
+                } elseif (is_array($configs) && count($configs)) {
+                    foreach ($configs as $name => $value) {
+                        if (Validate::isConfigName($name)) {
+                            Configuration::updateValue($name, $value);
+                        }
+                    }
+                }
+            } else {
                 $return['has_errors'] = true;
+            }
         }
 
-        if (Validate::isHookName($hook) && method_exists($module_obj, $hook))
+        if (Validate::isHookName($hook) && method_exists($module_obj, $hook)) {
             $return['widget_html'] = $module_obj->$hook($params);
+        }
 
         die(Tools::jsonEncode($return));
     }

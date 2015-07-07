@@ -42,8 +42,7 @@ class SearchControllerCore extends FrontController
 
         $this->ajax_search = Tools::getValue('ajaxSearch');
 
-        if ($this->instant_search || $this->ajax_search)
-        {
+        if ($this->instant_search || $this->ajax_search) {
             $this->display_header = false;
             $this->display_footer = false;
         }
@@ -57,12 +56,13 @@ class SearchControllerCore extends FrontController
     {
         $original_query = Tools::getValue('q');
         $query = Tools::replaceAccentedChars(urldecode($original_query));
-        if ($this->ajax_search)
-        {
+        if ($this->ajax_search) {
             $searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
-            if (is_array($searchResults))
-                foreach ($searchResults as &$product)
+            if (is_array($searchResults)) {
+                foreach ($searchResults as &$product) {
                     $product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
+                }
+            }
 
             $this->ajaxDie(Tools::jsonEncode($searchResults));
         }
@@ -72,8 +72,7 @@ class SearchControllerCore extends FrontController
         
         $product_per_page = isset($this->context->cookie->nb_item_per_page) ? (int)$this->context->cookie->nb_item_per_page : Configuration::get('PS_PRODUCTS_PER_PAGE');
 
-        if ($this->instant_search && !is_array($query))
-        {
+        if ($this->instant_search && !is_array($query)) {
             $this->productSort();
             $this->n = abs((int)(Tools::getValue('n', $product_per_page)));
             $this->p = abs((int)(Tools::getValue('p', 1)));
@@ -91,18 +90,18 @@ class SearchControllerCore extends FrontController
                 'search_query' => $original_query,
                 'instant_search' => $this->instant_search,
                 'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
-        }
-        elseif (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
-        {
+        } elseif (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query)) {
             $this->productSort();
             $this->n = abs((int)(Tools::getValue('n', $product_per_page)));
             $this->p = abs((int)(Tools::getValue('p', 1)));
             $original_query = $query;
             $query = Tools::replaceAccentedChars(urldecode($query));
             $search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
-            if (is_array($search['result']))
-                foreach ($search['result'] as &$product)
+            if (is_array($search['result'])) {
+                foreach ($search['result'] as &$product) {
                     $product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
+                }
+            }
 
             Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
             $nbProducts = $search['total'];
@@ -116,9 +115,7 @@ class SearchControllerCore extends FrontController
                 'nbProducts' => $search['total'],
                 'search_query' => $original_query,
                 'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
-        }
-        elseif (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag))
-        {
+        } elseif (($tag = urldecode(Tools::getValue('tag'))) && !is_array($tag)) {
             $nbProducts = (int)(Search::searchTag($this->context->language->id, $tag, true));
             $this->pagination($nbProducts);
             $result = Search::searchTag($this->context->language->id, $tag, false, $this->p, $this->n, $this->orderBy, $this->orderWay);
@@ -132,9 +129,7 @@ class SearchControllerCore extends FrontController
                 'search_products' => $result,
                 'nbProducts' => $nbProducts,
                 'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
-        }
-        else
-        {
+        } else {
             $this->context->smarty->assign(array(
                 'products' => array(),
                 'search_products' => array(),
@@ -148,23 +143,26 @@ class SearchControllerCore extends FrontController
 
     public function displayHeader($display = true)
     {
-        if (!$this->instant_search && !$this->ajax_search)
+        if (!$this->instant_search && !$this->ajax_search) {
             parent::displayHeader();
-        else
+        } else {
             $this->context->smarty->assign('static_token', Tools::getToken(false));
+        }
     }
 
     public function displayFooter($display = true)
     {
-        if (!$this->instant_search && !$this->ajax_search)
+        if (!$this->instant_search && !$this->ajax_search) {
             parent::displayFooter();
+        }
     }
 
     public function setMedia()
     {
         parent::setMedia();
 
-        if (!$this->instant_search && !$this->ajax_search)
+        if (!$this->instant_search && !$this->ajax_search) {
             $this->addCSS(_THEME_CSS_DIR_.'product_list.css');
+        }
     }
 }

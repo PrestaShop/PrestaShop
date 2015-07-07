@@ -69,12 +69,13 @@ class AdminZonesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_zone'] = array(
                 'href' => self::$currentIndex.'&addzone&token='.$this->token,
                 'desc' => $this->l('Add new zone', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -125,8 +126,7 @@ class AdminZonesControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),

@@ -59,8 +59,9 @@ class DbQueryCore
     {
         $types = array('SELECT', 'DELETE');
 
-        if (!empty($type) && in_array($type, $types))
+        if (!empty($type) && in_array($type, $types)) {
             $this->query['type'] = $type;
+        }
 
         return $this;
     }
@@ -74,8 +75,9 @@ class DbQueryCore
      */
     public function select($fields)
     {
-        if (!empty($fields))
+        if (!empty($fields)) {
             $this->query['select'][] = $fields;
+        }
 
         return $this;
     }
@@ -90,8 +92,9 @@ class DbQueryCore
      */
     public function from($table, $alias = null)
     {
-        if (!empty($table))
+        if (!empty($table)) {
             $this->query['from'][] = '`'._DB_PREFIX_.$table.'`'.($alias ? ' '.$alias : '');
+        }
 
         return $this;
     }
@@ -106,8 +109,9 @@ class DbQueryCore
      */
     public function join($join)
     {
-        if (!empty($join))
+        if (!empty($join)) {
             $this->query['join'][] = $join;
+        }
 
         return $this;
     }
@@ -177,8 +181,9 @@ class DbQueryCore
      */
     public function where($restriction)
     {
-        if (!empty($restriction))
+        if (!empty($restriction)) {
             $this->query['where'][] = $restriction;
+        }
 
         return $this;
     }
@@ -192,8 +197,9 @@ class DbQueryCore
      */
     public function having($restriction)
     {
-        if (!empty($restriction))
+        if (!empty($restriction)) {
             $this->query['having'][] = $restriction;
+        }
 
         return $this;
     }
@@ -207,8 +213,9 @@ class DbQueryCore
      */
     public function orderBy($fields)
     {
-        if (!empty($fields))
+        if (!empty($fields)) {
             $this->query['order'][] = $fields;
+        }
 
         return $this;
     }
@@ -222,8 +229,9 @@ class DbQueryCore
      */
     public function groupBy($fields)
     {
-        if (!empty($fields))
+        if (!empty($fields)) {
             $this->query['group'][] = $fields;
+        }
 
         return $this;
     }
@@ -239,8 +247,9 @@ class DbQueryCore
     public function limit($limit, $offset = 0)
     {
         $offset = (int)$offset;
-        if ($offset < 0)
+        if ($offset < 0) {
             $offset = 0;
+        }
 
         $this->query['limit'] = array(
             'offset' => $offset,
@@ -258,33 +267,39 @@ class DbQueryCore
      */
     public function build()
     {
-        if ($this->query['type'] == 'SELECT')
+        if ($this->query['type'] == 'SELECT') {
             $sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
-        else
+        } else {
             $sql = $this->query['type'].' ';
+        }
 
-        if (!$this->query['from'])
+        if (!$this->query['from']) {
             throw new PrestaShopException('Table name not set in DbQuery object. Cannot build a valid SQL query.');
+        }
 
         $sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
 
-        if ($this->query['join'])
+        if ($this->query['join']) {
             $sql .= implode("\n", $this->query['join'])."\n";
+        }
 
-        if ($this->query['where'])
+        if ($this->query['where']) {
             $sql .= 'WHERE ('.implode(') AND (', $this->query['where']).")\n";
+        }
 
-        if ($this->query['group'])
+        if ($this->query['group']) {
             $sql .= 'GROUP BY '.implode(', ', $this->query['group'])."\n";
+        }
 
-        if ($this->query['having'])
+        if ($this->query['having']) {
             $sql .= 'HAVING ('.implode(') AND (', $this->query['having']).")\n";
+        }
 
-        if ($this->query['order'])
+        if ($this->query['order']) {
             $sql .= 'ORDER BY '.implode(', ', $this->query['order'])."\n";
+        }
 
-        if ($this->query['limit']['limit'])
-        {
+        if ($this->query['limit']['limit']) {
             $limit = $this->query['limit'];
             $sql .= 'LIMIT '.($limit['offset'] ? $limit['offset'].', ' : '').$limit['limit'];
         }

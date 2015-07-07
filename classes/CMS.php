@@ -73,22 +73,25 @@ class CMSCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if (parent::update($null_values))
+        if (parent::update($null_values)) {
             return $this->cleanPositions($this->id_cms_category);
+        }
         return false;
     }
 
     public function delete()
     {
-        if (parent::delete())
+        if (parent::delete()) {
             return $this->cleanPositions($this->id_cms_category);
+        }
         return false;
     }
 
     public static function getLinks($id_lang, $selection = null, $active = true, Link $link = null)
     {
-        if (!$link)
+        if (!$link) {
             $link = Context::getContext()->link;
+        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
 		FROM '._DB_PREFIX_.'cms c
@@ -101,19 +104,20 @@ class CMSCore extends ObjectModel
 		ORDER BY c.`position`');
 
         $links = array();
-        if ($result)
-            foreach ($result as $row)
-            {
+        if ($result) {
+            foreach ($result as $row) {
                 $row['link'] = $link->getCMSLink((int)$row['id_cms'], $row['link_rewrite']);
                 $links[] = $row;
             }
+        }
         return $links;
     }
 
     public static function listCms($id_lang = null, $id_block = false, $active = true)
     {
-        if (empty($id_lang))
+        if (empty($id_lang)) {
             $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_cms, l.meta_title
@@ -133,15 +137,19 @@ class CMSCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'cms` cp
 			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
 			ORDER BY cp.`position` ASC'
-        ))
+        )) {
             return false;
+        }
 
-        foreach ($res as $cms)
-            if ((int)$cms['id_cms'] == (int)$this->id)
+        foreach ($res as $cms) {
+            if ((int)$cms['id_cms'] == (int)$this->id) {
                 $moved_cms = $cms;
+            }
+        }
 
-        if (!isset($moved_cms) || !isset($position))
+        if (!isset($moved_cms) || !isset($position)) {
             return false;
+        }
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
@@ -170,8 +178,7 @@ class CMSCore extends ObjectModel
 
         $result = Db::getInstance()->executeS($sql);
 
-        for ($i = 0, $total = count($result); $i < $total; ++$i)
-        {
+        for ($i = 0, $total = count($result); $i < $total; ++$i) {
             $sql = 'UPDATE `'._DB_PREFIX_.'cms`
 					SET `position` = '.(int)$i.'
 					WHERE `id_cms_category` = '.(int)$id_category.'
@@ -197,22 +204,25 @@ class CMSCore extends ObjectModel
         $sql->select('*');
         $sql->from('cms', 'c');
 
-        if ($id_lang)
-        {
-            if ($id_shop)
+        if ($id_lang) {
+            if ($id_shop) {
                 $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang.' AND l.id_shop = '.(int)$id_shop);
-            else
+            } else {
                 $sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
+            }
         }
 
-        if ($id_shop)
+        if ($id_shop) {
             $sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = '.(int)$id_shop);
+        }
 
-        if ($active)
+        if ($active) {
             $sql->where('c.active = 1');
+        }
 
-        if ($id_cms_category)
+        if ($id_cms_category) {
             $sql->where('c.id_cms_category = '.(int)$id_cms_category);
+        }
 
         $sql->orderBy('position');
 
@@ -232,10 +242,12 @@ class CMSCore extends ObjectModel
 
     public static function getCMSContent($id_cms, $id_lang = null, $id_shop = null)
     {
-        if (is_null($id_lang))
+        if (is_null($id_lang)) {
             $id_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
-        if (is_null($id_shop))
+        }
+        if (is_null($id_shop)) {
             $id_shop = (int)Configuration::get('PS_LANG_DEFAULT');
+        }
 
         $sql = '
 			SELECT `content`

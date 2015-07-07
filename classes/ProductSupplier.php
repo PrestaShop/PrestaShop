@@ -96,14 +96,13 @@ class ProductSupplierCore extends ObjectModel
     {
         $res = parent::delete();
 
-        if ($res && $this->id_product_attribute == 0)
-        {
+        if ($res && $this->id_product_attribute == 0) {
             $items = ProductSupplier::getSupplierCollection($this->id_product, false);
-            foreach ($items as $item)
-            {
+            foreach ($items as $item) {
                 /** @var ProductSupplier $item */
-                if ($item->id_product_attribute > 0)
+                if ($item->id_product_attribute > 0) {
                     $item->delete();
+                }
             }
         }
 
@@ -146,20 +145,23 @@ class ProductSupplierCore extends ObjectModel
         // build query
         $query = new DbQuery();
         $query->select('ps.product_supplier_price_te');
-        if ($with_currency)
+        if ($with_currency) {
             $query->select('ps.id_currency');
+        }
         $query->from('product_supplier', 'ps');
         $query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier
         );
 
-        if (!$with_currency)
+        if (!$with_currency) {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        }
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        if (isset($res[0]))
+        if (isset($res[0])) {
             return $res[0];
+        }
 
         return $res;
     }
@@ -198,8 +200,9 @@ class ProductSupplierCore extends ObjectModel
         $suppliers = new PrestaShopCollection('ProductSupplier');
         $suppliers->where('id_product', '=', (int)$id_product);
 
-        if ($group_by_supplier)
+        if ($group_by_supplier) {
             $suppliers->groupBy('id_supplier');
+        }
 
         return $suppliers;
     }
@@ -214,8 +217,9 @@ class ProductSupplierCore extends ObjectModel
      */
     public static function getProductPrice($id_supplier, $id_product, $id_product_attribute = 0, $converted_price = false)
     {
-        if (is_null($id_supplier) || is_null($id_product))
+        if (is_null($id_supplier) || is_null($id_product)) {
             return;
+        }
 
         $query = new DbQuery();
         $query->select('product_supplier_price_te as price_te, id_currency');
@@ -224,8 +228,9 @@ class ProductSupplierCore extends ObjectModel
         $query->where('id_supplier = '.(int)$id_supplier);
 
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-        if ($converted_price)
+        if ($converted_price) {
             return Tools::convertPrice($row['price_te'], $row['id_currency']);
+        }
 
         return $row['price_te'];
     }

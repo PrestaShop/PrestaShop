@@ -31,8 +31,7 @@ function configuration_double_cleaner()
 	FROM '._DB_PREFIX_.'configuration
 	GROUP BY name
 	HAVING count(name) > 1');
-    foreach ($result as $row)
-    {
+    foreach ($result as $row) {
         DB::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'configuration
 		WHERE name = \''.addslashes($row['name']).'\'

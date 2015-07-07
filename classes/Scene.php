@@ -62,42 +62,46 @@ class SceneCore extends ObjectModel
     {
         parent::__construct($id, $id_lang);
 
-        if (!$lite_result)
+        if (!$lite_result) {
             $this->products = $this->getProducts(true, (int)$id_lang, false);
-        if ($hide_scene_position)
+        }
+        if ($hide_scene_position) {
             $this->name = Scene::hideScenePosition($this->name);
+        }
         $this->image_dir = _PS_SCENE_IMG_DIR_;
     }
 
     public function update($null_values = false)
     {
-        if (!$this->updateZoneProducts())
+        if (!$this->updateZoneProducts()) {
             return false;
-        if (!$this->updateCategories())
+        }
+        if (!$this->updateCategories()) {
             return false;
+        }
 
-        if (parent::update($null_values))
-        {
+        if (parent::update($null_values)) {
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', Scene::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
         return false;
-
     }
 
     public function add($autodate = true, $null_values = false)
     {
-        if (!empty($this->zones))
+        if (!empty($this->zones)) {
             $this->addZoneProducts($this->zones);
-        if (!empty($this->categories))
+        }
+        if (!empty($this->categories)) {
             $this->addCategories($this->categories);
+        }
 
-        if (parent::add($autodate, $null_values))
-        {
+        if (parent::add($autodate, $null_values)) {
             // Put cache of feature detachable only if this new scene is active else we keep the old value
-            if ($this->active)
+            if ($this->active) {
                 Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', '1');
+            }
             return true;
         }
         return false;
@@ -107,8 +111,7 @@ class SceneCore extends ObjectModel
     {
         $this->deleteZoneProducts();
         $this->deleteCategories();
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             return $this->deleteImage() &&
                 Configuration::updateGlobalValue('PS_SCENE_FEATURE_ACTIVE', Scene::isCurrentlyUsed($this->def['table'], true));
         }
@@ -118,18 +121,19 @@ class SceneCore extends ObjectModel
     public function deleteImage($force_delete = false)
     {
         if (file_exists($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format)
-            && !unlink($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format))
+            && !unlink($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format)) {
             return false;
-        if (!(isset($_FILES) && count($_FILES)))
+        }
+        if (!(isset($_FILES) && count($_FILES))) {
             return parent::deleteImage();
+        }
         return true;
     }
 
     public function addCategories($categories)
     {
         $data = array();
-        foreach ($categories as $category)
-        {
+        foreach ($categories as $category) {
             $data[] = array(
                 'id_scene' => (int)$this->id,
                 'id_category' => (int)$category,
@@ -147,18 +151,19 @@ class SceneCore extends ObjectModel
 
     public function updateCategories()
     {
-        if (!$this->deleteCategories())
+        if (!$this->deleteCategories()) {
             return false;
-        if (!empty($this->categories) && !$this->addCategories($this->categories))
-                return false;
+        }
+        if (!empty($this->categories) && !$this->addCategories($this->categories)) {
+            return false;
+        }
         return true;
     }
 
     public function addZoneProducts($zones)
     {
         $data = array();
-        foreach ($zones as $zone)
-        {
+        foreach ($zones as $zone) {
             $data[] = array(
                 'id_scene' => (int)$this->id,
                 'id_product' => (int)$zone['id_product'],
@@ -181,10 +186,12 @@ class SceneCore extends ObjectModel
 
     public function updateZoneProducts()
     {
-        if (!$this->deleteZoneProducts())
+        if (!$this->deleteZoneProducts()) {
             return false;
-        if ($this->zones && !$this->addZoneProducts($this->zones))
+        }
+        if ($this->zones && !$this->addZoneProducts($this->zones)) {
             return false;
+        }
         return true;
     }
 
@@ -196,14 +203,15 @@ class SceneCore extends ObjectModel
     public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true,
         Context $context = null)
     {
-        if (!Scene::isFeatureActive())
+        if (!Scene::isFeatureActive()) {
             return array();
+        }
 
         $cache_key = 'Scene::getScenes'.$id_category.(int)$lite_result;
-        if (!Cache::isStored($cache_key))
-        {
-            if (!$context)
+        if (!Cache::isStored($cache_key)) {
+            if (!$context) {
                 $context = Context::getContext();
+            }
             $id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
             $sql = 'SELECT s.*
@@ -217,13 +225,15 @@ class SceneCore extends ObjectModel
 					ORDER BY sl.name ASC';
             $scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-            if (!$lite_result && $scenes)
-                foreach ($scenes as &$scene)
+            if (!$lite_result && $scenes) {
+                foreach ($scenes as &$scene) {
                     $scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);
+                }
+            }
             Cache::store($cache_key, $scenes);
-        }
-        else
+        } else {
             $scenes = Cache::retrieve($cache_key);
+        }
         return $scenes;
     }
 
@@ -234,11 +244,13 @@ class SceneCore extends ObjectModel
     */
     public function getProducts($only_active = true, $id_lang = null, $lite_result = true, Context $context = null)
     {
-        if (!Scene::isFeatureActive())
+        if (!Scene::isFeatureActive()) {
             return array();
+        }
 
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
         $id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
         $products = Db::getInstance()->executeS('
@@ -248,12 +260,10 @@ class SceneCore extends ObjectModel
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE s.id_scene = '.(int)$this->id.($only_active ? ' AND product_shop.active = 1' : ''));
 
-        if (!$lite_result && $products)
-            foreach ($products as &$product)
-            {
+        if (!$lite_result && $products) {
+            foreach ($products as &$product) {
                 $product['details'] = new Product($product['id_product'], !$lite_result, $id_lang);
-                if (Validate::isLoadedObject($product['details']))
-                {
+                if (Validate::isLoadedObject($product['details'])) {
                     $product['link'] = $context->link->getProductLink(
                         $product['details']->id,
                         $product['details']->link_rewrite,
@@ -261,10 +271,12 @@ class SceneCore extends ObjectModel
                         $product['details']->ean13
                     );
                     $cover = Product::getCover($product['details']->id);
-                    if (is_array($cover))
+                    if (is_array($cover)) {
                         $product = array_merge($cover, $product);
+                    }
                 }
             }
+        }
         return $products;
     }
 

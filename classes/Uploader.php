@@ -61,16 +61,18 @@ class UploaderCore
 
     public function getFilePath($file_name = null)
     {
-        if (!isset($file_name))
+        if (!isset($file_name)) {
             return tempnam($this->getSavePath(), $this->getUniqueFileName());
+        }
 
         return $this->getSavePath().$file_name;
     }
 
     public function getFiles()
     {
-        if (!isset($this->_files))
+        if (!isset($this->_files)) {
             $this->_files = array();
+        }
 
         return $this->_files;
     }
@@ -83,8 +85,9 @@ class UploaderCore
 
     public function getMaxSize()
     {
-        if (!isset($this->_max_size) || empty($this->_max_size))
+        if (!isset($this->_max_size) || empty($this->_max_size)) {
             $this->setMaxSize(self::DEFAULT_MAX_SIZE);
+        }
 
         return $this->_max_size;
     }
@@ -112,22 +115,23 @@ class UploaderCore
         $bytes         = trim($post_max_size);
         $last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
 
-        switch ($last)
-        {
+        switch ($last) {
             case 'g': $bytes *= 1024;
             case 'm': $bytes *= 1024;
             case 'k': $bytes *= 1024;
         }
 
-        if ($bytes == '')
+        if ($bytes == '') {
             $bytes = null;
+        }
         return $bytes;
     }
 
     public function getSavePath()
     {
-        if (!isset($this->_save_path))
+        if (!isset($this->_save_path)) {
             $this->setSavePath(_PS_UPLOAD_DIR_);
+        }
 
         return $this->_normalizeDirectory($this->_save_path);
     }
@@ -146,11 +150,10 @@ class UploaderCore
     {
         $upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 
-        if ($upload && is_array($upload['tmp_name']))
-        {
+        if ($upload && is_array($upload['tmp_name'])) {
             $tmp = array();
-            foreach ($upload['tmp_name'] as $index => $value)
-            {    $tmp[$index] = array(
+            foreach ($upload['tmp_name'] as $index => $value) {
+                $tmp[$index] = array(
                     'tmp_name' => $upload['tmp_name'][$index],
                     'name'     => $upload['name'][$index],
                     'size'     => $upload['size'][$index],
@@ -160,34 +163,34 @@ class UploaderCore
 
                 $this->files[] = $this->upload($tmp[$index], $dest);
             }
-        }
-        elseif ($upload)
+        } elseif ($upload) {
             $this->files[] = $this->upload($upload, $dest);
+        }
 
         return $this->files;
     }
 
     public function upload($file, $dest = null)
     {
-        if ($this->validate($file))
-        {
-            if (isset($dest) && is_dir($dest))
+        if ($this->validate($file)) {
+            if (isset($dest) && is_dir($dest)) {
                 $file_path = $dest;
-            else
+            } else {
                 $file_path = $this->getFilePath(isset($dest) ? $dest : $file['name']);
+            }
 
-            if ($file['tmp_name'] && is_uploaded_file($file['tmp_name']))
-                    move_uploaded_file($file['tmp_name'], $file_path);
-            else
+            if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'])) {
+                move_uploaded_file($file['tmp_name'], $file_path);
+            } else {
                 // Non-multipart uploads (PUT method support)
                 file_put_contents($file_path, fopen('php://input', 'r'));
+            }
 
             $file_size = $this->_getFileSize($file_path, true);
 
-            if ($file_size === $file['size'])
+            if ($file_size === $file['size']) {
                 $file['save_path'] = $file_path;
-            else
-            {
+            } else {
                 $file['size'] = $file_size;
                 unlink($file_path);
                 $file['error'] = Tools::displayError('Server file size is different from local file size');
@@ -200,8 +203,7 @@ class UploaderCore
     protected function checkUploadError($error_code)
     {
         $error = 0;
-        switch ($error_code)
-        {
+        switch ($error_code) {
             case 1:
                 $error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('upload_max_filesize'));
                 break;
@@ -235,14 +237,12 @@ class UploaderCore
 
         $post_max_size = $this->getPostMaxSizeBytes();
 
-        if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
-        {
+        if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size)) {
             $file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
             return false;
         }
 
-        if (preg_match('/\%00/', $file['name']))
-        {
+        if (preg_match('/\%00/', $file['name'])) {
             $file['error'] = Tools::displayError('Invalid file name');
             return false;
         }
@@ -250,14 +250,12 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types))
-        {
+        if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types)) {
             $file['error'] = Tools::displayError('Filetype not allowed');
             return false;
         }
 
-        if ($this->checkFileSize() && $file['size'] > $this->getMaxSize())
-        {
+        if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
             $file['error'] = sprintf(Tools::displayError('File (size : %1s) is too big (max : %2s)'), $file['size'], $this->getMaxSize());
             return false;
         }
@@ -267,8 +265,9 @@ class UploaderCore
 
     protected function _getFileSize($file_path, $clear_stat_cache = false)
     {
-        if ($clear_stat_cache)
+        if ($clear_stat_cache) {
             clearstatcache(true, $file_path);
+        }
 
         return filesize($file_path);
     }
@@ -282,8 +281,7 @@ class UploaderCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\')))
-        {
+        if (in_array($last, array('/', '\\'))) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
             return $directory;
         }

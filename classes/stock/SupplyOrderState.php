@@ -101,16 +101,16 @@ class SupplyOrderStateCore extends ObjectModel
      */
     public static function getSupplyOrderStates($id_state_referrer = null, $id_lang = null)
     {
-        if ($id_lang == null)
+        if ($id_lang == null) {
             $id_lang = Context::getContext()->language->id;
+        }
 
         $query = new DbQuery();
         $query->select('sl.name, s.id_supply_order_state');
         $query->from('supply_order_state', 's');
         $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
 
-        if (!is_null($id_state_referrer))
-        {
+        if (!is_null($id_state_referrer)) {
             $is_receipt_state = false;
             $is_editable = false;
             $is_delivery_note = false;
@@ -118,8 +118,7 @@ class SupplyOrderStateCore extends ObjectModel
 
             //check current state to see what state is available
             $state = new SupplyOrderState((int)$id_state_referrer);
-            if (Validate::isLoadedObject($state))
-            {
+            if (Validate::isLoadedObject($state)) {
                 $is_receipt_state = $state->receipt_state;
                 $is_editable = $state->editable;
                 $is_delivery_note = $state->delivery_note;
@@ -129,14 +128,17 @@ class SupplyOrderStateCore extends ObjectModel
             $query->where('s.id_supply_order_state <> '.(int)$id_state_referrer);
 
             //check first if the order is editable
-            if ($is_editable)
+            if ($is_editable) {
                 $query->where('s.editable = 1 OR s.delivery_note = 1 OR s.enclosed = 1');
+            }
             //check if the delivery note is available or if the state correspond to a pending receipt state
-            elseif ($is_delivery_note || $is_pending_receipt)
+            elseif ($is_delivery_note || $is_pending_receipt) {
                 $query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
+            }
             //check if the state correspond to a receipt state
-            elseif ($is_receipt_state)
+            elseif ($is_receipt_state) {
                 $query->where('s.receipt_state = 1');
+            }
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -151,22 +153,24 @@ class SupplyOrderStateCore extends ObjectModel
      */
     public static function getStates($ids = null, $id_lang = null)
     {
-        if ($id_lang == null)
+        if ($id_lang == null) {
             $id_lang = Context::getContext()->language->id;
+        }
 
-        if ($ids && !is_array($ids))
+        if ($ids && !is_array($ids)) {
             $ids = array();
+        }
 
         $query = new DbQuery();
         $query->select('sl.name, s.id_supply_order_state');
         $query->from('supply_order_state', 's');
         $query->leftjoin('supply_order_state_lang', 'sl', 's.id_supply_order_state = sl.id_supply_order_state AND sl.id_lang='.(int)$id_lang);
-        if ($ids)
+        if ($ids) {
             $query->where('s.id_supply_order_state NOT IN('.implode(',', array_map('intval', $ids)).')');
+        }
 
         $query->orderBy('sl.name ASC');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
-
 }

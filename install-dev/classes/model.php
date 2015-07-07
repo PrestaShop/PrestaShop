@@ -43,8 +43,9 @@ abstract class InstallAbstractModel
 
     public function setError($errors)
     {
-        if (!is_array($errors))
+        if (!is_array($errors)) {
             $errors = array($errors);
+        }
 
         $this->errors[] = $errors;
     }

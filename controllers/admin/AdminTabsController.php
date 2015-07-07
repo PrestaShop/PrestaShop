@@ -90,18 +90,19 @@ class AdminTabsControllerCore extends AdminController
     {
         $this->page_header_toolbar_title = $this->l('Menus');
 
-        if ($this->display == 'details')
+        if ($this->display == 'details') {
             $this->page_header_toolbar_btn['back_to_list'] = array(
                 'href' => Context::getContext()->link->getAdminLink('AdminTabs'),
                 'desc' => $this->l('Back to list', null, null, false),
                 'icon' => 'process-icon-back'
             );
-        elseif(empty($this->display))
+        } elseif (empty($this->display)) {
             $this->page_header_toolbar_btn['new_menu'] = array(
                 'href' => self::$currentIndex.'&addtab&token='.$this->token,
                 'desc' => $this->l('Add new menu', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -114,10 +115,13 @@ class AdminTabsControllerCore extends AdminController
     {
         $tabs = Tab::getTabs($this->context->language->id, 0);
         // If editing, we clean itself
-        if (Tools::isSubmit('id_tab'))
-            foreach ($tabs as $key => $tab)
-                if ($tab['id_tab'] == Tools::getValue('id_tab'))
+        if (Tools::isSubmit('id_tab')) {
+            foreach ($tabs as $key => $tab) {
+                if ($tab['id_tab'] == Tools::getValue('id_tab')) {
                     unset($tabs[$key]);
+                }
+            }
+        }
 
         // added category "Home" in var $tabs
         $tab_zero = array(
@@ -183,10 +187,11 @@ class AdminTabsControllerCore extends AdminController
         );
 
         $display_parent = true;
-        if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller'))
+        if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller')) {
             $display_parent = false;
+        }
 
-        if ($display_parent)
+        if ($display_parent) {
             $this->fields_form['input'][] = array(
                 'type' => 'select',
                 'label' => $this->l('Parent'),
@@ -197,6 +202,7 @@ class AdminTabsControllerCore extends AdminController
                     'name' => 'name'
                 )
             );
+        }
 
         return parent::renderForm();
     }
@@ -219,23 +225,22 @@ class AdminTabsControllerCore extends AdminController
 
     public function initProcess()
     {
-        if (Tools::getIsset('details'.$this->table))
-        {
+        if (Tools::getIsset('details'.$this->table)) {
             $this->list_id = 'details';
 
-            if (isset($_POST['submitReset'.$this->list_id]))
+            if (isset($_POST['submitReset'.$this->list_id])) {
                 $this->processResetFilters();
-        }
-        else
+            }
+        } else {
             $this->list_id = 'tab';
+        }
 
         return parent::initProcess();
     }
 
     public function renderDetails()
     {
-        if (($id = Tools::getValue('id_tab')))
-        {
+        if (($id = Tools::getValue('id_tab'))) {
             $this->lang = false;
             $this->list_id = 'details';
             $this->addRowAction('edit');
@@ -261,36 +266,33 @@ class AdminTabsControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
         /* PrestaShop demo mode*/
 
-        if (($id_tab = (int)Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab)))
-        {
-            if ($tab->move($direction))
+        if (($id_tab = (int)Tools::getValue('id_tab')) && ($direction = Tools::getValue('move')) && Validate::isLoadedObject($tab = new Tab($id_tab))) {
+            if ($tab->move($direction)) {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-        }
-        elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table))
-        {
-            if ($this->tabAccess['edit'] !== '1')
+            }
+        } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd'.$this->table)) {
+            if ($this->tabAccess['edit'] !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
-            elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier))))
+            } elseif (!Validate::isLoadedObject($object = new Tab((int)Tools::getValue($this->identifier)))) {
                 $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
                     ' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-            if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))
+            }
+            if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
                 $this->errors[] = Tools::displayError('Failed to update the position.');
-            else
+            } else {
                 Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
-        }
-        elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
+            }
+        } elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent')) {
             $this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
-        elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int)Tools::getValue('id_parent'))
+        } elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int)Tools::getValue('id_parent')) {
             $this->redirect_after = self::$currentIndex.'&id_'.$this->table.'='.$id_parent.'&details'.$this->table.'&conf=4&token='.$this->token;
-        elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions))
-        {
+        } elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions)) {
             $submit_bulk_actions = array_merge(array(
                 'enableSelection' => array(
                     'text' => $this->l('Enable selection'),
@@ -301,49 +303,43 @@ class AdminTabsControllerCore extends AdminController
                     'icon' => 'icon-power-off text-danger'
                 )
             ), $this->bulk_actions);
-            foreach ($submit_bulk_actions as $bulk_action => $params)
-            {
-                if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
-                {
-                    if ($this->tabAccess['edit'] === '1')
-                    {
+            foreach ($submit_bulk_actions as $bulk_action => $params) {
+                if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action)) {
+                    if ($this->tabAccess['edit'] === '1') {
                         $this->action = 'bulk'.$bulk_action;
                         $this->boxes = Tools::getValue($this->list_id.'Box');
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    }
                     break;
-                }
-                elseif (Tools::isSubmit('submitBulk'))
-                {
-                    if ($this->tabAccess['edit'] === '1')
-                    {
+                } elseif (Tools::isSubmit('submitBulk')) {
+                    if ($this->tabAccess['edit'] === '1') {
                         $this->action = 'bulk'.Tools::getValue('select_submitBulk');
                         $this->boxes = Tools::getValue($this->list_id.'Box');
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    }
                     break;
                 }
             }
-        }
-        else
-        {
+        } else {
             // Temporary add the position depend of the selection of the parent category
-            if (!Tools::isSubmit('id_tab')) // @todo Review
+            if (!Tools::isSubmit('id_tab')) { // @todo Review
                 $_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
+            }
         }
 
-        if (!count($this->errors))
+        if (!count($this->errors)) {
             parent::postProcess();
-
+        }
     }
 
     protected function afterImageUpload()
     {
         /** @var Tab $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
         @rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');
     }
 
@@ -354,26 +350,25 @@ class AdminTabsControllerCore extends AdminController
         $positions = Tools::getValue('tab');
 
         // when changing positions in a tab sub-list, the first array value is empty and needs to be removed
-        if (!$positions[0])
-        {
+        if (!$positions[0]) {
             unset($positions[0]);
             // reset indexation from 0
             $positions = array_merge($positions);
         }
 
-        foreach ($positions as $position => $value)
-        {
+        foreach ($positions as $position => $value) {
             $pos = explode('_', $value);
 
-            if (isset($pos[2]) && (int)$pos[2] === $id_tab)
-            {
-                if ($tab = new Tab((int)$pos[2]))
-                    if (isset($position) && $tab->updatePosition($way, $position))
+            if (isset($pos[2]) && (int)$pos[2] === $id_tab) {
+                if ($tab = new Tab((int)$pos[2])) {
+                    if (isset($position) && $tab->updatePosition($way, $position)) {
                         echo 'ok position '.(int)$position.' for tab '.(int)$pos[1].'\r\n';
-                    else
+                    } else {
                         echo '{"hasError" : true, "errors" : "Can not update tab '.(int)$id_tab.' to position '.(int)$position.' "}';
-                else
+                    }
+                } else {
                     echo '{"hasError" : true, "errors" : "This tab ('.(int)$id_tab.') can t be loaded"}';
+                }
 
                 break;
             }

@@ -42,8 +42,9 @@ class AdminShopGroupControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->show_toolbar = false;
 
@@ -101,22 +102,22 @@ class AdminShopGroupControllerCore extends AdminController
         $this->addJqueryPlugin('cooki-plugin');
         $data = Shop::getTree();
 
-        foreach ($data as $key_group => &$group)
-            foreach ($group['shops'] as $key_shop => &$shop)
-            {
+        foreach ($data as $key_group => &$group) {
+            foreach ($group['shops'] as $key_shop => &$shop) {
                 $current_shop = new Shop($shop['id_shop']);
                 $urls = $current_shop->getUrls();
 
-                foreach ($urls as $key_url => &$url)
-                {
+                foreach ($urls as $key_url => &$url) {
                     $title = $url['domain'].$url['physical_uri'].$url['virtual_uri'];
-                    if (strlen($title) > 23)
+                    if (strlen($title) > 23) {
                         $title = substr($title, 0, 23).'...';
+                    }
 
                     $url['name'] = $title;
                     $shop['urls'][$url['id_shop_url']] = $url;
                 }
             }
+        }
 
         $shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
@@ -138,8 +139,9 @@ class AdminShopGroupControllerCore extends AdminController
             ->setData($data);
         $shops_tree = $shops_tree->render(null, false, false);
 
-        if ($this->display == 'edit')
+        if ($this->display == 'edit') {
             $this->toolbar_title[] = $this->object->name;
+        }
 
         $this->context->smarty->assign(array(
             'toolbar_scroll' => 1,
@@ -153,8 +155,7 @@ class AdminShopGroupControllerCore extends AdminController
     {
         parent::initPageHeaderToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit')
-        {
+        if ($this->display != 'add' && $this->display != 'edit') {
             $this->page_header_toolbar_btn['new'] = array(
                 'desc' => $this->l('Add a new shop group'),
                 'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token
@@ -172,11 +173,12 @@ class AdminShopGroupControllerCore extends AdminController
     {
         parent::initToolbar();
 
-        if ($this->display != 'add' && $this->display != 'edit')
+        if ($this->display != 'add' && $this->display != 'edit') {
             $this->toolbar_btn['new'] = array(
                 'desc' => $this->l('Add a new shop group'),
                 'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
             );
+        }
     }
 
     public function renderForm()
@@ -278,18 +280,20 @@ class AdminShopGroupControllerCore extends AdminController
             )
         );
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
-        if (Shop::getTotalShops() > 1 && $obj->id)
+        if (Shop::getTotalShops() > 1 && $obj->id) {
             $disabled = array(
                 'share_customer' => true,
                 'share_stock' => true,
                 'share_order' => true,
                 'active' => false
             );
-        else
+        } else {
             $disabled = false;
+        }
 
         $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
         $this->tpl_form_vars = array(
@@ -310,29 +314,30 @@ class AdminShopGroupControllerCore extends AdminController
         $shop_group_delete_list = array();
 
         // test store authorized to remove
-        foreach ($this->_list as $shop_group)
-        {
+        foreach ($this->_list as $shop_group) {
             $shops = Shop::getShops(true, $shop_group['id_shop_group']);
-            if (!empty($shops))
+            if (!empty($shops)) {
                 $shop_group_delete_list[] = $shop_group['id_shop_group'];
+            }
         }
         $this->addRowActionSkipList('delete', $shop_group_delete_list);
     }
 
     public function postProcess()
     {
-        if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
-        {
+        if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table)) {
             /** @var ShopGroup $object */
             $object = $this->loadObject();
 
-            if (ShopGroup::getTotalShopGroup() == 1)
+            if (ShopGroup::getTotalShopGroup() == 1) {
                 $this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
-            elseif ($object->haveShops())
+            } elseif ($object->haveShops()) {
                 $this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use.');
+            }
 
-            if (count($this->errors))
+            if (count($this->errors)) {
                 return false;
+            }
         }
         return parent::postProcess();
     }
@@ -351,8 +356,7 @@ class AdminShopGroupControllerCore extends AdminController
 
     public function renderOptions()
     {
-        if ($this->fields_options && is_array($this->fields_options))
-        {
+        if ($this->fields_options && is_array($this->fields_options)) {
             $this->display = 'options';
             $this->show_toolbar = false;
             $helper = new HelperOptions($this);

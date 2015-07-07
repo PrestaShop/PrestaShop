@@ -128,13 +128,10 @@ class AdminCustomerPreferencesControllerCore extends AdminController
         $value = (int)$value;
 
         $tabs_class_name = array('AdminOutstanding');
-        if (!empty($tabs_class_name))
-        {
-            foreach ($tabs_class_name as $tab_class_name)
-            {
+        if (!empty($tabs_class_name)) {
+            foreach ($tabs_class_name as $tab_class_name) {
                 $tab = Tab::getInstanceFromClassName($tab_class_name);
-                if (Validate::isLoadedObject($tab))
-                {
+                if (Validate::isLoadedObject($tab)) {
                     $tab->active = $value;
                     $tab->save();
                 }

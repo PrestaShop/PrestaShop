@@ -49,43 +49,39 @@ class OrderDetailControllerCore extends FrontController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitMessage'))
-        {
+        if (Tools::isSubmit('submitMessage')) {
             $idOrder = (int)Tools::getValue('id_order');
             $msgText = Tools::getValue('msgText');
 
-            if (!$idOrder || !Validate::isUnsignedId($idOrder))
+            if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
                 $this->errors[] = Tools::displayError('The order is no longer valid.');
-            elseif (empty($msgText))
+            } elseif (empty($msgText)) {
                 $this->errors[] = Tools::displayError('The message cannot be blank.');
-            elseif (!Validate::isMessage($msgText))
+            } elseif (!Validate::isMessage($msgText)) {
                 $this->errors[] = Tools::displayError('This message is invalid (HTML is not allowed).');
-            if (!count($this->errors))
-            {
+            }
+            if (!count($this->errors)) {
                 $order = new Order($idOrder);
-                if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id)
-                {
+                if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                     //check if a thread already exist
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
                     $id_product = (int)Tools::getValue('id_product');
                     $cm = new CustomerMessage();
-                    if (!$id_customer_thread)
-                    {
+                    if (!$id_customer_thread) {
                         $ct = new CustomerThread();
                         $ct->id_contact = 0;
                         $ct->id_customer = (int)$order->id_customer;
                         $ct->id_shop = (int)$this->context->shop->id;
-                        if ($id_product && $order->orderContainProduct($id_product))
+                        if ($id_product && $order->orderContainProduct($id_product)) {
                             $ct->id_product = $id_product;
+                        }
                         $ct->id_order = (int)$order->id;
                         $ct->id_lang = (int)$this->context->language->id;
                         $ct->email = $this->context->customer->email;
                         $ct->status = 'open';
                         $ct->token = Tools::passwdGen(12);
                         $ct->add();
-                    }
-                    else
-                    {
+                    } else {
                         $ct = new CustomerThread((int)$id_customer_thread);
                         $ct->status = 'open';
                         $ct->update();
@@ -96,10 +92,9 @@ class OrderDetailControllerCore extends FrontController
                     $cm->ip_address = (int)ip2long($_SERVER['REMOTE_ADDR']);
                     $cm->add();
 
-                    if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE'))
+                    if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE')) {
                         $to = strval(Configuration::get('PS_SHOP_EMAIL'));
-                    else
-                    {
+                    } else {
                         $to = new Contact((int)Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
                         $to = strval($to->email);
                     }
@@ -108,10 +103,11 @@ class OrderDetailControllerCore extends FrontController
 
                     $product = new Product($id_product);
                     $product_name = '';
-                    if (Validate::isLoadedObject($product) && isset($product->name[(int)$this->context->language->id]))
+                    if (Validate::isLoadedObject($product) && isset($product->name[(int)$this->context->language->id])) {
                         $product_name = $product->name[(int)$this->context->language->id];
+                    }
 
-                    if (Validate::isLoadedObject($customer))
+                    if (Validate::isLoadedObject($customer)) {
                         Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
                         array(
                             '{lastname}' => $customer->lastname,
@@ -123,14 +119,16 @@ class OrderDetailControllerCore extends FrontController
                             '{product_name}' => $product_name
                         ),
                         $to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
+                    }
 
-                    if (Tools::getValue('ajax') != 'true')
+                    if (Tools::getValue('ajax') != 'true') {
                         Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
+                    }
 
                     $this->context->smarty->assign('message_confirmation', true);
-                }
-                else
+                } else {
                     $this->errors[] = Tools::displayError('Order not found');
+                }
             }
         }
     }
@@ -148,13 +146,11 @@ class OrderDetailControllerCore extends FrontController
     {
         parent::initContent();
 
-        if (!($id_order = (int)Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order))
+        if (!($id_order = (int)Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order)) {
             $this->errors[] = Tools::displayError('Order ID required');
-        else
-        {
+        } else {
             $order = new Order($id_order);
-            if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id)
-            {
+            if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $id_order_state = (int)$order->getCurrentState();
                 $carrier = new Carrier((int)$order->id_carrier, (int)$order->id_lang);
                 $addressInvoice = new Address((int)$order->id_address_invoice);
@@ -166,8 +162,9 @@ class OrderDetailControllerCore extends FrontController
                 $invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
                 $deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 
-                if ($order->total_discounts > 0)
+                if ($order->total_discounts > 0) {
                     $this->context->smarty->assign('total_old', (float)$order->total_paid - $order->total_discounts);
+                }
                 $products = $order->getProducts();
 
                 /* DEPRECATED: customizedDatas @since 1.5 */
@@ -212,15 +209,16 @@ class OrderDetailControllerCore extends FrontController
                     'reorderingAllowed' => !(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
                 ));
 
-                if ($carrier->url && $order->shipping_number)
+                if ($carrier->url && $order->shipping_number) {
                     $this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
+                }
                 $this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Hook::exec('displayOrderDetail', array('order' => $order)));
                 Hook::exec('actionOrderDetail', array('carrier' => $carrier, 'order' => $order));
 
                 unset($carrier, $addressInvoice, $addressDelivery);
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('This order cannot be found.');
+            }
             unset($order);
         }
 
@@ -229,8 +227,7 @@ class OrderDetailControllerCore extends FrontController
 
     public function setMedia()
     {
-        if (Tools::getValue('ajax') != 'true')
-        {
+        if (Tools::getValue('ajax') != 'true') {
             parent::setMedia();
             $this->addCSS(_THEME_CSS_DIR_.'history.css');
             $this->addCSS(_THEME_CSS_DIR_.'addresses.css');

@@ -94,16 +94,18 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function initToolbar()
     {
-        if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql'))
+        if ($this->display == 'view' && $id_request = Tools::getValue('id_request_sql')) {
             $this->toolbar_btn['edit'] = array(
                 'href' => self::$currentIndex.'&amp;updaterequest_sql&amp;token='.$this->token.'&amp;id_request_sql='.(int)$id_request,
                 'desc' => $this->l('Edit this SQL query')
             );
+        }
 
         parent::initToolbar();
 
-        if ($this->display == 'options')
+        if ($this->display == 'options') {
             unset($this->toolbar_btn['new']);
+        }
     }
 
     public function renderList()
@@ -169,8 +171,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
@@ -184,14 +185,13 @@ class AdminRequestSqlControllerCore extends AdminController
     public function ajaxProcess()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
+        if (_PS_MODE_DEMO_) {
             die(Tools::displayError('This functionality has been disabled.'));
-        if ($table = Tools::GetValue('table'))
-        {
+        }
+        if ($table = Tools::GetValue('table')) {
             $request_sql = new RequestSql();
             $attributes = $request_sql->getAttributesByTable($table);
-            foreach ($attributes as $key => $attribute)
-            {
+            foreach ($attributes as $key => $attribute) {
                 unset($attributes[$key]['Null']);
                 unset($attributes[$key]['Key']);
                 unset($attributes[$key]['Default']);
@@ -204,14 +204,15 @@ class AdminRequestSqlControllerCore extends AdminController
     public function renderView()
     {
         /** @var RequestSql $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $view = array();
-        if ($results = Db::getInstance()->executeS($obj->sql))
-        {
-            foreach (array_keys($results[0]) as $key)
+        if ($results = Db::getInstance()->executeS($obj->sql)) {
+            foreach (array_keys($results[0]) as $key) {
                 $tab_key[] = $key;
+            }
 
             $view['name'] = $obj->name;
             $view['key'] = $tab_key;
@@ -221,9 +222,9 @@ class AdminRequestSqlControllerCore extends AdminController
 
             $request_sql = new RequestSql();
             $view['attributes'] = $request_sql->attributes;
-        }
-        else
+        } else {
             $view['error'] = true;
+        }
 
         $this->tpl_view_vars = array(
             'view' => $view
@@ -233,14 +234,14 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function _childValidation()
     {
-        if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql'))
-        {
+        if (Tools::getValue('submitAdd'.$this->table) && $sql = Tools::getValue('sql')) {
             $request_sql = new RequestSql();
             $parser = $request_sql->parsingSql($sql);
             $validate = $request_sql->validateParser($parser, false, $sql);
 
-            if (!$validate || count($request_sql->error_sql))
+            if (!$validate || count($request_sql->error_sql)) {
                 $this->displayError($request_sql->error_sql);
+            }
         }
     }
 
@@ -269,8 +270,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function initProcess()
     {
         parent::initProcess();
-        if (Tools::getValue('export'.$this->table))
-        {
+        if (Tools::getValue('export'.$this->table)) {
             $this->display = 'export';
             $this->action = 'export';
         }
@@ -282,24 +282,21 @@ class AdminRequestSqlControllerCore extends AdminController
         // toolbar (save, cancel, new, ..)
         $this->initToolbar();
         $this->initPageHeaderToolbar();
-        if ($this->display == 'edit' || $this->display == 'add')
-        {
-            if (!$this->loadObject(true))
+        if ($this->display == 'edit' || $this->display == 'add') {
+            if (!$this->loadObject(true)) {
                 return;
+            }
 
             $this->content .= $this->renderForm();
-        }
-        elseif ($this->display == 'view')
-        {
+        } elseif ($this->display == 'view') {
             // Some controllers use the view action without an object
-            if ($this->className)
+            if ($this->className) {
                 $this->loadObject(true);
+            }
             $this->content .= $this->renderView();
-        }
-        elseif ($this->display == 'export')
+        } elseif ($this->display == 'export') {
             $this->generateExport();
-        elseif (!$this->ajax)
-        {
+        } elseif (!$this->ajax) {
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
         }
@@ -315,12 +312,13 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_request'] = array(
                 'href' => self::$currentIndex.'&addrequest_sql&token='.$this->token,
                 'desc' => $this->l('Add new SQL query', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -332,37 +330,34 @@ class AdminRequestSqlControllerCore extends AdminController
     {
         $id = Tools::getValue($this->identifier);
         $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_.'/export/' : _PS_ADMIN_DIR_.'/export/';
-        if (!Validate::isFileName($id))
+        if (!Validate::isFileName($id)) {
             die(Tools::displayError());
+        }
         $file = 'request_sql_'.$id.'.csv';
-        if ($csv = fopen($export_dir.$file, 'w'))
-        {
+        if ($csv = fopen($export_dir.$file, 'w')) {
             $sql = RequestSql::getRequestSqlById($id);
 
-            if ($sql)
-            {
+            if ($sql) {
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
-                foreach (array_keys($results[0]) as $key)
-                {
+                foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
                     fputs($csv, $key.';');
                 }
-                foreach ($results as $result)
-                {
+                foreach ($results as $result) {
                     fputs($csv, "\n");
-                    foreach ($tab_key as $name)
+                    foreach ($tab_key as $name) {
                         fputs($csv, '"'.strip_tags($result[$name]).'";');
+                    }
                 }
-                if (file_exists($export_dir.$file))
-                {
+                if (file_exists($export_dir.$file)) {
                     $filesize = filesize($export_dir.$file);
                     $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
-                    if ($filesize < $upload_max_filesize)
-                    {
-                        if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL'))
+                    if ($filesize < $upload_max_filesize) {
+                        if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
                             $charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
-                        else
+                        } else {
                             $charset = self::$encoding_file[0]['name'];
+                        }
 
                         header('Content-Type: text/csv; charset='.$charset);
                         header('Cache-Control: no-store, no-cache');
@@ -370,9 +365,9 @@ class AdminRequestSqlControllerCore extends AdminController
                         header('Content-Length: '.$filesize);
                         readfile($export_dir.$file);
                         die();
-                    }
-                    else
+                    } else {
                         $this->errors[] = Tools::DisplayError('The file is too large and can not be downloaded. Please use the LIMIT clause in this query.');
+                    }
                 }
             }
         }
@@ -385,84 +380,88 @@ class AdminRequestSqlControllerCore extends AdminController
      */
     public function displayError($e)
     {
-        foreach (array_keys($e) as $key)
-        {
-            switch ($key)
-            {
+        foreach (array_keys($e) as $key) {
+            switch ($key) {
                 case 'checkedFrom':
-                    if (isset($e[$key]['table']))
+                    if (isset($e[$key]['table'])) {
                         $this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
-                    elseif (isset($e[$key]['attribut']))
+                    } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedFrom" error');
+                    }
                 break;
 
                 case 'checkedSelect':
-                    if (isset($e[$key]['table']))
+                    if (isset($e[$key]['table'])) {
                         $this->errors[] = sprintf(Tools::displayError('The "%s" table does not exist.'), $e[$key]['table']);
-                    elseif (isset($e[$key]['attribut']))
+                    } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    elseif (isset($e[$key]['*']))
+                    } elseif (isset($e[$key]['*'])) {
                         $this->errors[] = Tools::displayError('The "*" operator cannot be used in a nested query.');
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedSelect" error');
+                    }
                 break;
 
                 case 'checkedWhere':
-                    if (isset($e[$key]['operator']))
+                    if (isset($e[$key]['operator'])) {
                         $this->errors[] = sprintf(Tools::displayError('The operator "%s" is incorrect.'), $e[$key]['operator']);
-                    elseif (isset($e[$key]['attribut']))
+                    } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedWhere" error');
+                    }
                 break;
 
                 case 'checkedHaving':
-                    if (isset($e[$key]['operator']))
+                    if (isset($e[$key]['operator'])) {
                         $this->errors[] = sprintf(Tools::displayError('The "%s" operator is incorrect.'), $e[$key]['operator']);
-                    elseif (isset($e[$key]['attribut']))
+                    } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedHaving" error');
+                    }
                 break;
 
                 case 'checkedOrder':
-                    if (isset($e[$key]['attribut']))
+                    if (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedOrder" error');
+                    }
                 break;
 
                 case 'checkedGroupBy':
-                    if (isset($e[$key]['attribut']))
+                    if (isset($e[$key]['attribut'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" attribute does not exist in the "%2$s" table.'),
                             $e[$key]['attribut'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedGroupBy" error');
+                    }
                 break;
 
                 case 'checkedLimit':
@@ -470,14 +469,15 @@ class AdminRequestSqlControllerCore extends AdminController
                 break;
 
                 case 'returnNameTable':
-                    if (isset($e[$key]['reference']))
+                    if (isset($e[$key]['reference'])) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The "%1$s" reference does not exist in the "%2$s" table.'),
                             $e[$key]['reference'][0],
                             $e[$key]['attribut'][1]
                         );
-                    else
+                    } else {
                         $this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer back to a table.');
+                    }
                 break;
 
                 case 'testedRequired':

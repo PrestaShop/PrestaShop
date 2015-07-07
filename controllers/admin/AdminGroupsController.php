@@ -100,7 +100,7 @@ class AdminGroupsControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $groups = Group::getGroups(Context::getContext()->language->id, true);
-        if (Shop::isFeatureActive())
+        if (Shop::isFeatureActive()) {
             $this->fields_options = array(
                 'general' => array(
                     'title' =>    $this->l('Default groups options'),
@@ -135,6 +135,7 @@ class AdminGroupsControllerCore extends AdminController
                     )
                 ),
             );
+        }
     }
 
     public function setMedia()
@@ -146,24 +147,26 @@ class AdminGroupsControllerCore extends AdminController
 
     public function initToolbar()
     {
-        if ($this->display == 'add' || $this->display == 'edit')
+        if ($this->display == 'add' || $this->display == 'edit') {
             $this->toolbar_btn['save-and-stay'] = array(
                 'short' => 'SaveAndStay',
                 'href' => '#',
                 'desc' => $this->l('Save, then add a category reduction.'),
                 'force_desc' => true,
             );
+        }
         parent::initToolbar();
     }
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_group'] = array(
                 'href' => self::$currentIndex.'&addgroup&token='.$this->token,
                 'desc' => $this->l('Add new group', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -172,18 +175,19 @@ class AdminGroupsControllerCore extends AdminController
     {
         $this->id_object = Tools::getValue('id_'.$this->table);
 
-        if (Tools::isSubmit('changeShowPricesVal') && $this->id_object)
+        if (Tools::isSubmit('changeShowPricesVal') && $this->id_object) {
             $this->action = 'change_show_prices_val';
+        }
 
-        if (Tools::getIsset('viewgroup'))
-        {
+        if (Tools::getIsset('viewgroup')) {
             $this->list_id = 'customer_group';
 
-            if (isset($_POST['submitReset'.$this->list_id]))
+            if (isset($_POST['submitReset'.$this->list_id])) {
                 $this->processResetFilters();
-        }
-        else
+            }
+        } else {
             $this->list_id = 'group';
+        }
 
         parent::initProcess();
     }
@@ -191,8 +195,9 @@ class AdminGroupsControllerCore extends AdminController
     public function renderView()
     {
         $this->context = Context::getContext();
-        if (!($group = $this->loadObject(true)))
+        if (!($group = $this->loadObject(true))) {
             return;
+        }
 
         $this->tpl_view_vars = array(
             'group' => $group,
@@ -208,8 +213,7 @@ class AdminGroupsControllerCore extends AdminController
     {
         $genders = array(0 => '?');
         $genders_icon = array('default' => 'unknown.gif');
-        foreach (Gender::getGenders() as $gender)
-        {
+        foreach (Gender::getGenders() as $gender) {
             /** @var Gender $gender */
             $genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
             $genders[$gender->id] = $gender->name;
@@ -246,8 +250,9 @@ class AdminGroupsControllerCore extends AdminController
 
     public function renderForm()
     {
-        if (!($group = $this->loadObject(true)))
+        if (!($group = $this->loadObject(true))) {
             return;
+        }
 
         $this->fields_form = array(
             'legend' => array(
@@ -332,8 +337,7 @@ class AdminGroupsControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -341,8 +345,9 @@ class AdminGroupsControllerCore extends AdminController
             );
         }
 
-        if (Tools::getIsset('addgroup'))
+        if (Tools::getIsset('addgroup')) {
             $this->fields_value['price_display_method'] = Configuration::get('PRICE_DISPLAY_METHOD');
+        }
 
         $this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
@@ -358,10 +363,10 @@ class AdminGroupsControllerCore extends AdminController
         $category_reductions = array();
         $category_reduction = Tools::getValue('category_reduction');
 
-        foreach ($group_reductions as $category)
-        {
-            if (is_array($category_reduction) && array_key_exists($category['id_category'], $category_reduction))
+        foreach ($group_reductions as $category) {
+            if (is_array($category_reduction) && array_key_exists($category['id_category'], $category_reduction)) {
                 $category['reduction'] = $category_reduction[$category['id_category']];
+            }
 
             $category_reductions[(int)$category['id_category']] = array(
                 'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), (int)$category['id_category']),
@@ -370,14 +375,17 @@ class AdminGroupsControllerCore extends AdminController
             );
         }
 
-        if (is_array($category_reduction))
-            foreach ($category_reduction as $key => $val)
-                if (!array_key_exists($key, $category_reductions))
+        if (is_array($category_reduction)) {
+            foreach ($category_reduction as $key => $val) {
+                if (!array_key_exists($key, $category_reductions)) {
                     $category_reductions[(int)$key] = array(
                         'path' => getPath(Context::getContext()->link->getAdminLink('AdminCategories'), $key),
                         'reduction' => (float)$val * 100,
                         'id_category' => (int)$key
                     );
+                }
+            }
+        }
 
         return $category_reductions;
     }
@@ -390,37 +398,43 @@ class AdminGroupsControllerCore extends AdminController
         $auth_modules = array();
         $unauth_modules = array();
 
-        if ($id_group)
+        if ($id_group) {
             $authorized_modules = Module::getAuthorizedModules($id_group);
+        }
 
-        if (is_array($authorized_modules))
-        {
-            foreach ($modules as $module)
-            {
+        if (is_array($authorized_modules)) {
+            foreach ($modules as $module) {
                 $authorized = false;
-                foreach ($authorized_modules as $auth_module)
-                    if ($module['id_module'] == $auth_module['id_module'])
+                foreach ($authorized_modules as $auth_module) {
+                    if ($module['id_module'] == $auth_module['id_module']) {
                         $authorized = true;
+                    }
+                }
 
-                if ($authorized)
+                if ($authorized) {
                     $auth_modules[] = $module;
-                else
+                } else {
                     $unauth_modules[] = $module;
+                }
+            }
+        } else {
+            $auth_modules = $modules;
+        }
+        $auth_modules_tmp = array();
+        foreach ($auth_modules as $key => $val) {
+            if ($module = Module::getInstanceById($val['id_module'])) {
+                $auth_modules_tmp[] = $module;
             }
         }
-        else
-            $auth_modules = $modules;
-        $auth_modules_tmp = array();
-        foreach ($auth_modules as $key => $val)
-            if ($module = Module::getInstanceById($val['id_module']))
-                $auth_modules_tmp[] = $module;
 
         $auth_modules = $auth_modules_tmp;
 
         $unauth_modules_tmp = array();
-        foreach ($unauth_modules as $key => $val)
-            if (($tmp_obj = Module::getInstanceById($val['id_module'])))
+        foreach ($unauth_modules as $key => $val) {
+            if (($tmp_obj = Module::getInstanceById($val['id_module']))) {
                 $unauth_modules_tmp[] = $tmp_obj;
+            }
+        }
 
         $unauth_modules = $unauth_modules_tmp;
 
@@ -429,10 +443,9 @@ class AdminGroupsControllerCore extends AdminController
 
     public function processSave()
     {
-        if (!$this->validateDiscount(Tools::getValue('reduction')))
+        if (!$this->validateDiscount(Tools::getValue('reduction'))) {
             $this->errors[] = Tools::displayError('The discount value is incorrect (must be a percentage).');
-        else
-        {
+        } else {
             $this->updateCategoryReduction();
             $object = parent::processSave();
             $this->updateRestrictions();
@@ -442,10 +455,11 @@ class AdminGroupsControllerCore extends AdminController
 
     protected function validateDiscount($reduction)
     {
-        if (!Validate::isPrice($reduction) || $reduction > 100 || $reduction < 0)
+        if (!Validate::isPrice($reduction) || $reduction > 100 || $reduction < 0) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
     public function ajaxProcessAddCategoryReduction()
@@ -454,18 +468,13 @@ class AdminGroupsControllerCore extends AdminController
         $id_category = Tools::getValue('id_category'); //no cast validation is done with Validate::isUnsignedId($id_category)
 
         $result = array();
-        if (!Validate::isUnsignedId($id_category))
-        {
+        if (!Validate::isUnsignedId($id_category)) {
             $result['errors'][] = Tools::displayError('Wrong category ID.');
             $result['hasError'] = true;
-        }
-        elseif (!$this->validateDiscount($category_reduction))
-        {
+        } elseif (!$this->validateDiscount($category_reduction)) {
             $result['errors'][] = Tools::displayError('The discount value is incorrect (must be a percentage).');
             $result['hasError'] = true;
-        }
-        else
-        {
+        } else {
             $result['id_category'] = (int)$id_category;
             $result['catPath'] = getPath(self::$currentIndex.'?tab=AdminCategories', (int)$id_category);
             $result['discount'] = $category_reduction;
@@ -482,11 +491,13 @@ class AdminGroupsControllerCore extends AdminController
         $id_group = Tools::getValue('id_group');
         $auth_modules = Tools::getValue('modulesBoxAuth');
         $return = true;
-        if ($id_group)
+        if ($id_group) {
             Group::truncateModulesRestrictions((int)$id_group);
+        }
         $shops = Shop::getShops(true, null, true);
-        if (is_array($auth_modules))
+        if (is_array($auth_modules)) {
             $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
+        }
         return $return;
     }
 
@@ -501,24 +512,23 @@ class AdminGroupsControllerCore extends AdminController
 			DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
 			WHERE `id_group` = '.(int)Tools::getValue('id_group')
         );
-        if (is_array($category_reduction) && count($category_reduction))
-        {
-            if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE'))
+        if (is_array($category_reduction) && count($category_reduction)) {
+            if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE')) {
                 Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
-            foreach ($category_reduction as $cat => $reduction)
-            {
-                if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction))
+            }
+            foreach ($category_reduction as $cat => $reduction) {
+                if (!Validate::isUnsignedId($cat) || !$this->validateDiscount($reduction)) {
                     $this->errors[] = Tools::displayError('The discount value is incorrect.');
-                else
-                {
+                } else {
                     $category = new Category((int)$cat);
                     $category->addGroupsIfNoExist((int)Tools::getValue('id_group'));
                     $group_reduction = new GroupReduction();
                     $group_reduction->id_group = (int)Tools::getValue('id_group');
                     $group_reduction->reduction = (float)($reduction / 100);
                     $group_reduction->id_category = (int)$cat;
-                    if (!$group_reduction->save())
+                    if (!$group_reduction->save()) {
                         $this->errors[] = Tools::displayError('You cannot save group reductions.');
+                    }
                 }
             }
         }
@@ -530,11 +540,13 @@ class AdminGroupsControllerCore extends AdminController
     public function processChangeShowPricesVal()
     {
         $group = new Group($this->id_object);
-        if (!Validate::isLoadedObject($group))
+        if (!Validate::isLoadedObject($group)) {
             $this->errors[] = Tools::displayError('An error occurred while updating this group.');
+        }
         $update = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'group` SET show_prices = '.($group->show_prices ? 0 : 1).' WHERE `id_group` = '.(int)$group->id);
-        if (!$update)
+        if (!$update) {
             $this->errors[] = Tools::displayError('An error occurred while updating this group.');
+        }
         Tools::clearSmartyCache();
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
@@ -549,8 +561,9 @@ class AdminGroupsControllerCore extends AdminController
     public function printShowPricesIcon($id_group, $tr)
     {
         $group = new Group($tr['id_group']);
-        if (!Validate::isLoadedObject($group))
+        if (!Validate::isLoadedObject($group)) {
             return;
+        }
         return '<a class="list-action-enable'.($group->show_prices ? ' action-enabled' : ' action-disabled').'" href="index.php?tab=AdminGroups&amp;id_group='.(int)$group->id.'&amp;changeShowPricesVal&amp;token='.Tools::getAdminTokenLite('AdminGroups').'">
 				'.($group->show_prices ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
             '</a>';
@@ -585,13 +598,15 @@ class AdminGroupsControllerCore extends AdminController
     public function displayEditLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
-        if (!array_key_exists('Edit', self::$cache_lang))
+        if (!array_key_exists('Edit', self::$cache_lang)) {
             self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
+        }
 
         $href = self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token);
 
-        if ($this->display == 'view')
+        if ($this->display == 'view') {
             $href = Context::getContext()->link->getAdminLink('AdminCustomers').'&id_customer='.(int)$id.'&updatecustomer';
+        }
 
         $tpl->assign(array(
             'href' => $href,

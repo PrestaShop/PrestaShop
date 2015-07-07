@@ -93,8 +93,7 @@ class SpecificPriceCore extends ObjectModel
 
     public function add($autodate = true, $nullValues = false)
     {
-        if (parent::add($autodate, $nullValues))
-        {
+        if (parent::add($autodate, $nullValues)) {
             // Flush cache when we adding a new specific price
             SpecificPrice::$_specificPriceCache = array();
             Product::flushPriceCache();
@@ -107,8 +106,7 @@ class SpecificPriceCore extends ObjectModel
 
     public function update($null_values = false)
     {
-        if (parent::update($null_values))
-        {
+        if (parent::update($null_values)) {
             // Flush cache when we updating a new specific price
             SpecificPrice::$_specificPriceCache = array();
             Product::flushPriceCache();
@@ -119,8 +117,7 @@ class SpecificPriceCore extends ObjectModel
 
     public function delete()
     {
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             // Flush cache when we deletind a new specific price
             SpecificPrice::$_specificPriceCache = array();
             Product::flushPriceCache();
@@ -167,20 +164,22 @@ class SpecificPriceCore extends ObjectModel
         $select = '(';
 
         $priority = SpecificPrice::getPriority($id_product);
-        foreach (array_reverse($priority) as $k => $field)
-            if (!empty($field))
+        foreach (array_reverse($priority) as $k => $field) {
+            if (!empty($field)) {
                 $select .= ' IF (`'.bqSQL($field).'` = '.(int)$$field.', '.pow(2, $k + 1).', 0) + ';
+            }
+        }
 
         return rtrim($select, ' +').') AS `score`';
     }
 
     public static function getPriority($id_product)
     {
-        if (!SpecificPrice::isFeatureActive())
+        if (!SpecificPrice::isFeatureActive()) {
             return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
+        }
 
-        if (!isset(SpecificPrice::$_cache_priorities[(int)$id_product]))
-        {
+        if (!isset(SpecificPrice::$_cache_priorities[(int)$id_product])) {
             SpecificPrice::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `priority`, `id_specific_price_priority`
 				FROM `'._DB_PREFIX_.'specific_price_priority`
@@ -191,8 +190,9 @@ class SpecificPriceCore extends ObjectModel
 
         $priority = SpecificPrice::$_cache_priorities[(int)$id_product];
 
-        if (!$priority)
+        if (!$priority) {
             $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
+        }
         $priority = 'id_customer;'.$priority;
 
         return preg_split('/;/', $priority);
@@ -200,16 +200,16 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0, $real_quantity = 0)
     {
-        if (!SpecificPrice::isFeatureActive())
+        if (!SpecificPrice::isFeatureActive()) {
             return array();
+        }
         /*
         ** The date is not taken into account for the cache, but this is for the better because it keeps the consistency for the whole script.
         ** The price must not change between the top and the bottom of the page
         */
 
         $key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
-        if (!array_key_exists($key, SpecificPrice::$_specificPriceCache))
-        {
+        if (!array_key_exists($key, SpecificPrice::$_specificPriceCache)) {
             $now = date('Y-m-d H:i:00');
             $query = '
 			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
@@ -234,7 +234,6 @@ class SpecificPriceCore extends ObjectModel
             $query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
             SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-
         }
         return SpecificPrice::$_specificPriceCache[$key];
     }
@@ -242,9 +241,11 @@ class SpecificPriceCore extends ObjectModel
     public static function setPriorities($priorities)
     {
         $value = '';
-        if (is_array($priorities))
-            foreach ($priorities as $priority)
+        if (is_array($priorities)) {
+            foreach ($priorities as $priority) {
                 $value .= pSQL($priority).';';
+            }
+        }
 
         SpecificPrice::deletePriorities();
 
@@ -261,8 +262,9 @@ class SpecificPriceCore extends ObjectModel
     public static function setSpecificPriority($id_product, $priorities)
     {
         $value = '';
-        foreach ($priorities as $priority)
+        foreach ($priorities as $priority) {
             $value .= pSQL($priority).';';
+        }
 
         return Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'specific_price_priority` (`id_product`, `priority`)
@@ -273,8 +275,9 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false, $id_customer = 0)
     {
-        if (!SpecificPrice::isFeatureActive())
+        if (!SpecificPrice::isFeatureActive()) {
             return array();
+        }
 
         $now = date('Y-m-d H:i:00');
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -301,16 +304,17 @@ class SpecificPriceCore extends ObjectModel
         $targeted_prices = array();
         $last_quantity = array();
 
-        while ($specific_price = Db::getInstance()->nextRow($result))
-        {
-            if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
+        while ($specific_price = Db::getInstance()->nextRow($result)) {
+            if (!isset($last_quantity[(int)$specific_price['id_product_attribute']])) {
                 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
-            elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
+            } elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity']) {
                 continue;
+            }
 
             $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
-            if ($specific_price['from_quantity'] > 1)
+            if ($specific_price['from_quantity'] > 1) {
                 $targeted_prices[] = $specific_price;
+            }
         }
 
         return $targeted_prices;
@@ -318,8 +322,9 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0)
     {
-        if (!SpecificPrice::isFeatureActive())
+        if (!SpecificPrice::isFeatureActive()) {
             return array();
+        }
 
         $now = date('Y-m-d H:i:00');
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -347,8 +352,9 @@ class SpecificPriceCore extends ObjectModel
 
     public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0, $with_combination_id = false)
     {
-        if (!SpecificPrice::isFeatureActive())
+        if (!SpecificPrice::isFeatureActive()) {
             return array();
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT SQL_NO_CACHE `id_product`, `id_product_attribute`
@@ -368,16 +374,16 @@ class SpecificPriceCore extends ObjectModel
 					`reduction` > 0
 		', false, false);
         $ids_product = array();
-        while ($row = Db::getInstance()->nextRow($result))
+        while ($row = Db::getInstance()->nextRow($result)) {
             $ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
+        }
 
         return $ids_product;
     }
 
     public static function deleteByProductId($id_product)
     {
-        if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product))
-        {
+        if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product)) {
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed('specific_price'));
             return true;
@@ -387,8 +393,9 @@ class SpecificPriceCore extends ObjectModel
 
     public function duplicate($id_product = false)
     {
-        if ($id_product)
+        if ($id_product) {
             $this->id_product = (int)$id_product;
+        }
         unset($this->id);
         return $this->add();
     }
@@ -402,8 +409,9 @@ class SpecificPriceCore extends ObjectModel
     {
         static $feature_active = null;
 
-        if ($feature_active === null)
+        if ($feature_active === null) {
             $feature_active = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
+        }
         return $feature_active;
     }
 

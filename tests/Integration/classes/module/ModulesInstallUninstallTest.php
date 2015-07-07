@@ -45,12 +45,9 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
     {
         $modules = array();
 
-        foreach (scandir(_PS_MODULE_DIR_) as $entry)
-        {
-            if ($entry[0] !== '.')
-            {
-                if (file_exists(_PS_MODULE_DIR_.$entry.DIRECTORY_SEPARATOR.$entry.'.php'))
-                {
+        foreach (scandir(_PS_MODULE_DIR_) as $entry) {
+            if ($entry[0] !== '.') {
+                if (file_exists(_PS_MODULE_DIR_.$entry.DIRECTORY_SEPARATOR.$entry.'.php')) {
                     $modules[] = array($entry);
                 }
             }
@@ -66,13 +63,10 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
     public function testInstallationAndUnInstallation($moduleName)
     {
         $module = Module::getInstanceByName($moduleName);
-        if ($module->id)
-        {
+        if ($module->id) {
             $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
             $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
-        }
-        else
-        {
+        } else {
             $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
             $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
         }

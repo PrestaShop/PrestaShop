@@ -47,7 +47,6 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
 
         \PrestaShop\PrestaShop\Tests\Helper\Module::removeModule('pscsx3241');
         \PrestaShop\PrestaShop\Tests\Helper\Module::removeModule('pscsx32412');
-
     }
 
     public function testInstall()
@@ -55,15 +54,11 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
         $pscsx3241 = array();
         $pscsx3241['pscsx3241'] = Module::getInstanceByName('pscsx3241');
         $pscsx3241['pscsx32412'] = Module::getInstanceByName('pscsx32412');
-        foreach ($pscsx3241 as $module)
-        {
-            if ($module->id)
-            {
+        foreach ($pscsx3241 as $module) {
+            if ($module->id) {
                 $this->assertTrue((bool)$module->uninstall());
                 $this->assertTrue((bool)$module->install());
-            }
-            else
-            {
+            } else {
                 $this->assertTrue((bool)$module->install());
             }
         }
@@ -95,8 +90,9 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
         $pscsx3241 = array();
         $pscsx3241[] = Module::getInstanceByName('pscsx3241');
         $pscsx3241[] = Module::getInstanceByName('pscsx32412');
-        foreach ($pscsx3241 as $module)
+        foreach ($pscsx3241 as $module) {
             $this->assertTrue((bool)$module->uninstall());
+        }
 
         $this->assertFileNotExists($override_path_cart);
         $this->assertFileNotExists($override_path_admin_product_controller);

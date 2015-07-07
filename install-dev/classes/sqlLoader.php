@@ -46,8 +46,9 @@ class InstallSqlLoader
      */
     public function __construct(Db $db = null)
     {
-        if (is_null($db))
+        if (is_null($db)) {
             $db = Db::getInstance();
+        }
         $this->db = $db;
     }
 
@@ -58,8 +59,9 @@ class InstallSqlLoader
      */
     public function setMetaData(array $data)
     {
-        foreach ($data as $k => $v)
+        foreach ($data as $k => $v) {
             $this->metadata[$k] = $v;
+        }
     }
 
     /**
@@ -70,8 +72,9 @@ class InstallSqlLoader
      */
     public function parse_file($filename, $stop_when_fail = true)
     {
-        if (!file_exists($filename))
+        if (!file_exists($filename)) {
             throw new PrestashopInstallerException("File $filename not found");
+        }
 
         return $this->parse(file_get_contents($filename), $stop_when_fail);
     }
@@ -88,22 +91,22 @@ class InstallSqlLoader
 
         $content = str_replace(array_keys($this->metadata), array_values($this->metadata), $content);
         $queries = preg_split('#;\s*[\r\n]+#', $content);
-        foreach ($queries as $query)
-        {
+        foreach ($queries as $query) {
             $query = trim($query);
-            if (!$query)
+            if (!$query) {
                 continue;
+            }
 
-            if (!$this->db->execute($query))
-            {
+            if (!$this->db->execute($query)) {
                 $this->errors[] = array(
                     'errno' => $this->db->getNumberError(),
                     'error' => $this->db->getMsgError(),
                     'query' => $query,
                 );
 
-                if ($stop_when_fail)
+                if ($stop_when_fail) {
                     return false;
+                }
             }
         }
 

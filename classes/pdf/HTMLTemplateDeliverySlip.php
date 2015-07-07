@@ -77,8 +77,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         $formatted_invoice_address = '';
 
-        if ($this->order->id_address_delivery != $this->order->id_address_invoice)
-        {
+        if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int)$this->order->id_address_invoice);
             $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         }
@@ -87,11 +86,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 
         $order_details = $this->order_invoice->getProducts();
-        if (Configuration::get('PS_PDF_IMG_DELIVERY'))
-            foreach ($order_details as &$order_detail)
-            {
-                if ($order_detail['image'] != null)
-                {
+        if (Configuration::get('PS_PDF_IMG_DELIVERY')) {
+            foreach ($order_details as &$order_detail) {
+                if ($order_detail['image'] != null) {
                     $name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
                     $path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
 
@@ -102,12 +99,14 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                         1
                     );
 
-                    if (file_exists(_PS_TMP_IMG_DIR_.$name))
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
                         $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
-                    else
+                    } else {
                         $order_detail['image_size'] = false;
+                    }
                 }
             }
+        }
 
         $this->smarty->assign(array(
             'order' => $this->order,

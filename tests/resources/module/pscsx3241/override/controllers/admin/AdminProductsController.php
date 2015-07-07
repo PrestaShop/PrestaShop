@@ -70,8 +70,9 @@ class AdminProductsController extends AdminProductsControllerCore
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-        if (!Tools::getValue('id_product'))
+        if (!Tools::getValue('id_product')) {
             $this->multishop_context_group = false;
+        }
 
         parent::__construct();
 
@@ -101,7 +102,7 @@ class AdminProductsController extends AdminProductsControllerCore
         );
 
         $this->available_tabs = array('Quantities' => 6, 'Warehouses' => 14);
-        if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP)
+        if ($this->context->shop->getContext() != Shop::CONTEXT_GROUP) {
             $this->available_tabs = array_merge($this->available_tabs, array(
                 'Informations' => 0,
                 'Pack' => 7,
@@ -117,54 +118,52 @@ class AdminProductsController extends AdminProductsControllerCore
                 'Attachments' => 12,
                 'Suppliers' => 13,
             ));
+        }
 
         // Sort the tabs that need to be preloaded by their priority number
         asort($this->available_tabs, SORT_NUMERIC);
 
         /* Adding tab if modules are hooked */
         $modules_list = Hook::getHookModuleExecList('displayAdminProductsExtra');
-        if (is_array($modules_list) && count($modules_list) > 0)
-            foreach ($modules_list as $m)
-            {
+        if (is_array($modules_list) && count($modules_list) > 0) {
+            foreach ($modules_list as $m) {
                 $this->available_tabs['Module'.ucfirst($m['module'])] = 23;
                 $this->available_tabs_lang['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
             }
+        }
 
-        if (Tools::getValue('reset_filter_category'))
+        if (Tools::getValue('reset_filter_category')) {
             $this->context->cookie->id_category_products_filter = false;
-        if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter)
-        {
+        }
+        if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter) {
             $category = new Category((int)$this->context->cookie->id_category_products_filter);
-            if (!$category->inShop())
-            {
+            if (!$category->inShop()) {
                 $this->context->cookie->id_category_products_filter = false;
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
             }
         }
         /* Join categories table */
-        if ($id_category = (int)Tools::getValue('productFilter_cl!name'))
-        {
+        if ($id_category = (int)Tools::getValue('productFilter_cl!name')) {
             $this->_category = new Category((int)$id_category);
             $_POST['productFilter_cl!name'] = $this->_category->name[$this->context->language->id];
-        }
-        else
-        {
-            if ($id_category = (int)Tools::getValue('id_category'))
-            {
+        } else {
+            if ($id_category = (int)Tools::getValue('id_category')) {
                 $this->id_current_category = $id_category;
                 $this->context->cookie->id_category_products_filter = $id_category;
-            }
-            elseif ($id_category = $this->context->cookie->id_category_products_filter)
+            } elseif ($id_category = $this->context->cookie->id_category_products_filter) {
                 $this->id_current_category = $id_category;
-            if ($this->id_current_category)
+            }
+            if ($this->id_current_category) {
                 $this->_category = new Category((int)$this->id_current_category);
-            else
+            } else {
                 $this->_category = new Category();
+            }
         }
 
         $join_category = false;
-        if (Validate::isLoadedObject($this->_category) && empty($this->_filter))
+        if (Validate::isLoadedObject($this->_category) && empty($this->_filter)) {
             $join_category = true;
+        }
 
         $this->_join .= '
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)
@@ -184,8 +183,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $this->_select .= 'shop.name as shopname, a.id_shop_default, ';
         $this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 
-        if ($join_category)
-        {
+        if ($join_category) {
             $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
             $this->_select .= ' , cp.`position`, ';
         }
@@ -216,16 +214,17 @@ class AdminProductsController extends AdminProductsControllerCore
             'align' => 'left',
         );
 
-        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
             $this->fields_list['shopname'] = array(
                 'title' => $this->l('Default shop'),
                 'filter_key' => 'shop!name',
             );
-        else
+        } else {
             $this->fields_list['name_category'] = array(
                 'title' => $this->l('Category'),
                 'filter_key' => 'cl!name',
             );
+        }
         $this->fields_list['price'] = array(
             'title' => $this->l('Base price'),
             'type' => 'price',
@@ -241,7 +240,7 @@ class AdminProductsController extends AdminProductsControllerCore
             'search' => false
         );
 
-        if (Configuration::get('PS_STOCK_MANAGEMENT'))
+        if (Configuration::get('PS_STOCK_MANAGEMENT')) {
             $this->fields_list['sav_quantity'] = array(
                 'title' => $this->l('Quantity'),
                 'type' => 'int',
@@ -251,6 +250,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 'badge_danger' => true,
                 //'hint' => $this->l('This is the quantity available in the current shop/group.'),
             );
+        }
 
         $this->fields_list['active'] = array(
             'title' => $this->l('Status'),
@@ -262,12 +262,13 @@ class AdminProductsController extends AdminProductsControllerCore
             'orderby' => false
         );
 
-        if ($join_category && (int)$this->id_current_category)
+        if ($join_category && (int)$this->id_current_category) {
             $this->fields_list['position'] = array(
                 'title' => $this->l('Position'),
                 'filter_key' => 'cp!position',
                 'align' => 'center',
                 'position' => 'position'
             );
+        }
     }
 }

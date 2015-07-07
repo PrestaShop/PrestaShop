@@ -26,8 +26,7 @@
 
 function hook_blocksearch_on_header()
 {
-    if ($id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \'blocksearch\''))
-    {
+    if ($id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \'blocksearch\'')) {
         $id_hook = Db::getInstance()->getValue('
 			SELECT `id_hook`
 			FROM `'._DB_PREFIX_.'hook`

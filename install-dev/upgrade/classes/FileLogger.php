@@ -47,10 +47,11 @@ class FileLoggerCore extends AbstractLogger
     */
     public function setFilename($filename)
     {
-        if (is_writable(dirname($filename)))
+        if (is_writable(dirname($filename))) {
             $this->filename = $filename;
-        else
+        } else {
             die('Directory '.dirname($filename).' is not writable');
+        }
     }
 
     /**
@@ -61,8 +62,9 @@ class FileLoggerCore extends AbstractLogger
     */
     public function getFilename()
     {
-        if (empty($this->filename))
+        if (empty($this->filename)) {
             die('Filename is empty.');
+        }
 
         return $this->filename;
     }

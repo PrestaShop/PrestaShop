@@ -61,12 +61,13 @@ class RangeWeightCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
+        if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this)) {
             return false;
+        }
 
         $carrier = new Carrier((int)$this->id_carrier);
         $price_list = array();
-        foreach ($carrier->getZones() as $zone)
+        foreach ($carrier->getZones() as $zone) {
             $price_list[] = array(
                 'id_range_price' => 0,
                 'id_range_weight' => (int)$this->id,
@@ -74,6 +75,7 @@ class RangeWeightCore extends ObjectModel
                 'id_zone' => (int)$zone['id_zone'],
                 'price' => 0,
             );
+        }
         $carrier->addDeliveryPrice($price_list);
 
         return true;

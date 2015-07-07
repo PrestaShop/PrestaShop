@@ -26,7 +26,6 @@
 
 class ConfigurationTestCore
 {
-
     public static $test_files = array(
         '/cache/smarty/compile/index.php',
         '/classes/log/index.php',
@@ -75,7 +74,7 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download'
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $tests = array_merge($tests, array(
                 'system' => array(
                     'fopen', 'fclose', 'fread', 'fwrite',
@@ -89,6 +88,7 @@ class ConfigurationTestCore
                 'files' => false,
                 'mails_dir' => 'mails',
             ));
+        }
 
         return $tests;
     }
@@ -123,15 +123,17 @@ class ConfigurationTestCore
     public static function check($tests)
     {
         $res = array();
-        foreach ($tests as $key => $test)
+        foreach ($tests as $key => $test) {
             $res[$key] = ConfigurationTest::run($key, $test);
+        }
         return $res;
     }
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg))
+        if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg)) {
             return 'ok';
+        }
         return 'fail';
     }
 
@@ -172,9 +174,11 @@ class ConfigurationTestCore
 
     public static function test_system($funcs)
     {
-        foreach ($funcs as $func)
-            if (!function_exists($func))
+        foreach ($funcs as $func) {
+            if (!function_exists($func)) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -190,40 +194,40 @@ class ConfigurationTestCore
 
     public static function test_gz()
     {
-        if (function_exists('gzencode'))
+        if (function_exists('gzencode')) {
             return @gzencode('dd') !== false;
+        }
         return false;
     }
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
     {
         $dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
-        if (!file_exists($dir) || !$dh = @opendir($dir))
-        {
+        if (!file_exists($dir) || !$dh = @opendir($dir)) {
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
             return false;
         }
         $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
-        if (@file_put_contents($dummy, 'test'))
-        {
+        if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
-            if (!$recursive)
-            {
+            if (!$recursive) {
                 closedir($dh);
                 return true;
             }
-        }
-        elseif (!is_writable($dir))
-        {
+        } elseif (!is_writable($dir)) {
             $full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
             return false;
         }
 
-        if ($recursive)
-            while (($file = readdir($dh)) !== false)
-                if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn')
-                    if (!ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, $recursive, $full_report))
+        if ($recursive) {
+            while (($file = readdir($dh)) !== false) {
+                if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn') {
+                    if (!ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, $recursive, $full_report)) {
                         return false;
+                    }
+                }
+            }
+        }
 
         closedir($dh);
         return true;
@@ -303,24 +307,27 @@ class ConfigurationTestCore
     public static function test_theme_lang_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir))
+        if (!file_exists($absoluteDir)) {
             return true;
+        }
         return ConfigurationTest::test_dir($dir, true);
     }
 
     public static function test_theme_pdf_lang_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir))
+        if (!file_exists($absoluteDir)) {
             return true;
+        }
         return ConfigurationTest::test_dir($dir, true);
     }
 
     public static function test_theme_cache_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir))
+        if (!file_exists($absoluteDir)) {
             return true;
+        }
         return ConfigurationTest::test_dir($dir, true);
     }
 
@@ -346,8 +353,9 @@ class ConfigurationTestCore
 
     public static function test_sessions()
     {
-        if (!$path = @ini_get('session.save_path'))
+        if (!$path = @ini_get('session.save_path')) {
             return true;
+        }
 
         return is_writable($path);
     }
@@ -359,17 +367,19 @@ class ConfigurationTestCore
     public static function test_files($full = false)
     {
         $return = array();
-        foreach (ConfigurationTest::$test_files as $file)
-            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
-            {
-                if ($full)
+        foreach (ConfigurationTest::$test_files as $file) {
+            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
+                if ($full) {
                     array_push($return, $file);
-                else
+                } else {
                     return false;
+                }
             }
+        }
 
-        if ($full)
+        if ($full) {
             return $return;
+        }
         return true;
     }
 }

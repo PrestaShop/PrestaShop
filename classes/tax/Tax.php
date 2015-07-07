@@ -68,10 +68,11 @@ class TaxCore extends ObjectModel
         /* Clean associations */
         TaxRule::deleteTaxRuleByIdTax((int)$this->id);
 
-        if ($this->isUsed())
+        if ($this->isUsed()) {
             return $this->historize();
-        else
+        } else {
             return parent::delete();
+        }
     }
 
     /**
@@ -87,16 +88,16 @@ class TaxCore extends ObjectModel
 
     public function toggleStatus()
     {
-        if (parent::toggleStatus())
+        if (parent::toggleStatus()) {
             return $this->_onStatusChange();
+        }
 
         return false;
     }
 
     public function update($null_values = false)
     {
-        if (!$this->deleted && $this->isUsed())
-        {
+        if (!$this->deleted && $this->isUsed()) {
             $historized_tax = new Tax($this->id);
             $historized_tax->historize();
 
@@ -107,17 +108,18 @@ class TaxCore extends ObjectModel
             // change tax id in the tax rule table
             $res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
             return $res;
-        }
-        elseif (parent::update($null_values))
+        } elseif (parent::update($null_values)) {
             return $this->_onStatusChange();
+        }
 
         return false;
     }
 
     protected function _onStatusChange()
     {
-        if (!$this->active)
+        if (!$this->active) {
             return TaxRule::deleteTaxRuleByIdTax($this->id);
+        }
 
         return true;
     }
@@ -148,15 +150,15 @@ class TaxCore extends ObjectModel
         $sql->from('tax', 't');
         $sql->where('t.`deleted` != 1');
 
-        if ($id_lang)
-        {
+        if ($id_lang) {
             $sql->select('tl.name, tl.id_lang');
             $sql->leftJoin('tax_lang', 'tl', 't.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)$id_lang);
             $sql->orderBy('`name` ASC');
         }
 
-        if ($active_only)
+        if ($active_only) {
             $sql->where('t.`active` = 1');
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
@@ -230,8 +232,7 @@ class TaxCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
 
-        if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode]))
-        {
+        if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode])) {
             $tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
             self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
         }
@@ -248,8 +249,9 @@ class TaxCore extends ObjectModel
      */
     public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)
     {
-        if ($context == null)
+        if ($context == null) {
             $context = Context::getContext();
+        }
 
         $address = Address::initialize($id_address);
         $id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct($id_product, $context);

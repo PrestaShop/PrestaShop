@@ -104,13 +104,11 @@ class OrderSlipCore extends ObjectModel
 
     public function addSlipDetail($orderDetailList, $productQtyList)
     {
-        foreach ($orderDetailList as $key => $id_order_detail)
-        {
-            if ($qty = (int)($productQtyList[$key]))
-            {
+        foreach ($orderDetailList as $key => $id_order_detail) {
+            if ($qty = (int)($productQtyList[$key])) {
                 $order_detail = new OrderDetail((int)$id_order_detail);
 
-                if (Validate::isLoadedObject($order_detail))
+                if (Validate::isLoadedObject($order_detail)) {
                     Db::getInstance()->insert('order_slip_detail', array(
                         'id_order_slip' => (int)$this->id,
                         'id_order_detail' => (int)$id_order_detail,
@@ -118,6 +116,7 @@ class OrderSlipCore extends ObjectModel
                         'amount_tax_excl' => $order_detail->unit_price_tax_excl * $qty,
                         'amount_tax_incl' => $order_detail->unit_price_tax_incl * $qty
                     ));
+                }
             }
         }
     }
@@ -153,16 +152,17 @@ class OrderSlipCore extends ObjectModel
         $order_details = $order->getProductsDetail();
 
         $slip_quantity = array();
-        foreach ($productsRet as $slip_detail)
+        foreach ($productsRet as $slip_detail) {
             $slip_quantity[$slip_detail['id_order_detail']] = $slip_detail;
+        }
 
         $products = array();
-        foreach ($order_details as $key => $product)
-            if (isset($slip_quantity[$product['id_order_detail']]) && $slip_quantity[$product['id_order_detail']]['product_quantity'])
-            {
+        foreach ($order_details as $key => $product) {
+            if (isset($slip_quantity[$product['id_order_detail']]) && $slip_quantity[$product['id_order_detail']]['product_quantity']) {
                 $products[$key] = $product;
                 $products[$key] = array_merge($products[$key], $slip_quantity[$product['id_order_detail']]);
             }
+        }
         return $order->getProducts($products);
     }
 
@@ -204,8 +204,7 @@ class OrderSlipCore extends ObjectModel
 
         $order = new Order($this->id_order);
         $products = array();
-        foreach ($result as $row)
-        {
+        foreach ($result as $row) {
             $order->setProductPrices($row);
             $products[] = $row;
         }
@@ -223,8 +222,9 @@ class OrderSlipCore extends ObjectModel
 		ORDER BY os.`date_add` ASC');
 
         $slips = array();
-        foreach ($result as $slip)
+        foreach ($result as $slip) {
             $slips[] = (int)$slip['id_order_slip'];
+        }
         return $slips;
     }
 
@@ -237,8 +237,7 @@ class OrderSlipCore extends ObjectModel
         Tools::displayAsDeprecated();
 
         $product_list = array();
-        foreach ($productList as $id_order_detail)
-        {
+        foreach ($productList as $id_order_detail) {
             $order_detail = new OrderDetail((int)$id_order_detail);
             $product_list[$id_order_detail] = array(
                 'id_order_detail' => $id_order_detail,
@@ -261,14 +260,11 @@ class OrderSlipCore extends ObjectModel
         $order_slip->id_order = (int)$order->id;
         $order_slip->conversion_rate = $currency->conversion_rate;
 
-        if ($add_tax)
-        {
+        if ($add_tax) {
             $add_or_remove = 'add';
             $inc_or_ex_1 = 'excl';
             $inc_or_ex_2 = 'incl';
-        }
-        else
-        {
+        } else {
             $add_or_remove = 'remove';
             $inc_or_ex_1 = 'incl';
             $inc_or_ex_2 = 'excl';
@@ -278,41 +274,43 @@ class OrderSlipCore extends ObjectModel
         $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = 0;
         $order_slip->partial = 0;
 
-        if ($shipping_cost !== false)
-        {
+        if ($shipping_cost !== false) {
             $order_slip->shipping_cost = true;
             $carrier = new Carrier((int)$order->id_carrier);
             $address = Address::initialize($order->id_address_delivery, false);
             $tax_calculator = $carrier->getTaxCalculator($address);
             $order_slip->{'total_shipping_tax_'.$inc_or_ex_1} = ($shipping_cost === null ? $order->{'total_shipping_tax_'.$inc_or_ex_1} : (float)$shipping_cost);
 
-            if ($tax_calculator instanceof TaxCalculator)
+            if ($tax_calculator instanceof TaxCalculator) {
                 $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($order_slip->{'total_shipping_tax_'.$inc_or_ex_1}), _PS_PRICE_COMPUTE_PRECISION_);
-            else
+            } else {
                 $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
-        }
-        else
+            }
+        } else {
             $order_slip->shipping_cost = false;
+        }
 
         $order_slip->amount = 0;
         $order_slip->{'total_products_tax_'.$inc_or_ex_1} = 0;
         $order_slip->{'total_products_tax_'.$inc_or_ex_2} = 0;
 
-        foreach ($product_list as &$product)
-        {
+        foreach ($product_list as &$product) {
             $order_detail = new OrderDetail((int)$product['id_order_detail']);
             $price = (float)$product['unit_price'];
             $quantity = (int)$product['quantity'];
             $order_slip_resume = OrderSlip::getProductSlipResume((int)$order_detail->id);
 
-            if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity)
+            if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
                 $quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
+            }
 
-            if ($quantity == 0)
+            if ($quantity == 0) {
                 continue;
+            }
 
-            if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid())
+            if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid()) {
                 $order_detail->product_quantity_refunded += $quantity;
+            }
 
             $order_detail->save();
 
@@ -323,21 +321,19 @@ class OrderSlipCore extends ObjectModel
 
             $order_slip->{'total_products_tax_'.$inc_or_ex_1} += $price * $quantity;
 
-            if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
-            {
-                if (!isset($total_products[$id_tax_rules_group]))
+            if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE))) {
+                if (!isset($total_products[$id_tax_rules_group])) {
                     $total_products[$id_tax_rules_group] = 0;
-            }
-            else
-            {
-                if (!isset($total_products[$id_tax_rules_group.'_'.$id_address]))
+                }
+            } else {
+                if (!isset($total_products[$id_tax_rules_group.'_'.$id_address])) {
                     $total_products[$id_tax_rules_group.'_'.$id_address] = 0;
+                }
             }
 
             $product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
 
-            switch (Configuration::get('PS_ROUND_TYPE'))
-            {
+            switch (Configuration::get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
                     $product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_) * $quantity;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
@@ -360,35 +356,37 @@ class OrderSlipCore extends ObjectModel
 
         unset($product);
 
-        foreach ($total_products as $key => $price)
-        {
-            if (Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL)
-            {
+        foreach ($total_products as $key => $price) {
+            if (Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL) {
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int)$tmp[1], true);
                 $tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
                 $order_slip->{'total_products_tax_'.$inc_or_ex_2} += Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_);
-            }
-            else
+            } else {
                 $order_slip->{'total_products_tax_'.$inc_or_ex_2} += $price;
+            }
         }
 
         $order_slip->{'total_products_tax_'.$inc_or_ex_2} -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
         $order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_1};
         $order_slip->shipping_cost_amount = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
 
-        if ((float)$amount && !$amount_choosen)
+        if ((float)$amount && !$amount_choosen) {
             $order_slip->order_slip_type = 1;
-        if (((float)$amount && $amount_choosen) || $order_slip->shipping_cost_amount > 0)
+        }
+        if (((float)$amount && $amount_choosen) || $order_slip->shipping_cost_amount > 0) {
             $order_slip->order_slip_type = 2;
+        }
 
-        if (!$order_slip->add())
+        if (!$order_slip->add()) {
             return false;
+        }
 
         $res = true;
 
-        foreach ($product_list as $product)
+        foreach ($product_list as $product) {
             $res &= $order_slip->addProductOrderSlip($product);
+        }
 
         return $res;
     }
@@ -419,8 +417,9 @@ class OrderSlipCore extends ObjectModel
         $orderSlip->shipping_cost_amount = (float)$shipping_cost_amount;
         $orderSlip->conversion_rate = $currency->conversion_rate;
         $orderSlip->partial = 1;
-        if (!$orderSlip->add())
+        if (!$orderSlip->add()) {
             return false;
+        }
 
         $orderSlip->addPartialSlipDetail($order_detail_list);
         return true;
@@ -428,19 +427,21 @@ class OrderSlipCore extends ObjectModel
 
     public function addPartialSlipDetail($order_detail_list)
     {
-        foreach ($order_detail_list as $id_order_detail => $tab)
-        {
+        foreach ($order_detail_list as $id_order_detail => $tab) {
             $order_detail = new OrderDetail($id_order_detail);
             $order_slip_resume = OrderSlip::getProductSlipResume($id_order_detail);
 
-            if ($tab['amount'] + $order_slip_resume['amount_tax_incl'] > $order_detail->total_price_tax_incl)
+            if ($tab['amount'] + $order_slip_resume['amount_tax_incl'] > $order_detail->total_price_tax_incl) {
                 $tab['amount'] = $order_detail->total_price_tax_incl - $order_slip_resume['amount_tax_incl'];
+            }
 
-            if ($tab['amount'] == 0)
+            if ($tab['amount'] == 0) {
                 continue;
+            }
 
-            if ($tab['quantity'] + $order_slip_resume['product_quantity'] > $order_detail->product_quantity)
+            if ($tab['quantity'] + $order_slip_resume['product_quantity'] > $order_detail->product_quantity) {
                 $tab['quantity'] = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
+            }
 
             $tab['amount_tax_excl'] = $tab['amount_tax_incl'] = $tab['amount'];
 
@@ -450,23 +451,20 @@ class OrderSlipCore extends ObjectModel
 				WHERE `id_order_detail` = '.(int)$id_order_detail
             );
 
-            if ($id_tax > 0)
-            {
+            if ($id_tax > 0) {
                 $rate = (float)Db::getInstance()->getValue('
 					SELECT `rate`
 					FROM `'._DB_PREFIX_.'tax`
 					WHERE `id_tax` = '.(int)$id_tax
                 );
 
-                if ($rate > 0)
-                {
+                if ($rate > 0) {
                     $rate = 1 + ($rate / 100);
                     $tab['amount_tax_excl'] = $tab['amount_tax_excl'] / $rate;
                 }
             }
 
-            if ($tab['quantity'] > 0 && $tab['quantity'] > $order_detail->product_quantity_refunded)
-            {
+            if ($tab['quantity'] > 0 && $tab['quantity'] > $order_detail->product_quantity_refunded) {
                 $order_detail->product_quantity_refunded = $tab['quantity'];
                 $order_detail->save();
             }
@@ -486,16 +484,16 @@ class OrderSlipCore extends ObjectModel
     public function getEcoTaxTaxesBreakdown()
     {
         $ecotax_detail = array();
-        foreach ($this->getOrdersSlipDetail((int)$this->id) as $order_slip_details)
-        {
-                $row = Db::getInstance()->getRow('
+        foreach ($this->getOrdersSlipDetail((int)$this->id) as $order_slip_details) {
+            $row = Db::getInstance()->getRow('
 					SELECT `ecotax_tax_rate` as `rate`, `ecotax` as `ecotax_tax_excl`, `ecotax` as `ecotax_tax_incl`, `product_quantity`
 					FROM `'._DB_PREFIX_.'order_detail`
 					WHERE `id_order_detail` = '.(int)$order_slip_details['id_order_detail']
                 );
 
-            if (!isset($ecotax_detail[$row['rate']]))
+            if (!isset($ecotax_detail[$row['rate']])) {
                 $ecotax_detail[$row['rate']] = array('ecotax_tax_incl' => 0, 'ecotax_tax_excl' => 0, 'rate' => $row['rate']);
+            }
 
             $ecotax_detail[$row['rate']]['ecotax_tax_incl'] += Tools::ps_round(($row['ecotax_tax_excl'] * $order_slip_details['product_quantity']) + ($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'] * $row['rate'] / 100), 2);
             $ecotax_detail[$row['rate']]['ecotax_tax_excl'] += Tools::ps_round($row['ecotax_tax_excl'] * $order_slip_details['product_quantity'], 2);
@@ -515,15 +513,15 @@ class OrderSlipCore extends ObjectModel
 
     public function setWsOrderSlipDetails($values)
     {
-        if (Db::getInstance()->execute('DELETE from `'._DB_PREFIX_.'order_slip_detail` where id_order_slip = '.(int)$this->id))
-        {
+        if (Db::getInstance()->execute('DELETE from `'._DB_PREFIX_.'order_slip_detail` where id_order_slip = '.(int)$this->id)) {
             $query = 'INSERT INTO `'._DB_PREFIX_.'order_slip_detail`(`id_order_slip`, `id_order_detail`, `product_quantity`, `amount_tax_excl`, `amount_tax_incl`) VALUES ';
 
-            foreach ($values as $value)
+            foreach ($values as $value) {
                 $query .= '('.(int)$this->id.', '.(int)$value['id_order_detail'].', '.(int)$value['product_quantity'].', '.
                     (isset($value['amount_tax_excl']) ? (float)$value['amount_tax_excl'] : 'NULL').', '.
                     (isset($value['amount_tax_incl']) ? (float)$value['amount_tax_incl'] : 'NULL').
                     '),';
+            }
             $query = rtrim($query, ',');
             Db::getInstance()->execute($query);
         }

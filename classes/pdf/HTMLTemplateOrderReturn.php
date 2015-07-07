@@ -62,8 +62,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
         $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         $formatted_invoice_address = '';
 
-        if ($this->order->id_address_delivery != $this->order->id_address_invoice)
-        {
+        if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $invoice_address = new Address((int)$this->order->id_address_invoice);
             $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         }

@@ -12,18 +12,17 @@ class Cart extends CartCore
     public function updateAddressId($id_address, $id_address_new)
     {
         $to_update = false;
-        if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address)
-        {
+        if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address) {
             $to_update = true;
             $this->id_address_invoice = $id_address_new;
         }
-        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address)
-        {
+        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
             $to_update = true;
             $this->id_address_delivery = $id_address_new;
         }
-        if ($to_update)
+        if ($to_update) {
             $this->update();
+        }
 
         $sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 		SET `id_address_delivery` = '.(int)$id_address_new.'
@@ -40,8 +39,9 @@ class Cart extends CartCore
 
     public function delete()
     {
-        if ($this->OrderExists()) //NOT delete a cart which is associated with an order
+        if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
             return false;
+        }
 
         $uploaded_files = Db::getInstance()->executeS('
 			SELECT cd.`value`
@@ -50,8 +50,7 @@ class Cart extends CartCore
 			WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id
         );
 
-        foreach ($uploaded_files as $must_unlink)
-        {
+        foreach ($uploaded_files as $must_unlink) {
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value'].'_small');
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
         }
@@ -71,8 +70,9 @@ class Cart extends CartCore
         );
 
         if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id)
-         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id))
+         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
             return false;
+        }
 
         return parent::delete();
     }

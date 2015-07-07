@@ -83,8 +83,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
         $formatted_delivery_address = '';
 
-        if ($this->order->id_address_delivery != $this->order->id_address_invoice)
-        {
+        if ($this->order->id_address_delivery != $this->order->id_address_invoice) {
             $delivery_address = new Address((int)$this->order->id_address_delivery);
             $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
         }
@@ -92,15 +91,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $customer = new Customer((int)$this->order->id_customer);
         $this->order->total_paid_tax_excl = $this->order->total_paid_tax_incl = $this->order->total_products = $this->order->total_products_wt = 0;
 
-        if ($this->order_slip->amount > 0)
-        {
-            foreach ($this->order->products as &$product)
-            {
+        if ($this->order_slip->amount > 0) {
+            foreach ($this->order->products as &$product) {
                 $product['total_price_tax_excl'] = $product['unit_price_tax_excl'] * $product['product_quantity'];
                 $product['total_price_tax_incl'] = $product['unit_price_tax_incl'] * $product['product_quantity'];
 
-                if ($this->order_slip->partial == 1)
-                {
+                if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
 						SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
 						WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
@@ -115,32 +111,34 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $this->order->total_paid_tax_excl = $this->order->total_products;
                 $this->order->total_paid_tax_incl = $this->order->total_products_wt;
             }
-        }
-        else
+        } else {
             $this->order->products = null;
+        }
 
         unset($product); // remove reference
 
-        if ($this->order_slip->shipping_cost == 0)
+        if ($this->order_slip->shipping_cost == 0) {
             $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
+        }
 
         $tax = new Tax();
         $tax->rate = $this->order->carrier_tax_rate;
         $tax_calculator = new TaxCalculator(array($tax));
         $tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
-        if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0)
-        {
-            if ($tax_excluded_display)
+        if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0) {
+            if ($tax_excluded_display) {
                 $this->order->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($this->order_slip->shipping_cost_amount), 2);
-            else
+            } else {
                 $this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
+            }
         }
 
-        if ($tax_excluded_display)
+        if ($tax_excluded_display) {
             $this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
-        else
+        } else {
             $this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
+        }
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
@@ -229,25 +227,24 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'ecotax_tax' => $this->order_slip->getEcoTaxTaxesBreakdown(),
         );
 
-        foreach ($breakdowns as $type => $bd)
-        {
-            if (empty($bd))
+        foreach ($breakdowns as $type => $bd) {
+            if (empty($bd)) {
                 unset($breakdowns[$type]);
+            }
         }
 
-        if (empty($breakdowns))
+        if (empty($breakdowns)) {
             $breakdowns = false;
-
-        if (isset($breakdowns['product_tax']))
-        {
-            foreach ($breakdowns['product_tax'] as &$bd)
-                $bd['total_tax_excl'] = $bd['total_price_tax_excl'];
         }
 
-        if (isset($breakdowns['ecotax_tax']))
-        {
-            foreach ($breakdowns['ecotax_tax'] as &$bd)
-            {
+        if (isset($breakdowns['product_tax'])) {
+            foreach ($breakdowns['product_tax'] as &$bd) {
+                $bd['total_tax_excl'] = $bd['total_price_tax_excl'];
+            }
+        }
+
+        if (isset($breakdowns['ecotax_tax'])) {
+            foreach ($breakdowns['ecotax_tax'] as &$bd) {
                 $bd['total_tax_excl'] = $bd['ecotax_tax_excl'];
                 $bd['total_amount'] = $bd['ecotax_tax_incl'] - $bd['ecotax_tax_excl'];
             }
@@ -267,13 +264,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $details = $this->order->getProductTaxesDetails();
 
-        if ($sum_composite_taxes)
-        {
+        if ($sum_composite_taxes) {
             $grouped_details = array();
-            foreach ($details as $row)
-            {
-                if (!isset($grouped_details[$row['id_order_detail']]))
-                {
+            foreach ($details as $row) {
+                if (!isset($grouped_details[$row['id_order_detail']])) {
                     $grouped_details[$row['id_order_detail']] = array(
                         'tax_rate' => 0,
                         'total_tax_base' => 0,
@@ -290,11 +284,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             $details = $grouped_details;
         }
 
-        foreach ($details as $row)
-        {
+        foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
-            if (!isset($breakdown[$rate]))
-            {
+            if (!isset($breakdown[$rate])) {
                 $breakdown[$rate] = array(
                     'total_price_tax_excl' => 0,
                     'total_amount' => 0,
@@ -307,8 +299,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             $breakdown[$rate]['total_amount'] += $row['total_amount'];
         }
 
-        foreach ($breakdown as $rate => $data)
-        {
+        foreach ($breakdown as $rate => $data) {
             $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
             $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
         }
@@ -345,23 +336,21 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $customer = new Customer((int)$this->order->id_customer);
         $tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
-        if ($tax_excluded_display)
-        {
+        if ($tax_excluded_display) {
             $total_tax_excl = $this->order_slip->shipping_cost_amount;
             $shipping_tax_amount = $tax_calculator->addTaxes($this->order_slip->shipping_cost_amount) - $total_tax_excl;
-        }
-        else
-        {
+        } else {
             $total_tax_excl = $tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount);
             $shipping_tax_amount = $this->order_slip->shipping_cost_amount - $total_tax_excl;
         }
 
-        if ($shipping_tax_amount > 0)
+        if ($shipping_tax_amount > 0) {
             $taxes_breakdown[] = array(
                 'rate' =>  $this->order->carrier_tax_rate,
                 'total_amount' => $shipping_tax_amount,
                 'total_tax_excl' => $total_tax_excl
             );
+        }
 
         return $taxes_breakdown;
     }

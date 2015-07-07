@@ -36,8 +36,7 @@ class Core_Foundation_Database_EntityRepository
         Core_Foundation_Database_EntityManager $entityManager,
         $tablesPrefix,
         Core_Foundation_Database_EntityMetaData $entityMetaData
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->db = $this->entityManager->getDatabase();
         $this->tablesPrefix = $tablesPrefix;

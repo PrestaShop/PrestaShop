@@ -28,8 +28,9 @@ function update_for_13version()
 {
     global $oldversion;
     
-    if (version_compare($oldversion, '1.4.0.1') >= 0)
-        return; // if the old version is a 1.4 version
+    if (version_compare($oldversion, '1.4.0.1') >= 0) {
+        return;
+    } // if the old version is a 1.4 version
     
     // Disable the Smarty 3
     // Disable the URL rewritting
@@ -37,22 +38,25 @@ function update_for_13version()
 
     $res = true;
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_FORCE_SMARTY_2\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` = \'PS_FORCE_SMARTY_2\'');
-    else
+    } else {
         $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_FORCE_SMARTY_2", "1")');
+    }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_REWRITING_SETTINGS\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` = \'PS_REWRITING_SETTINGS\'');
-    else
+    } else {
         $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_REWRITING_SETTINGS", "0")');
+    }
 
     $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_CANONICAL_REDIRECT\'');
-    if ($exist)
+    if ($exist) {
         $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` = \'PS_CANONICAL_REDIRECT\'');
-    else
+    } else {
         $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_CANONICAL_REDIRECT", "0")');
+    }
 
     return $res;
 }

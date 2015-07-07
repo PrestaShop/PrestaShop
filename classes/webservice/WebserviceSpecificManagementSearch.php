@@ -79,8 +79,9 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
      */
     public function manage()
     {
-        if (!isset($this->wsObject->urlFragments['query']) || !isset($this->wsObject->urlFragments['language']))
+        if (!isset($this->wsObject->urlFragments['query']) || !isset($this->wsObject->urlFragments['language'])) {
             throw new WebserviceException('You have to set both the \'language\' and \'query\' parameters to get a result', array(100, 400));
+        }
         $objects_products = array();
         $objects_categories = array();
         $objects_products['empty'] = new Product();
@@ -88,23 +89,26 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 
         $this->_resourceConfiguration = $objects_products['empty']->getWebserviceParameters();
 
-        if (!$this->wsObject->setFieldsToDisplay())
+        if (!$this->wsObject->setFieldsToDisplay()) {
             return false;
+        }
 
         $results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
         $categories = array();
-        foreach ($results as $result)
-        {
+        foreach ($results as $result) {
             $current = new Product($result['id_product']);
             $objects_products[] = $current;
             $categories_result = $current->getWsCategories();
-            foreach ($categories_result as $category_result)
-                foreach ($category_result as $id)
+            foreach ($categories_result as $category_result) {
+                foreach ($category_result as $id) {
                     $categories[] = $id;
+                }
+            }
         }
         $categories = array_unique($categories);
-        foreach ($categories as $id)
+        foreach ($categories as $id) {
             $objects_categories[] = new Category($id);
+        }
 
         $this->output .= $this->objOutput->getContent($objects_products, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
         // @todo allow fields of type category and product

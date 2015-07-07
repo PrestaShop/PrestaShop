@@ -35,13 +35,10 @@ define('_THEME_JS_DIR_',                _THEME_DIR_.'js/');
 define('_PS_THEME_OVERRIDE_DIR_',        _PS_THEME_DIR_.'override/');
 
 /* For mobile devices */
-if (file_exists(_PS_THEME_DIR_.'mobile/'))
-{
+if (file_exists(_PS_THEME_DIR_.'mobile/')) {
     define('_PS_THEME_MOBILE_DIR_',        _PS_THEME_DIR_.'mobile/');
     define('_THEME_MOBILE_DIR_',        _THEMES_DIR_._THEME_NAME_.'/mobile/');
-}
-else
-{
+} else {
     define('_PS_THEME_MOBILE_DIR_',        _PS_ROOT_DIR_.'/themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
     define('_THEME_MOBILE_DIR_',        __PS_BASE_URI__.'themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
 }

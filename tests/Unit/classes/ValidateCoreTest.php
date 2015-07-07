@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 use PHPUnit_Framework_TestCase;
 use Validate;
 
-class ValidateCoreTest extends PHPUnit_Framework_TestCase {
-
+class ValidateCoreTest extends PHPUnit_Framework_TestCase
+{
     /**
      * @dataProvider isIp2LongDataProvider
      */
@@ -102,12 +102,12 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
         // --- providers ---
 
         public function isIp2LongDataProvider()
-    {
-        return array(
+        {
+            return array(
             array(false, 'toto'),
             array(true, '123')
         );
-    }
+        }
 
     public function isMd5DataProvider()
     {
@@ -121,7 +121,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-        public function isSha1DataProvider()
+    public function isSha1DataProvider()
     {
         return array(
             array(1, sha1('SomeRandomString')),
@@ -176,7 +176,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-        public function trueFloatDataProvider()
+    public function trueFloatDataProvider()
     {
         return array(
             array(true, 12),

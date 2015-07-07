@@ -26,12 +26,15 @@
 function drop_module_non_unique_index()
 {
     $index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'module` WHERE Key_name = "name"');
-    if (is_array($index) && count($index))
+    if (is_array($index) && count($index)) {
         Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` DROP INDEX `name`');
+    }
     $tmp = Db::getInstance()->executeS('SHOW SESSION VARIABLES WHERE Variable_Name LIKE "old_alter_table" AND Value like "OFF"');
-    if (is_array($tmp) && $tmp)
+    if (is_array($tmp) && $tmp) {
         Db::getInstance()->execute('SET SESSION old_alter_table="ON"');
+    }
     Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` ADD UNIQUE `name` (`name`)');
-    if (is_array($tmp) && $tmp)
+    if (is_array($tmp) && $tmp) {
         Db::getInstance()->execute('SET SESSION old_alter_table="OFF"');
+    }
 }

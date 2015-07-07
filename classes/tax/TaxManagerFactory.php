@@ -42,11 +42,11 @@ class TaxManagerFactoryCore
     public static function getManager(Address $address, $type)
     {
         $cache_id = TaxManagerFactory::getCacheKey($address).'-'.$type;
-        if (!isset(TaxManagerFactory::$cache_tax_manager[$cache_id]))
-        {
+        if (!isset(TaxManagerFactory::$cache_tax_manager[$cache_id])) {
             $tax_manager = TaxManagerFactory::execHookTaxManagerFactory($address, $type);
-            if (!($tax_manager instanceof TaxManagerInterface))
+            if (!($tax_manager instanceof TaxManagerInterface)) {
                 $tax_manager = new TaxRulesTaxManager($address, $type);
+            }
 
             TaxManagerFactory::$cache_tax_manager[$cache_id] = $tax_manager;
         }
@@ -67,19 +67,18 @@ class TaxManagerFactoryCore
         $modules_infos = Hook::getModulesFromHook(Hook::getIdByName('taxManager'));
         $tax_manager = false;
 
-        foreach ($modules_infos as $module_infos)
-        {
+        foreach ($modules_infos as $module_infos) {
             $module_instance = Module::getInstanceByName($module_infos['name']);
-            if (is_callable(array($module_instance, 'hookTaxManager')))
-            {
+            if (is_callable(array($module_instance, 'hookTaxManager'))) {
                 $tax_manager = $module_instance->hookTaxManager(array(
                                                                 'address' => $address,
                                                                 'params' => $type
                                                             ));
             }
 
-            if ($tax_manager)
+            if ($tax_manager) {
                 break;
+            }
         }
 
         return $tax_manager;

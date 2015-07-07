@@ -35,8 +35,9 @@ abstract class ModuleGraphEngineCore extends Module
 
     public function install()
     {
-        if (!parent::install())
+        if (!parent::install()) {
             return false;
+        }
         return Configuration::updateValue('PS_STATS_RENDER', $this->name);
     }
 
@@ -51,11 +52,11 @@ abstract class ModuleGraphEngineCore extends Module
 	    ');
 
         $array_engines = array();
-        foreach ($result as $module)
-        {
+        foreach ($result as $module) {
             $instance = Module::getInstanceByName($module['name']);
-            if (!$instance)
+            if (!$instance) {
                 continue;
+            }
             $array_engines[$module['name']] = array($instance->displayName, $instance->description);
         }
 

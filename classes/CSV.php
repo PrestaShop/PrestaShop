@@ -59,11 +59,9 @@ class CSVCore
 
         $header_line = false;
 
-        foreach ($this->collection as $object)
-        {
+        foreach ($this->collection as $object) {
             $vars = get_object_vars($object);
-            if (!$header_line)
-            {
+            if (!$header_line) {
                 $this->output(array_keys($vars));
                 $header_line = true;
             }

@@ -221,8 +221,9 @@ class SupplyOrderDetailCore extends ObjectModel
         $this->price_te = Tools::ps_round((float)$this->unit_price_te * (int)$this->quantity_expected, 6);
 
         // calculates entry discount value
-        if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0)
+        if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0) {
             $this->discount_value_te = Tools::ps_round((float)$this->price_te * ($this->discount_rate / 100), 6);
+        }
 
         // calculates entry price with discount
         $this->price_with_discount_te = Tools::ps_round($this->price_te - $this->discount_value_te, 6);
@@ -244,8 +245,7 @@ class SupplyOrderDetailCore extends ObjectModel
      */
     public function applyGlobalDiscount($discount_rate)
     {
-        if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0)
-        {
+        if ($discount_rate != null && is_numeric($discount_rate) && (float)$discount_rate > 0) {
             // calculates new price, with global order discount, tax ecluded
             $discount_value = $this->price_with_discount_te - (($this->price_with_discount_te * (float)$discount_rate) / 100);
 
@@ -271,46 +271,59 @@ class SupplyOrderDetailCore extends ObjectModel
         /* required fields */
         $fields_required = $this->fieldsRequired;
 
-        if (isset(self::$fieldsRequiredDatabase[get_class($this)]))
+        if (isset(self::$fieldsRequiredDatabase[get_class($this)])) {
             $fields_required = array_merge(
                 $this->fieldsRequired,
                 self::$fieldsRequiredDatabase[get_class($this)]
             );
+        }
 
-        foreach ($fields_required as $field)
-            if (($value = $this->{$field}) == false && (string)$value != '0')
-                if (!$this->id || $field != 'passwd')
+        foreach ($fields_required as $field) {
+            if (($value = $this->{$field}) == false && (string)$value != '0') {
+                if (!$this->id || $field != 'passwd') {
                     $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities)
                                 .'</b> '.Tools::displayError('is required.');
+                }
+            }
+        }
 
         /* Checks maximum fields sizes */
-        foreach ($this->fieldsSize as $field => $max_length)
-            if ($value = $this->{$field} && Tools::strlen($value) > $max_length)
+        foreach ($this->fieldsSize as $field => $max_length) {
+            if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
                 $errors[] = sprintf(
                     Tools::displayError('%1$s is too long. Maximum length: %2$d'),
                     SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities),
                     $max_length
                 );
+            }
+        }
 
         /* Checks fields validity */
-        foreach ($this->fieldsValidate as $field => $function)
-            if ($value = $this->{$field})
-                if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired)))
+        foreach ($this->fieldsValidate as $field => $function) {
+            if ($value = $this->{$field}) {
+                if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
                     $errors[] = '<b>'.SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
-                elseif ($field == 'passwd')
-                        if ($value = Tools::getValue($field))
-                            $this->{$field} = Tools::encrypt($value);
-                    else
+                } elseif ($field == 'passwd') {
+                    if ($value = Tools::getValue($field)) {
+                        $this->{$field} = Tools::encrypt($value);
+                    } else {
                         $this->{$field} = $value;
+                    }
+                }
+            }
+        }
 
-        if ($this->quantity_expected <= 0)
+        if ($this->quantity_expected <= 0) {
             $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('quantity_expected', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+        }
 
-        if ($this->tax_rate < 0 || $this->tax_rate > 100)
+        if ($this->tax_rate < 0 || $this->tax_rate > 100) {
             $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('tax_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+        }
 
-        if ($this->discount_rate < 0 || $this->discount_rate > 100)
+        if ($this->discount_rate < 0 || $this->discount_rate > 100) {
             $errors[] = '<b>'.SupplyOrderDetail::displayFieldName('discount_rate', get_class($this)).'</b> '.Tools::displayError('is invalid.');
+        }
 
         return $errors;
     }
@@ -321,19 +334,18 @@ class SupplyOrderDetailCore extends ObjectModel
     public function hydrate(array $data, $id_lang = null)
     {
         $this->id_lang = $id_lang;
-        if (isset($data[$this->def['primary']]))
+        if (isset($data[$this->def['primary']])) {
             $this->id = $data[$this->def['primary']];
-        foreach ($data as $key => $value)
-        {
-            if (array_key_exists($key, $this))
-            {
+        }
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this)) {
                 // formats prices and floats
                 if ($this->def['fields'][$key]['validate'] == 'isFloat' ||
-                    $this->def['fields'][$key]['validate'] == 'isPrice')
+                    $this->def['fields'][$key]['validate'] == 'isPrice') {
                     $value = Tools::ps_round($value, 6);
+                }
                 $this->$key = $value;
             }
         }
     }
-
 }

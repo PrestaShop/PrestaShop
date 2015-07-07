@@ -132,8 +132,9 @@ class PDFGeneratorCore extends TCPDF
     public function setFontForLang($iso_lang)
     {
         $this->font = PDFGenerator::DEFAULT_FONT;
-        if (array_key_exists($iso_lang, $this->font_by_lang))
+        if (array_key_exists($iso_lang, $this->font_by_lang)) {
             $this->font = $this->font_by_lang[$iso_lang];
+        }
 
         $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
         $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
@@ -167,23 +168,25 @@ class PDFGeneratorCore extends TCPDF
      */
     public function render($filename, $display = true)
     {
-        if (empty($filename))
+        if (empty($filename)) {
             throw new PrestaShopException('Missing filename.');
+        }
 
         $this->lastPage();
 
-        if ($display === true)
+        if ($display === true) {
             $output = 'D';
-        elseif ($display === false)
+        } elseif ($display === false) {
             $output = 'S';
-        elseif ($display == 'D')
+        } elseif ($display == 'D') {
             $output = 'D';
-        elseif ($display == 'S')
+        } elseif ($display == 'S') {
             $output = 'S';
-        elseif ($display == 'F')
+        } elseif ($display == 'F') {
             $output = 'F';
-        else
+        } else {
             $output = 'I';
+        }
 
         return $this->output($filename, $output);
     }
@@ -207,32 +210,38 @@ class PDFGeneratorCore extends TCPDF
     {
         $seed .= microtime();
 
-        if (function_exists('openssl_random_pseudo_bytes') && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN'))
-        {
+        if (function_exists('openssl_random_pseudo_bytes') && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
             // this is not used on windows systems because it is very slow for a know bug
             $seed .= openssl_random_pseudo_bytes(512);
-        }
-        else
-            for ($i = 0; $i < 23; ++$i)
+        } else {
+            for ($i = 0; $i < 23; ++$i) {
                 $seed .= uniqid('', true);
+            }
+        }
 
         $seed .= uniqid('', true);
         $seed .= rand();
         $seed .= __FILE__;
         $seed .= $this->bufferlen;
 
-        if (isset($_SERVER['REMOTE_ADDR']))
+        if (isset($_SERVER['REMOTE_ADDR'])) {
             $seed .= $_SERVER['REMOTE_ADDR'];
-        if (isset($_SERVER['HTTP_USER_AGENT']))
+        }
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
             $seed .= $_SERVER['HTTP_USER_AGENT'];
-        if (isset($_SERVER['HTTP_ACCEPT']))
+        }
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
             $seed .= $_SERVER['HTTP_ACCEPT'];
-        if (isset($_SERVER['HTTP_ACCEPT_ENCODING']))
+        }
+        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             $seed .= $_SERVER['HTTP_ACCEPT_ENCODING'];
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+        }
+        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $seed .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-        if (isset($_SERVER['HTTP_ACCEPT_CHARSET']))
+        }
+        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
             $seed .= $_SERVER['HTTP_ACCEPT_CHARSET'];
+        }
 
         $seed .= rand();
         $seed .= uniqid('', true);

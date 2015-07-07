@@ -51,7 +51,6 @@ class Core_Business_Email_EmailLister
 
         // Remove unwanted .html / .txt / .tpl / .php / . / ..
         foreach ($mail_directory as $mail) {
-
             if (strpos($mail->getFilename(), '.') !== false) {
                 $tmp = explode('.', $mail->getFilename());
 

@@ -30,8 +30,8 @@ use PHPUnit_Framework_TestCase;
 use Tax;
 use TaxCalculator;
 
-class TaxCalculatorCoreTest extends PHPUnit_Framework_TestCase {
-
+class TaxCalculatorCoreTest extends PHPUnit_Framework_TestCase
+{
     public function test_getTotalRate_OK()
     {
         $tax = new Tax();

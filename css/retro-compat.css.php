@@ -57,13 +57,13 @@ $css_files = array(
 
 $file = $_GET['file'];
 
-if (!array_key_exists($file, $css_files)) //check if file is a real prestashop native CSS
+if (!array_key_exists($file, $css_files)) { //check if file is a real prestashop native CSS
     die('file_not_found');
-else
+} else {
     $html = file_get_contents($css_files[$file]['new_file']);
+}
 
-if ($file == 'datepicker.css')
-{
+if ($file == 'datepicker.css') {
     $html = file_get_contents($css_folder.'ui/themes/base/jquery.ui.theme.css');
     $html .= file_get_contents($css_folder.'ui/themes/base/jquery.ui.datepicker.css');
     $html = str_replace('url(images', 'url(../ui/themes/base/images', $html);

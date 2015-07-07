@@ -36,8 +36,7 @@ function migrate_tabs_multi_shop()
     $tab_shop_group_active = false;
     
     //check if current configuration has more than one shop
-    if ($nbr_shop > 1)
-    {
+    if ($nbr_shop > 1) {
         Db::getInstance()->update('configuration', array('value' => true), 'name = \'PS_MULTISHOP_FEATURE_ACTIVE\'');
         $tab_shop_group_active = true;
     }

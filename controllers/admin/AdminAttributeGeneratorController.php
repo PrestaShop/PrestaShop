@@ -54,13 +54,11 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     protected function addAttribute($attributes, $price = 0, $weight = 0)
     {
-        foreach ($attributes as $attribute)
-        {
+        foreach ($attributes as $attribute) {
             $price += (float)preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
             $weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
         }
-        if ($this->product->id)
-        {
+        if ($this->product->id) {
             return array(
                 'id_product' => (int)$this->product->id,
                 'price' => (float)$price,
@@ -77,30 +75,32 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     protected static function createCombinations($list)
     {
-        if (count($list) <= 1)
+        if (count($list) <= 1) {
             return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
+        }
         $res = array();
         $first = array_pop($list);
-        foreach ($first as $attribute)
-        {
+        foreach ($first as $attribute) {
             $tab = AdminAttributeGeneratorController::createCombinations($list);
-            foreach ($tab as $to_add)
+            foreach ($tab as $to_add) {
                 $res[] = is_array($to_add) ? array_merge($to_add, array($attribute)) : array($to_add, $attribute);
+            }
         }
         return $res;
     }
 
     public function initProcess()
     {
-        if (!defined('PS_MASS_PRODUCT_CREATION'))
+        if (!defined('PS_MASS_PRODUCT_CREATION')) {
             define('PS_MASS_PRODUCT_CREATION', true);
+        }
 
-        if (Tools::isSubmit('generate'))
-        {
-            if ($this->tabAccess['edit'] === '1')
+        if (Tools::isSubmit('generate')) {
+            if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'generate';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
+            }
         }
         parent::initProcess();
     }
@@ -114,23 +114,21 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     public function processGenerate()
     {
-        if (!is_array(Tools::getValue('options')))
+        if (!is_array(Tools::getValue('options'))) {
             $this->errors[] = Tools::displayError('Please select at least one attribute.');
-        else
-        {
+        } else {
             $tab = array_values(Tools::getValue('options'));
-            if (count($tab) && Validate::isLoadedObject($this->product))
-            {
+            if (count($tab) && Validate::isLoadedObject($this->product)) {
                 AdminAttributeGeneratorController::setAttributesImpacts($this->product->id, $tab);
                 $this->combinations = array_values(AdminAttributeGeneratorController::createCombinations($tab));
                 $values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
 
                 // @since 1.5.0
-                if ($this->product->depends_on_stock == 0)
-                {
+                if ($this->product->depends_on_stock == 0) {
                     $attributes = Product::getProductAttributesIds($this->product->id, true);
-                    foreach ($attributes as $attribute)
+                    foreach ($attributes as $attribute) {
                         StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
+                    }
                 }
 
                 SpecificPriceRule::disableAnyApplication();
@@ -143,45 +141,47 @@ class AdminAttributeGeneratorControllerCore extends AdminController
                 Product::updateDefaultAttribute($this->product->id);
 
                 // @since 1.5.0
-                if ($this->product->depends_on_stock == 0)
-                {
+                if ($this->product->depends_on_stock == 0) {
                     $attributes = Product::getProductAttributesIds($this->product->id, true);
                     $quantity = (int)Tools::getValue('quantity');
-                    foreach ($attributes as $attribute)
-                        if (Shop::getContext() == Shop::CONTEXT_ALL)
-                        {
+                    foreach ($attributes as $attribute) {
+                        if (Shop::getContext() == Shop::CONTEXT_ALL) {
                             $shops_list = Shop::getShops();
-                            if (is_array($shops_list))
-                                foreach ($shops_list as $current_shop)
-                                    if (isset($current_shop['id_shop']) && (int)$current_shop['id_shop'] > 0)
+                            if (is_array($shops_list)) {
+                                foreach ($shops_list as $current_shop) {
+                                    if (isset($current_shop['id_shop']) && (int)$current_shop['id_shop'] > 0) {
                                         StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity, (int)$current_shop['id_shop']);
-                        }
-                        else
+                                    }
+                                }
+                            }
+                        } else {
                             StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity);
-                }
-                else
+                        }
+                    }
+                } else {
                     StockAvailable::synchronize($this->product->id);
+                }
 
                 SpecificPriceRule::enableAnyApplication();
                 SpecificPriceRule::applyAllRules(array((int)$this->product->id));
 
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
+            }
         }
     }
 
     protected static function setAttributesImpacts($id_product, $tab)
     {
         $attributes = array();
-        foreach ($tab as $group)
-            foreach ($group as $attribute)
-                {
-                    $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
-                    $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
-                    $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$price.', '.(float)$weight.')';
-                }
+        foreach ($tab as $group) {
+            foreach ($group as $attribute) {
+                $price = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+                $weight = preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
+                $attributes[] = '('.(int)$id_product.', '.(int)$attribute.', '.(float)$price.', '.(float)$weight.')';
+            }
+        }
 
         return Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
@@ -194,12 +194,10 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
         $attributes = array();
         $impacts = Product::getAttributesImpacts($this->product->id);
-        foreach ($combinations_groups as &$combination)
-        {
+        foreach ($combinations_groups as &$combination) {
             $target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
             $target = $combination;
-            if (isset($impacts[$combination['id_attribute']]))
-            {
+            if (isset($impacts[$combination['id_attribute']])) {
                 $target['price'] = $impacts[$combination['id_attribute']]['price'];
                 $target['weight'] = $impacts[$combination['id_attribute']]['weight'];
             }
@@ -230,8 +228,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     public function initContent()
     {
-        if (!Combination::isFeatureActive())
-        {
+        if (!Combination::isFeatureActive()) {
             $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
                     $this->l('Performance').'</a>';
             $this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
@@ -245,8 +242,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $attributes = Attribute::getAttributes(Context::getContext()->language->id, true);
         $attribute_js = array();
 
-        foreach ($attributes as $k => $attribute)
+        foreach ($attributes as $k => $attribute) {
             $attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
+        }
 
         $attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
         $this->product = new Product((int)Tools::getValue('id_product'));
