@@ -79,7 +79,7 @@ function reorderpositions()
 		foreach($result as $i => $categ)
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c 
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
-			SET `name` = \''.preg_replace('/^[0-9]+\./', '',$categ['name']).'\' 
+			SET `name` = \''.preg_replace('/^[0-9]+\./', '', $categ['name']).'\' 
 			WHERE c.id_category = '.(int)($categ['id_category']).' AND id_lang = \''.(int)($categ['id_lang']).'\'');
 	}
 	

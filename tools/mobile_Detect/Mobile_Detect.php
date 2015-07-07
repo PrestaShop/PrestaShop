@@ -632,7 +632,7 @@ class Mobile_Detect
         //Only save HTTP headers. In PHP land, that means only _SERVER vars that
         //start with HTTP_.
         foreach ($httpHeaders as $key => $value) {
-            if (substr($key,0,5) == 'HTTP_') {
+            if (substr($key, 0, 5) == 'HTTP_') {
                 $this->httpHeaders[$key] = $value;
             }
         }

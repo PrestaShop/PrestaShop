@@ -340,7 +340,7 @@ class OrderHistoryCore extends ObjectModel
 			$order->setDelivery();
 
 		// executes hook
-		Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os,'id_order' => (int)$order->id,), null, false, true, false, $order->id_shop);
+		Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id, ), null, false, true, false, $order->id_shop);
 
 		ShopUrl::resetMainDomainCache();
 	}

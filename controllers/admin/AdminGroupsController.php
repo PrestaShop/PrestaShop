@@ -232,7 +232,7 @@ class AdminGroupsControllerCore extends AdminController
 			'email' => array('title' => $this->l('Email address'), 'filter_key' => 'c!email', 'orderby' => true),
 			'birthday' => array('title' => $this->l('Birth date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
 			'date_add' => array('title' => $this->l('Registration date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active')
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status', 'type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active')
 		));
 		$this->_select = 'c.*, a.id_group';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';

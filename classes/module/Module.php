@@ -2387,10 +2387,10 @@ abstract class ModuleCore
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>'.$this->name.'</name>
-	<displayName><![CDATA['.str_replace('&amp;' , '&', Tools::htmlentitiesUTF8($this->displayName)).']]></displayName>
+	<displayName><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->displayName)).']]></displayName>
 	<version><![CDATA['.$this->version.']]></version>
-	<description><![CDATA['.str_replace('&amp;' , '&', Tools::htmlentitiesUTF8($this->description)).']]></description>
-	<author><![CDATA['.str_replace('&amp;' , '&', Tools::htmlentitiesUTF8($this->author)).']]></author>'
+	<description><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->description)).']]></description>
+	<author><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)).']]></author>'
 	.$author_uri.'
 	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
 	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>

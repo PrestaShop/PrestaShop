@@ -75,7 +75,7 @@ class AdminTrackingControllerCore extends AdminController
 			if (preg_match('#getCustomList(.+)#', $method_name, $matches))
 			{
 				$this->clearListOptions();
-				$this->content .= call_user_func(array($this,$matches[0]));
+				$this->content .= call_user_func(array($this, $matches[0]));
 			}
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

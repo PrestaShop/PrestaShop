@@ -52,7 +52,7 @@ function deactivate_custom_modules()
 	$nativeModules = $nativeModules->modules;
 	$arrNativeModules = array();
 	foreach ($nativeModules as $nativeModulesType)
-		if (in_array($nativeModulesType['type'],array('native','partner')))
+		if (in_array($nativeModulesType['type'], array('native', 'partner')))
 		{
 			$arrNativeModules[] = '""';
 			foreach ($nativeModulesType->module as $module)
@@ -62,7 +62,7 @@ function deactivate_custom_modules()
 	$arrNonNative = $db->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'module` m
-		WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
+		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
 
 	$uninstallMe = array("undefined-modules");
 	if (is_array($arrNonNative))

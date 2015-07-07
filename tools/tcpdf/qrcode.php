@@ -871,7 +871,7 @@ class QRcode {
 			$this->rsblocks[$blockNo]['eccLength'] = $el;
 			$ecc = $this->encode_rs_char($rs, $this->rsblocks[$blockNo]['data'], $ecc);
 			$this->rsblocks[$blockNo]['ecc'] = $ecc;
-			$this->ecccode = array_merge(array_slice($this->ecccode,0, $eccPos), $ecc);
+			$this->ecccode = array_merge(array_slice($this->ecccode, 0, $eccPos), $ecc);
 			$dataPos += $dl;
 			$eccPos += $el;
 			$blockNo++;
@@ -2270,7 +2270,7 @@ class QRcode {
 	 * @return array srctab
 	 */
 	 protected function qrstrset($srctab, $x, $y, $repl, $replLen=false) {
-		$srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl,0,$replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
+		$srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl, 0, $replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
 		return $srctab;
 	}
 
@@ -2551,7 +2551,7 @@ class QRcode {
 		$frame = $this->qrstrset($frame, 0, 8, $setPattern);
 		$frame = $this->qrstrset($frame, $width - 8, 8, $setPattern, 8);
 		$yOffset = $width - 8;
-		for ($y=0; $y < 8; ++$y,++$yOffset) {
+		for ($y=0; $y < 8; ++$y, ++$yOffset) {
 			$frame[$y][8] = "\x84";
 			$frame[$yOffset][8] = "\x84";
 		}
@@ -2797,7 +2797,7 @@ class QRcode {
 		}
 		$rs['iprim'] = (int)($iprim / $prim);
 		$rs['genpoly'][0] = 1;
-		for ($i = 0,$root=$fcr*$prim; $i < $nroots; $i++, $root += $prim) {
+		for ($i = 0, $root=$fcr*$prim; $i < $nroots; $i++, $root += $prim) {
 			$rs['genpoly'][$i+1] = 1;
 			// Multiply rs->genpoly[] by  @**(root + x)
 			for ($j = $i; $j > 0; --$j) {

@@ -297,7 +297,7 @@ class AdminSearchControllerCore extends AdminController
 			'birthday' => array('title' => $this->l('Birth date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
 			'date_add' => array('title' => $this->l('Registration date'), 'align' => 'center', 'type' => 'date', 'width' => 75),
 			'orders' => array('title' => $this->l('Orders'), 'align' => 'center', 'width' => 50),
-			'active' => array('title' => $this->l('Enabled'),'align' => 'center','active' => 'status','type' => 'bool', 'width' => 25),
+			'active' => array('title' => $this->l('Enabled'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25),
 		));
 	}
 

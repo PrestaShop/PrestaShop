@@ -576,7 +576,7 @@ class AdminCategoriesControllerCore extends AdminController
 					)
 				)
 			);
-			unset($this->fields_form['input'][2],$this->fields_form['input'][3]);
+			unset($this->fields_form['input'][2], $this->fields_form['input'][3]);
 		}
 		// Display this field only if multistore option is enabled AND there are several stores configured
 		if (Shop::isFeatureActive())
