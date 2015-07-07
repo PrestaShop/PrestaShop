@@ -2290,7 +2290,7 @@ class QRcode {
 	 * @param $level (int) error correction level
 	 * @return int ECC size (bytes)
 	 */
-	protected function getECCLength($version, $level){
+	protected function getECCLength($version, $level) {
 		return $this->capacity[$version][QRCAP_EC][$level];
 	}
 

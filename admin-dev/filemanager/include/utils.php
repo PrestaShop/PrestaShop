@@ -12,7 +12,7 @@ function deleteDir($dir) {
     return rmdir($dir);
 }
 
-function duplicate_file($old_path, $name){
+function duplicate_file($old_path, $name) {
     if(file_exists($old_path)){
 	$info=pathinfo($old_path);
 	$new_path=$info['dirname']."/".$name.".".$info['extension'];
@@ -21,7 +21,7 @@ function duplicate_file($old_path, $name){
     }
 }
 
-function rename_file($old_path, $name, $transliteration){
+function rename_file($old_path, $name, $transliteration) {
     $name=fix_filename($name, $transliteration);
     if(file_exists($old_path)){
 	$info=pathinfo($old_path);
@@ -31,7 +31,7 @@ function rename_file($old_path, $name, $transliteration){
     }
 }
 
-function rename_folder($old_path, $name, $transliteration){
+function rename_folder($old_path, $name, $transliteration) {
     $name=fix_filename($name, $transliteration);
     if(file_exists($old_path)){
 	$new_path=fix_dirname($old_path)."/".$name;
@@ -95,7 +95,7 @@ function foldersize($path) {
     return $total_size;
 }
 
-function create_folder($path=false, $path_thumbs=false){
+function create_folder($path=false, $path_thumbs=false) {
     $oldumask = umask(0);
     if ($path && !file_exists($path))
         mkdir($path, 0777, true); // or even 01777 so you get the sticky bit set
@@ -104,7 +104,7 @@ function create_folder($path=false, $path_thumbs=false){
     umask($oldumask);
 }
 
-function check_files_extensions_on_path($path, $ext){
+function check_files_extensions_on_path($path, $ext) {
     if(!is_dir($path)){
         $fileinfo = pathinfo($path);
         if (function_exists('mb_strtolower'))
@@ -139,7 +139,7 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $ext) {
     }
 }
 
-function fix_filename($str, $transliteration){
+function fix_filename($str, $transliteration) {
     if($transliteration){
 	if(function_exists('transliterator_transliterate'))
 	{
@@ -167,11 +167,11 @@ function fix_filename($str, $transliteration){
     return trim($str);
 }
 
-function fix_dirname($str){
+function fix_dirname($str) {
     return str_replace('~', ' ', dirname(str_replace(' ', '~', $str)));
 }
 
-function fix_strtoupper($str){
+function fix_strtoupper($str) {
     if(function_exists('mb_strtoupper'))
 	return mb_strtoupper($str);
     else
@@ -179,14 +179,14 @@ function fix_strtoupper($str){
 }
 
 
-function fix_strtolower($str){
+function fix_strtolower($str) {
     if(function_exists('mb_strtoupper'))
 	return mb_strtolower($str);
     else
 	return strtolower($str);
 }
 
-function fix_path($path, $transliteration){
+function fix_path($path, $transliteration) {
     $info=pathinfo($path);
     if (($s = strrpos($path, '/')) !== false) $s++;
     if (($e = strrpos($path, '.') - $s) !== strlen($info['filename']))
@@ -203,7 +203,7 @@ function fix_path($path, $transliteration){
 	return $str;
 }
 
-function base_url(){
+function base_url() {
   return sprintf(
     "%s://%s",
     isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
@@ -211,7 +211,7 @@ function base_url(){
   );
 }
 
-function config_loading($current_path, $fld){
+function config_loading($current_path, $fld) {
     if(file_exists($current_path.$fld.".config")){
 	require_once($current_path.$fld.".config");
 	return true;
@@ -225,7 +225,7 @@ function config_loading($current_path, $fld){
 }
 
 
-function image_check_memory_usage($img, $max_breedte, $max_hoogte){
+function image_check_memory_usage($img, $max_breedte, $max_hoogte) {
     if(file_exists($img)){
 	$K64 = 65536;    // number of bytes in 64K
 	$memory_usage = memory_get_usage();
@@ -258,7 +258,7 @@ function endsWith($haystack, $needle)
     return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
 }
 
-function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height){
+function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path, $relative_image_creation, $relative_path_from_current_pos, $relative_image_creation_name_to_prepend, $relative_image_creation_name_to_append, $relative_image_creation_width, $relative_image_creation_height, $fixed_image_creation, $fixed_path_from_filemanager, $fixed_image_creation_name_to_prepend, $fixed_image_creation_to_append, $fixed_image_creation_width, $fixed_image_creation_height) {
     //create relative thumbs
     $all_ok=true;
     if($relative_image_creation){

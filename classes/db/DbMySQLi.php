@@ -44,7 +44,7 @@ class DbMySQLiCore extends Db
 	 * @return mysqli
 	 * @throws PrestaShopDatabaseException
 	 */
-	public function	connect()
+	public function connect()
 	{
 		if (strpos($this->server, ':') !== false)
 		{
@@ -95,7 +95,7 @@ class DbMySQLiCore extends Db
 	 *
 	 * @see DbCore::disconnect()
 	 */
-	public function	disconnect()
+	public function disconnect()
 	{
 		@$this->link->close();
 	}
@@ -176,7 +176,7 @@ class DbMySQLiCore extends Db
 	 * @see DbCore::Insert_ID()
 	 * @return string|int
 	 */
-	public function	Insert_ID()
+	public function Insert_ID()
 	{
 		return $this->link->insert_id;
 	}
@@ -187,7 +187,7 @@ class DbMySQLiCore extends Db
 	 * @see DbCore::Affected_Rows()
 	 * @return int
 	 */
-	public function	Affected_Rows()
+	public function Affected_Rows()
 	{
 		return $this->link->affected_rows;
 	}

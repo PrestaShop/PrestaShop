@@ -373,7 +373,7 @@ class ImageCore extends ObjectModel
 	 * @param bool $direction Direction
 	 * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
 	 */
-	public function	positionImage($position, $direction)
+	public function positionImage($position, $direction)
 	{
 		Tools::displayAsDeprecated();
 

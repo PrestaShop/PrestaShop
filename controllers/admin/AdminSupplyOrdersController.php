@@ -1688,7 +1688,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 * method call when ajax request is made for search product to add to the order
 	 * @TODO - Update this method to retreive the reference, ean13, upc corresponding to a product attribute
 	 */
-	public function	ajaxProcessSearchProduct()
+	public function ajaxProcessSearchProduct()
 	{
 		// Get the search pattern
 		$pattern = pSQL(Tools::getValue('q', false));
