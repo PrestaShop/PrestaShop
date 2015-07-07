@@ -26,90 +26,90 @@
 
 class Core_Foundation_Database_EntityManager
 {
-	private $db;
-	private $configuration;
+    private $db;
+    private $configuration;
 
-	private $entityMetaData = array();
+    private $entityMetaData = array();
 
-	public function __construct(
+    public function __construct(
         Core_Foundation_Database_DatabaseInterface $db,
         Core_Business_ConfigurationInterface $configuration
     )
     {
-		$this->db = $db;
-		$this->configuration = $configuration;
+        $this->db = $db;
+        $this->configuration = $configuration;
     }
 
-	/**
-	 * Return current database object used
-	 * @return Core_Foundation_Database_DatabaseInterface
-	 */
-	public function getDatabase()
-	{
-		return $this->db;
-	}
+    /**
+     * Return current database object used
+     * @return Core_Foundation_Database_DatabaseInterface
+     */
+    public function getDatabase()
+    {
+        return $this->db;
+    }
 
-	/**
-	 * Return current repository used
-	 * @param $className
-	 * @return mixed
-	 */
-	public function getRepository($className)
-	{
+    /**
+     * Return current repository used
+     * @param $className
+     * @return mixed
+     */
+    public function getRepository($className)
+    {
         if (is_callable(array($className, 'getRepositoryClassName'))) {
             $repositoryClass = call_user_func(array($className, 'getRepositoryClassName'));
         } else {
             $repositoryClass = null;
         }
 
-		if (!$repositoryClass) {
-			$repositoryClass = 'Core_Foundation_Database_EntityRepository';
-		}
+        if (!$repositoryClass) {
+            $repositoryClass = 'Core_Foundation_Database_EntityRepository';
+        }
 
         $repository = new $repositoryClass(
-			$this,
-			$this->configuration->get('_DB_PREFIX_'),
-			$this->getEntityMetaData($className)
-		);
+            $this,
+            $this->configuration->get('_DB_PREFIX_'),
+            $this->getEntityMetaData($className)
+        );
 
-		return $repository;
-	}
+        return $repository;
+    }
 
-	/**
-	 * Return entity's meta data
-	 * @param $className
-	 * @return mixed
-	 * @throws Adapter_Exception
-	 */
-	public function getEntityMetaData($className)
-	{
-		if (!array_key_exists($className, $this->entityMetaData)) {
-			$metaDataRetriever = new Adapter_EntityMetaDataRetriever;
-			$this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
-		}
+    /**
+     * Return entity's meta data
+     * @param $className
+     * @return mixed
+     * @throws Adapter_Exception
+     */
+    public function getEntityMetaData($className)
+    {
+        if (!array_key_exists($className, $this->entityMetaData)) {
+            $metaDataRetriever = new Adapter_EntityMetaDataRetriever;
+            $this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
+        }
 
-		return $this->entityMetaData[$className];
-	}
+        return $this->entityMetaData[$className];
+    }
 
-	/**
-	 * Flush entity to DB
-	 * @param Core_Foundation_Database_EntityInterface $entity
-	 * @return $this
-	 */
-	public function save(Core_Foundation_Database_EntityInterface $entity)
-	{
-		$entity->save();
-		return $this;
-	}
+    /**
+     * Flush entity to DB
+     * @param Core_Foundation_Database_EntityInterface $entity
+     * @return $this
+     */
+    public function save(Core_Foundation_Database_EntityInterface $entity)
+    {
+        $entity->save();
+        return $this;
+    }
 
-	/**
-	 * DElete entity from DB
-	 * @param Core_Foundation_Database_EntityInterface $entity
-	 * @return $this
-	 */
-	public function delete(Core_Foundation_Database_EntityInterface $entity)
-	{
-		$entity->delete();
-		return $this;
-	}
+    /**
+     * DElete entity from DB
+     * @param Core_Foundation_Database_EntityInterface $entity
+     * @return $this
+     */
+    public function delete(Core_Foundation_Database_EntityInterface $entity)
+    {
+        $entity->delete();
+        return $this;
+    }
 }

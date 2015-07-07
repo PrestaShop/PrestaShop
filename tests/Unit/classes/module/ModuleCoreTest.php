@@ -38,55 +38,55 @@ class FakeModule extends Module {
 
 class ModuleCoreTest extends PHPUnit_Framework_TestCase
 {
-	private $error_string_res = '<div class="bootstrap">
+    private $error_string_res = '<div class="bootstrap">
 										<div class="module_error alert alert-danger" >
 											<button  type="button" class="close" data-dismiss="alert">&times;</button>This is an error!
 										</div>
 									</div>';
 
-	private $error_array_res = '<div class="bootstrap">
+    private $error_array_res = '<div class="bootstrap">
 									<div class="module_error alert alert-danger" >
 										<button type="button" class="close" data-dismiss="alert">&times;</button>
 										<ul><li>Error 1</li><li>Error 2</li><li>Error 3</li></ul>
 									</div>
 								</div>';
 
-	public function testDisplayError_shouldReturnSimpleError()
-	{
-		// given
-		$error = 'This is an error!';
-		$module = new FakeModule();
+    public function testDisplayError_shouldReturnSimpleError()
+    {
+        // given
+        $error = 'This is an error!';
+        $module = new FakeModule();
 
-		// when
-		$html_output = $module->displayError($error);
+        // when
+        $html_output = $module->displayError($error);
 
-		// then
-		$this->assertHtmlEquals($this->error_string_res, $html_output);
-	}
+        // then
+        $this->assertHtmlEquals($this->error_string_res, $html_output);
+    }
 
-	public function testDisplayError_shouldReturnMultipleErrors()
-	{
-		// given
-		$errors = array(
-			'Error 1',
-			'Error 2',
-			'Error 3'
-		);
+    public function testDisplayError_shouldReturnMultipleErrors()
+    {
+        // given
+        $errors = array(
+            'Error 1',
+            'Error 2',
+            'Error 3'
+        );
 
-		$module = new FakeModule();
+        $module = new FakeModule();
 
-		// when
-		$html_output = $module->displayError($errors);
+        // when
+        $html_output = $module->displayError($errors);
 
-		// then
-		$this->assertHtmlEquals($this->error_array_res, $html_output);
-	}
+        // then
+        $this->assertHtmlEquals($this->error_array_res, $html_output);
+    }
 
-	/**
-	 * @param $html_output
-	 */
-	public function assertHtmlEquals($expected, $html_output)
-	{
-		$this->assertEquals(Media::minifyHTML($expected), Media::minifyHTML($html_output));
-	}
+    /**
+     * @param $html_output
+     */
+    public function assertHtmlEquals($expected, $html_output)
+    {
+        $this->assertEquals(Media::minifyHTML($expected), Media::minifyHTML($html_output));
+    }
 }

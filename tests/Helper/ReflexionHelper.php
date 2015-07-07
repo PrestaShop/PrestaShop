@@ -45,38 +45,38 @@ use PHPUnit_Framework_TestCase;
 class ReflexionHelper extends PHPUnit_Framework_TestCase
 {
 
-	public static function invoke($object, $method)
-	{
-		$params = array_slice(func_get_args(), 2);
+    public static function invoke($object, $method)
+    {
+        $params = array_slice(func_get_args(), 2);
 
-		$reflexion = new ReflectionClass(self::getClass($object));
-		$reflexion_method = $reflexion->getMethod($method);
-		$reflexion_method->setAccessible(true);
+        $reflexion = new ReflectionClass(self::getClass($object));
+        $reflexion_method = $reflexion->getMethod($method);
+        $reflexion_method->setAccessible(true);
 
-		return $reflexion_method->invokeArgs($object, $params);
-	}
+        return $reflexion_method->invokeArgs($object, $params);
+    }
 
-	public static function getProperty($object, $property)
-	{
-		$reflexion = new ReflectionClass(self::getClass($object));
-		$reflexion_property = $reflexion->getProperty($property);
-		$reflexion_property->setAccessible(true);
+    public static function getProperty($object, $property)
+    {
+        $reflexion = new ReflectionClass(self::getClass($object));
+        $reflexion_property = $reflexion->getProperty($property);
+        $reflexion_property->setAccessible(true);
 
-		return $reflexion_property->getValue($object);
-	}
+        return $reflexion_property->getValue($object);
+    }
 
-	public static function setProperty($object, $property, $value)
-	{
-		$reflexion = new ReflectionClass(self::getClass($object));
-		$reflexion_property = $reflexion->getProperty($property);
-		$reflexion_property->setAccessible(true);
+    public static function setProperty($object, $property, $value)
+    {
+        $reflexion = new ReflectionClass(self::getClass($object));
+        $reflexion_property = $reflexion->getProperty($property);
+        $reflexion_property->setAccessible(true);
 
-		$reflexion_property->setValue($object, $value);
-	}
+        $reflexion_property->setValue($object, $value);
+    }
 
-	public static function getClass($object)
-	{
-		$namespace = explode('\\', get_class($object));
-		return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));
-	}
+    public static function getClass($object)
+    {
+        $namespace = explode('\\', get_class($object));
+        return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));
+    }
 }

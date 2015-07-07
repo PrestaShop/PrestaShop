@@ -29,70 +29,70 @@
  */
 class TaxRulesTaxManagerCore implements TaxManagerInterface
 {
-	public $address;
-	public $type;
-	public $tax_calculator;
+    public $address;
+    public $type;
+    public $tax_calculator;
 
-	/**
-	 * @var Core_Business_ConfigurationInterface
-	 */
-	private $configurationManager;
+    /**
+     * @var Core_Business_ConfigurationInterface
+     */
+    private $configurationManager;
 
-	/**
-	 *
-	 * @param Address $address
-	 * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
-	 */
-	public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
-	{
-		if ($configurationManager === null)
-			$this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
-		else
-			$this->configurationManager = $configurationManager;
+    /**
+     *
+     * @param Address $address
+     * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+     */
+    public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
+    {
+        if ($configurationManager === null)
+            $this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        else
+            $this->configurationManager = $configurationManager;
 
-		$this->address = $address;
-		$this->type = $type;
-	}
+        $this->address = $address;
+        $this->type = $type;
+    }
 
-	/**
-	* Returns true if this tax manager is available for this address
-	*
-	* @return bool
-	*/
-	public static function isAvailableForThisAddress(Address $address)
-	{
-		return true; // default manager, available for all addresses
-	}
+    /**
+    * Returns true if this tax manager is available for this address
+    *
+    * @return bool
+    */
+    public static function isAvailableForThisAddress(Address $address)
+    {
+        return true; // default manager, available for all addresses
+    }
 
-	/**
-	* Return the tax calculator associated to this address
-	*
-	* @return TaxCalculator
-	*/
-	public function getTaxCalculator()
-	{
-		static $tax_enabled = null;
+    /**
+    * Return the tax calculator associated to this address
+    *
+    * @return TaxCalculator
+    */
+    public function getTaxCalculator()
+    {
+        static $tax_enabled = null;
 
-		if (isset($this->tax_calculator))
-			return $this->tax_calculator;
+        if (isset($this->tax_calculator))
+            return $this->tax_calculator;
 
-		if ($tax_enabled === null)
-			$tax_enabled = $this->configurationManager->get('PS_TAX');
+        if ($tax_enabled === null)
+            $tax_enabled = $this->configurationManager->get('PS_TAX');
 
-		if (!$tax_enabled)
-			return new TaxCalculator(array());
+        if (!$tax_enabled)
+            return new TaxCalculator(array());
 
-		$taxes = array();
-		$postcode = 0;
+        $taxes = array();
+        $postcode = 0;
 
-		if (!empty($this->address->postcode))
-			$postcode = $this->address->postcode;
+        if (!empty($this->address->postcode))
+            $postcode = $this->address->postcode;
 
-		$cache_id = (int)$this->address->id_country.'-'.(int)$this->address->id_state.'-'.$postcode.'-'.(int)$this->type;
+        $cache_id = (int)$this->address->id_country.'-'.(int)$this->address->id_state.'-'.$postcode.'-'.(int)$this->type;
 
-		if (!Cache::isStored($cache_id))
-		{
-			$rows = Db::getInstance()->executeS('
+        if (!Cache::isStored($cache_id))
+        {
+            $rows = Db::getInstance()->executeS('
 				SELECT tr.*
 				FROM `'._DB_PREFIX_.'tax_rule` tr
 				JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
@@ -104,30 +104,30 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 					OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \''.pSQL($postcode).'\')))
 				ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC');
 
-			$behavior = 0;
-			$first_row = true;
+            $behavior = 0;
+            $first_row = true;
 
-			foreach ($rows as $row)
-			{
-				$tax = new Tax((int)$row['id_tax']);
+            foreach ($rows as $row)
+            {
+                $tax = new Tax((int)$row['id_tax']);
 
-				$taxes[] = $tax;
+                $taxes[] = $tax;
 
-				// the applied behavior correspond to the most specific rules
-				if ($first_row)
-				{
-					$behavior = $row['behavior'];
-					$first_row = false;
-				}
+                // the applied behavior correspond to the most specific rules
+                if ($first_row)
+                {
+                    $behavior = $row['behavior'];
+                    $first_row = false;
+                }
 
-				if ($row['behavior'] == 0)
-					break;
-			}
-			$result = new TaxCalculator($taxes, $behavior);
-			Cache::store($cache_id, $result);
-			return $result;
-		}
+                if ($row['behavior'] == 0)
+                    break;
+            }
+            $result = new TaxCalculator($taxes, $behavior);
+            Cache::store($cache_id, $result);
+            return $result;
+        }
 
-		return Cache::retrieve($cache_id);
-	}
+        return Cache::retrieve($cache_id);
+    }
 }

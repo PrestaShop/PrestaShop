@@ -14,52 +14,52 @@ function deleteDir($dir) {
 
 function duplicate_file($old_path, $name) {
     if(file_exists($old_path)){
-	$info=pathinfo($old_path);
-	$new_path=$info['dirname']."/".$name.".".$info['extension'];
-	if(file_exists($new_path)) return false;
-	return copy($old_path, $new_path);
+    $info=pathinfo($old_path);
+    $new_path=$info['dirname']."/".$name.".".$info['extension'];
+    if(file_exists($new_path)) return false;
+    return copy($old_path, $new_path);
     }
 }
 
 function rename_file($old_path, $name, $transliteration) {
     $name=fix_filename($name, $transliteration);
     if(file_exists($old_path)){
-	$info=pathinfo($old_path);
-	$new_path=$info['dirname']."/".$name.".".$info['extension'];
-	if(file_exists($new_path)) return false;
-	return rename($old_path, $new_path);
+    $info=pathinfo($old_path);
+    $new_path=$info['dirname']."/".$name.".".$info['extension'];
+    if(file_exists($new_path)) return false;
+    return rename($old_path, $new_path);
     }
 }
 
 function rename_folder($old_path, $name, $transliteration) {
     $name=fix_filename($name, $transliteration);
     if(file_exists($old_path)){
-	$new_path=fix_dirname($old_path)."/".$name;
-	if(file_exists($new_path)) return false;
-	return rename($old_path, $new_path);
+    $new_path=fix_dirname($old_path)."/".$name;
+    if(file_exists($new_path)) return false;
+    return rename($old_path, $new_path);
     }
 }
 
 function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight="") {
     if(image_check_memory_usage($imgfile, $newwidth, $newheight)){
-	require_once('php_image_magician.php');
-	$magicianObj = new imageLib($imgfile);
-	$magicianObj -> resizeImage($newwidth, $newheight, 'crop');
-	$magicianObj -> saveImage($imgthumb, 80);
-	return true;
+    require_once('php_image_magician.php');
+    $magicianObj = new imageLib($imgfile);
+    $magicianObj -> resizeImage($newwidth, $newheight, 'crop');
+    $magicianObj -> saveImage($imgthumb, 80);
+    return true;
     }
     return false;
 }
 
 function create_img($imgfile, $imgthumb, $newwidth, $newheight="") {
     if(image_check_memory_usage($imgfile, $newwidth, $newheight)){
-	require_once('php_image_magician.php');
-	$magicianObj = new imageLib($imgfile);
-	$magicianObj -> resizeImage($newwidth, $newheight, 'auto');
-	$magicianObj -> saveImage($imgthumb, 80);
-	return true;
+    require_once('php_image_magician.php');
+    $magicianObj = new imageLib($imgfile);
+    $magicianObj -> resizeImage($newwidth, $newheight, 'auto');
+    $magicianObj -> saveImage($imgthumb, 80);
+    return true;
     }else{
-	return false;
+    return false;
     }
 }
 
@@ -141,16 +141,16 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $ext) {
 
 function fix_filename($str, $transliteration) {
     if($transliteration){
-	if(function_exists('transliterator_transliterate'))
-	{
-	   $str = transliterator_transliterate('Accents-Any', $str);
-	}
-	else
-	{
-	   $str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
-	}
+    if(function_exists('transliterator_transliterate'))
+    {
+       $str = transliterator_transliterate('Accents-Any', $str);
+    }
+    else
+    {
+       $str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
+    }
 
-	$str = preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str);
+    $str = preg_replace("/[^a-zA-Z0-9\.\[\]_| -]/", '', $str);
     }
 
     $str=str_replace(array('"', "'", "/", "\\"), "", $str);
@@ -173,17 +173,17 @@ function fix_dirname($str) {
 
 function fix_strtoupper($str) {
     if(function_exists('mb_strtoupper'))
-	return mb_strtoupper($str);
+    return mb_strtoupper($str);
     else
-	return strtoupper($str);
+    return strtoupper($str);
 }
 
 
 function fix_strtolower($str) {
     if(function_exists('mb_strtoupper'))
-	return mb_strtolower($str);
+    return mb_strtolower($str);
     else
-	return strtolower($str);
+    return strtolower($str);
 }
 
 function fix_path($path, $transliteration) {
@@ -198,9 +198,9 @@ function fix_path($path, $transliteration) {
 
     $str=fix_filename($info['filename'], $transliteration);
     if($tmp_path!="")
-	return $tmp_path.DIRECTORY_SEPARATOR.$str;
+    return $tmp_path.DIRECTORY_SEPARATOR.$str;
     else
-	return $str;
+    return $str;
 }
 
 function base_url() {
@@ -213,12 +213,12 @@ function base_url() {
 
 function config_loading($current_path, $fld) {
     if(file_exists($current_path.$fld.".config")){
-	require_once($current_path.$fld.".config");
-	return true;
+    require_once($current_path.$fld.".config");
+    return true;
     }
     echo "!!!!".$parent=fix_dirname($fld);
     if($parent!="." && !empty($parent)){
-	config_loading($current_path, $parent);
+    config_loading($current_path, $parent);
     }
 
     return false;
@@ -227,16 +227,16 @@ function config_loading($current_path, $fld) {
 
 function image_check_memory_usage($img, $max_breedte, $max_hoogte) {
     if(file_exists($img)){
-	$K64 = 65536;    // number of bytes in 64K
-	$memory_usage = memory_get_usage();
-	$memory_limit = abs(intval(str_replace('M', '', ini_get('memory_limit'))*1024*1024));
-	$image_properties = getimagesize($img);
-	$image_width = $image_properties[0];
-	$image_height = $image_properties[1];
-	$image_bits = $image_properties['bits'];
-	$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits)  * 2);
-	$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits) * 2);
-	$memory_needed = intval($memory_usage + $image_memory_usage + $thumb_memory_usage);
+    $K64 = 65536;    // number of bytes in 64K
+    $memory_usage = memory_get_usage();
+    $memory_limit = abs(intval(str_replace('M', '', ini_get('memory_limit'))*1024*1024));
+    $image_properties = getimagesize($img);
+    $image_width = $image_properties[0];
+    $image_height = $image_properties[1];
+    $image_bits = $image_properties['bits'];
+    $image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits)  * 2);
+    $thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits) * 2);
+    $memory_needed = intval($memory_usage + $image_memory_usage + $thumb_memory_usage);
 
         if($memory_needed > $memory_limit){
                 ini_set('memory_limit', (intval($memory_needed/1024/1024)+5) . 'M');
@@ -248,8 +248,8 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte) {
         }else{
             return true;
         }
-	    }else{
-	    return false;
+        }else{
+        return false;
     }
 }
 
@@ -262,26 +262,26 @@ function new_thumbnails_creation($targetPath, $targetFile, $name, $current_path,
     //create relative thumbs
     $all_ok=true;
     if($relative_image_creation){
-	foreach($relative_path_from_current_pos as $k=>$path){
-	    if($path!="" && $path[strlen($path)-1]!="/") $path.="/";
-	    if (!file_exists($targetPath.$path)) create_folder($targetPath.$path, false);
-	    $info=pathinfo($name);
-	    if(!endsWith($targetPath, $path))
-		if(!create_img($targetFile, $targetPath.$path.$relative_image_creation_name_to_prepend[$k].$info['filename'].$relative_image_creation_name_to_append[$k].".".$info['extension'], $relative_image_creation_width[$k], $relative_image_creation_height[$k]))
-		    $all_ok=false;
-	}
+    foreach($relative_path_from_current_pos as $k=>$path){
+        if($path!="" && $path[strlen($path)-1]!="/") $path.="/";
+        if (!file_exists($targetPath.$path)) create_folder($targetPath.$path, false);
+        $info=pathinfo($name);
+        if(!endsWith($targetPath, $path))
+        if(!create_img($targetFile, $targetPath.$path.$relative_image_creation_name_to_prepend[$k].$info['filename'].$relative_image_creation_name_to_append[$k].".".$info['extension'], $relative_image_creation_width[$k], $relative_image_creation_height[$k]))
+            $all_ok=false;
+    }
     }
 
     //create fixed thumbs
     if($fixed_image_creation){
-	foreach($fixed_path_from_filemanager as $k=>$path){
-	    if($path!="" && $path[strlen($path)-1]!="/") $path.="/";
-	    $base_dir=$path.substr_replace($targetPath, '', 0, strlen($current_path));
-	    if (!file_exists($base_dir)) create_folder($base_dir, false);
-	    $info=pathinfo($name);
-	    if(!create_img($targetFile, $base_dir.$fixed_image_creation_name_to_prepend[$k].$info['filename'].$fixed_image_creation_to_append[$k].".".$info['extension'], $fixed_image_creation_width[$k], $fixed_image_creation_height[$k]))
-		$all_ok=false;
-	}
+    foreach($fixed_path_from_filemanager as $k=>$path){
+        if($path!="" && $path[strlen($path)-1]!="/") $path.="/";
+        $base_dir=$path.substr_replace($targetPath, '', 0, strlen($current_path));
+        if (!file_exists($base_dir)) create_folder($base_dir, false);
+        $info=pathinfo($name);
+        if(!create_img($targetFile, $base_dir.$fixed_image_creation_name_to_prepend[$k].$info['filename'].$fixed_image_creation_to_append[$k].".".$info['extension'], $fixed_image_creation_width[$k], $fixed_image_creation_height[$k]))
+        $all_ok=false;
+    }
     }
     return $all_ok;
 }

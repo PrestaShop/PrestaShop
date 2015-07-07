@@ -83,7 +83,7 @@ class DatabaseDump
             escapeshellarg($executable),
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
-			'-h', escapeshellarg($this->host),
+            '-h', escapeshellarg($this->host),
         );
 
         if ($this->password)

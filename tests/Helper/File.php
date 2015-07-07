@@ -29,52 +29,52 @@ namespace PrestaShop\PrestaShop\Tests\Helper;
 class File
 {
 
-	/**
-	 * Recursivly copy a directory
-	 *
-	 * @var $src the source path (eg. /home/dir/to/copy)
-	 * @var $dst the destination path (eg. /home/)
-	 */
-	public static function recurseCopy($src, $dst)
-	{
-		$dirp = opendir($src);
-		@mkdir($dst);
-		$file = readdir($dirp);
-		while ($file !== false)
-		{
-			if ($file != '.' && $file != '..')
-			{
-				if (is_dir($src.'/'.$file))
-					File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
-				else
-					copy($src.'/'.$file, $dst.'/'.$file);
-			}
-			$file = readdir($dirp);
-		}
-		closedir($dirp);
-	}
+    /**
+     * Recursivly copy a directory
+     *
+     * @var $src the source path (eg. /home/dir/to/copy)
+     * @var $dst the destination path (eg. /home/)
+     */
+    public static function recurseCopy($src, $dst)
+    {
+        $dirp = opendir($src);
+        @mkdir($dst);
+        $file = readdir($dirp);
+        while ($file !== false)
+        {
+            if ($file != '.' && $file != '..')
+            {
+                if (is_dir($src.'/'.$file))
+                    File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
+                else
+                    copy($src.'/'.$file, $dst.'/'.$file);
+            }
+            $file = readdir($dirp);
+        }
+        closedir($dirp);
+    }
 
-	/**
-	 * Recursivly delete a directory
-	 *
-	 * @var $dir the directory to delete path (eg. /home/dir/to/delete)
-	 */
-	public static function recurseDelete($dir)
-	{
-		$dirp = opendir($dir);
-		$file = readdir($dirp);
-		while ($file !== false)
-		{
-			if ($file != '.' && $file != '..')
-			{
-				if (is_dir($dir.'/'.$file))
-					File::recurseDelete($dir.'/'.$file);
-				else
-					unlink($dir.'/'.$file);
-			}
-			$file = readdir($dirp);
-		}
-		closedir($dirp);
-		rmdir($dir);
-	}
+    /**
+     * Recursivly delete a directory
+     *
+     * @var $dir the directory to delete path (eg. /home/dir/to/delete)
+     */
+    public static function recurseDelete($dir)
+    {
+        $dirp = opendir($dir);
+        $file = readdir($dirp);
+        while ($file !== false)
+        {
+            if ($file != '.' && $file != '..')
+            {
+                if (is_dir($dir.'/'.$file))
+                    File::recurseDelete($dir.'/'.$file);
+                else
+                    unlink($dir.'/'.$file);
+            }
+            $file = readdir($dirp);
+        }
+        closedir($dirp);
+        rmdir($dir);
+    }
 }

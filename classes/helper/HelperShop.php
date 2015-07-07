@@ -27,10 +27,10 @@
 class HelperShopCore extends Helper
 {
     /**
-	 * Render shop list
+     * Render shop list
      *
-	 * @return string
-	 */
+     * @return string
+     */
     public function getRenderedShopList()
     {
         if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2)

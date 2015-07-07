@@ -29,8 +29,8 @@
  */
 class PrestaShopDatabaseExceptionCore extends PrestaShopException
 {
-	public function __toString()
-	{
-		return $this->message;
-	}
+    public function __toString()
+    {
+        return $this->message;
+    }
 }

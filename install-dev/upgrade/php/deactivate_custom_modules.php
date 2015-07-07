@@ -26,61 +26,61 @@
 
 function deactivate_custom_modules()
 {
-	$db = Db::getInstance();
-	$modulesDirOnDisk = array();
-	$modules = scandir(_PS_MODULE_DIR_);
-	foreach ($modules as $name)
-	{
-		if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php'))
-		{
-			if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name))
-				die(Tools::displayError().' (Module '.$name.')');
-			$modulesDirOnDisk[] = $name;
-		}
-	}
+    $db = Db::getInstance();
+    $modulesDirOnDisk = array();
+    $modules = scandir(_PS_MODULE_DIR_);
+    foreach ($modules as $name)
+    {
+        if (!in_array($name, array('.', '..', 'index.php', '.htaccess')) && @is_dir(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR) && @file_exists(_PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$name.'.php'))
+        {
+            if (!preg_match('/^[a-zA-Z0-9_-]+$/', $name))
+                die(Tools::displayError().' (Module '.$name.')');
+            $modulesDirOnDisk[] = $name;
+        }
+    }
 
-	$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
+    $module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_list.xml';
 
-	if (!file_exists($module_list_xml))
-	{
-		$module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
-		if (!file_exists($module_list_xml))
-		return false;
-	}
+    if (!file_exists($module_list_xml))
+    {
+        $module_list_xml = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'modules_list.xml';
+        if (!file_exists($module_list_xml))
+        return false;
+    }
 
-	$nativeModules = simplexml_load_file($module_list_xml);
-	$nativeModules = $nativeModules->modules;
-	$arrNativeModules = array();
-	foreach ($nativeModules as $nativeModulesType)
-		if (in_array($nativeModulesType['type'], array('native', 'partner')))
-		{
-			$arrNativeModules[] = '""';
-			foreach ($nativeModulesType->module as $module)
-				$arrNativeModules[] = '"'.pSQL($module['name']).'"';
-		}
+    $nativeModules = simplexml_load_file($module_list_xml);
+    $nativeModules = $nativeModules->modules;
+    $arrNativeModules = array();
+    foreach ($nativeModules as $nativeModulesType)
+        if (in_array($nativeModulesType['type'], array('native', 'partner')))
+        {
+            $arrNativeModules[] = '""';
+            foreach ($nativeModulesType->module as $module)
+                $arrNativeModules[] = '"'.pSQL($module['name']).'"';
+        }
 
-	$arrNonNative = $db->executeS('
+    $arrNonNative = $db->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'module` m
 		WHERE name NOT IN ('.implode(',', $arrNativeModules).') ');
 
-	$uninstallMe = array("undefined-modules");
-	if (is_array($arrNonNative))
-		foreach($arrNonNative as $k => $aModule)
-			$uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
+    $uninstallMe = array("undefined-modules");
+    if (is_array($arrNonNative))
+        foreach($arrNonNative as $k => $aModule)
+            $uninstallMe[(int)$aModule['id_module']] = $aModule['name'];
 
-	if (!is_array($uninstallMe))
-		$uninstallMe = array($uninstallMe);
+    if (!is_array($uninstallMe))
+        $uninstallMe = array($uninstallMe);
 
-	foreach ($uninstallMe as $k => $v)
-		$uninstallMe[$k] = '"'.pSQL($v).'"';
+    foreach ($uninstallMe as $k => $v)
+        $uninstallMe[$k] = '"'.pSQL($v).'"';
 
-	$return = Db::getInstance()->execute('
+    $return = Db::getInstance()->execute('
 	UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` IN ('.implode(',', $uninstallMe).')');
 
-	if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0)
-		foreach($uninstallMe as $k => $uninstall)
-			$return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
+    if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \''._DB_PREFIX_.'module_shop\''))> 0)
+        foreach($uninstallMe as $k => $uninstall)
+            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$k);
 
-	return $return;
+    return $return;
 }

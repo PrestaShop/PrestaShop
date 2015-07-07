@@ -30,19 +30,19 @@
 */
 interface TaxManagerInterface
 {
-	/**
-	* This method determine if the tax manager is available for the specified address.
-	*
-	* @param Address $address
-	*
-	* @return bool
-   	*/
-	public static function isAvailableForThisAddress(Address $address);
+    /**
+    * This method determine if the tax manager is available for the specified address.
+    *
+    * @param Address $address
+    *
+    * @return bool
+    */
+    public static function isAvailableForThisAddress(Address $address);
 
-	/**
-	* Return the tax calculator associated to this address
-	*
-	* @return TaxCalculator
-	*/
-	public function getTaxCalculator();
+    /**
+    * Return the tax calculator associated to this address
+    *
+    * @return TaxCalculator
+    */
+    public function getTaxCalculator();
 }

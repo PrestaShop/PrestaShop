@@ -111,7 +111,7 @@ class CartTest extends UnitTestCase
             'PS_USE_ECOTAX' => 0,
             'PS_ROUND_TYPE' => $type,
             'PS_ECOTAX_TAX_RULES_GROUP_ID' => 0,
-			'PS_ATCP_SHIPWRAP' => false
+            'PS_ATCP_SHIPWRAP' => false
         ));
     }
 

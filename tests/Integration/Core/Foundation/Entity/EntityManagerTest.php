@@ -35,48 +35,48 @@ use Product;
 
 class EntityManagerTest extends IntegrationTestCase
 {
-	private $container;
-	private $entityManager;
+    private $container;
+    private $entityManager;
 
-	public function setup()
-	{
-		$containerBuilder = new Core_Business_ContainerBuilder;
-		$this->container = $containerBuilder->build();
-		$this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
-	}
+    public function setup()
+    {
+        $containerBuilder = new Core_Business_ContainerBuilder;
+        $this->container = $containerBuilder->build();
+        $this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
+    }
 
-	public function test_explicitly_defined_repository_is_found_by_entitymanager()
-	{
-		$this->assertInstanceOf(
-			'Core_Business_CMS_CMSRoleRepository',
-			$this->entityManager->getRepository('CMSRole')
-		);
-	}
+    public function test_explicitly_defined_repository_is_found_by_entitymanager()
+    {
+        $this->assertInstanceOf(
+            'Core_Business_CMS_CMSRoleRepository',
+            $this->entityManager->getRepository('CMSRole')
+        );
+    }
 
-	public function test_find_implicitly_defined_repository()
-	{
-		$repository = $this->entityManager->getRepository('Product');
-		$product = $repository->findOne(1);
-		$this->assertInstanceOf('Product', $product);
-		$this->assertEquals(1, $product->id);
-	}
+    public function test_find_implicitly_defined_repository()
+    {
+        $repository = $this->entityManager->getRepository('Product');
+        $product = $repository->findOne(1);
+        $this->assertInstanceOf('Product', $product);
+        $this->assertEquals(1, $product->id);
+    }
 
-	public function test_save_dataMapper_style()
-	{
-		$repository = $this->entityManager->getRepository('CMSRole');
+    public function test_save_dataMapper_style()
+    {
+        $repository = $this->entityManager->getRepository('CMSRole');
 
-		$entity = new CMSRole;
+        $entity = new CMSRole;
 
-		$name = "Yo CMS Role " . rand();
+        $name = "Yo CMS Role " . rand();
 
-		$entity->name 	= $name;
-		$entity->id_cms = 6666;
+        $entity->name    = $name;
+        $entity->id_cms = 6666;
 
-		$this->entityManager->save($entity);
+        $this->entityManager->save($entity);
 
-		$this->assertGreaterThan(0, $repository->findOneByName($name)->id);
+        $this->assertGreaterThan(0, $repository->findOneByName($name)->id);
 
-		// Clean DB !
-		$this->entityManager->delete($entity);
-	}
+        // Clean DB !
+        $this->entityManager->delete($entity);
+    }
 }
