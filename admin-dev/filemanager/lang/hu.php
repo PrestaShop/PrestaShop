@@ -55,4 +55,3 @@ define('lang_Extract', 'kibontás ide');
 define('lang_File_info', 'fájl info');
 define('lang_Edit_image', 'kép szerkesztése');
 define('lang_Duplicate', 'Klónozás');
-?>

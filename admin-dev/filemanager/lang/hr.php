@@ -55,5 +55,3 @@ define('lang_Extract', 'raspakiraj ovdje');
 define('lang_File_info', 'informacije');
 define('lang_Edit_image', 'uredi sliku');
 define('lang_Duplicate', 'kopiraj');
-
-?>

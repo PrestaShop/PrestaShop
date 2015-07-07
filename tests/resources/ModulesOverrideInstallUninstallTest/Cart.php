@@ -181,4 +181,3 @@ class Cart extends CartCore
 		return parent::delete();
 	}
 }
-?>

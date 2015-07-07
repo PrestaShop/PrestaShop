@@ -55,5 +55,3 @@ define('lang_Extract', 'Rozbaliť sem');
 define('lang_File_info', 'Informácie o súbore');
 define('lang_Edit_image', 'Upraviť obrázok');
 define('lang_Duplicate', 'Duplikovať');
-
-?>

@@ -54,4 +54,3 @@ class Cart extends CartCore
 		}
 	}
 }
-?>
