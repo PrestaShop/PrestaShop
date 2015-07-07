@@ -53,8 +53,9 @@ class PDFCore
         $this->smarty = $smarty;
 
         $this->objects = $objects;
-        if (!($objects instanceof Iterator) && !is_array($objects))
+        if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
+        }
     }
 
     /**
@@ -68,17 +69,17 @@ class PDFCore
     {
         $render = false;
         $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
-        foreach ($this->objects as $object)
-        {
+        foreach ($this->objects as $object) {
             $template = $this->getTemplateObject($object);
-            if (!$template)
+            if (!$template) {
                 continue;
+            }
 
-            if (empty($this->filename))
-            {
+            if (empty($this->filename)) {
                 $this->filename = $template->getFilename();
-                if (count($this->objects) > 1)
+                if (count($this->objects) > 1) {
                     $this->filename = $template->getBulkFilename();
+                }
             }
 
             $template->assignHookData($object);
@@ -92,11 +93,11 @@ class PDFCore
             unset($template);
         }
 
-        if ($render)
-        {
+        if ($render) {
             // clean the output buffer
-            if (ob_get_level() && ob_get_length() > 0)
+            if (ob_get_level() && ob_get_length() > 0) {
                 ob_clean();
+            }
             return $this->pdf_renderer->render($this->filename, $display);
         }
     }
@@ -113,12 +114,12 @@ class PDFCore
         $class = false;
         $class_name = 'HTMLTemplate'.$this->template;
 
-        if (class_exists($class_name))
-        {
+        if (class_exists($class_name)) {
             $class = new $class_name($object, $this->smarty);
 
-            if (!($class instanceof HTMLTemplate))
+            if (!($class instanceof HTMLTemplate)) {
                 throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
+            }
         }
 
         return $class;

@@ -93,14 +93,17 @@ abstract class ControllerCore
      */
     public function init()
     {
-        if (_PS_MODE_DEV_ && $this->controller_type == 'admin')
+        if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler(array(__CLASS__, 'myErrorHandler'));
+        }
 
-        if (!defined('_PS_BASE_URL_'))
+        if (!defined('_PS_BASE_URL_')) {
             define('_PS_BASE_URL_', Tools::getShopDomain(true));
+        }
 
-        if (!defined('_PS_BASE_URL_SSL_'))
+        if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+        }
     }
 
     /**
@@ -133,14 +136,17 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        if (is_null($this->display_header))
+        if (is_null($this->display_header)) {
             $this->display_header = true;
+        }
 
-        if (is_null($this->display_header_javascript))
+        if (is_null($this->display_header_javascript)) {
             $this->display_header_javascript = true;
+        }
 
-        if (is_null($this->display_footer))
+        if (is_null($this->display_footer)) {
             $this->display_footer = true;
+        }
 
         $this->context = Context::getContext();
         $this->context->controller = $this;
@@ -151,8 +157,9 @@ abstract class ControllerCore
         if (!headers_sent()
             && isset($_SERVER['HTTP_USER_AGENT'])
             && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
-            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false))
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
             header('X-UA-Compatible: IE=edge,chrome=1');
+        }
     }
 
     /**
@@ -161,45 +168,47 @@ abstract class ControllerCore
     public function run()
     {
         $this->init();
-        if ($this->checkAccess())
-        {
+        if ($this->checkAccess()) {
             // setMedia MUST be called before postProcess
-            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
                 $this->setMedia();
+            }
 
             // postProcess handles ajaxProcess
             $this->postProcess();
 
-            if (!empty($this->redirect_after))
+            if (!empty($this->redirect_after)) {
                 $this->redirect();
+            }
 
-            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
+            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
                 $this->initHeader();
+            }
 
-            if ($this->viewAccess())
+            if ($this->viewAccess()) {
                 $this->initContent();
-            else
+            } else {
                 $this->errors[] = Tools::displayError('Access denied.');
+            }
 
-            if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
+            if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
                 $this->initFooter();
+            }
 
             // Default behavior for ajax process is to use $_POST[action] or $_GET[action]
             // then using displayAjax[action]
-            if ($this->ajax)
-            {
+            if ($this->ajax) {
                 $action = Tools::toCamelCase(Tools::getValue('action'), true);
 
-                if (!empty($action) && method_exists($this, 'displayAjax'.$action))
+                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
                     $this->{'displayAjax'.$action}();
-                elseif (method_exists($this, 'displayAjax'))
+                } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
-            }
-            else
+                }
+            } else {
                 $this->display();
-        }
-        else
-        {
+            }
+        } else {
             $this->initCursedPage();
             $this->smartyOutputContent($this->layout);
         }
@@ -289,32 +298,31 @@ abstract class ControllerCore
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
-        if (!is_array($css_uri))
+        if (!is_array($css_uri)) {
             $css_uri = array($css_uri);
+        }
 
-        foreach ($css_uri as $css_file => $media)
-        {
-            if (is_string($css_file) && strlen($css_file) > 1)
-            {
-                if ($check_path)
+        foreach ($css_uri as $css_file => $media) {
+            if (is_string($css_file) && strlen($css_file) > 1) {
+                if ($check_path) {
                     $css_path = Media::getCSSPath($css_file, $media);
-                else
+                } else {
                     $css_path = array($css_file => $media);
-            }
-            else
-            {
-                if ($check_path)
+                }
+            } else {
+                if ($check_path) {
                     $css_path = Media::getCSSPath($media, $css_media_type);
-                else
+                } else {
                     $css_path = array($media => $css_media_type);
+                }
             }
 
             $key = is_array($css_path) ? key($css_path) : $css_path;
-            if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path))))
-            {
+            if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path)))) {
                 $size = count($this->css_files);
-                if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset))
+                if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset)) {
                     $offset = $size;
+                }
 
                 $this->css_files = array_merge(array_slice($this->css_files, 0, $offset), $css_path, array_slice($this->css_files, $offset));
             }
@@ -330,28 +338,28 @@ abstract class ControllerCore
      */
     public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
     {
-        if (!is_array($css_uri))
+        if (!is_array($css_uri)) {
             $css_uri = array($css_uri);
+        }
 
-        foreach ($css_uri as $css_file => $media)
-        {
-            if (is_string($css_file) && strlen($css_file) > 1)
-            {
-                if ($check_path)
+        foreach ($css_uri as $css_file => $media) {
+            if (is_string($css_file) && strlen($css_file) > 1) {
+                if ($check_path) {
                     $css_path = Media::getCSSPath($css_file, $media);
-                else
+                } else {
                     $css_path = array($css_file => $media);
-            }
-            else
-            {
-                if ($check_path)
+                }
+            } else {
+                if ($check_path) {
                     $css_path = Media::getCSSPath($media, $css_media_type);
-                else
+                } else {
                     $css_path = array($media => $css_media_type);
+                }
             }
 
-            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path)))
+            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path))) {
                 unset($this->css_files[key($css_path)]);
+            }
         }
     }
 
@@ -364,25 +372,27 @@ abstract class ControllerCore
      */
     public function addJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri))
-            foreach ($js_uri as $js_file)
-            {
+        if (is_array($js_uri)) {
+            foreach ($js_uri as $js_file) {
                 $js_path = $js_file;
-                if ($check_path)
+                if ($check_path) {
                     $js_path = Media::getJSPath($js_file);
+                }
 
                 // $key = is_array($js_path) ? key($js_path) : $js_path;
-                if ($js_path && !in_array($js_path, $this->js_files))
+                if ($js_path && !in_array($js_path, $this->js_files)) {
                     $this->js_files[] = $js_path;
+                }
             }
-        else
-        {
+        } else {
             $js_path = $js_uri;
-            if ($check_path)
+            if ($check_path) {
                 $js_path = Media::getJSPath($js_uri);
+            }
 
-            if ($js_path && !in_array($js_path, $this->js_files))
+            if ($js_path && !in_array($js_path, $this->js_files)) {
                 $this->js_files[] = $js_path;
+            }
         }
     }
 
@@ -394,24 +404,26 @@ abstract class ControllerCore
      */
     public function removeJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri))
-            foreach ($js_uri as $js_file)
-            {
+        if (is_array($js_uri)) {
+            foreach ($js_uri as $js_file) {
                 $js_path = $js_file;
-                if ($check_path)
+                if ($check_path) {
                     $js_path = Media::getJSPath($js_file);
+                }
 
-                if ($js_path && in_array($js_path, $this->js_files))
+                if ($js_path && in_array($js_path, $this->js_files)) {
                     unset($this->js_files[array_search($js_path, $this->js_files)]);
+                }
             }
-        else
-        {
+        } else {
             $js_path = $js_uri;
-            if ($check_path)
+            if ($check_path) {
                 $js_path = Media::getJSPath($js_uri);
+            }
 
-            if ($js_path)
+            if ($js_path) {
                 unset($this->js_files[array_search($js_path, $this->js_files)]);
+            }
         }
     }
 
@@ -436,11 +448,11 @@ abstract class ControllerCore
      */
     public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
     {
-        if (!is_array($component))
+        if (!is_array($component)) {
             $component = array($component);
+        }
 
-        foreach ($component as $ui)
-        {
+        foreach ($component as $ui) {
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
             $this->addCSS($ui_path['css'], 'all', false);
             $this->addJS($ui_path['js'], false);
@@ -456,18 +468,19 @@ abstract class ControllerCore
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
     {
-        if (!is_array($name))
+        if (!is_array($name)) {
             $name = array($name);
-        if (is_array($name))
-        {
-            foreach ($name as $plugin)
-            {
+        }
+        if (is_array($name)) {
+            foreach ($name as $plugin) {
                 $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 
-                if (!empty($plugin_path['js']))
+                if (!empty($plugin_path['js'])) {
                     $this->addJS($plugin_path['js'], false);
-                if ($css && !empty($plugin_path['css']))
+                }
+                if ($css && !empty($plugin_path['css'])) {
                     $this->addCSS(key($plugin_path['css']), 'all', null, false);
+                }
             }
         }
     }
@@ -498,25 +511,28 @@ abstract class ControllerCore
         $js_tag = 'js_def';
         $this->context->smarty->assign($js_tag, $js_tag);
 
-        if (is_array($content))
-            foreach ($content as $tpl)
+        if (is_array($content)) {
+            foreach ($content as $tpl) {
                 $html .= $this->context->smarty->fetch($tpl);
-        else
+            }
+        } else {
             $html = $this->context->smarty->fetch($content);
+        }
 
         $html = trim($html);
 
-        if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout())
-        {
+        if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
             $live_edit_content = '';
-            if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
+            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
                 $live_edit_content = $this->getLiveEditFooter();
+            }
 
             $dom_available = extension_loaded('dom') ? true : false;
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
-            if ($defer && $dom_available)
+            if ($defer && $dom_available) {
                 $html = Media::deferInlineScripts($html);
+            }
             $html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 
             $this->context->smarty->assign(array(
@@ -527,13 +543,14 @@ abstract class ControllerCore
 
             $javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 
-            if ($defer)
+            if ($defer) {
                 echo $html.$javascript;
-            else
+            } else {
                 echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
-        }
-        else
+            }
+        } else {
             echo $html;
+        }
     }
 
     /**
@@ -564,11 +581,11 @@ abstract class ControllerCore
      */
     public static function myErrorHandler($errno, $errstr, $errfile, $errline)
     {
-        if (error_reporting() === 0)
+        if (error_reporting() === 0) {
             return false;
+        }
 
-        switch ($errno)
-        {
+        switch ($errno) {
             case E_USER_ERROR:
             case E_ERROR:
                 die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
@@ -607,11 +624,11 @@ abstract class ControllerCore
      */
     protected function ajaxDie($value = null, $controller = null, $method = null)
     {
-        if ($controller === null)
+        if ($controller === null) {
             $controller = get_class($this);
+        }
 
-        if ($method === null)
-        {
+        if ($method === null) {
             $bt = debug_backtrace();
             $method = $bt[1]['function'];
         }

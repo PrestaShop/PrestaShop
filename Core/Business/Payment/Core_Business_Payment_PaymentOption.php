@@ -177,8 +177,9 @@ class Core_Business_Payment_PaymentOption
      */
     public static function convertLegacyOption(array $legacyOption)
     {
-        if (!$legacyOption)
+        if (!$legacyOption) {
             return;
+        }
 
         if (array_key_exists('cta_text', $legacyOption)) {
             $legacyOption = array($legacyOption);
@@ -195,7 +196,6 @@ class Core_Business_Payment_PaymentOption
         );
 
         foreach ($legacyOption as $option) {
-
             $option = array_merge($defaults, $option);
 
             $newOption = new Core_Business_Payment_PaymentOption();

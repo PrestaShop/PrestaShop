@@ -53,13 +53,14 @@ class HistoryControllerCore extends FrontController
     {
         parent::initContent();
 
-        if ($orders = Order::getCustomerOrders($this->context->customer->id))
-            foreach ($orders as &$order)
-            {
+        if ($orders = Order::getCustomerOrders($this->context->customer->id)) {
+            foreach ($orders as &$order) {
                 $myOrder = new Order((int)$order['id_order']);
-                if (Validate::isLoadedObject($myOrder))
+                if (Validate::isLoadedObject($myOrder)) {
                     $order['virtual'] = $myOrder->isVirtual(false);
+                }
             }
+        }
         $this->context->smarty->assign(array(
             'orders' => $orders,
             'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),

@@ -33,23 +33,23 @@ class InstallSimplexmlElement extends SimpleXMLElement
      */
     public function addChild($name, $value = null, $namespace = null)
     {
-        if ($value instanceof SimplexmlElement)
-        {
+        if ($value instanceof SimplexmlElement) {
             $content = trim((string)$value);
-            if (strlen($content) > 0)
+            if (strlen($content) > 0) {
                 $new_element = parent::addChild($name, str_replace('&', '&amp;', $content), $namespace);
-            else
-            {
+            } else {
                 $new_element = parent::addChild($name);
-                foreach ($value->attributes() as $k => $v)
+                foreach ($value->attributes() as $k => $v) {
                     $new_element->addAttribute($k, $v);
+                }
             }
 
-            foreach ($value->children() as $child)
+            foreach ($value->children() as $child) {
                 $new_element->addChild($child->getName(), $child);
-        }
-        else
+            }
+        } else {
             return parent::addChild($name, str_replace('&', '&amp;', $value), $namespace);
+        }
     }
 
     /**
@@ -64,8 +64,9 @@ class InstallSimplexmlElement extends SimpleXMLElement
         $dom->formatOutput = true;
         $dom->loadXML(parent::asXML());
 
-        if ($filename)
+        if ($filename) {
             return (bool)file_put_contents($filename, $dom->saveXML());
+        }
         return $dom->saveXML();
     }
 }

@@ -44,24 +44,26 @@ class SearchEngineCore extends ObjectModel
     public static function getKeywords($url)
     {
         $parsed_url = @parse_url($url);
-        if (!isset($parsed_url['host']) || !isset($parsed_url['query']))
+        if (!isset($parsed_url['host']) || !isset($parsed_url['query'])) {
             return false;
+        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM `'._DB_PREFIX_.'search_engine`');
-        foreach ($result as $row)
-        {
+        foreach ($result as $row) {
             $host =& $row['server'];
             $varname =& $row['getvar'];
-            if (strstr($parsed_url['host'], $host))
-            {
+            if (strstr($parsed_url['host'], $host)) {
                 $array = array();
                 preg_match('/[^a-z]'.$varname.'=.+\&/U', $parsed_url['query'], $array);
-                if (empty($array[0]))
+                if (empty($array[0])) {
                     preg_match('/[^a-z]'.$varname.'=.+$/', $parsed_url['query'], $array);
-                if (empty($array[0]))
+                }
+                if (empty($array[0])) {
                     return false;
+                }
                 $str = urldecode(str_replace('+', ' ', ltrim(substr(rtrim($array[0], '&'), strlen($varname) + 1), '=')));
-                if (!Validate::isMessage($str))
+                if (!Validate::isMessage($str)) {
                     return false;
+                }
                 return $str;
             }
         }

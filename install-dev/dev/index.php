@@ -30,9 +30,15 @@ include_once(_PS_INSTALL_PATH_.'classes/controllerHttp.php');
 
 class SynchronizeController extends InstallControllerHttp
 {
-    public function validate() {}
-    public function display() {}
-    public function processNextStep() {}
+    public function validate()
+    {
+    }
+    public function display()
+    {
+    }
+    public function processNextStep()
+    {
+    }
 
     /**
      * @var InstallXmlLoader
@@ -49,26 +55,30 @@ class SynchronizeController extends InstallControllerHttp
         $this->type = Tools::getValue('type');
         $this->loader = new InstallXmlLoader();
         $languages = array();
-        foreach (Language::getLanguages(false) as $language)
+        foreach (Language::getLanguages(false) as $language) {
             $languages[$language['id_lang']] = $language['iso_code'];
+        }
         $this->loader->setLanguages($languages);
 
-        if (Tools::getValue('submit'))
+        if (Tools::getValue('submit')) {
             $this->generateSchemas();
-        elseif (Tools::getValue('synchronize'))
+        } elseif (Tools::getValue('synchronize')) {
             $this->synchronizeEntities();
+        }
 
-        if ($this->type == 'demo')
+        if ($this->type == 'demo') {
             $this->loader->setFixturesPath();
-        else
+        } else {
             $this->loader->setDefaultPath();
+        }
         $this->displayTemplate('index');
     }
 
     public function generateSchemas()
     {
-        if ($this->type == 'demo')
+        if ($this->type == 'demo') {
             $this->loader->setFixturesPath();
+        }
 
         $tables = isset($_POST['tables']) ? (array)$_POST['tables'] : array();
         $columns = isset($_POST['columns']) ? (array)$_POST['columns'] : array();
@@ -82,38 +92,43 @@ class SynchronizeController extends InstallControllerHttp
         $nulls = isset($_POST['null']) ? (array)$_POST['null'] : array();
 
         $entities = array();
-        foreach ($tables as $table)
-        {
+        foreach ($tables as $table) {
             $config = array();
-            if (isset($ids[$table]) && $ids[$table])
+            if (isset($ids[$table]) && $ids[$table]) {
                 $config['id'] = $ids[$table];
+            }
 
-            if (isset($primaries[$table]) && $primaries[$table])
+            if (isset($primaries[$table]) && $primaries[$table]) {
                 $config['primary'] = $primaries[$table];
+            }
 
-            if (isset($classes[$table]) && $classes[$table])
+            if (isset($classes[$table]) && $classes[$table]) {
                 $config['class'] = $classes[$table];
+            }
 
-            if (isset($sqls[$table]) && $sqls[$table])
+            if (isset($sqls[$table]) && $sqls[$table]) {
                 $config['sql'] = $sqls[$table];
+            }
 
-            if (isset($orders[$table]) && $orders[$table])
+            if (isset($orders[$table]) && $orders[$table]) {
                 $config['ordersql'] = $orders[$table];
+            }
 
-            if (isset($images[$table]) && $images[$table])
+            if (isset($images[$table]) && $images[$table]) {
                 $config['image'] = $images[$table];
+            }
 
-            if (isset($nulls[$table]) && $nulls[$table])
+            if (isset($nulls[$table]) && $nulls[$table]) {
                 $config['null'] = $nulls[$table];
+            }
 
             $fields = array();
-            if (isset($columns[$table]))
-            {
-                foreach ($columns[$table] as $column)
-                {
+            if (isset($columns[$table])) {
+                foreach ($columns[$table] as $column) {
                     $fields[$column] = array();
-                    if (isset($relations[$table][$column]['check']))
+                    if (isset($relations[$table][$column]['check'])) {
                         $fields[$column]['relation'] = $relations[$table][$column];
+                    }
                 }
             }
 
@@ -123,8 +138,9 @@ class SynchronizeController extends InstallControllerHttp
             );
         }
 
-        foreach ($entities as $entity => $info)
+        foreach ($entities as $entity => $info) {
             $this->loader->generateEntitySchema($entity, $info['fields'], $info['config']);
+        }
 
         $this->errors = $this->loader->getErrors();
     }
@@ -132,14 +148,12 @@ class SynchronizeController extends InstallControllerHttp
     public function synchronizeEntities()
     {
         $entities = Tools::getValue('entities');
-        if (isset($entities['common']))
-        {
+        if (isset($entities['common'])) {
             $this->loader->setDefaultPath();
             $this->loader->generateEntityFiles($entities['common']);
         }
 
-        if (isset($entities['fixture']))
-        {
+        if (isset($entities['fixture'])) {
             $this->loader->setFixturesPath();
             $this->loader->generateEntityFiles($entities['fixture']);
         }

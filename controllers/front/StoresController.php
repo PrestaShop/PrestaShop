@@ -36,8 +36,7 @@ class StoresControllerCore extends FrontController
     {
         parent::init();
 
-        if (!extension_loaded('Dom'))
-        {
+        if (!extension_loaded('Dom')) {
             $this->errors[] = Tools::displayError('PHP "Dom" extension has not been loaded.');
             $this->context->smarty->assign('errors', $this->errors);
         }
@@ -62,24 +61,22 @@ class StoresControllerCore extends FrontController
         $address_datas = AddressFormat::getOrderedAddressFields($store['id_country'], false, true);
         $state = (isset($store['id_state'])) ? new State($store['id_state']) : null;
 
-        foreach ($address_datas as $data_line)
-        {
+        foreach ($address_datas as $data_line) {
             $data_fields = explode(' ', $data_line);
             $addr_out = array();
 
             $data_fields_mod = false;
-            foreach ($data_fields as $field_item)
-            {
+            foreach ($data_fields as $field_item) {
                 $field_item = trim($field_item);
-                if (!in_array($field_item, $ignore_field) && !empty($store[$field_item]))
-                {
+                if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
                     $addr_out[] = ($field_item == 'city' && $state && isset($state->iso_code) && strlen($state->iso_code)) ?
                         $store[$field_item].', '.$state->iso_code : $store[$field_item];
                     $data_fields_mod = true;
                 }
             }
-            if ($data_fields_mod)
+            if ($data_fields_mod) {
                 $out_datas[] = implode(' ', $addr_out);
+            }
         }
 
         $out = implode('<br />', $out_datas);
@@ -101,8 +98,7 @@ class StoresControllerCore extends FrontController
 
         $addresses_formated = array();
 
-        foreach ($stores as &$store)
-        {
+        foreach ($stores as &$store) {
             $address = new Address();
             $address->country = Country::getNameById($this->context->language->id, $store['id_country']);
             $address->address1 = $store['address1'];
@@ -113,8 +109,9 @@ class StoresControllerCore extends FrontController
             $addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address);
 
             $store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)$store['id_store'].'.jpg');
-            if ($working_hours = $this->renderStoreWorkingHours($store))
+            if ($working_hours = $this->renderStoreWorkingHours($store)) {
                 $store['working_hours'] = $working_hours;
+            }
         }
 
         $this->context->smarty->assign(array(
@@ -139,19 +136,16 @@ class StoresControllerCore extends FrontController
         $days_datas = array();
         $hours = array();
 
-        if ($store['hours'])
-        {
+        if ($store['hours']) {
             $hours = Tools::unSerialize($store['hours']);
-            if (is_array($hours))
+            if (is_array($hours)) {
                 $hours = array_filter($hours);
+            }
         }
 
-        if (!empty($hours))
-        {
-            for ($i = 1; $i < 8; $i++)
-            {
-                if (isset($hours[(int)$i - 1]))
-                {
+        if (!empty($hours)) {
+            for ($i = 1; $i < 8; $i++) {
+                if (isset($hours[(int)$i - 1])) {
                     $hours_datas = array();
                     $hours_datas['hours'] = $hours[(int)$i - 1];
                     $hours_datas['day'] = $days[$i];
@@ -168,11 +162,11 @@ class StoresControllerCore extends FrontController
     public function getStores()
     {
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi')))
+        if (!in_array($distance_unit, array('km', 'mi'))) {
             $distance_unit = 'km';
+        }
 
-        if (Tools::getValue('all') == 1)
-        {
+        if (Tools::getValue('all') == 1) {
             $stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state
 			FROM '._DB_PREFIX_.'store s
@@ -180,9 +174,7 @@ class StoresControllerCore extends FrontController
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
-        }
-        else
-        {
+        } else {
             $distance = (int)Tools::getValue('radius', 100);
             $multiplicator = ($distance_unit == 'km' ? 6371 : 3959);
 
@@ -219,8 +211,9 @@ class StoresControllerCore extends FrontController
         $this->context->smarty->assign('hasStoreIcon', file_exists(_PS_IMG_DIR_.Configuration::get('PS_STORES_ICON')));
 
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi')))
+        if (!in_array($distance_unit, array('km', 'mi'))) {
             $distance_unit = 'km';
+        }
 
         $this->context->smarty->assign(array(
             'distance_unit' => $distance_unit,
@@ -237,8 +230,7 @@ class StoresControllerCore extends FrontController
         $stores = $this->getStores();
         $parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
-        foreach ($stores as $store)
-        {
+        foreach ($stores as $store) {
             $other = '';
             $newnode = $parnode->addChild('marker');
             $newnode->addAttribute('name', $store['name']);
@@ -253,8 +245,9 @@ class StoresControllerCore extends FrontController
             $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)$store['id_store'].'.jpg'));
             $newnode->addAttribute('lat', (float)$store['latitude']);
             $newnode->addAttribute('lng', (float)$store['longitude']);
-            if (isset($store['distance']))
+            if (isset($store['distance'])) {
                 $newnode->addAttribute('distance', (int)$store['distance']);
+            }
         }
 
         header('Content-type: text/xml');
@@ -269,10 +262,11 @@ class StoresControllerCore extends FrontController
     {
         parent::initContent();
 
-        if (Configuration::get('PS_STORES_SIMPLIFIED'))
+        if (Configuration::get('PS_STORES_SIMPLIFIED')) {
             $this->assignStoresSimplified();
-        else
+        } else {
             $this->assignStores();
+        }
 
         $this->context->smarty->assign(array(
             'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -290,8 +284,7 @@ class StoresControllerCore extends FrontController
         parent::setMedia();
         $this->addCSS(_THEME_CSS_DIR_.'stores.css');
 
-        if (!Configuration::get('PS_STORES_SIMPLIFIED'))
-        {
+        if (!Configuration::get('PS_STORES_SIMPLIFIED')) {
             $default_country = new Country((int)Tools::getCountry());
             $this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&region='.substr($default_country->iso_code, 0, 2));
             $this->addJS(_THEME_JS_DIR_.'stores.js');

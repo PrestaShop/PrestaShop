@@ -70,14 +70,16 @@ class ShopUrlCore extends ObjectModel
         $this->domain_ssl = trim($this->domain_ssl);
         $this->physical_uri = trim(str_replace(' ', '', $this->physical_uri), '/');
 
-        if ($this->physical_uri)
+        if ($this->physical_uri) {
             $this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
-        else
+        } else {
             $this->physical_uri = '/';
+        }
 
         $this->virtual_uri = trim(str_replace(' ', '', $this->virtual_uri), '/');
-        if ($this->virtual_uri)
+        if ($this->virtual_uri) {
             $this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
+        }
 
         return parent::getFields();
     }
@@ -89,8 +91,9 @@ class ShopUrlCore extends ObjectModel
 
     public function getURL($ssl = false)
     {
-        if (!$this->id)
+        if (!$this->id) {
             return;
+        }
 
         $url = ($ssl) ? 'https://'.$this->domain_ssl : 'http://'.$this->domain;
         return $url.$this->getBaseUri();
@@ -105,8 +108,9 @@ class ShopUrlCore extends ObjectModel
     public static function getShopUrls($id_shop = false)
     {
         $urls = new PrestaShopCollection('ShopUrl');
-        if ($id_shop)
+        if ($id_shop) {
             $urls->where('id_shop', '=', $id_shop);
+        }
         return $urls;
     }
 
@@ -124,8 +128,9 @@ class ShopUrlCore extends ObjectModel
 					AND s2.id_shop = s1.id_shop
 				) = 0
 				GROUP BY s1.id_shop';
-        foreach (Db::getInstance()->executeS($sql) as $row)
+        foreach (Db::getInstance()->executeS($sql) as $row) {
             Db::getInstance()->update('shop_url', array('main' => 1), 'id_shop_url = '.$row['id_shop_url']);
+        }
 
         return $res;
     }
@@ -134,14 +139,16 @@ class ShopUrlCore extends ObjectModel
     {
         $physical_uri = trim($physical_uri, '/');
 
-        if ($physical_uri)
+        if ($physical_uri) {
             $physical_uri = preg_replace('#/+#', '/', '/'.$physical_uri.'/');
-        else
+        } else {
             $physical_uri = '/';
+        }
 
         $virtual_uri = trim($virtual_uri, '/');
-        if ($virtual_uri)
+        if ($virtual_uri) {
             $virtual_uri = preg_replace('#/+#', '/', trim($virtual_uri, '/')).'/';
+        }
 
         $sql = 'SELECT id_shop_url
 				FROM '._DB_PREFIX_.'shop_url
@@ -154,8 +161,7 @@ class ShopUrlCore extends ObjectModel
 
     public static function cacheMainDomainForShop($id_shop)
     {
-        if (!isset(self::$main_domain_ssl[(int)$id_shop]) || !isset(self::$main_domain[(int)$id_shop]))
-        {
+        if (!isset(self::$main_domain_ssl[(int)$id_shop]) || !isset(self::$main_domain[(int)$id_shop])) {
             $row = Db::getInstance()->getRow('
 			SELECT domain, domain_ssl
 			FROM '._DB_PREFIX_.'shop_url

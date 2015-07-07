@@ -103,8 +103,9 @@ class AdminLogsControllerCore extends AdminController
 
     public function processDelete()
     {
-        if (PrestaShopLogger::eraseAllLogs())
+        if (PrestaShopLogger::eraseAllLogs()) {
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogs'));
+        }
     }
 
     public function initToolbar()

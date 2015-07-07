@@ -27,8 +27,7 @@
 function update_modules_multishop()
 {
     $block_cms_installed = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blockcms"');
-    if($block_cms_installed)
-    {
+    if ($block_cms_installed) {
         Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'blocklink_shop` (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT,
 			`id_shop` varchar(255) NOT NULL,
@@ -47,8 +46,7 @@ function update_modules_multishop()
     }
     
     $block_link_installed = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'module` WHERE name = "blocklink"');
-    if($block_link_installed)
-    {
+    if ($block_link_installed) {
         Db::getInstance()->execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'blocklink_shop` (
 			`id_blocklink` int(2) NOT NULL AUTO_INCREMENT,

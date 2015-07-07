@@ -24,10 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (isset(Context::getContext()->controller))
+if (isset(Context::getContext()->controller)) {
     $controller = Context::getContext()->controller;
-else
-{
+} else {
     $controller = new FrontController();
     $controller->init();
     $controller->setMedia();

@@ -88,12 +88,13 @@ class GuestCore extends ObjectModel
         // $langsArray is filled with all the languages accepted, ordered by priority
         $langsArray = array();
         preg_match_all('/([a-z]{2}(-[a-z]{2})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/', $acceptLanguage, $array);
-        if (count($array[1]))
-        {
+        if (count($array[1])) {
             $langsArray = array_combine($array[1], $array[4]);
-            foreach ($langsArray as $lang => $val)
-                if ($val === '')
+            foreach ($langsArray as $lang => $val) {
+                if ($val === '') {
                     $langsArray[$lang] = 1;
+                }
+            }
             arsort($langsArray, SORT_NUMERIC);
         }
 
@@ -116,9 +117,8 @@ class GuestCore extends ObjectModel
             'IE 7' => 'MSIE 7',
             'IE 6' => 'MSIE 6'
         );
-        foreach ($browserArray as $k => $value)
-            if (strstr($userAgent, $value))
-            {
+        foreach ($browserArray as $k => $value) {
+            if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_web_browser`
 				FROM `'._DB_PREFIX_.'web_browser` wb
@@ -126,6 +126,7 @@ class GuestCore extends ObjectModel
 
                 return $result['id_web_browser'];
             }
+        }
         return null;
     }
 
@@ -141,9 +142,8 @@ class GuestCore extends ObjectModel
             'Linux' => 'X11'
         );
 
-        foreach ($osArray as $k => $value)
-            if (strstr($userAgent, $value))
-            {
+        foreach ($osArray as $k => $value) {
+            if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_operating_system`
 				FROM `'._DB_PREFIX_.'operating_system` os
@@ -151,13 +151,15 @@ class GuestCore extends ObjectModel
 
                 return $result['id_operating_system'];
             }
+        }
         return null;
     }
 
     public static function getFromCustomer($id_customer)
     {
-        if (!Validate::isUnsignedId($id_customer))
+        if (!Validate::isUnsignedId($id_customer)) {
             return false;
+        }
         $result = Db::getInstance()->getRow('
 		SELECT `id_guest`
 		FROM `'._DB_PREFIX_.'guest`

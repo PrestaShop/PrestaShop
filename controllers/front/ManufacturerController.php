@@ -39,10 +39,12 @@ class ManufacturerControllerCore extends FrontController
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        if (Tools::getValue('live_edit'))
+        if (Tools::getValue('live_edit')) {
             return;
-        if (Validate::isLoadedObject($this->manufacturer))
+        }
+        if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
+        }
     }
 
     /**
@@ -53,17 +55,15 @@ class ManufacturerControllerCore extends FrontController
     {
         parent::init();
 
-        if ($id_manufacturer = Tools::getValue('id_manufacturer'))
-        {
+        if ($id_manufacturer = Tools::getValue('id_manufacturer')) {
             $this->manufacturer = new Manufacturer((int)$id_manufacturer, $this->context->language->id);
-            if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToShop())
-            {
+            if (!Validate::isLoadedObject($this->manufacturer) || !$this->manufacturer->active || !$this->manufacturer->isAssociatedToShop()) {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 $this->errors[] = Tools::displayError('The manufacturer does not exist.');
-            }
-            else
+            } else {
                 $this->canonicalRedirection();
+            }
         }
     }
 
@@ -75,14 +75,11 @@ class ManufacturerControllerCore extends FrontController
     {
         parent::initContent();
 
-        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop())
-        {
+        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
             $this->productSort();
             $this->assignOne();
             $this->setTemplate(_PS_THEME_DIR_.'manufacturer.tpl');
-        }
-        else
-        {
+        } else {
             $this->assignAll();
             $this->setTemplate(_PS_THEME_DIR_.'manufacturer-list.tpl');
         }
@@ -115,8 +112,7 @@ class ManufacturerControllerCore extends FrontController
      */
     protected function assignAll()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
-        {
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $data = Manufacturer::getManufacturers(false, $this->context->language->id, true, false, false, false);
             $nbProducts = count($data);
             $this->n = abs((int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE')));
@@ -124,8 +120,9 @@ class ManufacturerControllerCore extends FrontController
             $data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
             $this->pagination($nbProducts);
 
-            foreach ($data as &$item)
+            foreach ($data as &$item) {
                 $item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
+            }
 
             $this->context->smarty->assign(array(
                 'pages_nb' => ceil($nbProducts / (int)$this->n),
@@ -134,9 +131,9 @@ class ManufacturerControllerCore extends FrontController
                 'manufacturers' => $data,
                 'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY')
             ));
-        }
-        else
+        } else {
             $this->context->smarty->assign('nbManufacturers', 0);
+        }
     }
 
     /**

@@ -88,25 +88,27 @@ class AdminWebserviceControllerCore extends AdminController
                 ),
             );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
                 'title' => $this->l('Enable CGI mode for PHP'),
                 'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
                 'cast' => 'intval',
                 'type' => 'bool'
             );
+        }
 
         parent::__construct();
     }
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_webservice'] = array(
                 'href' => self::$currentIndex.'&addwebservice_account&token='.$this->token,
                 'desc' => $this->l('Add new webservice key', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -175,8 +177,7 @@ class AdminWebserviceControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -188,8 +189,9 @@ class AdminWebserviceControllerCore extends AdminController
             'title' => $this->l('Save'),
         );
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $ressources = WebserviceRequest::getResources();
         $permissions = WebserviceKey::getPermissionForAccount($obj->key);
@@ -204,8 +206,9 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function initContent()
     {
-        if ($this->display != 'add' && $this->display != 'edit')
+        if ($this->display != 'add' && $this->display != 'edit') {
             $this->checkForWarning();
+        }
 
         parent::initContent();
     }
@@ -215,8 +218,7 @@ class AdminWebserviceControllerCore extends AdminController
      */
     public function renderOptions()
     {
-        if ($this->fields_options && is_array($this->fields_options))
-        {
+        if ($this->fields_options && is_array($this->fields_options)) {
             $helper = new HelperOptions($this);
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
@@ -236,16 +238,19 @@ class AdminWebserviceControllerCore extends AdminController
     {
         parent::initProcess();
         // This is a composite page, we don't want the "options" display mode
-        if ($this->display == 'options')
+        if ($this->display == 'options') {
             $this->display = '';
+        }
     }
 
     public function postProcess()
     {
-        if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32)
+        if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32) {
             $this->errors[] = Tools::displayError('Key length must be 32 character long.');
-        if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account'))
+        }
+        if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account')) {
             $this->errors[] = Tools::displayError('This key already exists.');
+        }
         return parent::postProcess();
     }
 
@@ -263,30 +268,34 @@ class AdminWebserviceControllerCore extends AdminController
 
     public function checkForWarning()
     {
-        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false)
-        {
+        if (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === false) {
             $this->warnings[] = $this->l('To avoid operating problems, please use an Apache server.');
-            if (function_exists('apache_get_modules'))
-            {
+            if (function_exists('apache_get_modules')) {
                 $apache_modules = apache_get_modules();
-                if (!in_array('mod_auth_basic', $apache_modules))
+                if (!in_array('mod_auth_basic', $apache_modules)) {
                     $this->warnings[] = $this->l('Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.');
-                if (!in_array('mod_rewrite', $apache_modules))
+                }
+                if (!in_array('mod_rewrite', $apache_modules)) {
                     $this->warnings[] = $this->l('Please activate the \'mod_rewrite\' Apache module to allow the PrestaShop webservice.');
-            }
-            else
+                }
+            } else {
                 $this->warnings[] = $this->l('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.');
+            }
         }
-        if (!extension_loaded('SimpleXML'))
+        if (!extension_loaded('SimpleXML')) {
             $this->warnings[] = $this->l('Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.');
-        if (!configuration::get('PS_SSL_ENABLED'))
+        }
+        if (!configuration::get('PS_SSL_ENABLED')) {
             $this->warnings[] = $this->l('It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.');
+        }
 
-        foreach ($this->_list as $k => $item)
+        foreach ($this->_list as $k => $item) {
             if ($item['is_module'] && $item['class_name'] && $item['module_name'] &&
                 ($instance = Module::getInstanceByName($item['module_name'])) &&
-                !$instance->useNormalPermissionBehaviour())
+                !$instance->useNormalPermissionBehaviour()) {
                 unset($this->_list[$k]);
+            }
+        }
 
         $this->renderList();
     }

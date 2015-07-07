@@ -84,8 +84,9 @@ abstract class HTMLTemplateCore
         $shop_address = '';
 
         $shop_address_obj = $this->shop->getAddress();
-        if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
+        if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
             $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
+        }
 
         return $shop_address;
     }
@@ -99,10 +100,11 @@ abstract class HTMLTemplateCore
 
         $id_shop = (int)$this->shop->id;
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop)))
+        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
             $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop)))
+        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop))) {
             $logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
+        }
         return $logo;
     }
 
@@ -120,13 +122,13 @@ abstract class HTMLTemplateCore
 
         $width = 0;
         $height = 0;
-        if (!empty($path_logo))
+        if (!empty($path_logo)) {
             list($width, $height) = getimagesize($path_logo);
+        }
 
         // Limit the height of the logo for the PDF render
         $maximum_height = 100;
-        if ($height > $maximum_height)
-        {
+        if ($height > $maximum_height) {
             $ratio = $maximum_height / $height;
             $height *= $ratio;
             $width *= $ratio;
@@ -195,10 +197,11 @@ abstract class HTMLTemplateCore
         $template = false;
         $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
         $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
-        if (file_exists($overridden_template))
+        if (file_exists($overridden_template)) {
             $template = $overridden_template;
-        elseif (file_exists($default_template))
+        } elseif (file_exists($default_template)) {
             $template = $default_template;
+        }
 
         return $template;
     }
@@ -218,13 +221,15 @@ abstract class HTMLTemplateCore
 
     protected function setShopId()
     {
-        if (isset($this->order) && Validate::isLoadedObject($this->order))
+        if (isset($this->order) && Validate::isLoadedObject($this->order)) {
             $id_shop = (int)$this->order->id_shop;
-        else
+        } else {
             $id_shop = (int)Context::getContext()->shop->id;
+        }
 
         $this->shop = new Shop($id_shop);
-        if (Validate::isLoadedObject($this->shop))
+        if (Validate::isLoadedObject($this->shop)) {
             Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
+        }
     }
 }

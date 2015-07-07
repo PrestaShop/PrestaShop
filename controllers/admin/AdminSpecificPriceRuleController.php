@@ -40,8 +40,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->multishop_context = Shop::CONTEXT_ALL;
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
-        if ($this->id_shop = (int)Tools::getValue('shop_id'))
-        {
+        if ($this->id_shop = (int)Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
             $_POST['id_shop'] = $this->id_shop;
         }
@@ -136,12 +135,13 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_specific_price_rule'] = array(
                 'href' => self::$currentIndex.'&addspecific_price_rule&token='.$this->token,
                 'desc' => $this->l('Add new catalog price rule', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -150,17 +150,20 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     {
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-        foreach ($this->_list as $k => $list)
-            if ($list['reduction_type'] == 'amount')
+        foreach ($this->_list as $k => $list) {
+            if ($list['reduction_type'] == 'amount') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
-            elseif ($list['reduction_type'] == 'percentage')
+            } elseif ($list['reduction_type'] == 'percentage') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['percentage'];
+            }
+        }
     }
 
     public function renderForm()
     {
-        if (!$this->object->id)
+        if (!$this->object->id) {
             $this->object->price = -1;
+        }
 
         $this->fields_form = array(
             'legend' => array(
@@ -295,10 +298,11 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->l('Save')
             ),
         );
-        if (($value = $this->getFieldValue($this->object, 'price')) != -1)
+        if (($value = $this->getFieldValue($this->object, 'price')) != -1) {
             $price = number_format($value, 6);
-        else
+        } else {
             $price = '';
+        }
 
         $this->fields_value = array(
             'price' => $price,
@@ -309,21 +313,22 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $attribute_groups = array();
         $attributes = Attribute::getAttributes((int)$this->context->language->id);
-        foreach ($attributes as $attribute)
-        {
-            if (!isset($attribute_groups[$attribute['id_attribute_group']]))
+        foreach ($attributes as $attribute) {
+            if (!isset($attribute_groups[$attribute['id_attribute_group']])) {
                 $attribute_groups[$attribute['id_attribute_group']]  = array(
                     'id_attribute_group' => $attribute['id_attribute_group'],
                     'name' => $attribute['attribute_group']
                 );
+            }
             $attribute_groups[$attribute['id_attribute_group']]['attributes'][] = array(
                 'id_attribute' => $attribute['id_attribute'],
                 'name' => $attribute['name']
             );
         }
         $features = Feature::getFeatures((int)$this->context->language->id);
-        foreach ($features as &$feature)
+        foreach ($features as &$feature) {
             $feature['values'] = FeatureValue::getFeatureValuesWithLang((int)$this->context->language->id, $feature['id_feature'], true);
+        }
 
         $this->tpl_form_vars = array(
             'manufacturers' => Manufacturer::getManufacturers(),
@@ -340,17 +345,13 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     public function processSave()
     {
         $_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
-        if (Validate::isLoadedObject(($object = parent::processSave())))
-        {
+        if (Validate::isLoadedObject(($object = parent::processSave()))) {
             /** @var SpecificPriceRule $object */
             $object->deleteConditions();
-            foreach ($_POST as $key => $values)
-            {
-                if (preg_match('/^condition_group_([0-9]+)$/Ui', $key, $condition_group))
-                {
+            foreach ($_POST as $key => $values) {
+                if (preg_match('/^condition_group_([0-9]+)$/Ui', $key, $condition_group)) {
                     $conditions = array();
-                    foreach ($values as $value)
-                    {
+                    foreach ($values as $value) {
                         $condition = explode('_', $value);
                         $conditions[] = array('type' => $condition[0], 'value' => $condition[1]);
                     }

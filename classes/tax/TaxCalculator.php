@@ -61,9 +61,11 @@ class TaxCalculatorCore
     public function __construct(array $taxes = array(), $computation_method = TaxCalculator::COMBINE_METHOD)
     {
         // sanity check
-        foreach ($taxes as $tax)
-            if (!($tax instanceof Tax))
+        foreach ($taxes as $tax) {
+            if (!($tax instanceof Tax)) {
                 throw new Exception('Invalid Tax Object');
+            }
+        }
 
         $this->taxes = $taxes;
         $this->computation_method = (int)$computation_method;
@@ -98,19 +100,18 @@ class TaxCalculatorCore
     public function getTotalRate()
     {
         $taxes = 0;
-        if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
-        {
+        if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD) {
             $taxes = 1;
-            foreach ($this->taxes as $tax)
+            foreach ($this->taxes as $tax) {
                 $taxes *= (1 + (abs($tax->rate) / 100));
+            }
 
             $taxes = $taxes - 1;
             $taxes = $taxes * 100;
-        }
-        else
-        {
-            foreach ($this->taxes as $tax)
+        } else {
+            foreach ($this->taxes as $tax) {
                 $taxes += abs($tax->rate);
+            }
         }
 
         return (float)$taxes;
@@ -119,8 +120,9 @@ class TaxCalculatorCore
     public function getTaxesName()
     {
         $name = '';
-        foreach ($this->taxes as $tax)
+        foreach ($this->taxes as $tax) {
             $name .= $tax->name[(int)Context::getContext()->language->id].' - ';
+        }
 
         $name = rtrim($name, ' - ');
 
@@ -137,15 +139,13 @@ class TaxCalculatorCore
     {
         $taxes_amounts = array();
 
-        foreach ($this->taxes as $tax)
-        {
-            if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
-            {
+        foreach ($this->taxes as $tax) {
+            if ($this->computation_method == TaxCalculator::ONE_AFTER_ANOTHER_METHOD) {
                 $taxes_amounts[$tax->id] = $price_te * (abs($tax->rate) / 100);
                 $price_te = $price_te + $taxes_amounts[$tax->id];
-            }
-            else
+            } else {
                 $taxes_amounts[$tax->id] = ($price_te * (abs($tax->rate) / 100));
+            }
         }
 
         return $taxes_amounts;
@@ -162,8 +162,9 @@ class TaxCalculatorCore
         $amount = 0;
 
         $taxes = $this->getTaxesAmount($price_te);
-        foreach ($taxes as $tax)
+        foreach ($taxes as $tax) {
             $amount += $tax;
+        }
 
         return $amount;
     }

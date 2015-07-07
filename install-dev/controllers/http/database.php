@@ -77,20 +77,23 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
             // We do not want to validate table prefix if we are already in install process
             ($this->session->step == 'process') ? true : $this->session->database_clear
         );
-        if (count($this->errors))
+        if (count($this->errors)) {
             return false;
+        }
         
-        if (!isset($this->session->database_engine))
+        if (!isset($this->session->database_engine)) {
             $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
+        }
         return true;
     }
 
     public function process()
     {
-        if (Tools::getValue('checkDb'))
+        if (Tools::getValue('checkDb')) {
             $this->processCheckDb();
-        elseif (Tools::getValue('createDb'))
+        } elseif (Tools::getValue('createDb')) {
             $this->processCreateDb();
+        }
     }
 
     /**
@@ -136,10 +139,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
      */
     public function display()
     {
-        if (!$this->session->database_server)
-        {
-            if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
-            {
+        if (!$this->session->database_server) {
+            if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
                 @include_once _PS_ROOT_DIR_.'/config/settings.inc.php';
                 $this->database_server = _DB_SERVER_;
                 $this->database_name = _DB_NAME_;
@@ -147,9 +148,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
                 $this->database_password = _DB_PASSWD_;
                 $this->database_engine = _MYSQL_ENGINE_;
                 $this->database_prefix = _DB_PREFIX_;
-            }
-            else
-            {
+            } else {
                 $this->database_server = 'localhost';
                 $this->database_name = 'prestashop';
                 $this->database_login = 'root';
@@ -162,9 +161,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
             $this->use_smtp = false;
             $this->smtp_encryption = 'off';
             $this->smtp_port = 25;
-        }
-        else
-        {
+        } else {
             $this->database_server = $this->session->database_server;
             $this->database_name = $this->session->database_name;
             $this->database_login = $this->session->database_login;

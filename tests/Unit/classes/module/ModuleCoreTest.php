@@ -32,8 +32,8 @@ use PHPUnit_Framework_TestCase;
 
 define('_PS_VERSION_', '1.6.1.0');
 
-class FakeModule extends Module {
-
+class FakeModule extends Module
+{
 }
 
 class ModuleCoreTest extends PHPUnit_Framework_TestCase

@@ -27,19 +27,23 @@
 ob_start();
 
 // Check PHP version
-if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.2', '<'))
+if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.2', '<')) {
     die('You need at least PHP 5.2 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
+}
 
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
-if (!defined('__PS_BASE_URI__'))
-        define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+if (!defined('__PS_BASE_URI__')) {
+    define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+}
 
-if (!defined('_PS_CORE_DIR_'))
+if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
+}
 
-if (!defined('_THEME_NAME_'))
-        define('_THEME_NAME_', 'default-bootstrap');
+if (!defined('_THEME_NAME_')) {
+    define('_THEME_NAME_', 'default-bootstrap');
+}
 
 
 require_once(_PS_CORE_DIR_.'/config/defines.inc.php');
@@ -72,27 +76,32 @@ require_once(_PS_INSTALL_PATH_.'classes/xmlLoader.php');
 require_once(_PS_INSTALL_PATH_.'classes/simplexml.php');
 
 @set_time_limit(0);
-if (!@ini_get('date.timezone'))
+if (!@ini_get('date.timezone')) {
     @date_default_timezone_set('UTC');
+}
 
 // Some hosting still have magic_quotes_runtime configured
 ini_set('magic_quotes_runtime', 0);
 
 // Try to improve memory limit if it's under 64M
 $current_memory_limit = psinstall_get_memory_limit();
-if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('64M'))
+if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('64M')) {
     ini_set('memory_limit', '64M');
+}
 
 function psinstall_get_octets($option)
 {
-    if (preg_match('/[0-9]+k/i', $option))
+    if (preg_match('/[0-9]+k/i', $option)) {
         return 1024 * (int)$option;
+    }
 
-    if (preg_match('/[0-9]+m/i', $option))
+    if (preg_match('/[0-9]+m/i', $option)) {
         return 1024 * 1024 * (int)$option;
+    }
 
-    if (preg_match('/[0-9]+g/i', $option))
+    if (preg_match('/[0-9]+g/i', $option)) {
         return 1024 * 1024 * 1024 * (int)$option;
+    }
 
     return $option;
 }
@@ -101,14 +110,17 @@ function psinstall_get_memory_limit()
 {
     $memory_limit = @ini_get('memory_limit');
 
-    if (preg_match('/[0-9]+k/i', $memory_limit))
+    if (preg_match('/[0-9]+k/i', $memory_limit)) {
         return 1024 * (int)$memory_limit;
+    }
 
-    if (preg_match('/[0-9]+m/i', $memory_limit))
+    if (preg_match('/[0-9]+m/i', $memory_limit)) {
         return 1024 * 1024 * (int)$memory_limit;
+    }
 
-    if (preg_match('/[0-9]+g/i', $memory_limit))
+    if (preg_match('/[0-9]+g/i', $memory_limit)) {
         return 1024 * 1024 * 1024 * (int)$memory_limit;
+    }
 
     return $memory_limit;
 }

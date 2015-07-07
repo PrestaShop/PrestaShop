@@ -82,8 +82,9 @@ class Cart extends CartCore
                 'id_address_delivery' => $id_address_delivery,
             ),
             null, false);
-        if ($result == false)
+        if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
+        }
     }
     /*
     * module: pscsx3241
@@ -93,22 +94,21 @@ class Cart extends CartCore
     protected function _getProducts($refresh = false, $id_product = false, $id_country = null)
     {
         $products = parent::getProducts($refresh, $id_product, $id_country);
-        if (_PS_VERSION_ >= 1.6)
-        {
+        if (_PS_VERSION_ >= 1.6) {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
-            if (isset($params['productpricebysize']['products']))
+            if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
-            else
+            } else {
                 return $products;
-        }
-        else
-        {
+            }
+        } else {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
             $params = Tools::jsonDecode($params, true);
-            if (isset($params['products']))
+            if (isset($params['products'])) {
                 return $params['products'];
-            else
+            } else {
                 return $products;
+            }
         }
     }
     
@@ -120,18 +120,17 @@ class Cart extends CartCore
     public function updateAddressId($id_address, $id_address_new)
     {
         $to_update = false;
-        if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address)
-        {
+        if (!isset($this->id_address_invoice) || $this->id_address_invoice == $id_address) {
             $to_update = true;
             $this->id_address_invoice = $id_address_new;
         }
-        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address)
-        {
+        if (!isset($this->id_address_delivery) || $this->id_address_delivery == $id_address) {
             $to_update = true;
             $this->id_address_delivery = $id_address_new;
         }
-        if ($to_update)
+        if ($to_update) {
             $this->update();
+        }
         $sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
 		SET `id_address_delivery` = '.(int)$id_address_new.'
 		WHERE  `id_cart` = '.(int)$this->id.'
@@ -150,16 +149,16 @@ class Cart extends CartCore
     */
     public function delete()
     {
-        if ($this->OrderExists()) //NOT delete a cart which is associated with an order
+        if ($this->OrderExists()) { //NOT delete a cart which is associated with an order
             return false;
+        }
         $uploaded_files = Db::getInstance()->executeS('
 			SELECT cd.`value`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
 			WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id
         );
-        foreach ($uploaded_files as $must_unlink)
-        {
+        foreach ($uploaded_files as $must_unlink) {
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value'].'_small');
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
         }
@@ -176,8 +175,9 @@ class Cart extends CartCore
 			WHERE `id_cart` = '.(int)$this->id
         );
         if (!Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_cart_rule` WHERE `id_cart` = '.(int)$this->id)
-         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id))
+         || !Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id)) {
             return false;
+        }
         return parent::delete();
     }
 }

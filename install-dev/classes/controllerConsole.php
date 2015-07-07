@@ -67,12 +67,10 @@ abstract class InstallControllerConsole
 
     final public static function execute($argc, $argv)
     {
-        if (!($argc-1))
-        {
+        if (!($argc-1)) {
             $available_arguments = Datas::getInstance()->getArgs();
             echo 'Arguments available:'."\n";
-            foreach ($available_arguments as $key => $arg)
-            {
+            foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
                 echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '')."\n";
             }
@@ -80,22 +78,23 @@ abstract class InstallControllerConsole
         }
         
         $errors = Datas::getInstance()->getAndCheckArgs($argv);
-        if (Datas::getInstance()->show_license)
-        {
+        if (Datas::getInstance()->show_license) {
             echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.phtml'));
             exit;
         }
 
-        if ($errors !== true)
-        {
-            if (count($errors))
-                foreach ($errors as $error)
+        if ($errors !== true) {
+            if (count($errors)) {
+                foreach ($errors as $error) {
                     echo $error."\n";
+                }
+            }
             exit;
         }
 
-        if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php'))
+        if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php')) {
             throw new PrestashopInstallerException("Controller file 'console/process.php' not found");
+        }
 
         require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
         $classname = 'InstallControllerConsoleProcess';
@@ -118,8 +117,9 @@ abstract class InstallControllerConsole
         
         // Set current language
         $this->language = InstallLanguages::getInstance();
-        if (!$this->datas->language)
+        if (!$this->datas->language) {
             die('No language defined');
+        }
         $this->language->setLanguage($this->datas->language);
 
         $this->init();
@@ -135,14 +135,16 @@ abstract class InstallControllerConsole
     public function printErrors()
     {
         $errors = $this->model_install->getErrors();
-        if (count($errors))
-        {
-            if (!is_array($errors))
+        if (count($errors)) {
+            if (!is_array($errors)) {
                 $errors = array($errors);
+            }
             echo 'Errors :'."\n";
-            foreach ($errors as $error_process)
-                foreach ($error_process as $error)
+            foreach ($errors as $error_process) {
+                foreach ($error_process as $error) {
                     echo (is_string($error) ? $error : print_r($error, true))."\n";
+                }
+            }
             die;
         }
     }

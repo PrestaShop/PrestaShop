@@ -38,10 +38,8 @@ class AverageTaxOfProductsTaxCalculator
         $amounts = array();
         $total_base = 0;
 
-        foreach ($this->getProductTaxes() as $row)
-        {
-            if (!array_key_exists($row['id_tax'], $amounts))
-            {
+        foreach ($this->getProductTaxes() as $row) {
+            if (!array_key_exists($row['id_tax'], $amounts)) {
                 $amounts[$row['id_tax']] = array(
                     'rate' => $row['rate'],
                     'base' => 0
@@ -53,8 +51,7 @@ class AverageTaxOfProductsTaxCalculator
         }
 
         $actual_tax = 0;
-        foreach ($amounts as &$data)
-        {
+        foreach ($amounts as &$data) {
             $data = Tools::ps_round(
                 $price_before_tax * ($data['base'] / $total_base) * $data['rate'] / 100,
                 $round_precision,
@@ -64,8 +61,7 @@ class AverageTaxOfProductsTaxCalculator
         }
         unset($data);
 
-        if ($price_after_tax)
-        {
+        if ($price_after_tax) {
             Tools::spreadAmount(
                 $price_after_tax - $price_before_tax - $actual_tax,
                 $round_precision,

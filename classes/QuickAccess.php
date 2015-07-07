@@ -67,8 +67,9 @@ class QuickAccessCore extends ObjectModel
 
     public function toggleNewWindow()
     {
-        if (!array_key_exists('new_window', $this))
+        if (!array_key_exists('new_window', $this)) {
             throw new PrestaShopException('property "new_window" is missing in object '.get_class($this));
+        }
 
         $this->setFieldsToUpdate(array('new_window' => true));
 

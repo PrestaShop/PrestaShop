@@ -71,9 +71,11 @@ class AdminRangePriceControllerCore extends AdminController
         $currency = $this->context->currency;
         $carriers = Carrier::getCarriers((int)Configuration::get('PS_LANG_DEFAULT'), true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 
-        foreach ($carriers as $key => $carrier)
-            if ($carrier['is_free'])
+        foreach ($carriers as $key => $carrier) {
+            if ($carrier['is_free']) {
                 unset($carriers[$key]);
+            }
+        }
 
         $this->fields_form = array(
             'legend' => array(
@@ -125,27 +127,30 @@ class AdminRangePriceControllerCore extends AdminController
     public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
     {
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-        if ($this->_list && is_array($this->_list))
-            foreach ($this->_list as $key => $list)
-                if ($list['carrier_name'] == '0')
+        if ($this->_list && is_array($this->_list)) {
+            foreach ($this->_list as $key => $list) {
+                if ($list['carrier_name'] == '0') {
                     $this->_list[$key]['carrier_name'] = Carrier::getCarrierNameFromShopName();
+                }
+            }
+        }
     }
 
     public function postProcess()
     {
         $id = (int)Tools::getValue('id_'.$this->table);
-        if (Tools::getValue('submitAdd'.$this->table))
-        {
-            if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
+        if (Tools::getValue('submitAdd'.$this->table)) {
+            if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2')) {
                 $this->errors[] = Tools::displayError('Invalid range');
-            elseif (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
+            } elseif (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'))) {
                 $this->errors[] = Tools::displayError('The range already exists');
-            elseif (RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
+            } elseif (RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null))) {
                 $this->errors[] = Tools::displayError('Error: Ranges are overlapping');
-            elseif (!count($this->errors))
+            } elseif (!count($this->errors)) {
                 parent::postProcess();
-        }
-        else
+            }
+        } else {
             parent::postProcess();
+        }
     }
 }

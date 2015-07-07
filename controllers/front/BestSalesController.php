@@ -30,16 +30,16 @@ class BestSalesControllerCore extends FrontController
 
     public function initContent()
     {
-        if (Configuration::get('PS_DISPLAY_BEST_SELLERS'))
-        {
+        if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             parent::initContent();
 
             $this->productSort();
             $nb_products = (int)ProductSale::getNbSales();
             $this->pagination($nb_products);
 
-            if (!Tools::getValue('orderby'))
+            if (!Tools::getValue('orderby')) {
                 $this->orderBy = 'sales';
+            }
 
             $products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
             $this->addColorsToProductList($products);
@@ -53,9 +53,9 @@ class BestSalesControllerCore extends FrontController
             ));
 
             $this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');
-        }
-        else
+        } else {
             Tools::redirect('index.php?controller=404');
+        }
     }
 
     public function setMedia()

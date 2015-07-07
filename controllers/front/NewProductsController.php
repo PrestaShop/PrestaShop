@@ -45,8 +45,7 @@ class NewProductsControllerCore extends FrontController
         $this->productSort();
 
         // Override default configuration values: cause the new products page must display latest products first.
-        if (!Tools::getIsset('orderway') || !Tools::getIsset('orderby'))
-        {
+        if (!Tools::getIsset('orderway') || !Tools::getIsset('orderby')) {
             $this->orderBy = 'date_add';
             $this->orderWay = 'DESC';
         }

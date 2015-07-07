@@ -32,12 +32,13 @@ function attribute_group_clean_combinations()
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
     $toRemove = array();
-    foreach ($attributeCombinations as $attributeCombination)
-        if ((int)($attributeCombination['id_attribute']) == 0)
+    foreach ($attributeCombinations as $attributeCombination) {
+        if ((int)($attributeCombination['id_attribute']) == 0) {
             $toRemove[] = (int)($attributeCombination['id_product_attribute']);
+        }
+    }
 
-    if (!empty($toRemove))
-    {
+    if (!empty($toRemove)) {
         $res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_attribute`
 			WHERE `id_product_attribute` IN ('.implode(', ', $toRemove).')');
         return $res;

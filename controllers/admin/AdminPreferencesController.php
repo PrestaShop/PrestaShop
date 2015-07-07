@@ -37,8 +37,7 @@ class AdminPreferencesControllerCore extends AdminController
         $this->table = 'configuration';
 
         // Prevent classes which extend AdminPreferences to load useless data
-        if (get_class($this) == 'AdminPreferencesController')
-        {
+        if (get_class($this) == 'AdminPreferencesController') {
             $round_mode = array(
                 array(
                     'value' => PS_ROUND_HALF_UP,
@@ -89,19 +88,20 @@ class AdminPreferencesControllerCore extends AdminController
                 20 => $this->l('Travel')
             );
             $activities2 = array();
-            foreach ($activities1 as $value => $name)
+            foreach ($activities1 as $value => $name) {
                 $activities2[] = array('value' => $value, 'name' => $name);
+            }
 
             $disable_ssl = false;
 
-            if (defined('_PS_HOST_DOMAINS_') && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
-            {
+            if (defined('_PS_HOST_DOMAINS_') && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
                 $host_mode_domains = explode(',', (string)_PS_HOST_DOMAINS_);
                 $domain_parts = array_reverse(explode('.', $this->context->shop->domain_ssl));
 
                 if (isset($host_mode_domains) && isset($domain_parts[1]) && isset($domain_parts[0])
-                    && !in_array($domain_parts[1].'.'.$domain_parts[0], $host_mode_domains))
+                    && !in_array($domain_parts[1].'.'.$domain_parts[0], $host_mode_domains)) {
                     $disable_ssl = true;
+                }
             }
 
             $fields = array(
@@ -118,7 +118,7 @@ class AdminPreferencesControllerCore extends AdminController
                 ),
             );
 
-            if (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED')))
+            if (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED'))) {
                 $fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
                     'title' => $this->l('Force the SSL on all the pages'),
                     'desc' => $this->l('Force all your store to use SSL.'),
@@ -127,6 +127,7 @@ class AdminPreferencesControllerCore extends AdminController
                     'type' => 'bool',
                     'default' => '0'
                 );
+            }
 
             $fields = array_merge($fields, array(
                 'PS_TOKEN_ENABLE' => array(
@@ -225,8 +226,7 @@ class AdminPreferencesControllerCore extends AdminController
             ));
 
             // No HTTPS activation if you haven't already.
-            if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED'))
-            {
+            if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED')) {
                 $fields['PS_SSL_ENABLED']['type'] = 'disabled';
                 $fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
                     $this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';

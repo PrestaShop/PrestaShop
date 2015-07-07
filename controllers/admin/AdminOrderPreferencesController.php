@@ -42,8 +42,9 @@ class AdminOrderPreferencesControllerCore extends AdminController
             'id' => 0,
             'name' => $this->l('None')
         ));
-        foreach (CMS::listCms($this->context->language->id) as $cms_file)
+        foreach (CMS::listCms($this->context->language->id) as $cms_file) {
             $cms_tab[] = array('id' => $cms_file['id_cms'], 'name' => $cms_file['meta_title']);
+        }
 
         // List of order process types
         $order_process_type = array(
@@ -168,11 +169,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
             ),
         );
 
-        if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
+        if (!Configuration::get('PS_ALLOW_MULTISHIPPING')) {
             unset($this->fields_options['general']['fields']['PS_ALLOW_MULTISHIPPING']);
+        }
 
-        if (Configuration::get('PS_ATCP_SHIPWRAP'))
+        if (Configuration::get('PS_ATCP_SHIPWRAP')) {
             unset($this->fields_options['gift']['fields']['PS_GIFT_WRAPPING_TAX_RULES_GROUP']);
+        }
     }
 
     /**
@@ -182,7 +185,8 @@ class AdminOrderPreferencesControllerCore extends AdminController
     {
         $sql = 'SELECT `id_cms` FROM `'._DB_PREFIX_.'cms`
 				WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
-        if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
+        if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql))) {
             $this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
+        }
     }
 }

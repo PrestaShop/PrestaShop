@@ -38,14 +38,15 @@ class PackCore extends Product
      */
     public static function isPack($id_product)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return false;
+        }
 
-        if (!$id_product)
+        if (!$id_product) {
             return false;
+        }
 
-        if (!array_key_exists($id_product, self::$cacheIsPack))
-        {
+        if (!array_key_exists($id_product, self::$cacheIsPack)) {
             $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_pack = '.(int)$id_product);
             self::$cacheIsPack[$id_product] = ($result > 0);
         }
@@ -60,11 +61,11 @@ class PackCore extends Product
      */
     public static function isPacked($id_product)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return false;
+        }
 
-        if (!array_key_exists($id_product, self::$cacheIsPacked))
-        {
+        if (!array_key_exists($id_product, self::$cacheIsPacked)) {
             $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.(int)$id_product);
             self::$cacheIsPacked[$id_product] = ($result > 0);
         }
@@ -76,8 +77,7 @@ class PackCore extends Product
         $sum = 0;
         $price_display_method = !self::$_taxCalculationMethod;
         $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             /** @var Product $item */
             $sum += $item->getPrice($price_display_method) * $item->pack_quantity;
         }
@@ -89,28 +89,29 @@ class PackCore extends Product
     {
         $sum = 0;
         $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($items as $item)
+        foreach ($items as $item) {
             $sum += $item->wholesale_price * $item->pack_quantity;
+        }
         return $sum;
     }
 
     public static function getItems($id_product, $id_lang)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return array();
+        }
 
-        if (array_key_exists($id_product, self::$cachePackItems))
+        if (array_key_exists($id_product, self::$cachePackItems)) {
             return self::$cachePackItems[$id_product];
+        }
         $result = Db::getInstance()->executeS('SELECT id_product_item, id_product_attribute_item, quantity FROM `'._DB_PREFIX_.'pack` where id_product_pack = '.(int)$id_product);
         $array_result = array();
-        foreach ($result as $row)
-        {
+        foreach ($result as $row) {
             $p = new Product($row['id_product_item'], false, $id_lang);
             $p->loadStockData();
             $p->pack_quantity = $row['quantity'];
             $p->id_pack_product_attribute = (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item'] ? $row['id_product_attribute_item'] : 0);
-            if (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item'])
-            {
+            if (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item']) {
                 $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name
 					FROM `'._DB_PREFIX_.'product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
@@ -124,8 +125,9 @@ class PackCore extends Product
 					ORDER BY pa.`id_product_attribute`';
 
                 $combinations = Db::getInstance()->executeS($sql);
-                foreach ($combinations as $k => $combination)
+                foreach ($combinations as $k => $combination) {
                     $p->name .= ' '.$combination['group_name'].'-'.$combination['attribute_name'];
+                }
             }
             $array_result[] = $p;
         }
@@ -135,25 +137,27 @@ class PackCore extends Product
 
     public static function isInStock($id_product)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return true;
+        }
 
         $items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
 
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             /** @var Product $item */
             // Updated for 1.5.0
-            if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
+            if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)) {
                 return false;
+            }
         }
         return true;
     }
 
     public static function getItemTable($id_product, $id_lang, $full = false)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return array();
+        }
 
         $context = Context::getContext();
 
@@ -176,10 +180,8 @@ class PackCore extends Product
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        foreach ($result as &$line)
-        {
-            if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item'])
-            {
+        foreach ($result as &$line) {
+            if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item']) {
                 $line['cache_default_attribute'] = $line['id_product_attribute'] = $line['id_product_attribute_item'];
 
                 $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name,  pai.`id_image` AS id_product_attribute_image
@@ -197,40 +199,45 @@ class PackCore extends Product
 
                 $attr_name = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-                if (isset($attr_name[0]['id_product_attribute_image']) && $attr_name[0]['id_product_attribute_image'])
+                if (isset($attr_name[0]['id_product_attribute_image']) && $attr_name[0]['id_product_attribute_image']) {
                     $line['id_image'] = $attr_name[0]['id_product_attribute_image'];
+                }
                 $line['name'] .= "\n";
-                foreach ($attr_name as $value)
+                foreach ($attr_name as $value) {
                     $line['name'] .= ' '.$value['group_name'].'-'.$value['attribute_name'];
+                }
             }
             $line = Product::getTaxesInformations($line);
         }
 
-        if (!$full)
+        if (!$full) {
             return $result;
+        }
 
         $array_result = array();
-        foreach ($result as $prow)
-            if (!Pack::isPack($prow['id_product']))
-            {
+        foreach ($result as $prow) {
+            if (!Pack::isPack($prow['id_product'])) {
                 $prow['id_product_attribute'] = (int)$prow['id_product_attribute_item'];
                 $array_result[] = Product::getProductProperties($id_lang, $prow);
             }
+        }
         return $array_result;
     }
 
     public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
     {
-        if (!Pack::isFeatureActive())
+        if (!Pack::isFeatureActive()) {
             return array();
+        }
 
         $packs = Db::getInstance()->getValue('
 		SELECT GROUP_CONCAT(a.`id_product_pack`)
 		FROM `'._DB_PREFIX_.'pack` a
 		WHERE a.`id_product_item` = '.(int)$id_product);
 
-        if (!(int)$packs)
+        if (!(int)$packs) {
             return array();
+        }
 
         $context = Context::getContext();
 
@@ -248,16 +255,20 @@ class PackCore extends Product
 			'.Shop::addSqlRestrictionOnLang('pl').'
 			AND p.`id_product` IN ('.$packs.')
 		GROUP BY p.id_product';
-        if ($limit)
+        if ($limit) {
             $sql .= ' LIMIT '.(int)$limit;
+        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-        if (!$full)
+        if (!$full) {
             return $result;
+        }
 
         $array_result = array();
-        foreach ($result as $row)
-            if (!Pack::isPacked($row['id_product']))
+        foreach ($result as $row) {
+            if (!Pack::isPacked($row['id_product'])) {
                 $array_result[] = Product::getProductProperties($id_lang, $row);
+            }
+        }
         return $array_result;
     }
 
@@ -334,15 +345,16 @@ class PackCore extends Product
      */
     public static function usesAdvancedStockManagement($id_product)
     {
-        if (!Pack::isPack($id_product))
+        if (!Pack::isPack($id_product)) {
             return false;
+        }
 
         $products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($products as $product)
-        {
+        foreach ($products as $product) {
             // if one product uses the advanced stock management
-            if ($product->advanced_stock_management == 1)
+            if ($product->advanced_stock_management == 1) {
                 return true;
+            }
         }
         // not used
         return false;
@@ -356,15 +368,16 @@ class PackCore extends Product
      */
     public static function allUsesAdvancedStockManagement($id_product)
     {
-        if (!Pack::isPack($id_product))
+        if (!Pack::isPack($id_product)) {
             return false;
+        }
 
         $products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-        foreach ($products as $product)
-        {
+        foreach ($products as $product) {
             // if one product uses the advanced stock management
-            if ($product->advanced_stock_management == 0)
+            if ($product->advanced_stock_management == 0) {
                 return false;
+            }
         }
         // not used
         return true;

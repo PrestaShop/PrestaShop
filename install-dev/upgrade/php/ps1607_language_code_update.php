@@ -26,17 +26,18 @@
 
 function ps1607_language_code_update()
 {
-    if (defined('_PS_VERSION_'))
-    {
+    if (defined('_PS_VERSION_')) {
         $langs = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code`, `language_code` FROM `'._DB_PREFIX_.'lang`');
-        if (is_array($langs) && $langs)
-            foreach ($langs as $lang)
-                if (Tools::strlen($lang['language_code']) == 2)
-                {
+        if (is_array($langs) && $langs) {
+            foreach ($langs as $lang) {
+                if (Tools::strlen($lang['language_code']) == 2) {
                     $result = Tools::jsonDecode(Tools::file_get_contents('https://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.Tools::strtolower($lang['iso_code'])));
-                    if ($result && !isset($result->error) && Tools::strlen($result->language_code) > 2)
+                    if ($result && !isset($result->error) && Tools::strlen($result->language_code) > 2) {
                         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'lang` SET `language_code` = \''.pSQL($result->language_code).'\' WHERE `id_lang` = '.(int)$lang['id_lang']).' LIMIT 1';
+                    }
                 }
+            }
+        }
     }
     return true;
 }

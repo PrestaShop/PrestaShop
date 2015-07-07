@@ -86,18 +86,18 @@ class AdminGeolocationControllerCore extends AdminController
      */
     public function processUpdateOptions()
     {
-        if ($this->isGeoLiteCityAvailable())
+        if ($this->isGeoLiteCityAvailable()) {
             Configuration::updateValue('PS_GEOLOCATION_ENABLED', (int)Tools::getValue('PS_GEOLOCATION_ENABLED'));
+        }
         // stop processing if geolocation is set to yes but geolite pack is not available
-        elseif (Tools::getValue('PS_GEOLOCATION_ENABLED'))
+        elseif (Tools::getValue('PS_GEOLOCATION_ENABLED')) {
             $this->errors[] = Tools::displayError('The geolocation database is unavailable.');
+        }
 
-        if (empty($this->errors))
-        {
-            if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries')))
+        if (empty($this->errors)) {
+            if (!is_array(Tools::getValue('countries')) || !count(Tools::getValue('countries'))) {
                 $this->errors[] = Tools::displayError('Country selection is invalid.');
-            else
-            {
+            } else {
                 Configuration::updateValue(
                     'PS_GEOLOCATION_BEHAVIOR',
                     (!(int)Tools::getValue('PS_GEOLOCATION_BEHAVIOR') ? _PS_GEOLOCATION_NO_CATALOG_ : _PS_GEOLOCATION_NO_ORDER_)
@@ -106,10 +106,9 @@ class AdminGeolocationControllerCore extends AdminController
                 Configuration::updateValue('PS_ALLOWED_COUNTRIES', implode(';', Tools::getValue('countries')));
             }
 
-            if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST')))
+            if (!Validate::isCleanHtml(Tools::getValue('PS_GEOLOCATION_WHITELIST'))) {
                 $this->errors[] = Tools::displayError('Invalid whitelist');
-            else
-            {
+            } else {
                 Configuration::updateValue(
                     'PS_GEOLOCATION_WHITELIST',
                     str_replace("\n", ';', str_replace("\r", '', Tools::getValue('PS_GEOLOCATION_WHITELIST')))
@@ -139,8 +138,7 @@ class AdminGeolocationControllerCore extends AdminController
     public function initContent()
     {
         $this->display = 'options';
-        if (!$this->isGeoLiteCityAvailable())
-        {
+        if (!$this->isGeoLiteCityAvailable()) {
             $this->displayWarning($this->l('In order to use Geolocation, please download').'
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
                 $this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory.'));
@@ -152,8 +150,9 @@ class AdminGeolocationControllerCore extends AdminController
 
     protected function isGeoLiteCityAvailable()
     {
-        if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_))
+        if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_)) {
             return true;
+        }
 
         return false;
     }

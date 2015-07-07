@@ -46,21 +46,22 @@ class DbMySQLiCore extends Db
      */
     public function connect()
     {
-        if (strpos($this->server, ':') !== false)
-        {
+        if (strpos($this->server, ':') !== false) {
             list($server, $port) = explode(':', $this->server);
             $this->link = @new mysqli($server, $this->user, $this->password, $this->database, $port);
-        }
-        else
+        } else {
             $this->link = @new mysqli($this->server, $this->user, $this->password, $this->database);
+        }
 
         // Do not use object way for error because this work bad before PHP 5.2.9
-        if (mysqli_connect_error())
+        if (mysqli_connect_error()) {
             throw new PrestaShopDatabaseException(sprintf(Tools::displayError('Link to database cannot be established: %s'), mysqli_connect_error()));
+        }
 
         // UTF-8 support
-        if (!$this->link->query('SET NAMES \'utf8\''))
+        if (!$this->link->query('SET NAMES \'utf8\'')) {
             throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+        }
 
         return $this->link;
     }
@@ -77,16 +78,16 @@ class DbMySQLiCore extends Db
      */
     public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
     {
-        if (strpos($host, ':') !== false)
-        {
+        if (strpos($host, ':') !== false) {
             list($host, $port) = explode(':', $host);
             $link = @new mysqli($host, $user, $password, null, $port);
-        }
-        else
+        } else {
             $link = @new mysqli($host, $user, $password);
+        }
         $success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $database).'`');
-        if ($dropit && ($link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`') !== false))
+        if ($dropit && ($link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`') !== false)) {
             return true;
+        }
         return $success;
     }
 
@@ -121,11 +122,13 @@ class DbMySQLiCore extends Db
      */
     public function nextRow($result = false)
     {
-        if (!$result)
+        if (!$result) {
             $result = $this->result;
+        }
 
-        if (!is_object($result))
+        if (!is_object($result)) {
             return false;
+        }
 
         return $result->fetch_assoc();
     }
@@ -139,20 +142,22 @@ class DbMySQLiCore extends Db
      */
     protected function getAll($result = false)
     {
-        if (!$result)
+        if (!$result) {
             $result = $this->result;
+        }
 
-        if (!is_object($result))
+        if (!is_object($result)) {
             return false;
+        }
 
-        if (method_exists($result, 'fetch_all'))
+        if (method_exists($result, 'fetch_all')) {
             return $result->fetch_all(MYSQLI_ASSOC);
-        else
-        {
+        } else {
             $ret = array();
 
-            while ($row = $this->nextRow($result))
+            while ($row = $this->nextRow($result)) {
                 $ret[] = $row;
+            }
 
             return $ret;
         }
@@ -264,8 +269,9 @@ class DbMySQLiCore extends Db
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
     {
         $link = @new mysqli($server, $user, $pwd, $db);
-        if (mysqli_connect_error())
+        if (mysqli_connect_error()) {
             return false;
+        }
 
         $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = $link->query($sql);
@@ -288,15 +294,18 @@ class DbMySQLiCore extends Db
     public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
     {
         $link = mysqli_init();
-        if (!$link)
+        if (!$link) {
             return -1;
+        }
 
-        if (!$link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout))
+        if (!$link->options(MYSQLI_OPT_CONNECT_TIMEOUT, $timeout)) {
             return 1;
+        }
 
         // There is an @ because mysqli throw a warning when the database does not exists
-        if (!@$link->real_connect($server, $user, $pwd, $db))
+        if (!@$link->real_connect($server, $user, $pwd, $db)) {
             return (mysqli_connect_errno() == 1049) ? 2 : 1;
+        }
 
         $link->close();
         return 0;
@@ -313,22 +322,25 @@ class DbMySQLiCore extends Db
 
         $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
         $result = $this->link->query($sql);
-        if (!$result)
+        if (!$result) {
             $value = 'MyISAM';
+        }
         $row = $result->fetch_assoc();
-        if (!$row || strtolower($row['Value']) != 'yes')
+        if (!$row || strtolower($row['Value']) != 'yes') {
             $value = 'MyISAM';
+        }
 
         /* MySQL >= 5.6 */
         $sql = 'SHOW ENGINES';
         $result = $this->link->query($sql);
-        while ($row = $result->fetch_assoc())
-            if ($row['Engine'] == 'InnoDB')
-            {
-                if (in_array($row['Support'], array('DEFAULT', 'YES')))
+        while ($row = $result->fetch_assoc()) {
+            if ($row['Engine'] == 'InnoDB') {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
+                }
                 break;
             }
+        }
 
         return $value;
     }
@@ -347,19 +359,22 @@ class DbMySQLiCore extends Db
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
         $link = @new mysqli($server, $user, $pwd, $db);
-        if (mysqli_connect_error())
+        if (mysqli_connect_error()) {
             return false;
+        }
 
-        if ($engine === null)
+        if ($engine === null) {
             $engine = 'MyISAM';
+        }
 
         $result = $link->query('
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine);
 
-        if (!$result)
+        if (!$result) {
             return $link->error;
+        }
 
         $link->query('DROP TABLE `'.$prefix.'test`');
         return true;

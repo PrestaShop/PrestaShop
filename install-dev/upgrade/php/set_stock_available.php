@@ -34,8 +34,7 @@ function set_stock_available()
 		WHERE `active` = 1
 	');
 
-    while ($row = Db::getInstance()->nextRow($resource))
-    {
+    while ($row = Db::getInstance()->nextRow($resource)) {
         $quantity = 0;
 
         //Try to get product attribues
@@ -46,8 +45,7 @@ function set_stock_available()
         );
 
         //Add each attribute to stock_available
-        foreach ($attributes as $attribute)
-        {
+        foreach ($attributes as $attribute) {
             // add to global quantity
             $quantity += $attribute['quantity'];
 
@@ -58,12 +56,14 @@ function set_stock_available()
 				VALUES
 				("'.(int)$row['id_product'].'", "'.(int)$attribute['id_product_attribute'].'", "1", "0", "'.(int)$attribute['quantity'].'", "0", "'.(int)$row['out_of_stock'].'")
 			');
-            if (!$res)
+            if (!$res) {
                 return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(attributes)'.Db::getInstance()->getMsgError());
+            }
         }
 
-        if (count($attributes) == 0)
+        if (count($attributes) == 0) {
             $quantity = (int)$row['quantity'];
+        }
 
         //Add stock available for product;
         $res &= Db::getInstance()->execute('
@@ -72,8 +72,9 @@ function set_stock_available()
 			VALUES
 			("'.(int)$row['id_product'].'", "0", "1", "0", "'.(int)$quantity.'", "0", "'.(int)$row['out_of_stock'].'")
 		');
-            if (!$res)
-                return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
+        if (!$res) {
+            return array('error' => Db::getInstance()->getNumberError(), 'msg' => '(products)'.Db::getInstance()->getMsgError());
+        }
     }
     return $res;
 }

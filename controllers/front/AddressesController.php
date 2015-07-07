@@ -50,8 +50,9 @@ class AddressesControllerCore extends FrontController
     {
         parent::init();
 
-        if (!Validate::isLoadedObject($this->context->customer))
+        if (!Validate::isLoadedObject($this->context->customer)) {
             die(Tools::displayError('The customer could not be found.'));
+        }
     }
 
     /**
@@ -67,8 +68,7 @@ class AddressesControllerCore extends FrontController
         $ordered_fields = array();
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         // @todo getAddresses() should send back objects
-        foreach ($addresses as $detail)
-        {
+        foreach ($addresses as $detail) {
             $address = new Address($detail['id_address']);
             $multiple_addresses_formated[$total] = AddressFormat::getFormattedLayoutData($address);
             unset($address);
@@ -79,8 +79,9 @@ class AddressesControllerCore extends FrontController
         }
 
         // Retro theme 1.4.2
-        if ($key = array_search('Country:name', $ordered_fields))
+        if ($key = array_search('Country:name', $ordered_fields)) {
             $ordered_fields[$key] = 'country';
+        }
 
         $addresses_style = array(
             'company' => 'address_company',

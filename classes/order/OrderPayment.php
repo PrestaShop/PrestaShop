@@ -61,8 +61,7 @@ class OrderPaymentCore extends ObjectModel
 
     public function add($autodate = true, $nullValues = false)
     {
-        if (parent::add($autodate, $nullValues))
-        {
+        if (parent::add($autodate, $nullValues)) {
             Hook::exec('actionPaymentCCAdd', array('paymentCC' => $this));
             return true;
         }
@@ -108,12 +107,14 @@ class OrderPaymentCore extends ObjectModel
     public static function getByInvoiceId($id_invoice)
     {
         $payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `'._DB_PREFIX_.'order_invoice_payment` WHERE id_order_invoice = '.(int)$id_invoice);
-        if (!$payments)
+        if (!$payments) {
             return array();
+        }
 
         $payment_list = array();
-        foreach ($payments as $payment)
+        foreach ($payments as $payment) {
             $payment_list[] = $payment['id_order_payment'];
+        }
 
         $payments = new PrestaShopCollection('OrderPayment');
         $payments->where('id_order_payment', 'IN', $payment_list);
@@ -135,8 +136,9 @@ class OrderPaymentCore extends ObjectModel
 		WHERE id_order_payment = '.(int)$this->id.'
 		AND id_order = '.(int)$id_order);
 
-        if (!$res)
+        if (!$res) {
             return false;
+        }
 
         return new OrderInvoice((int)$res);
     }

@@ -27,30 +27,30 @@ class Cart extends CartCore
                 'id_address_delivery' => $id_address_delivery,
             ),
             null, false);
-        if ($result == false)
+        if ($result == false) {
             parent::deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0);
+        }
     }
 
     protected function _getProducts($refresh = false, $id_product = false, $id_country = null)
     {
         $products = parent::getProducts($refresh, $id_product, $id_country);
 
-        if (_PS_VERSION_ >= 1.6)
-        {
+        if (_PS_VERSION_ >= 1.6) {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null, true);
-            if (isset($params['productpricebysize']['products']))
+            if (isset($params['productpricebysize']['products'])) {
                 return $params['productpricebysize']['products'];
-            else
+            } else {
                 return $products;
-        }
-        else
-        {
+            }
+        } else {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
             $params = Tools::jsonDecode($params, true);
-            if (isset($params['products']))
+            if (isset($params['products'])) {
                 return $params['products'];
-            else
+            } else {
                 return $products;
+            }
         }
     }
 }

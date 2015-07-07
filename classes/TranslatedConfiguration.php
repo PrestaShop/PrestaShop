@@ -55,15 +55,15 @@ class TranslatedConfigurationCore extends Configuration
         $this->def = ObjectModel::getDefinition($this);
         // Check if the id configuration is set in the configuration_lang table.
         // Otherwise configuration is not set as translated configuration.
-        if ($id !== null)
-        {
+        if ($id !== null) {
             $id_translated = Db::getInstance()->executeS('				SELECT `'.bqSQL($this->def['primary']).'`
 				FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
 				WHERE `'.bqSQL($this->def['primary']).'`='.(int)$id.' LIMIT 0,1
 			');
 
-            if (empty($id_translated))
+            if (empty($id_translated)) {
                 $id = null;
+            }
         }
         parent::__construct($id, $id_lang);
     }
@@ -76,10 +76,8 @@ class TranslatedConfigurationCore extends Configuration
     public function update($nullValues = false)
     {
         $ishtml = false;
-        foreach ($this->value as $i18n_value)
-        {
-            if (Validate::isCleanHtml($i18n_value))
-            {
+        foreach ($this->value as $i18n_value) {
+            if (Validate::isCleanHtml($i18n_value)) {
                 $ishtml = true;
                 break;
             }
@@ -90,8 +88,9 @@ class TranslatedConfigurationCore extends Configuration
 			SELECT `id_configuration` AS id
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE `name` = \''.pSQL($this->name).'\'');
-        if ($last_insert)
+        if ($last_insert) {
             $this->id = $last_insert['id'];
+        }
 
         return true;
     }

@@ -52,7 +52,6 @@ class InstallControllerHttpLicense extends InstallControllerHttp
 
     public function process()
     {
-    
     }
     
     /**

@@ -34,8 +34,7 @@ class Core_Foundation_Database_EntityManager
     public function __construct(
         Core_Foundation_Database_DatabaseInterface $db,
         Core_Business_ConfigurationInterface $configuration
-    )
-    {
+    ) {
         $this->db = $db;
         $this->configuration = $configuration;
     }

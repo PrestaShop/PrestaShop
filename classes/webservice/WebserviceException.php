@@ -37,8 +37,7 @@ class WebserviceExceptionCore extends Exception
     public function __construct($message, $code)
     {
         $exception_code = $code;
-        if (is_array($code))
-        {
+        if (is_array($code)) {
             $exception_code = $code[0];
             $this->setStatus($code[1]);
         }
@@ -56,8 +55,9 @@ class WebserviceExceptionCore extends Exception
     }
     public function setStatus($status)
     {
-        if (Validate::isInt($status))
+        if (Validate::isInt($status)) {
             $this->status = $status;
+        }
         return $this;
     }
     public function getStatus()

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Tests\Helper;
 
 class File
 {
-
     /**
      * Recursivly copy a directory
      *
@@ -40,14 +39,13 @@ class File
         $dirp = opendir($src);
         @mkdir($dst);
         $file = readdir($dirp);
-        while ($file !== false)
-        {
-            if ($file != '.' && $file != '..')
-            {
-                if (is_dir($src.'/'.$file))
+        while ($file !== false) {
+            if ($file != '.' && $file != '..') {
+                if (is_dir($src.'/'.$file)) {
                     File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
-                else
+                } else {
                     copy($src.'/'.$file, $dst.'/'.$file);
+                }
             }
             $file = readdir($dirp);
         }
@@ -63,14 +61,13 @@ class File
     {
         $dirp = opendir($dir);
         $file = readdir($dirp);
-        while ($file !== false)
-        {
-            if ($file != '.' && $file != '..')
-            {
-                if (is_dir($dir.'/'.$file))
+        while ($file !== false) {
+            if ($file != '.' && $file != '..') {
+                if (is_dir($dir.'/'.$file)) {
                     File::recurseDelete($dir.'/'.$file);
-                else
+                } else {
                     unlink($dir.'/'.$file);
+                }
             }
             $file = readdir($dirp);
         }

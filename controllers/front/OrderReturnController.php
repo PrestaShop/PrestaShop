@@ -44,16 +44,13 @@ class OrderReturnControllerCore extends FrontController
         
         $id_order_return = (int)Tools::getValue('id_order_return');
 
-        if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return))
+        if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return)) {
             $this->errors[] = Tools::displayError('Order ID required');
-        else
-        {
+        } else {
             $order_return = new OrderReturn((int)$id_order_return);
-            if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer)
-            {
+            if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
                 $order = new Order((int)($order_return->id_order));
-                if (Validate::isLoadedObject($order))
-                {
+                if (Validate::isLoadedObject($order)) {
                     $state = new OrderReturnState((int)$order_return->state);
                     $this->context->smarty->assign(array(
                         'orderRet' => $order_return,
@@ -64,12 +61,12 @@ class OrderReturnControllerCore extends FrontController
                         'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)$order_return->id_order),
                         'customizedDatas' => Product::getAllCustomizedDatas((int)$order->id_cart)
                     ));
-                }
-                else
+                } else {
                     $this->errors[] = Tools::displayError('Cannot find the order return.');
-            }
-            else
+                }
+            } else {
                 $this->errors[] = Tools::displayError('Cannot find the order return.');
+            }
         }
     }
 

@@ -63,23 +63,23 @@ function p15012_add_missing_columns()
     $q_list['country']['display_tax_label']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'country`
 		CHANGE display_tax_label `display_tax_label` tinyint(1) NOT NULL AFTER zip_code_format';
 
-  $q_list['currency']['active']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'currency`
+    $q_list['currency']['active']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'currency`
 		CHANGE active active tinyint(1) unsigned NOT NULL DEFAULT "1"';
 
-  $q_list['customer']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'customer`
+    $q_list['customer']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'customer`
 		CHANGE id_shop_group id_shop_group int(11) unsigned NOT NULL DEFAULT "1"';
 
-  $q_list['employee']['bo_uimode']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'employee`
+    $q_list['employee']['bo_uimode']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'employee`
 		DROP `bo_uimode`';
 
-  $q_list['meta_lang']['url_rewrite']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'meta_lang`
+    $q_list['meta_lang']['url_rewrite']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'meta_lang`
 		CHANGE url_rewrite url_rewrite varchar(254) NOT NULL';
 
-  $q_list['order_detail']['id_warehouse']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
+    $q_list['order_detail']['id_warehouse']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `id_warehouse` id_warehouse  int(10) unsigned DEFAULT "0"';
-  $q_list['order_detail']['reduction_amount_tax_incl']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
+    $q_list['order_detail']['reduction_amount_tax_incl']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `reduction_amount_tax_incl` reduction_amount_tax_incl DEC(20,6) NOT NULL DEFAULT "0.000000"';
-  $q_list['order_detail']['reduction_amount_tax_excl']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
+    $q_list['order_detail']['reduction_amount_tax_excl']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
 		CHANGE `reduction_amount_tax_excl` reduction_amount_tax_excl DEC(20,6) NOT NULL DEFAULT "0.000000"';
     
     $q_list['order_detail']['ecotax_tax_rate']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail`
@@ -108,83 +108,85 @@ function p15012_add_missing_columns()
     $q_list['order_detail_tax']['total_amount']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_detail_tax`
 		CHANGE `total_amount` total_amount DEC(10,6) NOT NULL DEFAULT "0.000000"';
 
-  $q_list['order_invoice']['note']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_invoice`
+    $q_list['order_invoice']['note']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_invoice`
 		CHANGE `note` note text';
 
-  $q_list['order_payment']['id_order_invoice']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_payment`
+    $q_list['order_payment']['id_order_invoice']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'order_payment`
 		CHANGE `id_order_invoice` id_order_invoice int(10) unsigned NOT NULL DEFAULT 0';
 
-  $q_list['orders']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
+    $q_list['orders']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `reference` reference varchar(9) DEFAULT NULL';
-  $q_list['orders']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
+    $q_list['orders']['id_shop_group']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'orders`
 		CHANGE `id_shop_group` id_shop_group int(11) unsigned NOT NULL DEFAULT "1"';
 
-  $q_list['product']['unity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
+    $q_list['product']['unity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `unity` unity varchar(255) DEFAULT NULL';
 
-  $q_list['product']['width']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
+    $q_list['product']['width']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `width` `width` float NOT NULL DEFAULT "0"';
 
-  $q_list['product']['height']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
+    $q_list['product']['height']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `height` `height` float NOT NULL DEFAULT "0"';
 
-  $q_list['product']['depth']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
+    $q_list['product']['depth']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `depth` `depth` float NOT NULL DEFAULT "0"';
 
-  $q_list['product']['minimal_quantity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
+    $q_list['product']['minimal_quantity']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product`
 		CHANGE `minimal_quantity` `minimal_quantity` int(10) unsigned NOT NULL DEFAULT "1"';
 
-  $q_list['product_attribute']['ecotax']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product_attribute`
+    $q_list['product_attribute']['ecotax']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'product_attribute`
 		CHANGE `ecotax` ecotax decimal(17,6) NOT NULL DEFAULT "0.000000"';
 
-  $q_list['stock_mvt_reason']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason`
+    $q_list['stock_mvt_reason']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason`
 		CHANGE `id_stock_mvt_reason` id_stock_mvt_reason int(11) unsigned NOT NULL';
 
-  $q_list['stock_mvt_reason_lang']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
+    $q_list['stock_mvt_reason_lang']['id_stock_mvt_reason']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
 		CHANGE `id_stock_mvt_reason` id_stock_mvt_reason int(11) unsigned NOT NULL';
 
-  $q_list['stock_mvt_reason_lang']['id_lang']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
+    $q_list['stock_mvt_reason_lang']['id_lang']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'stock_mvt_reason_lang`
 		CHANGE `id_lang` id_lang int(11) unsigned NOT NULL';
 
-  $q_list['supply_order']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'supply_order`
+    $q_list['supply_order']['reference']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'supply_order`
 		CHANGE `reference` reference varchar(64) NOT NULL';
 
-  $q_list['tax']['deleted']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'tax`
+    $q_list['tax']['deleted']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'tax`
 		CHANGE `deleted` deleted tinyint(1) unsigned NOT NULL DEFAULT "0"';
 
-  $q_list['carrier']['need_range']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'carrier`
+    $q_list['carrier']['need_range']['mod'] = 'ALTER TABLE `'._DB_PREFIX_.'carrier`
 		CHANGE `need_range` need_range tinyint(1) unsigned NOT NULL DEFAULT "0" AFTER shipping_external';
 
-    foreach($q_list as $table => $cols)
-    {
-        if (empty($table))
+    foreach ($q_list as $table => $cols) {
+        if (empty($table)) {
             continue;
+        }
         $list_fields = $db->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
-        if (is_array($list_fields))
-            foreach($list_fields as $k => $field)
+        if (is_array($list_fields)) {
+            foreach ($list_fields as $k => $field) {
                 $list_fields[$k] = $field['Field'];
-        if (is_array($cols))
-            foreach ($cols as $col => $q)
-            {
+            }
+        }
+        if (is_array($cols)) {
+            foreach ($cols as $col => $q) {
                 // do only if column exists
-                if (is_array($list_fields) && in_array($col, $list_fields))
+                if (is_array($list_fields) && in_array($col, $list_fields)) {
                     $do = 'mod';
-                else
+                } else {
                     $do = 'add';
+                }
     
-                if (!empty($q[$do]))
-                {
-                    if (!$db->execute($q[$do]))
+                if (!empty($q[$do])) {
+                    if (!$db->execute($q[$do])) {
                         $errors[] = '<subquery><query>'.$q[$do].'</query><error>'.$db->getMsgError().'</error></subquery>';
+                    }
                 }
             }
+        }
     }
 
-    if (sizeof($errors) > 0)
-    {
+    if (sizeof($errors) > 0) {
         $msg = implode("\r", $errors);
         return array('error' => 1, 'msg' => $msg);
-    }
-    else
+    } else {
         return true;
+    }
 }

@@ -46,25 +46,29 @@ class InstallLanguages
 
     public static function getInstance()
     {
-        if (!self::$_instance)
+        if (!self::$_instance) {
             self::$_instance = new self();
+        }
         return self::$_instance;
     }
 
     public function __construct()
     {
         // English language is required
-        if (!file_exists(_PS_INSTALL_LANGS_PATH_.'en/language.xml'))
+        if (!file_exists(_PS_INSTALL_LANGS_PATH_.'en/language.xml')) {
             throw new PrestashopInstallerException('English language is missing');
+        }
 
         $this->languages = array(
             self::DEFAULT_ISO => new InstallLanguage(self::DEFAULT_ISO),
         );
 
         // Load other languages
-        foreach (scandir(_PS_INSTALL_LANGS_PATH_) as $lang)
-            if ($lang[0] != '.' && is_dir(_PS_INSTALL_LANGS_PATH_.$lang) && $lang != self::DEFAULT_ISO && file_exists(_PS_INSTALL_LANGS_PATH_.$lang.'/install.php'))
+        foreach (scandir(_PS_INSTALL_LANGS_PATH_) as $lang) {
+            if ($lang[0] != '.' && is_dir(_PS_INSTALL_LANGS_PATH_.$lang) && $lang != self::DEFAULT_ISO && file_exists(_PS_INSTALL_LANGS_PATH_.$lang.'/install.php')) {
                 $this->languages[$lang] = new InstallLanguage($lang);
+            }
+        }
         uasort($this->languages, 'ps_usort_languages');
     }
 
@@ -75,8 +79,9 @@ class InstallLanguages
      */
     public function setLanguage($iso)
     {
-        if (!in_array($iso, $this->getIsoList()))
+        if (!in_array($iso, $this->getIsoList())) {
             throw new PrestashopInstallerException('Language '.$iso.' not found');
+        }
         $this->language = $iso;
     }
 
@@ -97,8 +102,9 @@ class InstallLanguages
      */
     public function getLanguage($iso = null)
     {
-        if (!$iso)
+        if (!$iso) {
             $iso = $this->language;
+        }
         return $this->languages[$iso];
     }
 
@@ -128,18 +134,19 @@ class InstallLanguages
     {
         $args = func_get_args();
         $translation = $this->getLanguage()->getTranslation($args[0]);
-        if (is_null($translation))
-        {
+        if (is_null($translation)) {
             $translation = $this->getLanguage(self::DEFAULT_ISO)->getTranslation($args[0]);
-            if (is_null($translation))
+            if (is_null($translation)) {
                 $translation = $args[0];
+            }
         }
 
         $args[0] = $translation;
-        if(count($args) > 1)
+        if (count($args) > 1) {
             return call_user_func_array('sprintf', $args);
-        else
+        } else {
             return $translation;
+        }
     }
 
     /**
@@ -150,8 +157,9 @@ class InstallLanguages
     public function getInformation($key, $with_default = true)
     {
         $information = $this->getLanguage()->getTranslation($key, 'informations');
-        if (is_null($information) && $with_default)
+        if (is_null($information) && $with_default) {
             return $this->getLanguage(self::DEFAULT_ISO)->getTranslation($key, 'informations');
+        }
         return $information;
     }
 
@@ -164,14 +172,12 @@ class InstallLanguages
     {
         static $countries = null;
 
-        if (is_null($countries))
-        {
+        if (is_null($countries)) {
             $countries = array();
             $countries_lang = $this->getLanguage()->getCountries();
             $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
             $xml = simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/country.xml');
-            foreach ($xml->entities->country as $country)
-            {
+            foreach ($xml->entities->country as $country) {
                 $iso = strtolower((string)$country['iso_code']);
                 $countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
             }
@@ -190,17 +196,19 @@ class InstallLanguages
     {
         // This code is from a php.net comment : http://www.php.net/manual/fr/reserved.variables.server.php#94237
         $split_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        if (!is_array($split_languages))
+        if (!is_array($split_languages)) {
             return false;
+        }
 
-        foreach ($split_languages as $lang)
-        {
+        foreach ($split_languages as $lang) {
             $pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})'.
                 '(?:-(?P<subtag>[a-zA-Z]{2,8}))?(?:(?:;q=)'.
                 '(?P<quantifier>\d\.\d))?$/';
-            if (preg_match($pattern, $lang, $m))
-                if (in_array($m['primarytag'], $this->getIsoList()))
+            if (preg_match($pattern, $lang, $m)) {
+                if (in_array($m['primarytag'], $this->getIsoList())) {
                     return $m;
+                }
+            }
         }
         return false;
     }
@@ -210,7 +218,8 @@ function ps_usort_languages($a, $b)
 {
     $aname = $a->getMetaInformation('name');
     $bname = $b->getMetaInformation('name');
-    if ($aname == $bname)
+    if ($aname == $bname) {
         return 0;
+    }
     return ($aname < $bname) ? -1 : 1;
 }

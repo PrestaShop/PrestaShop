@@ -41,8 +41,9 @@ class AdminSearchEnginesControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -88,12 +89,13 @@ class AdminSearchEnginesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if(empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_search_engine'] = array(
                 'href' => self::$currentIndex.'&addsearch_engine&token='.$this->token,
                 'desc' => $this->l('Add new search engine', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         $this->identifier_name = 'server';
         

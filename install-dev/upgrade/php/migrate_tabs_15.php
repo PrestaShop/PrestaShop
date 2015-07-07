@@ -43,12 +43,13 @@ function migrate_tabs_15()
     );
 
     $ids = array();
-    foreach ($remove_tabs as $tab)
-        if ($id = get_tab_id($tab))
+    foreach ($remove_tabs as $tab) {
+        if ($id = get_tab_id($tab)) {
             $ids[] = $id;
+        }
+    }
 
-    if ($ids)
-    {
+    if ($ids) {
         Db::getInstance()->delete('tab', 'id_tab IN ('.implode(', ', $ids).')');
         Db::getInstance()->delete('tab_lang', 'id_tab IN ('.implode(', ', $ids).')');
     }
@@ -83,19 +84,20 @@ function migrate_tabs_15()
         'AdminParentShop' => 'AdminShop',
     );
 
-    foreach ($move_association as $to => $from)
-    {
-        if (empty($parent[$to]))
+    foreach ($move_association as $to => $from) {
+        if (empty($parent[$to])) {
             continue;
+        }
 
         $id_parent = get_tab_id($from);
-        if ($id_parent)
+        if ($id_parent) {
             Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'tab
 				SET id_parent = '.$parent[$to].'
 				WHERE id_parent = '.$id_parent.'
 					OR id_tab = '.$id_parent.'
 			');
+        }
     }
 
     // ===== Move tabs to their new parents =====
@@ -123,18 +125,19 @@ function migrate_tabs_15()
         'AdminAccountingExport' => 'AdminStats',
     );
 
-    foreach ($move_to as $from => $to)
-    {
-        if (empty($parent[$to]))
+    foreach ($move_to as $from => $to) {
+        if (empty($parent[$to])) {
             continue;
+        }
 
         $id_tab = get_tab_id($from);
-        if ($id_tab)
+        if ($id_tab) {
             Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'tab
 				SET id_parent = '.$parent[$to].'
 				WHERE id_tab = '.$id_tab.'
 			');
+        }
     }
 
     // ===== Remove AdminThemes from Modules parent =====
@@ -144,8 +147,9 @@ function migrate_tabs_15()
 			AND id_parent = '.$parent['AdminParentModules'].'
 	');
 
-    if ($id_tab_theme)
+    if ($id_tab_theme) {
         Db::getInstance()->delete('tab', 'id_tab = '.$id_tab_theme);
+    }
 
     // ===== Create new tabs (but not parents this time) =====
     add_new_tab('AdminOrderPreferences', 'en:Orders|fr:Commandes|es:Pedidos|de:Bestellungen|it:Ordini', $parent['AdminParentPreferences']);
@@ -155,25 +159,29 @@ function migrate_tabs_15()
 
     // ===== Sort parent tabs =====
     $position = 0;
-    foreach ($parent as $id)
+    foreach ($parent as $id) {
         Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.(int)$id);
+    }
 
     $sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
 			WHERE id_tab NOT IN ('.implode(', ', $parent).')
 				AND id_parent = 0';
     
     $id_tabs = Db::getInstance()->executeS($sql);
-    if (is_array($id_tabs) && count($id_tabs))
-        foreach (Db::getInstance()->executeS($sql) as $row)
+    if (is_array($id_tabs) && count($id_tabs)) {
+        foreach (Db::getInstance()->executeS($sql) as $row) {
             Db::getInstance()->update('tab', array('position' => $position++), 'id_tab = '.$row['id_tab']);
+        }
+    }
 }
 
 function get_tab_id($class_name)
 {
     static $cache = array();
 
-    if (!isset($cache[$class_name]))
+    if (!isset($cache[$class_name])) {
         $cache[$class_name] = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name = \''.pSQL($class_name).'\'');
+    }
     return $cache[$class_name];
 }
 

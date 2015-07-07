@@ -39,6 +39,4 @@ class Core_Business_CMS_CMSRoleRepository extends Core_Foundation_Database_Entit
 
         return $this->hydrateMany($this->db->select($sql));
     }
-
-
 }

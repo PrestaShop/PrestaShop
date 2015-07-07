@@ -37,37 +37,44 @@ class OrderFollowControllerCore extends FrontController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitReturnMerchandise'))
-        {
+        if (Tools::isSubmit('submitReturnMerchandise')) {
             $customizationQtyInput = Tools::getValue('customization_qty_input');
             $order_qte_input = Tools::getValue('order_qte_input');
             $customizationIds = Tools::getValue('customization_ids');
 
-            if (!$id_order = (int)Tools::getValue('id_order'))
+            if (!$id_order = (int)Tools::getValue('id_order')) {
                 Tools::redirect('index.php?controller=history');
-            if (!$order_qte_input && !$customizationQtyInput && !$customizationIds)
+            }
+            if (!$order_qte_input && !$customizationQtyInput && !$customizationIds) {
                 Tools::redirect('index.php?controller=order-follow&errorDetail1');
-            if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail'))
+            }
+            if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail')) {
                 Tools::redirect('index.php?controller=order-follow&errorDetail2');
+            }
 
             $order = new Order((int)$id_order);
-            if (!$order->isReturnable()) Tools::redirect('index.php?controller=order-follow&errorNotReturnable');
-            if ($order->id_customer != $this->context->customer->id)
+            if (!$order->isReturnable()) {
+                Tools::redirect('index.php?controller=order-follow&errorNotReturnable');
+            }
+            if ($order->id_customer != $this->context->customer->id) {
                 die(Tools::displayError());
+            }
             $orderReturn = new OrderReturn();
             $orderReturn->id_customer = (int)$this->context->customer->id;
             $orderReturn->id_order = $id_order;
             $orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
-            if (empty($orderReturn->question))
+            if (empty($orderReturn->question)) {
                 Tools::redirect('index.php?controller=order-follow&errorMsg&'.
                     http_build_query(array(
                         'ids_order_detail' => $ids_order_detail,
                         'order_qte_input' => $order_qte_input,
                         'id_order' => Tools::getValue('id_order'),
                     )));
+            }
 
-            if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput))
+            if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
                 Tools::redirect('index.php?controller=order-follow&errorQuantity');
+            }
 
             $orderReturn->state = 1;
             $orderReturn->add();
@@ -86,9 +93,9 @@ class OrderFollowControllerCore extends FrontController
         parent::initContent();
 
         $ordersReturn = OrderReturn::getOrdersReturn($this->context->customer->id);
-        if (Tools::isSubmit('errorQuantity'))
+        if (Tools::isSubmit('errorQuantity')) {
             $this->context->smarty->assign('errorQuantity', true);
-        elseif (Tools::isSubmit('errorMsg'))
+        } elseif (Tools::isSubmit('errorMsg')) {
             $this->context->smarty->assign(
                 array(
                     'errorMsg' => true,
@@ -97,12 +104,13 @@ class OrderFollowControllerCore extends FrontController
                     'id_order' => (int)Tools::getValue('id_order'),
                 )
             );
-        elseif (Tools::isSubmit('errorDetail1'))
+        } elseif (Tools::isSubmit('errorDetail1')) {
             $this->context->smarty->assign('errorDetail1', true);
-        elseif (Tools::isSubmit('errorDetail2'))
+        } elseif (Tools::isSubmit('errorDetail2')) {
             $this->context->smarty->assign('errorDetail2', true);
-        elseif (Tools::isSubmit('errorNotReturnable'))
+        } elseif (Tools::isSubmit('errorNotReturnable')) {
             $this->context->smarty->assign('errorNotReturnable', true);
+        }
 
         $this->context->smarty->assign('ordersReturn', $ordersReturn);
 

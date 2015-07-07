@@ -35,8 +35,7 @@ class PrestaShopExceptionCore extends Exception
     public function displayMessage()
     {
         header('HTTP/1.1 500 Internal Server Error');
-        if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_'))
-        {
+        if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
             // Display error message
             echo '<style>
 				#psException{font-family: Verdana; font-size: 14px}
@@ -57,33 +56,35 @@ class PrestaShopExceptionCore extends Exception
 
             // Display debug backtrace
             echo '<ul>';
-            foreach ($this->getTrace() as $id => $trace)
-            {
+            foreach ($this->getTrace() as $id => $trace) {
                 $relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
                 $current_line = (isset($trace['line'])) ? $trace['line'] : '';
-                if (defined('_PS_ADMIN_DIR_'))
+                if (defined('_PS_ADMIN_DIR_')) {
                     $relative_file = str_replace(basename(_PS_ADMIN_DIR_).DIRECTORY_SEPARATOR, 'admin'.DIRECTORY_SEPARATOR, $relative_file);
+                }
                 echo '<li>';
                 echo '<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>';
                 echo ' - <a style="font-size: 12px; color: #000000; cursor:pointer; color: blue;" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$current_line.' - '.$relative_file.']</a>';
 
-                if (isset($trace['args']) && count($trace['args']))
+                if (isset($trace['args']) && count($trace['args'])) {
                     echo ' - <a style="font-size: 12px; color: #000000; cursor:pointer; color: blue;" onclick="document.getElementById(\'psArgs_'.$id.'\').style.display = (document.getElementById(\'psArgs_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">['.count($trace['args']).' Arguments]</a>';
+                }
 
-                if ($relative_file)
+                if ($relative_file) {
                     $this->displayFileDebug($trace['file'], $trace['line'], $id);
-                if (isset($trace['args']) && count($trace['args']))
+                }
+                if (isset($trace['args']) && count($trace['args'])) {
                     $this->displayArgsDebug($trace['args'], $id);
+                }
                 echo '</li>';
             }
             echo '</ul>';
             echo '</div>';
-        }
-        else
-        {
+        } else {
             // If not in mode dev, display an error page
-            if (file_exists(_PS_ROOT_DIR_.'/error500.html'))
+            if (file_exists(_PS_ROOT_DIR_.'/error500.html')) {
                 echo file_get_contents(_PS_ROOT_DIR_.'/error500.html');
+            }
         }
         // Log the error in the disk
         $this->logError();
@@ -102,8 +103,7 @@ class PrestaShopExceptionCore extends Exception
         $lines = file($file);
         $offset = $line - 6;
         $total = 11;
-        if ($offset < 0)
-        {
+        if ($offset < 0) {
             $total += $offset;
             $offset = 0;
         }
@@ -111,13 +111,13 @@ class PrestaShopExceptionCore extends Exception
         ++$offset;
 
         echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
-        foreach ($lines as $k => $l)
-        {
+        foreach ($lines as $k => $l) {
             $string = ($offset + $k).'. '.htmlspecialchars($l);
-            if ($offset + $k == $line)
+            if ($offset + $k == $line) {
                 echo '<span class="selected">'.$string.'</span>';
-            else
+            } else {
                 echo $string;
+            }
         }
         echo '</pre></div>';
     }
@@ -131,8 +131,7 @@ class PrestaShopExceptionCore extends Exception
     protected function displayArgsDebug($args, $id)
     {
         echo '<div class="psArgs" id="psArgs_'.$id.'"><pre>';
-        foreach ($args as $arg => $value)
-        {
+        foreach ($args as $arg => $value) {
             echo '<b>Argument ['.Tools::safeOutput($arg)."]</b>\n";
             echo Tools::safeOutput(print_r($value, true));
             echo "\n";
@@ -166,8 +165,9 @@ class PrestaShopExceptionCore extends Exception
     protected function getExtendedMessage($html = true)
     {
         $format = '<p><b>%s</b><br /><i>at line </i><b>%d</b><i> in file </i><b>%s</b></p>';
-        if (!$html)
+        if (!$html) {
             $format = strip_tags(str_replace('<br />', ' ', $format));
+        }
 
         return sprintf(
                     $format,

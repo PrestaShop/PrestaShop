@@ -68,8 +68,9 @@ class ThemeCore extends ObjectModel
     {
         $themes = new PrestaShopCollection('Theme');
 
-        if (is_array($excluded_ids) && !empty($excluded_ids))
+        if (is_array($excluded_ids) && !empty($excluded_ids)) {
             $themes->where('id_theme', 'notin', $excluded_ids);
+        }
 
         $themes->orderBy('name');
         return $themes;
@@ -86,32 +87,32 @@ class ThemeCore extends ObjectModel
         static $dirlist = array();
         $available_theme = array();
 
-        if (empty($dirlist))
-        {
+        if (empty($dirlist)) {
             $themes = scandir(_PS_ALL_THEMES_DIR_);
-            foreach ($themes as $theme)
-                if (is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$theme) && $theme[0] != '.')
+            foreach ($themes as $theme) {
+                if (is_dir(_PS_ALL_THEMES_DIR_.DIRECTORY_SEPARATOR.$theme) && $theme[0] != '.') {
                     $dirlist[] = $theme;
+                }
+            }
         }
 
-        if ($installed_only)
-        {
+        if ($installed_only) {
             $themes = Theme::getThemes();
-            foreach ($themes as $theme_obj)
-            {
+            foreach ($themes as $theme_obj) {
                 /** @var Theme $theme_obj */
                 $themes_dir[] = $theme_obj->directory;
             }
 
-            foreach ($dirlist as $theme)
-                if (false !== array_search($theme, $themes_dir))
+            foreach ($dirlist as $theme) {
+                if (false !== array_search($theme, $themes_dir)) {
                     $available_theme[] = $theme;
-        }
-        else
+                }
+            }
+        } else {
             $available_theme = $dirlist;
+        }
 
         return $available_theme;
-
     }
 
     /**
@@ -134,8 +135,9 @@ class ThemeCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        if (!is_dir(_PS_ALL_THEMES_DIR_.$this->directory))
+        if (!is_dir(_PS_ALL_THEMES_DIR_.$this->directory)) {
             return false;
+        }
 
         return parent::add($autodate, $null_values);
     }
@@ -149,8 +151,7 @@ class ThemeCore extends ObjectModel
      */
     public static function getByDirectory($directory)
     {
-        if (is_string($directory) && strlen($directory) > 0 && file_exists(_PS_ALL_THEMES_DIR_.$directory) && is_dir(_PS_ALL_THEMES_DIR_.$directory))
-        {
+        if (is_string($directory) && strlen($directory) > 0 && file_exists(_PS_ALL_THEMES_DIR_.$directory) && is_dir(_PS_ALL_THEMES_DIR_.$directory)) {
             $id_theme = (int)Db::getInstance()->getValue('SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
 
             return $id_theme ? new Theme($id_theme) : false;
@@ -163,8 +164,9 @@ class ThemeCore extends ObjectModel
     {
         $list = array();
         $tmp = Db::getInstance()->executeS('SELECT `directory` FROM '._DB_PREFIX_.'theme');
-        foreach ($tmp as $t)
+        foreach ($tmp as $t) {
             $list[] = $t['directory'];
+        }
 
         return $list;
     }
@@ -174,32 +176,32 @@ class ThemeCore extends ObjectModel
         $theme = new Theme((int)$id_theme);
         $theme_arr = array();
 
-        if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+        if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml')) {
             $config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-        elseif ($theme->name == 'default-bootstrap')
+        } elseif ($theme->name == 'default-bootstrap') {
             $config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
-        else
+        } else {
             $config_file = false;
+        }
 
-        if ($config_file)
-        {
+        if ($config_file) {
             $theme_arr['theme_id'] = (int)$theme->id;
             $xml_theme = @simplexml_load_file($config_file);
 
-            if ($xml_theme !== false)
-            {
-                foreach ($xml_theme->attributes() as $key => $value)
+            if ($xml_theme !== false) {
+                foreach ($xml_theme->attributes() as $key => $value) {
                     $theme_arr['theme_'.$key] = (string)$value;
+                }
 
-                foreach ($xml_theme->author->attributes() as $key => $value)
+                foreach ($xml_theme->author->attributes() as $key => $value) {
                     $theme_arr['author_'.$key] = (string)$value;
+                }
 
-                if ($theme_arr['theme_name'] == 'default-bootstrap')
+                if ($theme_arr['theme_name'] == 'default-bootstrap') {
                     $theme_arr['tc'] = Module::isEnabled('themeconfigurator');
+                }
             }
-        }
-        else
-        {
+        } else {
             // If no xml we use data from database
             $theme_arr['theme_id'] = (int)$theme->id;
             $theme_arr['theme_name'] = $theme->name;
@@ -213,20 +215,19 @@ class ThemeCore extends ObjectModel
     {
         $installed_theme_directories = Theme::getInstalledThemeDirectories();
         $not_installed_theme = array();
-        foreach (glob(_PS_ALL_THEMES_DIR_.'*', GLOB_ONLYDIR) as $theme_dir)
-        {
+        foreach (glob(_PS_ALL_THEMES_DIR_.'*', GLOB_ONLYDIR) as $theme_dir) {
             $dir = basename($theme_dir);
             $config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
-            if (!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
-            {
-                if ($xml_theme = @simplexml_load_file($config_file))
-                {
+            if (!in_array($dir, $installed_theme_directories) && @filemtime($config_file)) {
+                if ($xml_theme = @simplexml_load_file($config_file)) {
                     $theme = array();
-                    foreach ($xml_theme->attributes() as $key => $value)
+                    foreach ($xml_theme->attributes() as $key => $value) {
                         $theme[$key] = (string)$value;
+                    }
 
-                    if (!empty($theme))
+                    if (!empty($theme)) {
                         $not_installed_theme[] = $theme;
+                    }
                 }
             }
         }
@@ -242,16 +243,16 @@ class ThemeCore extends ObjectModel
      */
     public function updateMetas($metas, $full_update = false)
     {
-        if ($full_update)
+        if ($full_update) {
             Db::getInstance()->delete('theme_meta', 'id_theme='.(int)$this->id);
+        }
 
         $values = array();
-        if ($this->id > 0)
-        {
-            foreach ($metas as $meta)
-            {
-                if (!$full_update)
+        if ($this->id > 0) {
+            foreach ($metas as $meta) {
+                if (!$full_update) {
                     Db::getInstance()->delete('theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
+                }
 
                 $values[] = array(
                     'id_theme'     => (int)$this->id,
@@ -322,8 +323,9 @@ class ThemeCore extends ObjectModel
      */
     public function getMetas()
     {
-        if (!Validate::isUnsignedId($this->id) || $this->id == 0)
+        if (!Validate::isUnsignedId($this->id) || $this->id == 0) {
             return false;
+        }
 
         return Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'theme_meta WHERE id_theme = '.(int)$this->id);
     }
@@ -333,8 +335,9 @@ class ThemeCore extends ObjectModel
      */
     public function removeMetas()
     {
-        if (!Validate::isUnsignedId($this->id) || $this->id == 0)
+        if (!Validate::isUnsignedId($this->id) || $this->id == 0) {
             return false;
+        }
 
         return Db::getInstance()->delete('theme_meta', 'id_theme = '.(int)$this->id);
     }
@@ -342,8 +345,9 @@ class ThemeCore extends ObjectModel
     public function toggleResponsive()
     {
         // Object must have a variable called 'responsive'
-        if (!array_key_exists('responsive', $this))
+        if (!array_key_exists('responsive', $this)) {
             throw new PrestaShopException('property "responsive" is missing in object '.get_class($this));
+        }
 
         // Update only responsive field
         $this->setFieldsToUpdate(array('responsive' => true));
@@ -357,8 +361,9 @@ class ThemeCore extends ObjectModel
 
     public function toggleDefaultLeftColumn()
     {
-        if (!array_key_exists('default_left_column', $this))
+        if (!array_key_exists('default_left_column', $this)) {
             throw new PrestaShopException('property "default_left_column" is missing in object '.get_class($this));
+        }
 
         $this->setFieldsToUpdate(array('default_left_column' => true));
 
@@ -369,8 +374,9 @@ class ThemeCore extends ObjectModel
 
     public function toggleDefaultRightColumn()
     {
-        if (!array_key_exists('default_right_column', $this))
+        if (!array_key_exists('default_right_column', $this)) {
             throw new PrestaShopException('property "default_right_column" is missing in object '.get_class($this));
+        }
 
         $this->setFieldsToUpdate(array('default_right_column' => true));
 

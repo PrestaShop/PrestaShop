@@ -44,8 +44,9 @@ class AdminSearchConfControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        if (!Tools::getValue('realedit'))
+        if (!Tools::getValue('realedit')) {
             $this->deleted = false;
+        }
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -241,27 +242,30 @@ class AdminSearchConfControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_alias'] = array(
                 'href' => self::$currentIndex.'&addalias&token='.$this->token,
                 'desc' => $this->l('Add new alias', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
         $this->identifier_name = 'alias';
         parent::initPageHeaderToolbar();
-        if ($this->can_import)
+        if ($this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
                 'desc' => $this->l('Import', null, null, false)
             );
+        }
     }
 
     public function initProcess()
     {
         parent::initProcess();
         // This is a composite page, we don't want the "options" display mode
-        if ($this->display == 'options')
+        if ($this->display == 'options') {
             $this->display = '';
+        }
     }
 
     /**
@@ -269,8 +273,7 @@ class AdminSearchConfControllerCore extends AdminController
      */
     public function renderOptions()
     {
-        if ($this->fields_options && is_array($this->fields_options))
-        {
+        if ($this->fields_options && is_array($this->fields_options)) {
             $helper = new HelperOptions($this);
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
@@ -327,24 +330,27 @@ class AdminSearchConfControllerCore extends AdminController
         $search = strval(Tools::getValue('search'));
         $string = strval(Tools::getValue('alias'));
         $aliases = explode(',', $string);
-        if (empty($search) || empty($string))
+        if (empty($search) || empty($string)) {
             $this->errors[] = $this->l('Aliases and results are both required.');
-        if (!Validate::isValidSearch($search))
+        }
+        if (!Validate::isValidSearch($search)) {
             $this->errors[] = $search.' '.$this->l('Is not a valid result');
-        foreach ($aliases as $alias)
-            if (!Validate::isValidSearch($alias))
+        }
+        foreach ($aliases as $alias) {
+            if (!Validate::isValidSearch($alias)) {
                 $this->errors[] = $alias.' '.$this->l('Is not a valid alias');
+            }
+        }
 
-        if (!count($this->errors))
-        {
-            foreach ($aliases as $alias)
-            {
+        if (!count($this->errors)) {
+            foreach ($aliases as $alias) {
                 $obj = new Alias(null, trim($alias), trim($search));
                 $obj->save();
             }
         }
 
-        if (empty($this->errors))
+        if (empty($this->errors)) {
             $this->confirmations[] = $this->l('Creation successful');
+        }
     }
 }

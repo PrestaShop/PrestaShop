@@ -30,17 +30,15 @@ function ps16012_update_alias()
     $count_alias = Db::getInstance()->getValue('SELECT count(id_alias) FROM '._DB_PREFIX_.'alias');
     $nb_loop = $start = 0;
 
-    if ($count_alias > 0)
+    if ($count_alias > 0) {
         $nb_loop = ceil($count_alias / $step);
-    for ($i = 0; $i < $nb_loop; $i++)
-    {
+    }
+    for ($i = 0; $i < $nb_loop; $i++) {
         $sql = 'SELECT id_alias, alias, search FROM `'._DB_PREFIX_.'alias`';
         $start = intval(($i+1) * $step);
-        if ($aliass = Db::getInstance()->query($sql))
-            while ($alias = Db::getInstance()->nextRow($aliass))
-            {
-                if (is_array($alias))
-                {
+        if ($aliass = Db::getInstance()->query($sql)) {
+            while ($alias = Db::getInstance()->nextRow($aliass)) {
+                if (is_array($alias)) {
                     Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'alias`
 					SET alias = \''.pSQL(Tools::replaceAccentedChars($alias['alias'])).'\',
@@ -48,5 +46,6 @@ function ps16012_update_alias()
 					WHERE id_alias = '.(int)$alias['id_alias']);
                 }
             }
+        }
     }
 }

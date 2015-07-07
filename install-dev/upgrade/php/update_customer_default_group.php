@@ -33,11 +33,11 @@ function update_customer_default_group()
     $content = file_get_contents($filename);
     $pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
     preg_match($pattern, $content, $matches);
-    if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_'))
-            define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));
+    if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_')) {
+        define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));
+    }
     $ps_customer_group = DB::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
-    if ($ps_customer_group)
-    {
+    if ($ps_customer_group) {
         $str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
         $str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';
         $content = str_replace($str_old, $str_new, $content);
@@ -54,19 +54,20 @@ function update_customer_default_group()
 	WHERE `name` IN (\'PS_UNIDENTIFIED_GROUP\', \'PS_GUEST_GROUP\')');
 
 
-    if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups))
-        foreach ($carriers as $carrier)
-            foreach ($groups as $group)
+    if (count($carriers) && is_array($carriers) && count($groups) && is_array($groups)) {
+        foreach ($carriers as $carrier) {
+            foreach ($groups as $group) {
                 Db::getInstance()->execute('
 				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group`
 				VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
+            }
+        }
+    }
     
     $result = false;
-    if(file_exists($filename) && is_writable($filename))
-    {
+    if (file_exists($filename) && is_writable($filename)) {
         $result = (bool)file_put_contents($filename, $content);
-        if($result && file_exists($filename_old))
-        {
+        if ($result && file_exists($filename_old)) {
             unlink($filename_old);
             @chmod($filename, 0664);
         }

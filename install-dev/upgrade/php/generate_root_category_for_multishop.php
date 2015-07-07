@@ -54,10 +54,9 @@ function generate_root_category_for_multishop()
 	');
 
     $data = array();
-    if(is_array($shops) && is_array($langs))
-    {
-        foreach ($langs as $lang)
-            foreach ($shops as $shop)
+    if (is_array($shops) && is_array($langs)) {
+        foreach ($langs as $lang) {
+            foreach ($shops as $shop) {
                 $data[] = array(
                     'id_lang' => $lang['id_lang'],
                     'id_shop' => $shop['id_shop'],
@@ -65,6 +64,8 @@ function generate_root_category_for_multishop()
                     'name' => 'Root',
                     'link_rewrite' => '',
                 );
+            }
+        }
         Db::getInstance()->insert('category_lang', $data);
     }
 
@@ -73,14 +74,15 @@ function generate_root_category_for_multishop()
 		FROM `'._DB_PREFIX_.'category`
 	');
     $data = array();
-    if(is_array($shops) && is_array($categories))
-    {
-        foreach ($categories as $category)
-            foreach ($shops as $shop)
+    if (is_array($shops) && is_array($categories)) {
+        foreach ($categories as $category) {
+            foreach ($shops as $shop) {
                 $data[] = array(
                     'id_category' => $category['id_category'],
                     'id_shop' => $shop['id_shop']
                 );
+            }
+        }
         Db::getInstance()->insert('category_shop', $data);
     }
 

@@ -143,7 +143,7 @@ class AdminLocalizationControllerCore extends AdminController
             )
         );
 
-        if (function_exists('date_default_timezone_set'))
+        if (function_exists('date_default_timezone_set')) {
             $this->fields_options['general']['fields']['PS_TIMEZONE'] = array(
                 'title' => $this->l('Time zone'),
                 'validation' => 'isAnything',
@@ -153,63 +153,66 @@ class AdminLocalizationControllerCore extends AdminController
                 'identifier' => 'name',
                 'visibility' => Shop::CONTEXT_ALL
             );
+        }
     }
 
 
 
     public function postProcess()
     {
-        if (_PS_MODE_DEMO_)
-        {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
-                return;
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            return;
         }
 
-        if (!extension_loaded('openssl'))
+        if (!extension_loaded('openssl')) {
             $this->displayWarning($this->l('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.'));
+        }
 
-        if (Tools::isSubmit('submitLocalizationPack'))
-        {
+        if (Tools::isSubmit('submitLocalizationPack')) {
             $version = str_replace('.', '', _PS_VERSION_);
             $version = substr($version, 0, 2);
 
-            if (($iso_localization_pack = Tools::getValue('iso_localization_pack')) && Validate::isFileName($iso_localization_pack))
-            {
-                if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_'))
+            if (($iso_localization_pack = Tools::getValue('iso_localization_pack')) && Validate::isFileName($iso_localization_pack)) {
+                if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_')) {
                     $pack = @Tools::file_get_contents(_PS_API_URL_.'/localization/'.$version.'/'.$iso_localization_pack.'.xml');
-                else
+                } else {
                     $pack = false;
+                }
                 
-                if (defined('_PS_HOST_MODE_'))
+                if (defined('_PS_HOST_MODE_')) {
                     $path = _PS_CORE_DIR_.'/localization/'.$iso_localization_pack.'.xml';
-                else
+                } else {
                     $path = _PS_ROOT_DIR_.'/localization/'.$iso_localization_pack.'.xml';
+                }
 
-                if (!$pack && !($pack = @Tools::file_get_contents($path)))
+                if (!$pack && !($pack = @Tools::file_get_contents($path))) {
                     $this->errors[] = Tools::displayError('Cannot load the localization pack.');
+                }
 
-                if (!$selection = Tools::getValue('selection'))
+                if (!$selection = Tools::getValue('selection')) {
                     $this->errors[] = Tools::displayError('Please select at least one item to import.');
-                else
-                {
-                    foreach ($selection as $selected)
-                        if (!Validate::isLocalizationPackSelection($selected))
-                        {
+                } else {
+                    foreach ($selection as $selected) {
+                        if (!Validate::isLocalizationPackSelection($selected)) {
                             $this->errors[] = Tools::displayError('Invalid selection');
                             return;
                         }
+                    }
                     $localization_pack = new LocalizationPack();
-                    if (!$localization_pack->loadLocalisationPack($pack, $selection, false, $iso_localization_pack))
+                    if (!$localization_pack->loadLocalisationPack($pack, $selection, false, $iso_localization_pack)) {
                         $this->errors = array_merge($this->errors, $localization_pack->getErrors());
-                    else
+                    } else {
                         Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);
+                    }
                 }
             }
         }
 
         // Remove the module list cache if the default country changed
-        if (Tools::isSubmit('submitOptionsconfiguration') && file_exists(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST))
+        if (Tools::isSubmit('submitOptionsconfiguration') && file_exists(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
             @unlink(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+        }
         parent::postProcess();
     }
 
@@ -224,38 +227,38 @@ class AdminLocalizationControllerCore extends AdminController
         $this->tpl_option_vars['options_content'] = $this->renderOptions();
 
         $xml_localization = Tools::simplexml_load_file(_PS_API_URL_.'/rss/localization.xml');
-        if (!$xml_localization)
-        {
+        if (!$xml_localization) {
             $localization_file = _PS_ROOT_DIR_.'/localization/localization.xml';
-            if (file_exists($localization_file))
+            if (file_exists($localization_file)) {
                 $xml_localization = simplexml_load_file($localization_file);
+            }
         }
 
         // Array to hold the list of country ISOs that have a localization pack hosted on prestashop.com
         $remote_isos = array();
 
         $i = 0;
-        if ($xml_localization)
-            foreach ($xml_localization->pack as $key => $pack)
-            {
+        if ($xml_localization) {
+            foreach ($xml_localization->pack as $key => $pack) {
                 $remote_isos[(string)$pack->iso] = true;
                 $localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
                 $localizations_pack[$i]['name'] = (string)$pack->name;
                 $i++;
             }
+        }
 
-        if (!$localizations_pack)
+        if (!$localizations_pack) {
             return $this->displayWarning($this->l('Cannot connect to '._PS_API_URL_));
+        }
 
         // Add local localization .xml files to the list if they are not already there
-        foreach (scandir(_PS_ROOT_DIR_.'/localization/') as $entry)
-        {
+        foreach (scandir(_PS_ROOT_DIR_.'/localization/') as $entry) {
             $m = array();
-            if (preg_match('/^([a-z]{2})\.xml$/', $entry, $m))
-            {
+            if (preg_match('/^([a-z]{2})\.xml$/', $entry, $m)) {
                 $iso = $m[1];
-                if (empty($remote_isos[$iso])) // if the pack is only there locally and not on prestashop.com
-                {
+                if (empty($remote_isos[$iso])) {
+                    // if the pack is only there locally and not on prestashop.com
+
                     $xml_pack = simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
                     $localizations_pack[$i]['iso_localization_pack'] = $iso;
                     $localizations_pack[$i]['name'] = sprintf($this->l('%s (local)'), (string)$xml_pack['name']);
@@ -371,8 +374,9 @@ class AdminLocalizationControllerCore extends AdminController
     public function initContent()
     {
         $this->initTabModuleList();
-        if (!$this->loadObject(true))
+        if (!$this->loadObject(true)) {
             return;
+        }
 
         $this->initToolbar();
         $this->initPageHeaderToolbar();
@@ -396,8 +400,7 @@ class AdminLocalizationControllerCore extends AdminController
     {
         $lang = new Language((int)Tools::getValue('PS_LANG_DEFAULT'));
 
-        if (!$lang->active)
-        {
+        if (!$lang->active) {
             $lang->active = 1;
             $lang->save();
         }
@@ -405,21 +408,22 @@ class AdminLocalizationControllerCore extends AdminController
 
     public function updateOptionPsCurrencyDefault($value)
     {
-        if ($value == Configuration::get('PS_CURRENCY_DEFAULT'))
+        if ($value == Configuration::get('PS_CURRENCY_DEFAULT')) {
             return;
+        }
         Configuration::updateValue('PS_CURRENCY_DEFAULT', $value);
 
         /* Set conversion rate of default currency to 1 */
         ObjectModel::updateMultishopTable('Currency', array('conversion_rate' => 1), 'a.id_currency');
         
         $tmp_context = Shop::getContext();
-        if ($tmp_context == Shop::CONTEXT_GROUP)
+        if ($tmp_context == Shop::CONTEXT_GROUP) {
             $tmp_shop = Shop::getContextShopGroupID();
-        else
+        } else {
             $tmp_shop = (int)Shop::getContextShopID();
+        }
 
-        foreach (Shop::getContextListShopID() as $id_shop)
-        {
+        foreach (Shop::getContextListShopID() as $id_shop) {
             Shop::setContext(Shop::CONTEXT_SHOP, (int)$id_shop);
             Currency::refreshCurrencies();
         }

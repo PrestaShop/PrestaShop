@@ -48,8 +48,7 @@ class CategoryControllerCore extends FrontController
     {
         parent::setMedia();
 
-        if (!$this->useMobileTheme())
-        {
+        if (!$this->useMobileTheme()) {
             //TODO : check why cluetip css is include without js file
             $this->addCSS(array(
                 _THEME_CSS_DIR_.'scenes.css'       => 'all',
@@ -59,8 +58,7 @@ class CategoryControllerCore extends FrontController
         }
 
         $scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
-        if ($scenes && count($scenes))
-        {
+        if ($scenes && count($scenes)) {
             $this->addJS(_THEME_JS_DIR_.'scenes.js');
             $this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
         }
@@ -75,17 +73,18 @@ class CategoryControllerCore extends FrontController
      */
     public function canonicalRedirection($canonical_url = '')
     {
-        if (Tools::getValue('live_edit'))
+        if (Tools::getValue('live_edit')) {
             return;
+        }
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
-        {
+        if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY')))) {
             $this->redirect_after = '404';
             $this->redirect();
         }
 
-        if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category))
+        if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
+        }
     }
 
     /**
@@ -98,8 +97,9 @@ class CategoryControllerCore extends FrontController
     {
         // Get category ID
         $id_category = (int)Tools::getValue('id_category');
-        if (!$id_category || !Validate::isUnsignedId($id_category))
+        if (!$id_category || !Validate::isUnsignedId($id_category)) {
             $this->errors[] = Tools::displayError('Missing category ID');
+        }
 
         // Instantiate category
         $this->category = new Category($id_category, $this->context->language->id);
@@ -107,15 +107,13 @@ class CategoryControllerCore extends FrontController
         parent::init();
 
         // Check if the category is active and return 404 error if is disable.
-        if (!$this->category->active)
-        {
+        if (!$this->category->active) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
         }
 
         // Check if category can be accessible by current customer and return 403 if not
-        if (!$this->category->checkAccess($this->context->customer->id))
-        {
+        if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = Tools::displayError('You do not have access to this category.');
@@ -132,11 +130,13 @@ class CategoryControllerCore extends FrontController
 
         $this->setTemplate(_PS_THEME_DIR_.'category.tpl');
 
-        if (!$this->customer_access)
+        if (!$this->customer_access) {
             return;
+        }
 
-        if (isset($this->context->cookie->id_compare))
+        if (isset($this->context->cookie->id_compare)) {
             $this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
+        }
 
         // Product sort must be called before assignProductList()
         $this->productSort();
@@ -175,14 +175,13 @@ class CategoryControllerCore extends FrontController
         $this->context->smarty->assign('scenes', $scenes);
 
         // Scenes images formats
-        if ($scenes && ($scene_image_types = ImageType::getImagesTypes('scenes')))
-        {
-            foreach ($scene_image_types as $scene_image_type)
-            {
-                if ($scene_image_type['name'] == ImageType::getFormatedName('m_scene'))
+        if ($scenes && ($scene_image_types = ImageType::getImagesTypes('scenes'))) {
+            foreach ($scene_image_types as $scene_image_type) {
+                if ($scene_image_type['name'] == ImageType::getFormatedName('m_scene')) {
                     $thumb_scene_image_type = $scene_image_type;
-                elseif ($scene_image_type['name'] == ImageType::getFormatedName('scene'))
+                } elseif ($scene_image_type['name'] == ImageType::getFormatedName('scene')) {
                     $large_scene_image_type = $scene_image_type;
+                }
             }
 
             $this->context->smarty->assign(array(
@@ -197,8 +196,7 @@ class CategoryControllerCore extends FrontController
      */
     protected function assignSubcategories()
     {
-        if ($sub_categories = $this->category->getSubCategories($this->context->language->id))
-        {
+        if ($sub_categories = $this->category->getSubCategories($this->context->language->id)) {
             $this->context->smarty->assign(array(
                 'subcategories'          => $sub_categories,
                 'subcategories_nb_total' => count($sub_categories),
@@ -220,26 +218,28 @@ class CategoryControllerCore extends FrontController
         ));
 
         // The hook was not executed, standard working
-        if (!$hook_executed)
-        {
+        if (!$hook_executed) {
             $this->context->smarty->assign('categoryNameComplement', '');
             $this->nbProducts = $this->category->getProducts(null, null, null, $this->orderBy, $this->orderWay, true);
             $this->pagination((int)$this->nbProducts); // Pagination must be call after "getProducts"
             $this->cat_products = $this->category->getProducts($this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
         }
         // Hook executed, use the override
-        else
+        else {
             // Pagination must be call after "getProducts"
             $this->pagination($this->nbProducts);
+        }
 
         Hook::exec('actionProductListModifier', array(
             'nb_products'  => &$this->nbProducts,
             'cat_products' => &$this->cat_products,
         ));
 
-        foreach ($this->cat_products as &$product)
-            if (isset($product['id_product_attribute']) && $product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity']))
+        foreach ($this->cat_products as &$product) {
+            if (isset($product['id_product_attribute']) && $product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity'])) {
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
+            }
+        }
 
         $this->addColorsToProductList($this->cat_products);
 

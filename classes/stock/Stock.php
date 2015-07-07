@@ -118,8 +118,7 @@ class StockCore extends ObjectModel
     protected function getProductInformations()
     {
         // if combinations
-        if ((int)$this->id_product_attribute > 0)
-        {
+        if ((int)$this->id_product_attribute > 0) {
             $query = new DbQuery();
             $query->select('reference, ean13, upc');
             $query->from('product_attribute');
@@ -127,21 +126,20 @@ class StockCore extends ObjectModel
             $query->where('id_product_attribute = '.(int)$this->id_product_attribute);
             $rows = Db::getInstance()->executeS($query);
 
-            if (!is_array($rows))
+            if (!is_array($rows)) {
                 return;
+            }
 
-            foreach ($rows as $row)
-            {
+            foreach ($rows as $row) {
                 $this->reference = $row['reference'];
                 $this->ean13 = $row['ean13'];
                 $this->upc = $row['upc'];
             }
-        }
-        else // else, simple product
-        {
+        } else {
+            // else, simple product
+
             $product = new Product((int)$this->id_product);
-            if (Validate::isLoadedObject($product))
-            {
+            if (Validate::isLoadedObject($product)) {
                 $this->reference = $product->reference;
                 $this->ean13 = $product->ean13;
                 $this->upc = $product->upc;
@@ -161,16 +159,18 @@ class StockCore extends ObjectModel
 
     public static function deleteStockByIds($id_product = null, $id_product_attribute = null)
     {
-        if (!$id_product || !$id_product_attribute)
+        if (!$id_product || !$id_product_attribute) {
             return false;
+        }
 
         return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'stock WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
     }
 
     public static function productIsPresentInStock($id_product = 0, $id_product_attribute = 0, $id_warehouse = 0)
     {
-        if (!(int)$id_product && !is_int($id_product_attribute) && !(int)$id_warehouse)
+        if (!(int)$id_product && !is_int($id_product_attribute) && !(int)$id_warehouse) {
             return false;
+        }
 
         $result = Db::getInstance()->executeS('SELECT `id_stock` FROM '._DB_PREFIX_.'stock
 			WHERE `id_warehouse` = '.(int)$id_warehouse.' AND `id_product` = '.(int)$id_product.((int)$id_product_attribute ? ' AND `id_product_attribute` = '.$id_product_attribute : ''));

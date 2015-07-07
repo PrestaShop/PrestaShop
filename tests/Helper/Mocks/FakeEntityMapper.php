@@ -9,7 +9,6 @@ use ObjectModel;
 
 class FakeEntityMapper extends Adapter_EntityMapper
 {
-
     private $fake_db = array();
 
     private $entity_being_built = null;
@@ -22,8 +21,7 @@ class FakeEntityMapper extends Adapter_EntityMapper
      */
     public function willReturn(ObjectModel $entity)
     {
-        if($this->entity_being_built !== null)
-        {
+        if ($this->entity_being_built !== null) {
             throw new Exception('Invalid usage of FakeEntityMapper::willReturn : an entity build was already started, please call FakeEntityMapper::forId to finish building your entity.');
         }
 
@@ -40,8 +38,7 @@ class FakeEntityMapper extends Adapter_EntityMapper
      */
     public function forId($id, $id_lang = null, $id_shop = null)
     {
-        if($this->entity_being_built === null)
-        {
+        if ($this->entity_being_built === null) {
             throw new Exception('Invalid usage of FakeEntityMapper::forId : you need to call willReturn first.');
         }
 
@@ -61,16 +58,17 @@ class FakeEntityMapper extends Adapter_EntityMapper
      */
     public function load($id, $id_lang, $entity, $entity_defs, $id_shop, $should_cache_objects)
     {
-        if($this->entity_being_built !== null)
-        {
+        if ($this->entity_being_built !== null) {
             throw new Exception('Unifinished entity build : an entity build was started with FakeEntityMapper::willReturn, please call FakeEntityMapper::forId to finish building your entity.');
         }
 
         $cache_id = $this->buildCacheId($id, $entity_defs['classname'], $id_lang, $id_shop);
 
-        if(isset($this->fake_db[$cache_id]))
-            foreach($this->fake_db[$cache_id] as $key => $value)
+        if (isset($this->fake_db[$cache_id])) {
+            foreach ($this->fake_db[$cache_id] as $key => $value) {
                 $entity->$key = $value;
+            }
+        }
     }
 
 
@@ -78,5 +76,4 @@ class FakeEntityMapper extends Adapter_EntityMapper
     {
         return 'objectmodel_' . $class_name . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;
     }
-
 }

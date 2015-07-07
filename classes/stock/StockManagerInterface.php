@@ -30,7 +30,6 @@
  */
 interface StockManagerInterface
 {
-
     /**
      * Checks if the StockManager is available
      *
@@ -121,5 +120,4 @@ interface StockManagerInterface
      * @return int time
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
-
 }

@@ -81,7 +81,7 @@ class    PrestaShopLoggerCore extends ObjectModel
      */
     public static function sendByMail($log)
     {
-        if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity)
+        if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity) {
             Mail::Send(
                 (int)Configuration::get('PS_LANG_DEFAULT'),
                 'log_alert',
@@ -89,6 +89,7 @@ class    PrestaShopLoggerCore extends ObjectModel
                 array(),
                 Configuration::get('PS_SHOP_EMAIL')
             );
+        }
     }
 
     /**
@@ -111,26 +112,26 @@ class    PrestaShopLoggerCore extends ObjectModel
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
 
-        if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee))
+        if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee)) {
             $id_employee = Context::getContext()->employee->id;
+        }
 
-        if ($id_employee !== null)
+        if ($id_employee !== null) {
             $log->id_employee = (int)$id_employee;
+        }
 
-        if (!empty($object_type) && !empty($object_id))
-        {
+        if (!empty($object_type) && !empty($object_id)) {
             $log->object_type = pSQL($object_type);
             $log->object_id = (int)$object_id;
         }
 
-        if ($object_type != 'Swift_Message')
+        if ($object_type != 'Swift_Message') {
             PrestaShopLogger::sendByMail($log);
+        }
 
-        if ($allow_duplicate || !$log->_isPresent())
-        {
+        if ($allow_duplicate || !$log->_isPresent()) {
             $res = $log->add();
-            if ($res)
-            {
+            if ($res) {
                 self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()])?self::$is_present[$log->getHash()] + 1:1;
                 return true;
             }
@@ -145,8 +146,9 @@ class    PrestaShopLoggerCore extends ObjectModel
      */
     public function getHash()
     {
-        if (empty($this->hash))
+        if (empty($this->hash)) {
             $this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
+        }
 
         return $this->hash;
     }
@@ -163,7 +165,7 @@ class    PrestaShopLoggerCore extends ObjectModel
      */
     protected function _isPresent()
     {
-        if (!isset(self::$is_present[md5($this->message)]))
+        if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'log`
 				WHERE
@@ -173,6 +175,7 @@ class    PrestaShopLoggerCore extends ObjectModel
 					AND `object_type` = \''.$this->object_type.'\'
 					AND `object_id` = \''.$this->object_id.'\'
 				');
+        }
 
         return self::$is_present[$this->getHash()];
     }

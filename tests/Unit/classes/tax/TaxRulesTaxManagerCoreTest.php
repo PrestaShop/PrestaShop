@@ -33,8 +33,8 @@ use Tax;
 use TaxCalculator;
 use TaxRulesTaxManager;
 
-class TaxRulesTaxManagerCoreTest extends UnitTestCase {
-
+class TaxRulesTaxManagerCoreTest extends UnitTestCase
+{
     private $tax_rows = array(
         array(
             'id_tax' => 1,
@@ -53,8 +53,7 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase {
         // Given
         Phake::when($this->database)->executeS(Phake::anyParameters())->thenReturn($this->tax_rows);
 
-        foreach($this->tax_rows as $field_values)
-        {
+        foreach ($this->tax_rows as $field_values) {
             $tax = new Tax();
             $tax->id = $field_values['id_tax'];
             $tax->rate = $field_values['rate'];
@@ -74,11 +73,10 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase {
         $this->assertEquals(TaxCalculator::COMBINE_METHOD, $tax_calculator->computation_method);
         $this->assertTrue(is_array($tax_calculator->taxes));
 
-        foreach($tax_calculator->taxes as $key => $tax){
+        foreach ($tax_calculator->taxes as $key => $tax) {
             $this->assertTrue($tax instanceof Tax);
             $this->assertEquals($this->tax_rows[$key]['id_tax'], $tax->id);
             $this->assertEquals($this->tax_rows[$key]['rate'], $tax->rate);
         }
     }
-
 }

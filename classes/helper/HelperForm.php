@@ -68,8 +68,9 @@ class HelperFormCore extends Helper
     public function generate()
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
-        if (is_null($this->submit_action))
+        if (is_null($this->submit_action)) {
             $this->submit_action = 'submitAdd'.$this->table;
+        }
 
         $categories = true;
         $color = true;
@@ -77,47 +78,53 @@ class HelperFormCore extends Helper
         $tinymce = true;
         $textarea_autosize = true;
         $file = true;
-        foreach ($this->fields_form as $fieldset_key => &$fieldset)
-        {
-            if (isset($fieldset['form']['tabs']))
+        foreach ($this->fields_form as $fieldset_key => &$fieldset) {
+            if (isset($fieldset['form']['tabs'])) {
                 $tabs[] = $fieldset['form']['tabs'];
+            }
 
-            if (isset($fieldset['form']['input']))
-                foreach ($fieldset['form']['input'] as $key => &$params)
-                {
+            if (isset($fieldset['form']['input'])) {
+                foreach ($fieldset['form']['input'] as $key => &$params) {
                     // If the condition is not met, the field will not be displayed
-                    if (isset($params['condition']) && !$params['condition'])
+                    if (isset($params['condition']) && !$params['condition']) {
                         unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
-                    switch ($params['type'])
-                    {
+                    }
+                    switch ($params['type']) {
                         case 'categories':
-                            if ($categories)
-                            {
-                                if (!isset($params['tree']['id']))
+                            if ($categories) {
+                                if (!isset($params['tree']['id'])) {
                                     throw new PrestaShopException('Id must be filled for categories tree');
+                                }
 
                                 $tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
 
-                                if (isset($params['name']))
+                                if (isset($params['name'])) {
                                     $tree->setInputName($params['name']);
+                                }
 
-                                if (isset($params['tree']['selected_categories']))
+                                if (isset($params['tree']['selected_categories'])) {
                                     $tree->setSelectedCategories($params['tree']['selected_categories']);
+                                }
 
-                                if (isset($params['tree']['disabled_categories']))
+                                if (isset($params['tree']['disabled_categories'])) {
                                     $tree->setDisabledCategories($params['tree']['disabled_categories']);
+                                }
 
-                                if (isset($params['tree']['root_category']))
+                                if (isset($params['tree']['root_category'])) {
                                     $tree->setRootCategory($params['tree']['root_category']);
+                                }
 
-                                if (isset($params['tree']['use_search']))
+                                if (isset($params['tree']['use_search'])) {
                                     $tree->setUseSearch($params['tree']['use_search']);
+                                }
 
-                                if (isset($params['tree']['use_checkbox']))
+                                if (isset($params['tree']['use_checkbox'])) {
                                     $tree->setUseCheckBox($params['tree']['use_checkbox']);
+                                }
 
-                                if (isset($params['tree']['set_data']))
+                                if (isset($params['tree']['set_data'])) {
                                     $tree->setData($params['tree']['set_data']);
+                                }
 
                                 $this->context->smarty->assign('categories_tree', $tree->render());
                                 $categories = false;
@@ -133,9 +140,9 @@ class HelperFormCore extends Helper
                             $uploader->setUseAjax(isset($params['ajax'])?$params['ajax']:false);
                             $uploader->setMaxFiles(isset($params['max_files'])?$params['max_files']:null);
 
-                            if (isset($params['files']) && $params['files'])
+                            if (isset($params['files']) && $params['files']) {
                                 $uploader->setFiles($params['files']);
-                            elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility
+                            } elseif (isset($params['image']) && $params['image']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
                                     'type'       => HelperUploader::TYPE_IMAGE,
@@ -143,8 +150,9 @@ class HelperFormCore extends Helper
                                     'size'       => isset($params['size'])?$params['size']:null,
                                     'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
                                 )));
+                            }
 
-                            if (isset($params['file']) && $params['file']) // Use for retrocompatibility
+                            if (isset($params['file']) && $params['file']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
                                     'type'       => HelperUploader::TYPE_FILE,
@@ -152,21 +160,22 @@ class HelperFormCore extends Helper
                                     'delete_url' => isset($params['delete_url'])?$params['delete_url']:null,
                                     'download_url' => isset($params['file'])?$params['file']:null
                                 )));
+                            }
 
-                            if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility
+                            if (isset($params['thumb']) && $params['thumb']) { // Use for retrocompatibility
                                 $uploader->setFiles(array(
                                     0 => array(
                                     'type'       => HelperUploader::TYPE_IMAGE,
                                     'image'      => isset($params['thumb'])?'<img src="'.$params['thumb'].'" alt="'.(isset($params['title']) ? $params['title'] : '').'" title="'.(isset($params['title']) ? $params['title'] : '').'" />':null,
                                 )));
+                            }
 
                             $uploader->setTitle(isset($params['title'])?$params['title']:null);
                             $params['file'] = $uploader->render();
                         break;
 
                         case 'color':
-                            if ($color)
-                            {
+                            if ($color) {
                                 // Added JS file
                                 $this->context->controller->addJqueryPlugin('colorpicker');
                                 $color = false;
@@ -174,16 +183,14 @@ class HelperFormCore extends Helper
                         break;
 
                         case 'date':
-                            if ($date)
-                            {
+                            if ($date) {
                                 $this->context->controller->addJqueryUI('ui.datepicker');
                                 $date = false;
                             }
                         break;
 
                         case 'textarea':
-                            if ($tinymce)
-                            {
+                            if ($tinymce) {
                                 $iso = $this->context->language->iso_code;
                                 $this->tpl_vars['iso'] = file_exists(_PS_CORE_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en';
                                 $this->tpl_vars['path_css'] = _THEME_CSS_DIR_;
@@ -195,8 +202,7 @@ class HelperFormCore extends Helper
                                 $tinymce = false;
                             }
 
-                            if ($textarea_autosize)
-                            {
+                            if ($textarea_autosize) {
                                 $this->context->controller->addJqueryPlugin('autosize');
                                 $textarea_autosize = false;
                             }
@@ -205,12 +211,15 @@ class HelperFormCore extends Helper
                         case 'shop' :
                             $disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
                             $params['html'] = $this->renderAssoShop($disable_shops);
-                            if (Shop::getTotalShops(false) == 1)
-                                if ((isset($this->fields_form[$fieldset_key]['form']['force']) && !$this->fields_form[$fieldset_key]['form']['force']) || !isset($this->fields_form[$fieldset_key]['form']['force']))
+                            if (Shop::getTotalShops(false) == 1) {
+                                if ((isset($this->fields_form[$fieldset_key]['form']['force']) && !$this->fields_form[$fieldset_key]['form']['force']) || !isset($this->fields_form[$fieldset_key]['form']['force'])) {
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
+                                }
+                            }
                         break;
                     }
                 }
+            }
         }
 
         $this->tpl->assign(array(
@@ -250,11 +259,15 @@ class HelperFormCore extends Helper
      */
     public function getFieldsRequired()
     {
-        foreach ($this->fields_form as $fieldset)
-            if (isset($fieldset['form']['input']))
-                foreach ($fieldset['form']['input'] as $input)
-                    if (!empty($input['required']) && $input['type'] != 'radio')
+        foreach ($this->fields_form as $fieldset) {
+            if (isset($fieldset['form']['input'])) {
+                foreach ($fieldset['form']['input'] as $input) {
+                    if (!empty($input['required']) && $input['type'] != 'radio') {
                         return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -265,35 +278,35 @@ class HelperFormCore extends Helper
      */
     public function renderAssoShop($disable_shared = false, $template_directory = null)
     {
-        if (!Shop::isFeatureActive())
+        if (!Shop::isFeatureActive()) {
             return;
+        }
 
         $assos = array();
-        if ((int)$this->id)
-        {
+        if ((int)$this->id) {
             $sql = 'SELECT `id_shop`, `'.bqSQL($this->identifier).'`
 					FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`
 					WHERE `'.bqSQL($this->identifier).'` = '.(int)$this->id;
 
-            foreach (Db::getInstance()->executeS($sql) as $row)
+            foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];
-        }
-        else
-        {
-            switch (Shop::getContext())
-            {
+            }
+        } else {
+            switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP :
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
                 break;
 
                 case Shop::CONTEXT_GROUP :
-                    foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop)
-                            $assos[$id_shop] = $id_shop;
+                    foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
+                        $assos[$id_shop] = $id_shop;
+                    }
                 break;
 
                 default :
-                        foreach (Shop::getShops(false, null, true) as $id_shop)
+                        foreach (Shop::getShops(false, null, true) as $id_shop) {
                             $assos[$id_shop] = $id_shop;
+                        }
                 break;
             }
         }
@@ -306,8 +319,9 @@ class HelperFormCore extends Helper
         }*/
 
         $tree = new HelperTreeShops('shop-tree', 'Shops');
-        if (isset($template_directory))
+        if (isset($template_directory)) {
             $tree->setTemplateDirectory($template_directory);
+        }
         $tree->setSelectedShops($assos);
         $tree->setAttribute('table', $this->table);
         return $tree->render();

@@ -33,8 +33,9 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 
     public function setSchemaToDisplay($schema)
     {
-        if (is_string($schema))
+        if (is_string($schema)) {
             $this->schemaToDisplay = $schema;
+        }
         return $this;
     }
 
@@ -76,8 +77,9 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     public function renderErrors($message, $code = null)
     {
         $str_output = '<error>'."\n";
-        if ($code !== null)
+        if ($code !== null) {
             $str_output .= '<code><![CDATA['.$code.']]></code>'."\n";
+        }
         $str_output .= '<message><![CDATA['.$message.']]></message>'."\n";
         $str_output .= '</error>'."\n";
         return $str_output;
@@ -88,52 +90,54 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
         $node_content = '';
         $ret .= '<'.$field['sqlId'];
         // display i18n fields
-        if (isset($field['i18n']) && $field['i18n'])
-        {
-            foreach ($this->languages as $language)
-            {
+        if (isset($field['i18n']) && $field['i18n']) {
+            foreach ($this->languages as $language) {
                 $more_attr = '';
-                if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value'])))
-                {
+                if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value']))) {
                     $more_attr .= ' xlink:href="'.$this->getWsUrl().'languages/'.$language.'"';
-                    if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank')
+                    if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank') {
                         $more_attr .= ' format="isUnsignedId" ';
+                    }
                 }
                 $node_content .= '<language id="'.$language.'"'.$more_attr.'>';
-                if (isset($field['value']) &&  is_array($field['value']) &&  isset($field['value'][$language]))
+                if (isset($field['value']) &&  is_array($field['value']) &&  isset($field['value'][$language])) {
                     $node_content .= '<![CDATA['.$field['value'][$language].']]>';
+                }
                 $node_content .= '</language>';
             }
         }
         // display not i18n fields value
-        else
-        {
-            if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank')
-            {
-                if (!is_array($field['xlink_resource']))
+        else {
+            if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
+                if (!is_array($field['xlink_resource'])) {
                     $ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource'].'/'.$field['value'].'"';
-                else
+                } else {
                     $ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource']['resourceName'].'/'.
                     (isset($field['xlink_resource']['subResourceName']) ? $field['xlink_resource']['subResourceName'].'/'.$field['object_id'].'/' : '').$field['value'].'"';
+                }
             }
 
-            if (isset($field['getter']) && $this->schemaToDisplay != 'blank')
+            if (isset($field['getter']) && $this->schemaToDisplay != 'blank') {
                 $ret .= ' notFilterable="true"';
+            }
 
-            if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay == 'synopsis')
+            if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay == 'synopsis') {
                 $ret .= ' read_only="true"';
+            }
 
-            if ($field['value'] != '')
+            if ($field['value'] != '') {
                 $node_content .= '<![CDATA['.$field['value'].']]>';
+            }
         }
 
-        if (isset($field['encode']))
+        if (isset($field['encode'])) {
             $ret .= ' encode="'.$field['encode'].'"';
+        }
 
-        if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank')
-        {
-            foreach ($field['synopsis_details'] as $name => $detail)
+        if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank') {
+            foreach ($field['synopsis_details'] as $name => $detail) {
                 $ret .= ' '.$name.'="'.(is_array($detail) ? implode(' ', $detail) : $detail).'"';
+            }
         }
         $ret .= '>';
         $ret .= $node_content;
@@ -143,14 +147,13 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
     {
         $string_attr = '';
-        if (is_array($more_attr))
-        {
-            foreach ($more_attr as $key => $attr)
-            {
-                if ($key === 'xlink_resource')
+        if (is_array($more_attr)) {
+            foreach ($more_attr as $key => $attr) {
+                if ($key === 'xlink_resource') {
                     $string_attr .= ' xlink:href="'.$attr.'"';
-                else
+                } else {
                     $string_attr .= ' '.$key.'="'.$attr.'"';
+                }
             }
         }
         $end_tag = (!$has_child) ? '/>' : '>';
@@ -159,8 +162,9 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     public function getNodeName($params)
     {
         $node_name = '';
-        if (isset($params['objectNodeName']))
+        if (isset($params['objectNodeName'])) {
             $node_name = $params['objectNodeName'];
+        }
         return $node_name;
     }
     public function renderNodeFooter($node_name, $params)
@@ -187,19 +191,19 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     {
         $end_tag = ($closed_tags) ? '/>' : '>';
         $more = '';
-        if ($this->schemaToDisplay != 'blank')
-        {
-            if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter'])
+        if ($this->schemaToDisplay != 'blank') {
+            if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter']) {
                 $more .= ' readOnly="true"';
+            }
             $more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
-            if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'])
+            if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity']) {
                 $more .= ' virtualEntity="true"';
-            else
-            {
-                if (isset($params['associations'][$assoc_name]['api']))
+            } else {
+                if (isset($params['associations'][$assoc_name]['api'])) {
                     $more .= ' api="'.$params['associations'][$assoc_name]['api'].'"';
-                else
+                } else {
                     $more .= ' api="'.$assoc_name.'"';
+                }
             }
         }
         return '<'.$assoc_name.$more.$end_tag."\n";

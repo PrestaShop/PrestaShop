@@ -56,17 +56,15 @@ class TagCore extends ObjectModel
         $this->def = Tag::getDefinition($this);
         $this->setDefinitionRetrocompatibility();
 
-        if ($id)
+        if ($id) {
             parent::__construct($id);
-        elseif ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang))
-        {
+        } elseif ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang)) {
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tag` t
 			WHERE `name` = \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
 
-            if ($row)
-            {
+            if ($row) {
                 $this->id = (int)$row['id_tag'];
                 $this->id_lang = (int)$row['id_lang'];
                 $this->name = $row['name'];
@@ -76,10 +74,11 @@ class TagCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        if (!parent::add($autodate, $null_values))
+        if (!parent::add($autodate, $null_values)) {
             return false;
-        elseif (isset($_POST['products']))
+        } elseif (isset($_POST['products'])) {
             return $this->setProducts(Tools::getValue('products'));
+        }
         return true;
     }
 
@@ -93,34 +92,38 @@ class TagCore extends ObjectModel
     */
     public static function addTags($id_lang, $id_product, $tag_list, $separator = ',')
     {
-        if (!Validate::isUnsignedId($id_lang))
+        if (!Validate::isUnsignedId($id_lang)) {
             return false;
+        }
 
-        if (!is_array($tag_list))
+        if (!is_array($tag_list)) {
             $tag_list = array_filter(array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY))));
+        }
 
         $list = array();
-        if (is_array($tag_list))
-            foreach ($tag_list as $tag)
-            {
-                if (!Validate::isGenericName($tag))
+        if (is_array($tag_list)) {
+            foreach ($tag_list as $tag) {
+                if (!Validate::isGenericName($tag)) {
                     return false;
+                }
                 $tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
                 $tag_obj = new Tag(null, $tag, (int)$id_lang);
 
                 /* Tag does not exist in database */
-                if (!Validate::isLoadedObject($tag_obj))
-                {
+                if (!Validate::isLoadedObject($tag_obj)) {
                     $tag_obj->name = $tag;
                     $tag_obj->id_lang = (int)$id_lang;
                     $tag_obj->add();
                 }
-                if (!in_array($tag_obj->id, $list))
+                if (!in_array($tag_obj->id, $list)) {
                     $list[] = $tag_obj->id;
+                }
             }
+        }
         $data = '';
-        foreach ($list as $tag)
+        foreach ($list as $tag) {
             $data .= '('.(int)$tag.','.(int)$id_product.','.(int)$id_lang.'),';
+        }
         $data = rtrim($data, ',');
 
         $result = Db::getInstance()->execute('
@@ -134,8 +137,7 @@ class TagCore extends ObjectModel
 
     public static function updateTagCount()
     {
-        if (!Module::getBatchMode())
-        {
+        if (!Module::getBatchMode()) {
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 				FROM `'._DB_PREFIX_.'product_tag` pt
@@ -168,8 +170,7 @@ class TagCore extends ObjectModel
     public static function getMainTags($id_lang, $nb = 10)
     {
         $context = Context::getContext();
-        if (Group::isFeatureActive())
-        {
+        if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
@@ -179,9 +180,7 @@ class TagCore extends ObjectModel
 			AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
 			ORDER BY times DESC
 			LIMIT '.(int)$nb);
-        }
-        else
-        {
+        } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
 			FROM `'._DB_PREFIX_.'tag_count` pt
@@ -198,22 +197,26 @@ class TagCore extends ObjectModel
 		SELECT t.`id_lang`, t.`name`
 		FROM '._DB_PREFIX_.'tag t
 		LEFT JOIN '._DB_PREFIX_.'product_tag pt ON (pt.id_tag = t.id_tag)
-		WHERE pt.`id_product`='.(int)$id_product))
+		WHERE pt.`id_product`='.(int)$id_product)) {
             return false;
+        }
         $result = array();
-        foreach ($tmp as $tag)
+        foreach ($tmp as $tag) {
             $result[$tag['id_lang']][] = $tag['name'];
+        }
         return $result;
     }
 
     public function getProducts($associated = true, Context $context = null)
     {
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
         $id_lang = $this->id_lang ? $this->id_lang : $context->language->id;
 
-        if (!$this->id && $associated)
+        if (!$this->id && $associated) {
             return array();
+        }
 
         $in = $associated ? 'IN' : 'NOT IN';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -230,19 +233,19 @@ class TagCore extends ObjectModel
     public function setProducts($array)
     {
         $result = Db::getInstance()->delete('product_tag', 'id_tag = '.(int)$this->id);
-        if (is_array($array))
-        {
+        if (is_array($array)) {
             $array = array_map('intval', $array);
             $result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $array).')');
             $ids = array();
-            foreach ($array as $id_product)
+            foreach ($array as $id_product) {
                 $ids[] = '('.(int)$id_product.','.(int)$this->id.','.(int)$this->id_lang.')';
+            }
 
-            if ($result)
-            {
+            if ($result) {
                 $result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag, id_lang) VALUES '.implode(',', $ids));
-                if (Configuration::get('PS_SEARCH_INDEXATION'))
+                if (Configuration::get('PS_SEARCH_INDEXATION')) {
                     $result &= Search::indexation(false);
+                }
             }
         }
         self::updateTagCount();

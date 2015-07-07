@@ -44,8 +44,7 @@ class Adapter_ProductPriceCalculator
         $use_group_reduction = true,
         Context $context = null,
         $use_customer_price = true
-    )
-    {
+    ) {
         return Product::getPriceStatic(
             $id_product,
             $usetax,

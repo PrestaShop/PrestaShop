@@ -272,6 +272,7 @@ $timezones = array(
 );
 
 
-if (isset($timezones[$_GET['country']]) && $timezones[$_GET['country']])
+if (isset($timezones[$_GET['country']]) && $timezones[$_GET['country']]) {
     die($timezones[$_GET['country']]);
+}
 die('');

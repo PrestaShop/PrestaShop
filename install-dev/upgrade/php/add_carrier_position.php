@@ -30,11 +30,9 @@ function add_carrier_position()
 	SELECT `id_carrier`
 	FROM `'._DB_PREFIX_.'carrier`
 	WHERE `deleted` = 0');
-    if (count($carriers) && is_array($carriers))
-    {
+    if (count($carriers) && is_array($carriers)) {
         $i = 0;
-        foreach ($carriers as $carrier)
-        {
+        foreach ($carriers as $carrier) {
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'carrier`
 			SET `position` = '.$i++.'

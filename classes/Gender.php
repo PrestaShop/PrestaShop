@@ -57,8 +57,9 @@ class GenderCore extends ObjectModel
 
     public static function getGenders($id_lang = null)
     {
-        if (is_null($id_lang))
+        if (is_null($id_lang)) {
             $id_lang = Context::getContext()->language->id;
+        }
 
         $genders = new PrestaShopCollection('Gender', $id_lang);
         return $genders;
@@ -66,8 +67,9 @@ class GenderCore extends ObjectModel
 
     public function getImage($use_unknown = false)
     {
-        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg'))
+        if (!isset($this->id) || empty($this->id) || !file_exists(_PS_GENDERS_DIR_.$this->id.'.jpg')) {
             return _THEME_GENDERS_DIR_.'Unknown.jpg';
+        }
         return _THEME_GENDERS_DIR_.$this->id.'.jpg';
     }
 }

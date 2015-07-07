@@ -77,12 +77,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tax_rules_group'] = array(
                 'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
                 'desc' => $this->l('Add new tax rules group', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -201,8 +202,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -210,15 +210,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             );
         }
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
-        if (!isset($obj->id))
-        {
+        }
+        if (!isset($obj->id)) {
             $this->no_back = false;
             $content = parent::renderForm();
-        }
-        else
-        {
+        } else {
             $this->no_back = true;
             $this->page_header_toolbar_btn['new'] = array(
                 'href' => '#',
@@ -343,8 +341,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             )
         );
 
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $this->fields_value = array(
             'action' => 'create_rule',
@@ -379,30 +378,27 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
     public function initProcess()
     {
-        if (Tools::isSubmit('deletetax_rule'))
-        {
-            if ($this->tabAccess['delete'] === '1')
+        if (Tools::isSubmit('deletetax_rule')) {
+            if ($this->tabAccess['delete'] === '1') {
                 $this->action = 'delete_tax_rule';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
-        }
-        elseif (Tools::isSubmit('submitBulkdeletetax_rule'))
-        {
-            if ($this->tabAccess['delete'] === '1')
+            }
+        } elseif (Tools::isSubmit('submitBulkdeletetax_rule')) {
+            if ($this->tabAccess['delete'] === '1') {
                 $this->action = 'bulk_delete_tax_rules';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
-        }
-        elseif (Tools::getValue('action') == 'create_rule')
-        {
-            if ($this->tabAccess['add'] === '1')
+            }
+        } elseif (Tools::getValue('action') == 'create_rule') {
+            if ($this->tabAccess['add'] === '1') {
                 $this->action = 'create_rule';
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
-        }
-        else
+            }
+        } else {
             parent::initProcess();
-
+        }
     }
 
     protected function processCreateRule()
@@ -414,35 +410,32 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $behavior = (int)Tools::getValue('behavior');
         $description = pSQL(Tools::getValue('description'));
 
-        if ((int)($id_country = Tools::getValue('country')) == 0)
-        {
+        if ((int)($id_country = Tools::getValue('country')) == 0) {
             $countries = Country::getCountries($this->context->language->id);
             $this->selected_countries = array();
-            foreach ($countries as $country)
+            foreach ($countries as $country) {
                 $this->selected_countries[] = (int)$country['id_country'];
-        }
-        else
+            }
+        } else {
             $this->selected_countries = array($id_country);
+        }
         $this->selected_states = Tools::getValue('states');
 
-        if (empty($this->selected_states) || count($this->selected_states) == 0)
+        if (empty($this->selected_states) || count($this->selected_states) == 0) {
             $this->selected_states = array(0);
+        }
         $tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
-        foreach ($this->selected_countries as $id_country)
-        {
+        foreach ($this->selected_countries as $id_country) {
             $first = true;
-            foreach ($this->selected_states as $id_state)
-            {
-                if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule))
-                {
+            foreach ($this->selected_states as $id_state) {
+                if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule)) {
                     $this->errors[] = Tools::displayError('A tax rule already exists for this country/state with tax only behavior.');
                     continue;
                 }
                 $tr = new TaxRule();
 
                 // update or creation?
-                if (isset($id_rule) && $first)
-                {
+                if (isset($id_rule) && $first) {
                     $tr->id = $id_rule;
                     $first = false;
                 }
@@ -457,19 +450,18 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 // Construct Object Country
                 $country = new Country((int)$id_country, (int)$this->context->language->id);
 
-                if ($zip_code && $country->need_zip_code)
-                {
-                    if ($country->zip_code_format)
-                    {
-                        foreach (array($tr->zipcode_from, $tr->zipcode_to) as $zip_code)
-                            if ($zip_code)
-                                if (!$country->checkZipCode($zip_code))
-                                {
+                if ($zip_code && $country->need_zip_code) {
+                    if ($country->zip_code_format) {
+                        foreach (array($tr->zipcode_from, $tr->zipcode_to) as $zip_code) {
+                            if ($zip_code) {
+                                if (!$country->checkZipCode($zip_code)) {
                                     $this->errors[] = sprintf(
                                         Tools::displayError('The Zip/postal code is invalid. It must be typed as follows: %s for %s.'),
                                         str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))), $country->name
                                     );
                                 }
+                            }
+                        }
                     }
                 }
 
@@ -480,24 +472,25 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
                 $this->errors = array_merge($this->errors, $this->validateTaxRule($tr));
 
-                if (count($this->errors) == 0)
-                {
+                if (count($this->errors) == 0) {
                     $tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
                     $tr->id = (int)$tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$tr->id);
                     $tr->id_tax_rules_group = (int)$tax_rules_group->id;
 
-                    if (!$tr->save())
+                    if (!$tr->save()) {
                         $this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
+                    }
                 }
             }
         }
 
-        if (count($this->errors) == 0)
+        if (count($this->errors) == 0) {
             Tools::redirectAdmin(
                 self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
             );
-        else
+        } else {
             $this->display = 'edit';
+        }
     }
 
     protected function processBulkDeleteTaxRules()
@@ -514,16 +507,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         $result = true;
 
-        foreach ($id_tax_rule_list as $id_tax_rule)
-        {
+        foreach ($id_tax_rule_list as $id_tax_rule) {
             $tax_rule = new TaxRule((int)$id_tax_rule);
-            if (Validate::isLoadedObject($tax_rule))
-            {
+            if (Validate::isLoadedObject($tax_rule)) {
                 $tax_rules_group = new TaxRulesGroup((int)$tax_rule->id_tax_rules_group);
                 $tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
                 $tax_rule = new TaxRule($tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$id_tax_rule));
-                if (Validate::isLoadedObject($tax_rule))
+                if (Validate::isLoadedObject($tax_rule)) {
                     $result &= $tax_rule->delete();
+                }
             }
         }
 
@@ -547,13 +539,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
     protected function displayAjaxUpdateTaxRule()
     {
-        if ($this->tabAccess['view'] === '1')
-        {
+        if ($this->tabAccess['view'] === '1') {
             $id_tax_rule = Tools::getValue('id_tax_rule');
             $tax_rules = new TaxRule((int)$id_tax_rule);
             $output = array();
-            foreach ($tax_rules as $key => $result)
+            foreach ($tax_rules as $key => $result) {
                 $output[$key] = $result;
+            }
             die(Tools::jsonEncode($output));
         }
     }
@@ -566,8 +558,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     protected function updateTaxRulesGroup($object)
     {
         static $tax_rules_group = null;
-        if ($tax_rules_group === null)
-        {
+        if ($tax_rules_group === null) {
             $object->update();
             $tax_rules_group = $object;
         }

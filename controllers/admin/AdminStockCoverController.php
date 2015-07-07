@@ -107,7 +107,7 @@ class AdminStockCoverControllerCore extends AdminController
     {
         $this->page_header_toolbar_title = $this->l('Stock coverage');
 
-        if ($this->display == 'details')
+        if ($this->display == 'details') {
             $this->page_header_toolbar_btn['back_to_list'] = array(
                 'href' => Context::getContext()->link->getAdminLink('AdminStockCover')
                     .(Tools::getValue('coverage_period') ? '&coverage_period='.Tools::getValue('coverage_period') : '')
@@ -116,14 +116,16 @@ class AdminStockCoverControllerCore extends AdminController
                 'desc' => $this->l('Back to list', null, null, false),
                 'icon' => 'process-icon-back'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
 
     public function renderDetails()
     {
-        if (Tools::isSubmit('id_product')) // if a product id is submit
-        {
+        if (Tools::isSubmit('id_product')) {
+            // if a product id is submit
+
             $this->lang = false;
             $this->list_id = 'details';
             $this->tpl_list_vars['show_filter'] = false;
@@ -135,8 +137,9 @@ class AdminStockCoverControllerCore extends AdminController
             $period = (Tools::getValue('period') ? (int)Tools::getValue('period') : 7);
             $warehouse = Tools::getValue('id_warehouse', -1);
             $where_warehouse = '';
-            if ($warehouse != -1)
+            if ($warehouse != -1) {
                 $where_warehouse = ' AND s.id_warehouse = '.(int)$warehouse;
+            }
 
             $this->_select = 'a.id_product_attribute as id, a.id_product, stock_view.reference, stock_view.ean13,
 							stock_view.upc, stock_view.usable_quantity as stock';
@@ -176,8 +179,7 @@ class AdminStockCoverControllerCore extends AdminController
         $this->_group = 'GROUP BY a.id_product';
 
         self::$currentIndex .= '&coverage_period='.(int)$this->getCurrentCoveragePeriod().'&warn_days='.(int)$this->getCurrentWarning();
-        if ($this->getCurrentCoverageWarehouse() != -1)
-        {
+        if ($this->getCurrentCoverageWarehouse() != -1) {
             $this->_where .= ' AND s.id_warehouse = '.(int)$this->getCurrentCoverageWarehouse();
             self::$currentIndex .= '&id_warehouse='.(int)$this->getCurrentCoverageWarehouse();
         }
@@ -219,12 +221,10 @@ class AdminStockCoverControllerCore extends AdminController
     {
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
-        if ($this->display == 'details')
-        {
+        if ($this->display == 'details') {
             $nb_items = count($this->_list);
 
-            for ($i = 0; $i < $nb_items; ++$i)
-            {
+            for ($i = 0; $i < $nb_items; ++$i) {
                 $item = &$this->_list[$i];
                 $item['name'] = Product::getProductName($item['id_product'], $item['id']);
 
@@ -235,31 +235,30 @@ class AdminStockCoverControllerCore extends AdminController
                     (Tools::getValue('period') ? (int)Tools::getValue('period') : 7),
                     (($this->getCurrentCoverageWarehouse() == -1) ? null : Tools::getValue('id_warehouse', -1))
                 );
-                if ($coverage != -1)  // if coverage is available
-                {
-                    if ($coverage < $this->getCurrentWarning()) // if highlight needed
+                if ($coverage != -1) {
+                    // if coverage is available
+
+                    if ($coverage < $this->getCurrentWarning()) { // if highlight needed
                         $item['color'] = '#BDE5F8';
+                    }
                     $item['coverage'] = $coverage;
-                }
-                else // infinity
+                } else { // infinity
                     $item['coverage'] = '--';
+                }
 
                 // computes quantity sold
                 $qty_sold = $this->getQuantitySold($item['id_product'], $item['id'], $this->getCurrentCoveragePeriod());
-                if (!$qty_sold)
+                if (!$qty_sold) {
                     $item['qty_sold'] = '--';
-                else
+                } else {
                     $item['qty_sold'] = $qty_sold;
+                }
             }
-        }
-        else
-        {
+        } else {
             $nb_items = count($this->_list);
-            for ($i = 0; $i < $nb_items; ++$i)
-            {
+            for ($i = 0; $i < $nb_items; ++$i) {
                 $item = &$this->_list[$i];
-                if (array_key_exists('variations', $item) && (int)$item['variations'] <= 0)
-                {
+                if (array_key_exists('variations', $item) && (int)$item['variations'] <= 0) {
                     // computes coverage and displays (highlights if needed)
                     $coverage = StockManagerFactory::getManager()->getProductCoverage(
                                     $item['id'],
@@ -267,30 +266,29 @@ class AdminStockCoverControllerCore extends AdminController
                                     $this->getCurrentCoveragePeriod(),
                                     (($this->getCurrentCoverageWarehouse() == -1) ? null : $this->getCurrentCoverageWarehouse())
                     );
-                    if ($coverage != -1) // coverage is available
-                    {
-                        if ($coverage < $this->getCurrentWarning())
+                    if ($coverage != -1) {
+                        // coverage is available
+
+                        if ($coverage < $this->getCurrentWarning()) {
                             $item['color'] = '#BDE5F8';
+                        }
 
                         $item['coverage'] = $coverage;
-                    }
-                    else // infinity
+                    } else { // infinity
                         $item['coverage'] = '--';
+                    }
 
                     // computes quantity sold
                     $qty_sold = $this->getQuantitySold($item['id'], 0, $this->getCurrentCoveragePeriod());
-                    if (!$qty_sold)
+                    if (!$qty_sold) {
                         $item['qty_sold'] = '--';
-                    else
+                    } else {
                         $item['qty_sold'] = $qty_sold;
+                    }
 
                     // removes 'details' action on products without attributes
                     $this->addRowActionSkipList('details', array($item['id']));
-
-
-                }
-                else
-                {
+                } else {
                     $item['stock'] = $this->l('See details');
                     $item['reference'] = '--';
                     $item['ean13'] = '--';
@@ -309,11 +307,11 @@ class AdminStockCoverControllerCore extends AdminController
     {
         static $coverage_period = 0;
 
-        if ($coverage_period == 0)
-        {
+        if ($coverage_period == 0) {
             $coverage_period = 7; // Week by default
-            if ((int)Tools::getValue('coverage_period'))
+            if ((int)Tools::getValue('coverage_period')) {
                 $coverage_period = (int)Tools::getValue('coverage_period');
+            }
         }
         return $coverage_period;
     }
@@ -327,11 +325,11 @@ class AdminStockCoverControllerCore extends AdminController
     {
         static $warehouse = 0;
 
-        if ($warehouse == 0)
-        {
+        if ($warehouse == 0) {
             $warehouse = -1; // all warehouses
-            if ((int)Tools::getValue('id_warehouse'))
+            if ((int)Tools::getValue('id_warehouse')) {
                 $warehouse = (int)Tools::getValue('id_warehouse');
+            }
         }
         return $warehouse;
     }
@@ -345,11 +343,11 @@ class AdminStockCoverControllerCore extends AdminController
     {
         static $warning = 0;
 
-        if ($warning == 0)
-        {
+        if ($warning == 0) {
             $warning = 0;
-            if (Tools::getValue('warn_days') && Validate::isInt(Tools::getValue('warn_days')))
+            if (Tools::getValue('warn_days') && Validate::isInt(Tools::getValue('warn_days'))) {
                 $warning = (int)Tools::getValue('warn_days');
+            }
         }
         return $warning;
     }
@@ -382,8 +380,7 @@ class AdminStockCoverControllerCore extends AdminController
     
     public function initContent()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
@@ -392,16 +389,16 @@ class AdminStockCoverControllerCore extends AdminController
     
     public function initProcess()
     {
-        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-        {
+        if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
             $this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
             return false;
         }
 
-        if (Tools::isSubmit('detailsproduct'))
+        if (Tools::isSubmit('detailsproduct')) {
             $this->list_id = 'details';
-        else
+        } else {
             $this->list_id = 'product';
+        }
 
         parent::initProcess();
     }

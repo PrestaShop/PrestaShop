@@ -162,8 +162,9 @@ class Datas
 
     public function __get($key)
     {
-        if (isset($this->datas[$key]))
+        if (isset($this->datas[$key])) {
             return $this->datas[$key];
+        }
 
         return false;
     }
@@ -175,8 +176,9 @@ class Datas
 
     public static function getInstance()
     {
-        if (Datas::$instance === null)
+        if (Datas::$instance === null) {
             Datas::$instance = new Datas();
+        }
         return Datas::$instance;
     }
 
@@ -187,41 +189,43 @@ class Datas
 
     public function getAndCheckArgs($argv)
     {
-        if (!$argv)
+        if (!$argv) {
             return false;
+        }
 
         $args_ok = array();
-        foreach ($argv as $arg)
-        {
-            if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res))
+        foreach ($argv as $arg) {
+            if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res)) {
                 continue;
+            }
 
-            if ($res[1] == 'license' && !isset($res[2]))
+            if ($res[1] == 'license' && !isset($res[2])) {
                 $res[2] = 1;
-            elseif (!isset($res[2]))
+            } elseif (!isset($res[2])) {
                 continue;
+            }
 
             $args_ok[$res[1]] = $res[2];
         }
 
         $errors = array();
-        foreach (Datas::getArgs() as $key => $row)
-        {
-            if (isset($row['name']))
+        foreach (Datas::getArgs() as $key => $row) {
+            if (isset($row['name'])) {
                 $name = $row['name'];
-            else
+            } else {
                 $name = $key;
-            if (!isset($args_ok[$name]))
-            {
-                if (!isset($row['default']))
-                    $errors[] = 'Field '.$row['name'].' is empty';
-                else
-                    $this->$key = $row['default'];
             }
-            elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name]))
-                    $errors[] = 'Field '.$key.' is not valid';
-            else
+            if (!isset($args_ok[$name])) {
+                if (!isset($row['default'])) {
+                    $errors[] = 'Field '.$row['name'].' is empty';
+                } else {
+                    $this->$key = $row['default'];
+                }
+            } elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
+                $errors[] = 'Field '.$key.' is not valid';
+            } else {
                 $this->$key = $args_ok[$name];
+            }
         }
 
         return count($errors) ? $errors : true;

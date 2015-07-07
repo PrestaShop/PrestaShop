@@ -295,15 +295,13 @@ class AdminPPreferencesControllerCore extends AdminController
 
     public function beforeUpdateOptions()
     {
-        if (!Tools::getValue('PS_STOCK_MANAGEMENT', true))
-        {
+        if (!Tools::getValue('PS_STOCK_MANAGEMENT', true)) {
             $_POST['PS_ORDER_OUT_OF_STOCK'] = 1;
             $_POST['PS_DISPLAY_QTIES'] = 0;
         }
 
         // if advanced stock management is disabled, updates concerned tables
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 && (int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-        {
+        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 && (int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0) {
             $id_shop_list = Shop::getContextListShopID();
             $sql_shop = 'UPDATE `'._DB_PREFIX_.'product_shop` SET `advanced_stock_management` = 0 WHERE
 			`advanced_stock_management` = 1 AND (`id_shop` = '.implode(' OR `id_shop` = ', $id_shop_list).')';
@@ -319,11 +317,9 @@ class AdminPPreferencesControllerCore extends AdminController
             Db::getInstance()->execute($sql);
         }
 
-        if (Tools::getIsset('PS_CATALOG_MODE'))
-        {
+        if (Tools::getIsset('PS_CATALOG_MODE')) {
             Tools::clearSmartyCache();
             Media::clearCache();
         }
     }
-
 }

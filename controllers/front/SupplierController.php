@@ -39,10 +39,12 @@ class SupplierControllerCore extends FrontController
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        if (Tools::getValue('live_edit'))
+        if (Tools::getValue('live_edit')) {
             return;
-        if (Validate::isLoadedObject($this->supplier))
+        }
+        if (Validate::isLoadedObject($this->supplier)) {
             parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
+        }
     }
 
     /**
@@ -53,18 +55,16 @@ class SupplierControllerCore extends FrontController
     {
         parent::init();
 
-        if ($id_supplier = (int)Tools::getValue('id_supplier'))
-        {
+        if ($id_supplier = (int)Tools::getValue('id_supplier')) {
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
-            if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active)
-            {
+            if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active) {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 $this->errors[] = Tools::displayError('The chosen supplier does not exist.');
-            }
-            else
+            } else {
                 $this->canonicalRedirection();
+            }
         }
     }
 
@@ -76,14 +76,11 @@ class SupplierControllerCore extends FrontController
     {
         parent::initContent();
 
-        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop())
-        {
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
             $this->productSort(); // productSort must be called before assignOne
             $this->assignOne();
             $this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
-        }
-        else
-        {
+        } else {
             $this->assignAll();
             $this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
         }
@@ -94,8 +91,7 @@ class SupplierControllerCore extends FrontController
      */
     protected function assignOne()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
-        {
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $this->supplier->description = Tools::nl2br(trim($this->supplier->description));
             $nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
             $this->pagination((int)$nbProducts);
@@ -116,9 +112,9 @@ class SupplierControllerCore extends FrontController
                     )
                 )
             );
-        }
-        else
+        } else {
             Tools::redirect('index.php?controller=404');
+        }
     }
 
     /**
@@ -126,15 +122,15 @@ class SupplierControllerCore extends FrontController
      */
     protected function assignAll()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS'))
-        {
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $result = Supplier::getSuppliers(true, $this->context->language->id, true);
             $nbProducts = count($result);
             $this->pagination($nbProducts);
 
             $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
-            foreach ($suppliers as &$row)
+            foreach ($suppliers as &$row) {
                 $row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
+            }
 
             $this->context->smarty->assign(array(
                 'pages_nb' => ceil($nbProducts / (int)$this->n),
@@ -143,9 +139,9 @@ class SupplierControllerCore extends FrontController
                 'suppliers_list' => $suppliers,
                 'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             ));
-        }
-        else
+        } else {
             Tools::redirect('index.php?controller=404');
+        }
     }
     
     /**

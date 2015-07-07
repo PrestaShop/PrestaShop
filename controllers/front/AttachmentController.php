@@ -29,13 +29,15 @@ class AttachmentControllerCore extends FrontController
     public function postProcess()
     {
         $a = new Attachment(Tools::getValue('id_attachment'), $this->context->language->id);
-        if (!$a->id)
+        if (!$a->id) {
             Tools::redirect('index.php');
+        }
 
         Hook::exec('actionDownloadAttachment', array('attachment' => &$a));
 
-        if (ob_get_level() && ob_get_length() > 0)
+        if (ob_get_level() && ob_get_length() > 0) {
             ob_end_clean();
+        }
 
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: '.$a->mime);

@@ -26,7 +26,6 @@
 
 class AdminInformationControllerCore extends AdminController
 {
-
     public function __construct()
     {
         $this->bootstrap = true;
@@ -56,7 +55,7 @@ class AdminInformationControllerCore extends AdminController
         $this->initPageHeaderToolbar();
 
         $hosting_vars = array();
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $hosting_vars = array(
                 'version' => array(
                     'php' => phpversion(),
@@ -75,6 +74,7 @@ class AdminInformationControllerCore extends AdminController
                 'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
                 'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
             );
+        }
 
         $shop_vars = array(
             'shop' => array(
@@ -133,16 +133,17 @@ class AdminInformationControllerCore extends AdminController
         // Test to execute (function/args): lets uses the default test
         $params_required_results = ConfigurationTest::check(ConfigurationTest::getDefaultTests());
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
+        }
 
         $fail_required = in_array('fail', $params_required_results);
 
-        if ($fail_required && $params_required_results['files'] != 'ok')
-        {
+        if ($fail_required && $params_required_results['files'] != 'ok') {
             $tmp = ConfigurationTest::test_files(true);
-            if (is_array($tmp) && count($tmp))
+            if (is_array($tmp) && count($tmp)) {
                 $tests_errors['files'] = $tests_errors['files'].'<br/>('.implode(', ', $tmp).')';
+            }
         }
 
         $results = array(
@@ -151,11 +152,12 @@ class AdminInformationControllerCore extends AdminController
             'testsRequired' => $params_required_results,
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $results = array_merge($results, array(
                 'failOptional' => in_array('fail', $params_optional_results),
                 'testsOptional' => $params_optional_results,
             ));
+        }
 
         return $results;
     }
@@ -164,8 +166,9 @@ class AdminInformationControllerCore extends AdminController
     {
         $this->file_list = array('missing' => array(), 'updated' => array());
         $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
-        if (!$xml)
+        if (!$xml) {
             die(Tools::jsonEncode($this->file_list));
+        }
 
         $this->getListOfUpdatedFiles($xml->ps_root_dir[0]);
         die(Tools::jsonEncode($this->file_list));
@@ -176,23 +179,24 @@ class AdminInformationControllerCore extends AdminController
         $exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload|modules|override/(:?.*)index.php$)';
         $admin_dir = basename(_PS_ADMIN_DIR_);
 
-        foreach ($dir->md5file as $file)
-        {
+        foreach ($dir->md5file as $file) {
             $filename = preg_replace('#^admin/#', $admin_dir.'/', $path.$file['name']);
-            if (preg_match('#^'.$exclude_regexp.'#', $filename))
+            if (preg_match('#^'.$exclude_regexp.'#', $filename)) {
                 continue;
+            }
 
-            if (!file_exists(_PS_ROOT_DIR_.'/'.$filename))
+            if (!file_exists(_PS_ROOT_DIR_.'/'.$filename)) {
                 $this->file_list['missing'][] = $filename;
-            else
-            {
+            } else {
                 $md5_local = md5_file(_PS_ROOT_DIR_.'/'.$filename);
-                if ($md5_local != (string)$file)
+                if ($md5_local != (string)$file) {
                     $this->file_list['updated'][] = $filename;
+                }
             }
         }
 
-        foreach ($dir->dir as $subdir)
+        foreach ($dir->dir as $subdir) {
             $this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
+        }
     }
 }

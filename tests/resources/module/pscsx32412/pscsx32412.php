@@ -1,6 +1,8 @@
 <?php
 
-if (!defined('_PS_VERSION_')) exit;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class Pscsx32412 extends Module
 {
@@ -18,7 +20,9 @@ class Pscsx32412 extends Module
 
     public function install()
     {
-        if (parent::install() == false) return false;
+        if (parent::install() == false) {
+            return false;
+        }
         return true;
     }
 }

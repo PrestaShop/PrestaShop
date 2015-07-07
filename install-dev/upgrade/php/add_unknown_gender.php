@@ -47,8 +47,7 @@ function add_unknown_gender()
         'it' => 'Sconosciuto',
     );
 
-    foreach ($languages as $lang)
-    {
+    foreach ($languages as $lang) {
         $name = (isset($lang_names[$lang['iso_code']]) ? $lang_names[$lang['iso_code']] : 'Unknown');
         $res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'gender_lang` (`id_gender`, `id_lang`, `name`) VALUES

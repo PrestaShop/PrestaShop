@@ -48,5 +48,4 @@ class CMSRoleCore extends ObjectModel
     {
         return 'Core_Business_CMS_CMSRoleRepository';
     }
-
 }

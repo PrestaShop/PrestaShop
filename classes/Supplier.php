@@ -105,30 +105,32 @@ class SupplierCore extends ObjectModel
      */
     public static function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
     {
-        if (!$id_lang)
+        if (!$id_lang) {
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
-        if (!Group::isFeatureActive())
+        }
+        if (!Group::isFeatureActive()) {
             $all_groups = true;
+        }
 
         $query = new DbQuery();
         $query->select('s.*, sl.`description`');
         $query->from('supplier', 's');
         $query->leftJoin('supplier_lang', 'sl', 's.`id_supplier` = sl.`id_supplier` AND sl.`id_lang` = '.(int)$id_lang);
         $query->join(Shop::addSqlAssociation('supplier', 's'));
-        if ($active)
+        if ($active) {
             $query->where('s.`active` = 1');
+        }
         $query->orderBy(' s.`name` ASC');
         $query->limit($n, ($p - 1) * $n);
         $query->groupBy('s.id_supplier');
 
         $suppliers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        if ($suppliers === false)
+        if ($suppliers === false) {
             return false;
-        if ($get_nb_products)
-        {
+        }
+        if ($get_nb_products) {
             $sql_groups = '';
-            if (!$all_groups)
-            {
+            if (!$all_groups) {
                 $groups = FrontController::getCurrentCustomerGroups();
                 $sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
             }
@@ -153,21 +155,26 @@ class SupplierCore extends ObjectModel
                 );
 
             $counts = array();
-            foreach ($results as $result)
+            foreach ($results as $result) {
                 $counts[(int)$result['id_supplier']] = (int)$result['nb_products'];
+            }
 
-            if (count($counts) && is_array($suppliers))
-                foreach ($suppliers as $key => $supplier)
-                    if (isset($counts[(int)$supplier['id_supplier']]))
+            if (count($counts) && is_array($suppliers)) {
+                foreach ($suppliers as $key => $supplier) {
+                    if (isset($counts[(int)$supplier['id_supplier']])) {
                         $suppliers[$key]['nb_products'] = $counts[(int)$supplier['id_supplier']];
-                    else
+                    } else {
                         $suppliers[$key]['nb_products'] = 0;
+                    }
+                }
+            }
         }
 
         $nb_suppliers = count($suppliers);
         $rewrite_settings = (int)Configuration::get('PS_REWRITING_SETTINGS');
-        for ($i = 0; $i < $nb_suppliers; $i++)
-                $suppliers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($suppliers[$i]['name']) : 0);
+        for ($i = 0; $i < $nb_suppliers; $i++) {
+            $suppliers[$i]['link_rewrite'] = ($rewrite_settings ? Tools::link_rewrite($suppliers[$i]['name']) : 0);
+        }
         return $suppliers;
     }
 
@@ -180,9 +187,10 @@ class SupplierCore extends ObjectModel
     protected static $cache_name = array();
     public static function getNameById($id_supplier)
     {
-        if (!isset(self::$cache_name[$id_supplier]))
+        if (!isset(self::$cache_name[$id_supplier])) {
             self::$cache_name[$id_supplier] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `name` FROM `'._DB_PREFIX_.'supplier` WHERE `id_supplier` = '.(int)$id_supplier);
+        }
         return self::$cache_name[$id_supplier];
     }
 
@@ -193,8 +201,9 @@ class SupplierCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'supplier`
 		WHERE `name` = \''.pSQL($name).'\'');
 
-        if (isset($result['id_supplier']))
+        if (isset($result['id_supplier'])) {
             return (int)$result['id_supplier'];
+        }
 
         return false;
     }
@@ -204,25 +213,32 @@ class SupplierCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
             $front = false;
+        }
 
-        if ($p < 1) $p = 1;
-        if (empty($order_by) || $order_by == 'position') $order_by = 'name';
-        if (empty($order_way)) $order_way = 'ASC';
+        if ($p < 1) {
+            $p = 1;
+        }
+        if (empty($order_by) || $order_by == 'position') {
+            $order_by = 'name';
+        }
+        if (empty($order_way)) {
+            $order_way = 'ASC';
+        }
 
-        if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
+        if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
             die(Tools::displayError());
+        }
 
         $sql_groups = '';
-        if (Group::isFeatureActive())
-        {
+        if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = 'WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
         }
 
         /* Return only the number of products */
-        if ($get_total)
+        if ($get_total) {
             return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(DISTINCT ps.`id_product`)
 			FROM `'._DB_PREFIX_.'product_supplier` ps
@@ -239,21 +255,20 @@ class SupplierCore extends ObjectModel
 				'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 				'.$sql_groups.'
 			)');
+        }
 
         $nb_days_new_product = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
-        if (strpos('.', $order_by) > 0)
-        {
+        if (strpos('.', $order_by) > 0) {
             $order_by = explode('.', $order_by);
             $order_by = pSQL($order_by[0]).'.`'.pSQL($order_by[1]).'`';
         }
         $alias = '';
-        if (in_array($order_by, array('price', 'date_add', 'date_upd')))
+        if (in_array($order_by, array('price', 'date_add', 'date_upd'))) {
             $alias = 'product_shop.';
-        elseif ($order_by == 'id_product')
+        } elseif ($order_by == 'id_product') {
             $alias = 'p.';
-        elseif ($order_by == 'manufacturer_name')
-        {
+        } elseif ($order_by == 'manufacturer_name') {
             $order_by = 'name';
             $alias = 'm.';
         }
@@ -288,16 +303,17 @@ class SupplierCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				'.Product::sqlStock('p', 0);
 
-                if (Group::isFeatureActive() || $active_category)
-                {
-                    $sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
-                    if (Group::isFeatureActive())
-                        $sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
-                    if ($active_category)
-                        $sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
-                }
+        if (Group::isFeatureActive() || $active_category) {
+            $sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
+            if (Group::isFeatureActive()) {
+                $sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+            }
+            if ($active_category) {
+                $sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+            }
+        }
 
-                $sql .= '
+        $sql .= '
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
@@ -307,11 +323,13 @@ class SupplierCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
-        if (!$result)
+        if (!$result) {
             return false;
+        }
 
-        if ($order_by == 'price')
+        if ($order_by == 'price') {
             Tools::orderbyPrice($result, $order_way);
+        }
 
         return Product::getProductsProperties($id_lang, $result);
     }
@@ -320,8 +338,9 @@ class SupplierCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+        if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {
             $front = false;
+        }
 
         $sql = '
 			SELECT p.`id_product`,
@@ -365,8 +384,7 @@ class SupplierCore extends ObjectModel
      */
     public function delete()
     {
-        if (parent::delete())
-        {
+        if (parent::delete()) {
             CartRule::cleanProductRuleIntegrity('suppliers', $this->id);
             return $this->deleteImage();
         }
@@ -391,7 +409,8 @@ class SupplierCore extends ObjectModel
         $query->where('id_product_attribute = '.(int)$id_product_attribute);
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if (count($res))
+        if (count($res)) {
             return $res[0];
+        }
     }
 }

@@ -77,12 +77,12 @@ class InstallLanguage
      */
     public function getMetaInformation($key)
     {
-        if (!is_array($this->meta))
-        {
+        if (!is_array($this->meta)) {
             $this->meta = array();
             $xml = simplexml_load_file($this->path.'language.xml');
-            foreach ($xml->children() as $node)
+            foreach ($xml->children() as $node) {
                 $this->meta[$node->getName()] = (string)$node;
+            }
         }
 
         return isset($this->meta[$key]) ? $this->meta[$key] : null;
@@ -90,22 +90,23 @@ class InstallLanguage
 
     public function getTranslation($key, $type = 'translations')
     {
-        if (!is_array($this->data))
+        if (!is_array($this->data)) {
             $this->data = file_exists($this->path.'install.php') ? include($this->path.'install.php') : array();
+        }
 
         return isset($this->data[$type][$key]) ? $this->data[$type][$key] : null;
     }
 
     public function getCountries()
     {
-        if (!is_array($this->countries))
-        {
+        if (!is_array($this->countries)) {
             $this->countries = array();
-            if (file_exists($this->path.'data/country.xml'))
-            {
-                if ($xml = simplexml_load_file($this->path.'data/country.xml'))
-                    foreach ($xml->country as $country)
+            if (file_exists($this->path.'data/country.xml')) {
+                if ($xml = simplexml_load_file($this->path.'data/country.xml')) {
+                    foreach ($xml->country as $country) {
                         $this->countries[strtolower((string)$country['id'])] = (string)$country->name;
+                    }
+                }
             }
         }
         return $this->countries;

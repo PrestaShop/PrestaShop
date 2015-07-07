@@ -24,10 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_MAGIC_QUOTES_GPC_'))
+if (!defined('_PS_MAGIC_QUOTES_GPC_')) {
     define('_PS_MAGIC_QUOTES_GPC_', get_magic_quotes_gpc());
-if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+}
+if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_')) {
     define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
+}
 
 function latin1_database_to_utf8()
 {
@@ -84,20 +86,21 @@ function latin1_database_to_utf8()
                     array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
                 );
 
-    foreach ($tables as $table)
-    {
+    foreach ($tables as $table) {
         /* Latin1 datas' selection */
-        if (!Db::getInstance()->execute('SET NAMES latin1'))
+        if (!Db::getInstance()->execute('SET NAMES latin1')) {
             echo 'Cannot change the sql encoding to latin1!';
+        }
         $query = 'SELECT `'.$table['id'].'`';
-        foreach ($table['fields'] as $field)
+        foreach ($table['fields'] as $field) {
             $query .= ', `'.$field.'`';
-        if (isset($table['lang']) and $table['lang'])
+        }
+        if (isset($table['lang']) and $table['lang']) {
             $query .= ', `id_lang`';
+        }
         $query .= ' FROM `'._DB_PREFIX_.$table['name'].'`';
         $latin1Datas = Db::getInstance()->executeS($query);
-        if ($latin1Datas === false)
-        {
+        if ($latin1Datas === false) {
             $warningExist = true;
             $requests .= '
 				<request result="fail">
@@ -107,22 +110,22 @@ function latin1_database_to_utf8()
 				</request>'."\n";
         }
 
-        if (Db::getInstance()->NumRows())
-        {
+        if (Db::getInstance()->NumRows()) {
             /* Utf-8 datas' restitution */
-            if (!Db::getInstance()->execute('SET NAMES utf8'))
+            if (!Db::getInstance()->execute('SET NAMES utf8')) {
                 echo 'Cannot change the sql encoding to utf8!';
-            foreach ($latin1Datas as $latin1Data)
-            {
+            }
+            foreach ($latin1Datas as $latin1Data) {
                 $query = 'UPDATE `'._DB_PREFIX_.$table['name'].'` SET';
-                foreach ($table['fields'] as $field)
+                foreach ($table['fields'] as $field) {
                     $query .= ' `'.$field.'` = \''.pSQL($latin1Data[$field]).'\',';
+                }
                 $query = rtrim($query, ',');
                 $query .= ' WHERE `'.$table['id'].'` = '.(int)($latin1Data[$table['id']]);
-                if (isset($table['lang']) and $table['lang'])
+                if (isset($table['lang']) and $table['lang']) {
                     $query .= ' AND `id_lang` = '.(int)($latin1Data['id_lang']);
-                if (!Db::getInstance()->execute($query))
-                {
+                }
+                if (!Db::getInstance()->execute($query)) {
                     $warningExist = true;
                     $requests .= '
 						<request result="fail">

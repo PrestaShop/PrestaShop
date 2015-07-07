@@ -61,9 +61,11 @@ class CompareProductCore extends ObjectModel
 
         $compareProducts = null;
 
-        if ($results)
-            foreach ($results as $result)
+        if ($results) {
+            foreach ($results as $result) {
                 $compareProducts[] = (int)$result['id_product'];
+            }
+        }
 
         return $compareProducts;
     }
@@ -82,15 +84,14 @@ class CompareProductCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'compare`
 			WHERE `id_compare` = '.(int)$id_compare);
 
-        if (!$id_compare)
-        {
+        if (!$id_compare) {
             $id_customer = false;
-            if (Context::getContext()->customer)
+            if (Context::getContext()->customer) {
                 $id_customer = Context::getContext()->customer->id;
+            }
             $sql = Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'compare` (`id_compare`, `id_customer`) VALUES (NULL, "'.($id_customer ? $id_customer: '0').'")');
-            if ($sql)
-            {
+            if ($sql) {
                 $id_compare = Db::getInstance()->getValue('SELECT MAX(`id_compare`) FROM `'._DB_PREFIX_.'compare`');
                 Context::getContext()->cookie->id_compare = $id_compare;
             }
@@ -137,17 +138,17 @@ class CompareProductCore extends ObjectModel
      */
     public static function cleanCompareProducts($period = 'week')
     {
-        if ($period === 'week')
+        if ($period === 'week') {
             $interval = '1 WEEK';
-        elseif ($period === 'month')
+        } elseif ($period === 'month') {
             $interval = '1 MONTH';
-        elseif ($period === 'year')
+        } elseif ($period === 'year') {
             $interval = '1 YEAR';
-        else
+        } else {
             return;
+        }
 
-        if ($interval != null)
-        {
+        if ($interval != null) {
             Db::getInstance()->execute('
 			DELETE cp, c FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
 			WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL 1 WEEK) AND c.`id_compare`=cp.`id_compare`');

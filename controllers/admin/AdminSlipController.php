@@ -141,22 +141,23 @@ class AdminSlipControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::getValue('submitAddorder_slip'))
-        {
-            if (!Validate::isDate(Tools::getValue('date_from')))
+        if (Tools::getValue('submitAddorder_slip')) {
+            if (!Validate::isDate(Tools::getValue('date_from'))) {
                 $this->errors[] = $this->l('Invalid "From" date');
-            if (!Validate::isDate(Tools::getValue('date_to')))
+            }
+            if (!Validate::isDate(Tools::getValue('date_to'))) {
                 $this->errors[] = $this->l('Invalid "To" date');
-            if (!count($this->errors))
-            {
+            }
+            if (!count($this->errors)) {
                 $order_slips = OrderSlip::getSlipsIdByDate(Tools::getValue('date_from'), Tools::getValue('date_to'));
-                if (count($order_slips))
+                if (count($order_slips)) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateOrderSlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
+                }
                 $this->errors[] = $this->l('No order slips were found for this period.');
             }
-        }
-        else
+        } else {
             return parent::postProcess();
+        }
     }
 
     public function initContent()
@@ -188,8 +189,9 @@ class AdminSlipControllerCore extends AdminController
     public function printPDFIcons($id_order_slip, $tr)
     {
         $order_slip = new OrderSlip((int)$id_order_slip);
-        if (!Validate::isLoadedObject($order_slip))
+        if (!Validate::isLoadedObject($order_slip)) {
             return '';
+        }
 
         $this->context->smarty->assign(array(
             'order_slip' => $order_slip,

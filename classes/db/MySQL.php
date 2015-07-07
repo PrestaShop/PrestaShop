@@ -44,18 +44,22 @@ class MySQLCore extends Db
      */
     public function connect()
     {
-        if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_'))
+        if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_')) {
             define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
+        }
 
-        if (!$this->link = mysql_connect($this->server, $this->user, $this->password))
+        if (!$this->link = mysql_connect($this->server, $this->user, $this->password)) {
             throw new PrestaShopDatabaseException(Tools::displayError('Link to database cannot be established.'));
+        }
 
-        if (!$this->set_db($this->database))
+        if (!$this->set_db($this->database)) {
             throw new PrestaShopDatabaseException(Tools::displayError('The database selection cannot be made.'));
+        }
 
         // UTF-8 support
-        if (!mysql_query('SET NAMES \'utf8\'', $this->link))
+        if (!mysql_query('SET NAMES \'utf8\'', $this->link)) {
             throw new PrestaShopDatabaseException(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+        }
 
         return $this->link;
     }
@@ -74,8 +78,9 @@ class MySQLCore extends Db
     {
         $link = mysql_connect($host, $user, $password);
         $success = mysql_query('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link);
-        if ($dropit && (mysql_query('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link) !== false))
+        if ($dropit && (mysql_query('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`', $link) !== false)) {
             return true;
+        }
 
         return $success;
     }
@@ -112,10 +117,11 @@ class MySQLCore extends Db
     public function nextRow($result = false)
     {
         $return = false;
-        if (is_resource($result) && $result)
+        if (is_resource($result) && $result) {
             $return = mysql_fetch_assoc($result);
-        elseif (is_resource($this->_result) && $this->_result)
+        } elseif (is_resource($this->_result) && $this->_result) {
             $return = mysql_fetch_assoc($this->_result);
+        }
 
         return $return;
     }
@@ -221,12 +227,14 @@ class MySQLCore extends Db
      */
     protected function getAll($result = false)
     {
-        if (!$result)
+        if (!$result) {
             $result = $this->result;
+        }
 
         $data = array();
-        while ($row = $this->nextRow($result))
+        while ($row = $this->nextRow($result)) {
             $data[] = $row;
+        }
 
         return $data;
     }
@@ -244,10 +252,12 @@ class MySQLCore extends Db
      */
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
     {
-        if (!$link = @mysql_connect($server, $user, $pwd, true))
+        if (!$link = @mysql_connect($server, $user, $pwd, true)) {
             return false;
-        if (!@mysql_select_db($db, $link))
+        }
+        if (!@mysql_select_db($db, $link)) {
             return false;
+        }
 
         $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
         $result = mysql_query($sql);
@@ -270,10 +280,12 @@ class MySQLCore extends Db
     public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
     {
         ini_set('mysql.connect_timeout', $timeout);
-        if (!$link = @mysql_connect($server, $user, $pwd, $new_db_link))
+        if (!$link = @mysql_connect($server, $user, $pwd, $new_db_link)) {
             return 1;
-        if (!@mysql_select_db($db, $link))
+        }
+        if (!@mysql_select_db($db, $link)) {
             return 2;
+        }
         @mysql_close($link);
 
         return 0;
@@ -290,22 +302,25 @@ class MySQLCore extends Db
 
         $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
         $result = mysql_query($sql);
-        if (!$result)
+        if (!$result) {
             $value = 'MyISAM';
+        }
         $row = mysql_fetch_assoc($result);
-        if (!$row || strtolower($row['Value']) != 'yes')
+        if (!$row || strtolower($row['Value']) != 'yes') {
             $value = 'MyISAM';
+        }
 
         /* MySQL >= 5.6 */
         $sql = 'SHOW ENGINES';
         $result = mysql_query($sql);
-        while ($row = mysql_fetch_assoc($result))
-            if ($row['Engine'] == 'InnoDB')
-            {
-                if (in_array($row['Support'], array('DEFAULT', 'YES')))
+        while ($row = mysql_fetch_assoc($result)) {
+            if ($row['Engine'] == 'InnoDB') {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
                     $value = 'InnoDB';
+                }
                 break;
             }
+        }
 
         return $value;
     }
@@ -324,21 +339,25 @@ class MySQLCore extends Db
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
         ini_set('mysql.connect_timeout', 5);
-        if (!$link = @mysql_connect($server, $user, $pwd, true))
+        if (!$link = @mysql_connect($server, $user, $pwd, true)) {
             return false;
-        if (!@mysql_select_db($db, $link))
+        }
+        if (!@mysql_select_db($db, $link)) {
             return false;
+        }
 
-        if ($engine === null)
+        if ($engine === null) {
             $engine = 'MyISAM';
+        }
 
         $result = mysql_query('
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine, $link);
 
-        if (!$result)
+        if (!$result) {
             return mysql_error($link);
+        }
 
         mysql_query('DROP TABLE `'.$prefix.'test`', $link);
         return true;

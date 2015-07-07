@@ -80,8 +80,9 @@ class AdminProfilesControllerCore extends AdminController
         );
 
         $list_profile = array();
-        foreach (Profile::getProfiles($this->context->language->id) as $profil)
+        foreach (Profile::getProfiles($this->context->language->id) as $profil) {
             $list_profile[] = array('value' => $profil['id_profile'], 'name' => $profil['name']);
+        }
 
         parent::__construct();
     }
@@ -89,27 +90,28 @@ class AdminProfilesControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
         /* PrestaShop demo mode*/
 
-        if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_))
+        if (isset($_GET['delete'.$this->table]) && $_GET[$this->identifier] == (int)(_PS_ADMIN_PROFILE_)) {
             $this->errors[] = $this->l('For security reasons, you cannot delete the Administrator\'s profile.');
-        else
+        } else {
             parent::postProcess();
+        }
     }
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_profile'] = array(
                 'href' => self::$currentIndex.'&addprofile&token='.$this->token,
                 'desc' => $this->l('Add new profile', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
         
         parent::initPageHeaderToolbar();
     }

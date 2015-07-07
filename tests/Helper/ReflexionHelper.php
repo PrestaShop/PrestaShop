@@ -44,7 +44,6 @@ use PHPUnit_Framework_TestCase;
  */
 class ReflexionHelper extends PHPUnit_Framework_TestCase
 {
-
     public static function invoke($object, $method)
     {
         $params = array_slice(func_get_args(), 2);

@@ -45,10 +45,11 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
      */
     public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
     {
-        if ($configurationManager === null)
+        if ($configurationManager === null) {
             $this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
-        else
+        } else {
             $this->configurationManager = $configurationManager;
+        }
 
         $this->address = $address;
         $this->type = $type;
@@ -73,25 +74,28 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     {
         static $tax_enabled = null;
 
-        if (isset($this->tax_calculator))
+        if (isset($this->tax_calculator)) {
             return $this->tax_calculator;
+        }
 
-        if ($tax_enabled === null)
+        if ($tax_enabled === null) {
             $tax_enabled = $this->configurationManager->get('PS_TAX');
+        }
 
-        if (!$tax_enabled)
+        if (!$tax_enabled) {
             return new TaxCalculator(array());
+        }
 
         $taxes = array();
         $postcode = 0;
 
-        if (!empty($this->address->postcode))
+        if (!empty($this->address->postcode)) {
             $postcode = $this->address->postcode;
+        }
 
         $cache_id = (int)$this->address->id_country.'-'.(int)$this->address->id_state.'-'.$postcode.'-'.(int)$this->type;
 
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $rows = Db::getInstance()->executeS('
 				SELECT tr.*
 				FROM `'._DB_PREFIX_.'tax_rule` tr
@@ -107,21 +111,20 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
             $behavior = 0;
             $first_row = true;
 
-            foreach ($rows as $row)
-            {
+            foreach ($rows as $row) {
                 $tax = new Tax((int)$row['id_tax']);
 
                 $taxes[] = $tax;
 
                 // the applied behavior correspond to the most specific rules
-                if ($first_row)
-                {
+                if ($first_row) {
                     $behavior = $row['behavior'];
                     $first_row = false;
                 }
 
-                if ($row['behavior'] == 0)
+                if ($row['behavior'] == 0) {
                     break;
+                }
             }
             $result = new TaxCalculator($taxes, $behavior);
             Cache::store($cache_id, $result);

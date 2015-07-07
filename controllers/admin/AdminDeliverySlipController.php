@@ -104,22 +104,23 @@ class AdminDeliverySlipControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('submitAdddelivery'))
-        {
-            if (!Validate::isDate(Tools::getValue('date_from')))
+        if (Tools::isSubmit('submitAdddelivery')) {
+            if (!Validate::isDate(Tools::getValue('date_from'))) {
                 $this->errors[] = Tools::displayError('Invalid \'from\' date');
-            if (!Validate::isDate(Tools::getValue('date_to')))
-                $this->errors[] = Tools::displayError('Invalid \'to\' date');
-            if (!count($this->errors))
-            {
-                if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to'))))
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateDeliverySlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
-                else
-                    $this->errors[] = Tools::displayError('No delivery slip was found for this period.');
             }
-        }
-        else
+            if (!Validate::isDate(Tools::getValue('date_to'))) {
+                $this->errors[] = Tools::displayError('Invalid \'to\' date');
+            }
+            if (!count($this->errors)) {
+                if (count(OrderInvoice::getByDeliveryDateInterval(Tools::getValue('date_from'), Tools::getValue('date_to')))) {
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateDeliverySlipsPDF&date_from='.urlencode(Tools::getValue('date_from')).'&date_to='.urlencode(Tools::getValue('date_to')));
+                } else {
+                    $this->errors[] = Tools::displayError('No delivery slip was found for this period.');
+                }
+            }
+        } else {
             parent::postProcess();
+        }
     }
 
     public function initContent()

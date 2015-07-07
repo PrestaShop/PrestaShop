@@ -221,13 +221,12 @@ class StockMvtWSCore extends ObjectModelCore
         // calls parent
         parent::__construct($id, $id_lang, $id_shop);
 
-        if ((int)$this->id != 0)
-        {
+        if ((int)$this->id != 0) {
             $res = $this->getWebserviceObjectList(null, (' AND '.$this->def['primary'].' = '.(int)$this->id), null, null, true);
-            if (isset($res[0]))
-            {
-                foreach ($this->tables_assoc as $key => $param)
+            if (isset($res[0])) {
+                foreach ($this->tables_assoc as $key => $param) {
                     $this->{$key} = $res[0][$key];
+                }
             }
         }
     }
@@ -240,37 +239,43 @@ class StockMvtWSCore extends ObjectModelCore
     {
         $query = 'SELECT DISTINCT main.'.$this->def['primary'].' ';
 
-        if ($full)
+        if ($full) {
             $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
 					   s.ean13, s.upc, s.reference ';
+        }
 
         $old_filter = $filter;
-        if ($filter)
-            foreach ($this->tables_assoc as $key => $value)
+        if ($filter) {
+            foreach ($this->tables_assoc as $key => $value) {
                 $filter = str_replace('main.`'.$key.'`', $value['table'].'.`'.$key.'`', $filter);
+            }
+        }
 
         $query .= 'FROM '._DB_PREFIX_.$this->def['table'].' as main ';
 
-        if ($filter !== $old_filter || $full)
-        {
+        if ($filter !== $old_filter || $full) {
             $query .= 'LEFT JOIN '._DB_PREFIX_.'stock s ON (s.id_stock = main.id_stock) ';
             $query .= 'LEFT JOIN '._DB_PREFIX_.'warehouse w ON (w.id_warehouse = s.id_warehouse) ';
             $query .= 'LEFT JOIN '._DB_PREFIX_.'currency c ON (c.id_currency = w.id_currency) ';
         }
 
-        if ($join)
+        if ($join) {
             $query .= $join;
+        }
 
         $query .= 'WHERE 1 ';
 
-        if ($filter)
+        if ($filter) {
             $query .= $filter.' ';
+        }
 
-        if ($sort)
+        if ($sort) {
             $query .= $sort.' ';
+        }
 
-        if ($limit)
+        if ($limit) {
             $query .= $limit.' ';
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -281,10 +286,10 @@ class StockMvtWSCore extends ObjectModelCore
     public function getWSProductName()
     {
         $res = array();
-        foreach (Language::getIDs(true) as $id_lang)
+        foreach (Language::getIDs(true) as $id_lang) {
             $res[$id_lang] = Product::getProductName($this->id_product, $this->id_product_attribute, $id_lang);
+        }
 
         return $res;
     }
-
 }

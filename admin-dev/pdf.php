@@ -24,8 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_ADMIN_DIR_'))
+if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
+}
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 /**
@@ -34,8 +35,9 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
  */
 Tools::displayFileAsDeprecated();
 
-if (!Context::getContext()->employee->id)
+if (!Context::getContext()->employee->id) {
     Tools::redirectAdmin('index.php?controller=AdminLogin');
+}
 
 $function_array = array(
     'pdf' => 'generateInvoicePDF',
@@ -50,11 +52,11 @@ $function_array = array(
 );
 
 $pdf_controller = new AdminPdfController();
-foreach ($function_array as $var => $function)
-    if (isset($_GET[$var]))
-    {
+foreach ($function_array as $var => $function) {
+    if (isset($_GET[$var])) {
         $pdf_controller->{'process'.$function}();
         exit;
     }
+}
 
 exit;

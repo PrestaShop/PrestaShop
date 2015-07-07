@@ -78,12 +78,13 @@ class AdminSuppliersControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_supplier'] = array(
                 'href' => self::$currentIndex.'&addsupplier&token='.$this->token,
                 'desc' => $this->l('Add new supplier', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -91,8 +92,9 @@ class AdminSuppliersControllerCore extends AdminController
     public function renderForm()
     {
         // loads current warehouse
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $image = _PS_SUPP_IMG_DIR_.$obj->id.'.jpg';
         $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
@@ -102,8 +104,9 @@ class AdminSuppliersControllerCore extends AdminController
         $tmp_addr = new Address();
         $res = $tmp_addr->getFieldsRequiredDatabase();
         $required_fields = array();
-        foreach ($res as $row)
+        foreach ($res as $row) {
             $required_fields[(int)$row['id_required_field']] = $row['field_name'];
+        }
 
         $this->fields_form = array(
             'legend' => array(
@@ -285,17 +288,16 @@ class AdminSuppliersControllerCore extends AdminController
 
         // loads current address for this supplier - if possible
         $address = null;
-        if (isset($obj->id))
-        {
+        if (isset($obj->id)) {
             $id_address = Address::getAddressIdBySupplierId($obj->id);
 
-            if ($id_address > 0)
+            if ($id_address > 0) {
                 $address = new Address((int)$id_address);
+            }
         }
 
         // force specific fields values (address)
-        if ($address != null)
-        {
+        if ($address != null) {
             $this->fields_value = array(
                 'id_address' => $address->id,
                 'phone' => $address->phone,
@@ -307,16 +309,15 @@ class AdminSuppliersControllerCore extends AdminController
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
             );
-        }
-        else
+        } else {
             $this->fields_value = array(
                 'id_address' => 0,
                 'id_country' => Configuration::get('PS_COUNTRY_DEFAULT')
             );
+        }
 
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -337,11 +338,12 @@ class AdminSuppliersControllerCore extends AdminController
         parent::initToolbar();
         $this->addPageHeaderToolBarModulesListButton();
 
-        if (empty($this->display) && $this->can_import)
+        if (empty($this->display) && $this->can_import) {
             $this->toolbar_btn['import'] = array(
                 'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
                 'desc' => $this->l('Import')
             );
+        }
     }
 
     public function renderView()
@@ -351,14 +353,12 @@ class AdminSuppliersControllerCore extends AdminController
         $products = $this->object->getProductsLite($this->context->language->id);
         $total_product = count($products);
 
-        for ($i = 0; $i < $total_product; $i++)
-        {
+        for ($i = 0; $i < $total_product; $i++) {
             $products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
             $products[$i]->loadStockData();
             // Build attributes combinations
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
-            foreach ($combinations as $k => $combination)
-            {
+            foreach ($combinations as $k => $combination) {
                 $comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
                                                                          $products[$i]->id,
                                                                          $combination['id_product_attribute']);
@@ -375,20 +375,17 @@ class AdminSuppliersControllerCore extends AdminController
                 );
             }
 
-            if (isset($comb_array))
-            {
-                foreach ($comb_array as $key => $product_attribute)
-                {
+            if (isset($comb_array)) {
+                foreach ($comb_array as $key => $product_attribute) {
                     $list = '';
-                    foreach ($product_attribute['attributes'] as $attribute)
+                    foreach ($product_attribute['attributes'] as $attribute) {
                         $list .= $attribute[0].' - '.$attribute[1].', ';
+                    }
                     $comb_array[$key]['attributes'] = rtrim($list, ', ');
                 }
                 isset($comb_array) ? $products[$i]->combination = $comb_array : '';
                 unset($comb_array);
-            }
-            else
-            {
+            } else {
                 $product_infos = Supplier::getProductInformationsBySupplier($this->object->id,
                                                                             $products[$i]->id,
                                                                             0);
@@ -414,24 +411,26 @@ class AdminSuppliersControllerCore extends AdminController
 
         /* Generate image with differents size */
         if (($id_supplier = (int)Tools::getValue('id_supplier')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
-        {
+             isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg')) {
             $images_types = ImageType::getImagesTypes('suppliers');
-            foreach ($images_types as $k => $image_type)
-            {
+            foreach ($images_types as $k => $image_type) {
                 $file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
-                if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
+                if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height'])) {
                     $return = false;
+                }
 
-                if ($generate_hight_dpi_images)
-                    if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2))
+                if ($generate_hight_dpi_images) {
+                    if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2)) {
                         $return = false;
+                    }
+                }
             }
 
             $current_logo_file = _PS_TMP_IMG_DIR_.'supplier_mini_'.$id_supplier.'_'.$this->context->shop->id.'.jpg';
 
-            if (file_exists($current_logo_file))
+            if (file_exists($current_logo_file)) {
                 unlink($current_logo_file);
+            }
         }
         return $return;
     }
@@ -443,22 +442,23 @@ class AdminSuppliersControllerCore extends AdminController
     public function postProcess()
     {
         // checks access
-        if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1'))
-        {
+        if (Tools::isSubmit('submitAdd'.$this->table) && !($this->tabAccess['add'] === '1')) {
             $this->errors[] = Tools::displayError('You do not have permission to add suppliers.');
             return parent::postProcess();
         }
 
-        if (Tools::isSubmit('submitAdd'.$this->table))
-        {
-            if (Tools::isSubmit('id_supplier') && !($obj = $this->loadObject(true)))
+        if (Tools::isSubmit('submitAdd'.$this->table)) {
+            if (Tools::isSubmit('id_supplier') && !($obj = $this->loadObject(true))) {
                 return;
+            }
 
             // updates/creates address if it does not exist
-            if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0)
-                $address = new Address((int)Tools::getValue('id_address')); // updates address
-            else
-                $address = new Address(); // creates address
+            if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0) {
+                $address = new Address((int)Tools::getValue('id_address'));
+            } // updates address
+            else {
+                $address = new Address();
+            } // creates address
 
             $address->alias = Tools::getValue('name', null);
             $address->lastname = 'supplier'; // skip problem with numeric characters in supplier name
@@ -475,47 +475,40 @@ class AdminSuppliersControllerCore extends AdminController
             $validation = $address->validateController();
 
             // checks address validity
-            if (count($validation) > 0)
-            {
-                foreach ($validation as $item)
+            if (count($validation) > 0) {
+                foreach ($validation as $item) {
                     $this->errors[] = $item;
+                }
                 $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
-            }
-            else
-            {
-                if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0)
+            } else {
+                if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0) {
                     $address->update();
-                else
-                {
+                } else {
                     $address->save();
                     $_POST['id_address'] = $address->id;
                 }
             }
             return parent::postProcess();
-        }
-        elseif (Tools::isSubmit('delete'.$this->table))
-        {
-            if (!($obj = $this->loadObject(true)))
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
+            if (!($obj = $this->loadObject(true))) {
                 return;
-            elseif (SupplyOrder::supplierHasPendingOrders($obj->id))
+            } elseif (SupplyOrder::supplierHasPendingOrders($obj->id)) {
                 $this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
-            else
-            {
+            } else {
                 //delete all product_supplier linked to this supplier
                 Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id);
 
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);
-                if (Validate::isLoadedObject($address))
-                {
+                if (Validate::isLoadedObject($address)) {
                     $address->deleted = 1;
                     $address->save();
                 }
                 return parent::postProcess();
             }
-        }
-        else
+        } else {
             return parent::postProcess();
+        }
     }
 
     /**
@@ -529,8 +522,7 @@ class AdminSuppliersControllerCore extends AdminController
     {
         $id_address = (int)$_POST['id_address'];
         $address = new Address($id_address);
-        if (Validate::isLoadedObject($address))
-        {
+        if (Validate::isLoadedObject($address)) {
             $address->id_supplier = $object->id;
             $address->save();
         }
@@ -549,15 +541,12 @@ class AdminSuppliersControllerCore extends AdminController
     {
         $id_address = (int)$_POST['id_address'];
         $address = new Address($id_address);
-        if (Validate::isLoadedObject($address))
-        {
-            if ($address->id_supplier != $object->id)
-            {
+        if (Validate::isLoadedObject($address)) {
+            if ($address->id_supplier != $object->id) {
                 $address->id_supplier = $object->id;
                 $address->save();
             }
         }
         return true;
     }
-
 }

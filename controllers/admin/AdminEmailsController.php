@@ -33,8 +33,7 @@ class AdminEmailsControllerCore extends AdminController
     {
         $this->bootstrap = true;
 
-        if (Configuration::get('PS_LOG_EMAILS'))
-        {
+        if (Configuration::get('PS_LOG_EMAILS')) {
             $this->table = 'mail';
             $this->className = 'Mail';
 
@@ -52,8 +51,9 @@ class AdminEmailsControllerCore extends AdminController
                 )
             );
 
-            foreach (Language::getLanguages() as $language)
+            foreach (Language::getLanguages() as $language) {
                 $languages[$language['id_lang']] = $language['name'];
+            }
 
             $this->fields_list = array(
                 'id_mail' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
@@ -81,8 +81,9 @@ class AdminEmailsControllerCore extends AdminController
 
         parent::__construct();
 
-        foreach (Contact::getContacts($this->context->language->id) as $contact)
+        foreach (Contact::getContacts($this->context->language->id) as $contact) {
             $arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
+        }
 
         $this->fields_options = array(
             'email' => array(
@@ -215,9 +216,10 @@ class AdminEmailsControllerCore extends AdminController
             )
         );
 
-        if (!defined('_PS_HOST_MODE_'))
+        if (!defined('_PS_HOST_MODE_')) {
             $this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices'][1] =
                 $this->l('Use PHP\'s mail() function (recommended; works in most cases)');
+        }
 
         ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
     }
@@ -238,10 +240,11 @@ class AdminEmailsControllerCore extends AdminController
     
     public function processDelete()
     {
-        if ((int)$id_mail = Tools::getValue('id_mail', 0))
+        if ((int)$id_mail = Tools::getValue('id_mail', 0)) {
             $return = Mail::eraseLog((int)$id_mail);
-        else
+        } else {
             $return = Mail::eraseAllLogs();
+        }
 
         return $return;
     }
@@ -259,10 +262,11 @@ class AdminEmailsControllerCore extends AdminController
     
     public function updateOptionPsMailPasswd($value)
     {
-        if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
+        if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD')) {
             return true;
-        else
+        } else {
             Configuration::updateValue('PS_MAIL_PASSWD', Tools::getValue('PS_MAIL_PASSWD'));
+        }
     }
 
     /**
@@ -299,30 +303,31 @@ class AdminEmailsControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
-        {
+        if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
             return;
         }
         /* PrestaShop demo mode*/
 
         // We don't want to update the shop e-mail when sending test e-mails
-        if (isset($_POST['PS_SHOP_EMAIL']))
+        if (isset($_POST['PS_SHOP_EMAIL'])) {
             $_POST['PS_SHOP_EMAIL'] = Configuration::get('PS_SHOP_EMAIL');
+        }
 
         if (isset($_POST['PS_MAIL_METHOD']) && $_POST['PS_MAIL_METHOD'] == 2
-            && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT'])))
+            && (empty($_POST['PS_MAIL_SERVER']) || empty($_POST['PS_MAIL_SMTP_PORT']))) {
             $this->errors[] = Tools::displayError('You must define an SMTP server and an SMTP port. If you do not know it, use the PHP mail() function instead.');
+        }
     }
 
     public function ajaxProcessSendMailTest()
     {
         /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_)
+        if (_PS_MODE_DEMO_) {
             die(Tools::displayError('This functionality has been disabled.'));
+        }
         /* PrestaShop demo mode */
-        if ($this->tabAccess['view'] === '1')
-        {
+        if ($this->tabAccess['view'] === '1') {
             $smtpChecked = (trim(Tools::getValue('mailMethod')) == 'smtp');
             $smtpServer = Tools::getValue('smtpSrv');
             $content = urldecode(Tools::getValue('testMsg'));

@@ -36,35 +36,39 @@ class    AddConfToFile
         $this->file = $file;
         $this->mode = $mode;
         $this->checkFile($file);
-        if ($mode == 'w' and !$this->error)
-            if (!$res = @fwrite($this->fd, '<?php'."\n"))
+        if ($mode == 'w' and !$this->error) {
+            if (!$res = @fwrite($this->fd, '<?php'."\n")) {
                 $this->error = 6;
+            }
+        }
     }
 
     public function __destruct()
     {
-        if (!$this->error)
+        if (!$this->error) {
             @fclose($this->fd);
+        }
     }
 
     private function checkFile($file)
     {
-        if (!$fd = @fopen($this->file, $this->mode))
+        if (!$fd = @fopen($this->file, $this->mode)) {
             $this->error = 5;
-        elseif (!is_writable($this->file))
+        } elseif (!is_writable($this->file)) {
             $this->error = 6;
+        }
         $this->fd = $fd;
     }
 
     public function writeInFile($name, $data)
     {
-        if ($name == '_PS_VERSION_' && strpos($this->file, 'settings.inc') !== false)
+        if ($name == '_PS_VERSION_' && strpos($this->file, 'settings.inc') !== false) {
             $string = 'if (!defined(\''.$name.'\'))'."\n\t".'define(\''.$name.'\', \''.$this->checkString($data).'\');'."\n";
-        else
+        } else {
             $string = 'define(\''.$name.'\', \''.$this->checkString($data).'\');'."\n";
+        }
 
-        if (!$res = @fwrite($this->fd, $string))
-        {
+        if (!$res = @fwrite($this->fd, $string)) {
             $this->error = 6;
             return false;
         }
@@ -82,10 +86,10 @@ class    AddConfToFile
 
     public function checkString($string)
     {
-        if (get_magic_quotes_gpc())
+        if (get_magic_quotes_gpc()) {
             $string = stripslashes($string);
-        if (!is_numeric($string))
-        {
+        }
+        if (!is_numeric($string)) {
             $string = addslashes($string);
             $string = str_replace(array("\n", "\r"), '', $string);
         }

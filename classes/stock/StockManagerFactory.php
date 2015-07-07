@@ -42,11 +42,11 @@ class StockManagerFactoryCore
      */
     public static function getManager()
     {
-        if (!isset(StockManagerFactory::$stock_manager))
-        {
+        if (!isset(StockManagerFactory::$stock_manager)) {
             $stock_manager = StockManagerFactory::execHookStockManagerFactory();
-            if (!($stock_manager instanceof StockManagerInterface))
+            if (!($stock_manager instanceof StockManagerInterface)) {
                 $stock_manager = new StockManager();
+            }
             StockManagerFactory::$stock_manager = $stock_manager;
         }
         return StockManagerFactory::$stock_manager;
@@ -62,15 +62,16 @@ class StockManagerFactoryCore
         $modules_infos = Hook::getModulesFromHook(Hook::getIdByName('stockManager'));
         $stock_manager = false;
 
-        foreach ($modules_infos as $module_infos)
-        {
+        foreach ($modules_infos as $module_infos) {
             $module_instance = Module::getInstanceByName($module_infos['name']);
 
-            if (is_callable(array($module_instance, 'hookStockManager')))
+            if (is_callable(array($module_instance, 'hookStockManager'))) {
                 $stock_manager = $module_instance->hookStockManager();
+            }
 
-            if ($stock_manager)
+            if ($stock_manager) {
                 break;
+            }
         }
 
         return $stock_manager;

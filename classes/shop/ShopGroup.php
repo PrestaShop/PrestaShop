@@ -58,8 +58,9 @@ class ShopGroupCore extends ObjectModel
      */
     public function getFields()
     {
-        if (!$this->share_customer || !$this->share_stock)
+        if (!$this->share_customer || !$this->share_stock) {
             $this->share_order = false;
+        }
 
         return parent::getFields();
     }
@@ -68,8 +69,9 @@ class ShopGroupCore extends ObjectModel
     {
         $groups = new PrestaShopCollection('ShopGroup');
         $groups->where('deleted', '=', false);
-        if ($active)
+        if ($active) {
             $groups->where('active', '=', true);
+        }
         return $groups;
     }
 
@@ -126,29 +128,30 @@ class ShopGroupCore extends ObjectModel
     public static function hasDependency($id_shop_group, $check = 'all')
     {
         $list_shops = Shop::getShops(false, $id_shop_group, true);
-        if (!$list_shops)
+        if (!$list_shops) {
             return false;
+        }
 
-        if ($check == 'all' || $check == 'customer')
-        {
+        if ($check == 'all' || $check == 'customer') {
             $total_customer = (int)Db::getInstance()->getValue('
 				SELECT count(*)
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
-            if ($total_customer)
+            if ($total_customer) {
                 return true;
+            }
         }
 
-        if ($check == 'all' || $check == 'order')
-        {
+        if ($check == 'all' || $check == 'order') {
             $total_order = (int)Db::getInstance()->getValue('
 				SELECT count(*)
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
-            if ($total_order)
+            if ($total_order) {
                 return true;
+            }
         }
 
         return false;

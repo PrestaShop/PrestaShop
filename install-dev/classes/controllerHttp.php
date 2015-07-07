@@ -92,55 +92,56 @@ abstract class InstallControllerHttp
 
     final public static function execute()
     {
-        if (Tools::getValue('compile_templates'))
-        {
+        if (Tools::getValue('compile_templates')) {
             require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
             exit;
         }
 
         $session = InstallSession::getInstance();
-        if (!$session->last_step || $session->last_step == 'welcome')
+        if (!$session->last_step || $session->last_step == 'welcome') {
             Tools::generateIndex();
+        }
 
         // Include all controllers
-        foreach (self::$steps as $step)
-        {
-            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'http/'.$step.'.php'))
+        foreach (self::$steps as $step) {
+            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'http/'.$step.'.php')) {
                 throw new PrestashopInstallerException("Controller file 'http/{$step}.php' not found");
+            }
 
             require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/'.$step.'.php';
             $classname = 'InstallControllerHttp'.$step;
             self::$instances[$step] = new $classname($step);
         }
 
-        if (!$session->last_step || !in_array($session->last_step, self::$steps))
+        if (!$session->last_step || !in_array($session->last_step, self::$steps)) {
             $session->last_step = self::$steps[0];
+        }
 
         // Set timezone
-        if ($session->shop_timezone)
+        if ($session->shop_timezone) {
             @date_default_timezone_set($session->shop_timezone);
+        }
 
         // Get current step (check first if step is changed, then take it from session)
-        if (Tools::getValue('step'))
-        {
+        if (Tools::getValue('step')) {
             $current_step = Tools::getValue('step');
             $session->step = $current_step;
-        }
-        else
+        } else {
             $current_step = (isset($session->step)) ? $session->step : self::$steps[0];
+        }
 
-        if (!in_array($current_step, self::$steps))
+        if (!in_array($current_step, self::$steps)) {
             $current_step = self::$steps[0];
+        }
 
         // Validate all steps until current step. If a step is not valid, use it as current step.
-        foreach (self::$steps as $check_step)
-        {
+        foreach (self::$steps as $check_step) {
             // Do not validate current step
-            if ($check_step == $current_step)
+            if ($check_step == $current_step) {
                 break;
+            }
 
-            if (!self::$instances[$check_step]->validate())
-            {
+            if (!self::$instances[$check_step]->validate()) {
                 $current_step = $check_step;
                 $session->step = $current_step;
                 $session->last_step = $current_step;
@@ -149,22 +150,22 @@ abstract class InstallControllerHttp
         }
 
         // Submit form to go to next step
-        if (Tools::getValue('submitNext'))
-        {
+        if (Tools::getValue('submitNext')) {
             self::$instances[$current_step]->processNextStep();
 
             // If current step is validated, let's go to next step
-            if (self::$instances[$current_step]->validate())
+            if (self::$instances[$current_step]->validate()) {
                 $current_step = self::$instances[$current_step]->findNextStep();
+            }
             $session->step = $current_step;
 
             // Change last step
-            if (self::getStepOffset($current_step) > self::getStepOffset($session->last_step))
+            if (self::getStepOffset($current_step) > self::getStepOffset($session->last_step)) {
                 $session->last_step = $current_step;
+            }
         }
         // Go to previous step
-        elseif (Tools::getValue('submitPrevious') && $current_step != self::$steps[0])
-        {
+        elseif (Tools::getValue('submitPrevious') && $current_step != self::$steps[0]) {
             $current_step = self::$instances[$current_step]->findPreviousStep($current_step);
             $session->step = $current_step;
         }
@@ -181,13 +182,15 @@ abstract class InstallControllerHttp
         // Set current language
         $this->language = InstallLanguages::getInstance();
         $detect_language = $this->language->detectLanguage();
-        if (isset($this->session->lang))
+        if (isset($this->session->lang)) {
             $lang = $this->session->lang;
-        else
+        } else {
             $lang = (isset($detect_language['primarytag'])) ? $detect_language['primarytag'] : false;
+        }
 
-        if (!in_array($lang, $this->language->getIsoList()))
+        if (!in_array($lang, $this->language->getIsoList())) {
             $lang = 'en';
+        }
         $this->language->setLanguage($lang);
 
         $this->init();
@@ -226,8 +229,9 @@ abstract class InstallControllerHttp
     {
         static $flip = null;
 
-        if (is_null($flip))
+        if (is_null($flip)) {
             $flip = array_flip(self::$steps);
+        }
         return $flip[$step];
     }
 
@@ -273,8 +277,9 @@ abstract class InstallControllerHttp
     public function findNextStep()
     {
         $nextStep = (isset(self::$steps[$this->getStepOffset($this->step) + 1])) ? self::$steps[$this->getStepOffset($this->step) + 1] : false;
-        if ($nextStep == 'system' && self::$instances[$nextStep]->validate())
+        if ($nextStep == 'system' && self::$instances[$nextStep]->validate()) {
             $nextStep = self::$instances[$nextStep]->findNextStep();
+        }
         return $nextStep;
     }
 
@@ -316,14 +321,16 @@ abstract class InstallControllerHttp
      */
     public function getPhone()
     {
-        if (InstallSession::getInstance()->support_phone != null)
+        if (InstallSession::getInstance()->support_phone != null) {
             return InstallSession::getInstance()->support_phone;
-        if ($this->phone === null)
-        {
+        }
+        if ($this->phone === null) {
             $this->phone = $this->language->getInformation('phone', false);
-            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3))
-                if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1]))
+            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
+                if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
                     $this->phone = $matches[1];
+                }
+            }
         }
         InstallSession::getInstance()->support_phone = $this->phone;
         return $this->phone;
@@ -402,8 +409,9 @@ abstract class InstallControllerHttp
      */
     public function ajaxJsonAnswer($success, $message = '')
     {
-        if (!$success && empty($message))
+        if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
+        }
         die(Tools::jsonEncode(array(
             'success' => (bool)$success,
             'message' => $message,
@@ -420,32 +428,34 @@ abstract class InstallControllerHttp
      */
     public function displayTemplate($template, $get_output = false, $path = null)
     {
-        if (!$path)
+        if (!$path) {
             $path = _PS_INSTALL_PATH_.'theme/views/';
+        }
 
-        if (!file_exists($path.$template.'.phtml'))
+        if (!file_exists($path.$template.'.phtml')) {
             throw new PrestashopInstallerException("Template '{$template}.phtml' not found");
+        }
 
-        if ($get_output)
+        if ($get_output) {
             ob_start();
+        }
 
         include($path.$template.'.phtml');
 
-        if ($get_output)
-        {
+        if ($get_output) {
             $content = ob_get_contents();
-            if (ob_get_level() && ob_get_length() > 0)
+            if (ob_get_level() && ob_get_length() > 0) {
                 ob_end_clean();
+            }
             return $content;
         }
     }
 
     public function &__get($varname)
     {
-        if (isset($this->__vars[$varname]))
+        if (isset($this->__vars[$varname])) {
             $ref = &$this->__vars[$varname];
-        else
-        {
+        } else {
             $null = null;
             $ref = &$null;
         }

@@ -107,12 +107,13 @@ class AdminLanguagesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_language'] = array(
                 'href' => self::$currentIndex.'&addlang&token='.$this->token,
                 'desc' => $this->l('Add new language', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -123,8 +124,9 @@ class AdminLanguagesControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->displayWarning($this->l('When you delete a language, all related translations in the database will be deleted.'));
-        if (!is_writable(_PS_ROOT_DIR_.'/.htaccess') && Configuration::get('PS_REWRITING_SETTINGS'))
+        if (!is_writable(_PS_ROOT_DIR_.'/.htaccess') && Configuration::get('PS_REWRITING_SETTINGS')) {
             $this->displayInformation($this->l('Your .htaccess file must be writable.'));
+        }
         return parent::renderList();
     }
 
@@ -248,8 +250,7 @@ class AdminLanguagesControllerCore extends AdminController
             )
         );
 
-        if (Shop::isFeatureActive())
-        {
+        if (Shop::isFeatureActive()) {
             $this->fields_form['input'][] = array(
                 'type' => 'shop',
                 'label' => $this->l('Shop association'),
@@ -262,11 +263,11 @@ class AdminLanguagesControllerCore extends AdminController
         );
 
         /** @var Language $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
-        if ($obj->id && !$obj->checkFiles())
-        {
+        if ($obj->id && !$obj->checkFiles()) {
             $this->fields_form['new'] = array(
                 'legend' => array(
                     'title' => $this->l('Warning'),
@@ -297,10 +298,12 @@ class AdminLanguagesControllerCore extends AdminController
     public function processDelete()
     {
         $object = $this->loadObject();
-        if (!$this->checkDeletion($object))
+        if (!$this->checkDeletion($object)) {
             return false;
-        if (!$this->deleteNoPictureImages((int)$object->id))
+        }
+        if (!$this->deleteNoPictureImages((int)$object->id)) {
             $this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> ';
+        }
 
         return parent::processDelete();
     }
@@ -308,15 +311,13 @@ class AdminLanguagesControllerCore extends AdminController
     protected function processBulkDelete()
     {
         $can_bulk = true;
-        if (is_array($this->boxes) && !empty($this->boxes))
-        {
-            foreach ($this->boxes as $id_lang)
-            {
+        if (is_array($this->boxes) && !empty($this->boxes)) {
+            foreach ($this->boxes as $id_lang) {
                 $object = new Language((int)$id_lang);
-                if (!$this->checkDeletion($object))
+                if (!$this->checkDeletion($object)) {
                     return false;
-                if (!$this->deleteNoPictureImages((int)$object->id))
-                {
+                }
+                if (!$this->deleteNoPictureImages((int)$object->id)) {
                     $this->errors[] = Tools::displayError('An error occurred while deleting the object.').' <b>'.$this->table.'</b> ';
                     return false;
                 }
@@ -327,42 +328,40 @@ class AdminLanguagesControllerCore extends AdminController
 
     protected function checkDeletion($object)
     {
-        if (_PS_MODE_DEMO_)
-        {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
-                return;
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            return;
         }
 
-        if (Validate::isLoadedObject($object))
-        {
-            if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
+        if (Validate::isLoadedObject($object)) {
+            if ($object->id == Configuration::get('PS_LANG_DEFAULT')) {
                 $this->errors[] = $this->l('You cannot delete the default language.');
-            elseif ($object->id == $this->context->language->id)
+            } elseif ($object->id == $this->context->language->id) {
                 $this->errors[] = $this->l('You cannot delete the language currently in use. Please select a different language.');
-            else
+            } else {
                 return true;
-        }
-        else
+            }
+        } else {
             $this->errors[] = Tools::displayError('(cannot load object)');
+        }
 
         return false;
     }
 
     protected function checkDisableStatus($object)
     {
-        if (_PS_MODE_DEMO_)
-        {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
-                return;
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            return;
         }
-        if (!Validate::isLoadedObject($object))
+        if (!Validate::isLoadedObject($object)) {
             $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-        else
-        {
-            if ($object->id == (int)Configuration::get('PS_LANG_DEFAULT'))
-                    $this->errors[] = Tools::displayError('You cannot change the status of the default language.');
-            else
+        } else {
+            if ($object->id == (int)Configuration::get('PS_LANG_DEFAULT')) {
+                $this->errors[] = Tools::displayError('You cannot change the status of the default language.');
+            } else {
                 return true;
+            }
         }
         return false;
     }
@@ -370,8 +369,7 @@ class AdminLanguagesControllerCore extends AdminController
     public function processStatus()
     {
         $object = $this->loadObject();
-        if ($this->checkDisableStatus($object))
-        {
+        if ($this->checkDisableStatus($object)) {
             $this->checkEmployeeIdLang($object->id);
             return parent::processStatus();
         }
@@ -380,13 +378,12 @@ class AdminLanguagesControllerCore extends AdminController
 
     protected function processBulkDisableSelection()
     {
-        if (is_array($this->boxes) && !empty($this->boxes))
-        {
-            foreach ($this->boxes as $id_lang)
-            {
+        if (is_array($this->boxes) && !empty($this->boxes)) {
+            foreach ($this->boxes as $id_lang) {
                 $object = new Language((int)$id_lang);
-                if (!$this->checkDisableStatus($object))
+                if (!$this->checkDisableStatus($object)) {
                     return false;
+                }
                 $this->checkEmployeeIdLang($object->id);
             }
         }
@@ -395,48 +392,49 @@ class AdminLanguagesControllerCore extends AdminController
 
     public function processAdd()
     {
-        if (_PS_MODE_DEMO_)
-        {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
-                return;
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            return;
         }
 
-        if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
+        if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code'])) {
             $this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
-        if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
-        {
-            if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
-                $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
-            unset($_FILES['no_picture']);
         }
-        else
+        if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
+            if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK) {
+                $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+            }
+            unset($_FILES['no_picture']);
+        } else {
             $this->errors[] = Tools::displayError('Flag and "No picture" image fields are required.');
+        }
 
         return parent::processAdd();
     }
 
     public function processUpdate()
     {
-        if (_PS_MODE_DEMO_)
-        {
-                $this->errors[] = Tools::displayError('This functionality has been disabled.');
-                return;
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = Tools::displayError('This functionality has been disabled.');
+            return;
         }
 
         if ((isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
-                && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
-            {
-                if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK)
-                    $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+                && Validate::isLanguageIsoCode(Tools::getValue('iso_code'))) {
+            if ($_FILES['no_picture']['error'] == UPLOAD_ERR_OK) {
+                $this->copyNoPictureImage(strtolower(Tools::getValue('iso_code')));
+            }
                         // class AdminTab deal with every $_FILES content, don't do that for no_picture
                     unset($_FILES['no_picture']);
-            }
+        }
 
             /** @var Language $object */
             $object = $this->loadObject();
-            if (Tools::getValue('active') != (int)$object->active)
-                if (!$this->checkDisableStatus($object))
-                    return false;
+        if (Tools::getValue('active') != (int)$object->active) {
+            if (!$this->checkDisableStatus($object)) {
+                return false;
+            }
+        }
 
         $this->checkEmployeeIdLang($object->id);
         return parent::processUpdate();
@@ -451,34 +449,38 @@ class AdminLanguagesControllerCore extends AdminController
      */
     public function copyNoPictureImage($language)
     {
-        if (isset($_FILES['no_picture']) && $_FILES['no_picture']['error'] === 0)
-            if ($error = ImageManager::validateUpload($_FILES['no_picture'], Tools::getMaxUploadSize()))
+        if (isset($_FILES['no_picture']) && $_FILES['no_picture']['error'] === 0) {
+            if ($error = ImageManager::validateUpload($_FILES['no_picture'], Tools::getMaxUploadSize())) {
                 $this->errors[] = $error;
-            else
-            {
-                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no_picture']['tmp_name'], $tmp_name))
+            } else {
+                if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['no_picture']['tmp_name'], $tmp_name)) {
                     return false;
-                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg'))
+                }
+                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'.jpg')) {
                     $this->errors[] = Tools::displayError('An error occurred while copying "No Picture" image to your product folder.');
-                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg'))
+                }
+                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'.jpg')) {
                     $this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your category folder.');
-                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg'))
+                }
+                if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'.jpg')) {
                     $this->errors[] = Tools::displayError('An error occurred while copying "No picture" image to your manufacturer folder.');
-                else
-                {
+                } else {
                     $images_types = ImageType::getImagesTypes('products');
-                    foreach ($images_types as $k => $image_type)
-                    {
-                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
+                    foreach ($images_types as $k => $image_type) {
+                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
                             $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your product directory.');
-                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
+                        }
+                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'c/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
                             $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your category directory.');
-                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']))
+                        }
+                        if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'m/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
                             $this->errors[] = Tools::displayError('An error occurred while resizing "No picture" image to your manufacturer directory.');
+                        }
                     }
                 }
                 unlink($tmp_name);
             }
+        }
     }
 
     /**
@@ -492,16 +494,20 @@ class AdminLanguagesControllerCore extends AdminController
         $language = Language::getIsoById($id_language);
         $images_types = ImageType::getImagesTypes('products');
         $dirs = array(_PS_PROD_IMG_DIR_, _PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_SUPP_IMG_DIR_, _PS_MANU_IMG_DIR_);
-        foreach ($dirs as $dir)
-        {
-            foreach ($images_types as $k => $image_type)
-                if (file_exists($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg'))
-                    if (!unlink($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg'))
+        foreach ($dirs as $dir) {
+            foreach ($images_types as $k => $image_type) {
+                if (file_exists($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
+                    if (!unlink($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
                         $this->errors[] = Tools::displayError('An error occurred during image deletion process.');
+                    }
+                }
+            }
 
-            if (file_exists($dir.$language.'.jpg'))
-                if (!unlink($dir.$language.'.jpg'))
+            if (file_exists($dir.$language.'.jpg')) {
+                if (!unlink($dir.$language.'.jpg')) {
                     $this->errors[] = Tools::displayError('An error occurred during image deletion process.');
+                }
+            }
         }
 
         return !count($this->errors) ? true : false;
@@ -513,45 +519,39 @@ class AdminLanguagesControllerCore extends AdminController
      */
     protected function copyFromPost(&$object, $table)
     {
-        if ($object->id && ($object->iso_code != $_POST['iso_code']))
-            if (Validate::isLanguageIsoCode($_POST['iso_code']))
+        if ($object->id && ($object->iso_code != $_POST['iso_code'])) {
+            if (Validate::isLanguageIsoCode($_POST['iso_code'])) {
                 $object->moveToIso($_POST['iso_code']);
+            }
+        }
         parent::copyFromPost($object, $table);
     }
 
     public function ajaxProcessCheckLangPack()
     {
         $this->json = true;
-        if (!Tools::getValue('iso_lang') || !Validate::isLanguageIsoCode(Tools::getValue('iso_lang')))
-        {
+        if (!Tools::getValue('iso_lang') || !Validate::isLanguageIsoCode(Tools::getValue('iso_lang'))) {
             $this->status = 'error';
             $this->errors[] = $this->l('Iso code is not valid');
             return;
         }
-        if (!Tools::getValue('ps_version') || !Validate::isPrestaShopVersion(Tools::getValue('ps_version')))
-        {
+        if (!Tools::getValue('ps_version') || !Validate::isPrestaShopVersion(Tools::getValue('ps_version'))) {
             $this->status = 'error';
             $this->errors[] = $this->l('Technical Error: ps_version is not valid');
             return;
         }
 
         // Get all iso code available
-        if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.Tools::getValue('ps_version').'&iso_lang='.Tools::strtolower(Tools::getValue('iso_lang'))))
-        {
+        if ($lang_packs = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.Tools::getValue('ps_version').'&iso_lang='.Tools::strtolower(Tools::getValue('iso_lang')))) {
             $result = Tools::jsonDecode($lang_packs);
-            if ($lang_packs !== '' && $result && !isset($result->error))
-            {
+            if ($lang_packs !== '' && $result && !isset($result->error)) {
                 $this->status = 'ok';
                 $this->content = $lang_packs;
-            }
-            else
-            {
+            } else {
                 $this->status = 'error';
                 $this->errors[] = $this->l('Wrong ISO code, or the selected language pack is unavailable.');
             }
-        }
-        else
-        {
+        } else {
             $this->status = 'error';
             $this->errors[] = $this->l('Technical Error: translation server unreachable.');
         }
@@ -568,12 +568,12 @@ class AdminLanguagesControllerCore extends AdminController
         parent::afterImageUpload();
 
         if (($id_lang = (int)Tools::getValue('id_lang')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_LANG_IMG_DIR_.$id_lang.'.jpg'))
-        {
+             isset($_FILES) && count($_FILES) && file_exists(_PS_LANG_IMG_DIR_.$id_lang.'.jpg')) {
             $current_file = _PS_TMP_IMG_DIR_.'lang_mini_'.$id_lang.'_'.$this->context->shop->id.'.jpg';
 
-            if (file_exists($current_file))
+            if (file_exists($current_file)) {
                 unlink($current_file);
+            }
         }
 
         return true;

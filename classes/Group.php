@@ -73,15 +73,17 @@ class GroupCore extends ObjectModel
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-        if ($this->id && !isset(Group::$group_price_display_method[$this->id]))
+        if ($this->id && !isset(Group::$group_price_display_method[$this->id])) {
             self::$group_price_display_method[$this->id] = $this->price_display_method;
+        }
     }
 
     public static function getGroups($id_lang, $id_shop = false)
     {
         $shop_criteria = '';
-        if ($id_shop)
+        if ($id_shop) {
             $shop_criteria = Shop::addSqlAssociation('group', 'g');
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
@@ -93,7 +95,7 @@ class GroupCore extends ObjectModel
 
     public function getCustomers($count = false, $start = 0, $limit = 0, $shop_filtering = false)
     {
-        if ($count)
+        if ($count) {
             return Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'customer_group` cg
@@ -101,6 +103,7 @@ class GroupCore extends ObjectModel
 			WHERE cg.`id_group` = '.(int)$this->id.'
 			'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 			AND c.`deleted` != 1');
+        }
         return Db::getInstance()->executeS('
 		SELECT cg.`id_customer`, c.*
 		FROM `'._DB_PREFIX_.'customer_group` cg
@@ -114,18 +117,16 @@ class GroupCore extends ObjectModel
 
     public static function getReduction($id_customer = null)
     {
-        if (!isset(self::$cache_reduction['customer'][(int)$id_customer]))
-        {
-                $id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Group::getCurrent()->id;
-                self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
+        if (!isset(self::$cache_reduction['customer'][(int)$id_customer])) {
+            $id_group = $id_customer ? Customer::getDefaultGroupId((int)$id_customer) : (int)Group::getCurrent()->id;
+            self::$cache_reduction['customer'][(int)$id_customer] = Group::getReductionByIdGroup($id_group);
         }
         return self::$cache_reduction['customer'][(int)$id_customer];
     }
 
     public static function getReductionByIdGroup($id_group)
     {
-        if (!isset(self::$cache_reduction['group'][$id_group]))
-        {
+        if (!isset(self::$cache_reduction['group'][$id_group])) {
             self::$cache_reduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `reduction`
 			FROM `'._DB_PREFIX_.'group`
@@ -136,11 +137,12 @@ class GroupCore extends ObjectModel
 
     public static function getPriceDisplayMethod($id_group)
     {
-        if (!isset(Group::$group_price_display_method[$id_group]))
+        if (!isset(Group::$group_price_display_method[$id_group])) {
             self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
 			FROM `'._DB_PREFIX_.'group`
 			WHERE `id_group` = '.(int)$id_group);
+        }
         return self::$group_price_display_method[$id_group];
     }
 
@@ -152,8 +154,7 @@ class GroupCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
-        if (parent::add($autodate, $null_values))
-        {
+        if (parent::add($autodate, $null_values)) {
             Category::setNewGroupForHome((int)$this->id);
             Carrier::assignGroupToAllCarriers((int)$this->id);
             return true;
@@ -163,17 +164,18 @@ class GroupCore extends ObjectModel
 
     public function update($autodate = true, $null_values = false)
     {
-        if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE') && $this->reduction > 0)
+        if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE') && $this->reduction > 0) {
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
+        }
         return parent::update($autodate, $null_values);
     }
 
     public function delete()
     {
-        if ($this->id == (int)Configuration::get('PS_CUSTOMER_GROUP'))
+        if ($this->id == (int)Configuration::get('PS_CUSTOMER_GROUP')) {
             return false;
-        if (parent::delete())
-        {
+        }
+        if (parent::delete()) {
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_group` WHERE `id_group` = '.(int)$this->id);
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)$this->id);
             Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
@@ -211,8 +213,9 @@ class GroupCore extends ObjectModel
     public static function isFeatureActive()
     {
         static $ps_group_feature_active = null;
-        if ($ps_group_feature_active === null)
+        if ($ps_group_feature_active === null) {
             $ps_group_feature_active = Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+        }
         return $ps_group_feature_active;
     }
 
@@ -263,16 +266,19 @@ class GroupCore extends ObjectModel
      */
     public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
     {
-        if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops))
+        if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops)) {
             return false;
+        }
 
         // Delete all record for this group
         Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
 
         $sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
-        foreach ($modules as $module)
-            foreach ($shops as $shop)
+        foreach ($modules as $module) {
+            foreach ($shops as $shop) {
                 $sql .= '("'.(int)$module.'", "'.(int)$shop.'", "'.(int)$id_group.'"),';
+            }
+        }
         $sql = rtrim($sql, ',');
 
         return (bool)Db::getInstance()->execute($sql);
@@ -288,14 +294,16 @@ class GroupCore extends ObjectModel
      */
     public static function addRestrictionsForModule($id_module, $shops = array(1))
     {
-        if (!is_array($shops) || !count($shops))
+        if (!is_array($shops) || !count($shops)) {
             return false;
+        }
 
         $res = true;
-        foreach ($shops as $shop)
+        foreach ($shops as $shop) {
             $res &= Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`)
 			(SELECT '.(int)$id_module.', '.(int)$shop.', id_group FROM `'._DB_PREFIX_.'group`)');
+        }
         return $res;
     }
 
@@ -311,26 +319,30 @@ class GroupCore extends ObjectModel
         static $ps_unidentified_group = null;
         static $ps_customer_group = null;
 
-        if ($ps_unidentified_group === null)
+        if ($ps_unidentified_group === null) {
             $ps_unidentified_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+        }
 
-        if ($ps_customer_group === null)
+        if ($ps_customer_group === null) {
             $ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
+        }
 
         $customer = Context::getContext()->customer;
-        if (Validate::isLoadedObject($customer))
+        if (Validate::isLoadedObject($customer)) {
             $id_group = (int)$customer->id_default_group;
-        else
+        } else {
             $id_group = (int)$ps_unidentified_group;
+        }
 
-        if (!isset($groups[$id_group]))
+        if (!isset($groups[$id_group])) {
             $groups[$id_group] = new Group($id_group);
+        }
 
-        if (!$groups[$id_group]->isAssociatedToShop(Context::getContext()->shop->id))
-        {
+        if (!$groups[$id_group]->isAssociatedToShop(Context::getContext()->shop->id)) {
             $id_group = (int)$ps_customer_group;
-            if (!isset($groups[$id_group]))
+            if (!isset($groups[$id_group])) {
                 $groups[$id_group] = new Group($id_group);
+            }
         }
 
         return $groups[$id_group];

@@ -43,8 +43,7 @@ class PrestaShopSecurityTest extends IntegrationTestCase
     public static function setupBeforeClass()
     {
         parent::setUpBeforeClass();
-        if (!file_exists(_PS_MODULE_DIR_.'/prestafraud/prestafraud.php'))
-        {
+        if (!file_exists(_PS_MODULE_DIR_.'/prestafraud/prestafraud.php')) {
             $download = file_put_contents(_PS_CACHE_DIR_.'sandbox/prestafraud.zip', Tools::addonsRequest('module', array('id_module' => 4181)));
             Assert::assertGreaterThan(20000, $download, 'Fail download module from Addons');
             $extract = Tools::ZipExtract(_PS_CACHE_DIR_.'sandbox/prestafraud.zip', _PS_MODULE_DIR_);
@@ -56,8 +55,9 @@ class PrestaShopSecurityTest extends IntegrationTestCase
 
         Assert::assertTrue(is_object(self::$prestafraud), 'Fail Module::getInstanceByName(\'prestafraud\')');
         Assert::assertEquals('prestafraud', self::$prestafraud->name);
-        if (!Module::isInstalled('prestafraud'))
+        if (!Module::isInstalled('prestafraud')) {
             Assert::assertTrue((bool)self::$prestafraud->install());
+        }
             
         Assert::assertTrue((bool)self::$prestafraud->isRegisteredInHook('actionValidateOrder'), 'Fail Module::isRegisteredInHook(\'actionValidateOrder\')');
         

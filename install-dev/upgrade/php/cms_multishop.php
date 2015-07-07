@@ -35,8 +35,7 @@ function cms_multishop()
 		SELECT *
 		FROM `'._DB_PREFIX_.'cms_lang`
 	');
-    foreach ($cms_lang as $value)
-    {
+    foreach ($cms_lang as $value) {
         $data = array();
         $cms = array(
             'id_cms' => $value['id_cms'],
@@ -47,10 +46,8 @@ function cms_multishop()
             'meta_keywords' => pSQL($value['meta_keywords']),
             'meta_description' => pSQL($value['meta_description'])
             );
-        foreach ($shops as $shop)
-        {
-            if ($shop['id_shop'] != 1)
-            {
+        foreach ($shops as $shop) {
+            if ($shop['id_shop'] != 1) {
                 $cms['id_shop'] = $shop['id_shop'];
                 $data[] = $cms;
             }
@@ -62,8 +59,7 @@ function cms_multishop()
 		SELECT *
 		FROM `'._DB_PREFIX_.'cms_category_lang`
 	');
-    foreach ($cms_category_lang as $value)
-    {
+    foreach ($cms_category_lang as $value) {
         $data = array();
         $data_bis = array();
 
@@ -80,10 +76,8 @@ function cms_multishop()
             'meta_keywords' => pSQL($value['meta_keywords']),
             'meta_description' => pSQL($value['meta_description'])
             );
-        foreach ($shops as $shop)
-        {
-            if ($shop['id_shop'] != 1)
-            {
+        foreach ($shops as $shop) {
+            if ($shop['id_shop'] != 1) {
                 $cms_category['id_shop'] = $shop['id_shop'];
                 $data[] = $cms_category;
             }

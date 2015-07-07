@@ -137,22 +137,26 @@ class WarehouseCore extends ObjectModel
         $ids_carrier = array();
 
         $query = new DbQuery();
-        if ($return_reference)
+        if ($return_reference) {
             $query->select('wc.id_carrier');
-        else
+        } else {
             $query->select('c.id_carrier');
+        }
         $query->from('warehouse_carrier', 'wc');
         $query->innerJoin('carrier', 'c', 'c.id_reference = wc.id_carrier');
         $query->where($this->def['primary'].' = '.(int)$this->id);
         $query->where('c.deleted = 0');
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if (!is_array($res))
+        if (!is_array($res)) {
             return $ids_carrier;
+        }
 
-        foreach ($res as $carriers)
-            foreach ($carriers as $carrier)
+        foreach ($res as $carriers) {
+            foreach ($carriers as $carrier) {
                 $ids_carrier[$carrier] = $carrier;
+            }
+        }
 
         return $ids_carrier;
     }
@@ -164,19 +168,22 @@ class WarehouseCore extends ObjectModel
      */
     public function setCarriers($ids_carriers)
     {
-        if (!is_array($ids_carriers))
+        if (!is_array($ids_carriers)) {
             $ids_carriers = array();
+        }
 
         $row_to_insert = array();
-        foreach ($ids_carriers as $id_carrier)
+        foreach ($ids_carriers as $id_carrier) {
             $row_to_insert[] = array($this->def['primary'] => $this->id, 'id_carrier' => (int)$id_carrier);
+        }
 
         Db::getInstance()->execute('
 			DELETE FROM '._DB_PREFIX_.'warehouse_carrier
 			WHERE '.$this->def['primary'].' = '.(int)$this->id);
 
-        if ($row_to_insert)
+        if ($row_to_insert) {
             Db::getInstance()->insert('warehouse_carrier', $row_to_insert);
+        }
     }
 
     /**
@@ -294,27 +301,24 @@ class WarehouseCore extends ObjectModel
     {
         // if it's a pack, returns warehouses if and only if some products use the advanced stock management
         $share_stock = false;
-        if ($id_shop === null)
-        {
-            if (Shop::getContext() == Shop::CONTEXT_GROUP)
+        if ($id_shop === null) {
+            if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                 $shop_group = Shop::getContextShopGroup();
-            else
-            {
+            } else {
                 $shop_group = Context::getContext()->shop->getGroup();
                 $id_shop = (int)Context::getContext()->shop->id;
             }
             $share_stock = $shop_group->share_stock;
-        }
-        else
-        {
+        } else {
             $shop_group = Shop::getGroupFromShop($id_shop);
             $share_stock = $shop_group['share_stock'];
         }
 
-        if ($share_stock)
+        if ($share_stock) {
             $ids_shop = Shop::getShops(true, (int)$shop_group->id, true);
-        else
+        } else {
             $ids_shop = array((int)$id_shop);
+        }
 
         $query = new DbQuery();
         $query->select('wpl.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
@@ -339,17 +343,20 @@ class WarehouseCore extends ObjectModel
      */
     public static function getWarehouses($ignore_shop = false, $id_shop = null)
     {
-        if (!$ignore_shop)
-            if (is_null($id_shop))
+        if (!$ignore_shop) {
+            if (is_null($id_shop)) {
                 $id_shop = Context::getContext()->shop->id;
+            }
+        }
 
         $query = new DbQuery();
         $query->select('w.id_warehouse, CONCAT(reference, \' - \', name) as name');
         $query->from('warehouse', 'w');
         $query->where('deleted = 0');
         $query->orderBy('reference ASC');
-        if (!$ignore_shop)
+        if (!$ignore_shop) {
             $query->innerJoin('warehouse_shop', 'ws', 'ws.id_warehouse = w.id_warehouse AND ws.id_shop = '.(int)$id_shop);
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -368,8 +375,9 @@ class WarehouseCore extends ObjectModel
         $query->orderBy('id_shop');
 
         // queries to get warehouse ids grouped by shops
-        foreach (Db::getInstance()->executeS($query) as $row)
+        foreach (Db::getInstance()->executeS($query) as $row) {
             $ids_warehouse[$row['id_shop']][] = $row['id_warehouse'];
+        }
 
         return $ids_warehouse;
     }
@@ -451,17 +459,20 @@ class WarehouseCore extends ObjectModel
      */
     public static function getWarehousesByProductId($id_product, $id_product_attribute = 0)
     {
-        if (!$id_product && !$id_product_attribute)
+        if (!$id_product && !$id_product_attribute) {
             return array();
+        }
 
         $query = new DbQuery();
         $query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
         $query->from('warehouse', 'w');
         $query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
-        if ($id_product)
+        if ($id_product) {
             $query->where('wpl.id_product = '.(int)$id_product);
-        if ($id_product_attribute)
+        }
+        if ($id_product_attribute) {
             $query->where('wpl.id_product_attribute = '.(int)$id_product_attribute);
+        }
         $query->orderBy('w.reference ASC');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -490,11 +501,13 @@ class WarehouseCore extends ObjectModel
      */
     public static function getPackWarehouses($id_product, $id_shop = null)
     {
-        if (!Pack::isPack($id_product))
+        if (!Pack::isPack($id_product)) {
             return false;
+        }
 
-        if (is_null($id_shop))
+        if (is_null($id_shop)) {
             $id_shop = Context::getContext()->shop->id;
+        }
 
         // warehouses of the pack
         $pack_warehouses = WarehouseProductLocation::getCollection((int)$id_product);
@@ -505,38 +518,38 @@ class WarehouseCore extends ObjectModel
         $list = array();
 
         // fills $list
-        foreach ($pack_warehouses as $pack_warehouse)
-        {
+        foreach ($pack_warehouses as $pack_warehouse) {
             /** @var WarehouseProductLocation $pack_warehouse */
             $list['pack_warehouses'][] = (int)$pack_warehouse->id_warehouse;
         }
 
         // for each products in the pack
-        foreach ($products as $product)
-        {
-            if ($product->advanced_stock_management)
-            {
+        foreach ($products as $product) {
+            if ($product->advanced_stock_management) {
                 // gets the warehouses of one product
                 $product_warehouses = Warehouse::getProductWarehouseList((int)$product->id, (int)$product->cache_default_attribute, (int)$id_shop);
                 $list[(int)$product->id] = array();
                 // fills array with warehouses for this product
-                foreach ($product_warehouses as $product_warehouse)
+                foreach ($product_warehouses as $product_warehouse) {
                     $list[(int)$product->id][] = $product_warehouse['id_warehouse'];
+                }
             }
         }
 
         $res = false;
         // returns final list
-        if (count($list) > 1)
+        if (count($list) > 1) {
             $res = call_user_func_array('array_intersect', $list);
+        }
         return $res;
     }
 
     public function resetStockAvailable()
     {
         $products = WarehouseProductLocation::getProducts((int)$this->id);
-        foreach ($products as $product)
+        foreach ($products as $product) {
             StockAvailable::synchronize((int)$product['id_product']);
+        }
     }
 
     /*********************************\
@@ -599,14 +612,16 @@ class WarehouseCore extends ObjectModel
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if (!is_array($res))
+        if (!is_array($res)) {
             return $ids_carrier;
+        }
 
-        foreach ($res as $carriers)
-            foreach ($carriers as $carrier)
+        foreach ($res as $carriers) {
+            foreach ($carriers as $carrier) {
                 $ids_carrier[] = $carrier;
+            }
+        }
 
         return $ids_carrier;
     }
-
 }

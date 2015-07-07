@@ -36,8 +36,9 @@ class FileLoggerCore extends AbstractLogger
     */
     protected function logMessage($message, $level)
     {
-        if (!is_string($message))
+        if (!is_string($message)) {
             $message = print_r($message, true);
+        }
         $formatted_message = '*'.$this->level_value[$level].'* '."\t".date('Y/m/d - H:i:s').': '.$message."\r\n";
         return (bool)file_put_contents($this->getFilename(), $formatted_message, FILE_APPEND);
     }
@@ -49,10 +50,11 @@ class FileLoggerCore extends AbstractLogger
     */
     public function setFilename($filename)
     {
-        if (is_writable(dirname($filename)))
+        if (is_writable(dirname($filename))) {
             $this->filename = $filename;
-        else
+        } else {
             die('Directory '.dirname($filename).' is not writable');
+        }
     }
 
     /**
@@ -63,8 +65,9 @@ class FileLoggerCore extends AbstractLogger
     */
     public function getFilename()
     {
-        if (empty($this->filename))
+        if (empty($this->filename)) {
             die('Filename is empty.');
+        }
 
         return $this->filename;
     }

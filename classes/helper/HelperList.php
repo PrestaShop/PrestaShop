@@ -135,8 +135,7 @@ class HelperListCore extends Helper
     public function generateList($list, $fields_display)
     {
         // Append when we get a syntax error in SQL query
-        if ($list === false)
-        {
+        if ($list === false) {
             $this->context->controller->warnings[] = $this->l('Bad SQL query', 'Helper');
             return false;
         }
@@ -185,15 +184,16 @@ class HelperListCore extends Helper
 
     public function displayListContent()
     {
-        if (isset($this->fields_list['position']))
-        {
-            if ($this->position_identifier)
-                if (isset($this->position_group_identifier))
+        if (isset($this->fields_list['position'])) {
+            if ($this->position_identifier) {
+                if (isset($this->position_group_identifier)) {
                     $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
-                else
+                } else {
                     $position_group_identifier = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category', ($this->is_cms ? '1' : Category::getRootCategory()->id));
-            else
+                }
+            } else {
                 $position_group_identifier = Category::getRootCategory()->id;
+            }
 
             $positions = array_map(create_function('$elem', 'return (int)($elem[\'position\']);'), $this->_list);
             sort($positions);
@@ -201,68 +201,69 @@ class HelperListCore extends Helper
 
         // key_to_get is used to display the correct product category or cms category after a position change
         $identifier = in_array($this->identifier, array('id_category', 'id_cms_category')) ? '_parent' : '';
-        if ($identifier)
+        if ($identifier) {
             $key_to_get = 'id_'.($this->is_cms ? 'cms_' : '').'category'.$identifier;
+        }
 
-        foreach ($this->_list as $index => $tr)
-        {
+        foreach ($this->_list as $index => $tr) {
             $id = null;
-            if (isset($tr[$this->identifier]))
+            if (isset($tr[$this->identifier])) {
                 $id = $tr[$this->identifier];
+            }
             $name = isset($tr['name']) ? $tr['name'] : null;
 
-            if ($this->shopLinkType)
+            if ($this->shopLinkType) {
                 $this->_list[$index]['short_shop_name'] = Tools::strlen($tr['shop_name']) > 15 ? Tools::substr($tr['shop_name'], 0, 15).'...' : $tr['shop_name'];
+            }
 
             $is_first = true;
             // Check all available actions to add to the current list row
-            foreach ($this->actions as $action)
-            {
+            foreach ($this->actions as $action) {
                 //Check if the action is available for the current row
-                if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action]))
-                {
+                if (!array_key_exists($action, $this->list_skip_actions) || !in_array($id, $this->list_skip_actions[$action])) {
                     $method_name = 'display'.ucfirst($action).'Link';
 
-                    if (method_exists($this->context->controller, $method_name))
+                    if (method_exists($this->context->controller, $method_name)) {
                         $this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
-                    elseif ($this->module instanceof Module && method_exists($this->module, $method_name))
+                    } elseif ($this->module instanceof Module && method_exists($this->module, $method_name)) {
                         $this->_list[$index][$action] = $this->module->$method_name($this->token, $id, $name);
-                    elseif (method_exists($this, $method_name))
+                    } elseif (method_exists($this, $method_name)) {
                         $this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
+                    }
                 }
 
-                if ($is_first && isset($this->_list[$index][$action]))
-                {
+                if ($is_first && isset($this->_list[$index][$action])) {
                     $is_first = false;
 
-                    if (!preg_match('/a\s*.*class/', $this->_list[$index][$action]))
+                    if (!preg_match('/a\s*.*class/', $this->_list[$index][$action])) {
                         $this->_list[$index][$action] = preg_replace('/href\s*=\s*\"([^\"]*)\"/',
                             'href="$1" class="btn btn-default"', $this->_list[$index][$action]);
-                    elseif (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action]))
+                    } elseif (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action])) {
                         $this->_list[$index][$action] = preg_replace('/a(\s*.*)class\s*=\s*\"(.*)\"/',
                             'a $1 class="$2 btn btn-default"', $this->_list[$index][$action]);
+                    }
                 }
             }
 
             // @todo skip action for bulk actions
             // $this->_list[$index]['has_bulk_actions'] = true;
-            foreach ($this->fields_list as $key => $params)
-            {
+            foreach ($this->fields_list as $key => $params) {
                 $tmp = explode('!', $key);
                 $key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
 
-                if (isset($params['active']))
-                {
+                if (isset($params['active'])) {
                     // If method is defined in calling controller, use it instead of the Helper method
-                    if (method_exists($this->context->controller, 'displayEnableLink'))
+                    if (method_exists($this->context->controller, 'displayEnableLink')) {
                         $calling_obj = $this->context->controller;
-                    elseif (isset($this->module) && method_exists($this->module, 'displayEnableLink'))
+                    } elseif (isset($this->module) && method_exists($this->module, 'displayEnableLink')) {
                         $calling_obj = $this->module;
-                    else
+                    } else {
                         $calling_obj = $this;
+                    }
 
-                    if (!isset($params['ajax']))
+                    if (!isset($params['ajax'])) {
                         $params['ajax'] = false;
+                    }
                     $this->_list[$index][$key] = $calling_obj->displayEnableLink(
                         $this->token,
                         $id,
@@ -272,11 +273,9 @@ class HelperListCore extends Helper
                         Tools::getValue('id_product'),
                         $params['ajax']
                     );
-                }
-                elseif (isset($params['activeVisu']))
+                } elseif (isset($params['activeVisu'])) {
                     $this->_list[$index][$key] = (bool)$tr[$key];
-                elseif (isset($params['position']))
-                {
+                } elseif (isset($params['position'])) {
                     $this->_list[$index][$key] = array(
                         'position' => $tr[$key],
                         'position_url_down' => $this->currentIndex.
@@ -288,47 +287,41 @@ class HelperListCore extends Helper
                             '&'.$this->position_identifier.'='.$id.
                             '&way=0&position='.((int)$tr['position'] - 1).'&token='.$this->token
                     );
-                }
-                elseif (isset($params['image']))
-                {
+                } elseif (isset($params['image'])) {
                     // item_id is the product id in a product image context, else it is the image id.
                     $item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
-                    if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES'))
+                    if ($params['image'] != 'p' || Configuration::get('PS_LEGACY_IMAGES')) {
                         $path_to_image = _PS_IMG_DIR_.$params['image'].'/'.$item_id.(isset($tr['id_image']) ? '-'.(int)$tr['id_image'] : '').'.'.$this->imageType;
-                    else
+                    } else {
                         $path_to_image = _PS_IMG_DIR_.$params['image'].'/'.Image::getImgFolderStatic($tr['id_image']).(int)$tr['id_image'].'.'.$this->imageType;
+                    }
                     $this->_list[$index][$key] = ImageManager::thumbnail($path_to_image, $this->table.'_mini_'.$item_id.'_'.$this->context->shop->id.'.'.$this->imageType, 45, $this->imageType);
-                }
-                elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default'])))
-                {
-                    if (!$this->bootstrap)
-                    {
-                        if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]]))
+                } elseif (isset($params['icon']) && isset($tr[$key]) && (isset($params['icon'][$tr[$key]]) || isset($params['icon']['default']))) {
+                    if (!$this->bootstrap) {
+                        if (isset($params['icon'][$tr[$key]]) && is_array($params['icon'][$tr[$key]])) {
                             $this->_list[$index][$key] = array(
                                 'src' => $params['icon'][$tr[$key]]['src'],
                                 'alt' => $params['icon'][$tr[$key]]['alt'],
                             );
-                        else
+                        } else {
                             $this->_list[$index][$key] = array(
                                 'src' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
                                 'alt' =>  isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'],
                             );
+                        }
+                    } elseif (isset($params['icon'][$tr[$key]])) {
+                        $this->_list[$index][$key] = $params['icon'][$tr[$key]];
                     }
-                    elseif (isset($params['icon'][$tr[$key]]))
-                            $this->_list[$index][$key] = $params['icon'][$tr[$key]];
-                }
-                elseif (isset($params['type']) && $params['type'] == 'float')
+                } elseif (isset($params['type']) && $params['type'] == 'float') {
                     $this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-                elseif (isset($tr[$key]))
-                {
+                } elseif (isset($tr[$key])) {
                     $echo = $tr[$key];
-                    if (isset($params['callback']))
-                    {
+                    if (isset($params['callback'])) {
                         $callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
                         $this->_list[$index][$key] = call_user_func_array(array($callback_obj, $params['callback']), array($echo, $tr));
-                    }
-                    else
+                    } else {
                         $this->_list[$index][$key] = $echo;
+                    }
                 }
             }
         }
@@ -369,18 +362,21 @@ class HelperListCore extends Helper
     public function displayDuplicateLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_duplicate.tpl');
-        if (!array_key_exists('Bad SQL query', self::$cache_lang))
+        if (!array_key_exists('Bad SQL query', self::$cache_lang)) {
             self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
+        }
 
-        if (!array_key_exists('Copy images too?', self::$cache_lang))
+        if (!array_key_exists('Copy images too?', self::$cache_lang)) {
             self::$cache_lang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', 'Helper');
+        }
 
         $duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
         $confirm = self::$cache_lang['Copy images too?'];
 
-        if (($this->table == 'product') && !Image::hasImages($this->context->language->id, (int)$id))
+        if (($this->table == 'product') && !Image::hasImages($this->context->language->id, (int)$id)) {
             $confirm = '';
+        }
 
         $tpl->assign(array(
             'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -416,12 +412,14 @@ class HelperListCore extends Helper
     public function displayDetailsLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_details.tpl');
-        if (!array_key_exists('Details', self::$cache_lang))
+        if (!array_key_exists('Details', self::$cache_lang)) {
             self::$cache_lang['Details'] = $this->l('Details', 'Helper');
+        }
 
         $ajax_params = $this->ajax_params;
-        if (!is_array($ajax_params) || !isset($ajax_params['action']))
+        if (!is_array($ajax_params) || !isset($ajax_params['action'])) {
             $ajax_params['action'] = 'details';
+        }
 
         $tpl->assign(array(
             'id' => $id,
@@ -441,8 +439,9 @@ class HelperListCore extends Helper
     public function displayViewLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_view.tpl');
-        if (!array_key_exists('View', self::$cache_lang))
+        if (!array_key_exists('View', self::$cache_lang)) {
             self::$cache_lang['View'] = $this->l('View', 'Helper');
+        }
 
         $tpl->assign(array(
             'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -450,7 +449,6 @@ class HelperListCore extends Helper
         ));
 
         return $tpl->fetch();
-
     }
 
     /**
@@ -459,8 +457,9 @@ class HelperListCore extends Helper
     public function displayEditLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_edit.tpl');
-        if (!array_key_exists('Edit', self::$cache_lang))
+        if (!array_key_exists('Edit', self::$cache_lang)) {
             self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
+        }
 
         $tpl->assign(array(
             'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
@@ -478,17 +477,21 @@ class HelperListCore extends Helper
     {
         $tpl = $this->createTemplate('list_action_delete.tpl');
 
-        if (!array_key_exists('Delete', self::$cache_lang))
+        if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
+        }
 
-        if (!array_key_exists('DeleteItem', self::$cache_lang))
+        if (!array_key_exists('DeleteItem', self::$cache_lang)) {
             self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper', true, false);
+        }
 
-        if (!array_key_exists('Name', self::$cache_lang))
+        if (!array_key_exists('Name', self::$cache_lang)) {
             self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
+        }
 
-        if (!is_null($name))
+        if (!is_null($name)) {
             $name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
+        }
 
         $data = array(
             $this->identifier => $id,
@@ -496,8 +499,9 @@ class HelperListCore extends Helper
             'action' => self::$cache_lang['Delete'],
         );
 
-        if ($this->specificConfirmDelete !== false)
+        if ($this->specificConfirmDelete !== false) {
             $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
+        }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
@@ -510,8 +514,9 @@ class HelperListCore extends Helper
     public function displayDefaultLink($token = null, $id, $name = null)
     {
         $tpl = $this->createTemplate('list_action_default.tpl');
-        if (!array_key_exists('Default', self::$cache_lang))
+        if (!array_key_exists('Default', self::$cache_lang)) {
             self::$cache_lang['Default'] = $this->l('Default', 'Helper');
+        }
 
         $tpl->assign(array(
             'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&default'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -527,38 +532,44 @@ class HelperListCore extends Helper
      */
     public function displayListHeader()
     {
-        if (!isset($this->list_id))
+        if (!isset($this->list_id)) {
             $this->list_id = $this->table;
+        }
 
         $id_cat = (int)Tools::getValue('id_'.($this->is_cms ? 'cms_' : '').'category');
 
-        if (!isset($token) || empty($token))
+        if (!isset($token) || empty($token)) {
             $token = $this->token;
+        }
 
         /* Determine total page number */
         $pagination = $this->_default_pagination;
-        if (in_array((int)Tools::getValue($this->list_id.'_pagination'), $this->_pagination))
+        if (in_array((int)Tools::getValue($this->list_id.'_pagination'), $this->_pagination)) {
             $pagination = (int)Tools::getValue($this->list_id.'_pagination');
-        elseif (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'})
+        } elseif (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'}) {
             $pagination = $this->context->cookie->{$this->list_id.'_pagination'};
+        }
 
         $total_pages = max(1, ceil($this->listTotal / $pagination));
 
         $identifier = Tools::getIsset($this->identifier) ? '&'.$this->identifier.'='.(int)Tools::getValue($this->identifier) : '';
         $order = '';
-        if (Tools::getIsset($this->table.'Orderby'))
+        if (Tools::getIsset($this->table.'Orderby')) {
             $order = '&'.$this->table.'Orderby='.urlencode($this->orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->orderWay));
+        }
 
         $action = $this->currentIndex.$identifier.'&token='.$token.'#'.$this->list_id;
 
         /* Determine current page number */
         $page = (int)Tools::getValue('submitFilter'.$this->list_id);
 
-        if (!$page)
+        if (!$page) {
             $page = 1;
+        }
 
-        if ($page > $total_pages)
+        if ($page > $total_pages) {
             $page = $total_pages;
+        }
 
         $this->page = (int)$page;
 
@@ -567,37 +578,42 @@ class HelperListCore extends Helper
             isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : $this->_default_pagination
         );
 
-        if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1))
+        if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1)) {
             $this->table_id = substr($this->identifier, 3, strlen($this->identifier));
+        }
 
-        if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC'))
+        if ($this->position_identifier && ($this->orderBy == 'position' && $this->orderWay != 'DESC')) {
             $table_dnd = true;
+        }
 
         $prefix = isset($this->controller_name) ? str_replace(array('admin', 'controller'), '', Tools::strtolower($this->controller_name)) : '';
         $ajax = false;
-        foreach ($this->fields_list as $key => $params)
-        {
-            if (!isset($params['type']))
+        foreach ($this->fields_list as $key => $params) {
+            if (!isset($params['type'])) {
                 $params['type'] = 'text';
+            }
 
             $value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
             $value = Context::getContext()->cookie->{$value_key};
-            if (!$value && Tools::getIsset($value_key))
+            if (!$value && Tools::getIsset($value_key)) {
                 $value = Tools::getValue($value_key);
+            }
 
-            switch ($params['type'])
-            {
+            switch ($params['type']) {
                 case 'bool':
-                    if (isset($params['ajax']) && $params['ajax'])
+                    if (isset($params['ajax']) && $params['ajax']) {
                         $ajax = true;
+                    }
                     break;
 
                 case 'date':
                 case 'datetime':
-                    if (is_string($value))
+                    if (is_string($value)) {
                         $value = Tools::unSerialize($value);
-                    if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1]))
+                    }
+                    if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';
+                    }
                     $name = $this->list_id.'Filter_'.(isset($params['filter_key']) ? $params['filter_key'] : $key);
                     $name_id = str_replace('!', '__', $name);
 
@@ -608,18 +624,19 @@ class HelperListCore extends Helper
                     break;
 
                 case 'select':
-                    foreach ($params['list'] as $option_value => $option_display)
-                    {
+                    foreach ($params['list'] as $option_value => $option_display) {
                         if (isset(Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']})
                             && Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} == $option_value
-                            && Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} != '')
+                            && Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} != '') {
                             $this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
+                        }
                     }
                     break;
 
                 case 'text':
-                    if (!Validate::isCleanHtml($value))
+                    if (!Validate::isCleanHtml($value)) {
                         $value = '';
+                    }
             }
 
             $params['value'] = $value;
@@ -629,18 +646,18 @@ class HelperListCore extends Helper
         $has_value = false;
         $has_search_field = false;
 
-        foreach ($this->fields_list as $key => $field)
-        {
-            if (isset($field['value']) && $field['value'] !== false && $field['value'] !== '')
-            {
-                if (is_array($field['value']) && trim(implode('', $field['value'])) == '')
+        foreach ($this->fields_list as $key => $field) {
+            if (isset($field['value']) && $field['value'] !== false && $field['value'] !== '') {
+                if (is_array($field['value']) && trim(implode('', $field['value'])) == '') {
                     continue;
+                }
 
                 $has_value = true;
                 break;
             }
-            if (!(isset($field['search']) && $field['search'] === false))
+            if (!(isset($field['search']) && $field['search'] === false)) {
                 $has_search_field = true;
+            }
         }
 
         Context::getContext()->smarty->assign(array(
@@ -689,24 +706,27 @@ class HelperListCore extends Helper
 
     public function hasBulkActions($has_value = false)
     {
-        if ($this->force_show_bulk_actions)
+        if ($this->force_show_bulk_actions) {
             return true;
+        }
 
-        if (count($this->_list) <= 1 && !$has_value)
+        if (count($this->_list) <= 1 && !$has_value) {
             return false;
+        }
 
         if (isset($this->list_skip_actions) && count($this->list_skip_actions)
-            && isset($this->bulk_actions) && is_array($this->bulk_actions) && count($this->bulk_actions))
-        {
-            foreach ($this->bulk_actions as $action => $data)
-                if (array_key_exists($action, $this->list_skip_actions))
-                {
-                    foreach ($this->_list as $key => $row)
-                        if (!in_array($row[$this->identifier], $this->list_skip_actions[$action]))
+            && isset($this->bulk_actions) && is_array($this->bulk_actions) && count($this->bulk_actions)) {
+            foreach ($this->bulk_actions as $action => $data) {
+                if (array_key_exists($action, $this->list_skip_actions)) {
+                    foreach ($this->_list as $key => $row) {
+                        if (!in_array($row[$this->identifier], $this->list_skip_actions[$action])) {
                             return true;
+                        }
+                    }
 
                     return false;
                 }
+            }
         }
 
         return !empty($this->bulk_actions);
@@ -717,8 +737,9 @@ class HelperListCore extends Helper
      */
     public function displayListFooter()
     {
-        if (!isset($this->list_id))
+        if (!isset($this->list_id)) {
             $this->list_id = $this->table;
+        }
 
         $this->footer_tpl->assign(array_merge($this->tpl_vars, array(
             'current' => $this->currentIndex,

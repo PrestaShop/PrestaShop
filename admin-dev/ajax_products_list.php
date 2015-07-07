@@ -23,15 +23,17 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-if (!defined('_PS_ADMIN_DIR_'))
+if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
+}
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 /* Getting cookie or logout */
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $query = Tools::getValue('q', false);
-if (!$query or $query == '' or strlen($query) < 1)
+if (!$query or $query == '' or strlen($query) < 1) {
     die();
+}
 
 /*
  * In the SQL request the "q" param is used entirely to match result in database.
@@ -40,14 +42,16 @@ if (!$query or $query == '' or strlen($query) < 1)
  * is not write in the name field of the product.
  * So the ref pattern will be cut for the search request.
  */
-if($pos = strpos($query, ' (ref:'))
+if ($pos = strpos($query, ' (ref:')) {
     $query = substr($query, 0, $pos);
+}
 
 $excludeIds = Tools::getValue('excludeIds', false);
-if ($excludeIds && $excludeIds != 'NaN')
+if ($excludeIds && $excludeIds != 'NaN') {
     $excludeIds = implode(',', array_map('intval', explode(',', $excludeIds)));
-else
+} else {
     $excludeIds = '';
+}
 
 // Excluding downloadable products from packs because download from pack is not supported
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
@@ -70,18 +74,16 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))
-    foreach ($items as $item)
+if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false)) {
+    foreach ($items as $item) {
         echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
-elseif ($items)
-{
+    }
+} elseif ($items) {
     // packs
     $results = array();
-    foreach ($items as $item)
-    {
+    foreach ($items as $item) {
         // check if product have combination
-        if (Combination::isFeatureActive() && $item['cache_default_attribute'])
-        {
+        if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
             $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
 						a.`id_attribute`
 					FROM `'._DB_PREFIX_.'product_attribute` pa
@@ -97,24 +99,22 @@ elseif ($items)
 					ORDER BY pa.`id_product_attribute`';
 
             $combinations = Db::getInstance()->executeS($sql);
-            if (!empty($combinations))
-            {
-                foreach ($combinations as $k => $combination)
-                {
+            if (!empty($combinations)) {
+                foreach ($combinations as $k => $combination) {
                     $results[$combination['id_product_attribute']]['id'] = $item['id_product'];
                     $results[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
                     !empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' '.$combination['group_name'].'-'.$combination['attribute_name']
                     : $results[$combination['id_product_attribute']]['name'] = $item['name'].' '.$combination['group_name'].'-'.$combination['attribute_name'];
-                    if (!empty($combination['reference']))
+                    if (!empty($combination['reference'])) {
                         $results[$combination['id_product_attribute']]['ref'] = $combination['reference'];
-                    else
+                    } else {
                         $results[$combination['id_product_attribute']]['ref'] = !empty($item['reference']) ? $item['reference'] : '';
-                    if (empty($results[$combination['id_product_attribute']]['image']))
+                    }
+                    if (empty($results[$combination['id_product_attribute']]['image'])) {
                         $results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $combination['id_image'], 'home_default'));
+                    }
                 }
-            }
-            else
-            {
+            } else {
                 $product = array(
                     'id' => (int)($item['id_product']),
                     'name' => $item['name'],
@@ -123,9 +123,7 @@ elseif ($items)
                 );
                 array_push($results, $product);
             }
-        }
-        else
-        {
+        } else {
             $product = array(
                 'id' => (int)($item['id_product']),
                 'name' => $item['name'],
@@ -137,6 +135,6 @@ elseif ($items)
     }
     $results = array_values($results);
     echo Tools::jsonEncode($results);
-}
-else
+} else {
     Tools::jsonEncode(new stdClass);
+}

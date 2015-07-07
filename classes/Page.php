@@ -65,8 +65,7 @@ class PageCore extends ObjectModel
             'id_page_type' => $page_type_id,
         );
 
-        if (array_key_exists($controller, $special_array))
-        {
+        if (array_key_exists($controller, $special_array)) {
             $object_id = Tools::getValue($special_array[$controller], null);
             $where = ' AND `id_object` = '.(int)$object_id;
             $insert_data['id_object'] = (int)$object_id;
@@ -76,8 +75,9 @@ class PageCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'page`
 				WHERE `id_page_type` = '.(int)$page_type_id.$where;
         $result = Db::getInstance()->getRow($sql);
-        if ($result['id_page'])
+        if ($result['id_page']) {
             return $result['id_page'];
+        }
 
         Db::getInstance()->insert('page', $insert_data, true);
         return Db::getInstance()->Insert_ID();
@@ -95,8 +95,9 @@ class PageCore extends ObjectModel
 				FROM '._DB_PREFIX_.'page_type
 				WHERE name = \''.pSQL($name).'\''
                 )
-            )
+            ) {
             return $value;
+        }
 
         Db::getInstance()->insert('page_type', array('name' => pSQL($name)));
 
@@ -117,7 +118,7 @@ class PageCore extends ObjectModel
         Db::getInstance()->execute($sql);
 
         // If no one has seen the page in this date range, it is added
-        if (Db::getInstance()->Affected_Rows() == 0)
+        if (Db::getInstance()->Affected_Rows() == 0) {
             Db::getInstance()->insert('page_viewed', array(
                 'id_date_range' =>    (int)$id_date_range,
                 'id_page' =>        (int)$id_page,
@@ -125,5 +126,6 @@ class PageCore extends ObjectModel
                 'id_shop' =>        (int)$context->shop->id,
                 'id_shop_group' =>    (int)$context->shop->id_shop_group,
             ));
+        }
     }
 }

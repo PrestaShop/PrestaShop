@@ -23,12 +23,13 @@
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-if (!defined('_PS_ADMIN_DIR_'))
+if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', getcwd());
+}
 require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
 function bindDatepicker($id, $time)
 {
-    if ($time)
+    if ($time) {
         echo '
 		var dateObj = new Date();
 		var hours = dateObj.getHours();
@@ -38,6 +39,7 @@ function bindDatepicker($id, $time)
 		if (mins < 10) { mins = "0" + mins; }
 		if (secs < 10) { secs = "0" + secs; }
 		var time = " "+hours+":"+mins+":"+secs;';
+    }
 
     echo '
 	$(function() {
@@ -60,14 +62,17 @@ function includeDatepicker($id, $time = false)
     echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
     echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
     $iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
-    if ($iso != 'en')
+    if ($iso != 'en') {
         echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
+    }
     echo '<script type="text/javascript">';
-        if (is_array($id))
-            foreach ($id as $id2)
-                bindDatepicker($id2, $time);
-        else
-            bindDatepicker($id, $time);
+    if (is_array($id)) {
+        foreach ($id as $id2) {
+            bindDatepicker($id2, $time);
+        }
+    } else {
+        bindDatepicker($id, $time);
+    }
     echo '</script>';
 }
 
@@ -93,22 +98,23 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
     $defines['_COOKIE_IV_'] = addslashes(_COOKIE_IV_);
     $defines['_PS_CREATION_DATE_'] = addslashes(_PS_CREATION_DATE_);
 
-    if (defined('_RIJNDAEL_KEY_'))
+    if (defined('_RIJNDAEL_KEY_')) {
         $defines['_RIJNDAEL_KEY_'] = addslashes(_RIJNDAEL_KEY_);
-    if (defined('_RIJNDAEL_IV_'))
+    }
+    if (defined('_RIJNDAEL_IV_')) {
         $defines['_RIJNDAEL_IV_'] = addslashes(_RIJNDAEL_IV_);
+    }
     $defines['_PS_VERSION_'] = addslashes(_PS_VERSION_);
     $content = "<?php\n\n";
-    foreach ($defines as $k => $value)
-    {
-        if ($k == '_PS_VERSION_')
+    foreach ($defines as $k => $value) {
+        if ($k == '_PS_VERSION_') {
             $content .= 'if (!defined(\''.$k.'\'))'."\n\t";
+        }
 
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
     copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
-    {
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w')) {
         fwrite($fd, $content);
         fclose($fd);
         return true;
@@ -140,14 +146,12 @@ function displayDate($sql_date, $with_time = false)
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
     $context = Context::getContext();
-    if ($category_type == 'catalog')
-    {
+    if ($category_type == 'catalog') {
         $category = Db::getInstance()->getRow('
 		SELECT id_category, level_depth, nleft, nright
 		FROM '._DB_PREFIX_.'category
 		WHERE id_category = '.(int)$id_category);
-        if (isset($category['id_category']))
-        {
+        if (isset($category['id_category'])) {
             $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
 					FROM '._DB_PREFIX_.'category c
 					LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
@@ -163,8 +167,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
             $full_path = '';
             $n = 1;
             $n_categories = (int)count($categories);
-            foreach ($categories as $category)
-            {
+            foreach ($categories as $category) {
                 $link = Context::getContext()->link->getAdminLink('AdminCategories');
                 $edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil').'"></i></a> ';
                 $full_path .= $edit.
@@ -176,23 +179,24 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
 
             return $full_path.$path;
         }
-    }
-    elseif ($category_type == 'cms')
-    {
+    } elseif ($category_type == 'cms') {
         $category = new CMSCategory($id_category, $context->language->id);
-        if (!$category->id)
+        if (!$category->id) {
             return $path;
+        }
 
         $name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
         $edit = '<a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&addcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
 				<i class="icon-pencil"></i></a> ';
-        if ($category->id == 1)
+        if ($category->id == 1) {
             $edit = '<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
 					<i class="icon-home"></i></a></li> ';
+        }
         $path = $edit.'<li><a href="'.Tools::safeOutput($url_base.'&id_cms_category='.$category->id.'&viewcategory&token='.Tools::getAdminToken('AdminCmsContent'.(int)Tab::getIdFromClassName('AdminCmsContent').(int)$context->employee->id)).'">
 		'.$name.'</a></li> > '.$path;
-        if ($category->id == 1)
+        if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
+        }
         return getPath($url_base, $category->id_parent, $path, '', 'cms');
     }
 }
@@ -200,12 +204,13 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
 function getDirContent($path)
 {
     $content = array();
-    if (is_dir($path))
-    {
+    if (is_dir($path)) {
         $d = dir($path);
-        while (false !== ($entry = $d->read()))
-            if ($entry{0} != '.')
+        while (false !== ($entry = $d->read())) {
+            if ($entry{0} != '.') {
                 $content[] = $entry;
+            }
+        }
         $d->close();
     }
     return $content;
@@ -213,8 +218,9 @@ function getDirContent($path)
 
 function createDir($path, $rights)
 {
-    if (file_exists($path))
+    if (file_exists($path)) {
         return true;
+    }
     return @mkdir($path, $rights);
 }
 
@@ -235,8 +241,9 @@ function translate($string)
     Tools::displayAsDeprecated();
 
     global $_LANGADM;
-    if (!is_array($_LANGADM))
+    if (!is_array($_LANGADM)) {
         return str_replace('"', '&quot;', $string);
+    }
     $key = md5(str_replace('\'', '\\\'', $string));
     $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
     return str_replace('"', '&quot;', stripslashes($str));
@@ -251,26 +258,25 @@ function translate($string)
 function checkingTab($tab)
 {
     $tab_lowercase = Tools::strtolower(trim($tab));
-    if (!Validate::isTabName($tab))
+    if (!Validate::isTabName($tab)) {
         return false;
+    }
     $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
-    if (!$row['id_tab'])
-    {
-        if (isset(AdminTab::$tabParenting[$tab]))
+    if (!$row['id_tab']) {
+        if (isset(AdminTab::$tabParenting[$tab])) {
             Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
+        }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
-    if (!class_exists($tab, false) || !$row['id_tab'])
-    {
+    if (!class_exists($tab, false) || !$row['id_tab']) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
         return false;
     }
     $admin_obj = new $tab;
-    if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee')))
-    {
+    if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
         return false;
@@ -285,11 +291,13 @@ function checkTabRights($id_tab)
 {
     static $tab_accesses = null;
 
-    if ($tab_accesses === null)
+    if ($tab_accesses === null) {
         $tab_accesses = Profile::getProfileAccesses(Context::getContext()->employee->id_profile);
+    }
 
-    if (isset($tab_accesses[(int)$id_tab]['view']))
+    if (isset($tab_accesses[(int)$id_tab]['view'])) {
         return ($tab_accesses[(int)$id_tab]['view'] === '1');
+    }
     return false;
 }
 
@@ -335,59 +343,61 @@ function checkTabRights($id_tab)
 function simpleXMLToArray($xml, $flatten_values = true, $flatten_attributes = true, $flatten_children = true, $value_key = '@value', $attributes_key = '@attributes', $children_key = '@children')
 {
     $return = array();
-    if (!($xml instanceof SimpleXMLElement))
+    if (!($xml instanceof SimpleXMLElement)) {
         return $return;
+    }
 
     $name = $xml->getName();
     $value = trim((string)$xml);
-    if (strlen($value) == 0)
+    if (strlen($value) == 0) {
         $value = null;
+    }
 
-    if ($value !== null)
-    {
-        if (!$flatten_values)
+    if ($value !== null) {
+        if (!$flatten_values) {
             $return[$value_key] = $value;
-        else
+        } else {
             $return = $value;
+        }
     }
 
     $children = array();
     $first = true;
-    foreach ($xml->children() as $element_name => $child)
-    {
+    foreach ($xml->children() as $element_name => $child) {
         $value = simpleXMLToArray($child, $flatten_values, $flatten_attributes, $flatten_children, $value_key, $attributes_key, $children_key);
-        if (isset($children[$element_name]))
-        {
-            if ($first)
-            {
+        if (isset($children[$element_name])) {
+            if ($first) {
                 $temp = $children[$element_name];
                 unset($children[$element_name]);
                 $children[$element_name][] = $temp;
                 $first = false;
             }
             $children[$element_name][] = $value;
-        }
-        else
+        } else {
             $children[$element_name] = $value;
+        }
     }
 
-    if (count($children) > 0)
-    {
-        if (!$flatten_children)
+    if (count($children) > 0) {
+        if (!$flatten_children) {
             $return[$children_key] = $children;
-        else
+        } else {
             $return = array_merge($return, $children);
+        }
     }
 
     $attributes = array();
-    foreach ($xml->attributes() as $name => $value)
+    foreach ($xml->attributes() as $name => $value) {
         $attributes[$name] = trim($value);
+    }
 
-    if (count($attributes) > 0)
-        if (!$flatten_attributes)
+    if (count($attributes) > 0) {
+        if (!$flatten_attributes) {
             $return[$attributes_key] = $attributes;
-        else
+        } else {
             $return = array_merge($return, $attributes);
+        }
+    }
 
     return $return;
 }
@@ -403,137 +413,135 @@ function runAdminTab($tab, $ajax_mode = false)
 
     require_once(_PS_ADMIN_DIR_.'/init.php');
     $cookie = Context::getContext()->cookie;
-    if (empty($tab) && !count($_POST))
-    {
+    if (empty($tab) && !count($_POST)) {
         $tab = 'AdminDashboard';
         $_POST['tab'] = $tab;
         $_POST['token'] = Tools::getAdminTokenLite($tab);
     }
     // $tab = $_REQUEST['tab'];
-    if ($admin_obj = checkingTab($tab))
-    {
+    if ($admin_obj = checkingTab($tab)) {
         Context::getContext()->controller = $admin_obj;
         // init is different for new tabs (AdminController) and old tabs (AdminTab)
-        if ($admin_obj instanceof AdminController)
-        {
-            if ($ajax_mode)
+        if ($admin_obj instanceof AdminController) {
+            if ($ajax_mode) {
                 $admin_obj->ajax = true;
+            }
             $admin_obj->path = dirname($_SERVER['PHP_SELF']);
             $admin_obj->run();
-        }
-        else
-        {
-            if (!$ajax_mode)
+        } else {
+            if (!$ajax_mode) {
                 require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+            }
             $iso_user = Context::getContext()->language->id;
             $tabs = array();
             $tabs = Tab::recursiveTab($admin_obj->id, $tabs);
             $tabs = array_reverse($tabs);
             $bread = '';
-            foreach ($tabs as $key => $item)
-            {
+            foreach ($tabs as $key => $item) {
                 $bread .= ' <img src="../img/admin/separator_breadcrumb.png" style="margin-right:5px" alt="&gt;" />';
-                if (count($tabs) - 1 > $key)
+                if (count($tabs) - 1 > $key) {
                     $bread .= '<a href="?tab='.$item['class_name'].'&token='.Tools::getAdminToken($item['class_name'].(int)$item['id_tab'].(int)Context::getContext()->employee->id).'">';
+                }
 
                 $bread .= $item['name'];
-                if (count($tabs) - 1 > $key)
+                if (count($tabs) - 1 > $key) {
                     $bread .= '</a>';
+                }
             }
 
-            if (!$ajax_mode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL)
-            {
+            if (!$ajax_mode && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && Context::getContext()->controller->multishop_context != Shop::CONTEXT_ALL) {
                 echo '<div class="multishop_info">';
-                if (Shop::getContext() == Shop::CONTEXT_GROUP)
-                {
+                if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                     $shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
                     printf(Translate::getAdminTranslation('You are configuring your store for group shop %s'), '<b>'.$shop_group->name.'</b>');
-                }
-                elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
+                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
                     printf(Translate::getAdminTranslation('You are configuring your store for shop %s'), '<b>'.Context::getContext()->shop->name.'</b>');
+                }
                 echo '</div>';
             }
-            if (Validate::isLoadedObject($admin_obj))
-            {
-                if ($admin_obj->checkToken())
-                {
-                    if ($ajax_mode)
-                    {
+            if (Validate::isLoadedObject($admin_obj)) {
+                if ($admin_obj->checkToken()) {
+                    if ($ajax_mode) {
                         // the differences with index.php is here
                         $admin_obj->ajaxPreProcess();
                         $action = Tools::getValue('action');
                         // no need to use displayConf() here
 
-                        if (!empty($action) && method_exists($admin_obj, 'ajaxProcess'.Tools::toCamelCase($action)))
+                        if (!empty($action) && method_exists($admin_obj, 'ajaxProcess'.Tools::toCamelCase($action))) {
                             $admin_obj->{'ajaxProcess'.Tools::toCamelCase($action)}();
-                        else
+                        } else {
                             $admin_obj->ajaxProcess();
+                        }
 
                         // @TODO We should use a displayAjaxError
                         $admin_obj->displayErrors();
-                        if (!empty($action) && method_exists($admin_obj, 'displayAjax'.Tools::toCamelCase($action)))
+                        if (!empty($action) && method_exists($admin_obj, 'displayAjax'.Tools::toCamelCase($action))) {
                             $admin_obj->{'displayAjax'.$action}();
-                        else
+                        } else {
                             $admin_obj->displayAjax();
-                    }
-                    else
-                    {
+                        }
+                    } else {
                         /* Filter memorization */
-                        if (isset($_POST) && !empty($_POST) && isset($admin_obj->table))
-                            foreach ($_POST as $key => $value)
-                                if (is_array($admin_obj->table))
-                                {
-                                    foreach ($admin_obj->table as $table)
-                                        if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
+                        if (isset($_POST) && !empty($_POST) && isset($admin_obj->table)) {
+                            foreach ($_POST as $key => $value) {
+                                if (is_array($admin_obj->table)) {
+                                    foreach ($admin_obj->table as $table) {
+                                        if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
                                             $cookie->$key = !is_array($value) ? $value : serialize($value);
-                                }
-                                elseif (strncmp($key, $admin_obj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0)
+                                        }
+                                    }
+                                } elseif (strncmp($key, $admin_obj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
                                     $cookie->$key = !is_array($value) ? $value : serialize($value);
-
-                        if (isset($_GET) && !empty($_GET) && isset($admin_obj->table))
-                            foreach ($_GET as $key => $value)
-                                if (is_array($admin_obj->table))
-                                {
-                                    foreach ($admin_obj->table as $table)
-                                        if (strncmp($key, $table.'OrderBy', 7) === 0 || strncmp($key, $table.'Orderway', 8) === 0)
-                                            $cookie->$key = $value;
                                 }
-                                elseif (strncmp($key, $admin_obj->table.'OrderBy', 7) === 0 || strncmp($key, $admin_obj->table.'Orderway', 12) === 0)
+                            }
+                        }
+
+                        if (isset($_GET) && !empty($_GET) && isset($admin_obj->table)) {
+                            foreach ($_GET as $key => $value) {
+                                if (is_array($admin_obj->table)) {
+                                    foreach ($admin_obj->table as $table) {
+                                        if (strncmp($key, $table.'OrderBy', 7) === 0 || strncmp($key, $table.'Orderway', 8) === 0) {
+                                            $cookie->$key = $value;
+                                        }
+                                    }
+                                } elseif (strncmp($key, $admin_obj->table.'OrderBy', 7) === 0 || strncmp($key, $admin_obj->table.'Orderway', 12) === 0) {
                                     $cookie->$key = $value;
+                                }
+                            }
+                        }
                         $admin_obj->displayConf();
                         $admin_obj->postProcess();
                         $admin_obj->displayErrors();
                         $admin_obj->display();
                         include(_PS_ADMIN_DIR_.'/footer.inc.php');
                     }
-                }
-                else
-                {
-                    if ($ajax_mode)
-                    {
+                } else {
+                    if ($ajax_mode) {
                         // If this is an XSS attempt, then we should only display a simple, secure page
-                        if (ob_get_level() && ob_get_length() > 0)
+                        if (ob_get_level() && ob_get_length() > 0) {
                             ob_clean();
+                        }
 
                         // ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
                         $url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$admin_obj->token.'$2', $_SERVER['REQUEST_URI']);
-                        if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
+                        if (false === strpos($url, '?token=') && false === strpos($url, '&token=')) {
                             $url .= '&token='.$admin_obj->token;
+                        }
 
                         // we can display the correct url
                         // die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
                         die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
-                    }
-                    else
-                    {
+                    } else {
                         // If this is an XSS attempt, then we should only display a simple, secure page
-                        if (ob_get_level() && ob_get_length() > 0)
+                        if (ob_get_level() && ob_get_length() > 0) {
                             ob_clean();
+                        }
 
                         // ${1} in the replacement string of the regexp is required, because the token may begin with a number and mix up with it (e.g. $17)
                         $url = preg_replace('/([&?]token=)[^&]*(&.*)?$/', '${1}'.$admin_obj->token.'$2', $_SERVER['REQUEST_URI']);
-                        if (false === strpos($url, '?token=') && false === strpos($url, '&token='))
+                        if (false === strpos($url, '?token=') && false === strpos($url, '&token=')) {
                             $url .= '&token='.$admin_obj->token;
+                        }
 
                         $message = Translate::getAdminTranslation('Invalid security token');
                         echo '<html><head><title>'.$message.'</title></head><body style="font-family:Arial,Verdana,Helvetica,sans-serif;background-color:#EC8686">

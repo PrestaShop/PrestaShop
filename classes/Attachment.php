@@ -78,8 +78,9 @@ class AttachmentCore extends ObjectModel
 
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)$this->id);
 
-        foreach ($products as $product)
+        foreach ($products as $product) {
             Product::updateCacheAttachment((int)$product['id_product']);
+        }
 
         return parent::delete();
     }
@@ -87,8 +88,7 @@ class AttachmentCore extends ObjectModel
     public function deleteSelection($attachments)
     {
         $return = 1;
-        foreach ($attachments as $id_attachment)
-        {
+        foreach ($attachments as $id_attachment) {
             $attachment = new Attachment((int)$id_attachment);
             $return &= $attachment->delete();
         }
@@ -157,21 +157,23 @@ class AttachmentCore extends ObjectModel
     {
         $result1 = Attachment::deleteProductAttachments($id_product);
 
-        if (is_array($array))
-        {
+        if (is_array($array)) {
             $ids = array();
-            foreach ($array as $id_attachment)
-                if ((int)$id_attachment > 0)
+            foreach ($array as $id_attachment) {
+                if ((int)$id_attachment > 0) {
                     $ids[] = array('id_product' => (int)$id_product, 'id_attachment' => (int)$id_attachment);
+                }
+            }
 
-            if (!empty($ids))
+            if (!empty($ids)) {
                 $result2 = Db::getInstance()->insert('product_attachment', $ids);
-
+            }
         }
 
         Product::updateCacheAttachment((int)$id_product);
-        if (is_array($array))
+        if (is_array($array)) {
             return ($result1 && (!isset($result2) || $result2));
+        }
 
         return $result1;
     }
@@ -179,10 +181,10 @@ class AttachmentCore extends ObjectModel
     public static function getProductAttached($id_lang, $list)
     {
         $ids_attachements = array();
-        if (is_array($list))
-        {
-            foreach ($list as $attachement)
+        if (is_array($list)) {
+            foreach ($list as $attachement) {
                 $ids_attachements[] = $attachement['id_attachment'];
+            }
 
             $sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
 					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
@@ -190,11 +192,12 @@ class AttachmentCore extends ObjectModel
 						AND pl.`id_lang` = '.(int)$id_lang;
             $tmp = Db::getInstance()->executeS($sql);
             $product_attachements = array();
-            foreach ($tmp as $t)
+            foreach ($tmp as $t) {
                 $product_attachements[$t['id_attachment']][] = $t['name'];
+            }
             return $product_attachements;
-        }
-        else
+        } else {
             return false;
+        }
     }
 }

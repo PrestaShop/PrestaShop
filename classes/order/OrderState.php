@@ -120,8 +120,7 @@ class OrderStateCore extends ObjectModel
     public static function getOrderStates($id_lang)
     {
         $cache_id = 'OrderState::getOrderStates_'.(int)$id_lang;
-        if (!Cache::isStored($cache_id))
-        {
+        if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'order_state` os
@@ -143,11 +142,12 @@ class OrderStateCore extends ObjectModel
     public static function invoiceAvailable($id_order_state)
     {
         $result = false;
-        if (Configuration::get('PS_INVOICE'))
+        if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `invoice`
 			FROM `'._DB_PREFIX_.'order_state`
 			WHERE `id_order_state` = '.(int)$id_order_state);
+        }
         return (bool)$result;
     }
 

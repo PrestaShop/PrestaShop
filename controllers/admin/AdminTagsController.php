@@ -71,12 +71,13 @@ class AdminTagsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display))
+        if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_tag'] = array(
                 'href' => self::$currentIndex.'&addtag&token='.$this->token,
                 'desc' => $this->l('Add new tag', null, null, false),
                 'icon' => 'process-icon-new'
             );
+        }
 
         parent::initPageHeaderToolbar();
     }
@@ -99,20 +100,21 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table))
-        {
-            if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
-            {
+        if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table)) {
+            if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
                 $removed_products = array();
 
-                foreach ($previous_products as $product)
-                    if (!in_array($product['id_product'], $_POST['products']))
+                foreach ($previous_products as $product) {
+                    if (!in_array($product['id_product'], $_POST['products'])) {
                         $removed_products[] = $product['id_product'];
+                    }
+                }
 
-                if (Configuration::get('PS_SEARCH_INDEXATION'))
+                if (Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::removeProductsSearchIndex($removed_products);
+                }
 
                 $obj->setProducts($_POST['products']);
             }
@@ -124,8 +126,9 @@ class AdminTagsControllerCore extends AdminController
     public function renderForm()
     {
         /** @var Tag $obj */
-        if (!($obj = $this->loadObject(true)))
+        if (!($obj = $this->loadObject(true))) {
             return;
+        }
 
         $this->fields_form = array(
             'legend' => array(

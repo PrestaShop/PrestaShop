@@ -45,39 +45,44 @@ class TranslateCore
         // @todo remove global keyword in translations files and use static
         global $_LANGADM;
 
-        if ($modules_tabs === null)
+        if ($modules_tabs === null) {
             $modules_tabs = Tab::getModuleTabList();
-
-        if ($_LANGADM == null)
-        {
-            $iso = Context::getContext()->language->iso_code;
-            if (empty($iso))
-                $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
-            if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
-                include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
         }
 
-        if (isset($modules_tabs[strtolower($class)]))
-        {
+        if ($_LANGADM == null) {
+            $iso = Context::getContext()->language->iso_code;
+            if (empty($iso)) {
+                $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
+            }
+            if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
+                include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+            }
+        }
+
+        if (isset($modules_tabs[strtolower($class)])) {
             $class_name_controller = $class.'controller';
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
-            if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
+            if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller)) {
                 return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
+            }
         }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
-        if (isset($_LANGADM[$class.$key]))
+        if (isset($_LANGADM[$class.$key])) {
             $str = $_LANGADM[$class.$key];
-        else
+        } else {
             $str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
+        }
 
-        if ($htmlentities)
+        if ($htmlentities) {
             $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
+        }
         $str = str_replace('"', '&quot;', $str);
 
-        if ($sprintf !== null)
+        if ($sprintf !== null) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
+        }
 
         return ($addslashes ? addslashes($str) : stripslashes($str));
     }
@@ -93,18 +98,20 @@ class TranslateCore
     public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
-        if (is_null($key))
+        if (is_null($key)) {
             $key = md5($string);
+        }
 
-        if (isset($lang_array['AdminController'.$key]))
+        if (isset($lang_array['AdminController'.$key])) {
             $str = $lang_array['AdminController'.$key];
-        elseif (isset($lang_array['Helper'.$key]))
+        } elseif (isset($lang_array['Helper'.$key])) {
             $str = $lang_array['Helper'.$key];
-        elseif (isset($lang_array['AdminTab'.$key]))
+        } elseif (isset($lang_array['AdminTab'.$key])) {
             $str = $lang_array['AdminTab'.$key];
-        else
+        } else {
             // note in 1.5, some translations has moved from AdminXX to helper/*.tpl
             $str = $string;
+        }
 
         return $str;
     }
@@ -130,8 +137,7 @@ class TranslateCore
 
         $language = Context::getContext()->language;
 
-        if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
-        {
+        if (!isset($translations_merged[$name]) && isset(Context::getContext()->language)) {
             $files_by_priority = array(
                 // Translations in theme
                 _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
@@ -141,64 +147,66 @@ class TranslateCore
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
             );
-            foreach ($files_by_priority as $file)
-                if (file_exists($file))
-                {
+            foreach ($files_by_priority as $file) {
+                if (file_exists($file)) {
                     include_once($file);
                     $_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
                     $translations_merged[$name] = true;
                 }
+            }
         }
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
         $cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
-        if (!isset($lang_cache[$cache_key]))
-        {
-            if ($_MODULES == null)
-            {
-                if ($sprintf !== null)
+        if (!isset($lang_cache[$cache_key])) {
+            if ($_MODULES == null) {
+                if ($sprintf !== null) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
+                }
                 return str_replace('"', '&quot;', $string);
             }
 
             $current_key = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$source).'_'.$key;
             $default_key = strtolower('<{'.$name.'}prestashop>'.$source).'_'.$key;
 
-            if ('controller' == ($file = substr($source, 0, - 10)))
-            {
+            if ('controller' == ($file = substr($source, 0, - 10))) {
                 $current_key_file = strtolower('<{'.$name.'}'._THEME_NAME_.'>'.$file).'_'.$key;
                 $default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
             }
 
-            if (isset($current_key_file) && !empty($_MODULES[$current_key_file]))
+            if (isset($current_key_file) && !empty($_MODULES[$current_key_file])) {
                 $ret = stripslashes($_MODULES[$current_key_file]);
-            elseif (isset($default_key_file) && !empty($_MODULES[$default_key_file]))
+            } elseif (isset($default_key_file) && !empty($_MODULES[$default_key_file])) {
                 $ret = stripslashes($_MODULES[$default_key_file]);
-            elseif (!empty($_MODULES[$current_key]))
+            } elseif (!empty($_MODULES[$current_key])) {
                 $ret = stripslashes($_MODULES[$current_key]);
-            elseif (!empty($_MODULES[$default_key]))
+            } elseif (!empty($_MODULES[$default_key])) {
                 $ret = stripslashes($_MODULES[$default_key]);
+            }
             // if translation was not found in module, look for it in AdminController or Helpers
-            elseif (!empty($_LANGADM))
+            elseif (!empty($_LANGADM)) {
                 $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
-            else
+            } else {
                 $ret = stripslashes($string);
+            }
 
-            if ($sprintf !== null)
+            if ($sprintf !== null) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
+            }
 
-            if ($js)
+            if ($js) {
                 $ret = addslashes($ret);
-            else
+            } else {
                 $ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
+            }
 
-            if ($sprintf === null)
+            if ($sprintf === null) {
                 $lang_cache[$cache_key] = $ret;
-            else
+            } else {
                 return $ret;
-
+            }
         }
         return $lang_cache[$cache_key];
     }
@@ -215,27 +223,32 @@ class TranslateCore
 
         $iso = Context::getContext()->language->iso_code;
 
-        if (!Validate::isLangIsoCode($iso))
+        if (!Validate::isLangIsoCode($iso)) {
             Tools::displayError(sprintf('Invalid iso lang (%s)', Tools::safeOutput($iso)));
+        }
 
         $override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
         $i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
-        if (file_exists($override_i18n_file))
+        if (file_exists($override_i18n_file)) {
             $i18n_file = $override_i18n_file;
+        }
 
-        if (!include($i18n_file))
+        if (!include($i18n_file)) {
             Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
+        }
 
-        if (!isset($_LANGPDF) || !is_array($_LANGPDF))
+        if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
             return str_replace('"', '&quot;', $string);
+        }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
         $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
-        if ($sprintf !== null)
+        if ($sprintf !== null) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
+        }
 
         return $str;
     }
@@ -249,10 +262,10 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args))
-        {
-            if (!is_array($args))
+        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args)) {
+            if (!is_array($args)) {
                 $args = array($args);
+            }
 
             return vsprintf($string, $args);
         }
@@ -265,16 +278,13 @@ class TranslateCore
     public static function postProcessTranslation($string, $params)
     {
         // If tags were explicitely provided, we want to use them *after* the translation string is escaped.
-        if (!empty($params['tags']))
-        {
-            foreach ($params['tags'] as $index => $tag)
-            {
+        if (!empty($params['tags'])) {
+            foreach ($params['tags'] as $index => $tag) {
                 // Make positions start at 1 so that it behaves similar to the %1$d etc. sprintf positional params
                 $position = $index + 1;
                 // extract tag name
                 $match = array();
-                if (preg_match('/^\s*<\s*(\w+)/', $tag, $match))
-                {
+                if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
                     $closer = '</'.$match[1].'>';
 

@@ -24,8 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class Adapter_EntityMapper {
-
+class Adapter_EntityMapper
+{
     /**
      * Load ObjectModel
      * @param $id
@@ -47,7 +47,6 @@ class Adapter_EntityMapper {
 
             // Get lang informations
             if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
-
                 $sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($entity_defs['primary']) . '` = b.`' . bqSQL($entity_defs['primary']) . '` AND b.`id_lang` = ' . (int)$id_lang);
                 if ($id_shop && !empty($entity_defs['multilang_shop'])) {
                     $sql->where('b.`id_shop` = ' . (int)$id_shop);
@@ -61,19 +60,18 @@ class Adapter_EntityMapper {
 
             if ($object_datas = Db::getInstance()->getRow($sql)) {
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
-
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
 							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id
                             .(($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int)$id_shop : '');
 
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
-
                         foreach ($object_datas_lang as $row) {
                             foreach ($row as $key => $value) {
                                 if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
-                                    if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
+                                    if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
                                         $object_datas[$key] = array();
+                                    }
 
                                     $object_datas[$key][$row['id_lang']] = $value;
                                 }
@@ -103,5 +101,4 @@ class Adapter_EntityMapper {
             }
         }
     }
-
 }

@@ -103,8 +103,9 @@ class CountryCore extends ObjectModel
 
     public function delete()
     {
-        if (!parent::delete())
+        if (!parent::delete()) {
             return false;
+        }
         return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_rule_country WHERE id_country = '.(int)$this->id);
     }
 
@@ -128,15 +129,17 @@ class CountryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = c.`id_zone`)
 		WHERE 1'.($active ? ' AND c.active = 1' : '').($contain_states ? ' AND c.`contains_states` = '.(int)$contain_states : '').'
 		ORDER BY cl.name ASC');
-        foreach ($result as $row)
+        foreach ($result as $row) {
             $countries[$row['id_country']] = $row;
+        }
 
-        if ($list_states)
-        {
+        if ($list_states) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'state` ORDER BY `name` ASC');
-            foreach ($result as $row)
-                if (isset($countries[$row['id_country']]) && $row['active'] == 1) /* Does not keep the state if its country has been disabled and not selected */
+            foreach ($result as $row) {
+                if (isset($countries[$row['id_country']]) && $row['active'] == 1) { /* Does not keep the state if its country has been disabled and not selected */
                         $countries[$row['id_country']]['states'][] = $row;
+                }
+            }
         }
         return $countries;
     }
@@ -160,8 +163,9 @@ class CountryCore extends ObjectModel
      */
     public static function getByIso($iso_code, $active = false)
     {
-        if (!Validate::isLanguageIsoCode($iso_code))
+        if (!Validate::isLanguageIsoCode($iso_code)) {
             die(Tools::displayError());
+        }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `id_country`
 			FROM `'._DB_PREFIX_.'country`
@@ -173,11 +177,13 @@ class CountryCore extends ObjectModel
 
     public static function getIdZone($id_country)
     {
-        if (!Validate::isUnsignedId($id_country))
+        if (!Validate::isUnsignedId($id_country)) {
             die(Tools::displayError());
+        }
 
-        if (isset(self::$_idZones[$id_country]))
+        if (isset(self::$_idZones[$id_country])) {
             return self::$_idZones[$id_country];
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `id_zone`
@@ -198,8 +204,7 @@ class CountryCore extends ObjectModel
     public static function getNameById($id_lang, $id_country)
     {
         $key = 'country_getNameById_'.$id_country.'_'.$id_lang;
-        if (!Cache::isStored($key))
-        {
+        if (!Cache::isStored($key)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 							SELECT `name`
 							FROM `'._DB_PREFIX_.'country_lang`
@@ -220,8 +225,7 @@ class CountryCore extends ObjectModel
      */
     public static function getIsoById($id_country)
     {
-        if (!isset(Country::$cache_iso_by_id[$id_country]))
-        {
+        if (!isset(Country::$cache_iso_by_id[$id_country])) {
             Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `iso_code`
 			FROM `'._DB_PREFIX_.'country`
@@ -244,8 +248,9 @@ class CountryCore extends ObjectModel
 		SELECT `id_country`
 		FROM `'._DB_PREFIX_.'country_lang`
 		WHERE `name` = \''.pSQL($country).'\'';
-        if ($id_lang)
+        if ($id_lang) {
             $sql .= ' AND `id_lang` = '.(int)$id_lang;
+        }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
@@ -254,8 +259,9 @@ class CountryCore extends ObjectModel
 
     public static function getNeedZipCode($id_country)
     {
-        if (!(int)$id_country)
+        if (!(int)$id_country) {
             return false;
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `need_zip_code`
@@ -265,8 +271,9 @@ class CountryCore extends ObjectModel
 
     public static function getZipCodeFormat($id_country)
     {
-        if (!(int)$id_country)
+        if (!(int)$id_country) {
             return false;
+        }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `zip_code_format`
@@ -288,8 +295,9 @@ class CountryCore extends ObjectModel
 
     public static function getCountriesByZoneId($id_zone, $id_lang)
     {
-        if (empty($id_zone) || empty($id_lang))
+        if (empty($id_zone) || empty($id_lang)) {
             die(Tools::displayError());
+        }
 
         $sql = ' SELECT DISTINCT c.*, cl.*
 				FROM `'._DB_PREFIX_.'country` c
@@ -355,28 +363,33 @@ class CountryCore extends ObjectModel
 
     public static function addModuleRestrictions(array $shops = array(), array $countries = array(), array $modules = array())
     {
-        if (!count($shops))
+        if (!count($shops)) {
             $shops = Shop::getShops(true, null, true);
+        }
 
-        if (!count($countries))
+        if (!count($countries)) {
             $countries = Country::getCountries((int)Context::getContext()->cookie->id_lang);
+        }
 
-        if (!count($modules))
+        if (!count($modules)) {
             $modules = Module::getPaymentModules();
+        }
 
         $sql = false;
-        foreach ($shops as $id_shop)
-            foreach ($countries as $country)
-                foreach ($modules as $module)
+        foreach ($shops as $id_shop) {
+            foreach ($countries as $country) {
+                foreach ($modules as $module) {
                     $sql .= '('.(int)$module['id_module'].', '.(int)$id_shop.', '.(int)$country['id_country'].'),';
+                }
+            }
+        }
 
-        if ($sql)
-        {
+        if ($sql) {
             $sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.'module_country` (`id_module`, `id_shop`, `id_country`) VALUES '.rtrim($sql, ',');
             return Db::getInstance()->execute($sql);
-        }
-        else
+        } else {
             return true;
+        }
     }
 
     public function add($autodate = true, $null_values = false)

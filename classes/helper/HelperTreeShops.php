@@ -37,16 +37,18 @@ class HelperTreeShopsCore extends TreeCore
     {
         parent::__construct($id);
 
-        if (isset($title))
+        if (isset($title)) {
             $this->setTitle($title);
+        }
 
         $this->setLang($lang);
     }
 
     public function getData()
     {
-        if (!isset($this->_data))
+        if (!isset($this->_data)) {
             $this->setData(Shop::getTree());
+        }
 
         return $this->_data;
     }
@@ -59,32 +61,36 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getLang()
     {
-        if (!isset($this->_lang))
+        if (!isset($this->_lang)) {
             $this->setLang($this->getContext()->employee->id_lang);
+        }
 
         return $this->_lang;
     }
 
     public function getNodeFolderTemplate()
     {
-        if (!isset($this->_node_folder_template))
+        if (!isset($this->_node_folder_template)) {
             $this->setNodeFolderTemplate(self::DEFAULT_NODE_FOLDER_TEMPLATE);
+        }
 
         return $this->_node_folder_template;
     }
 
     public function getNodeItemTemplate()
     {
-        if (!isset($this->_node_item_template))
+        if (!isset($this->_node_item_template)) {
             $this->setNodeItemTemplate(self::DEFAULT_NODE_ITEM_TEMPLATE);
+        }
 
         return $this->_node_item_template;
     }
 
     public function setSelectedShops($value)
     {
-        if (!is_array($value))
+        if (!is_array($value)) {
             throw new PrestaShopException('Selected shops value must be an array');
+        }
 
         $this->_selected_shops = $value;
         return $this;
@@ -92,26 +98,29 @@ class HelperTreeShopsCore extends TreeCore
 
     public function getSelectedShops()
     {
-        if (!isset($this->_selected_shops))
+        if (!isset($this->_selected_shops)) {
             $this->_selected_shops = array();
+        }
 
         return $this->_selected_shops;
     }
 
     public function getTemplate()
     {
-        if (!isset($this->_template))
+        if (!isset($this->_template)) {
             $this->setTemplate(self::DEFAULT_TEMPLATE);
+        }
 
         return $this->_template;
     }
 
     public function render($data = null, $use_default_actions = true, $use_selected_shop = true)
     {
-        if (!isset($data))
+        if (!isset($data)) {
             $data = $this->getData();
+        }
 
-        if ($use_default_actions)
+        if ($use_default_actions) {
             $this->setActions(array(
                 new TreeToolbarLink(
                     'Collapse All',
@@ -135,27 +144,30 @@ class HelperTreeShopsCore extends TreeCore
                     'icon-check-empty')
                 )
             );
+        }
 
-        if ($use_selected_shop)
+        if ($use_selected_shop) {
             $this->setAttribute('selected_shops', $this->getSelectedShops());
+        }
 
         return parent::render($data);
     }
 
     public function renderNodes($data = null)
     {
-        if (!isset($data))
+        if (!isset($data)) {
             $data = $this->getData();
+        }
 
-        if (!is_array($data) && !$data instanceof Traversable)
+        if (!is_array($data) && !$data instanceof Traversable) {
             throw new PrestaShopException('Data value must be an traversable array');
+        }
 
         $html = '';
 
-        foreach ($data as $item)
-        {
+        foreach ($data as $item) {
             if (array_key_exists('shops', $item)
-                && !empty($item['shops']))
+                && !empty($item['shops'])) {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
@@ -163,13 +175,14 @@ class HelperTreeShopsCore extends TreeCore
                     'children' => $this->renderNodes($item['shops']),
                     'node'     => $item
                 ))->fetch();
-            else
+            } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
                 )->assign($this->getAttributes())->assign(array(
                     'node' => $item
                 ))->fetch();
+            }
         }
 
         return $html;

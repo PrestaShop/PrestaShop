@@ -90,11 +90,13 @@ class MessageCore extends ObjectModel
      */
     public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
     {
-        if (!Validate::isBool($private))
+        if (!Validate::isBool($private)) {
             die(Tools::displayError());
+        }
 
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
 
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
@@ -121,11 +123,13 @@ class MessageCore extends ObjectModel
      */
     public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)
     {
-        if (!Validate::isBool($private))
+        if (!Validate::isBool($private)) {
             die(Tools::displayError());
+        }
 
-        if (!$context)
+        if (!$context) {
             $context = Context::getContext();
+        }
 
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
@@ -149,8 +153,9 @@ class MessageCore extends ObjectModel
      */
     public static function markAsReaded($id_message, $id_employee)
     {
-        if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee))
+        if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee)) {
             die(Tools::displayError());
+        }
 
         $result = Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES

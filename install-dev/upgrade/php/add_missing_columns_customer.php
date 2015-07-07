@@ -29,8 +29,9 @@ function add_missing_columns_customer()
     $db = Db::getInstance();
     $res = true;
     $current_fields = $db->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'customer`');
-    foreach ($current_fields as $k => $field)
+    foreach ($current_fields as $k => $field) {
         $current_fields[$k] = $field['Field'];
+    }
 
     $missing_fields = array(
         'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
@@ -47,9 +48,11 @@ function add_missing_columns_customer()
 			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"'
     );
     
-    foreach ($missing_fields as $field => $query)
-        if (!in_array($field, $current_fields))
+    foreach ($missing_fields as $field => $query) {
+        if (!in_array($field, $current_fields)) {
             $res &= $db->execute($query);
+        }
+    }
 
     return $res;
 }

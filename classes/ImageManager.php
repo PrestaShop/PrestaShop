@@ -48,33 +48,34 @@ class ImageManagerCore
      */
     public static function thumbnail($image, $cache_image, $size, $image_type = 'jpg', $disable_cache = true, $regenerate = false)
     {
-        if (!file_exists($image))
+        if (!file_exists($image)) {
             return '';
+        }
 
-        if (file_exists(_PS_TMP_IMG_DIR_.$cache_image) && $regenerate)
+        if (file_exists(_PS_TMP_IMG_DIR_.$cache_image) && $regenerate) {
             @unlink(_PS_TMP_IMG_DIR_.$cache_image);
+        }
 
-        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cache_image))
-        {
+        if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_.$cache_image)) {
             $infos = getimagesize($image);
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-            if (!ImageManager::checkImageMemoryLimit($image))
+            if (!ImageManager::checkImageMemoryLimit($image)) {
                 return false;
+            }
 
             $x = $infos[0];
             $y = $infos[1];
             $max_x = $size * 3;
 
             // Size is already ok
-            if ($y < $size && $x <= $max_x)
+            if ($y < $size && $x <= $max_x) {
                 copy($image, _PS_TMP_IMG_DIR_.$cache_image);
+            }
             // We need to resize */
-            else
-            {
+            else {
                 $ratio_x = $x / ($y / $size);
-                if ($ratio_x > $max_x)
-                {
+                if ($ratio_x > $max_x) {
                     $ratio_x = $max_x;
                     $size = $y / ($x / $max_x);
                 }
@@ -83,10 +84,11 @@ class ImageManagerCore
             }
         }
         // Relative link will always work, whatever the base uri set in the admin
-        if (Context::getContext()->controller->controller_type == 'admin')
+        if (Context::getContext()->controller->controller_type == 'admin') {
             return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
-        else
+        } else {
             return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
+        }
     }
 
     /**
@@ -99,19 +101,20 @@ class ImageManagerCore
     {
         $infos = @getimagesize($image);
 
-        if (!is_array($infos) || !isset($infos['bits']))
+        if (!is_array($infos) || !isset($infos['bits'])) {
             return true;
+        }
 
         $memory_limit = Tools::getMemoryLimit();
         // memory_limit == -1 => unlimited memory
-        if (function_exists('memory_get_usage') && (int)$memory_limit != -1)
-        {
+        if (function_exists('memory_get_usage') && (int)$memory_limit != -1) {
             $current_memory = memory_get_usage();
             $channel = isset($infos['channels']) ? ($infos['channels'] / 8) : 1;
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-            if (($infos[0] * $infos[1] * $infos['bits'] * $channel + pow(2, 16)) * 1.8 + $current_memory > $memory_limit - 1024 * 1024)
+            if (($infos[0] * $infos[1] * $infos['bits'] * $channel + pow(2, 16)) * 1.8 + $current_memory > $memory_limit - 1024 * 1024) {
                 return false;
+            }
         }
 
         return true;
@@ -138,24 +141,23 @@ class ImageManagerCore
                                 $force_type = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
                                 &$src_width = null, &$src_height = null)
     {
-        if (PHP_VERSION_ID < 50300)
+        if (PHP_VERSION_ID < 50300) {
             clearstatcache();
-        else
+        } else {
             clearstatcache(true, $src_file);
+        }
 
-        if (!file_exists($src_file) || !filesize($src_file))
+        if (!file_exists($src_file) || !filesize($src_file)) {
             return !($error = self::ERROR_FILE_NOT_EXIST);
+        }
 
         list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
         $rotate = 0;
-        if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
-        {
+        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
             $exif = @exif_read_data($src_file);
 
-            if ($exif && isset($exif['Orientation']))
-            {
-                switch ($exif['Orientation'])
-                {
+            if ($exif && isset($exif['Orientation'])) {
+                switch ($exif['Orientation']) {
                     case 3:
                         $src_width = $tmp_width;
                         $src_height = $tmp_height;
@@ -178,15 +180,11 @@ class ImageManagerCore
                         $src_width = $tmp_width;
                         $src_height = $tmp_height;
                 }
-            }
-            else
-            {
+            } else {
                 $src_width = $tmp_width;
                 $src_height = $tmp_height;
             }
-        }
-        else
-        {
+        } else {
             $src_width = $tmp_width;
             $src_height = $tmp_height;
         }
@@ -195,43 +193,42 @@ class ImageManagerCore
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
         if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$force_type)
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$force_type) {
             $file_type = 'png';
+        }
 
-        if (!$src_width)
+        if (!$src_width) {
             return !($error = self::ERROR_FILE_WIDTH);
-        if (!$dst_width)
+        }
+        if (!$dst_width) {
             $dst_width = $src_width;
-        if (!$dst_height)
+        }
+        if (!$dst_height) {
             $dst_height = $src_height;
+        }
 
         $width_diff = $dst_width / $src_width;
         $height_diff = $dst_height / $src_height;
 
         $ps_image_generation_method = Configuration::get('PS_IMAGE_GENERATION_METHOD');
-        if ($width_diff > 1 && $height_diff > 1)
-        {
+        if ($width_diff > 1 && $height_diff > 1) {
             $next_width = $src_width;
             $next_height = $src_height;
-        }
-        else
-        {
-            if ($ps_image_generation_method == 2 || (!$ps_image_generation_method && $width_diff > $height_diff))
-            {
+        } else {
+            if ($ps_image_generation_method == 2 || (!$ps_image_generation_method && $width_diff > $height_diff)) {
                 $next_height = $dst_height;
                 $next_width = round(($src_width * $next_height) / $src_height);
                 $dst_width = (int)(!$ps_image_generation_method ? $dst_width : $next_width);
-            }
-            else
-            {
+            } else {
                 $next_width = $dst_width;
                 $next_height = round($src_height * $dst_width / $src_width);
                 $dst_height = (int)(!$ps_image_generation_method ? $dst_height : $next_height);
             }
         }
 
-        if (!ImageManager::checkImageMemoryLimit($src_file))
+        if (!ImageManager::checkImageMemoryLimit($src_file)) {
             return !($error = self::ERROR_MEMORY_LIMIT);
+        }
 
         $tgt_width  = $dst_width;
         $tgt_height = $dst_height;
@@ -239,27 +236,26 @@ class ImageManagerCore
         $dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
         // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
-        if ($file_type == 'png' && $type == IMAGETYPE_PNG)
-        {
+        if ($file_type == 'png' && $type == IMAGETYPE_PNG) {
             imagealphablending($dest_image, false);
             imagesavealpha($dest_image, true);
             $transparent = imagecolorallocatealpha($dest_image, 255, 255, 255, 127);
             imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $transparent);
-        }
-        else
-        {
+        } else {
             $white = imagecolorallocate($dest_image, 255, 255, 255);
             imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $white);
         }
 
         $src_image = ImageManager::create($type, $src_file);
-        if ($rotate)
+        if ($rotate) {
             $src_image = imagerotate($src_image, $rotate, 0);
+        }
 
-        if ($dst_width >= $src_width && $dst_height >= $src_height)
+        if ($dst_width >= $src_width && $dst_height >= $src_height) {
             imagecopyresized($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
-        else
+        } else {
             ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
+        }
         $write_file = ImageManager::write($file_type, $dest_image, $dst_file);
         @imagedestroy($src_image);
         return $write_file;
@@ -280,17 +276,17 @@ class ImageManagerCore
         // 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
         // 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
 
-        if (empty($src_image) || empty($dst_image) || $quality <= 0)
+        if (empty($src_image) || empty($dst_image) || $quality <= 0) {
             return false;
-        if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h))
-        {
+        }
+        if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h)) {
             $temp = imagecreatetruecolor($dst_w * $quality + 1, $dst_h * $quality + 1);
             imagecopyresized($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
             imagecopyresampled($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $dst_w * $quality, $dst_h * $quality);
             imagedestroy($temp);
-        }
-        else
+        } else {
             imagecopyresampled($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+        }
         return true;
     }
 
@@ -306,44 +302,46 @@ class ImageManagerCore
     {
         // Detect mime content type
         $mime_type = false;
-        if (!$mime_type_list)
+        if (!$mime_type_list) {
             $mime_type_list = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
+        }
 
         // Try 4 different methods to determine the mime type
-        if (function_exists('getimagesize'))
-        {
+        if (function_exists('getimagesize')) {
             $image_info = @getimagesize($filename);
 
-            if ($image_info)
+            if ($image_info) {
                 $mime_type = $image_info['mime'];
-            else
+            } else {
                 $file_mime_type = false;
-        }
-        elseif (function_exists('finfo_open'))
-        {
+            }
+        } elseif (function_exists('finfo_open')) {
             $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
             $finfo = finfo_open($const);
             $mime_type = finfo_file($finfo, $filename);
             finfo_close($finfo);
-        }
-        elseif (function_exists('mime_content_type'))
+        } elseif (function_exists('mime_content_type')) {
             $mime_type = mime_content_type($filename);
-        elseif (function_exists('exec'))
-        {
+        } elseif (function_exists('exec')) {
             $mime_type = trim(exec('file -b --mime-type '.escapeshellarg($filename)));
-            if (!$mime_type)
+            if (!$mime_type) {
                 $mime_type = trim(exec('file --mime '.escapeshellarg($filename)));
-            if (!$mime_type)
+            }
+            if (!$mime_type) {
                 $mime_type = trim(exec('file -bi '.escapeshellarg($filename)));
+            }
         }
 
-        if ($file_mime_type && (empty($mime_type) || $mime_type == 'regular file' || $mime_type == 'text/plain'))
+        if ($file_mime_type && (empty($mime_type) || $mime_type == 'regular file' || $mime_type == 'text/plain')) {
             $mime_type = $file_mime_type;
+        }
 
         // For each allowed MIME type, we are looking for it inside the current MIME type
-        foreach ($mime_type_list as $type)
-            if (strstr($mime_type, $type))
+        foreach ($mime_type_list as $type) {
+            if (strstr($mime_type, $type)) {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -358,17 +356,18 @@ class ImageManagerCore
     public static function isCorrectImageFileExt($filename, $authorized_extensions = null)
     {
         // Filter on file extension
-        if ($authorized_extensions === null)
+        if ($authorized_extensions === null) {
             $authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
-        $name_explode = explode('.', $filename);
-        if (count($name_explode) >= 2)
-        {
-            $current_extension = strtolower($name_explode[count($name_explode) - 1]);
-            if (!in_array($current_extension, $authorized_extensions))
-                return false;
         }
-        else
+        $name_explode = explode('.', $filename);
+        if (count($name_explode) >= 2) {
+            $current_extension = strtolower($name_explode[count($name_explode) - 1]);
+            if (!in_array($current_extension, $authorized_extensions)) {
+                return false;
+            }
+        } else {
             return false;
+        }
 
         return true;
     }
@@ -382,12 +381,15 @@ class ImageManagerCore
      */
     public static function validateUpload($file, $max_file_size = 0, $types = null)
     {
-        if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
+        if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size) {
             return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name']))
+        }
+        if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
             return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
-        if ($file['error'])
+        }
+        if ($file['error']) {
             return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
+        }
         return false;
     }
 
@@ -400,16 +402,19 @@ class ImageManagerCore
      */
     public static function validateIconUpload($file, $max_file_size = 0)
     {
-        if ((int)$max_file_size > 0 && $file['size'] > $max_file_size)
+        if ((int)$max_file_size > 0 && $file['size'] > $max_file_size) {
             return sprintf(
                 Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
                 $file['size'] / 1000,
                 $max_file_size / 1000
             );
-        if (substr($file['name'], -4) != '.ico')
+        }
+        if (substr($file['name'], -4) != '.ico') {
             return Tools::displayError('Image format not recognized, allowed formats are: .ico');
-        if ($file['error'])
+        }
+        if ($file['error']) {
             return Tools::displayError('Error while uploading image; please change your server\'s settings.');
+        }
         return false;
     }
 
@@ -428,8 +433,9 @@ class ImageManagerCore
      */
     public static function cut($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $dst_x = 0, $dst_y = 0)
     {
-        if (!file_exists($src_file))
+        if (!file_exists($src_file)) {
             return false;
+        }
 
         // Source information
         $src_info = getimagesize($src_file);
@@ -464,8 +470,7 @@ class ImageManagerCore
      */
     public static function create($type, $filename)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case IMAGETYPE_GIF :
                 return imagecreatefromgif($filename);
             break;
@@ -509,14 +514,15 @@ class ImageManagerCore
         static $ps_png_quality = null;
         static $ps_jpeg_quality = null;
 
-        if ($ps_png_quality === null)
+        if ($ps_png_quality === null) {
             $ps_png_quality = Configuration::get('PS_PNG_QUALITY');
+        }
 
-        if ($ps_jpeg_quality === null)
+        if ($ps_jpeg_quality === null) {
             $ps_jpeg_quality = Configuration::get('PS_JPEG_QUALITY');
+        }
 
-        switch ($type)
-        {
+        switch ($type) {
             case 'gif':
                 $success = imagegif($resource, $filename);
             break;
@@ -555,15 +561,16 @@ class ImageManagerCore
         $extension = substr($file_name, strrpos($file_name, '.') + 1);
 
         $mime_type = null;
-        foreach ($types as $mime => $exts)
-            if (in_array($extension, $exts))
-            {
+        foreach ($types as $mime => $exts) {
+            if (in_array($extension, $exts)) {
                 $mime_type = $mime;
                 break;
             }
+        }
 
-        if ($mime_type === null)
+        if ($mime_type === null) {
             $mime_type = 'image/jpeg';
+        }
 
         return $mime_type;
     }

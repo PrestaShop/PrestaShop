@@ -61,36 +61,31 @@ class InstallModelMail extends InstallAbstractModel
      */
     public function send($subject, $content)
     {
-        try
-        {
+        try {
             // Test with custom SMTP connection
-            if ($this->smtp_checked)
-            {
-
+            if ($this->smtp_checked) {
                 $smtp = new Swift_Connection_SMTP($this->server, $this->port, ($this->encryption == "off") ? Swift_Connection_SMTP::ENC_OFF : (($this->encryption == "tls") ? Swift_Connection_SMTP::ENC_TLS : Swift_Connection_SMTP::ENC_SSL));
                 $smtp->setUsername($this->login);
                 $smtp->setpassword($this->password);
                 $smtp->setTimeout(5);
                 $swift = new Swift($smtp);
-            }
-            else
+            } else {
                 // Test with normal PHP mail() call
                 $swift = new Swift(new Swift_Connection_NativeMail());
+            }
 
             $message = new Swift_Message($subject, $content, 'text/html');
-            if (@$swift->send($message, $this->email, 'no-reply@'.Tools::getHttpHost(false, false, true)))
+            if (@$swift->send($message, $this->email, 'no-reply@'.Tools::getHttpHost(false, false, true))) {
                 $result = false;
-            else
+            } else {
                 $result = 'Could not send message';
+            }
 
             $swift->disconnect();
-        }
-        catch (Swift_Exception $e)
-        {
+        } catch (Swift_Exception $e) {
             $result = $e->getMessage();
         }
 
         return $result;
     }
-
 }

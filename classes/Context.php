@@ -123,8 +123,7 @@ class ContextCore
      */
     public function getMobileDetect()
     {
-        if ($this->mobile_detect === null)
-        {
+        if ($this->mobile_detect === null) {
             require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
             $this->mobile_detect = new Mobile_Detect();
         }
@@ -138,8 +137,7 @@ class ContextCore
      */
     public function isMobile()
     {
-        if ($this->is_mobile === null)
-        {
+        if ($this->is_mobile === null) {
             $mobile_detect = $this->getMobileDetect();
             $this->is_mobile = $mobile_detect->isMobile();
         }
@@ -153,8 +151,7 @@ class ContextCore
      */
     public function isTablet()
     {
-        if ($this->is_tablet === null)
-        {
+        if ($this->is_tablet === null) {
             $mobile_detect = $this->getMobileDetect();
             $this->is_tablet = $mobile_detect->isTablet();
         }
@@ -168,28 +165,27 @@ class ContextCore
      */
     public function getMobileDevice()
     {
-        if ($this->mobile_device === null)
-        {
+        if ($this->mobile_device === null) {
             $this->mobile_device = false;
-            if ($this->checkMobileContext())
-            {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+            if ($this->checkMobileContext()) {
+                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
                     $this->mobile_device = true;
-                else
-                {
-                    switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
-                    {
+                } else {
+                    switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
                         case 1: // Only for mobile device
-                            if ($this->isMobile() && !$this->isTablet())
+                            if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
+                            }
                             break;
                         case 2: // Only for touchpads
-                            if ($this->isTablet() && !$this->isMobile())
+                            if ($this->isTablet() && !$this->isMobile()) {
                                 $this->mobile_device = true;
+                            }
                             break;
                         case 3: // For touchpad or mobile devices
-                            if ($this->isMobile() || $this->isTablet())
+                            if ($this->isMobile() || $this->isTablet()) {
                                 $this->mobile_device = true;
+                            }
                             break;
                     }
                 }
@@ -207,14 +203,14 @@ class ContextCore
     {
         static $device = null;
 
-        if ($device === null)
-        {
-            if ($this->isTablet())
+        if ($device === null) {
+            if ($this->isTablet()) {
                 $device = Context::DEVICE_TABLET;
-            elseif ($this->isMobile())
+            } elseif ($this->isMobile()) {
                 $device = Context::DEVICE_MOBILE;
-            else
+            } else {
                 $device = Context::DEVICE_COMPUTER;
+            }
         }
 
         return $device;
@@ -229,21 +225,16 @@ class ContextCore
     protected function checkMobileContext()
     {
         // Check mobile context
-        if (Tools::isSubmit('no_mobile_theme'))
-        {
+        if (Tools::isSubmit('no_mobile_theme')) {
             Context::getContext()->cookie->no_mobile = true;
-            if (Context::getContext()->cookie->id_guest)
-            {
+            if (Context::getContext()->cookie->id_guest) {
                 $guest = new Guest(Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = false;
                 $guest->update();
             }
-        }
-        elseif (Tools::isSubmit('mobile_theme_ok'))
-        {
+        } elseif (Tools::isSubmit('mobile_theme_ok')) {
             Context::getContext()->cookie->no_mobile = false;
-            if (Context::getContext()->cookie->id_guest)
-            {
+            if (Context::getContext()->cookie->id_guest) {
                 $guest = new Guest(Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = true;
                 $guest->update();
@@ -264,8 +255,9 @@ class ContextCore
      */
     public static function getContext()
     {
-        if (!isset(self::$instance))
+        if (!isset(self::$instance)) {
             self::$instance = new Context();
+        }
 
         return self::$instance;
     }

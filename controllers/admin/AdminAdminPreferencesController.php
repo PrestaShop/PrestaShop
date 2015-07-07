@@ -29,7 +29,6 @@
  */
 class AdminAdminPreferencesControllerCore extends AdminController
 {
-
     public function __construct()
     {
         $this->bootstrap = true;
@@ -161,17 +160,18 @@ class AdminAdminPreferencesControllerCore extends AdminController
         $post_max_size = (int)str_replace('M', '', ini_get('post_max_size'));
         $max_size = $upload_max_size < $post_max_size ? $upload_max_size : $post_max_size;
 
-        if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size || Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size)
-        {
+        if (Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE') > $max_size || Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE') > $max_size) {
             $this->errors[] = Tools::displayError('The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.');
             return;
         }
 
-        if (Tools::getIsset('PS_LIMIT_UPLOAD_FILE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE'))
+        if (Tools::getIsset('PS_LIMIT_UPLOAD_FILE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_FILE_VALUE')) {
             $_POST['PS_LIMIT_UPLOAD_FILE_VALUE'] = 1;
+        }
 
-        if (Tools::getIsset('PS_LIMIT_UPLOAD_IMAGE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE'))
+        if (Tools::getIsset('PS_LIMIT_UPLOAD_IMAGE_VALUE') && !Tools::getValue('PS_LIMIT_UPLOAD_IMAGE_VALUE')) {
             $_POST['PS_LIMIT_UPLOAD_IMAGE_VALUE'] = 1;
+        }
 
         parent::postProcess();
     }
@@ -183,8 +183,9 @@ class AdminAdminPreferencesControllerCore extends AdminController
      */
     public function updateOptionPsAttachementMaximumSize($value)
     {
-        if (!$value)
+        if (!$value) {
             return;
+        }
 
         $upload_max_size = (int)str_replace('M', '', ini_get('upload_max_filesize'));
         $post_max_size = (int)str_replace('M', '', ini_get('post_max_size'));

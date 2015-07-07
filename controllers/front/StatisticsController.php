@@ -34,15 +34,17 @@ class StatisticsControllerCore extends FrontController
     public function postProcess()
     {
         $this->param_token = Tools::getValue('token');
-        if (!$this->param_token)
+        if (!$this->param_token) {
             die;
+        }
 
-        if ($_POST['type'] == 'navinfo')
+        if ($_POST['type'] == 'navinfo') {
             $this->processNavigationStats();
-        elseif ($_POST['type'] == 'pagetime')
+        } elseif ($_POST['type'] == 'pagetime') {
             $this->processPageTime();
-        else
+        } else {
             exit;
+        }
     }
 
     /**
@@ -51,8 +53,9 @@ class StatisticsControllerCore extends FrontController
     protected function processNavigationStats()
     {
         $id_guest = (int)Tools::getValue('id_guest');
-        if (sha1($id_guest._COOKIE_KEY_) != $this->param_token)
+        if (sha1($id_guest._COOKIE_KEY_) != $this->param_token) {
             die;
+        }
 
         $guest = new Guest((int)substr($_POST['id_guest'], 0, 10));
         $guest->javascript = true;
@@ -78,11 +81,13 @@ class StatisticsControllerCore extends FrontController
         $time_start = Tools::getValue('time_start');
         $id_page = (int)Tools::getValue('id_page');
 
-        if (sha1($id_connection.$id_page.$time_start._COOKIE_KEY_) != $this->param_token)
+        if (sha1($id_connection.$id_page.$time_start._COOKIE_KEY_) != $this->param_token) {
             die;
+        }
 
-        if ($time <= 0)
+        if ($time <= 0) {
             die;
+        }
 
         Connection::setPageTime($id_connection, $id_page, substr($time_start, 0, 19), $time);
     }

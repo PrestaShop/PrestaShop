@@ -31,11 +31,11 @@ function setAllGroupsOnHomeCategory()
 
     $results = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
     $groups = array();
-    foreach ($results as $result)
+    foreach ($results as $result) {
         $groups[] = $result['id_group'];
+    }
 
-    if (is_array($groups) && count($groups))
-    {
+    if (is_array($groups) && count($groups)) {
         // cleanGroups
         Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group`
 			WHERE `id_category` = 1');

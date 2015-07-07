@@ -36,18 +36,19 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
     public function initContent()
     {
-        if ($this->ajax)
+        if ($this->ajax) {
             return;
+        }
 
         $this->initTabModuleList();
         $this->addToolBarModulesListButton();
         $this->toolbar_title = $this->l('Stats', 'AdminStatsTab');
         $this->initPageHeaderToolbar();
-        if ($this->display == 'view')
-        {
+        if ($this->display == 'view') {
             // Some controllers use the view action without an object
-            if ($this->className)
+            if ($this->className) {
                 $this->loadObject(true);
+            }
             $this->content .= $this->renderView();
         }
         
@@ -92,8 +93,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         $context->controller->addJqueryUI('ui.datepicker');
 
-        if ($identifier === null && Tools::getValue('module'))
-        {
+        if ($identifier === null && Tools::getValue('module')) {
             $identifier = 'module';
             $id = Tools::getValue('module');
         }
@@ -151,12 +151,10 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
         $modules = $this->getModules();
         $module_instance = array();
-        foreach ($modules as $m => $module)
-        {
-            if ($module_instance[$module['name']] = Module::getInstanceByName($module['name']))
+        foreach ($modules as $m => $module) {
+            if ($module_instance[$module['name']] = Module::getInstanceByName($module['name'])) {
                 $modules[$m]['displayName'] = $module_instance[$module['name']]->displayName;
-            else
-            {
+            } else {
                 unset($module_instance[$module['name']]);
                 unset($modules[$m]);
             }
@@ -197,18 +195,20 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     {
         $tpl = $this->createTemplate('stats.tpl');
 
-        if ((!($module_name = Tools::getValue('module')) || !Validate::isModuleName($module_name)) && ($module_instance = Module::getInstanceByName('statsforecast')) && $module_instance->active)
+        if ((!($module_name = Tools::getValue('module')) || !Validate::isModuleName($module_name)) && ($module_instance = Module::getInstanceByName('statsforecast')) && $module_instance->active) {
             $module_name = 'statsforecast';
+        }
 
-        if ($module_name)
-        {
+        if ($module_name) {
             $_GET['module'] = $module_name;
 
-            if (!isset($module_instance))
+            if (!isset($module_instance)) {
                 $module_instance = Module::getInstanceByName($module_name);
+            }
                 
-            if ($module_instance && $module_instance->active)
+            if ($module_instance && $module_instance->active) {
                 $hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
+            }
         }
 
         $tpl->assign(array(
@@ -226,67 +226,59 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
         
         $this->processDateRange();
         
-        if (Tools::getValue('submitSettings'))
-        {
-            if ($this->tabAccess['edit'] === '1')
-            {
+        if (Tools::getValue('submitSettings')) {
+            if ($this->tabAccess['edit'] === '1') {
                 self::$currentIndex .= '&module='.Tools::getValue('module');
                 Configuration::updateValue('PS_STATS_RENDER', Tools::getValue('PS_STATS_RENDER', Configuration::get('PS_STATS_RENDER')));
                 Configuration::updateValue('PS_STATS_GRID_RENDER', Tools::getValue('PS_STATS_GRID_RENDER', Configuration::get('PS_STATS_GRID_RENDER')));
                 Configuration::updateValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Tools::getValue('PS_STATS_OLD_CONNECT_AUTO_CLEAN', Configuration::get('PS_STATS_OLD_CONNECT_AUTO_CLEAN')));
-            }
-            else
+            } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+            }
         }
     }
     
     public function processDateRange()
     {
-        if (Tools::isSubmit('submitDatePicker'))
-        {
-            if ((!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo'))) || (strtotime($from) > strtotime($to)))
+        if (Tools::isSubmit('submitDatePicker')) {
+            if ((!Validate::isDate($from = Tools::getValue('datepickerFrom')) || !Validate::isDate($to = Tools::getValue('datepickerTo'))) || (strtotime($from) > strtotime($to))) {
                 $this->errors[] = Tools::displayError('The specified date is invalid.');
+            }
         }
-        if (Tools::isSubmit('submitDateDay'))
-        {
+        if (Tools::isSubmit('submitDateDay')) {
             $from = date('Y-m-d');
             $to = date('Y-m-d');
         }
-        if (Tools::isSubmit('submitDateDayPrev'))
-        {
+        if (Tools::isSubmit('submitDateDayPrev')) {
             $yesterday = time() - 60 * 60 * 24;
             $from = date('Y-m-d', $yesterday);
             $to = date('Y-m-d', $yesterday);
         }
-        if (Tools::isSubmit('submitDateMonth'))
-        {
+        if (Tools::isSubmit('submitDateMonth')) {
             $from = date('Y-m-01');
             $to = date('Y-m-t');
         }
-        if (Tools::isSubmit('submitDateMonthPrev'))
-        {
+        if (Tools::isSubmit('submitDateMonthPrev')) {
             $m = (date('m') == 1 ? 12 : date('m') - 1);
             $y = ($m == 12 ? date('Y') - 1 : date('Y'));
             $from = $y.'-'.$m.'-01';
             $to = $y.'-'.$m.date('-t', mktime(12, 0, 0, $m, 15, $y));
         }
-        if (Tools::isSubmit('submitDateYear'))
-        {
+        if (Tools::isSubmit('submitDateYear')) {
             $from = date('Y-01-01');
             $to = date('Y-12-31');
         }
-        if (Tools::isSubmit('submitDateYearPrev'))
-        {
+        if (Tools::isSubmit('submitDateYearPrev')) {
             $from = (date('Y') - 1).date('-01-01');
             $to = (date('Y') - 1).date('-12-31');
         }
-        if (isset($from) && isset($to) && !count($this->errors))
-        {
+        if (isset($from) && isset($to) && !count($this->errors)) {
             $this->context->employee->stats_date_from = $from;
             $this->context->employee->stats_date_to = $to;
             $this->context->employee->update();
-            if (!$this->isXmlHttpRequest())
+            if (!$this->isXmlHttpRequest()) {
                 Tools::redirectAdmin($_SERVER['REQUEST_URI']);
+            }
         }
     }
     
@@ -294,21 +286,21 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     {
         $this->processDateRange();
         
-        if ($this->isXmlHttpRequest())
-        {
-            if (is_array($this->errors) && count($this->errors))
+        if ($this->isXmlHttpRequest()) {
+            if (is_array($this->errors) && count($this->errors)) {
                 die(Tools::jsonEncode(array(
                     'has_errors' => true,
                     'errors' => array($this->errors),
                     'date_from' => $this->context->employee->stats_date_from,
                     'date_to' => $this->context->employee->stats_date_to)
                 ));
-            else
+            } else {
                 die(Tools::jsonEncode(array(
                     'has_errors' => false,
                     'date_from' => $this->context->employee->stats_date_from,
                     'date_to' => $this->context->employee->stats_date_to)
                     ));
+            }
         }
     }
 

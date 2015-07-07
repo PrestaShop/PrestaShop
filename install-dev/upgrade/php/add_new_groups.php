@@ -32,20 +32,23 @@ function add_new_groups($french, $standard)
     $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
 
     $sql = '';
-    foreach ($languages as $lang)
-        if (strtolower($lang['iso_code']) == 'fr')
+    foreach ($languages as $lang) {
+        if (strtolower($lang['iso_code']) == 'fr') {
             $sql .= '('.(int)$last_id.', '.(int)$lang['id_lang'].', "'.pSQL($french).'"),';
-        else
+        } else {
             $sql .= '('.(int)$last_id.', '.(int)$lang['id_lang'].', "'.pSQL($standard).'"),';
+        }
+    }
     $sql = substr($sql, 0, strlen($sql) - 1);
     $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group_lang` (`id_group`, `id_lang`, `name`) VALUES '.$sql);
     // we add the different id_group in the configuration
-    if (strtolower($standard) == 'visitor')
+    if (strtolower($standard) == 'visitor') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_UNIDENTIFIED_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-    elseif (strtolower($standard) == 'guest')
+    } elseif (strtolower($standard) == 'guest') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_GUEST_GROUP", "'.(int)$last_id.'", NOW(), NOW())');
-    elseif (strtolower($standard) == 'test')
+    } elseif (strtolower($standard) == 'test') {
         $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_TEST", "'.(int)$last_id.'", NOW(), NOW())');
+    }
 
     // Add shop association
     $res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group_shop` (`id_group`, `id_shop`) (SELECT '.(int)$last_id.', `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_SHOP_DEFAULT\')');
