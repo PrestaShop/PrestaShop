@@ -83,7 +83,7 @@ class CombinationCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'objectNodeName' => 'combination',
 		'objectsNodeName' => 'combinations',
 		'fields' => array(

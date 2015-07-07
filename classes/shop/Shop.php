@@ -30,19 +30,19 @@
 class ShopCore extends ObjectModel
 {
 	/** @var int ID of shop group */
-	public	$id_shop_group;
+	public $id_shop_group;
 
 	/** @var int ID of shop category */
-	public	$id_category;
+	public $id_category;
 
 	/** @var int ID of shop theme */
-	public	$id_theme;
+	public $id_theme;
 
 	/** @var string Shop name */
-	public	$name;
+	public $name;
 
-	public	$active = true;
-	public	$deleted;
+	public $active = true;
+	public $deleted;
 
 	/** @var string Shop theme name (read only) */
 	public $theme_name;

@@ -26,8 +26,8 @@
 
 class LocalizationPackCore
 {
-	public	$name;
-	public	$version;
+	public $name;
+	public $version;
 
 	protected $iso_code_lang;
 	protected $iso_currency;

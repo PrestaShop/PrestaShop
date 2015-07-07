@@ -9914,7 +9914,7 @@ class HTMLPurifier_Zipper
      * @param Array to zipper-ify.
      * @return Tuple of zipper and element of first position.
      */
-    static public function fromArray($array) {
+    public static function fromArray($array) {
         $z = new self(array(), array_reverse($array));
         $t = $z->delete(); // delete the "dummy hole"
         return array($z, $t);

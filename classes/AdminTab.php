@@ -173,8 +173,8 @@ abstract class AdminTabCore
 	 */
 	public $context;
 
-	protected	$_languages = null;
-	protected	$_defaultFormLanguage = null;
+	protected $_languages = null;
+	protected $_defaultFormLanguage = null;
 
 	protected $_includeObj = array();
 	protected $_includeVars = false;

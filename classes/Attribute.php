@@ -53,7 +53,7 @@ class AttributeCore extends ObjectModel
 	);
 
 
-	protected	$image_dir = _PS_COL_IMG_DIR_;
+	protected $image_dir = _PS_COL_IMG_DIR_;
 
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'product_option_values',

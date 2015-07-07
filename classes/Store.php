@@ -104,7 +104,7 @@ class StoreCore extends ObjectModel
 		),
 	);
 
-	protected	$webserviceParameters = array(
+	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_country' => array('xlink_resource'=> 'countries'),
 			'id_state' => array('xlink_resource'=> 'states'),
