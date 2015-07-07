@@ -657,8 +657,8 @@ class AdminEmployeesControllerCore extends AdminController
 	{
 		$this->context->cookie->employee_form_lang = (int)Tools::getValue('form_language_id');
 		if (!$this->context->cookie->write())
-			die ('Error while updating cookie.');
-		die ('Form language updated.');
+			die('Error while updating cookie.');
+		die('Form language updated.');
 	}
 
 	protected function ajaxProcessToggleMenu()

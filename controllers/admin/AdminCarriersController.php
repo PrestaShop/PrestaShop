@@ -626,7 +626,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 		/** @var Carrier $carrier */
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
-			die (Tools::displayError('The object cannot be loaded.'));
+			die(Tools::displayError('The object cannot be loaded.'));
 		$zones = Zone::getZones(false);
 		foreach ($zones as $zone)
 			if (count($carrier->getZone($zone['id_zone'])))

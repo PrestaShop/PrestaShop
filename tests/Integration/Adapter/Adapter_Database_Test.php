@@ -38,7 +38,7 @@ class Adapter_Database_Test extends IntegrationTestCase
 
     public function test_values_are_escaped_dataProvider()
     {
-        return array (
+        return array(
             array( 'hello'       , 'hello'    ),
             array( '\\\'inject'  , '\'inject' ),
             array( '\\"inject'   , '"inject'  ),

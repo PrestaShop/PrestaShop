@@ -249,7 +249,7 @@ class ImageManagerCore
 		else
 		{
 			$white = imagecolorallocate($dest_image, 255, 255, 255);
-			imagefilledrectangle ($dest_image, 0, 0, $dst_width, $dst_height, $white);
+			imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $white);
 		}
 
 		$src_image = ImageManager::create($type, $src_file);
@@ -284,13 +284,13 @@ class ImageManagerCore
 			return false;
 		if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h))
 		{
-			$temp = imagecreatetruecolor ($dst_w * $quality + 1, $dst_h * $quality + 1);
-			imagecopyresized ($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
-			imagecopyresampled ($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $dst_w * $quality, $dst_h * $quality);
-			imagedestroy ($temp);
+			$temp = imagecreatetruecolor($dst_w * $quality + 1, $dst_h * $quality + 1);
+			imagecopyresized($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
+			imagecopyresampled($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $dst_w * $quality, $dst_h * $quality);
+			imagedestroy($temp);
 		}
 		else
-			imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+			imagecopyresampled($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 		return true;
 	}
 

@@ -226,7 +226,7 @@ class AdminModulesControllerCore extends AdminController
 			die('KO');
 		$result = strtoupper((string)$xml->success);
 		if (!in_array($result, array('OK', 'KO')))
-			die ('KO');
+			die('KO');
 		if ($result == 'OK')
 		{
 			Tools::clearXMLCache();

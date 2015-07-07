@@ -212,7 +212,7 @@ class SupplierCore extends ObjectModel
 		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		$sql_groups = '';
 		if (Group::isFeatureActive())

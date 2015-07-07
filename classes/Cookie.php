@@ -94,7 +94,7 @@ class CookieCore
 	{
 		$r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
 
-		if (!preg_match ($r, Tools::getHttpHost(false, false), $out) || !isset($out[4]))
+		if (!preg_match($r, Tools::getHttpHost(false, false), $out) || !isset($out[4]))
 			return false;
 
 		if (preg_match('/^(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]{1}[0-9]|[1-9]).)'.

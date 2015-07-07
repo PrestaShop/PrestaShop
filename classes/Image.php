@@ -564,7 +564,7 @@ class ImageCore extends ObjectModel
 			{
 				// we're only removing index.php if it's a folder we want to delete
 				if (file_exists($path.'index.php'))
-					@unlink ($path.'index.php');
+					@unlink($path.'index.php');
 				@rmdir($path);
 			}
 		}

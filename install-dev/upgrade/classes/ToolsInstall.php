@@ -67,7 +67,7 @@ class ToolsInstall
 							*                            false. Defaults to "@children"
 			 * @return array the resulting array.
 			 */
-	public static function simpleXMLToArray ($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
+	public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
 	{
 		$return = array();
 		if (!($xml instanceof SimpleXMLElement))

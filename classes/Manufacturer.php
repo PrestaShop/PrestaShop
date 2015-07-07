@@ -281,7 +281,7 @@ class ManufacturerCore extends ObjectModel
 		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		$groups = FrontController::getCurrentCustomerGroups();
 		$sql_groups = count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1';

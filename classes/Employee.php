@@ -276,7 +276,7 @@ class EmployeeCore extends ObjectModel
 	public static function employeeExists($email)
 	{
 		if (!Validate::isEmail($email))
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		return (bool)Db::getInstance()->getValue('
 		SELECT `id_employee`
@@ -293,7 +293,7 @@ class EmployeeCore extends ObjectModel
 	public static function checkPassword($id_employee, $passwd)
 	{
 		if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
-			die (Tools::displayError());
+			die(Tools::displayError());
 
 		return Db::getInstance()->getValue('
 		SELECT `id_employee`

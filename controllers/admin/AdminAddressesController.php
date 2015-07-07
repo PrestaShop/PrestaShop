@@ -176,7 +176,7 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'customer' => isset($customer) ? $customer : null,
-			'tokenCustomer' => isset ($token_customer) ? $token_customer : null,
+			'tokenCustomer' => isset($token_customer) ? $token_customer : null,
 			'back_url' => urldecode(Tools::getValue('back'))
 		);
 

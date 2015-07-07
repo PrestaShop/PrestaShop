@@ -160,7 +160,7 @@ if ($resultDB !== true)
 //
 //custom sql file creation
 $upgradeFiles = array();
-if (empty ($fail_result))
+if (empty($fail_result))
 {
 	if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_))
 	{
@@ -197,7 +197,7 @@ foreach ($upgradeFiles as $version)
 	$neededUpgradeFiles[] = $version;
 }
 
-if (empty ($fail_result) && empty($neededUpgradeFiles))
+if (empty($fail_result) && empty($neededUpgradeFiles))
 {
 	$logger->logError('No upgrade is possible.');
 	$fail_result .= '<action result="fail" error="32" />'."\n";

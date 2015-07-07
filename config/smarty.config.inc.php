@@ -50,9 +50,9 @@ if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_)
 	return;
 
 if (defined('_PS_ADMIN_DIR_'))
-	require_once (dirname(__FILE__).'/smartyadmin.config.inc.php');
+	require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
 else
-	require_once (dirname(__FILE__).'/smartyfront.config.inc.php');
+	require_once(dirname(__FILE__).'/smartyfront.config.inc.php');
 
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));

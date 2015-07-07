@@ -206,7 +206,7 @@ class OrderDetailCore extends ObjectModel
 	);
 
 	protected $webserviceParameters = array(
-		'fields' => array (
+		'fields' => array(
 			'id_order' => array('xlink_resource' => 'orders'),
 			'product_id' => array('xlink_resource' => 'products'),
 			'product_attribute_id' => array('xlink_resource' => 'combinations'),

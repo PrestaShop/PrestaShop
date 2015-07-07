@@ -17868,7 +17868,7 @@ public $uni_type = array(
  * Mirror unicode characters. For information on bidi mirroring, see UAX #9: Bidirectional Algorithm, at http://www.unicode.org/unicode/reports/tr9/
  * @public
  */
-public $uni_mirror = array (
+public $uni_mirror = array(
 0x0028=>0x0029,
 0x0029=>0x0028,
 0x003C=>0x003E,
@@ -18309,7 +18309,7 @@ public $uni_arabicsubst = array(
  * Arabic laa letter: (char code => isolated, final, initial, medial).
  * @public
  */
-public $uni_laa_array = array (
+public $uni_laa_array = array(
 1570 =>array(65269, 65270, 65269, 65270),
 1571 =>array(65271, 65272, 65271, 65272),
 1573 =>array(65273, 65274, 65273, 65274),
@@ -18322,7 +18322,7 @@ public $uni_laa_array = array (
  * second NSM char code => substitution char
  * @public
  */
-public $uni_diacritics = array (
+public $uni_diacritics = array(
 1612=>64606, # Shadda + Dammatan
 1613=>64607, # Shadda + Kasratan
 1614=>64608, # Shadda + Fatha
@@ -18334,7 +18334,7 @@ public $uni_diacritics = array (
  * Array of character substitutions from UTF-8 Unicode to Latin1.
  * @public
  */
-public $uni_utf8tolatin = array (
+public $uni_utf8tolatin = array(
 8364=>128, # Euro1
 338=>140,  # OE
 352=>138,  # Scaron

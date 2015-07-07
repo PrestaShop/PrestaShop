@@ -252,7 +252,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  private function initialise () {
+  private function initialise() {
 
     $this->psdReaderPath = dirname(__FILE__) . '/classPhpPsdReader.php';
     $this->filterOverlayPath = dirname(__FILE__) . '/filters';
@@ -1257,16 +1257,16 @@ class imageLib
       // Create new blank image with sizes.
       $final = imagecreatetruecolor($this->width, $this->height);
 
-      imagecopymerge ($final, $this->imageResized, 0, 0, 0, $reflectionHeight, $this->width, $this->height - $reflectionHeight, 100);
-      imagecopymerge ($final, $im, 0, $this->height - $reflectionHeight, 0, 0, $x, $y, 100);
+      imagecopymerge($final, $this->imageResized, 0, 0, 0, $reflectionHeight, $this->width, $this->height - $reflectionHeight, 100);
+      imagecopymerge($final, $im, 0, $this->height - $reflectionHeight, 0, 0, $x, $y, 100);
 
     } else {
 
       // Create new blank image with sizes.
       $final = imagecreatetruecolor($this->width, $this->height + $y);
 
-      imagecopymerge ($final, $this->imageResized, 0, 0, 0, 0, $this->width, $this->height, 100);
-      imagecopymerge ($final, $im, 0, $this->height, 0, 0, $x, $y, 100);
+      imagecopymerge($final, $this->imageResized, 0, 0, 0, 0, $this->width, $this->height, 100);
+      imagecopymerge($final, $im, 0, $this->height, 0, 0, $x, $y, 100);
     }
 
     $this->imageResized = $final;
@@ -2192,7 +2192,7 @@ class imageLib
   {
 
     // Load the stamp and the photo to apply the watermark to
-    $stamp = $this->openImage ($watermarkImage);    # stamp
+    $stamp = $this->openImage($watermarkImage);    # stamp
     $im = $this->imageResized;            # photo
 
     // *** Get stamps width and height
@@ -2861,7 +2861,7 @@ class imageLib
 
   ## --------------------------------------------------------
 
-  private function createImageColor ($colorArray)
+  private function createImageColor($colorArray)
   {
     $r = $colorArray['r'];
     $g = $colorArray['g'];

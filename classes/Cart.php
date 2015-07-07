@@ -2276,7 +2276,7 @@ class CartCore extends ObjectModel
 
 		// Sort delivery option list
 		foreach ($delivery_option_list as &$array)
-			uasort ($array, array('Cart', 'sortDeliveryOptionList'));
+			uasort($array, array('Cart', 'sortDeliveryOptionList'));
 
 		$cache[$this->id] = $delivery_option_list;
 		return $cache[$this->id];

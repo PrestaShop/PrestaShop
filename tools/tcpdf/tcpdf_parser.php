@@ -364,7 +364,7 @@ class TCPDF_PARSER {
 					// object start
 					$objtype = 'ojb';
 					$objval = intval($matches[1]).'_'.intval($matches[2]);
-					$offset += strlen ($matches[0]);
+					$offset += strlen($matches[0]);
 				} elseif (($numlen = strspn($this->pdfdata, '+-.0123456789', $offset)) > 0) {
 					// numeric object
 					$objtype = 'numeric';

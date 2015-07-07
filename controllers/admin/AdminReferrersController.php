@@ -48,7 +48,7 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::
 		foreach ($result as $row)
 			$json_array[] = '{id_product:'.(int)$row['id_product'].',name:\''.addslashes($row['name']).'\'}';
 
-		die ('['.implode(',', $json_array).']');
+		die('['.implode(',', $json_array).']');
 	}
 }
 

@@ -803,7 +803,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				// clean \n\r characters
 				foreach ($_POST as $key => $value)
 					if (preg_match('/^name_/Ui', $key))
-						$_POST[$key] = str_replace ('\n', '', str_replace('\r', '', $value));
+						$_POST[$key] = str_replace('\n', '', str_replace('\r', '', $value));
 				parent::postProcess();
 			}
 			else

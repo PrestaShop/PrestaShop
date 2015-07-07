@@ -94,7 +94,7 @@ abstract class InstallControllerHttp
 	{
 		if (Tools::getValue('compile_templates'))
 		{
-			require_once (_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+			require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
 			exit;
 		}
 

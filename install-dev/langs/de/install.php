@@ -1,8 +1,8 @@
 <?php
 
-return array (
+return array(
   'informations' =>
-  array (
+  array(
     'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
     'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
     'forum' => 'http://www.prestashop.com/forums/',
@@ -12,7 +12,7 @@ return array (
     'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' =>
-  array (
+  array(
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'SQL-Fehler bei Element <i>%1$s</i>: <i>%2$s</i> aufgetreten',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Bild "%1$s" für "%2$s" kann nicht erstellt werden',
     'Cannot create image "%1$s" (bad permissions on folder "%2$s")' => 'Bild "%1$s"kann nicht erstellt werden (keine Schreibrechte für Ordner "%2$s" vorhanden)',
