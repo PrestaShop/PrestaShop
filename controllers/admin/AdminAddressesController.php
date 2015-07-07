@@ -465,7 +465,7 @@ class AdminAddressesControllerCore extends AdminController
 
 		$out = array();
 
-		foreach (array('inv','dlv') as $adr_type)
+		foreach (array('inv', 'dlv') as $adr_type)
 		{
 			foreach (${$adr_type.'_adr_fields'} as $fields_line)
 				foreach (explode(' ', $fields_line) as $field_item)

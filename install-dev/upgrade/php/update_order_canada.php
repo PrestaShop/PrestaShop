@@ -43,7 +43,7 @@ function update_order_canada()
 		$address_field = Db::getInstance()->getValue('SELECT value 
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_TAX_ADDRESS_TYPE"');
-		$address_field = str_replace('`','\`', $address_field);
+		$address_field = str_replace('`', '\`', $address_field);
 
 		$sql = 'SELECT `id_order`, `price_display_method`
 					FROM `'._DB_PREFIX_.'orders` o

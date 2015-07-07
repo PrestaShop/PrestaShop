@@ -170,7 +170,7 @@ class TCPDFBarcode {
  	 * @return image or false in case of error.
  	 * @public
 	 */
-	public function getBarcodePNG($w=2, $h=30, $color=array(0,0,0)) {
+	public function getBarcodePNG($w=2, $h=30, $color=array(0, 0, 0)) {
 		// calculate image size
 		$width = ($this->barcode_array['maxw'] * $w);
 		$height = $h;
@@ -1741,7 +1741,7 @@ class TCPDFBarcode {
 			}
 			$row %= 6;
 			$col %= 6;
-			$chk = array_keys($checktable, array($row,$col));
+			$chk = array_keys($checktable, array($row, $col));
 			$code .= $chk[0];
 			++$len;
 		}

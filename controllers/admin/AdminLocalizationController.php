@@ -423,6 +423,6 @@ class AdminLocalizationControllerCore extends AdminController
 			Shop::setContext(Shop::CONTEXT_SHOP, (int)$id_shop);
 			Currency::refreshCurrencies();
 		}
-		Shop::setContext($tmp_context , $tmp_shop);
+		Shop::setContext($tmp_context, $tmp_shop);
 	}
 }

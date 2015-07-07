@@ -2,7 +2,7 @@
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_',dirname(__FILE__).'/../../');
+		define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
 
 require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
@@ -105,7 +105,7 @@ $ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //
 $ext_music = array();//array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
 $ext_misc = array();// array('zip', 'rar','gz','tar','iso','dmg'); //Archives
 
-$ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video,$ext_music); //allowed extensions
+$ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allowed extensions
 
 
 /******************

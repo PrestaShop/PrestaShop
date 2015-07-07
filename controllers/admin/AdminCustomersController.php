@@ -801,7 +801,7 @@ class AdminCustomersControllerCore extends AdminController
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
-			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'],null , true);
+			$referrers[$i]['date_add'] = Tools::displayDate($referrers[$i]['date_add'], null, true);
 
 		$customerLanguage = new Language($customer->id_lang);
 		$shop = new Shop($customer->id_shop);
@@ -810,14 +810,14 @@ class AdminCustomersControllerCore extends AdminController
 			'gender' => $gender,
 			'gender_image' => $gender_image,
 			// General information of the customer
-			'registration_date' => Tools::displayDate($customer->date_add,null , true),
+			'registration_date' => Tools::displayDate($customer->date_add, null, true),
 			'customer_stats' => $customer_stats,
-			'last_visit' => Tools::displayDate($customer_stats['last_visit'],null , true),
+			'last_visit' => Tools::displayDate($customer_stats['last_visit'], null, true),
 			'count_better_customers' => $count_better_customers,
 			'shop_is_feature_active' => Shop::isFeatureActive(),
 			'name_shop' => $shop->name,
 			'customer_birthday' => Tools::displayDate($customer->birthday),
-			'last_update' => Tools::displayDate($customer->date_upd,null , true),
+			'last_update' => Tools::displayDate($customer->date_upd, null, true),
 			'customer_exists' => Customer::customerExists($customer->email),
 			'id_lang' => $customer->id_lang,
 			'customerLanguage' => $customerLanguage,

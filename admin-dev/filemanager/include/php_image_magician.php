@@ -352,13 +352,13 @@ class imageLib
 
         switch($exifData['orientation']) {
             case 8:
-                $this->imageResized = imagerotate($this->imageResized,90,0);
+                $this->imageResized = imagerotate($this->imageResized, 90, 0);
                 break;
             case 3:
-                $this->imageResized = imagerotate($this->imageResized,180,0);
+                $this->imageResized = imagerotate($this->imageResized, 180, 0);
                 break;
             case 6:
-                $this->imageResized = imagerotate($this->imageResized,-90,0);
+                $this->imageResized = imagerotate($this->imageResized, -90, 0);
                 break;
         }
       }
@@ -442,9 +442,9 @@ class imageLib
     $cropStartY = $cropArray['y'];
 
     // *** Crop this bad boy
-    $crop = imagecreatetruecolor($newWidth , $newHeight);
+    $crop = imagecreatetruecolor($newWidth, $newHeight);
     $this->keepTransparancy($optimalWidth, $optimalHeight, $crop);
-    imagecopyresampled($crop, $this->imageResized, 0, 0, $cropStartX, $cropStartY, $newWidth, $newHeight , $newWidth, $newHeight);
+    imagecopyresampled($crop, $this->imageResized, 0, 0, $cropStartX, $cropStartY, $newWidth, $newHeight, $newWidth, $newHeight);
 
     $this->imageResized = $crop;
 
@@ -1170,16 +1170,16 @@ class imageLib
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
   public function image_colorize($rgb) {
-    imageTrueColorToPalette($this->imageResized,true,256);
+    imageTrueColorToPalette($this->imageResized, true, 256);
     $numColors = imageColorsTotal($this->imageResized);
 
     for ($x = 0; $x < $numColors; $x++) {
-    list($r,$g,$b) = array_values(imageColorsForIndex($this->imageResized,$x));
+    list($r, $g, $b) = array_values(imageColorsForIndex($this->imageResized, $x));
 
     // calculate grayscale in percent
     $grayscale = ($r + $g + $b) / 3 / 0xff;
 
-    imageColorSet($this->imageResized,$x,
+    imageColorSet($this->imageResized, $x,
       $grayscale * $rgb[0],
       $grayscale * $rgb[1],
       $grayscale * $rgb[2]
@@ -1334,13 +1334,13 @@ class imageLib
       $bg = ImageColorAllocateAlpha($this->imageResized, $r, $g, $b, $a);
 
       // *** Fill with background
-      ImageFill($this->imageResized, 0, 0 , $bg);
+      ImageFill($this->imageResized, 0, 0, $bg);
 
       // *** Rotate
       $this->imageResized = imagerotate($this->imageResized, $degrees, $bg); // Rotate 45 degrees and allocated the transparent colour as the one to make transparent (obviously)
 
       // Ensure alpha transparency
-      ImageSaveAlpha($this->imageResized,true);
+      ImageSaveAlpha($this->imageResized, true);
 
     }
   }
@@ -1495,18 +1495,18 @@ class imageLib
 
 
     // *** RGB
-    $rgb = imagecreatetruecolor($width+$blurWidth,$height+$blurHeight);
+    $rgb = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
     $colour = imagecolorallocate($rgb, 0, 0, 0);
     imagefilledrectangle($rgb, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
     $colour = imagecolorallocate($rgb, 255, 255, 255);
     //imagefilledrectangle($rgb, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-$distWidth, $height+$blurWidth*0.5-$distHeight, $colour);
     imagefilledrectangle($rgb, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, $width+$blurWidth*0.5-$distWidth, $height+$blurWidth*0.5-$distHeight, $colour);
     //imagecopymerge($rgb, $newImage, 1+$blurWidth*0.5-$distWidth, 1+$blurHeight*0.5-$distHeight, 0,0, $width, $height, 100);
-    imagecopymerge($rgb, $newImage, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, 0,0, $width+$blurWidth, $height+$blurHeight, 100);
+    imagecopymerge($rgb, $newImage, $blurWidth*0.5-$distWidth, $blurHeight*0.5-$distHeight, 0, 0, $width+$blurWidth, $height+$blurHeight, 100);
 
 
     // *** Shadow (alpha)
-    $shadow = imagecreatetruecolor($width+$blurWidth,$height+$blurHeight);
+    $shadow = imagecreatetruecolor($width+$blurWidth, $height+$blurHeight);
       imagealphablending($shadow, false);
     $colour = imagecolorallocate($shadow, 0, 0, 0);
     imagefilledrectangle($shadow, 0, 0, $width+$blurWidth, $height+$blurHeight, $colour);
@@ -1556,22 +1556,22 @@ class imageLib
       for ($theY=0;$theY<imagesy($rgb);$theY++){
 
         // *** Get the RGB values for every pixel of the RGB image
-        $colArray = imagecolorat($rgb,$theX,$theY);
+        $colArray = imagecolorat($rgb, $theX, $theY);
         $r = ($colArray >> 16) & 0xFF;
         $g = ($colArray >> 8) & 0xFF;
         $b = $colArray & 0xFF;
 
         // *** Get the alpha value for every pixel of the shadow image
-        $colArray = imagecolorat($shadow,$theX,$theY);
+        $colArray = imagecolorat($shadow, $theX, $theY);
         $a = $colArray & 0xFF;
         $a = 127-floor($a/2);
         $t = $a/128.0;
 
         // *** Create color
         if(fix_strtolower($bgColor) == 'transparent') {
-          $myColour = imagecolorallocatealpha($rgb,$r,$g,$b,$a);
+          $myColour = imagecolorallocatealpha($rgb, $r, $g, $b, $a);
         } else {
-          $myColour = imagecolorallocate($rgb,$r*(1.0-$t)+$r0*$t,$g*(1.0-$t)+$g0*$t,$b*(1.0-$t)+$b0*$t);
+          $myColour = imagecolorallocate($rgb, $r*(1.0-$t)+$r0*$t, $g*(1.0-$t)+$g0*$t, $b*(1.0-$t)+$b0*$t);
         }
 
         // *** Add color to new rgb image
@@ -2035,7 +2035,7 @@ class imageLib
 
 ## --------------------------------------------------------
 
-  private function iptc_maketag($rec,$dat,$val)
+  private function iptc_maketag($rec, $dat, $val)
   # Author:   Thies C. Arntzen
   # Purpose:    Function to format the new IPTC text
   # Param in:   $rec: Application record. (We’re working with #2)
@@ -3109,17 +3109,17 @@ class imageLib
   {
 
     //Ouverture du fichier en mode binaire
-    if (! $f1 = fopen($filename,"rb")) return false;
+    if (! $f1 = fopen($filename, "rb")) return false;
 
     //1 : Chargement des ent�tes FICHIER
-    $FILE = unpack("vfile_type/Vfile_size/Vreserved/Vbitmap_offset", fread($f1,14));
+    $FILE = unpack("vfile_type/Vfile_size/Vreserved/Vbitmap_offset", fread($f1, 14));
     if ($FILE['file_type'] != 19778) return false;
 
     //2 : Chargement des ent�tes BMP
     $BMP = unpack('Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel'.
            '/Vcompression/Vsize_bitmap/Vhoriz_resolution'.
-           '/Vvert_resolution/Vcolors_used/Vcolors_important', fread($f1,40));
-    $BMP['colors'] = pow(2,$BMP['bits_per_pixel']);
+           '/Vvert_resolution/Vcolors_used/Vcolors_important', fread($f1, 40));
+    $BMP['colors'] = pow(2, $BMP['bits_per_pixel']);
 
     if ($BMP['size_bitmap'] == 0) $BMP['size_bitmap'] = $FILE['file_size'] - $FILE['bitmap_offset'];
 
@@ -3135,14 +3135,14 @@ class imageLib
     $PALETTE = array();
     if ($BMP['colors'] < 16777216)
     {
-      $PALETTE = unpack('V'.$BMP['colors'], fread($f1,$BMP['colors']*4));
+      $PALETTE = unpack('V'.$BMP['colors'], fread($f1, $BMP['colors']*4));
     }
 
     //4 : Cr�ation de l'image
-    $IMG = fread($f1,$BMP['size_bitmap']);
+    $IMG = fread($f1, $BMP['size_bitmap']);
     $VIDE = chr(0);
 
-    $res = imagecreatetruecolor($BMP['width'],$BMP['height']);
+    $res = imagecreatetruecolor($BMP['width'], $BMP['height']);
     $P = 0;
     $Y = $BMP['height']-1;
     while ($Y >= 0)
@@ -3151,7 +3151,7 @@ class imageLib
       while ($X < $BMP['width'])
       {
         if ($BMP['bits_per_pixel'] == 24)
-          $COLOR = unpack("V",substr($IMG,$P,3).$VIDE);
+          $COLOR = unpack("V", substr($IMG, $P, 3).$VIDE);
         elseif ($BMP['bits_per_pixel'] == 16)
         {
 
@@ -3171,7 +3171,7 @@ class imageLib
           //$COLOR = unpack("n",substr($IMG,$P,2));
           //$COLOR[1] = $PALETTE[$COLOR[1]+1];
 
-          $COLOR = unpack("v",substr($IMG,$P,2));
+          $COLOR = unpack("v", substr($IMG, $P, 2));
           $blue = ($COLOR[1] & 0x001f) << 3;
           $green = ($COLOR[1] & 0x07e0) >> 3;
           $red = ($COLOR[1] & 0xf800) >> 8;
@@ -3180,18 +3180,18 @@ class imageLib
         }
         elseif ($BMP['bits_per_pixel'] == 8)
         {
-          $COLOR = unpack("n",$VIDE.substr($IMG,$P,1));
+          $COLOR = unpack("n", $VIDE.substr($IMG, $P, 1));
           $COLOR[1] = $PALETTE[$COLOR[1]+1];
         }
         elseif ($BMP['bits_per_pixel'] == 4)
         {
-          $COLOR = unpack("n",$VIDE.substr($IMG,floor($P),1));
+          $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
           if (($P*2)%2 == 0) $COLOR[1] = ($COLOR[1] >> 4) ; else $COLOR[1] = ($COLOR[1] & 0x0F);
           $COLOR[1] = $PALETTE[$COLOR[1]+1];
         }
         elseif ($BMP['bits_per_pixel'] == 1)
         {
-          $COLOR = unpack("n",$VIDE.substr($IMG,floor($P),1));
+          $COLOR = unpack("n", $VIDE.substr($IMG, floor($P), 1));
           if     (($P*8)%8 == 0) $COLOR[1] =  $COLOR[1]        >>7;
           elseif (($P*8)%8 == 1) $COLOR[1] = ($COLOR[1] & 0x40)>>6;
           elseif (($P*8)%8 == 2) $COLOR[1] = ($COLOR[1] & 0x20)>>5;
@@ -3205,7 +3205,7 @@ class imageLib
         else
           return false;
 
-        imagesetpixel($res,$X,$Y,$COLOR[1]);
+        imagesetpixel($res, $X, $Y, $COLOR[1]);
         $X++;
         $P += $BMP['bytes_per_pixel'];
       }

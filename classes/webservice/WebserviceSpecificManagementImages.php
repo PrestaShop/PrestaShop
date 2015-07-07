@@ -353,7 +353,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		{
 			// Set the image path on display in relation to the header image
 			case 'header':
-				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
+				if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT')))
 					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
 				else
 					throw new WebserviceException('This method is not allowed with general image resources.', array(49, 405));
@@ -361,7 +361,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 			// Set the image path on display in relation to the mail image
 			case 'mail':
-				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
+				if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT')))
 				{
 					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL');
 					$alternative_path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
@@ -372,7 +372,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 			// Set the image path on display in relation to the invoice image
 			case 'invoice':
-				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
+				if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT')))
 				{
 					$path = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE');
 					$alternative_path = _PS_IMG_DIR_.Configuration::get('PS_LOGO');
@@ -383,7 +383,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 			// Set the image path on display in relation to the icon store image
 			case 'store_icon':
-				if (in_array($this->wsObject->method, array('GET','HEAD','PUT')))
+				if (in_array($this->wsObject->method, array('GET', 'HEAD', 'PUT')))
 				{
 					$path = _PS_IMG_DIR_.Configuration::get('PS_STORES_ICON');
 					$this->imgExtension = 'gif';
