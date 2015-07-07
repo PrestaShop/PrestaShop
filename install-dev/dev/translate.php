@@ -41,7 +41,7 @@ foreach ($dirs as $dir)
 
 foreach ($files as $file)
 {
-	$content = file_get_contents('../'.$file); 
+	$content = file_get_contents('../'.$file);
 	preg_match_all($regex, $content, $matches);
 	$translations_source = array_merge($translations_source, $matches[1]);
 }

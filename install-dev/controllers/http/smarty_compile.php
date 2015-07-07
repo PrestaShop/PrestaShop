@@ -30,7 +30,7 @@ if (Tools::getValue('bo'))
 	if (!is_dir(_PS_ROOT_DIR_.'/admin/'))
 		exit;
 	define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
-	$directory = _PS_ADMIN_DIR_.'themes/default/';	
+	$directory = _PS_ADMIN_DIR_.'themes/default/';
 }
 else
 	$directory = _PS_THEME_DIR_;

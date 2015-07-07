@@ -342,8 +342,8 @@ class AdminLanguagesControllerCore extends AdminController
 			else
 				return true;
 		}
-		else	
-			$this->errors[] = Tools::displayError('(cannot load object)');	
+		else
+			$this->errors[] = Tools::displayError('(cannot load object)');
 
 		return false;
 	}

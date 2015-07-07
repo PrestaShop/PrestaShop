@@ -325,9 +325,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
 		$params = array(
-			'iso_lang' => $this->language->getLanguageIso(), 
-			'iso_country' => $this->session->shop_country, 
-			'email' => $this->session->admin_email, 
+			'iso_lang' => $this->language->getLanguageIso(),
+			'iso_country' => $this->session->shop_country,
+			'email' => $this->session->admin_email,
 			'shop_url' => Tools::getHttpHost(),
 			'version' => _PS_INSTALL_VERSION_
 		);

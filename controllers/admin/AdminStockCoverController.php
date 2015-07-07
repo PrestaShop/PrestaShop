@@ -297,7 +297,7 @@ class AdminStockCoverControllerCore extends AdminController
 					$item['upc'] = '--';
 				}
 			}
-		} 	
+		}
 	}
 
 	/**
@@ -403,6 +403,6 @@ class AdminStockCoverControllerCore extends AdminController
 		else
 			$this->list_id = 'product';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 }

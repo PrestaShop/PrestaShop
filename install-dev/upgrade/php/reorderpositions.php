@@ -27,7 +27,7 @@
 function reorderpositions()
 {
 	$res = true;
-	$ps_lang_default = Db::getInstance()->getValue('SELECT value 
+	$ps_lang_default = Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name="PS_LANG_DEFAULT"');
 	/* Clean products positions */
@@ -40,7 +40,7 @@ function reorderpositions()
 				SELECT `id_product`
 				FROM `'._DB_PREFIX_.'category_product`
 				WHERE `id_category` = '.$id_category.'
-				ORDER BY `position`'); 
+				ORDER BY `position`');
 			$sizeof = sizeof($result);
 			for ($i = 0; $i < $sizeof; $i++)
 				$res &= Db::getInstance()->execute('
@@ -55,7 +55,7 @@ function reorderpositions()
 	{
 		$result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
-							FROM `'._DB_PREFIX_.'category` c 
+							FROM `'._DB_PREFIX_.'category` c
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.$ps_lang_default.')
 							WHERE c.id_parent = '.(int)($parent['id_parent']).'
 							ORDER BY name ASC');
@@ -70,16 +70,16 @@ function reorderpositions()
 		
 		$result = Db::getInstance()->executeS('
 							SELECT DISTINCT c.*, cl.*
-							FROM `'._DB_PREFIX_.'category` c 
+							FROM `'._DB_PREFIX_.'category` c
 							LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
 							WHERE c.id_parent = '.(int)($parent['id_parent']).'
 							ORDER BY name ASC');
 		
 		// Remove number from category name
 		foreach($result as $i => $categ)
-			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c 
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
-			SET `name` = \''.preg_replace('/^[0-9]+\./', '', $categ['name']).'\' 
+			SET `name` = \''.preg_replace('/^[0-9]+\./', '', $categ['name']).'\'
 			WHERE c.id_category = '.(int)($categ['id_category']).' AND id_lang = \''.(int)($categ['id_lang']).'\'');
 	}
 	

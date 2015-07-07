@@ -90,12 +90,12 @@ class AdminEmailsControllerCore extends AdminController
 				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
-						'title' => $this->l('Send email to'), 
-						'desc' => $this->l('Where customers send messages from the order page.'), 
-						'validation' => 'isUnsignedId', 
-						'type' => 'select', 
-						'cast' => 'intval', 
-						'identifier' => 'email_message', 
+						'title' => $this->l('Send email to'),
+						'desc' => $this->l('Where customers send messages from the order page.'),
+						'validation' => 'isUnsignedId',
+						'type' => 'select',
+						'cast' => 'intval',
+						'identifier' => 'email_message',
 						'list' => $arr
 					),
 					'PS_MAIL_METHOD' => array(
@@ -114,8 +114,8 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
-							Mail::TYPE_TEXT => $this->l('Send email in text format'), 
+							Mail::TYPE_HTML => $this->l('Send email in HTML format'),
+							Mail::TYPE_TEXT => $this->l('Send email in text format'),
 							Mail::TYPE_BOTH => $this->l('Both')
 						)
 					),
@@ -335,8 +335,8 @@ class AdminEmailsControllerCore extends AdminController
 			$smtpPassword = Tools::getValue('smtpPassword');
 			$smtpPassword = (!empty($smtpPassword)) ? urldecode($smtpPassword) : Configuration::get('PS_MAIL_PASSWD');
 			$smtpPassword = str_replace(
-				array('&lt;', '&gt;', '&quot;', '&amp;'), 
-				array('<', '>', '"', '&'), 
+				array('&lt;', '&gt;', '&quot;', '&amp;'),
+				array('<', '>', '"', '&'),
 				Tools::htmlentitiesUTF8($smtpPassword)
 			);
 			

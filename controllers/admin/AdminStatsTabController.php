@@ -58,7 +58,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
@@ -99,7 +99,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 		}
 		
 		$action = Context::getContext()->link->getAdminLink('AdminStats');
-		$action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');		
+		$action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
 		$action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
 		$module = Tools::getValue('module');
 		$action .= ($module ? '&module='.Tools::safeOutput($module) : '');

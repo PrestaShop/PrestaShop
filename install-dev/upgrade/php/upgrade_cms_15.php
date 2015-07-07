@@ -48,7 +48,7 @@ function upgrade_cms_15()
 	if (!$id_module_cms)
 		return $res;
 	// /!\ : _cms_block is the wrong table name (fixed in 1.5.0.12.sql : upgrade_cms_15_rename() )
-	$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'._cms_block` 
+	$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'._cms_block`
 		ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_cms_block`');
 
 	return $res;

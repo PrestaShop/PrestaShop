@@ -175,7 +175,7 @@ class AdminInvoicesControllerCore extends AdminController
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT COUNT( o.id_order ) AS nbOrders, o.current_state as id_order_state
 			FROM `'._DB_PREFIX_.'order_invoice` oi
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order 
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
 			AND oi.number > 0
 			GROUP BY o.current_state
@@ -208,7 +208,7 @@ class AdminInvoicesControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn

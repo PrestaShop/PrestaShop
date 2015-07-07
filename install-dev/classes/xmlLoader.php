@@ -228,7 +228,7 @@ class InstallXmlLoader
 		}
 
 		if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_')
-			return;		
+			return;
 
 		$xml = $this->loadEntity($entity);
 
@@ -371,7 +371,7 @@ class InstallXmlLoader
 		if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso]))
 		{
 			if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_')
-				return;	
+				return;
 
 			$path = $this->data_path.$entity.'.xml';
 			if ($iso)

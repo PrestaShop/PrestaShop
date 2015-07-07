@@ -33,7 +33,7 @@ function add_missing_columns_customer()
 		$current_fields[$k] = $field['Field'];
 
 	$missing_fields = array(
-		'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer` 
+		'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `id_risk` int(10) unsigned NOT NULL DEFAULT "1"',
 		'company' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `company` varchar(64)',
 		'siret' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `siret` varchar(14)',

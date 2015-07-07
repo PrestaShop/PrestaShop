@@ -903,7 +903,7 @@ class AdminTranslationsControllerCore extends AdminController
 						foreach ($checks as $check)
 							$this->errors[] = sprintf(Tools::displayError('Please check rights for folder and files in %s'), $check);
 						if (!unlink($file))
-							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);						
+							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
 					}
 				}
 				else

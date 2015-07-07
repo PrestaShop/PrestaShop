@@ -40,7 +40,7 @@ function update_order_canada()
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
 
-		$address_field = Db::getInstance()->getValue('SELECT value 
+		$address_field = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_TAX_ADDRESS_TYPE"');
 		$address_field = str_replace('`', '\`', $address_field);
@@ -62,7 +62,7 @@ function update_order_canada()
 		{
 			$amount = array();
 			$id_order = $order['id_order'];
-			// in Order class, getTaxCalculationMethod 
+			// in Order class, getTaxCalculationMethod
 			// 	returns Group::getDefaultPriceDisplayMethod
 			$tax_calculation_method = $order['price_display_method'];
 
@@ -110,7 +110,7 @@ function update_order_canada_ps_round($val) {
 	static $ps_price_round_mode;
 	if (empty($ps_price_round_mode))
 	{
-		$ps_price_round_mode = Db::getInstance()->getValue('SELECT value 
+		$ps_price_round_mode = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name = "PS_PRICE_ROUND_MODE"');
 	}
