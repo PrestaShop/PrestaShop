@@ -54,7 +54,7 @@ class RangeWeightCore extends ObjectModel
 	/**
 	 * Override add to create delivery value for all zones
 	 * @see classes/ObjectModelCore::add()
-	 * 
+	 *
 	 * @param bool $null_values
 	 * @param bool $autodate
 	 * @return bool Insertion result
@@ -87,8 +87,8 @@ class RangeWeightCore extends ObjectModel
 	public static function getRanges($id_carrier)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT * 
-			FROM `'._DB_PREFIX_.'range_weight` 
+			SELECT *
+			FROM `'._DB_PREFIX_.'range_weight`
 			WHERE `id_carrier` = '.(int)$id_carrier.'
 			ORDER BY `delimiter1` ASC');
 	}

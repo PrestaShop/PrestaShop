@@ -6,7 +6,7 @@
  *
  * Usage: just execute this script.
  *
- * 
+ *
  * 1)
  * 	Parse all files under /localization,
  *  looking for <tax> elements that have the attribute eu-tax-group="virtual".
@@ -25,7 +25,7 @@
  * 	to also inject the required taxes.
  *
  * 	Warning: do not duplicate the tax with attribute eu-tax-group="virtual" of the pack being updated.
- * 	
+ *
  * 	Mark the injected group with the attributes eu-tax-group="virtual" and auto-generated="1"
  * 	Mark the injected taxes witth the attributes from-eu-tax-group="virtual" and auto-generated="1"
  *

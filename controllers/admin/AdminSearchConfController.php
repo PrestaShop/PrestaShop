@@ -249,7 +249,7 @@ class AdminSearchConfControllerCore extends AdminController
 			);
 		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
-		if ($this->can_import) 
+		if ($this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
 				'desc' => $this->l('Import', null, null, false)

@@ -225,14 +225,14 @@ class AdminAccessControllerCore extends AdminController
 
 			if ($id_module == -1)
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'module_access` 
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.' 
+					UPDATE `'._DB_PREFIX_.'module_access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
 			else
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'module_access` 
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.' 
-					WHERE `id_module` = '.(int)$id_module.' 
+					UPDATE `'._DB_PREFIX_.'module_access`
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					WHERE `id_module` = '.(int)$id_module.'
 						AND `id_profile` = '.(int)$id_profile;
 
 			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';

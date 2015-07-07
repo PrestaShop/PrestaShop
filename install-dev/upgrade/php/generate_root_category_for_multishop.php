@@ -74,7 +74,7 @@ function generate_root_category_for_multishop()
 	');
 	$data = array();
 	if(is_array($shops) && is_array($categories))
-	{	
+	{
 		foreach ($categories as $category)
 			foreach ($shops as $shop)
 				$data[] = array(

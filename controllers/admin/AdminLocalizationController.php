@@ -372,7 +372,7 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		if (!$this->loadObject(true))
-			return;	
+			return;
 
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();

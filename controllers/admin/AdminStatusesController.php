@@ -502,7 +502,7 @@ class AdminStatusesControllerCore extends AdminController
 			
 			$theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
 			$theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir) : array();
-			// We merge all available emails in one array 
+			// We merge all available emails in one array
 			$templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code), $theme_templates));
 			foreach ($templates as $key => $template)
 				if (!strncmp(strrev($template), 'lmth.', 5))

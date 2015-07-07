@@ -39,6 +39,6 @@ function fix_unique_specific_price()
 	$sql = rtrim($sql, ',');
 
 	return Db::getInstance()->execute('
-	DELETE FROM '._DB_PREFIX_.'specific_price 
+	DELETE FROM '._DB_PREFIX_.'specific_price
 	WHERE id_specific_price NOT IN ('.$sql.')');
 }

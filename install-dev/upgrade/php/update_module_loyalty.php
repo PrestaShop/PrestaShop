@@ -29,7 +29,7 @@
 */
 function update_module_loyalty()
 {
-	$ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value 
+	$ps_loyalty_point_value = Db::getInstance()->getValue('SELECT value
 		FROM `'._DB_PREFIX_.'configuration`
 		WHERE name="PS_LOYALTY_POINT_VALUE"');
 	if ($ps_loyalty_point_value !== false)

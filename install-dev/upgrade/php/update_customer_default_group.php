@@ -29,7 +29,7 @@ function update_customer_default_group()
 	$filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
 	$filename_old = str_replace('.inc.', '.old.', $filename);
 	copy($filename, $filename_old);
-	chmod($filename_old, 0664);	
+	chmod($filename_old, 0664);
 	$content = file_get_contents($filename);
 	$pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
 	preg_match($pattern, $content, $matches);
@@ -37,7 +37,7 @@ function update_customer_default_group()
 			define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) and is_numeric($matches[1]))? $matches[1] : 3));
 	$ps_customer_group = DB::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name = "PS_CUSTOMER_GROUP"', false);
 	if ($ps_customer_group)
-	{		
+	{
 		$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
 		$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';
 		$content = str_replace($str_old, $str_new, $content);
@@ -58,7 +58,7 @@ function update_customer_default_group()
 		foreach ($carriers as $carrier)
 			foreach ($groups as $group)
 				Db::getInstance()->execute('
-				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group` 
+				INSERT IGNORE INTO `'._DB_PREFIX_.'carrier_group`
 				VALUES ('.(int)$carrier['id_carrier'].', '.(int)$group['id_group'].')');
 	
 	$result = false;

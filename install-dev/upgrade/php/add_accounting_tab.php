@@ -28,9 +28,9 @@ function add_accounting_tab()
 {
 	include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
 	$id_parent = add_new_tab(
-		'AdminAccounting', 
-		'en:Accounting|fr:Comptabilité|es:Accounting|de:Accounting|it:Accounting', 
-		0, 
+		'AdminAccounting',
+		'en:Accounting|fr:Comptabilité|es:Accounting|de:Accounting|it:Accounting',
+		0,
 		true);
 
 	add_new_tab(

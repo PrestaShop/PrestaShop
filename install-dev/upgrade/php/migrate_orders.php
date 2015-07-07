@@ -154,7 +154,7 @@ function migrate_orders()
 			unset($order);
 			$cpt++;
 			
-			// limit to $cpt 
+			// limit to $cpt
 			if ($cpt >= $flush_limit)
 			{
 				$cpt = 0;

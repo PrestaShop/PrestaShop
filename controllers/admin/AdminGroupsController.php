@@ -106,25 +106,25 @@ class AdminGroupsControllerCore extends AdminController
 					'title' =>	$this->l('Default groups options'),
 					'fields' =>	array(
 						'PS_UNIDENTIFIED_GROUP' => array(
-							'title' => $this->l('Visitors group'), 
-							'desc' => $this->l('The group defined for your un-identified visitors.'), 
-							'cast' => 'intval', 
+							'title' => $this->l('Visitors group'),
+							'desc' => $this->l('The group defined for your un-identified visitors.'),
+							'cast' => 'intval',
 							'type' => 'select',
 							'list' => $groups,
 							'identifier' => 'id_group'
 						),
 						'PS_GUEST_GROUP' => array(
-							'title' => $this->l('Guests group'), 
-							'desc' => $this->l('The group defined for your identified guest customers (used in guest checkout).'), 
-							'cast' => 'intval', 
+							'title' => $this->l('Guests group'),
+							'desc' => $this->l('The group defined for your identified guest customers (used in guest checkout).'),
+							'cast' => 'intval',
 							'type' => 'select',
 							'list' => $groups,
 							'identifier' => 'id_group'
 						),
 						'PS_CUSTOMER_GROUP' => array(
-							'title' => $this->l('Customers group'), 
-							'desc' => $this->l('The group defined for your identified registered customers.'), 
-							'cast' => 'intval', 
+							'title' => $this->l('Customers group'),
+							'desc' => $this->l('The group defined for your identified registered customers.'),
+							'cast' => 'intval',
 							'type' => 'select',
 							'list' => $groups,
 							'identifier' => 'id_group'

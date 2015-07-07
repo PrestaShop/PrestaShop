@@ -56,7 +56,7 @@ function p15016_add_missing_columns()
 					`text` VARCHAR(300) NOT NULL,
 					PRIMARY KEY (`id_reinsurance`, `id_lang`)
 				) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
-			if (!$return)		
+			if (!$return)
 				$errors[] = Db::getInstance()->getMsgError();
 		}
 	}

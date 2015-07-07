@@ -28,22 +28,22 @@ function fix_cms_shop_1520()
 {
 	$res = true;
 	$db = Db::getInstance();
-	//test if cms_shop with 2 underscore is present to rename it. 
+	//test if cms_shop with 2 underscore is present to rename it.
 	$result = $db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'_cms_shop"');
 	if (!is_array($result) || !count($result) || !$result)
 	{
 		$res &= create_table_cms_shop();
 		if ($res)
 			insert_table_cms_to_cms_shop();
-	}	
-	//test if cms_shop with 1 underscore is present and create if not. 
+	}
+	//test if cms_shop with 1 underscore is present and create if not.
 	$result = $db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'cms_shop"');
 	if (!is_array($result) || !count($result) || !$result)
 	{
 		$res &= create_table_cms_shop();
 		if ($res)
 			insert_table_cms_to_cms_shop();
-	}		
+	}
 }
 
 function insert_table_cms_to_cms_shop()
@@ -60,7 +60,7 @@ function create_table_cms_shop()
 			'CREATE TABLE `'._DB_PREFIX_.'cms_shop` (
 				`id_cms` INT( 11 ) UNSIGNED NOT NULL,
 				`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
-			PRIMARY KEY (`id_cms`, `id_shop`), 
+			PRIMARY KEY (`id_cms`, `id_shop`),
 			KEY `id_shop` (`id_shop`)
 			) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8;');
 }

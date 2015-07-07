@@ -34,7 +34,7 @@ function add_group_attribute_position()
 		foreach ($groups as $group)
 		{
 			Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute_group` 
+				UPDATE `'._DB_PREFIX_.'attribute_group`
 				SET `position` = '.$i++.'
 				WHERE `id_attribute_group` = '.(int)$group['id_attribute_group']);
 		}
