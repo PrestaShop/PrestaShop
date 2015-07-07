@@ -30,17 +30,19 @@ use Composer\Script\Event;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
+
 class Hook
 {
-    public static function update(Event $event)
+    public static function init(Event $event)
     {
-        //load prestashop config
+        //load prestashop config to get locale env
         require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/config/config.inc.php');
 
-        $event->getIO()->write("Start CLDR datas download...");
+        $event->getIO()->write("Init CLDR datas download...");
 
         $up = new Update(_PS_CACHE_DIR_);
-        $up->fetch();
+        $up->setLocale($locale);
+        $up->init($locale);
 
         $event->getIO()->write("Finished...");
     }

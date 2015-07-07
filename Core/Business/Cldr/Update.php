@@ -26,15 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Cldr;
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
 use PrestaShop\PrestaShop\Core\Foundation\Net\Curl;
 
 class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
 
+    protected $locale;
+
     public function __construct($psCacheDir)
     {
         $this->cldrCacheFolder = $psCacheDir.'cldr';
+        $this->locale = null;
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
@@ -45,10 +49,24 @@ class Update extends Repository
         }
     }
 
-    /**
-     * fetch all CLDR translations datas
+    /*
+     * set locale
+     *
+     * @param string $locale
+     *
      */
-    public function fetch()
+    public function setLocale($locale)
+    {
+        $localize = new Localize();
+        $localize::setLocale($locale);
+
+        $this->locale = str_replace('_', '-', $localize::getLocale());
+    }
+
+    /*
+     * Init CLDR datas and download default language
+     */
+    public function init()
     {
         if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
             $fp = fopen($file, "w");
@@ -60,29 +78,72 @@ class Update extends Repository
             ));
 
             if ($curl->exec(self::ZIP_CORE_URL) === false) {
-                throw new \Exception("Failed to download from '".
-                    self::ZIP_CORE_URL."'.");
+                throw new \Exception("Failed to download from '" .
+                    self::ZIP_CORE_URL . "'.");
             };
 
             $curl->close();
             fclose($fp);
-
-            $archive = new \ZipArchive();
-            if ($archive->open($file) === true) {
-                $archive->extractTo($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp');
-                $archive->close();
-            } else {
-                throw new \Exception("Failed to unzip '".$file."'.");
-            }
-
-            $this->generateSupplementalDatas();
-            $this->generateMainDatas();
-            $this->rmdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp');
         }
+
+        //extract ONLY supplemental json files
+        $archive = new \ZipArchive();
+
+        if ($archive->open($file) === true) {
+            for ($i = 0; $i < $archive->numFiles; $i++) {
+                $filename = $archive->getNameIndex($i);
+                if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
+                    if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                        mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+                    }
+
+                    if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename)) {
+                        copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename);
+                    }
+                }
+            }
+            $archive->close();
+        } else {
+            throw new \Exception("Failed to unzip '".$file."'.");
+        }
+
+        $this->generateSupplementalDatas();
+        $this->fetchLocale();
+    }
+
+
+    /*
+     * fetch CLDR datas for a locale
+     *
+     * @param optional string $locale
+     */
+    public function fetchLocale($locale = null)
+    {
+        $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
+        $locale = $locale ? $locale : $this->locale;
+
+        $archive = new \ZipArchive();
+        $archive->open($file);
+
+        for ($i = 0; $i < $archive->numFiles; $i++) {
+            $filename = $archive->getNameIndex($i);
+            if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
+                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+                }
+
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename)) {
+                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename);
+                }
+            }
+        }
+        $archive->close();
+
+        $this->generateMainDatas($locale);
     }
 
     /**
-     * generate CLDR translations supplemental datas
+     * generate CLDR supplemental datas
      */
     private function generateSupplementalDatas()
     {
@@ -102,45 +163,22 @@ class Update extends Repository
 
     /**
      * generate CLDR translations main datas
+     *
+     * @param string $locale
      */
-    private function generateMainDatas()
+    private function generateMainDatas($locale)
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
-        $files = @scandir($rootPath.'main');
+        $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
 
         foreach ($files as $file) {
-            if ($file != '.' && $file != '..' && !is_dir($file)) {
-                $sections = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$file);
-                foreach ($sections as $section) {
-                    if ($section != '.' && $section != '..') {
-                        $newFileName = 'main--'.$file.'--'.pathinfo($section)['filename'];
-
-                        copy(
-                            $rootPath.'main'.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$section,
-                            $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
-                        );
-                    }
-                }
+            if ($file != '.' && $file != '..') {
+                $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
+                copy(
+                    $rootPath.'main'.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$file,
+                    $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
+                );
             }
-        }
-    }
-
-    /*Recursive rmdir */
-    private function rmdir($dir)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir") {
-                        $this->rmdir($dir."/".$object);
-                    } else {
-                        unlink($dir."/".$object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
         }
     }
 }
