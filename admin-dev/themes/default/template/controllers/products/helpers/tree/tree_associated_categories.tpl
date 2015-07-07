@@ -33,6 +33,7 @@
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
 	var idTree="{$id|escape:'html':'UTF-8'}";
+	var redirOnclick = true;
 	function addDefaultCategory(elem)
 	{
 		$('select#id_category_default').append('<option value="' + elem.val()+'">' + (elem.val() !=1 ? elem.parent().find('label').html() : home) + '</option>');
