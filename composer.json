@@ -15,8 +15,6 @@
     }
   },
     "scripts": {
-        "post-update-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::update",
-        "post-install-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::update",
         "cldr-update" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::update"
     }
 }
