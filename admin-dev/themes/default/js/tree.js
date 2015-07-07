@@ -95,7 +95,7 @@ Tree.prototype =
 					}
 				});
 			}
-			if (name != 'id_parent')
+			if (typeof(redirOnclick) != 'undefined')
 			{
 				this.$element.find(":input[type=radio]").unbind('click');
 				this.$element.find(":input[type=radio]").click(
