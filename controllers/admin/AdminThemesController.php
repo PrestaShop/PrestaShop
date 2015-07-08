@@ -2647,7 +2647,8 @@ class AdminThemesControllerCore extends AdminController
                 return false;
             }
 
-            $ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            $file_ext = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
+            $ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.'.$file_ext;
             $logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
                 .$logo_prefix.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').(int)$id_shop.$ext;
 
