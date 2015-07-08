@@ -1,20 +1,23 @@
 <?php
 session_start();
 
-if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_',dirname(__FILE__).'/../../');
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
+}
 
 require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
-if (function_exists('mb_internal_encoding'))
-	mb_internal_encoding('UTF-8');
+if (function_exists('mb_internal_encoding')) {
+    mb_internal_encoding('UTF-8');
+}
 
 $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminProducts'));
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
 
-if (!$products_accesses['edit'] && !$cms_accesses['edit'])
-	die(Tools::displayError());
+if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
+    die(Tools::displayError());
+}
 //------------------------------------------------------------------------------
 // DON'T COPY THIS VARIABLES IN FOLDERS config.php FILES
 //------------------------------------------------------------------------------
@@ -105,7 +108,7 @@ $ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //
 $ext_music = array();//array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
 $ext_misc = array();// array('zip', 'rar','gz','tar','iso','dmg'); //Archives
 
-$ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video,$ext_music); //allowed extensions
+$ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allowed extensions
 
 
 /******************
@@ -167,5 +170,3 @@ $relative_image_creation_name_to_prepend= array('','test_'); //name to prepend o
 $relative_image_creation_name_to_append = array('_test',''); //name to append on filename
 $relative_image_creation_width          = array(300,400); //width of image (you can leave empty if you set height)
 $relative_image_creation_height         = array(200,''); //height of image (you can leave empty if you set width)
-
-?>

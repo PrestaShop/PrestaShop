@@ -225,7 +225,7 @@ class Smarty_Internal_Data
                 $_ptr = $this;
             }
             while ($_ptr !== null) {
-                foreach ($_ptr->tpl_vars AS $key => $var) {
+                foreach ($_ptr->tpl_vars as $key => $var) {
                     if (!array_key_exists($key, $_result)) {
                         $_result[$key] = $var->value;
                     }
@@ -238,7 +238,7 @@ class Smarty_Internal_Data
                 }
             }
             if ($search_parents && isset(Smarty::$global_tpl_vars)) {
-                foreach (Smarty::$global_tpl_vars AS $key => $var) {
+                foreach (Smarty::$global_tpl_vars as $key => $var) {
                     if (!array_key_exists($key, $_result)) {
                         $_result[$key] = $var->value;
                     }

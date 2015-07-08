@@ -2624,7 +2624,7 @@ class Smarty_Internal_Templateparser #line 80 "smarty_internal_templateparser.ph
 
     public function __destruct()
     {
-        while ($this->yystack !== Array()) {
+        while ($this->yystack !== array()) {
             $this->yy_pop_parser_stack();
         }
         if (is_resource($this->yyTraceFILE)) {

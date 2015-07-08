@@ -24,12 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (isset(Context::getContext()->controller))
-	$controller = Context::getContext()->controller;
-else
-{
-	$controller = new FrontController();
-	$controller->init();
+if (isset(Context::getContext()->controller)) {
+    $controller = Context::getContext()->controller;
+} else {
+    $controller = new FrontController();
+    $controller->init();
 }
 Tools::displayFileAsDeprecated();
 $controller->displayFooter();
