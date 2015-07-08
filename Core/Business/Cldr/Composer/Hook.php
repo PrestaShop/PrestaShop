@@ -40,7 +40,7 @@ class Hook
 
         $event->getIO()->write("Init CLDR datas download...");
 
-        $up = new Update(_PS_CACHE_DIR_);
+        $up = new Update(_PS_TRANSLATIONS_DIR_);
         $up->setLocale($locale);
         $up->init($locale);
 

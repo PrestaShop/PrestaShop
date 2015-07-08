@@ -42,7 +42,7 @@ class Update extends Repository
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
-                mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp', 0777, true);
+                mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas', 0777, true);
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -93,12 +93,12 @@ class Update extends Repository
             for ($i = 0; $i < $archive->numFiles; $i++) {
                 $filename = $archive->getNameIndex($i);
                 if (preg_match('%^supplemental\/(.*).json$%', $filename)) {
-                    if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename))) {
-                        mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+                    if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                        mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
                     }
 
-                    if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename)) {
-                        copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename);
+                    if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+                        copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
                     }
                 }
             }
@@ -128,12 +128,12 @@ class Update extends Repository
         for ($i = 0; $i < $archive->numFiles; $i++) {
             $filename = $archive->getNameIndex($i);
             if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
-                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename))) {
-                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
                 }
 
-                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.$filename)) {
-                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename);
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
                 }
             }
         }
@@ -147,7 +147,7 @@ class Update extends Repository
      */
     private function generateSupplementalDatas()
     {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
+        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
         $files = @scandir($rootPath.'supplemental');
 
         foreach ($files as $file) {
@@ -168,7 +168,7 @@ class Update extends Repository
      */
     private function generateMainDatas($locale)
     {
-        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
+        $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
         $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
 
         foreach ($files as $file) {
