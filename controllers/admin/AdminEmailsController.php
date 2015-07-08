@@ -228,14 +228,14 @@ class AdminEmailsControllerCore extends AdminController
 
 		$this->addJs(_PS_JS_DIR_.'/admin/email.js');
 
-		Media::addJsDefL('textMsg', $this->l('This is a test message. Your server is now configured to send email.'));
-		Media::addJsDefL('textSubject', $this->l('Test message -- Prestashop'));
-		Media::addJsDefL('textSendOk', $this->l('A test email has been sent to the email address you provided.'));
-		Media::addJsDefL('textSendError', $this->l('Error: Please check your configuration'));
+		Media::addJsDefL('textMsg', $this->l('This is a test message. Your server is now configured to send email.', null, true, false));
+		Media::addJsDefL('textSubject', $this->l('Test message -- Prestashop', null, true, false));
+		Media::addJsDefL('textSendOk', $this->l('A test email has been sent to the email address you provided.', null, true, false));
+		Media::addJsDefL('textSendError', $this->l('Error: Please check your configuration', null, true, false));
 		Media::addJsDefL('token_mail', $this->token);
-		Media::addJsDefL('errorMail', $this->l('This email address is not valid'));
+		Media::addJsDefL('errorMail', $this->l('This email address is not valid', null, true, false));
 	}
-	
+
 	public function processDelete()
 	{
 		if ((int)$id_mail = Tools::getValue('id_mail', 0))
