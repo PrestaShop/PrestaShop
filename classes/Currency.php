@@ -190,9 +190,22 @@ class CurrencyCore extends ObjectModel
 		($active ? ' AND c.`active` = 1' : '').
 		($group_by ? ' GROUP BY c.`id_currency`' : '').
 		' ORDER BY `iso_code` ASC');
-		if ($object)
-			foreach ($tab as $key => $currency)
-				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
+
+        $cldr = new Repository(Context::getContext()->language);
+
+        foreach($tab as $k => $c){
+
+            if($object){
+                $tab[$k] = Currency::getCurrencyInstance($c['id_currency']);
+            }
+
+            $currency = $cldr->getCurrency($c['iso_code']);
+
+            $tab[$k]['name'] = ucfirst($currency['name']);
+            $tab[$k]['iso_code_num'] = $currency['iso_code'];
+            $tab[$k]['sign'] = $currency['symbol'];
+        }
+
 		return $tab;
 	}
 
