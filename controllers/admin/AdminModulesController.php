@@ -41,7 +41,8 @@ class AdminModulesControllerCore extends AdminController
         'configure' => 'getContent',
         'update' => 'update',
         'delete' => 'delete',
-        'checkAndUpdate' => 'checkAndUpdate'
+        'checkAndUpdate' => 'checkAndUpdate',
+        'updateAll' => 'updateAll'
     );
 
     protected $list_modules_categories = array();
@@ -723,14 +724,24 @@ class AdminModulesControllerCore extends AdminController
                 if (!Tools::getValue('module_name')) {
                     $modules_list_save = implode('|', $modules);
                 }
-            } elseif (($modules = Tools::getValue($key)) && $key != 'checkAndUpdate') {
-                if (strpos($modules, '|')) {
-                    $modules_list_save = $modules;
-                    $modules = explode('|', $modules);
+            } elseif ($key == 'updateAll') {
+                $loggedOnAddons = false;
+
+                if (isset($this->context->cookie->username_addons)
+                    && isset($this->context->cookie->password_addons)
+                    && !empty($this->context->cookie->username_addons)
+                    && !empty($this->context->cookie->password_addons)) {
+                    $loggedOnAddons = true;
                 }
 
-                if (!is_array($modules)) {
-                    $modules = (array)$modules;
+                $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
+                $upgradeAvailable = 0;
+                $modules = array();
+
+                foreach ($allModules as $km => $moduleToUpdate) {
+                    if ($moduleToUpdate->installed && isset($moduleToUpdate->version_addons) && $moduleToUpdate->version_addons) {
+                        $modules[] = (string)$moduleToUpdate->name;
+                    }
                 }
             }
 
@@ -742,7 +753,7 @@ class AdminModulesControllerCore extends AdminController
                     $module_to_update[$name] = null;
                     $full_report = null;
                     // If Addons module, download and unzip it before installing it
-                    if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') || $key == 'update') {
+                    if (!file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') || $key == 'update' || $key == 'updateAll') {
                         $files_list = array(
                             array('type' => 'addonsNative', 'file' => Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
                             array('type' => 'addonsBought', 'file' => Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
@@ -827,7 +838,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         $echo = '';
-                        if ($key != 'update' && $key != 'checkAndUpdate') {
+                        if ($key != 'update' && $key != 'updateAll' && $key != 'checkAndUpdate') {
                             // We check if method of module exists
                             if (!method_exists($module, $method)) {
                                 throw new PrestaShopException('Method of module cannot be found');
@@ -989,7 +1000,7 @@ class AdminModulesControllerCore extends AdminController
             Tools::redirectAdmin(self::$currentIndex.'&conf='.$return.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(isset($modules_list_save) ? '&modules_list='.$modules_list_save : '').$params);
         }
 
-        if (Tools::getValue('update') || Tools::getValue('checkAndUpdate')) {
+        if (Tools::getValue('update') || Tools::getValue('updateAll') || Tools::getValue('checkAndUpdate')) {
             $updated = '&updated=1';
             if (Tools::getValue('checkAndUpdate')) {
                 $updated = '&check=1';
@@ -1003,7 +1014,9 @@ class AdminModulesControllerCore extends AdminController
 
             $module_upgraded = implode('|', $module_upgraded);
 
-            if (isset($module_upgraded) && $module_upgraded != '') {
+            if ($key == 'updateAll') {
+                Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&allUpdated=1');
+            } elseif (isset($module_upgraded) && $module_upgraded != '') {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$module_upgraded);
             } elseif (isset($modules_list_save)) {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$modules_list_save);
@@ -1438,6 +1451,10 @@ class AdminModulesControllerCore extends AdminController
                         0 => sprintf($this->l('Current version: %s'), $module->version)));
                 }
             }
+        }
+
+        if (Tools::getValue('allUpdated')) {
+            $this->confirmations[] = $this->l('All modules updated successfully.');
         }
 
         // Browse modules list
