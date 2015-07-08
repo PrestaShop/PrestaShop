@@ -74,11 +74,13 @@ class Repository
         }
 
         $this->repository = new cldrRepository($provider);
-        $this->localeRepository = $this->repository->locales[$this->getLocaleRegion()];
+        $this->localeRepository = $this->repository->locales[$this->getCulture()];
     }
 
-
-    public function getLocaleRegion()
+    /*
+     * get the current culture
+     */
+    public function getCulture()
     {
         return $this->locale.($this->region ? '-'.$this->region : '');
     }
@@ -91,7 +93,7 @@ class Repository
     public function setLocale($locale)
     {
         $this->locale = $locale;
-        $this->localeRepository = $this->repository->locales[$this->getLocaleRegion()];
+        $this->localeRepository = $this->repository->locales[$this->getCulture()];
     }
 
     /**
@@ -183,7 +185,7 @@ class Repository
         }
 
         $currency = new Currency($this->repository, $code);
-        $localized_currency = $currency->localize($this->getLocaleRegion());
+        $localized_currency = $currency->localize($this->getCulture());
 
         return array(
             'name' => $localized_currency->name,
@@ -202,7 +204,7 @@ class Repository
      */
     public function getCurrencySymbol($code)
     {
-        $locale = $this->repository->locales[$this->getLocaleRegion()];
+        $locale = $this->repository->locales[$this->getCulture()];
         $currency = $locale['currencies'][$code];
 
         return !empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'];
@@ -219,7 +221,7 @@ class Repository
     public function getPrice($price, $code)
     {
         $currency = new Currency($this->repository, $code);
-        $localized_currency = $currency->localize($this->getLocaleRegion());
+        $localized_currency = $currency->localize($this->getCulture());
 
         return $localized_currency->format($price);
     }
@@ -234,7 +236,7 @@ class Repository
     public function getNumber($number)
     {
         $formatter = new NumberFormatter($this->repository);
-        $localized_formatter = $formatter->localize($this->getLocaleRegion());
+        $localized_formatter = $formatter->localize($this->getCulture());
 
         return $localized_formatter($number);
     }
@@ -264,7 +266,7 @@ class Repository
      */
     public function getCurrencyFormatPattern($locale = null)
     {
-        $locale = $this->repository->locales[$locale ? $locale : $this->getLocaleRegion()];
+        $locale = $this->repository->locales[$locale ? $locale : $this->getCulture()];
         return $locale['numbers']['currencyFormats-numberSystem-latn']['standard'];
     }
 }
