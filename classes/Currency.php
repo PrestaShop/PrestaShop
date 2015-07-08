@@ -194,16 +194,15 @@ class CurrencyCore extends ObjectModel
         $cldr = new Repository(Context::getContext()->language);
 
         foreach($tab as $k => $c){
-
             if($object){
                 $tab[$k] = Currency::getCurrencyInstance($c['id_currency']);
+            }else{
+                $currency = $cldr->getCurrency($c['iso_code']);
+
+                $tab[$k]['name'] = ucfirst($currency['name']);
+                $tab[$k]['iso_code_num'] = $currency['iso_code'];
+                $tab[$k]['sign'] = $currency['symbol'];
             }
-
-            $currency = $cldr->getCurrency($c['iso_code']);
-
-            $tab[$k]['name'] = ucfirst($currency['name']);
-            $tab[$k]['iso_code_num'] = $currency['iso_code'];
-            $tab[$k]['sign'] = $currency['symbol'];
         }
 
 		return $tab;

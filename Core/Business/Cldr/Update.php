@@ -33,8 +33,11 @@ class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
 
+    protected $oldUmask;
+
     public function __construct($psCacheDir)
     {
+        $this->oldUmask = umask(0000);
         $this->cldrCacheFolder = $psCacheDir.'cldr';
 
         if (!is_dir($this->cldrCacheFolder)) {
@@ -44,6 +47,11 @@ class Update extends Repository
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
         }
+    }
+
+    public function __destruct()
+    {
+        umask($this->oldUmask);
     }
 
     /*
@@ -71,7 +79,6 @@ class Update extends Repository
 
         //extract ONLY supplemental json files
         $archive = new \ZipArchive();
-
         if ($archive->open($file) === true) {
             for ($i = 0; $i < $archive->numFiles; $i++) {
                 $filename = $archive->getNameIndex($i);
@@ -112,6 +119,7 @@ class Update extends Repository
 
         for ($i = 0; $i < $archive->numFiles; $i++) {
             $filename = $archive->getNameIndex($i);
+
             if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
                 if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
                     mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
@@ -138,10 +146,12 @@ class Update extends Repository
         foreach ($files as $file) {
             if ($file != '.' && $file != '..') {
                 $newFileName = 'supplemental--'.pathinfo($file)['filename'];
-                copy(
-                    $rootPath.'supplemental'.DIRECTORY_SEPARATOR.$file,
-                    $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
-                );
+                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName)) {
+                    copy(
+                        $rootPath . 'supplemental' . DIRECTORY_SEPARATOR . $file,
+                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                    );
+                }
             }
         }
     }
@@ -159,10 +169,12 @@ class Update extends Repository
         foreach ($files as $file) {
             if ($file != '.' && $file != '..') {
                 $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
-                copy(
-                    $rootPath.'main'.DIRECTORY_SEPARATOR.$locale.DIRECTORY_SEPARATOR.$file,
-                    $this->cldrCacheFolder.DIRECTORY_SEPARATOR.$newFileName
-                );
+                if (!file_exists($this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName)) {
+                    copy(
+                        $rootPath . 'main' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $file,
+                        $this->cldrCacheFolder . DIRECTORY_SEPARATOR . $newFileName
+                    );
+                }
             }
         }
     }

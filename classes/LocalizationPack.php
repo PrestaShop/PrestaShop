@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+
 class LocalizationPackCore
 {
     public $name;
@@ -95,6 +97,18 @@ class LocalizationPackCore
             foreach ($selection as $selected) {
                 // No need to specify the install_mode because if the selection mode is used, then it's not the install
                 $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install'.$selected}($xml) : false;
+            }
+        }
+
+        //get/update cldr datas for each language
+        if ($iso_localization_pack) {
+            foreach ($xml->languages->language as $lang) {
+                //use this to get correct language code ex : qc become fr
+                $languageCode = explode('-', Language::getLanguageCodeByIso($lang['iso_code']));
+                $isoCode = $languageCode[0].'-'.strtoupper($iso_localization_pack);
+
+                $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                $cldrUpdate->fetchLocale($isoCode);
             }
         }
 

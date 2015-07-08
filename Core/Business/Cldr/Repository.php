@@ -43,16 +43,19 @@ class Repository
     protected $region;
     protected $locale;
     protected $contextLanguage;
+    protected $oldUmask;
 
     public function __construct($contextLanguage = null)
     {
         $this->contextLanguage = $contextLanguage;
-
         $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_.'cldr';
+
+        $this->oldUmask = umask(0000);
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
                 mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas', 0777, true);
+
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -75,6 +78,11 @@ class Repository
 
         $this->repository = new cldrRepository($provider);
         $this->localeRepository = $this->repository->locales[$this->getCulture()];
+    }
+
+    public function __destruct()
+    {
+        umask($this->oldUmask);
     }
 
     /*
