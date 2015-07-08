@@ -33,12 +33,9 @@ class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
 
-    protected $locale;
-
     public function __construct($psCacheDir)
     {
         $this->cldrCacheFolder = $psCacheDir.'cldr';
-        $this->locale = null;
 
         if (!is_dir($this->cldrCacheFolder)) {
             try {
@@ -47,20 +44,6 @@ class Update extends Repository
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
         }
-    }
-
-    /*
-     * set locale
-     *
-     * @param string $locale
-     *
-     */
-    public function setLocale($locale)
-    {
-        $localize = new Localize();
-        $localize::setLocale($locale);
-
-        $this->locale = str_replace('_', '-', $localize::getLocale());
     }
 
     /*
@@ -108,19 +91,21 @@ class Update extends Repository
         }
 
         $this->generateSupplementalDatas();
-        $this->fetchLocale();
     }
 
 
     /*
      * fetch CLDR datas for a locale
      *
-     * @param optional string $locale
+     * @param string $locale
      */
-    public function fetchLocale($locale = null)
+    public function fetchLocale($locale)
     {
+        if (!$locale) {
+            throw new \Exception('Error : the locale is not valid');
+        }
+
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
-        $locale = $locale ? $locale : $this->locale;
 
         $archive = new \ZipArchive();
         $archive->open($file);
