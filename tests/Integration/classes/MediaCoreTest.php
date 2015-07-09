@@ -53,7 +53,7 @@ class MediaCoreTest extends IntegrationTestCase
             array('<script type=\'application/javascript\'>test 9</script>', '<script type=\'application/javascript\'>/* <![CDATA[ */;test 9;/* ]]> */</script>'),
             array('<script type=\'text/javascript\'>test 10</script>', '<script type=\'text/javascript\'>/* <![CDATA[ */;test 10;/* ]]> */</script>'),
             array('<script type=\'javascript\'>test 11</script>', '<script type=\'javascript\'>/* <![CDATA[ */;test 11;/* ]]> */</script>'),
-            array('<script type="application/ld+json">{"@context": http://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>', '<script type="application/ld+json">{"@context": http://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>'),
+            array('<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>', '<script type="application/ld+json">{"@context": https://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>'),
         );
     }
 
