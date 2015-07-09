@@ -34,7 +34,7 @@
 		<div id="crossselling_list">
 			<ul id="crossselling_list_car" class="clearfix">
 				{foreach from=$orderProducts item='orderProduct' name=orderProduct}
-					<li class="product-box item" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
+					<li class="product-box item" itemprop="isRelatedTo" itemscope itemtype="https://schema.org/Product">
 						<a class="lnk_img product-image" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}" >
 							<img itemprop="image" src="{$orderProduct.image}" alt="{$orderProduct.name|htmlspecialchars}" />
 						</a>
