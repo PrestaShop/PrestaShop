@@ -27,10 +27,10 @@
 		{if $comments}
 			{foreach from=$comments item=comment}
 				{if $comment.content}
-				<div class="comment row" itemprop="review" itemscope itemtype="http://schema.org/Review">
+				<div class="comment row" itemprop="review" itemscope itemtype="https://schema.org/Review">
 					<div class="comment_author col-sm-2">
 						<span>{l s='Grade' mod='productcomments'}&nbsp;</span>
-						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
 							{section name="i" start=0 loop=5 step=1}
 								{if $comment.grade le $smarty.section.i.index}
 									<div class="star"></div>

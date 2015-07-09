@@ -34,7 +34,7 @@
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 6)}
 		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
-<div itemscope itemtype="http://schema.org/Product">
+<div itemscope itemtype="https://schema.org/Product">
 	<meta itemprop="url" content="{$link->getProductLink($product)}">
 	<div class="primary_block row">
 		{if !$content_only}
@@ -164,13 +164,13 @@
 			<p id="product_condition">
 				<label>{l s='Condition:'} </label>
 				{if $product->condition == 'new'}
-					<link itemprop="itemCondition" href="http://schema.org/NewCondition"/>
+					<link itemprop="itemCondition" href="https://schema.org/NewCondition"/>
 					<span class="editable">{l s='New product'}</span>
 				{elseif $product->condition == 'used'}
-					<link itemprop="itemCondition" href="http://schema.org/UsedCondition"/>
+					<link itemprop="itemCondition" href="https://schema.org/UsedCondition"/>
 					<span class="editable">{l s='Used'}</span>
 				{elseif $product->condition == 'refurbished'}
-					<link itemprop="itemCondition" href="http://schema.org/RefurbishedCondition"/>
+					<link itemprop="itemCondition" href="https://schema.org/RefurbishedCondition"/>
 					<span class="editable">{l s='Refurbished'}</span>
 				{/if}
 			</p>
@@ -258,8 +258,8 @@
 						{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 							<!-- prices -->
 							<div>
-								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">{strip}
-									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
+								<p class="our_price_display" itemprop="offers" itemscope itemtype="https://schema.org/Offer">{strip}
+									{if $product->quantity > 0}<link itemprop="availability" href="https://schema.org/InStock"/>{/if}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="our_price_display" class="price" itemprop="price" content="{$productPrice}">{convertPrice price=$productPrice|floatval}</span>
 										{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
