@@ -1,0 +1,8 @@
+{
+  "name": "prestashop-common",
+  "version": "1.0.0",
+  "dependencies": {
+    "cldrjs": "0.4.1",
+    "globalize": "1.0.0"
+  }
+}

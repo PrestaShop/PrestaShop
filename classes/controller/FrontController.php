@@ -897,8 +897,22 @@ class FrontControllerCore extends Controller
         $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
         $this->addJquery();
         $this->addJqueryPlugin('easing');
-        $this->addJS(_PS_JS_DIR_.'tools.js');
-        $this->addJS(_THEME_JS_DIR_.'global.js');
+        $this->addJS(array(
+            _PS_JS_DIR_.'cldr.js',
+            _PS_JS_DIR_.'tools.js',
+            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
+            _THEME_JS_DIR_.'global.js'
+        ));
 
         // Automatically add js files from js/autoload directory in the template
         if (@filemtime($this->getThemeDir().'js/autoload/')) {
