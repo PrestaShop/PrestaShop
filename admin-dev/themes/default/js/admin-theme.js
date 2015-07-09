@@ -160,11 +160,6 @@ $(document).ready(function() {
 			$('.page-head .breadcrumb').css('left', '70px');
 			$('.page-head .page-subtitle').css('left', '70px');
 
-		} else {
-			menuCollapse.css('margin-left', '');
-			$('.page-head .page-title').css('padding-left', '230px');
-			$('.page-head .breadcrumb').css('left', '230px');
-			$('.page-head .page-subtitle').css('left', '230px');
 		}
 	}
 
