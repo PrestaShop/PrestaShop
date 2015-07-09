@@ -53,8 +53,8 @@ class AdminLoginControllerCore extends AdminController
         $this->addJS(_PS_JS_DIR_.'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
         Media::addJsDef(array('img_dir' => _PS_IMG_));
-        Media::addJsDefL('one_error', $this->l('There is one error.'));
-        Media::addJsDefL('more_errors', $this->l('There are several errors.'));
+        Media::addJsDefL('one_error', $this->l('There is one error.', null, true, false));
+        Media::addJsDefL('more_errors', $this->l('There are several errors.', null, true, false));
 
         Hook::exec('actionAdminLoginControllerSetMedia');
 
