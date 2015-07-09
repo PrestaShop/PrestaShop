@@ -353,8 +353,8 @@ class AdminModulesControllerCore extends AdminController
             if (is_array($values) && count($values)) {
                 foreach ($values as $value) {
                     Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
-						VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
+                        INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
+                        VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
                 }
             }
         }
@@ -723,6 +723,15 @@ class AdminModulesControllerCore extends AdminController
 
                 if (!Tools::getValue('module_name')) {
                     $modules_list_save = implode('|', $modules);
+                }
+            } elseif (($modules = Tools::getValue($key)) && $key != 'checkAndUpdate' && $key != 'updateAll') {
+                if (strpos($modules, '|')) {
+                    $modules_list_save = $modules;
+                    $modules = explode('|', $modules);
+                }
+
+                if (!is_array($modules)) {
+                    $modules = (array)$modules;
                 }
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
