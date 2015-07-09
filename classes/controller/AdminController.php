@@ -1903,7 +1903,6 @@ class AdminControllerCore extends Controller
                 'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
                 'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
                 'employee' => $this->context->employee,
-                'current_version' => (string)Configuration::get('PS_INSTALL_VERSION'),
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
                 'quick_access' => $quick_access,
