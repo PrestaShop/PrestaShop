@@ -33,7 +33,11 @@
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
 	var idTree="{$id|escape:'html':'UTF-8'}";
-	var redirOnclick = true;
+	var treeClickFunc = function() {
+						location.href = location.href.replace(
+						/&id_category=[0-9]*/, "")+"&id_category="
+						+$(this).val();
+				};
 	function addDefaultCategory(elem)
 	{
 		$('select#id_category_default').append('<option value="' + elem.val()+'">' + (elem.val() !=1 ? elem.parent().find('label').html() : home) + '</option>');
@@ -122,9 +126,7 @@
 	{/if}
 	$(document).ready(function(){
 		$('#{$id|escape:'html':'UTF-8'}').tree('collapseAll');
-		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(function(){
-			location.href = location.href.replace(/&id_category=[0-9]*/, '') + '&id_category=' + $(this).val();
-		});
+		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(treeClickFunc);
 
 		{if isset($selected_categories)}
 			$('#no_default_category').hide();
