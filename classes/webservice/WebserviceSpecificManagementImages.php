@@ -972,7 +972,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 if ($this->defaultImage) {
                     $declination_path = $parent_path.$this->wsObject->urlSegment[3].'-default-'.$image_type['name'].'.jpg';
                 } else {
-                    if ($this->image_type == 'products') {
+                    if ($this->imageType == 'products') {
                         $declination_path = $parent_path.chunk_split($this->wsObject->urlSegment[3], 1, '/').$this->wsObject->urlSegment[3].'-'.$image_type['name'].'.jpg';
                     } else {
                         $declination_path = $parent_path.$this->wsObject->urlSegment[2].'-'.$image_type['name'].'.jpg';
