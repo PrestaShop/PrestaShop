@@ -71,6 +71,8 @@
 		<div id="page">
 			<div class="header-container">
 				<header id="header">
+					{assign var='display_banner' value={hook h='displayBanner'}}
+					{if $display_banner}
 					<div class="banner">
 						<div class="container">
 							<div class="row">
@@ -78,6 +80,7 @@
 							</div>
 						</div>
 					</div>
+					{/if}
 					<div class="nav">
 						<div class="container">
 							<div class="row">
