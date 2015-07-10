@@ -45,20 +45,24 @@ $(document).ready(function(){
 
         if (handler.checkTOS() === false)
         {
-            alert(aeuc_tos_err_str);
+            var to_display = $('<div/>').html(aeuc_tos_err_str).text();
+            alert(to_display);
             return;
         }
         if (aeuc_has_virtual_products === true && handler.checkVirtualProductRevocation() === false)
         {
-            alert(aeuc_virt_prod_err_str);
+            var to_display = $('<div/>').html(aeuc_virt_prod_err_str).text();
+            alert(to_display);
             return;
         }
         if (handler.selected_option === null) {
-            alert(aeuc_no_pay_err_str);
+            var to_display = $('<div/>').html(aeuc_no_pay_err_str).text();
+            alert(to_display);
             return;
         }
         if (handler.submitForm() === false) {
-            alert(aeuc_submit_err_str);
+            var to_display = $('<div/>').html(aeuc_submit_err_str).text();
+            alert(to_display);
             return;
         }
         return;
