@@ -1809,6 +1809,7 @@ class AdminOrdersControllerCore extends AdminController
 			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
 			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
 			'carrier_list' => $this->getCarrierList($order),
+            'recalculate_shipping_cost' => (int)Configuration::get('PS_ORDER_RECALCULATE_SHIPPING'),
 			'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
 				'order' => $order,
 				'products' => $products,

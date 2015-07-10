@@ -185,4 +185,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
 			$this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
 	}
+
+    /*
+     * Change configuration PS_ORDER_RECALCULATE_SHIPPING
+     */
+    public function ajaxProcessChangeRecalculteShippingOption()
+    {
+        Configuration::updateValue('PS_ORDER_RECALCULATE_SHIPPING', (int)Tools::getValue('recalculate_shipping_cost'));
+        die();
+    }
 }

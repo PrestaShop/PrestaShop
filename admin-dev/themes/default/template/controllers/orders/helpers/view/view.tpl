@@ -122,6 +122,25 @@
 				</div>
 				<!-- Orders Actions -->
 				<div class="well hidden-print">
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label class="control-label col-lg-4" style="text-align: left">{l s='On update, recalculate shipping cost?'}</label>
+							<div class="col-lg-8">
+								<span class="switch prestashop-switch fixed-width-lg"  style="display:inline-block">
+									<input type="radio" name="recalculate_shipping_cost" id="recalculate_shipping_cost_on" value="1" {($recalculate_shipping_cost == 1)?'checked="checked"':''} />
+									<label for="recalculate_shipping_cost_on">
+										{l s='Yes'}
+									</label>
+									<input type="radio" name="recalculate_shipping_cost" id="recalculate_shipping_cost_off" value="0" {($recalculate_shipping_cost == 0)?'checked="checked"':''}  />
+									<label for="recalculate_shipping_cost_off">
+										{l s='No'}
+									</label>
+									<a class="slide-button btn"></a>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
 					<a class="btn btn-default" href="javascript:window.print()">
 						<i class="icon-print"></i>
 						{l s='Print order'}
@@ -1366,6 +1385,15 @@
 				prevText: '',
 				nextText: '',
 				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+			});
+		});
+
+		$('input[name=recalculate_shipping_cost]').change(function() {
+			$.ajax({
+				type: 'POST',
+				headers: { "cache-control": "no-cache" },
+				url: "{$link->getAdminLink('AdminOrderPreferences')}",
+				data:  'ajax=1&action=changeRecalculteShippingOption&recalculate_shipping_cost='+$(this).val()
 			});
 		});
 

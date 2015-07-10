@@ -2369,6 +2369,10 @@ class OrderCore extends ObjectModel
 			return false;
 		}
 
+        if (!Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            return $this;
+        }
+
 		$fake_cart = new Cart($this->id_cart);
 		$new_cart = $fake_cart->duplicate();
 		$new_cart = $new_cart['cart'];
