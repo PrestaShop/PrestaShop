@@ -101,9 +101,9 @@ Tree.prototype =
 				this.$element.find(":input[type=radio]").click(
 					function()
 					{
-						location.href = location.href.replace(
-							/&id_category=[0-9]*/, "")+"&id_category="
-							+$(this).val();
+						var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+						var queryString = window.location.search.replace(/&id_category=[0-9]*/, "") + "&id_category=" + $(this).val();
+						location.href = newURL+queryString; // hash part is dropped: window.location.hash
 					}
 				);
 			}
