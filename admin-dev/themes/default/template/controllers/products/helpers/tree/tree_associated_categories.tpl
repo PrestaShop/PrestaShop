@@ -122,7 +122,9 @@
 	$(document).ready(function(){
 		$('#{$id|escape:'html':'UTF-8'}').tree('collapseAll');
 		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(function(){
-			location.href = location.href.replace(/&id_category=[0-9]*/, '') + '&id_category=' + $(this).val();
+			var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            var queryString = window.location.search.replace(/&id_category=[0-9]*/, "") + "&id_category=" + $(this).val();
+            location.href = newURL+queryString; // hash part is dropped: window.location.hash
 		});
 
 		{if isset($selected_categories)}
