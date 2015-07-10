@@ -61,7 +61,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
         $this->assignCommonHeaderData();
         $this->smarty->assign(array(
-            'header' => $this->l('INVOICE'),
+            'header' => $this->l('Invoice'),
         ));
 
         return $this->smarty->fetch($this->getTemplate('header'));

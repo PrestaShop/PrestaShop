@@ -66,9 +66,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     {
         $this->assignCommonHeaderData();
         $this->smarty->assign(array(
-            'header' => $this->l('CREDIT SLIP'),
+            'header' => $this->l('Credit slip'),
         ));
-    
+
         return $this->smarty->fetch($this->getTemplate('header'));
     }
 
