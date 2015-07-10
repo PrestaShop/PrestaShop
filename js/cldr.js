@@ -267,4 +267,9 @@ function testFormatCurrency() {
 		console.log(v);
 	});
 	
+	priceDisplayPrecision = 2; // global should be already defined
+	console.log(formatCurrency(-.5698, 1, '$', 0));
+	formatCurrencyCldr(-.5698, function(v) {
+		console.log(v);
+	});
 }
