@@ -617,7 +617,7 @@
 								</td>
 								<td class="text-right">
 									<div class="btn-group">
-										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}">
+										<a class="btn btn-default" href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;addaddress=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 											<i class="icon-edit"></i> {l s='Edit'}
 										</a>
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -625,7 +625,7 @@
 										</button>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}">
+												<a href="?tab=AdminAddresses&amp;id_address={$address['id_address']}&amp;deleteaddress&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 													<i class="icon-trash"></i>
 													{l s='Delete'}
 												</a>
