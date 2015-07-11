@@ -71,13 +71,15 @@
 		<div id="page">
 			<div class="header-container">
 				<header id="header">
-					<div class="banner">
-						<div class="container">
-							<div class="row">
-								{hook h="displayBanner"}
+					{if {hook h="displayBanner"}}
+						<div class="banner">
+							<div class="container">
+								<div class="row">
+									{hook h="displayBanner"}
+								</div>
 							</div>
 						</div>
-					</div>
+					{/if}
 					<div class="nav">
 						<div class="container">
 							<div class="row">
