@@ -45,6 +45,8 @@ class CurrencyCore extends ObjectModel
     public $sign;
     public $name;
     public $format;
+    public $blank;
+    public $decimals;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -88,9 +90,12 @@ class CurrencyCore extends ObjectModel
 
         if($this->iso_code){
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+
             $this->sign = $cldrCurrency['symbol'];
             $this->name = $cldrCurrency['name'];
             $this->format = $this->cldr->getCurrencyFormatPattern();
+            $this->blank = 1;
+            $this->decimals = 1;
         }
 
 		if (!$this->conversion_rate)
@@ -191,32 +196,63 @@ class CurrencyCore extends ObjectModel
 		($group_by ? ' GROUP BY c.`id_currency`' : '').
 		' ORDER BY `iso_code` ASC');
 
-        $cldr = new Repository(Context::getContext()->language);
+        return self::addCldrDatasToCurrency($tab, $object);
+    }
 
-        foreach($tab as $k => $c){
-            if($object){
-                $tab[$k] = Currency::getCurrencyInstance($c['id_currency']);
-            }else{
-                $currency = $cldr->getCurrency($c['iso_code']);
-
-                $tab[$k]['name'] = ucfirst($currency['name']);
-                $tab[$k]['iso_code_num'] = $currency['iso_code'];
-                $tab[$k]['sign'] = $currency['symbol'];
-            }
-        }
-
-		return $tab;
-	}
-
-	public static function getCurrenciesByIdShop($id_shop = 0)
-	{
-		return Db::getInstance()->executeS('
+    public static function getCurrenciesByIdShop($id_shop = 0)
+    {
+        $currencies = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
 		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
 		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
 		ORDER BY `iso_code` ASC');
-	}
+
+        return self::addCldrDatasToCurrency($currencies);
+    }
+
+    /*
+     * Add Cldr datas to result query or signe object/array
+     *
+     * @param $currencies mixed object|array
+     * @param $isObject bool
+     */
+    protected static function addCldrDatasToCurrency($currencies, $isObject = false)
+    {
+        $cldr = new Repository(Context::getContext()->language);
+
+        if (is_array($currencies)) {
+            foreach ($currencies as $k => $c) {
+                if ($isObject) {
+                    $currencies[$k] = Currency::getCurrencyInstance($c['id_currency']);
+                } else {
+                    $currency = $cldr->getCurrency($c['iso_code']);
+
+                    $currencies[$k]['name'] = ucfirst($currency['name']);
+                    $currencies[$k]['iso_code_num'] = $currency['iso_code'];
+                    $currencies[$k]['sign'] = $currency['symbol'];
+                }
+            }
+        } else {
+            if ($isObject) {
+                $currencies = Currency::getCurrencyInstance($currencies['id_currency']);
+            } else {
+                $currency = $cldr->getCurrency($currencies['iso_code']);
+
+                $currencies['name'] = ucfirst($currency['name']);
+                $currencies['iso_code_num'] = $currency['iso_code'];
+                $currencies['sign'] = $currency['symbol'];
+            }
+        }
+
+        return $currencies;
+    }
+
+    public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
+    {
+        if (is_null($id_shop)) {
+            $id_shop = Context::getContext()->shop->id;
+        }
 
 
 	public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
@@ -244,8 +280,9 @@ class CurrencyCore extends ObjectModel
 					AND c.`active` = 1
 					AND mc.id_shop = '.(int)$id_shop.'
 				ORDER BY c.`iso_code` ASC';
-		return Db::getInstance()->executeS($sql);
-	}
+
+        return Db::getInstance()->executeS($sql);
+    }
 
 	public static function checkPaymentCurrencies($id_module, $id_shop = null)
 	{
@@ -259,8 +296,9 @@ class CurrencyCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'module_currency`
 				WHERE `id_module` = '.(int)$id_module.'
 					AND `id_shop` = '.(int)$id_shop;
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-	}
+        
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+    }
 
 	public static function getCurrency($id_currency)
 	{
