@@ -2132,6 +2132,11 @@ class ToolsCore
         }
 
         $hex = str_replace('#', '', $hex);
+
+        if (Tools::strlen($hex) == 3) {
+            $hex .= $hex;
+        }
+
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
