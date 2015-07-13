@@ -1359,7 +1359,7 @@ abstract class ModuleCore
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
                     $tmp_module = Adapter_ServiceLocator::get($module);
-                    
+
                     $item = new stdClass();
                     $item->id = $tmp_module->id;
                     $item->warning = $tmp_module->warning;
@@ -2987,7 +2987,7 @@ abstract class ModuleCore
 
             $count = count($override_file);
             for ($i = 0; $i < $count; ++$i) {
-                if (preg_match('/(\/\/.*)/i', $override_file[$i])) {
+                if (preg_match('/(^\s*\/\/.*)/i', $override_file[$i])) {
                     $override_file[$i] = '#--remove--#';
                 } elseif (preg_match('/(^\s*\/\*)/i', $override_file[$i])) {
                     if (!preg_match('/(^\s*\* module:)/i', $override_file[$i + 1])
