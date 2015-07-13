@@ -1,0 +1,11 @@
+{
+  "name": "prestashop-common-tests-js",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jasmine": "^0.9.0",
+    "grunt-contrib-jshint": "^0.11.2"
+  }
+}

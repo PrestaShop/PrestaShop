@@ -52,6 +52,8 @@ admin-dev/themes/default/css/screen.css
 vendor/*
 /composer.phar
 js/vendor/node_modules/*
+tests/js/node_modules/*
+tests/js/.grunt/*
 
 # Translations and emails templates
 

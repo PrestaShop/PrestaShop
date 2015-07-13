@@ -47,6 +47,7 @@ var cldrCatalogsPath = '/translations/cldr/datas/';
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrLazyLoadCatalogs(catalogs, callback) {
+	if (typeof catalogs !== 'object' || catalogs.length < 1) throw Error('No catalog to load!');
 	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
 	var culture = full_language_code.split('-'); // en-us -> [en, us]
 	culture = culture[0] + '-' + culture[1].toUpperCase(); // en-US

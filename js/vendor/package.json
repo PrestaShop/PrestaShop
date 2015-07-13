@@ -1,5 +1,5 @@
 {
-  "name": "prestashop-common",
+  "name": "prestashop-common-js",
   "version": "1.0.0",
   "dependencies": {
     "cldrjs": "0.4.1",

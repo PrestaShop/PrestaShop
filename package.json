@@ -1,0 +1,10 @@
+{
+  "name": "prestashop-common",
+  "version": "1.0.0",
+  "scripts": {
+    "preinstall": "cd js/vendor && npm install",
+    "install": "cd tests/js && npm install",
+    "postinstall": "./getgruntcli.sh",
+    "test": "cd tests/js && grunt test"
+  }
+}
