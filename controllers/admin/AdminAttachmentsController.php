@@ -86,7 +86,7 @@ class AdminAttachmentsControllerCore extends AdminController
         parent::setMedia();
 
         $this->addJs(_PS_JS_DIR_.'/admin/attachments.js');
-        Media::addJsDefL('confirm_text', $this->l('This attachment is associated with the following products, do you really want to  delete it?'));
+        Media::addJsDefL('confirm_text', $this->l('This attachment is associated with the following products, do you really want to  delete it?', null, true, false));
     }
 
     public static function displayHumanReadableSize($size)

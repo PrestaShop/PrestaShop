@@ -230,14 +230,14 @@ class AdminEmailsControllerCore extends AdminController
 
         $this->addJs(_PS_JS_DIR_.'/admin/email.js');
 
-        Media::addJsDefL('textMsg', $this->l('This is a test message. Your server is now configured to send email.'));
-        Media::addJsDefL('textSubject', $this->l('Test message -- Prestashop'));
-        Media::addJsDefL('textSendOk', $this->l('A test email has been sent to the email address you provided.'));
-        Media::addJsDefL('textSendError', $this->l('Error: Please check your configuration'));
+        Media::addJsDefL('textMsg', $this->l('This is a test message. Your server is now configured to send email.', null, true, false));
+        Media::addJsDefL('textSubject', $this->l('Test message -- Prestashop', null, true, false));
+        Media::addJsDefL('textSendOk', $this->l('A test email has been sent to the email address you provided.', null, true, false));
+        Media::addJsDefL('textSendError', $this->l('Error: Please check your configuration', null, true, false));
         Media::addJsDefL('token_mail', $this->token);
-        Media::addJsDefL('errorMail', $this->l('This email address is not valid'));
+        Media::addJsDefL('errorMail', $this->l('This email address is not valid', null, true, false));
     }
-    
+
     public function processDelete()
     {
         if ((int)$id_mail = Tools::getValue('id_mail', 0)) {
@@ -259,7 +259,7 @@ class AdminEmailsControllerCore extends AdminController
         );
         unset($this->toolbar_btn['new']);
     }
-    
+
     public function updateOptionPsMailPasswd($value)
     {
         if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD')) {
@@ -281,12 +281,12 @@ class AdminEmailsControllerCore extends AdminController
         $this->addToolBarModulesListButton();
         unset($this->toolbar_btn['save']);
         $back = $this->context->link->getAdminLink('AdminDashboard');
-        
+
         $this->toolbar_btn['back'] = array(
             'href' => $back,
             'desc' => $this->l('Back to the dashboard')
         );
-        
+
         // $this->content .= $this->renderOptions();
 
         $this->context->smarty->assign(array(
@@ -296,7 +296,7 @@ class AdminEmailsControllerCore extends AdminController
             'page_header_toolbar_title' => $this->page_header_toolbar_title,
             'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
-        
+
         return parent::initContent();
     }
 
@@ -344,10 +344,10 @@ class AdminEmailsControllerCore extends AdminController
                 array('<', '>', '"', '&'),
                 Tools::htmlentitiesUTF8($smtpPassword)
             );
-            
+
             $smtpPort = Tools::getValue('smtpPort');
             $smtpEncryption = Tools::getValue('smtpEnc');
-            
+
             $result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
             die($result === true ? 'ok' : $result);
         }
