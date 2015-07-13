@@ -479,10 +479,8 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
 
                 $_POST['id_image'] = $image->id;
-            }
-
-            /* Choose product cover image */
-            elseif (Tools::getIsset('coverImage')) {
+            } elseif (Tools::getIsset('coverImage')) {
+                /* Choose product cover image */
                 Image::deleteCover($image->id_product);
                 $image->cover = 1;
                 if (!$image->update()) {
@@ -493,10 +491,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'_'.$this->context->shop->id.'.jpg');
                     $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
                 }
-            }
-
-            /* Choose product image position */
-            elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
+            } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
+                /* Choose product image position */
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
                 $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
             }
@@ -651,9 +647,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     } else {
                         $this->errors[] = Tools::displayError('You do not have permission to add this.');
                     }
-                }
-                // Add new
-                else {
+                } else {
+                    // Add new
                     if ($this->tabAccess['add'] === '1') {
                         if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'))) {
                             $this->errors[] = Tools::displayError('This combination already exists.');
@@ -988,9 +983,8 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
             }
-        }
-        // Product preview
-        elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+        } elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+            // Product preview
             $this->display = 'edit';
             $this->action = 'save';
             if (Tools::getValue('id_product')) {
@@ -1004,41 +998,36 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product duplication
-        elseif (Tools::getIsset('duplicate'.$this->table)) {
+        } elseif (Tools::getIsset('duplicate'.$this->table)) {
+            // Product duplication
             if ($this->tabAccess['add'] === '1') {
                 $this->action = 'duplicate';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
-        }
-        // Product images management
-        elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+        } elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+            // Product images management
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'image';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product attributes management
-        elseif (Tools::isSubmit('submitProductAttribute')) {
+        } elseif (Tools::isSubmit('submitProductAttribute')) {
+            // Product attributes management
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'productAttribute';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product features management
-        elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+        } elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+            // Product features management
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'features';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product specific prices management NEVER USED
-        elseif (Tools::isSubmit('submitPricesModification')) {
+        } elseif (Tools::isSubmit('submitPricesModification')) {
+            // Product specific prices management NEVER USED
             if ($this->tabAccess['add'] === '1') {
                 $this->action = 'pricesModification';
             } else {
@@ -1057,9 +1046,8 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Customization management
-        elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+        } elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+            // Customization management
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'customizationConfiguration';
                 $this->tab_display = 'customization';
@@ -1760,9 +1748,8 @@ class AdminProductsController extends AdminProductsControllerCore
                                 $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
                             }
                         }
-                    }
-                    // if errors : stay on edit page
-                    else {
+                    } else {
+                        // if errors : stay on edit page
                         $this->display = 'edit';
                     }
                 } else {
@@ -4093,16 +4080,14 @@ class AdminProductsController extends AdminProductsControllerCore
                 // if we are in all shops context, it's not possible to manage quantities at this level
                 if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL) {
                     $show_quantities = false;
-                }
-                // if we are in group shop context
-                elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP) {
+                } elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP) {
+                    // if we are in group shop context
                     // if quantities are not shared between shops of the group, it's not possible to manage them at group level
                     if (!$shop_group->share_stock) {
                         $show_quantities = false;
                     }
-                }
-                // if we are in shop context
-                else {
+                } else {
+                    // if we are in shop context
                     // if quantities are shared between shops of the group, it's not possible to manage them for a given shop
                     if ($shop_group->share_stock) {
                         $show_quantities = false;
