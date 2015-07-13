@@ -2069,13 +2069,13 @@ class AdminOrdersControllerCore extends AdminController
                 $order_invoice->shipping_tax_computation_method = (int)$tax_calculator->computation_method;
 
                 // Update current order field, only shipping because other field is updated later
-                $order->total_shipping += $order_invoice->total_shipping_tax_incl;
-                $order->total_shipping_tax_excl += $order_invoice->total_shipping_tax_excl;
-                $order->total_shipping_tax_incl += ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
+                $order->total_shipping = $order_invoice->total_shipping_tax_incl;
+                $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
+                $order->total_shipping_tax_incl = ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
 
-                $order->total_wrapping += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
-                $order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-                $order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+                $order->total_wrapping = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+                $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+                $order->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
                 $order_invoice->add();
 
                 $order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
@@ -2089,10 +2089,10 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
             } else {
-                $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-                $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
-                $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-                $order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+                $order_invoice->total_paid_tax_excl = Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+                $order_invoice->total_paid_tax_incl = Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+                $order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                $order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
                 $order_invoice->update();
             }
         }
@@ -2108,12 +2108,12 @@ class AdminOrdersControllerCore extends AdminController
         $order_detail->createList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int)Tools::getValue('add_product_warehouse'));
 
         // update totals amount of order
-        $order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $order->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+        $order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $order->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 
-        $order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
-        $order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-        $order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+        $order->total_paid = Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
+        $order->total_paid_tax_excl = Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+        $order->total_paid_tax_incl = Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
 
         if (isset($order_invoice) && Validate::isLoadedObject($order_invoice)) {
             $order->total_shipping = $order_invoice->total_shipping_tax_incl;
@@ -2121,9 +2121,9 @@ class AdminOrdersControllerCore extends AdminController
             $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
         }
         // discount
-        $order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_incl += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 
         // Save changes of order
         $order->update();
@@ -2764,7 +2764,8 @@ class AdminOrdersControllerCore extends AdminController
 
             $id_product = $order_detail->product_id;
             if ($delete) {
-                $order_detail->delete();
+                $order_detail->delete(true);
+                $order_detail->deleteCustomization();
             }
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
@@ -2776,7 +2777,8 @@ class AdminOrdersControllerCore extends AdminController
                 );
 
             if ($delete) {
-                $order_detail->delete();
+                $order_detail->delete(true);
+                $order_detail->deleteCustomization();
             }
         } else {
             $this->errors[] = Tools::displayError('This product cannot be re-stocked.');

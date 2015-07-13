@@ -504,7 +504,7 @@ function init()
 		}
 
 		$( ":text.customization_field.required" ).each(function() {
-			if ($.trim($('#textField4').val()) == '')
+			if ($.trim($(this).val()) == '')
 			{console.log($(this).attr('name'));
 				jAlert(txt_add_product_no_value_for_required_fields);
 				go = false;
@@ -571,6 +571,7 @@ function init()
 
 							$('.standard_refund_fields').hide();
 							$('.partial_refund_fields').hide();
+							$('.add_product_fields, .edit_product_fields').hide();
 							$('.order_action').show();
 						}
 						else
@@ -814,6 +815,7 @@ function init()
 		if (!confirm(txt_confirm))
 			return false;
 		var tr_product = $(this).closest('.product-line-row');
+		var classList = tr_product.attr('class').split(/\s+/);
 		var id_order_detail = $(this).closest('.product-line-row').find('td .edit_product_id_order_detail').val();
 		var query = 'ajax=1&action=deleteProductLine&token='+token+'&id_order_detail='+id_order_detail+'&id_order='+id_order;
 
@@ -829,6 +831,13 @@ function init()
 				{
 					tr_product.fadeOut('slow', function() {
 						$(this).remove();
+						$.each(classList, function(index, item){
+							if (0 === item.indexOf('customized-')){
+								$('.' + item).each(function(){
+									$(this).remove();
+								});
+							}
+						});
 					});
 					updateAmounts(data.order);
 					updateInvoice(data.invoices);
