@@ -31,6 +31,7 @@ use ICanBoogie\CLDR\RunTimeProvider;
 use ICanBoogie\CLDR\WebProvider;
 use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\Numbers;
+use ICanBoogie\CLDR\NumberFormatter;
 use ICanBoogie\CLDR\Repository as cldrRepository;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
