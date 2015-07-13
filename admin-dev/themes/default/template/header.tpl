@@ -289,7 +289,7 @@
 {/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
-						<li class="hidden-sm">
+						<li class="hidden-sm hidden-xs">
 							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to PrestaShop Marketplace account'}">
 								<i class="icon-chain-broken"></i>
 								<span class="string-long">{l s='Connect to PrestaShop Marketplace account'}</span>
@@ -338,7 +338,7 @@
 							<li class="divider"></li>
 							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 							<li class="divider"></li>
-							<li class="version"><span>Prestashop<sup>TM</sup> {$current_version|escape:'html':'UTF-8'}</span></li>
+							<li class="version"><span>Prestashop<sup>TM</sup> {$version|escape:'html':'UTF-8'}</span></li>
 						</ul>
 					</li>
 				</ul>

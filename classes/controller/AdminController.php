@@ -1903,7 +1903,6 @@ class AdminControllerCore extends Controller
                 'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
                 'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
                 'employee' => $this->context->employee,
-                'current_version' => (string)Configuration::get('PS_INSTALL_VERSION'),
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
                 'quick_access' => $quick_access,
@@ -2594,10 +2593,10 @@ class AdminControllerCore extends Controller
         if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
             $this->addJS('https://cdn.statuspage.io/se-v2.js');
 
-            Media::addJsDefL('status_operational', $this->l('Operational'));
-            Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance'));
-            Media::addJsDefL('status_partial_outage', $this->l('Partial Outage'));
-            Media::addJsDefL('status_major_outage', $this->l('Major Outage'));
+            Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
+            Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
+            Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
+            Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
             Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
         }
 

@@ -43,7 +43,7 @@
 			{/foreach}
 			{assign var='modules' value=$modules|substr:0:-1}
 			<li>
-				<a id="desc-module-update-all" class="toolbar_btn" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;update={$modules|urlencode}" title="{l s='Update all'}">
+				<a id="desc-module-update-all" class="toolbar_btn" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;updateAll=1" title="{l s='Update all'}">
 					<i class="process-icon-refresh"></i>
 					<div>{l s='Update all'}</div>
 				</a>
