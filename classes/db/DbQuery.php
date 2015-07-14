@@ -171,6 +171,34 @@ class DbQueryCore
     {
         return $this->join('NATURAL JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : ''));
     }
+    
+    /**
+     * Adds a RIGHT JOIN clause
+     *
+     * @param string      $table Table name (without prefix)
+     * @param string|null $alias Table alias
+     * @param string|null $on    ON clause
+     *
+     * @return DbQuery
+     */
+    public function rightJoin($table, $alias = null, $on = null)
+    {
+        return $this->join('RIGHT JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' `'.pSQL($alias).'`' : '').($on ? ' ON '.$on : ''));
+    }
+    
+    /**
+     * Adds a RIGHT OUTER JOIN clause
+     *
+     * @param string      $table Table name (without prefix)
+     * @param string|null $alias Table alias
+     * @param string|null $on    ON clause
+     *
+     * @return DbQuery
+     */
+    public function rightOuterJoin($table, $alias = null, $on = null)
+    {
+        return $this->join('RIGHT OUTER JOIN `'._DB_PREFIX_.bqSQL($table).'`'.($alias ? ' '.pSQL($alias) : '').($on ? ' ON '.$on : ''));
+    }
 
     /**
      * Adds a restriction in WHERE clause (each restriction will be separated by AND statement)
