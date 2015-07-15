@@ -1,6 +1,7 @@
 // javascript variables available on all Admin pages
 var currency;
 var full_language_code;
+var priceDisplayPrecision;
 
 describe("CLDR api", function() {
 	

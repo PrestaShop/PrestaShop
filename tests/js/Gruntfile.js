@@ -1,17 +1,17 @@
 /* jshint node: true */
 
 // Put here src files that we want to use for jasmine and jshint.
-var strictSrc = ["../../js/cldr.js",
+var strictSrc = ["../../js/cldr.js"
                  
     ];
 
 // Put here src files that we want to use with jasmine, but do not want to vlaidate under jshint
-var legacySrc = ["../../js/tools.js",
+var legacySrc = ["../../js/tools.js"
                  
     ];
 
 // Put here all jasmine specs files
-var specs = ["spec/**/*.js",
+var specs = ["spec/**/*.js"
              
     ];
 
@@ -28,7 +28,7 @@ var vendor = ["../../js/jquery/jquery-1*.min.js",
 	              "../../js/vendor/node_modules/globalize/dist/globalize/relative-time.js",
               /* to here */
               "../../js/vendor/node_modules/**/dist/**/*.js",
-              "!../../js/vendor/node_modules/**/dist/**/node[_-]main.js",
+              "!../../js/vendor/node_modules/**/dist/**/node[_-]main.js"
     ];
 
 module.exports = function (grunt) {
@@ -40,8 +40,8 @@ module.exports = function (grunt) {
 			all: strictSrc.concat(specs),
 			options: {
 				jshintrc: '.jshintrc',
-				force: false,
-			},
+				force: false
+			}
 		},
 		jasmine: {
 			short: {
@@ -49,15 +49,15 @@ module.exports = function (grunt) {
 				options: {
 					specs: specs,
 					vendor: vendor,
-					display: 'short',
-				},
+					display: 'short'
+				}
 			},
 			def: {
 				src: strictSrc.concat(legacySrc),
 				options: {
 					specs: specs,
-					vendor: vendor,
-				},
+					vendor: vendor
+				}
 			},
 			verbose: {
 				src: strictSrc.concat(legacySrc),
@@ -65,9 +65,9 @@ module.exports = function (grunt) {
 					specs: specs,
 					vendor: vendor,
 					captureExceptions: true,
-					summary: true,
-				},
-			},
+					summary: true
+				}
+			}
 		}
 	});
 	
