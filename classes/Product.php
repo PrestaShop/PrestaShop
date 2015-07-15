@@ -5326,11 +5326,12 @@ class ProductCore extends ObjectModel
     public function setCoverWs($id_image)
     {
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, `'._DB_PREFIX_.'image` i
-			SET image_shop.`cover` = 0
-			WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
-			AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+            SET image_shop.`cover` = NULL
+            WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
+            AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop`
-			SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
+            SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
 
         return true;
     }
@@ -5343,26 +5344,26 @@ class ProductCore extends ObjectModel
     public function getWsImages()
     {
         return Db::getInstance()->executeS('
-		SELECT i.`id_image` as id
-		FROM `'._DB_PREFIX_.'image` i
-		'.Shop::addSqlAssociation('image', 'i').'
-		WHERE i.`id_product` = '.(int)$this->id.'
-		ORDER BY i.`position`');
+            SELECT i.`id_image` as id
+            FROM `'._DB_PREFIX_.'image` i
+            '.Shop::addSqlAssociation('image', 'i').'
+            WHERE i.`id_product` = '.(int)$this->id.'
+            ORDER BY i.`position`');
     }
 
     public function getWsStockAvailables()
     {
         return Db::getInstance()->executeS('SELECT `id_stock_available` id, `id_product_attribute`
-														FROM `'._DB_PREFIX_.'stock_available`
-														WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
+			FROM `'._DB_PREFIX_.'stock_available`
+			WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
     }
 
     public function getWsTags()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_tag` as id
-		FROM `'._DB_PREFIX_.'product_tag`
-		WHERE `id_product` = '.(int)$this->id);
+    		SELECT `id_tag` as id
+    		FROM `'._DB_PREFIX_.'product_tag`
+    		WHERE `id_product` = '.(int)$this->id);
     }
 
     /**
