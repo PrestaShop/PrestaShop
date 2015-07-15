@@ -4522,7 +4522,7 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
                 // if we are in shop context
-                else {
+                elseif (Shop::isFeatureActive()) {
                     // if quantities are shared between shops of the group, it's not possible to manage them for a given shop
                     if ($shop_group->share_stock) {
                         $show_quantities = false;
