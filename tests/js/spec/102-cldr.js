@@ -8,6 +8,7 @@ describe("CLDR api", function() {
 		
 		currency = { 'iso_code': 'EUR' };
 		full_language_code = 'en-us';
+		priceDisplayPrecision = 2;
 		
 		cldrLoadedCatalogs = []; // reset registry of loaded catalogs
 		cldrLoaderError = false;
@@ -21,6 +22,20 @@ describe("CLDR api", function() {
 					return fakeSupplementalLikelySubtagsCatalog;
 				case cldrCatalogsPath+'supplemental/numberingSystems.json':
 					return fakeSupplementalNumberingSystemsCatalog;
+				case cldrCatalogsPath+'main/en-US/ca-gregorian.json':
+					return fakeEnCalendarCatalog;
+				case cldrCatalogsPath+'main/en-US/currencies.json':
+					return fakeEnCurrenciesCatalog;
+				case cldrCatalogsPath+'main/en-US/timeZoneNames.json':
+					return fakeEnTimeZoneNamesCatalog;
+				case cldrCatalogsPath+'supplemental/currencyData.json':
+					return fakeSupplementalCurrencyDataCatalog;
+				case cldrCatalogsPath+'supplemental/timeData.json':
+					return fakeSupplementalTimeDataCatalog;
+				case cldrCatalogsPath+'supplemental/plurals.json':
+					return fakeSupplementalPluralsCatalog;
+				case cldrCatalogsPath+'supplemental/weekData.json':
+					return fakeSupplementalWeekDataCatalog;
 				default:
 					throw Error(url+" was not mocked for tests!");
 			}
@@ -53,7 +68,7 @@ describe("CLDR api", function() {
 	});
 	
 	
-	// FIXME: how to test async behavior, since we have to mock $.get object...
+	// FIXME: how to test async behavior, since we have to mock $.get function correctly...
 	xit("can load an existing catalog asynchronously", function() {
 		var callback = jasmine.createSpy();
 		
@@ -76,75 +91,112 @@ describe("CLDR api", function() {
 		expect(t2).toEqual(57.67);
 	});
 
+	
+	it("can load catalogs for Date features, and can make simple formatter calls", function() {
+		var globalize = cldrForDate();
+		var t1 = globalize.dateFormatter({ datetime: "medium" })(new Date(2011, 11, 31, 22, 45, 59));
+		
+		expect(t1).toEqual('Dec 31, 2011, 10:45:59 PM');
+	});
+	
+	
+	it("can load catalogs for Currency features, and can make simple formatter calls with manual currency set (to EUR)", function() {
+		var currencyIsoCode = 'EUR';
+		var globalize = cldrForCurrencies();
+		var t1 = globalize.currencyFormatter(currencyIsoCode)(59.99);
+		
+		expect(t1).toEqual('€59.99');
+	});
+	
+	
+	it("can load catalogs for Currency features through currency wrapper method, and can make simple formatter calls with auto currency set", function() {
+		var formatter = cldrForCurrencyFormatterWrapper(null, {style: "name"});
+		var t1 = formatter(39.991268);
+		
+		expect(t1).toEqual('39.99 euros');
+	});
+	
+	
+	it("can give same result than old wrapped api for Number features with floats", function(done) {
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatNumber(1234.09876543, 4, '_', ';');
+		var t2 = '';
+		formatNumberCldr(1234.09876543, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		}, 4);
+	});
+	
+	
+	it("can give same result than old wrapped api for Number features with integers", function(done) {
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatNumber(1234, 4, '_', ';');
+		var t2 = '';
+		formatNumberCldr(1234, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		}, 4);
+	});
+	
+	
+	it("can give same result than old wrapped api for Number features with rounds", function(done) {
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatNumber(1234.00000000001, 4, '_', ';');
+		var t2 = '';
+		formatNumberCldr(1234.00000000001, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		}, 4);
+	});
+	
+	
+	it("can give same result than old wrapped api for Currency features with 2 decimals precision", function(done) {
+		priceDisplayPrecision = 2;
+		
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatCurrency(12344.12345657, 1, '$', 0);
+		var t2 = '';
+		formatCurrencyCldr(12344.12345657, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		});
+	});
+	
+	
+	it("can give same result than old wrapped api for Currency features with 6 decimals precision", function(done) {
+		priceDisplayPrecision = 6;
+		
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatCurrency(22344.12345657, 1, '$', 0);
+		var t2 = '';
+		formatCurrencyCldr(22344.12345657, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		});
+	});
+	
+	
+	it("can give same result than old wrapped api for Currency features with negative prices", function(done) {
+		priceDisplayPrecision = 2;
+		
+		// FIXME: We try firstly the old wrapped method in order to load cldr catalogs synchronously,
+		// because async loading does not work since we cannot moke $.get call properly.
+		var t1 = formatCurrency(-0.5698, 1, '$', 0);
+		var t2 = '';
+		formatCurrencyCldr(-0.5698, function(v) {
+			t2 = v;
+			expect(t1).toEqual(t2);
+			done();
+		});
+	});
 });
-
-
-// TODO : refacto les tests ci-dessous par du jasmine :)
-
-//////////////////
-// UNIT TESTING //
-//////////////////
-
-function testCurrenciesSync() {
-	var glCurrencyFormatter = cldrForCurrencyFormatterWrapper();
-	console.log(glCurrencyFormatter(59.99));
-}
-function testCurrenciesAsync() {
-	cldrForCurrencyFormatterWrapper(function(formatter) {
-		console.log(formatter(39.991268));
-	}, {style: "name"});
-}
-
-function testDateSync() {
-	console.log(cldrForDate().formatDate( new Date(), { datetime: "medium" }));
-}
-function testDateAsync() {
-	cldrForDate(function(gl) {
-		console.log(gl.formatDate( new Date(), { datetime: "medium" }));
-	});
-}
-
-//////////////////////////
-// NON REGRESSION TESTS //
-//////////////////////////
-
-function testFormatNumber() {
-	console.log(formatNumber(1234.09876543, 4, '_', ';'));
-	formatNumberCldr(1234.09876543, function(v) {
-		console.log(v);
-	}, 4);
-	
-	console.log(formatNumber(1234, 4, '_', ';'));
-	formatNumberCldr(1234, function(v) {
-		console.log(v);
-	}, 4);
-	
-	console.log(formatNumber(1234.00000000001, 4, '_', ';'));
-	formatNumberCldr(1234.00000000001, function(v) {
-		console.log(v);
-	}, 4);
-	
-	formatNumberCldr(123456.987654, function(v) {
-		console.log(v);
-	});
-}
-
-function testFormatCurrency() {
-	priceDisplayPrecision = 2; // global should be already defined
-	console.log(formatCurrency(12344.12345657, 1, '$', 0));
-	formatCurrencyCldr(12344.12345657, function(v) {
-		console.log(v);
-	});
-	
-	priceDisplayPrecision = 6; // global should be already defined
-	console.log(formatCurrency(22344.12345657, 1, '$', 0));
-	formatCurrencyCldr(22344.12345657, function(v) {
-		console.log(v);
-	});
-	
-	priceDisplayPrecision = 2; // global should be already defined
-	console.log(formatCurrency(-.5698, 1, '$', 0));
-	formatCurrencyCldr(-.5698, function(v) {
-		console.log(v);
-	});
-}

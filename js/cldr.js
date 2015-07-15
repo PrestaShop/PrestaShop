@@ -148,7 +148,7 @@ function cldrForCurrencies(callback) {
  */
 function cldrForCurrencyFormatterWrapper(callback, options) {
 	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
-	var currencyIsoCode = currency['iso_code'];
+	var currencyIsoCode = currency.iso_code;
 	
 	if (sync) {
 		var globalize = cldrForCurrencies();
@@ -177,7 +177,7 @@ function cldrForCurrencyFormatterWrapper(callback, options) {
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrForDate(callback) {
-	var catalogs = ['main/en/ca-gregorian', 'main/en/numbers', 'main/en/timeZoneNames', 'supplemental/timeData',
+	var catalogs = ['main/en/numbers', 'main/en/ca-gregorian', 'main/en/timeZoneNames', 'supplemental/timeData',
 	                'supplemental/weekData', 'supplemental/likelySubtags'];
 	return cldrLazyLoadCatalogs(catalogs, callback);
 }

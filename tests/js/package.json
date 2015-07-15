@@ -2,7 +2,9 @@
   "name": "prestashop-common-tests-js",
   "version": "1.0.0",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "test-verbose": "grunt test-verbose",
+    "test-short": "grunt test-short"
   },
   "devDependencies": {
     "grunt-contrib-jasmine": "^0.9.0",
