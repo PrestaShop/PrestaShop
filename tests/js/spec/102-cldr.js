@@ -1,3 +1,4 @@
+// jshint undef:false
 // javascript variables available on all Admin pages
 var currency;
 var full_language_code;
