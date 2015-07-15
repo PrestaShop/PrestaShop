@@ -1,16 +1,29 @@
 {
-    "validthis" : true
-  , "multistr"  : true
-  , "laxcomma"  : true
-  , "laxbreak"  : true
-  , "browser"   : true
-  , "eqeqeq"    : false
-  , "eqnull"    : true
-  , "debug"     : true
-  , "devel"     : true
-  , "curly"     : false
-  , "boss"      : true
-  , "expr"      : true
-  , "asi"       : true
-  , "supernew"  : true
+  "devel": true,
+  "debug": true,
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": false,
+  "curly": true,
+  "eqeqeq": true,
+  "eqnull": true,
+  "immed": true,
+  "indent": 4,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "trailing": true,
+  "smarttabs": true,
+  "sub": true,
+  "jasmine": true,
+  "globals": {
+    "$": false
+  }
 }
