@@ -1363,7 +1363,7 @@ class CategoryCore extends ObjectModel
             }
         }
 
-        if ($moved_category === false || !$position) {
+        if ($moved_category === false) {
             return false;
         }
         // < and > statements rather than BETWEEN operator
