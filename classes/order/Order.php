@@ -1854,7 +1854,7 @@ class OrderCore extends ObjectModel
                 $total += $payment->amount;
             } else {
                 $amount = Tools::convertPrice($payment->amount, $payment->id_currency, false);
-                if ($currency->id == Configuration::get('PS_DEFAULT_CURRENCY', null, null, $this->id_shop)) {
+                if ($currency->id == Configuration::get('PS_CURRENCY_DEFAULT', null, null, $this->id_shop)) {
                     $total += $amount;
                 } else {
                     $total += Tools::convertPrice($amount, $currency->id, true);
