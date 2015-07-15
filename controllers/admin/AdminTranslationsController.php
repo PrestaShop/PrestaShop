@@ -274,11 +274,10 @@ class AdminTranslationsControllerCore extends AdminController
     protected function writeTranslationFile($override_file = false)
     {
         $type = Tools::toCamelCase($this->type_selected, true);
-
         if (isset($this->translations_informations[$this->type_selected])) {
             $translation_informations = $this->translations_informations[$this->type_selected];
         } else {
-            return;
+            die(Tools::jsonEncode(array()));
         }
 
         if ($override_file) {
@@ -289,22 +288,22 @@ class AdminTranslationsControllerCore extends AdminController
 
         if ($file_path && !file_exists($file_path)) {
             if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
+                die(Tools::jsonEncode(array('errors' => true, 'msg' => sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)))));
             } elseif (!touch($file_path)) {
-                throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
+                die(Tools::jsonEncode(array('errors' => true, 'msg' => sprintf(Tools::displayError('File "%s" cannot be created'), $file_path))));
             }
+        }
+
+        //transform json inputs data to POST vars
+        $inputs = json_decode($_POST['data'] ? $_POST['data'] : '');
+        foreach ($inputs as $input) {
+            $_POST[$input->name] = $input->value;
         }
 
         $thm_name = str_replace('.', '', Tools::getValue('theme'));
         $kpi_key = substr(strtoupper($thm_name.'_'.Tools::getValue('lang')), 0, 16);
 
         if ($fd = fopen($file_path, 'w')) {
-            // Get value of button save and stay
-            $save_and_stay = Tools::isSubmit('submitTranslations'.$type.'AndStay');
-
-            // Get language
-            $lang = strtolower(Tools::getValue('lang'));
-
             // Unset all POST which are not translations
             unset(
                 $_POST['submitTranslations'.$type],
@@ -312,7 +311,8 @@ class AdminTranslationsControllerCore extends AdminController
                 $_POST['lang'],
                 $_POST['token'],
                 $_POST['theme'],
-                $_POST['type']
+                $_POST['type'],
+                $_POST['data']
             );
 
             // Get all POST which aren't empty
@@ -320,6 +320,7 @@ class AdminTranslationsControllerCore extends AdminController
             foreach ($_POST as $key => $value) {
                 if (!empty($value)) {
                     $to_insert[$key] = $value;
+                    $to_insert[$key] = Tools::getValue($key);
                 }
             }
 
@@ -336,15 +337,9 @@ class AdminTranslationsControllerCore extends AdminController
             }
             fwrite($fd, "\n?>");
             fclose($fd);
-
-            // Redirect
-            if ($save_and_stay) {
-                $this->redirect(true);
-            } else {
-                $this->redirect();
-            }
+            die(Tools::jsonEncode(array('errors' => false, 'redirect' => self::$currentIndex.'&token='.$this->token.'&conf=4', 'msg' => $this->l('Successful update'))));
         } else {
-            throw new PrestaShopException(sprintf(Tools::displayError('Cannot write this file: "%s"'), $file_path));
+            die(Tools::jsonEncode(array('errors' => true, 'msg' => sprintf(Tools::displayError('Cannot write this file: "%s"'), $file_path))));
         }
     }
 
@@ -950,12 +945,6 @@ class AdminTranslationsControllerCore extends AdminController
             if (!Tools::file_exists_cache($file_name)) {
                 file_put_contents($file_name, '');
             }
-            if (!is_writable($file_name)) {
-                throw new PrestaShopException(sprintf(
-                    Tools::displayError('Cannot write to the theme\'s language file (%s). Please check writing permissions.'),
-                    $file_name
-                ));
-            }
 
             // this string is initialized one time for a file
             $str_write .= "<?php\n\nglobal \$_MODULE;\n\$_MODULE = array();\n";
@@ -1519,26 +1508,32 @@ class AdminTranslationsControllerCore extends AdminController
                 if ($this->tabAccess['edit'] === '1') {
                     // Get list of modules
                     if ($modules = $this->getListModules()) {
+
+                        //transform json inputs data to POST vars
+                        $inputs = json_decode($_POST['data'] ? $_POST['data'] : '');
+                        foreach ($inputs as $input) {
+                            $_POST[$input->name] = $input->value;
+                        }
+                        unset($_POST['data']);
+
                         // Get files of all modules
                         $arr_files = $this->getAllModuleFiles($modules, null, $this->lang_selected->iso_code, true);
 
                         // Find and write all translation modules files
                         foreach ($arr_files as $value) {
+                            if (!is_writable($value['file_name'])) {
+                                die(Tools::jsonEncode(array('errors' => true, 'msg' =>  sprintf(Tools::displayError('Cannot write to the theme\'s language file (%s). Please check writing permissions.'), $value['file_name']))));
+                            }
                             $this->findAndWriteTranslationsIntoFile($value['file_name'], $value['files'], $value['theme'], $value['module'], $value['dir']);
                         }
 
                         // Clear modules cache
                         Tools::clearCache();
 
-                        // Redirect
-                        if (Tools::getIsset('submitTranslationsModulesAndStay')) {
-                            $this->redirect(true);
-                        } else {
-                            $this->redirect();
-                        }
+                        die(Tools::jsonEncode(array('errors' => false, 'redirect' => self::$currentIndex.'&token='.$this->token.'&conf=4', 'msg' => $this->l('Successful update'))));
                     }
                 } else {
-                    $this->errors[] = Tools::displayError('You do not have permission to edit this.');
+                    die(Tools::jsonEncode(array('errors' => true, 'msg' => Tools::displayError('You do not have permission to edit this.'))));
                 }
             }
         } catch (PrestaShopException $e) {
@@ -1731,20 +1726,15 @@ class AdminTranslationsControllerCore extends AdminController
         return $str_output;
     }
 
-    public function displayLimitPostWarning($count)
+    public function getEnvLimitPost()
     {
-        $return = array();
-        if ((ini_get('suhosin.post.max_vars') && ini_get('suhosin.post.max_vars') < $count) || (ini_get('suhosin.request.max_vars') && ini_get('suhosin.request.max_vars') < $count)) {
-            $return['error_type'] = 'suhosin';
-            $return['post.max_vars'] = ini_get('suhosin.post.max_vars');
-            $return['request.max_vars'] = ini_get('suhosin.request.max_vars');
-            $return['needed_limit'] = $count + 100;
-        } elseif (ini_get('max_input_vars') && ini_get('max_input_vars') < $count) {
-            $return['error_type'] = 'conf';
-            $return['max_input_vars'] = ini_get('max_input_vars');
-            $return['needed_limit'] = $count + 100;
+        if (ini_get('suhosin.post.max_vars') || ini_get('suhosin.request.max_vars')) {
+            return max(array(ini_get('suhosin.post.max_vars'), ini_get('suhosin.request.max_vars')));
+        } elseif (ini_get('max_input_vars')) {
+            return ini_get('max_input_vars');
         }
-        return $return;
+
+        return false;
     }
 
     /**
@@ -1834,7 +1824,6 @@ class AdminTranslationsControllerCore extends AdminController
             'missing_translations' => $missing_translations_front,
             'count' => $count,
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
-            'limit_warning' => $this->displayLimitPostWarning($count),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'tabsArray' => $tabs_array,
         ));
@@ -2023,7 +2012,6 @@ class AdminTranslationsControllerCore extends AdminController
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
             'count' => $count,
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
-            'limit_warning' => $this->displayLimitPostWarning($count),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'tabsArray' => $tabs_array,
             'missing_translations' => $missing_translations_back
@@ -2111,7 +2099,6 @@ class AdminTranslationsControllerCore extends AdminController
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
             'count' => count($string_to_translate),
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
-            'limit_warning' => $this->displayLimitPostWarning(count($string_to_translate)),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'errorsArray' => $string_to_translate,
             'missing_translations' => $count_empty
@@ -2202,7 +2189,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
             'count' => $count,
-            'limit_warning' => $this->displayLimitPostWarning($count),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'tabsArray' => $tabs_array,
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
@@ -2641,7 +2627,6 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
-            'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'tinyMCE' => $this->getTinyMCEForMails($this->lang_selected->iso_code),
             'mail_content' => $this->displayMailContent($core_mails, $subject_mail, $this->lang_selected, 'core', $this->l('Core emails')),
@@ -2926,7 +2911,6 @@ class AdminTranslationsControllerCore extends AdminController
             $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
                 'default_theme_name' => self::DEFAULT_THEME_NAME,
                 'count' => $this->total_expression,
-                'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
                 'mod_security_warning' => Tools::apacheModExists('mod_security'),
                 'textarea_sized' => AdminTranslationsControllerCore::TEXTAREA_SIZED,
                 'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
@@ -3052,7 +3036,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
             'count' => count($tabs_array['PDF']),
-            'limit_warning' => $this->displayLimitPostWarning(count($tabs_array['PDF'])),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),
             'tabsArray' => $tabs_array,
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),

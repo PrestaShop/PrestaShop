@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{extends file="helpers/view/view.tpl"}
+{extends file="controllers/translations/helpers/view/form_view.tpl"}
 
 {block name="override_tpl"}
 	{if $mod_security_warning}
@@ -31,124 +31,106 @@
 		{l s='Apache mod_security is activated on your server. This could result in some Bad Request errors'}
 	</div>
 	{/if}
-	{if !empty($limit_warning)}
-	<div class="alert alert-warning">
-		{if $limit_warning['error_type'] == 'suhosin'}
-			{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
-
-			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
-			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the Suhosin limit to'}
-		{else}
-			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}
-			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase this limit to'}
-		{/if}
-		{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
+	<div class="alert alert-info">
+		<p>
+			{l s='Click on the title of a section to open its fieldsets.'}
+		</p>
 	</div>
-	{else}
+	<div class="panel">
+		<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
+		<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
+	</div>
 
-		<div class="alert alert-info">
-			<p>
-				{l s='Click on the title of a section to open its fieldsets.'}
-			</p>
-		</div>
+	<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
 		<div class="panel">
-			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
-			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
-		</div>
+			<input type="hidden" name="lang" value="{$lang}" />
+			<input type="hidden" name="type" value="{$type}" />
+			<input type="hidden" name="theme" value="{$theme}" />
 
-		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
-			<div class="panel">
-				<input type="hidden" name="lang" value="{$lang}" />
-				<input type="hidden" name="type" value="{$type}" />
-				<input type="hidden" name="theme" value="{$theme}" />
-
-				<script type="text/javascript">
-					$(document).ready(function(){
-						$('a.useSpecialSyntax').click(function(){
-							var syntax = $(this).find('img').attr('alt');
-							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
-						});
-
-						$("a.sidetoggle").click(function(){
-							$('#'+$(this).attr('data-slidetoggle')).slideToggle();
-							return false;
-						});
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$('a.useSpecialSyntax').click(function(){
+						var syntax = $(this).find('img').attr('alt');
+						$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
 					});
-				</script>
 
-				<div id="BoxUseSpecialSyntax">
-					<div class="alert alert-warning">
-						<p>
-							{l s='Some of these expressions use this special syntax: %s.' sprintf='%d'}
-							<br />
-							{l s='You MUST use this syntax in your translations. Here are several examples:'}
-						</p>
-						<ul>
-							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
-							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
-							<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
-						</ul>
-					</div>
-				</div>
-				<div class="panel-footer">
-					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-					{$toggle_button}
-					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+					$("a.sidetoggle").click(function(){
+						$('#'+$(this).attr('data-slidetoggle')).slideToggle();
+						return false;
+					});
+				});
+			</script>
+
+			<div id="BoxUseSpecialSyntax">
+				<div class="alert alert-warning">
+					<p>
+						{l s='Some of these expressions use this special syntax: %s.' sprintf='%d'}
+						<br />
+						{l s='You MUST use this syntax in your translations. Here are several examples:'}
+					</p>
+					<ul>
+						<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+						<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+						<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
+					</ul>
 				</div>
 			</div>
-			{foreach $tabsArray as $k => $newLang}
-				{if !empty($newLang)}
-					<div class="panel">
-						<h3>
-							<a href="#" class="sidetoggle" data-slidetoggle="{$k}-tpl">
-								<i class="icon-caret-down"></i>
-								{$k}
-							</a>
-							- {$newLang|count} {l s='expressions'}
-							{if isset($missing_translations[$k])} <span class="label label-danger">{$missing_translations[$k]} {l s='missing'}</span>{/if}
-						</h3>
-						<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
-							<table class="table">
-								{counter start=0 assign=irow}
-								{foreach $newLang as $key => $value}{counter}
-									<tr>
-										<td width="40%">{$key|stripslashes}</td>
-										<td width="2%">=</td>
-										<td width="40%"> {*todo : md5 is already calculated in AdminTranslationsController*}
-											{if $key|strlen < $textarea_sized}
-												<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-													value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
-											{else}
-												<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
+			<div class="panel-footer">
+				<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+				{$toggle_button}
+				<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+				<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+			</div>
+		</div>
+		{foreach $tabsArray as $k => $newLang}
+			{if !empty($newLang)}
+				<div class="panel">
+					<h3>
+						<a href="#" class="sidetoggle" data-slidetoggle="{$k}-tpl">
+							<i class="icon-caret-down"></i>
+							{$k}
+						</a>
+						- {$newLang|count} {l s='expressions'}
+						{if isset($missing_translations[$k])} <span class="label label-danger">{$missing_translations[$k]} {l s='missing'}</span>{/if}
+					</h3>
+					<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
+						<table class="table">
+							{counter start=0 assign=irow}
+							{foreach $newLang as $key => $value}{counter}
+								<tr>
+									<td width="40%">{$key|stripslashes}</td>
+									<td width="2%">=</td>
+									<td width="40%"> {*todo : md5 is already calculated in AdminTranslationsController*}
+										{if $key|strlen < $textarea_sized}
+											<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
 												name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
-												>{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
-											{/if}
-										</td>
-										<td width="18%">
-											{if isset($value.use_sprintf) && $value.use_sprintf}
-												<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}">
-													<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
-												</a>
-											{/if}
-										</td>
-									</tr>
-								{/foreach}
-							</table>
-							<div class="panel-footer">
-							<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
-						</div>
-						</div>
-
+												value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
+										{else}
+											<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
+											name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
+											>{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}</textarea>
+										{/if}
+									</td>
+									<td width="18%">
+										{if isset($value.use_sprintf) && $value.use_sprintf}
+											<a class="useSpecialSyntax" title="{l s='This expression uses a special syntax:'} {$value.use_sprintf}">
+												<img src="{$smarty.const._PS_IMG_}admin/error.png" alt="{$value.use_sprintf}" />
+											</a>
+										{/if}
+									</td>
+								</tr>
+							{/foreach}
+						</table>
+						<div class="panel-footer">
+						<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+						<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+						<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 					</div>
-				{/if}
-			{/foreach}
-		</form>
-	{/if}
+					</div>
+
+				</div>
+			{/if}
+		{/foreach}
+	</form>
 
 {/block}
