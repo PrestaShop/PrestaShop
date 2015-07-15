@@ -2382,19 +2382,25 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (!$medias && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
-            $medias = array(_MEDIA_SERVER_1_, _MEDIA_SERVER_2_, _MEDIA_SERVER_3_);
+        if (
+            !$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
+            && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+        ) {
+            $medias = array(
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+            );
         }
 
         $media_domains = '';
-        if ($medias[0] != '') {
-            $media_domains = 'RewriteCond %{HTTP_HOST} ^'.$medias[0].'$ [OR]'."\n";
-        }
-        if ($medias[1] != '') {
-            $media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$medias[1].'$ [OR]'."\n";
-        }
-        if ($medias[2] != '') {
-            $media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$medias[2].'$ [OR]'."\n";
+        foreach ($medias as $media) {
+            foreach ($media as $media_url) {
+                if ($media_url) {
+                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^'.$media_url.'$ [OR]'."\n";
+                }
+            }
         }
 
         if (Configuration::get('PS_WEBSERVICE_CGI_HOST')) {
