@@ -2379,6 +2379,7 @@ class OrderCore extends ObjectModel
 
 		//assign order id_address_delivery to cart
 		$new_cart->id_address_delivery = $this->id_address_delivery;
+        //$new_cart->updateAddressId($new_cart->id_address_delivery, $this->id_address_delivery);
 
 		//assgign id_carrier
 		$new_cart->id_carrier = $this->id_carrier;

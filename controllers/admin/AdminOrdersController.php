@@ -2867,9 +2867,9 @@ class AdminOrdersControllerCore extends AdminController
 		$fake_cart = new Cart($order->id_cart);
 
 		//assign order id_address_delivery to cart
-		$fake_cart->id_address_delivery = $order->id_address_delivery;
+        $fake_cart->updateAddressId($fake_cart->id_address_delivery, $order->id_address_delivery);
 
-		$delivery_option_list = $fake_cart->getDeliveryOptionList();
+		$delivery_option_list = $fake_cart->getDeliveryOptionList(null, true);
 		$delivery_option_list_formated = array();
 
 		foreach (current($delivery_option_list) as $key => $delivery_option)
