@@ -1970,7 +1970,7 @@ class ToolsCore
     }
 
     /**
-     * returns the rounded value down of $value to specified precision
+     * returns the rounded value up of $value to specified precision
      *
      * @param float $value
      * @param int $precision
@@ -1992,7 +1992,7 @@ class ToolsCore
     }
 
     /**
-     * returns the rounded value up of $value to specified precision
+     * returns the rounded value down of $value to specified precision
      *
      * @param float $value
      * @param int $precision
