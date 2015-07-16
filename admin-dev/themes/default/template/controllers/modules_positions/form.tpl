@@ -37,7 +37,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
 			<div class="col-lg-9">
-				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
+				<select class="chosen" name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{if !$hooks}
 						<option value="0">{l s='Please select a module'}</option>
 					{/if}
