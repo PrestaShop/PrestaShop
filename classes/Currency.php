@@ -30,8 +30,11 @@ class CurrencyCore extends ObjectModel
 {
 	public $id;
 
-	/** @var string Iso code */
-	public $iso_code;
+    /** @var string Name */
+    public $name;
+
+    /** @var string Iso code */
+    public $iso_code;
 
 	/** @var string exchange rate from euros */
 	public $conversion_rate;
@@ -43,25 +46,25 @@ class CurrencyCore extends ObjectModel
 	public $active;
 
     public $sign;
-    public $name;
     public $format;
     public $blank;
     public $decimals;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'currency',
-		'primary' => 'id_currency',
-		'multilang_shop' => true,
-		'fields' => array(
-			'iso_code' => 		array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-			'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
-			'deleted' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'active' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-		),
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'currency',
+        'primary' => 'id_currency',
+        'multilang_shop' => true,
+        'fields' => array(
+            'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'iso_code' =>       array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
+            'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'active' =>         array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        ),
+    );
 
 	/** @var array Currency cache */
 	static protected $currencies = array();
@@ -102,25 +105,35 @@ class CurrencyCore extends ObjectModel
 			$this->conversion_rate = 1;
 	}
 
-	/**
-	 * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
-	 * If it's true, currency is not added.
-	 *
-	 * @see ObjectModelCore::add()
-	 */
-	public function add($autodate = true, $nullValues = false)
-	{
-		if ((float)$this->conversion_rate <= 0)
-			return false;
-		return Currency::exists($this->iso_code) ? false : parent::add($autodate, $nullValues);
-	}
+    /**
+     * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
+     * If it's true, currency is not added.
+     *
+     * @see ObjectModelCore::add()
+     */
+    public function add($autodate = true, $nullValues = false)
+    {
+        if ((float)$this->conversion_rate <= 0) {
+            return false;
+        }
 
-	public function update($autodate = true, $nullValues = false)
-	{
-		if ((float)$this->conversion_rate <= 0)
-			return false;
-		return parent::update($autodate, $nullValues);
-	}
+        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+        $this->name = $cldrCurrency['name'];
+
+        return Currency::exists($this->iso_code) ? false : parent::add($autodate, $nullValues);
+    }
+
+    public function update($autodate = true, $nullValues = false)
+    {
+        if ((float)$this->conversion_rate <= 0) {
+            return false;
+        }
+
+        $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+        $this->name = $cldrCurrency['name'];
+
+        return parent::update($autodate, $nullValues);
+    }
 
 	/**
 	 * Check if a curency already exists.
