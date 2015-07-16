@@ -644,24 +644,24 @@ class ToolsCore
         }
         if ($currency === null) {
             $currency = $context->currency;
-        }
-        // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-        elseif (is_int($currency)) {
+        } elseif (is_int($currency)) { // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
         $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+
         return $cldr->getPrice($price, $currency->iso_code);
     }
 
     /*
-     * Return a number well formatted
-     * @param float $number A number
-     * @param nullable $currency / not used anymaore
-     */
+	 * Return a number well formatted
+	 * @param float $number A number
+	 * @param nullable $currency / not used anymaore
+	 */
     public static function displayNumber($number, $currency = null)
     {
         $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+
         return $cldr->getNumber($number);
     }
 
