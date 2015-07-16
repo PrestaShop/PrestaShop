@@ -979,7 +979,11 @@ class AdminCustomersControllerCore extends AdminController
         if (Customer::customerExists($customer->email)) {
             $this->errors[] = Tools::displayError('This customer already exists as a non-guest.');
         } elseif ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id))) {
-            Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
+            if ($id_order = (int)Tools::getValue('id_order')) {
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders').'&id_order='.$id_order.'&vieworder&conf=3');
+            } else {
+                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&viewcustomer&conf=3&token='.$this->token);
+            }
         } else {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
