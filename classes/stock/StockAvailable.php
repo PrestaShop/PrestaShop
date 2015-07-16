@@ -646,6 +646,7 @@ class StockAvailableCore extends ObjectModel
     {
         if ($shop_group->share_stock) {
             $shop_list = Shop::getShops(false, $shop_group->id, true);
+        }
 
         if (count($shop_list) > 0) {
             $id_shops_list = implode(', ', $shop_list);
