@@ -54,7 +54,7 @@
 				<td>&nbsp;</td>
 				<td>{$line.carrier_name}</td>
 				<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
-				<td class="center">
+				<td id="price_carrier_{$line.id_carrier}" class="center">
 					{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}
 						{displayPrice price=$line.shipping_cost_tax_incl currency=$currency->id}
 					{else}

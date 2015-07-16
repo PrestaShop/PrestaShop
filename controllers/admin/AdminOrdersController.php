@@ -2473,12 +2473,12 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$order = $order->refreshShippingCost();
-
+        $orderCurrency = new Currency($order->id_currency);
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
 			'product' => $product,
 			'order' => $order,
-			'currency' => new Currency($order->id_currency),
+			'currency' => $orderCurrency,
 			'can_edit' => $this->tabAccess['edit'],
 			'invoices_collection' => $invoice_collection,
 			'current_id_lang' => Context::getContext()->language->id,
@@ -2510,7 +2510,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-			'customized_product' => is_array(Tools::getValue('product_quantity'))
+			'customized_product' => is_array(Tools::getValue('product_quantity')),
+            'currency' => $orderCurrency
 		)));
 	}
 
