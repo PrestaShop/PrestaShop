@@ -336,7 +336,7 @@
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
+							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 							<li class="divider"></li>
 							<li class="version"><span>Prestashop<sup>TM</sup> {$version|escape:'html':'UTF-8'}</span></li>
 						</ul>
