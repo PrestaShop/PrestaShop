@@ -42,6 +42,11 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->order = new Order($this->order_invoice->id_order);
         $this->smarty = $smarty;
 
+        // If shop_address is void, then update it with current one.
+        // But no DB save required here to avoid massive updates for bulk PDF generation case.
+        // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
+        if (! $this->order_invoice->shop_address) $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress();
+        
         // header informations
         $this->date = Tools::displayDate($this->order->invoice_date);
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
