@@ -5,9 +5,14 @@ var strictSrc = ["../../js/cldr.js"
                  
     ];
 
-// Put here src files that we want to use with jasmine, but do not want to vlaidate under jshint
+// Put here src files that we want to use with jasmine, but do not want to validate under jshint
 var legacySrc = ["../../js/tools.js"
                  
+    ];
+
+// Put here all jasmine helpers files
+var helpers = [ "helper/**/*.js"
+                
     ];
 
 // Put here all jasmine specs files
@@ -17,6 +22,7 @@ var specs = ["spec/**/*.js"
 
 // Put here all vendor libraries to include
 var vendor = ["../../js/jquery/jquery-1*.min.js",
+              "node_modules/jquery-mockjax/dist/jquery.mockjax.min.js",
               /* From here, must load these files in the right order to work properly */
 	              "../../js/vendor/node_modules/cldrjs/dist/**/*.js",
 	              "../../js/vendor/node_modules/globalize/dist/globalize.js",
@@ -37,7 +43,7 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		jshint: {
-			all: strictSrc.concat(specs),
+			all: strictSrc.concat(helpers).concat(specs),
 			options: {
 				jshintrc: '.jshintrc',
 				force: false
@@ -48,6 +54,7 @@ module.exports = function (grunt) {
 				src: strictSrc.concat(legacySrc),
 				options: {
 					specs: specs,
+					helpers: helpers,
 					vendor: vendor,
 					display: 'short'
 				}
@@ -56,6 +63,7 @@ module.exports = function (grunt) {
 				src: strictSrc.concat(legacySrc),
 				options: {
 					specs: specs,
+					helpers: helpers,
 					vendor: vendor
 				}
 			},
@@ -63,6 +71,7 @@ module.exports = function (grunt) {
 				src: strictSrc.concat(legacySrc),
 				options: {
 					specs: specs,
+					helpers: helpers,
 					vendor: vendor,
 					captureExceptions: true,
 					summary: true

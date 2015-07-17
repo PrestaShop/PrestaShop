@@ -47,7 +47,9 @@ var cldrCatalogsPath = '/translations/cldr/datas/';
  * @returns Globalize instance in SYNC behavior only.
  */
 function cldrLazyLoadCatalogs(catalogs, callback) {
-	if (typeof catalogs !== 'object' || catalogs.length < 1) throw Error('No catalog to load!');
+	if (typeof catalogs !== 'object' || catalogs.length < 1) {
+		throw Error('No catalog to load!');
+	}
 	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
 	var culture = full_language_code.split('-'); // en-us -> [en, us]
 	culture = culture[0] + '-' + culture[1].toUpperCase(); // en-US
@@ -56,7 +58,7 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 		// Warning, Sync behavior will slow down Browser performances!
 		catalogs.forEach(function(catalog) {
 			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) == -1)
+			if ($.inArray(url, cldrLoadedCatalogs) === -1) {
 				$.ajax({
 					url: url,
 					dataType: 'json',
@@ -65,33 +67,44 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 						Globalize.load(data);
 						cldrLoadedCatalogs.push(url);
 					},
-					error: function() {
+					error: function(xhr) {
 						cldrLoaderError = true;
 					}
 				});
+			}
 		});
 		
-		if (!cldrLoaderError) return Globalize(culture);
+		if (!cldrLoaderError) {
+			return new Globalize(culture);
+		}
 	} else {
 		var deferreds = [];
 		catalogs.forEach(function(catalog) {
 			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) == -1)
+			if ($.inArray(url, cldrLoadedCatalogs) === -1) {
 				this.push($.get(url).done(function() {
 						cldrLoadedCatalogs.push(url);
 					}).fail(function() {
 						cldrLoaderError = true;
 					}));
+			}
 		}, deferreds);
 
-		$.when.apply($, deferreds).then(function() {
-			return [].slice.apply( arguments, [ 0 ] ).map(function( result ) {
-				return result[ 0 ];
-			});
-	    }).then( Globalize.load ).then(function() {
-	    	if (!cldrLoaderError) 
-	    		callback(Globalize(culture));
-	    });
+		if (deferreds.length > 0) {
+			$.when.apply($, deferreds).then(function() {
+				return [].slice.apply( arguments, [ 0 ] ).map(function( result ) {
+					return result[ 0 ];
+				});
+		    }).then( Globalize.load ).then(function() {
+		    	if (!cldrLoaderError) {
+		    		callback(new Globalize(culture));
+		    	} else {
+		    		throw Error('Cannot load given catalogs.');
+		    	}
+		    });
+		} else {
+			callback(new Globalize(culture));
+		}
 	}
 }
 

@@ -1,3 +1,4 @@
+/* jshint quotmark: double */
 /* This file contains a dump of CLDR catalogs to bypass CLDR loading of the catalogs through ajax calls */
 
 var fakeEnNumbersCatalog = {

@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "grunt-contrib-jasmine": "^0.9.0",
-    "grunt-contrib-jshint": "^0.11.2"
+    "grunt-contrib-jshint": "^0.11.2",
+    "jquery-mockjax": "^2.0.1"
   }
 }
