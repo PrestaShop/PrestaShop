@@ -76,7 +76,7 @@
 			{/foreach}
 			</div>
 			<div class="col-lg-2{if $images|count <= 1} hidden{/if}" id="caption_selection">
-				<select name="id_image">
+				<select name="id_caption">
 					<option value="0">{l s='All captions'}</option>
 					{foreach from=$images item=image}
 					<option value="{$image->id_image|intval}">

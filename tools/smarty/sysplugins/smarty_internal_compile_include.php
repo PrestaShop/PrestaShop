@@ -170,7 +170,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
             $_smarty_tpl = $compiler->template;
             eval("\$tpl_name = $include_file;");
             if (!isset($compiler->smarty->merged_templates_func[$tpl_name][$uid])) {
-                $tpl = new $compiler->smarty->template_class ($tpl_name, $compiler->smarty, $compiler->template, $compiler->template->cache_id, $compiler->template->compile_id);
+                $tpl = new $compiler->smarty->template_class($tpl_name, $compiler->smarty, $compiler->template, $compiler->template->cache_id, $compiler->template->compile_id);
                 // save unique function name
                 $compiler->smarty->merged_templates_func[$tpl_name][$uid]['func'] = $tpl->properties['unifunc'] = 'content_' . str_replace(array('.', ','), '_', uniqid('', true));
                 // use current nocache hash for inlined code
@@ -204,7 +204,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase
                     }
                     $compiler->merged_templates[$tpl->properties['unifunc']] = $compiled_code;
                     $has_compiled_template = true;
-                    unset ($tpl);
+                    unset($tpl);
                 }
             } else {
                 $has_compiled_template = true;

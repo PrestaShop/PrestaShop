@@ -128,7 +128,7 @@
 {block name="script"}
 
 	function showMemcached() {
-		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache') {
+		if ($('input[name="caching_system"]:radio:checked').val() == 'CacheMemcache' || $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcached') {
 			$('#memcachedServers').css('display', $('#cache_active_on').is(':checked') ? 'block' : 'none');
 			$('#ps_cache_fs_directory_depth').closest('.form-group').hide();
 		}

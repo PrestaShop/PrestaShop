@@ -39,6 +39,7 @@
 <div class="order_carrier_content box">
 	{if isset($virtual_cart) && $virtual_cart}
 		<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
+        <p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
 	{else}
 		<div id="HOOK_BEFORECARRIER">
 			{if isset($carriers) && isset($HOOK_BEFORECARRIER)}
@@ -71,7 +72,7 @@
 													{foreach $option.carrier_list as $carrier}
 														{if $carrier.logo}
 															<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{if !$carrier@last} - {/if}
 														{/if}
@@ -94,7 +95,7 @@
 															{else}
 																<span class="best_grade best_grade_speed">{l s='The fastest'}</span>
 															{/if}
-														{else if $option.is_best_price}
+														{elseif $option.is_best_price}
 															<span class="best_grade best_grade_price">{l s='The best price'}</span>
 														{/if}
 													{/if}
@@ -130,7 +131,7 @@
 													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														{if $first.logo}
 															<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$first.instance->name|escape:'htmlall':'UTF-8'}
 														{/if}
 													</td>
@@ -173,7 +174,7 @@
 																			)
 																		{/if}
 																	{/if}
-																{strip}
+																{/strip}
 															{/foreach}
 														{/if}
 													</td>
@@ -201,7 +202,7 @@
 														<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
 															{if $carrier.logo}
 																<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-															{else if !$option.unique_carrier}
+															{elseif !$option.unique_carrier}
 																{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{/if}
 														</td>
@@ -244,7 +245,7 @@
 																				)
 																			{/if}
 																		{/if}
-																	{strip}
+																	{/strip}
 																{/foreach}
 															{/if}
 														</td>
@@ -305,6 +306,7 @@
 					</div>
 				{/if}
 				{if $recyclablePackAllowed}
+					<p class="carrier_title">{l s='Recyclable Packaging'}</p>
 					<div class="checkbox recyclable">
 						<label for="recyclable">
 							<input type="checkbox" name="recyclable" id="recyclable" value="1"{if $recyclable == 1} checked="checked"{/if} />
@@ -317,7 +319,7 @@
 						<hr style="" />
 					{/if}
 					<p class="carrier_title">{l s='Gift'}</p>
-					<p class="checkbox gift">
+					<div class="checkbox gift">
 						<input type="checkbox" name="gift" id="gift" value="1"{if $cart->gift == 1} checked="checked"{/if} />
 						<label for="gift">
 							{l s='I would like my order to be gift wrapped.'}
@@ -340,7 +342,7 @@
 								</i>
 							{/if}
 						</label>
-					</p>
+					</div>
 					<p id="gift_div">
 						<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
 						<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
@@ -348,11 +350,11 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions && $cms_id && !$advanced_payment_api}
+			{if $conditions && $cms_id && (isset($advanced_payment_api) && !$advanced_payment_api)}
 				{if $opc}
 					<hr style="" />
 				{/if}
-                {if $override_tos_display }
+                {if isset($override_tos_display) && $override_tos_display}
                     {$override_tos_display}
                 {else}
                     <div class="box">

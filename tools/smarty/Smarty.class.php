@@ -800,7 +800,7 @@ class Smarty extends Smarty_Internal_TemplateBase
             }
         } else {
             $_result = array();
-            foreach (self::$global_tpl_vars AS $key => $var) {
+            foreach (self::$global_tpl_vars as $key => $var) {
                 $_result[$key] = $var->value;
             }
 

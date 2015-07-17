@@ -12,7 +12,7 @@ Tree.prototype =
 	init: function ()
 	{
 		var that = $(this);
-		var name = this.$element.find('ul.tree input').first().attr('name');
+		var name = this.$element.parent().find('ul.tree input').first().attr('name');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").unbind('click');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
 			function ()
@@ -95,17 +95,10 @@ Tree.prototype =
 					}
 				});
 			}
-			if (name != 'id_parent')
+			if (typeof(treeClickFunc) != 'undefined')
 			{
 				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(
-					function()
-					{
-						location.href = location.href.replace(
-							/&id_category=[0-9]*/, "")+"&id_category="
-							+$(this).val();
-					}
-				);
+				this.$element.find(":input[type=radio]").click(treeClickFunc);
 			}
 		}
 
@@ -126,7 +119,7 @@ Tree.prototype =
 
 		return $(this);
 	},
-	
+
 	collapseAll : function($speed)
 	{
 		this.$element.find("label.tree-toggler").each(
@@ -154,8 +147,8 @@ Tree.prototype =
 					selected.push($(this).val());
 				}
 			);
-			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
-			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
+			var name = $('#'+idTree).parent().find('ul.tree input').first().attr('name');
+			var inputType = $('#'+idTree).parent().find('ul.tree input').first().attr('type');
 			var useCheckBox = 0;
 			if (inputType == 'checkbox')
 			{

@@ -105,37 +105,22 @@ class Minify_HTML {
 
         // replace SCRIPTs (and minify) with placeholders
         $this->_html = preg_replace_callback(
-            '/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i'
-            ,array($this, '_removeScriptCB')
-            ,$this->_html
-            ,Media::getBackTrackLimit());
+            '/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i', array($this, '_removeScriptCB'), $this->_html, Media::getBackTrackLimit());
 
         // replace STYLEs (and minify) with placeholders
         $this->_html = preg_replace_callback(
-            '/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i'
-            ,array($this, '_removeStyleCB')
-            ,$this->_html
-            ,Media::getBackTrackLimit());
+            '/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i', array($this, '_removeStyleCB'), $this->_html, Media::getBackTrackLimit());
 
         // remove HTML comments (not containing IE conditional comments).
         $this->_html = preg_replace_callback(
-            '/<!--([\\s\\S]*?)-->/'
-            ,array($this, '_commentCB')
-            ,$this->_html
-            ,Media::getBackTrackLimit());
+            '/<!--([\\s\\S]*?)-->/', array($this, '_commentCB'), $this->_html, Media::getBackTrackLimit());
 
         // replace PREs with placeholders
-        $this->_html = preg_replace_callback('/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i'
-            ,array($this, '_removePreCB')
-            ,$this->_html
-            ,Media::getBackTrackLimit());
+        $this->_html = preg_replace_callback('/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i', array($this, '_removePreCB'), $this->_html, Media::getBackTrackLimit());
 
         // replace TEXTAREAs with placeholders
         $this->_html = preg_replace_callback(
-            '/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i'
-            ,array($this, '_removeTextareaCB')
-            ,$this->_html
-            ,Media::getBackTrackLimit());
+            '/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i', array($this, '_removeTextareaCB'), $this->_html, Media::getBackTrackLimit());
 
         // trim each line.
         // @todo take into account attribute values that span multiple lines.
@@ -150,9 +135,7 @@ class Minify_HTML {
 
         // remove ws outside of all elements
         $this->_html = preg_replace(
-            '/>(\\s(?:\\s*))?([^<]+)(\\s(?:\s*))?</'
-            ,'>$1$2$3<'
-            ,$this->_html);
+            '/>(\\s(?:\\s*))?([^<]+)(\\s(?:\s*))?</', '>$1$2$3<', $this->_html);
 
         // use newlines before 1st attribute in open tags (to limit line lengths)
 		// $this->_html = preg_replace('/(<[a-z\\-]+)\\s+([^>]+>)/i', "$1\n$2", $this->_html);
@@ -160,15 +143,11 @@ class Minify_HTML {
 
         // fill placeholders
         $this->_html = str_replace(
-            array_keys($this->_placeholders)
-            ,array_values($this->_placeholders)
-            ,$this->_html
+            array_keys($this->_placeholders), array_values($this->_placeholders), $this->_html
         );
         // issue 229: multi-pass to catch scripts that didn't get replaced in textareas
         $this->_html = str_replace(
-            array_keys($this->_placeholders)
-            ,array_values($this->_placeholders)
-            ,$this->_html
+            array_keys($this->_placeholders), array_values($this->_placeholders), $this->_html
         );
         return $this->_html;
     }

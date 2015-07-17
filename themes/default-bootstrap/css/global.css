@@ -8398,7 +8398,8 @@ div.star.star_hover:after {
 #facebook_block .facebook-fanbox {
   background: #fff;
   border: 1px solid #aaaaaa;
-  padding-bottom: 10px; }
+  display: inline-block;
+  max-width: 100%; }
 
 #cmsinfo_block {
   border-left: 1px solid #d9d9d9; }

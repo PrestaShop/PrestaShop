@@ -589,7 +589,7 @@ abstract class Smarty_Resource
 
         // make sure configs are not loaded via anything smarty can't handle
         if (isset($_incompatible_resources[$type])) {
-            throw new SmartyException ("Unable to use resource '{$type}' for config");
+            throw new SmartyException("Unable to use resource '{$type}' for config");
         }
 
         // load resource handler, identify unique resource name

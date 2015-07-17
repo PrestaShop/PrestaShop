@@ -422,17 +422,16 @@ $(document).ready(function () {
 						<div class="col-lg-3">
 							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
 						</div>
+						<div class="col-lg-6">
+							<select name="sp_reduction_type" id="sp_reduction_type">
+								<option value="amount" selected="selected">{$currency->name|escape:'html':'UTF-8'}</option>
+								<option value="percentage">{l s='%'}</option>
+							</select>
+						</div>
 						<div class="col-lg-3">
 							<select name="sp_reduction_tax" id="sp_reduction_tax">
 								<option value="0">{l s='Tax excluded'}</option>
 								<option value="1" selected="selected">{l s='Tax included'}</option>
-							</select>
-						</div>
-						<div class="col-lg-6">
-							<select name="sp_reduction_type" id="sp_reduction_type">
-								<option selected="selected">-</option>
-								<option value="amount">{$currency->name|escape:'html':'UTF-8'}</option>
-								<option value="percentage">{l s='Percent'}</option>
 							</select>
 						</div>
 					</div>
@@ -470,6 +469,12 @@ $(document).ready(function () {
 				hourText: '{l s='Hour' js=1}',
 				minuteText: '{l s='Minute' js=1}',
 			});
+			$('#sp_reduction_type').on('change', function() {
+				if (this.value == 'percentage')
+					$('#sp_reduction_tax').hide();
+				else
+					$('#sp_reduction_tax').show();
+			});
 		});
 	</script>
 	<div class="table-responsive">
@@ -483,7 +488,11 @@ $(document).ready(function () {
 				<th>{l s='Country'}</th>
 				<th>{l s='Group'}</th>
 				<th>{l s='Customer'}</th>
-				<th>{l s='Fixed price'}</th>
+				{if $country_display_tax_label}
+					<th>{l s='Fixed price (tax excl.)'}</th>
+				{else}
+					<th>{l s='Fixed price'}</th>
+				{/if}
 				<th>{l s='Impact'}</th>
 				<th>{l s='Period'}</th>
 				<th>{l s='From (quantity)'}</th>

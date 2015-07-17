@@ -252,7 +252,7 @@ class _smarty_template_buffer extends _smarty_parsetree
      *
      * @var array
      */
-    public $subtrees = Array();
+    public $subtrees = array();
 
     /**
      * Create root of parse tree for template elements

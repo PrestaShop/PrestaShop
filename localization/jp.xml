@@ -20,7 +20,7 @@
 		<unit type="base_distance" value="丈" />
 	</units>
 
-	<state>
+	<states>
 		<state name="Aichi" iso_code="JP-23" country="JP" zone="Asia"/>
 		<state name="Akita" iso_code="JP-05" country="JP" zone="Asia"/>
 		<state name="Aomori" iso_code="JP-02" country="JP" zone="Asia"/>
@@ -68,6 +68,6 @@
 		<state name="Yamagata" iso_code="JP-06" country="JP" zone="Asia"/>
 		<state name="Yamaguchi" iso_code="JP-35" country="JP" zone="Asia"/>
 		<state name="Yamanashi" iso_code="JP-19" country="JP" zone="Asia"/>
-	</state>
+	</states>
 
 </localizationPack>

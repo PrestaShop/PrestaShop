@@ -149,7 +149,8 @@ CREATE TABLE `PREFIX_carrier` (
   `grade` int(10)  DEFAULT '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`)
+  KEY `id_tax_rules_group` (`id_tax_rules_group`),
+  KEY `reference` (`id_reference`, `deleted`, `active`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_carrier_lang` (
@@ -626,7 +627,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `id_customer_message` int(10) unsigned NOT NULL auto_increment,
   `id_customer_thread` int(11) DEFAULT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address`  varchar(16) DEFAULT NULL,
   `user_agent` varchar(128) DEFAULT NULL,
@@ -680,7 +681,7 @@ CREATE TABLE `PREFIX_customization` (
   `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_customization`,`id_cart`,`id_product`, `id_address_delivery`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  UNIQUE `id_cart_product` (`id_cart`, `id_product`, `id_product_attribute`)
+  KEY `id_cart_product` (`id_cart`, `id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_customization_field` (
@@ -1383,7 +1384,8 @@ CREATE TABLE `PREFIX_pack` (
   `id_product_item` int(10) unsigned NOT NULL,
   `id_product_attribute_item` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`)
+  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`),
+  KEY `product_item` (`id_product_item`,`id_product_attribute_item`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_page` (
@@ -2408,8 +2410,7 @@ CREATE TABLE `PREFIX_supply_order_detail` (
 `tax_value_with_order_discount` DECIMAL(20,6) DEFAULT '0.000000',
 `price_with_order_discount_te` DECIMAL(20,6) DEFAULT '0.000000',
   PRIMARY KEY (`id_supply_order_detail`),
-  KEY `id_supply_order` (`id_supply_order`),
-  KEY `id_product` (`id_product`),
+  KEY `id_supply_order` (`id_supply_order`, `id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
   KEY `id_product_product_attribute` (`id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

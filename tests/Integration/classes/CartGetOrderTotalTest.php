@@ -29,11 +29,8 @@ namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-
 use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
-
 use Exception;
-
 use Address;
 use Carrier;
 use Cart;
@@ -125,8 +122,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $mode = null;
 
-        switch ($modeStr)
-        {
+        switch ($modeStr) {
             case 'up':
                 $mode = PS_ROUND_UP;
                 break;
@@ -158,8 +154,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $type = null;
 
-        switch ($typeStr)
-        {
+        switch ($typeStr) {
             case 'item':
                 $type = Order::ROUND_ITEM;
                 break;
@@ -195,8 +190,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $name = $rate.'% TAX';
 
-        if (!array_key_exists($name, $taxes))
-        {
+        if (!array_key_exists($name, $taxes)) {
             $tax = new Tax(null, self::getDefaultLanguageId());
             $tax->name = $name;
             $tax->rate = $rate;
@@ -217,8 +211,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $name = $rate.'% TRG';
 
-        if (!array_key_exists($name, $groups))
-        {
+        if (!array_key_exists($name, $groups)) {
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
@@ -242,7 +235,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function makeProduct($name, $price, $id_tax_rules_group)
     {
-
         $product = new Product(null, false, self::getDefaultLanguageId());
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
@@ -283,19 +275,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         static $carriers = array();
 
-        if (!array_key_exists($name, $carriers))
-        {
+        if (!array_key_exists($name, $carriers)) {
             $carrier = new Carrier(null, self::getDefaultLanguageId());
 
             $carrier->name = $name;
             $carrier->delay = '28 days later';
 
-            if (null === $shippingCost)
-            {
+            if (null === $shippingCost) {
                 $carrier->is_free = true;
-            }
-            else
-            {
+            } else {
                 $carrier->range_behavior = false; // take highest range
                 $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
             }
@@ -304,13 +292,11 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
             Assert::assertTrue($carrier->save());
 
-            if (null !== $id_tax_rules_group)
-            {
+            if (null !== $id_tax_rules_group) {
                 $carrier->setTaxRulesGroup($id_tax_rules_group);
             }
 
-            if (null !== $shippingCost)
-            {
+            if (null !== $shippingCost) {
                 // Populate one range
                 Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
                     '.(int)$carrier->id.',
@@ -358,22 +344,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $cartRule->quantity = 1;
         $cartRule->quantity_per_user;
 
-        if ($type === 'before tax')
-        {
+        if ($type === 'before tax') {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = false;
-        }
-        else if ($type === 'after tax')
-        {
+        } elseif ($type === 'after tax') {
             $cartRule->reduction_amount = $amount;
             $cartRule->reduction_tax = true;
-        }
-        else if ($type === '%')
-        {
+        } elseif ($type === '%') {
             $cartRule->reduction_percent = $amount;
-        }
-        else
-        {
+        } else {
             throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
         }
 
@@ -398,7 +377,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         self::deactivateCurrentCartRules();
         // Something might have disabled CartRules :)
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
-		Configuration::set('PS_ATCP_SHIPWRAP', false);
+        Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 
     public function testBasicOnlyProducts()

@@ -19,153 +19,56 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2015 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div style="font-size: 9pt; color: #444">
 
-	<!-- SHOP ADDRESS -->
-	<div>
-		<table style="width: 100%">
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$shop_name}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_warehouse->address1}</td>
-			</tr>
-			{* if the address has two parts *}
-			{if !empty($address_warehouse->address2)}
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_warehouse->address2}</td>
-			</tr>
-			{/if}
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_warehouse->postcode} {$address_warehouse->city}</td>
-			</tr>
-		</table>
-	</div>
-	<!-- / SHOP ADDRESS -->
-	
-	<!-- SUPPLIER ADDRESS -->
-	<div style="text-align: right;">
-		<table style="width: 100%">
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$supply_order->supplier_name}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_supplier->address1}</td>
-			</tr>
-			{* if the address has two parts *}
-			{if !empty($address_supplier->address2)}
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_supplier->address2}</td>
-			</tr>
-			{/if}
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_supplier->postcode} {$address_supplier->city}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 12pt; font-weight: bold">{$address_supplier->country}</td>
-			</tr>
-		</table>
-	</div>
-	<!-- / SUPPLIER ADDRESS -->
+{$style_tab}
 
-	<table>
-		<tr><td style="line-height: 8px">&nbsp;</td></tr>
-	</table>
 
-	{l s='Products ordered:' pdf='true'}
-	<!-- PRODUCTS -->
-	<div style="font-size: 5pt;">
-		<table style="width: 100%;">
-			<tr style="line-height:6px; border: none">
-				<td style="width: 14%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Reference' pdf='true'}</td>
-				<td style="width: 21%; text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Designation' pdf='true'}</td>
-				<td style="width: 5%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Qty' pdf='true'}</td>
-				<td style="width: 10%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Unit Price TE' pdf='true'}</td>
-				<td style="width: 11%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='Before discount' pdf='true'}</td>
-				<td style="width: 9%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Discount Rate' pdf='true'}</td>
-				<td style="width: 11%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='After discount' pdf='true'}</td>
-				<td style="width: 9%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Tax rate' pdf='true'}</td>
-				<td style="width: 10%; text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Total TI' pdf='true'}</td>
-			</tr>
-			{* for each product ordered *}
-			{foreach $supply_order_details as $supply_order_detail}
-			<tr>
-				<td style="text-align: left; padding-left: 1px;">{$supply_order_detail->supplier_reference}</td>
-				<td style="text-align: left; padding-left: 1px;">{$supply_order_detail->name}</td>
-				<td style="text-align: right; padding-right: 1px;">{$supply_order_detail->quantity_expected}</td>
-				<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$supply_order_detail->unit_price_te} {$currency->suffix}</td>
-				<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$supply_order_detail->price_te} {$currency->suffix}</td>
-				<td style="text-align: right; padding-right: 1px;">{$supply_order_detail->discount_rate}</td>
-				<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$supply_order_detail->price_with_discount_te} {$currency->suffix}</td>
-				<td style="text-align: right; padding-right: 1px;">{$supply_order_detail->tax_rate}</td>
-				<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$supply_order_detail->price_ti} {$currency->suffix}</td>
-			</tr>
-			{/foreach}
-		</table>
-	</div>
-	<!-- / PRODUCTS -->
-	
-	<table>
-		<tr><td style="line-height: 8px">&nbsp;</td></tr>
-	</table>
+<table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
+	<!-- Addresses -->
+	<tr>
+		<td colspan="12">
 
-	{l s='Taxes:' pdf='true'}
-	<!-- PRODUCTS TAXES -->
-	<div style="font-size: 6pt;">
-		<table style="width: 30%;">
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Base TE' pdf='true'}</td>
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Tax Rate' pdf='true'}</td>
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-right: 2px; font-weight: bold;">{l s='Tax Value' pdf='true'}</td>
-				</tr>
-				{foreach $tax_order_summary as $entry}
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$entry['base_te']} {$currency->suffix}</td>
-					<td style="text-align: right; padding-right: 1px;">{$entry['tax_rate']}</td>
-					<td style="text-align: right; padding-right: 1px;">{$currency->prefix} {$entry['total_tax_value']} {$currency->suffix}</td>
-				</tr>
-				{/foreach}
-		</table>
-	</div>
-	<!-- / PRODUCTS TAXES -->
+			{$addresses_tab}
+
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="12" height="30">&nbsp;</td>
+	</tr>
+
+	<!-- Product -->
+	<tr>
+		<td colspan="12">
+
+			{$product_tab}
+
+		</td>
+	</tr>
+
 	
-	<table>
-		<tr><td style="line-height: 8px">&nbsp;</td></tr>
-	</table>
+	<tr>
+		<td colspan="12" height="10">&nbsp;</td>
+	</tr>
+
+	<!-- TVA -->
+		<tr>
+		<!-- Code TVA -->
+		<td colspan="6" class="left">
+
+			{$tax_tab}
+
+		</td>
+		<td colspan="1">&nbsp;</td>
+		<!-- Calcule TVA -->
+		<td colspan="5">
+
+			{$total_tab}
+
+		</td>
+	</tr>
 	
-	{l s='Summary:' pdf='true'}
-	<!-- TOTAL -->
-	<div style="font-size: 6pt;">
-		<table style="width: 30%;">
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='(Discount excluded)' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->total_te} {$currency->suffix}</td>
-				</tr>
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Order Discount' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->discount_value_te} {$currency->suffix}</td>
-				</tr>
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Total TE' pdf='true'} <br /> {l s='(Discount included)' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->total_with_discount_te} {$currency->suffix}</td>
-				</tr>
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Tax value' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->total_tax} {$currency->suffix}</td>
-				</tr>
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='Total TI' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->total_ti} {$currency->suffix}</td>
-				</tr>
-				<tr style="line-height:6px; border: none">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 2px; font-weight: bold;">{l s='TOTAL TO PAY' pdf='true'}</td>
-					<td width="43px" style="text-align: right;">{$currency->prefix} {$supply_order->total_ti} {$currency->suffix}</td>
-				</tr>
-		</table>
-	</div>
-	<!-- / TOTAL -->
-</div>
+</table>

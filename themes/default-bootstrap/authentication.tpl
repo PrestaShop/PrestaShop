@@ -83,7 +83,7 @@
 					</div>
 					<div class="form-group">
 						<label for="passwd">{l s='Password'}</label>
-						<input class="is_required validate account_input form-control" type="password" data-validate="isPasswd" id="passwd" name="passwd" value="{if isset($smarty.post.passwd)}{$smarty.post.passwd|stripslashes}{/if}" />
+						<input class="is_required validate account_input form-control" type="password" data-validate="isPasswd" id="passwd" name="passwd" value="" />
 					</div>
 					<p class="lost_password form-group"><a href="{$link->getPageLink('password')|escape:'html':'UTF-8'}" title="{l s='Recover your forgotten password'}" rel="nofollow">{l s='Forgot your password?'}</a></p>
 					<p class="submit">
@@ -300,7 +300,7 @@
 						{elseif $field_name eq "dni"}
 						{assign var=dniExist value=true}
 						<div class="required form-group dni_invoice">
-							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+							<label for="dni_invoice">{l s='Identification number'} <sup>*</sup></label>
 							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($smarty.post.dni_invoice) && $smarty.post.dni_invoice}{$smarty.post.dni_invoice}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
@@ -555,7 +555,7 @@
 						<div id="vat_number" style="display:none;">
 							<p class="form-group">
 								<label for="vat_number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
-								<input type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
+								<input type="text" class="form-control" id="vat_number" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 							</p>
 						</div>
 					{elseif $field_name eq "firstname"}
@@ -670,7 +670,7 @@
 {strip}
 {if isset($smarty.post.id_state) && $smarty.post.id_state}
 	{addJsDef idSelectedState=$smarty.post.id_state|intval}
-{else if isset($address->id_state) && $address->id_state}
+{elseif isset($address->id_state) && $address->id_state}
 	{addJsDef idSelectedState=$address->id_state|intval}
 {else}
 	{addJsDef idSelectedState=false}
@@ -682,7 +682,7 @@
 {/if}
 {if isset($smarty.post.id_country) && $smarty.post.id_country}
 	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
-{else if isset($address->id_country) && $address->id_country}
+{elseif isset($address->id_country) && $address->id_country}
 	{addJsDef idSelectedCountry=$address->id_country|intval}
 {else}
 	{addJsDef idSelectedCountry=false}

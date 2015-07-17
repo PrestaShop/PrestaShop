@@ -227,7 +227,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
             ! ($method == 'generator' and $attribute == 'name')) {
             if ($content->hasAttribute($attribute)) {
                 return $content->getAttribute($attribute);
-            } else if ($attribute == 'href' and $content->hasAttribute('uri')) {
+            } elseif ($attribute == 'href' and $content->hasAttribute('uri')) {
                 return $content->getAttribute('uri');
             }
             return false;
@@ -354,7 +354,7 @@ class XML_Feed_Parser_Atom extends XML_Feed_Parser_Type
                     $value = $this->addBase($value, $links->item($offset));
                 }
                 return $value;
-            } else if ($attribute == 'rel') {
+            } elseif ($attribute == 'rel') {
                 return 'alternate';
             }
         }

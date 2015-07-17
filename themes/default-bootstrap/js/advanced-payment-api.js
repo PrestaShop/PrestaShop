@@ -25,6 +25,13 @@
 
 $(document).ready(function(){
     var handler = new PaymentOptionHandler();
+    
+    if (!!$.prototype.fancybox)
+        $("a.iframe").fancybox({
+            'type': 'iframe',
+            'width': 600,
+            'height': 600
+        });
 
     $('p.payment_module').on('click', function(event){
         handler.selectOption($(this));
@@ -38,20 +45,24 @@ $(document).ready(function(){
 
         if (handler.checkTOS() === false)
         {
-            alert(aeuc_tos_err_str);
+            var to_display = $('<div/>').html(aeuc_tos_err_str).text();
+            alert(to_display);
             return;
         }
         if (aeuc_has_virtual_products === true && handler.checkVirtualProductRevocation() === false)
         {
-            alert(aeuc_virt_prod_err_str);
+            var to_display = $('<div/>').html(aeuc_virt_prod_err_str).text();
+            alert(to_display);
             return;
         }
         if (handler.selected_option === null) {
-            alert(aeuc_no_pay_err_str);
+            var to_display = $('<div/>').html(aeuc_no_pay_err_str).text();
+            alert(to_display);
             return;
         }
         if (handler.submitForm() === false) {
-            alert(aeuc_submit_err_str);
+            var to_display = $('<div/>').html(aeuc_submit_err_str).text();
+            alert(to_display);
             return;
         }
         return;
@@ -72,18 +83,10 @@ var PaymentOptionHandler = function() {
         }
         this.selected_option = elem;
         this.selected_option.addClass('payment_selected');
-        this.selected_option.children('a:first').css({
-            'border': '1px solid #55c65e',
-            'border-radius': '4px'
-        });
         this.selected_option.children('a:first').children('.payment_option_selected:first').fadeIn();
     };
 
     this.unselectOption = function() {
-        this.selected_option.children('a:first').css({
-            'border': '1px solid #d6d4d4',
-            'border-radius': '4px'
-        });
         this.selected_option.children('a:first').children('.payment_option_selected:first').fadeOut();
         this.selected_option.removeClass('payment_selected');
     };

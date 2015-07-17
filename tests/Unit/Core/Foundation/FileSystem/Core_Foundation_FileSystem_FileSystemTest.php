@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use Core_Foundation_FileSystem_FileSystem;
 use Core_Foundation_FileSystem_Exception;
 
@@ -122,8 +121,8 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-	 *
-	 * @expectedException Core_Foundation_FileSystem_Exception
+     *
+     * @expectedException Core_Foundation_FileSystem_Exception
      */
     public function test_listEntriesRecursively_throws_when_path_is_a_file()
     {

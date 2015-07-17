@@ -4,7 +4,7 @@ About PrestaShop
 PrestaShop is a free and open-source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
 
 <p align="center">
-  <img src="http://www.prestashop.com/images/banners/general/ps16-screenshot-github.png" alt="PrestaShop's back office dashboard"/>
+  <img src="http://www.prestashop.com/images/banners/general/ps161-screenshot-github.png" alt="PrestaShop's back office dashboard"/>
 </p>
 
 To download the latest stable public version of PrestaShop, please go to [the download page][2] on the official PrestaShop site.
@@ -15,7 +15,7 @@ About this repository
 
 This repository contains the source code for the latest version of PrestaShop 1.6.
 
-Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- which is in active development [![Travis](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=1.6)](https://travis-ci.org/PrestaShop/PrestaShop), and cannot be considered stable. If you want the latest stable version, go to [the download page][2].
+Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- which is in active development, and cannot be considered stable. If you want the latest stable version, go to [the download page][2].
 
 Note that the ZIP file does not contain the default modules: you need to make a recursive clone using your local Git client in order to download their files too. See [CONTRIBUTING.md][7] for more information about using Git and GitHub.
 
@@ -60,11 +60,15 @@ First-time users will be particularly interested in the following guides:
 Contributing
 --------
 
+PrestaShop is an Open Source project, and it wouldn't be possible without the help of the [hundreds of contributors][21], who submitted improvements and bugfixes over the years. Thank you all!
+
 If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository or read the [tutorials about contribution][8] on the documentation site.
+
+Current [Travis](https://travis-ci.org/) status: [![Travis](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=1.6)](https://travis-ci.org/PrestaShop/PrestaShop) (The Unit Tests are being implemented, so the status might be broken).
 
 If you want to help translate PrestaShop in your language, [join us on Crowdin][9]!
 
-[![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 
 Extending PrestaShop
@@ -109,3 +113,4 @@ Thank you for downloading and using the PrestaShop open-source e-commerce soluti
 [18]: http://doc.prestashop.com/display/PS16/Troubleshooting
 [19]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [20]: http://addons.prestashop.com/
+[21]: CONTRIBUTORS.md

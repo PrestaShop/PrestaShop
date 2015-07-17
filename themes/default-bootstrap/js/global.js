@@ -272,7 +272,7 @@ function display(view)
 					html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 					var rating = $(element).find('.comments_note').html(); // check : rating
 					if (rating != null) {
-						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
+						html += '<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
 					html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 					var colorList = $(element).find('.color-list-container').html();
@@ -312,14 +312,14 @@ function display(view)
 				html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 				var rating = $(element).find('.comments_note').html(); // check : rating
 					if (rating != null) {
-						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
+						html += '<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
 				html += '<p itemprop="description" class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 				var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
 					if (price != null) {
 						html += '<div class="content_price">'+ price + '</div>';
 					}
-				html += '<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="button-container">'+ $(element).find('.button-container').html() +'</div>';
+				html += '<div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="button-container">'+ $(element).find('.button-container').html() +'</div>';
 				var colorList = $(element).find('.color-list-container').html();
 				if (colorList != null) {
 					html += '<div class="color-list-container">'+ colorList +'</div>';

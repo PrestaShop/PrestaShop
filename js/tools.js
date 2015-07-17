@@ -329,6 +329,7 @@ function checkCustomizations()
 
 function emptyCustomizations()
 {
+	customizationId = null;
 	if(typeof(customizationFields) == 'undefined') return;
 
 	$('.customization_block .success').fadeOut(function(){

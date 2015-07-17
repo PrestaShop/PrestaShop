@@ -60,7 +60,7 @@
 						</p>
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
 								<p class="help-block"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
-							{else if $product->cache_is_pack}
+							{elseif $product->cache_is_pack}
 								<p class="help-block">{l s='When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.'}</p>
 							{/if}
 					</div>
