@@ -1688,6 +1688,30 @@ class AdminOrdersControllerCore extends AdminController
             }
         }
 
+        // Package management for order
+        foreach ($products as &$product) {
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->context->language->id, true) : array();
+            foreach ($pack_items as &$pack_item) {
+                $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
+                // if the current stock requires a warning
+                if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
+                    $this->displayWarning($this->l('This product, included in package ('.$product['product_name'].') is out of stock: ').' '.$pack_item['product_name']);
+                }
+                $this->setProductImageInformations($pack_item);
+                if ($pack_item['image'] != null) {
+                    $name = 'product_mini_'.(int)$pack_item['id_product'].(isset($pack_item['id_product_attribute']) ? '_'.(int)$pack_item['id_product_attribute'] : '').'.jpg';
+                    // generate image cache, only for back office
+                    $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$pack_item['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg');
+                    if (file_exists(_PS_TMP_IMG_DIR_.$name)) {
+                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+                    } else {
+                        $pack_item['image_size'] = false;
+                    }
+                }
+            }
+            $product['pack_items'] = $pack_items;
+        }
+
         $gender = new Gender((int)$customer->id_gender, $this->context->language->id);
 
         $history = $order->getHistory($this->context->language->id);
@@ -2785,5 +2809,35 @@ class AdminOrdersControllerCore extends AdminController
             'result' => true,
             'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
         )));
+    }
+
+    /**
+    *
+    * This method allow to add image information on a package detail
+    * @param array &pack_item
+    */
+    protected function setProductImageInformations(&$pack_item)
+    {
+        if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute'])
+            $id_image = Db::getInstance()->getValue('
+                SELECT `image_shop`.id_image
+                FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
+                Shop::addSqlAssociation('image', 'pai', true).'
+                WHERE id_product_attribute = '.(int)$pack_item['id_product_attribute']);
+
+        if (!isset($id_image) || !$id_image)
+            $id_image = Db::getInstance()->getValue('
+                SELECT `image_shop`.id_image
+                FROM `'._DB_PREFIX_.'image` i'.
+                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE i.id_product = '.(int)$pack_item['id_product']
+            );
+
+        $pack_item['image'] = null;
+        $pack_item['image_size'] = null;
+
+        if ($id_image) {
+            $pack_item['image'] = new Image($id_image);
+        }
     }
 }
