@@ -3044,6 +3044,7 @@ abstract class ModuleCore
                 $possible_hooks_list[] = array(
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,
+                    'description' => $current_hook['description'],
                     'title' => $current_hook['title'],
                 );
             }

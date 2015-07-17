@@ -55,7 +55,7 @@
 						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
 					{else}
 						{foreach $hooks as $hook}
-							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
 						{/foreach}
 					{/if}
 				</select>
