@@ -840,7 +840,6 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT). '-ids';
-		
 		if ((int)$cartRule->gift_product)
 			$this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 'up', 0, null, false);
 
