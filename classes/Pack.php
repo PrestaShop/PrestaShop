@@ -55,21 +55,34 @@ class PackCore extends Product
 
     /**
      * Is product in a pack?
+     * If $id_product_attribute specified, then will restrict search on the given combination,
+     * else this method will match a product if at least one of all its combination is in a pack.
      *
      * @param $id_product
+     * @param $id_product_attribute Optional combination of the product
      * @return bool
      */
-    public static function isPacked($id_product)
+    public static function isPacked($id_product, $id_product_attribute = false)
     {
         if (!Pack::isFeatureActive()) {
             return false;
         }
 
-        if (!array_key_exists($id_product, self::$cacheIsPacked)) {
-            $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.(int)$id_product);
-            self::$cacheIsPacked[$id_product] = ($result > 0);
+        if ($id_product_attribute === false) {
+            if (!array_key_exists($id_product, self::$cacheIsPacked)) {
+                $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.(int)$id_product);
+                self::$cacheIsPacked[$id_product] = ($result > 0);
+            }
+            return self::$cacheIsPacked[$id_product];
+        } else {
+            $cache_key = $id_product.'-'.$id_product_attribute;
+            if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
+                $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.((int)$id_product).' AND
+					id_product_attribute_item = '.((int)$id_product_attribute));
+                self::$cacheIsPacked[$cache_key] = ($result > 0);
+            }
+            return self::$cacheIsPacked[$cache_key];
         }
-        return self::$cacheIsPacked[$id_product];
     }
 
     public static function noPackPrice($id_product)
@@ -381,5 +394,24 @@ class PackCore extends Product
         }
         // not used
         return true;
+    }
+
+    // TODO 2 : tester, puis php doc!
+    public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
+    {
+        if (!Pack::isFeatureActive()) {
+            return array();
+        }
+        
+        $result = Db::getInstance()->executeS('SELECT `id_product_pack`, `quantity` FROM `'._DB_PREFIX_.'pack`
+			WHERE `id_product_item` = '.((int)$id_item).' AND `id_product_attribute_item` = '.((int)$id_attribute_item));
+        $array_result = array();
+        foreach ($result as $row) {
+            $p = new Product($row['id_product_pack'], false, $id_lang);
+            $p->loadStockData();
+            $p->pack_item_quantity = $row['quantity']; // Specific need from StockAvailable::updateQuantity()
+            $array_result[] = $p;
+        }
+        return $array_result;
     }
 }

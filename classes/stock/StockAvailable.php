@@ -449,49 +449,45 @@ class StockAvailableCore extends ObjectModel
 
     /**
      * For a given id_product and id_product_attribute updates the quantity available
+     * If $avoid_parent_pack_update is true, then packs containing the given product won't be updated
      *
      * @param int $id_product
      * @param int $id_product_attribute Optional
      * @param int $delta_quantity The delta quantity to update
      * @param int $id_shop Optional
+     * @param boolean $avoid_parent_pack_update Used internally in the method to avoid cyclic call (in a recursive behavior).
      */
     public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
-
-        $id_stock_available = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
-
-        if (!$id_stock_available) {
+        $product = new Product((int)$id_product);
+        if (!Validate::isLoadedObject($product)) {
             return false;
         }
+        
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+        $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
 
         // Update quantity of the pack products
         if (Pack::isPack($id_product)) {
-            if (Validate::isLoadedObject($product = new Product((int)$id_product))) {
-                if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
-                    $products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
-                    foreach ($products_pack as $product_pack) {
-                        StockAvailable::updateQuantity($product_pack->id, $product_pack->id_pack_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
-                    }
-                }
-
-
-                $stock_available = new StockAvailable($id_stock_available);
-                $stock_available->quantity = $stock_available->quantity + $delta_quantity;
-
-                if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                    ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
-                    $stock_available->update();
-                }
-            } else {
-                return false;
-            }
+            // The product is a pack
+            $packStockUpdater = Adapter_ServiceLocator::get('Adapter_PackStockUpdater');
+            $packStockUpdater->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
         } else {
-            $stock_available = new StockAvailable($id_stock_available);
-            $stock_available->quantity = $stock_available->quantity + $delta_quantity;
-            $stock_available->update();
+            // The product is not a pack
+            $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
+            $stockAvailable->update();
+
+            // Decrease case only: the stock of linked packs should be decreased too.
+            if ($delta_quantity < 0) {
+                // The product is not a pack, but the product combination is part of a pack (use of isPacked, not isPack)
+                if (Pack::isPacked($id_product, $id_product_attribute)) {
+                    $packStockUpdater = Adapter_ServiceLocator::get('Adapter_PackStockUpdater');
+                    $packStockUpdater->updatePacksQuantityContainingProduct($product, $id_product_attribute, $stockAvailable, $id_shop);
+                }
+            }
         }
 
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
@@ -500,7 +496,7 @@ class StockAvailableCore extends ObjectModel
                 array(
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stock_available->quantity
+                    'quantity' => $stockAvailable->quantity
                 )
         );
 
