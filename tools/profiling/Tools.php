@@ -82,7 +82,7 @@ class Tools extends ToolsCore
 	public static function redirectAdmin($url)
 	{
 		if (!is_object(Context::getContext()->controller))
-			Context::getContext()->controller = new StdClass();
+			Context::getContext()->controller = new AdminController();
 		Context::getContext()->controller->setRedirectAfter($url);
 	}
 }
