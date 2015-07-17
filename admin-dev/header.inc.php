@@ -39,6 +39,7 @@ Context::getContext()->smarty->assign(array(
     'navigationPipe', Configuration::get('PS_NAVIGATION_PIPE'),
     'meta_title' => implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $title),
     'display_header' => true,
+    'display_header_javascript' => true,
     'display_footer' => true,
 ));
 $dir = Context::getContext()->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.trim($con->override_folder, '\\/').DIRECTORY_SEPARATOR;
