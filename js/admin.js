@@ -1573,4 +1573,11 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 		else
 			document.location = cancel_link;
 	});
+
+}
+
+function TogglePackage(detail)
+{
+    var pack = $('#pack_items_' + detail);
+    pack.css('display', (pack.css('display') == 'block') ? "none" : "block");
 }
