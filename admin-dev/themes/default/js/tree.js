@@ -98,7 +98,7 @@ Tree.prototype =
 			if (name != 'id_parent')
 			{
 				this.$element.find(':input[name="id-category"][type=radio]')
-				.unbind('click');
+				.unbind('click')
 				.click(
 					function()
 					{
