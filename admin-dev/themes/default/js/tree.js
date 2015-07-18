@@ -97,8 +97,9 @@ Tree.prototype =
 			}
 			if (name != 'id_parent')
 			{
-				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(
+				this.$element.find(':input[name="id-category"][type=radio]')
+				.unbind('click')
+				.click(
 					function()
 					{
 						location.href = location.href.replace(
