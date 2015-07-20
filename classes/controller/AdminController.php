@@ -1913,6 +1913,7 @@ class AdminControllerCore extends Controller
                 'is_multishop' => $is_multishop,
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
+                'login_link' => $this->context->link->getAdminLink('AdminLogin'),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0,
             ));
         } else {
@@ -3174,7 +3175,7 @@ class AdminControllerCore extends Controller
             ($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
             $sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.', '.(int)$limit : '');
 
-            if ($this->_use_found_rows) {
+            if ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having)) {
                 $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS
 								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
                                 $sql_order_by.$sql_limit;

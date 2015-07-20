@@ -23,9 +23,9 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 <li class="tree-item{if isset($node['disabled']) && $node['disabled'] == true} tree-item-disable{/if}">
-	<label class="tree-item-name">
+	<span class="tree-item-name">
 		<input type="radio" name="id_category" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		<i class="tree-dot"></i>
-		{$node['name']}
-	</label>
+		<label class="tree-toggler">{$node['name']}</label>
+	</span>
 </li>

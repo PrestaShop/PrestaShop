@@ -48,7 +48,7 @@ class CustomerMessageCore extends ObjectModel
             'id_employee' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_customer_thread' => array('type' => self::TYPE_INT),
             'ip_address' =>        array('type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15),
-            'message' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
+            'message' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 16777216),
             'file_name' =>            array('type' => self::TYPE_STRING),
             'user_agent' =>        array('type' => self::TYPE_STRING),
             'private' =>            array('type' => self::TYPE_INT),

@@ -711,7 +711,7 @@ class OrderDetailCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_tax as id');
         $query->from('order_detail_tax', 'tax');
-        $query->join('LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (tax.`id_order_detail` = od.`id_order_detail`)');
+        $query->leftJoin('order_detail', 'od', 'tax.`id_order_detail` = od.`id_order_detail`');
         $query->where('od.`id_order_detail` = '.(int)$this->id_order_detail);
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }

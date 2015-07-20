@@ -499,7 +499,13 @@ class AdminAddressesControllerCore extends AdminController
             }
         }
 
-        return parent::processDelete();
+        $res = parent::processDelete();
+
+        if ($back = Tools::getValue('back')) {
+            $this->redirect_after = urldecode($back).'&conf=1';
+        }
+
+        return $res;
     }
 
     /**

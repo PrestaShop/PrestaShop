@@ -35,6 +35,11 @@
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
 	var idTree="{$id|escape:'html':'UTF-8'}";
+	var treeClickFunc = function() {
+						location.href = location.href.replace(
+						/&id_category=[0-9]*/, "")+"&id_category="
+						+$(this).val();
+				};
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{
@@ -93,14 +98,7 @@
 		});
 
 		$('#collapse-all-{$id|escape:'html':'UTF-8'}').hide();
-		$("#{$id|escape:'html':'UTF-8'}").find(":input[type=radio]").click(
-			function()
-			{
-				location.href = location.href.replace(
-					/&id_category=[0-9]*/, "")+"&id_category="
-					+$(this).val();
-			}
-		);
+		$("#{$id|escape:'html':'UTF-8'}").find(":input[type=radio]").click(treeClickFunc);
 
 		{if isset($selected_categories)}
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}

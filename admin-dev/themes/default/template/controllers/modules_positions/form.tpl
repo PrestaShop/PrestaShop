@@ -50,7 +50,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3 required"> {l s='Transplant to'}</label>
 			<div class="col-lg-9">
-				<select name="id_hook" disabled="disabled">
+				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
 					{if !$hooks}
 						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
 					{else}

@@ -56,7 +56,6 @@ class AdminCartsControllerCore extends AdminController
             $this->_use_found_rows = false;
         }
 
-
         $this->fields_list = array(
             'id_cart' => array(
                 'title' => $this->l('ID'),
@@ -66,7 +65,8 @@ class AdminCartsControllerCore extends AdminController
             'status' => array(
                 'title' => $this->l('Order ID'),
                 'align' => 'text-center',
-                'badge_danger' => true
+                'badge_danger' => true,
+                'havingFilter' => true
             ),
             'customer' => array(
                 'title' => $this->l('Customer'),

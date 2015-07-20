@@ -48,7 +48,7 @@
 		<tr class="product {$bgcolor_class}">
 
 			<td class="product center">
-				{$order_detail.reference}
+				{$order_detail.product_reference}
 			</td>
 			<td class="product left">
 				{if $display_product_images}

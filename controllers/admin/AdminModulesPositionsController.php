@@ -355,6 +355,8 @@ class AdminModulesPositionsControllerCore extends AdminController
         $this->initToolbar();
         $id_module = (int)Tools::getValue('id_module');
         $id_hook = (int)Tools::getValue('id_hook');
+        $show_modules = (int)Tools::getValue('show_modules');
+
         if (Tools::isSubmit('editGraft')) {
             // Check auth for this page
             if (!$id_module || !$id_hook) {
@@ -402,8 +404,8 @@ class AdminModulesPositionsControllerCore extends AdminController
         $modules = $instances;
 
         $hooks = array();
-        if ((int)Tools::getValue('id_hook') > 0) {
-            $module_instance = Module::getInstanceById((int)Tools::getValue('id_module'));
+        if ($show_modules || (Tools::getValue('id_hook') > 0)) {
+            $module_instance = Module::getInstanceById((int)Tools::getValue('id_module', $show_modules));
             $hooks = $module_instance->getPossibleHooksList();
         }
 
@@ -418,7 +420,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'edit_graft' => Tools::isSubmit('editGraft'),
             'id_module' => (int)Tools::getValue('id_module'),
             'id_hook' => (int)Tools::getValue('id_hook'),
-            'show_modules' => Tools::getValue('show_modules'),
+            'show_modules' => $show_modules,
             'hooks' => $hooks,
             'exception_list' => $this->displayModuleExceptionList(array_shift($excepts_list), 0),
             'exception_list_diff' => $exception_list_diff,
