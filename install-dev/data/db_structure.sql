@@ -627,7 +627,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `id_customer_message` int(10) unsigned NOT NULL auto_increment,
   `id_customer_thread` int(11) DEFAULT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address`  varchar(16) DEFAULT NULL,
   `user_agent` varchar(128) DEFAULT NULL,

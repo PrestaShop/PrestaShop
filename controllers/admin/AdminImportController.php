@@ -1580,6 +1580,15 @@ class AdminImportControllerCore extends AdminController
 
             // Indexation is already 0 if it's a new product, but not if it's an update
             $product->indexed = 0;
+            $productExistsInDatabase = false;
+
+            if ($product->id && Product::existsInDatabase((int)$product->id, 'product')) {
+                $productExistsInDatabase = true;
+            }
+
+            if (($match_ref && $product->reference && $product->existsRefInDatabase($product->reference)) || $productExistsInDatabase) {
+                $product->date_upd = date('Y-m-d H:i:s');
+            }
 
             $res = false;
             $field_error = $product->validateFields(UNFRIENDLY_ERROR, true);
@@ -1602,7 +1611,7 @@ class AdminImportControllerCore extends AdminController
                     $product->date_add = pSQL($datas['date_add']);
                     $res = $product->update();
                 } // Else If id product && id product already in base, trying to update
-                elseif ($product->id && Product::existsInDatabase((int)$product->id, 'product')) {
+                elseif ($productExistsInDatabase) {
                     $datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`
 						FROM `'._DB_PREFIX_.'product` p

@@ -291,6 +291,7 @@
                 </div>
             {/if}
             {if $recyclablePackAllowed}
+                <p class="carrier_title">{l s='Recyclable Packaging'}</p>
                 <div class="checkbox recyclable">
                     <label for="recyclable">
                         <input type="checkbox" name="recyclable" id="recyclable" value="1"{if $recyclable == 1} checked="checked"{/if} />

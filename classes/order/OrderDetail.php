@@ -530,7 +530,7 @@ class OrderDetailCore extends ObjectModel
                     $tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
                     $this->tax_calculator = $tax_manager->getTaxCalculator();
 
-                    if ($this->reduction_tax) {
+                    if ($this->specificPrice['reduction_tax']) {
                         $this->reduction_amount_tax_incl = $this->reduction_amount;
                         $this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
                     } else {
@@ -711,7 +711,7 @@ class OrderDetailCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_tax as id');
         $query->from('order_detail_tax', 'tax');
-        $query->join('LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (tax.`id_order_detail` = od.`id_order_detail`)');
+        $query->leftJoin('order_detail', 'od', 'tax.`id_order_detail` = od.`id_order_detail`');
         $query->where('od.`id_order_detail` = '.(int)$this->id_order_detail);
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }

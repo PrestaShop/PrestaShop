@@ -380,6 +380,6 @@
 	ignore = dirty
 [submodule "modules/sendtoafriend"]
 	path = modules/sendtoafriend
-	url = https://github.com/PrestaShop/sendtoafriend
+	url = https://github.com/PrestaShop/sendtoafriend.git
 	branch = master
 	ignore = dirty

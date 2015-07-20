@@ -95,17 +95,10 @@ Tree.prototype =
 					}
 				});
 			}
-			if (name != 'id_parent')
+			if (typeof(treeClickFunc) != 'undefined')
 			{
 				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(
-					function()
-					{
-						location.href = location.href.replace(
-							/&id_category=[0-9]*/, "")+"&id_category="
-							+$(this).val();
-					}
-				);
+				this.$element.find(":input[type=radio]").click(treeClickFunc);
 			}
 		}
 

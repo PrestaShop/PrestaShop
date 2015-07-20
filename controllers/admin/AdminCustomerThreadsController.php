@@ -1036,7 +1036,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
                         $customer = new Customer;
                         $client = $customer->getByEmail($from); //check if we already have a customer with this email
-
                         $ct = new CustomerThread();
                         if (isset($client->id)) { //if mail is owned by a customer assign to him
                             $ct->id_customer = $client->id;
@@ -1061,7 +1060,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         $cm->message = $message;
-                        $cm->add();
+
+                        if (!Validate::isCleanHtml($message)) {
+                            $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
+                        } else {
+                            $cm->add();
+                        }
                     }
                 }
                 Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
@@ -1069,6 +1073,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         imap_expunge($mbox);
         imap_close($mbox);
-        return array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
+        if ($str_errors.$str_error_delete) {
+            return array('hasError' => true, 'errors' => array($str_errors.$str_error_delete));
+        }
+        else {
+            return array('hasError' => false, 'errors' => '');
+        }
     }
 }

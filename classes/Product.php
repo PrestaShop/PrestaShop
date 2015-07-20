@@ -878,7 +878,7 @@ class ProductCore extends ObjectModel
         // Removes the product from StockAvailable, for the current shop
         StockAvailable::removeProductFromStockAvailable($this->id);
         $result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
-        // If there are still entries in product_shop, don't remove completly the product
+        // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
             return true;
         }

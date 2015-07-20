@@ -38,7 +38,7 @@
 
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
-	{if $display_header_javascript}
+	{if !isset($display_header_javascript) || $display_header_javascript}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
@@ -289,7 +289,7 @@
 {/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
-						<li class="hidden-sm">
+						<li class="hidden-sm hidden-xs">
 							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to PrestaShop Marketplace account'}">
 								<i class="icon-chain-broken"></i>
 								<span class="string-long">{l s='Connect to PrestaShop Marketplace account'}</span>
@@ -336,9 +336,9 @@
 							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
 							{/if}
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
+							<li><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 							<li class="divider"></li>
-							<li class="version"><span>Prestashop<sup>TM</sup> {$current_version|escape:'html':'UTF-8'}</span></li>
+							<li class="version"><span>Prestashop<sup>TM</sup> {$version|escape:'html':'UTF-8'}</span></li>
 						</ul>
 					</li>
 				</ul>

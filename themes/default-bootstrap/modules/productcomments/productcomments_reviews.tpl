@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($nbComments) && $nbComments > 0}
-	<div class="comments_note" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+	<div class="comments_note" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 		<div class="star_content clearfix">
 			{section name="i" start=0 loop=5 step=1}
 				{if $averageTotal le $smarty.section.i.index}

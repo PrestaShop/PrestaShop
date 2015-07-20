@@ -646,20 +646,13 @@ class StockAvailableCore extends ObjectModel
     {
         if ($shop_group->share_stock) {
             $shop_list = Shop::getShops(false, $shop_group->id, true);
+        }
 
-            if (count($shop_list) > 0) {
-                $id_shops_list = implode(', ', $shop_list);
-
-                return Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'stock_available
-					WHERE id_shop IN ('.$id_shops_list.')'
-                );
-            }
+        if (count($shop_list) > 0) {
+            $id_shops_list = implode(', ', $shop_list);
+            return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop IN ('.$id_shops_list.')');
         } else {
-            return Db::getInstance()->execute('
-				DELETE FROM '._DB_PREFIX_.'stock_available
-				WHERE id_shop_group = '.$shop_group->id
-            );
+            return Db::getInstance()->update('stock_available', array('quantity' => 0), 'id_shop_group = '.$shop_group->id);
         }
     }
 
