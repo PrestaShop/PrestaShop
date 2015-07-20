@@ -4,8 +4,2653 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1cb1df9b128c8b1361335e9e334622df",
+    "hash": "e0032853384d7e588d890dc9c5032fec",
     "packages": [
+        {
+            "name": "PrestaShop/bankwire",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/bankwire.git",
+                "reference": "dc785d90a91f714c3283ff113a0f00215a633e77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/bankwire/zipball/dc785d90a91f714c3283ff113a0f00215a633e77",
+                "reference": "dc785d90a91f714c3283ff113a0f00215a633e77",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module bankwire",
+            "homepage": "https://github.com/PrestaShop/bankwire",
+            "support": {
+                "source": "https://github.com/PrestaShop/bankwire/tree/dev"
+            },
+            "time": "2015-07-20 12:09:50"
+        },
+        {
+            "name": "PrestaShop/blockadvertising",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockadvertising.git",
+                "reference": "e335c4e7c27bab158e0071d013bfe487c0b66537"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockadvertising/zipball/e335c4e7c27bab158e0071d013bfe487c0b66537",
+                "reference": "e335c4e7c27bab158e0071d013bfe487c0b66537",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockadvertising",
+            "homepage": "https://github.com/PrestaShop/blockadvertising",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockadvertising/tree/dev"
+            },
+            "time": "2015-07-20 12:09:52"
+        },
+        {
+            "name": "PrestaShop/blockbanner",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockbanner.git",
+                "reference": "d745757c92a53a2333e1a60c8b2d2344f83b9e86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockbanner/zipball/d745757c92a53a2333e1a60c8b2d2344f83b9e86",
+                "reference": "d745757c92a53a2333e1a60c8b2d2344f83b9e86",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockbanner",
+            "homepage": "https://github.com/PrestaShop/blockbanner",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockbanner/tree/dev"
+            },
+            "time": "2015-07-20 12:09:53"
+        },
+        {
+            "name": "PrestaShop/blockbestsellers",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockbestsellers.git",
+                "reference": "bd61f9904f3a9ea6faab6592afea8c58259b2793"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockbestsellers/zipball/bd61f9904f3a9ea6faab6592afea8c58259b2793",
+                "reference": "bd61f9904f3a9ea6faab6592afea8c58259b2793",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockbestsellers",
+            "homepage": "https://github.com/PrestaShop/blockbestsellers",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockbestsellers/tree/dev"
+            },
+            "time": "2015-07-20 12:09:55"
+        },
+        {
+            "name": "PrestaShop/blockcart",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcart.git",
+                "reference": "c2135b64c04fb72708db5b48153f96b82a432c11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/c2135b64c04fb72708db5b48153f96b82a432c11",
+                "reference": "c2135b64c04fb72708db5b48153f96b82a432c11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcart",
+            "homepage": "https://github.com/PrestaShop/blockcart",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcart/tree/dev"
+            },
+            "time": "2015-07-20 12:09:57"
+        },
+        {
+            "name": "PrestaShop/blockcategories",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcategories.git",
+                "reference": "58775ef084ace8dc656b656fe38d6bb6e14c6217"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcategories/zipball/58775ef084ace8dc656b656fe38d6bb6e14c6217",
+                "reference": "58775ef084ace8dc656b656fe38d6bb6e14c6217",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcategories",
+            "homepage": "https://github.com/PrestaShop/blockcategories",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcategories/tree/dev"
+            },
+            "time": "2015-07-20 12:09:58"
+        },
+        {
+            "name": "PrestaShop/blockcms",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcms.git",
+                "reference": "06a66e7205cb5b341abfda7b15b7ae7bdc827121"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcms/zipball/06a66e7205cb5b341abfda7b15b7ae7bdc827121",
+                "reference": "06a66e7205cb5b341abfda7b15b7ae7bdc827121",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcms",
+            "homepage": "https://github.com/PrestaShop/blockcms",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcms/tree/dev"
+            },
+            "time": "2015-07-20 12:10:00"
+        },
+        {
+            "name": "PrestaShop/blockcmsinfo",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcmsinfo.git",
+                "reference": "48e4d97a1e3e973c1ee43271dc587e2c1f84480c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcmsinfo/zipball/48e4d97a1e3e973c1ee43271dc587e2c1f84480c",
+                "reference": "48e4d97a1e3e973c1ee43271dc587e2c1f84480c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcmsinfo",
+            "homepage": "https://github.com/PrestaShop/blockcmsinfo",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcmsinfo/tree/dev"
+            },
+            "time": "2015-07-20 12:10:01"
+        },
+        {
+            "name": "PrestaShop/blockcontact",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcontact.git",
+                "reference": "5bc687f5c515a28be309f534737c6b8f1cbe3754"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/5bc687f5c515a28be309f534737c6b8f1cbe3754",
+                "reference": "5bc687f5c515a28be309f534737c6b8f1cbe3754",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcontact",
+            "homepage": "https://github.com/PrestaShop/blockcontact",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcontact/tree/dev"
+            },
+            "time": "2015-07-20 12:10:04"
+        },
+        {
+            "name": "PrestaShop/blockcontactinfos",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcontactinfos.git",
+                "reference": "185058a0eccc11f66119ae2eef20bf188fb607bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/185058a0eccc11f66119ae2eef20bf188fb607bd",
+                "reference": "185058a0eccc11f66119ae2eef20bf188fb607bd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcontactinfos",
+            "homepage": "https://github.com/PrestaShop/blockcontactinfos",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcontactinfos/tree/dev"
+            },
+            "time": "2015-07-20 12:10:06"
+        },
+        {
+            "name": "PrestaShop/blockcurrencies",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcurrencies.git",
+                "reference": "1d4d67779acdaef7ca2c63f2927c69b5d80a3d0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcurrencies/zipball/1d4d67779acdaef7ca2c63f2927c69b5d80a3d0e",
+                "reference": "1d4d67779acdaef7ca2c63f2927c69b5d80a3d0e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcurrencies",
+            "homepage": "https://github.com/PrestaShop/blockcurrencies",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcurrencies/tree/dev"
+            },
+            "time": "2015-07-20 12:10:08"
+        },
+        {
+            "name": "PrestaShop/blockcustomerprivacy",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockcustomerprivacy.git",
+                "reference": "7d8c9a45a64f3ac15cad4a66505c6940c32caaa9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockcustomerprivacy/zipball/7d8c9a45a64f3ac15cad4a66505c6940c32caaa9",
+                "reference": "7d8c9a45a64f3ac15cad4a66505c6940c32caaa9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockcustomerprivacy",
+            "homepage": "https://github.com/PrestaShop/blockcustomerprivacy",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcustomerprivacy/tree/dev"
+            },
+            "time": "2015-07-20 12:10:09"
+        },
+        {
+            "name": "PrestaShop/blockfacebook",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockfacebook.git",
+                "reference": "23d1a80ed65feb768e16d22f7e0256b200518d9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockfacebook/zipball/23d1a80ed65feb768e16d22f7e0256b200518d9c",
+                "reference": "23d1a80ed65feb768e16d22f7e0256b200518d9c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockfacebook",
+            "homepage": "https://github.com/PrestaShop/blockfacebook",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockfacebook/tree/dev"
+            },
+            "time": "2015-07-20 12:10:11"
+        },
+        {
+            "name": "PrestaShop/blocklanguages",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocklanguages.git",
+                "reference": "1d3105b6fa2ca4f4f7f8552dec02b3ae514be4a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocklanguages/zipball/1d3105b6fa2ca4f4f7f8552dec02b3ae514be4a7",
+                "reference": "1d3105b6fa2ca4f4f7f8552dec02b3ae514be4a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocklanguages",
+            "homepage": "https://github.com/PrestaShop/blocklanguages",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocklanguages/tree/dev"
+            },
+            "time": "2015-07-20 12:10:12"
+        },
+        {
+            "name": "PrestaShop/blocklayered",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocklayered.git",
+                "reference": "46e9d2ee59bf2541b77209a8690e6c40106b72a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocklayered/zipball/46e9d2ee59bf2541b77209a8690e6c40106b72a1",
+                "reference": "46e9d2ee59bf2541b77209a8690e6c40106b72a1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocklayered",
+            "homepage": "https://github.com/PrestaShop/blocklayered",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocklayered/tree/dev"
+            },
+            "time": "2015-07-20 12:10:14"
+        },
+        {
+            "name": "PrestaShop/blocklink",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocklink.git",
+                "reference": "a07311cd8233290b104c273bb02c758c336009d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocklink/zipball/a07311cd8233290b104c273bb02c758c336009d4",
+                "reference": "a07311cd8233290b104c273bb02c758c336009d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocklink",
+            "homepage": "https://github.com/PrestaShop/blocklink",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocklink/tree/dev"
+            },
+            "time": "2015-07-20 12:10:16"
+        },
+        {
+            "name": "PrestaShop/blockmanufacturer",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockmanufacturer.git",
+                "reference": "ab0f4b6d975f32825e323f2b5e69746f55c9ed19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockmanufacturer/zipball/ab0f4b6d975f32825e323f2b5e69746f55c9ed19",
+                "reference": "ab0f4b6d975f32825e323f2b5e69746f55c9ed19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockmanufacturer",
+            "homepage": "https://github.com/PrestaShop/blockmanufacturer",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockmanufacturer/tree/dev"
+            },
+            "time": "2015-07-20 12:10:18"
+        },
+        {
+            "name": "PrestaShop/blockmyaccountfooter",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockmyaccountfooter.git",
+                "reference": "447053d1a9a5e2843dc44b43741fa6a53066352d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockmyaccountfooter/zipball/447053d1a9a5e2843dc44b43741fa6a53066352d",
+                "reference": "447053d1a9a5e2843dc44b43741fa6a53066352d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockmyaccountfooter",
+            "homepage": "https://github.com/PrestaShop/blockmyaccountfooter",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockmyaccountfooter/tree/dev"
+            },
+            "time": "2015-07-20 12:10:21"
+        },
+        {
+            "name": "PrestaShop/blocknewproducts",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocknewproducts.git",
+                "reference": "42a8d31cd6bbd6591546ade2d227522e3b7cf326"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocknewproducts/zipball/42a8d31cd6bbd6591546ade2d227522e3b7cf326",
+                "reference": "42a8d31cd6bbd6591546ade2d227522e3b7cf326",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocknewproducts",
+            "homepage": "https://github.com/PrestaShop/blocknewproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocknewproducts/tree/dev"
+            },
+            "time": "2015-07-20 12:10:22"
+        },
+        {
+            "name": "PrestaShop/blocknewsletter",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocknewsletter.git",
+                "reference": "3d01303e003147b878c95d26c631b989cac4b725"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocknewsletter/zipball/3d01303e003147b878c95d26c631b989cac4b725",
+                "reference": "3d01303e003147b878c95d26c631b989cac4b725",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocknewsletter",
+            "homepage": "https://github.com/PrestaShop/blocknewsletter",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocknewsletter/tree/dev"
+            },
+            "time": "2015-07-20 12:10:24"
+        },
+        {
+            "name": "PrestaShop/blockpaymentlogo",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockpaymentlogo.git",
+                "reference": "473d79a927fbfff12722e76917a880f237c689ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockpaymentlogo/zipball/473d79a927fbfff12722e76917a880f237c689ad",
+                "reference": "473d79a927fbfff12722e76917a880f237c689ad",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockpaymentlogo",
+            "homepage": "https://github.com/PrestaShop/blockpaymentlogo",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockpaymentlogo/tree/dev"
+            },
+            "time": "2015-07-20 12:10:25"
+        },
+        {
+            "name": "PrestaShop/blockpermanentlinks",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockpermanentlinks.git",
+                "reference": "933a1f67bf3cb4002b4980e92d45f1132dbd5771"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockpermanentlinks/zipball/933a1f67bf3cb4002b4980e92d45f1132dbd5771",
+                "reference": "933a1f67bf3cb4002b4980e92d45f1132dbd5771",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockpermanentlinks",
+            "homepage": "https://github.com/PrestaShop/blockpermanentlinks",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockpermanentlinks/tree/dev"
+            },
+            "time": "2015-07-20 12:10:27"
+        },
+        {
+            "name": "PrestaShop/blockreinsurance",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockreinsurance.git",
+                "reference": "3394e9fc422c5b443374282d19906349833c16a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockreinsurance/zipball/3394e9fc422c5b443374282d19906349833c16a9",
+                "reference": "3394e9fc422c5b443374282d19906349833c16a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockreinsurance",
+            "homepage": "https://github.com/PrestaShop/blockreinsurance",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockreinsurance/tree/dev"
+            },
+            "time": "2015-07-20 12:10:29"
+        },
+        {
+            "name": "PrestaShop/blockrss",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockrss.git",
+                "reference": "3eda35b918a7d53a71929a4dfd443e99cfb167f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockrss/zipball/3eda35b918a7d53a71929a4dfd443e99cfb167f1",
+                "reference": "3eda35b918a7d53a71929a4dfd443e99cfb167f1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockrss",
+            "homepage": "https://github.com/PrestaShop/blockrss",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockrss/tree/dev"
+            },
+            "time": "2015-07-20 12:10:31"
+        },
+        {
+            "name": "PrestaShop/blocksearch",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocksearch.git",
+                "reference": "36ea7eed2ae5ff4d09cb628911623389b4d945c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocksearch/zipball/36ea7eed2ae5ff4d09cb628911623389b4d945c9",
+                "reference": "36ea7eed2ae5ff4d09cb628911623389b4d945c9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocksearch",
+            "homepage": "https://github.com/PrestaShop/blocksearch",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocksearch/tree/dev"
+            },
+            "time": "2015-07-20 12:10:32"
+        },
+        {
+            "name": "PrestaShop/blocksharefb",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocksharefb.git",
+                "reference": "42cec7851e6d4b3fe3c2761b4edcc15cf6204ebd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocksharefb/zipball/42cec7851e6d4b3fe3c2761b4edcc15cf6204ebd",
+                "reference": "42cec7851e6d4b3fe3c2761b4edcc15cf6204ebd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocksharefb",
+            "homepage": "https://github.com/PrestaShop/blocksharefb",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocksharefb/tree/dev"
+            },
+            "time": "2015-07-20 12:10:34"
+        },
+        {
+            "name": "PrestaShop/blocksocial",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocksocial.git",
+                "reference": "bc4ffa391c8fe77801b06d1ac288ffa11ec13a2d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocksocial/zipball/bc4ffa391c8fe77801b06d1ac288ffa11ec13a2d",
+                "reference": "bc4ffa391c8fe77801b06d1ac288ffa11ec13a2d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocksocial",
+            "homepage": "https://github.com/PrestaShop/blocksocial",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocksocial/tree/dev"
+            },
+            "time": "2015-07-20 12:10:35"
+        },
+        {
+            "name": "PrestaShop/blockspecials",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockspecials.git",
+                "reference": "3128edf090fb51772423182073f8a45367aacfe0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockspecials/zipball/3128edf090fb51772423182073f8a45367aacfe0",
+                "reference": "3128edf090fb51772423182073f8a45367aacfe0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockspecials",
+            "homepage": "https://github.com/PrestaShop/blockspecials",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockspecials/tree/dev"
+            },
+            "time": "2015-07-20 12:10:37"
+        },
+        {
+            "name": "PrestaShop/blockstore",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockstore.git",
+                "reference": "66df3ccecf81333ff25ed7b0ae0b55197c09c640"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockstore/zipball/66df3ccecf81333ff25ed7b0ae0b55197c09c640",
+                "reference": "66df3ccecf81333ff25ed7b0ae0b55197c09c640",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockstore",
+            "homepage": "https://github.com/PrestaShop/blockstore",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockstore/tree/dev"
+            },
+            "time": "2015-07-20 12:10:38"
+        },
+        {
+            "name": "PrestaShop/blocksupplier",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocksupplier.git",
+                "reference": "9709d6e6c1d5642d5a72f87ac178991b80ddb871"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocksupplier/zipball/9709d6e6c1d5642d5a72f87ac178991b80ddb871",
+                "reference": "9709d6e6c1d5642d5a72f87ac178991b80ddb871",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocksupplier",
+            "homepage": "https://github.com/PrestaShop/blocksupplier",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocksupplier/tree/dev"
+            },
+            "time": "2015-07-20 12:10:40"
+        },
+        {
+            "name": "PrestaShop/blocktags",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocktags.git",
+                "reference": "ccf99bee1fd2d295d0802056b2a909ef46eab7a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocktags/zipball/ccf99bee1fd2d295d0802056b2a909ef46eab7a0",
+                "reference": "ccf99bee1fd2d295d0802056b2a909ef46eab7a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocktags",
+            "homepage": "https://github.com/PrestaShop/blocktags",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocktags/tree/dev"
+            },
+            "time": "2015-07-20 12:10:42"
+        },
+        {
+            "name": "PrestaShop/blocktopmenu",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blocktopmenu.git",
+                "reference": "9481474a8003d71a83700ef3a9da5db0f71ea3c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blocktopmenu/zipball/9481474a8003d71a83700ef3a9da5db0f71ea3c7",
+                "reference": "9481474a8003d71a83700ef3a9da5db0f71ea3c7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blocktopmenu",
+            "homepage": "https://github.com/PrestaShop/blocktopmenu",
+            "support": {
+                "source": "https://github.com/PrestaShop/blocktopmenu/tree/dev"
+            },
+            "time": "2015-07-20 12:10:43"
+        },
+        {
+            "name": "PrestaShop/blockuserinfo",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockuserinfo.git",
+                "reference": "c16868e84eb622a55939f6f6d697f5e4832f900f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockuserinfo/zipball/c16868e84eb622a55939f6f6d697f5e4832f900f",
+                "reference": "c16868e84eb622a55939f6f6d697f5e4832f900f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockuserinfo",
+            "homepage": "https://github.com/PrestaShop/blockuserinfo",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockuserinfo/tree/dev"
+            },
+            "time": "2015-07-20 12:10:45"
+        },
+        {
+            "name": "PrestaShop/blockviewed",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockviewed.git",
+                "reference": "1ffaa6bfd207fcb44ce108d5047f5d76f24cbce6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockviewed/zipball/1ffaa6bfd207fcb44ce108d5047f5d76f24cbce6",
+                "reference": "1ffaa6bfd207fcb44ce108d5047f5d76f24cbce6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockviewed",
+            "homepage": "https://github.com/PrestaShop/blockviewed",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockviewed/tree/dev"
+            },
+            "time": "2015-07-20 12:10:46"
+        },
+        {
+            "name": "PrestaShop/cheque",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/cheque.git",
+                "reference": "3059e093c830f38cafe67844021c2998a118e08c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/cheque/zipball/3059e093c830f38cafe67844021c2998a118e08c",
+                "reference": "3059e093c830f38cafe67844021c2998a118e08c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module cheque",
+            "homepage": "https://github.com/PrestaShop/cheque",
+            "support": {
+                "source": "https://github.com/PrestaShop/cheque/tree/dev"
+            },
+            "time": "2015-07-20 12:10:53"
+        },
+        {
+            "name": "PrestaShop/crossselling",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/crossselling.git",
+                "reference": "9f80ef989c5c902b29023c4e86a0ac9cc5daf5ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/crossselling/zipball/9f80ef989c5c902b29023c4e86a0ac9cc5daf5ff",
+                "reference": "9f80ef989c5c902b29023c4e86a0ac9cc5daf5ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module crossselling",
+            "homepage": "https://github.com/PrestaShop/crossselling",
+            "support": {
+                "source": "https://github.com/PrestaShop/crossselling/tree/dev"
+            },
+            "time": "2015-07-20 12:10:57"
+        },
+        {
+            "name": "PrestaShop/dashactivity",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/dashactivity.git",
+                "reference": "682d60c168811cc1c2597debac75676a8ab82b8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/dashactivity/zipball/682d60c168811cc1c2597debac75676a8ab82b8d",
+                "reference": "682d60c168811cc1c2597debac75676a8ab82b8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module dashactivity",
+            "homepage": "https://github.com/PrestaShop/dashactivity",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashactivity/tree/dev"
+            },
+            "time": "2015-07-20 12:10:58"
+        },
+        {
+            "name": "PrestaShop/dashgoals",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/dashgoals.git",
+                "reference": "e5d394541f8613f454b9a15ee7ce7b72bb22323d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/e5d394541f8613f454b9a15ee7ce7b72bb22323d",
+                "reference": "e5d394541f8613f454b9a15ee7ce7b72bb22323d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module dashgoals",
+            "homepage": "https://github.com/PrestaShop/dashgoals",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashgoals/tree/dev"
+            },
+            "time": "2015-07-20 12:11:00"
+        },
+        {
+            "name": "PrestaShop/dashproducts",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/dashproducts.git",
+                "reference": "7f45418db196993eaf7eac475e964e4ce3767c85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/7f45418db196993eaf7eac475e964e4ce3767c85",
+                "reference": "7f45418db196993eaf7eac475e964e4ce3767c85",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module dashproducts",
+            "homepage": "https://github.com/PrestaShop/dashproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/dashproducts/tree/dev"
+            },
+            "time": "2015-07-20 12:11:02"
+        },
+        {
+            "name": "PrestaShop/graphnvd3",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/graphnvd3.git",
+                "reference": "7e7a834467bf02b78bb6f32c609180fb9b150062"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/7e7a834467bf02b78bb6f32c609180fb9b150062",
+                "reference": "7e7a834467bf02b78bb6f32c609180fb9b150062",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module graphnvd3",
+            "homepage": "https://github.com/PrestaShop/graphnvd3",
+            "support": {
+                "source": "https://github.com/PrestaShop/graphnvd3/tree/dev"
+            },
+            "time": "2015-07-20 12:11:15"
+        },
+        {
+            "name": "PrestaShop/gridhtml",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/gridhtml.git",
+                "reference": "43578257f3ffd16c35ac37ffff1920873e5b225a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/43578257f3ffd16c35ac37ffff1920873e5b225a",
+                "reference": "43578257f3ffd16c35ac37ffff1920873e5b225a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module gridhtml",
+            "homepage": "https://github.com/PrestaShop/gridhtml",
+            "support": {
+                "source": "https://github.com/PrestaShop/gridhtml/tree/dev"
+            },
+            "time": "2015-07-20 12:11:16"
+        },
+        {
+            "name": "PrestaShop/homefeatured",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/homefeatured.git",
+                "reference": "0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/homefeatured/zipball/0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a",
+                "reference": "0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module homefeatured",
+            "homepage": "https://github.com/PrestaShop/homefeatured",
+            "support": {
+                "source": "https://github.com/PrestaShop/homefeatured/tree/dev"
+            },
+            "time": "2015-07-20 12:11:19"
+        },
+        {
+            "name": "PrestaShop/homeslider",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/homeslider.git",
+                "reference": "92693a22d879729d756d2a26fc42ff1f0e1bf66f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/homeslider/zipball/92693a22d879729d756d2a26fc42ff1f0e1bf66f",
+                "reference": "92693a22d879729d756d2a26fc42ff1f0e1bf66f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module homeslider",
+            "homepage": "https://github.com/PrestaShop/homeslider",
+            "support": {
+                "source": "https://github.com/PrestaShop/homeslider/tree/dev"
+            },
+            "time": "2015-07-20 12:11:21"
+        },
+        {
+            "name": "PrestaShop/pagesnotfound",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/pagesnotfound.git",
+                "reference": "4e03646bbbea4ba34753b8199ad1f54c670fc727"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/4e03646bbbea4ba34753b8199ad1f54c670fc727",
+                "reference": "4e03646bbbea4ba34753b8199ad1f54c670fc727",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module pagesnotfound",
+            "homepage": "https://github.com/PrestaShop/pagesnotfound",
+            "support": {
+                "source": "https://github.com/PrestaShop/pagesnotfound/tree/dev"
+            },
+            "time": "2015-07-20 12:11:24"
+        },
+        {
+            "name": "PrestaShop/productpaymentlogos",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/productpaymentlogos.git",
+                "reference": "e55e5323bace5be081749dbef3e7f3da64d92481"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/productpaymentlogos/zipball/e55e5323bace5be081749dbef3e7f3da64d92481",
+                "reference": "e55e5323bace5be081749dbef3e7f3da64d92481",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module productpaymentlogos",
+            "homepage": "https://github.com/PrestaShop/productpaymentlogos",
+            "support": {
+                "source": "https://github.com/PrestaShop/productpaymentlogos/tree/dev"
+            },
+            "time": "2015-07-20 12:11:27"
+        },
+        {
+            "name": "PrestaShop/productscategory",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/productscategory.git",
+                "reference": "cb5134030da4a1b6c4336ded6d2637cc6a9f74d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/productscategory/zipball/cb5134030da4a1b6c4336ded6d2637cc6a9f74d6",
+                "reference": "cb5134030da4a1b6c4336ded6d2637cc6a9f74d6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module productscategory",
+            "homepage": "https://github.com/PrestaShop/productscategory",
+            "support": {
+                "source": "https://github.com/PrestaShop/productscategory/tree/dev"
+            },
+            "time": "2015-07-20 12:11:29"
+        },
+        {
+            "name": "PrestaShop/producttooltip",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/producttooltip.git",
+                "reference": "8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/producttooltip/zipball/8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5",
+                "reference": "8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module producttooltip",
+            "homepage": "https://github.com/PrestaShop/producttooltip",
+            "support": {
+                "source": "https://github.com/PrestaShop/producttooltip/tree/dev"
+            },
+            "time": "2015-07-20 12:11:31"
+        },
+        {
+            "name": "PrestaShop/sekeywords",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/sekeywords.git",
+                "reference": "fc3d998d5894b0be154752c25b15696bf48906b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/sekeywords/zipball/fc3d998d5894b0be154752c25b15696bf48906b2",
+                "reference": "fc3d998d5894b0be154752c25b15696bf48906b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module sekeywords",
+            "homepage": "https://github.com/PrestaShop/sekeywords",
+            "support": {
+                "source": "https://github.com/PrestaShop/sekeywords/tree/dev"
+            },
+            "time": "2015-07-20 12:11:37"
+        },
+        {
+            "name": "PrestaShop/sendtoafriend",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/sendtoafriend.git",
+                "reference": "226ad3f34b1b6d2c79fdac73b4547458532d28dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/sendtoafriend/zipball/226ad3f34b1b6d2c79fdac73b4547458532d28dc",
+                "reference": "226ad3f34b1b6d2c79fdac73b4547458532d28dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module sendtoafriend",
+            "homepage": "https://github.com/PrestaShop/sendtoafriend",
+            "support": {
+                "source": "https://github.com/PrestaShop/sendtoafriend/tree/dev"
+            },
+            "time": "2015-07-20 12:11:38"
+        },
+        {
+            "name": "PrestaShop/socialsharing",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/socialsharing.git",
+                "reference": "28d9e9958a7f8db7405520d408a7a3a6cdff766f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/socialsharing/zipball/28d9e9958a7f8db7405520d408a7a3a6cdff766f",
+                "reference": "28d9e9958a7f8db7405520d408a7a3a6cdff766f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module socialsharing",
+            "homepage": "https://github.com/PrestaShop/socialsharing",
+            "support": {
+                "source": "https://github.com/PrestaShop/socialsharing/tree/dev"
+            },
+            "time": "2015-07-20 12:11:40"
+        },
+        {
+            "name": "PrestaShop/statsbestcategories",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestcategories.git",
+                "reference": "a20588a77a092378e3dba22c4c6e088480b71d27"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcategories/zipball/a20588a77a092378e3dba22c4c6e088480b71d27",
+                "reference": "a20588a77a092378e3dba22c4c6e088480b71d27",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestcategories",
+            "homepage": "https://github.com/PrestaShop/statsbestcategories",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestcategories/tree/dev"
+            },
+            "time": "2015-07-20 12:11:42"
+        },
+        {
+            "name": "PrestaShop/statsbestcustomers",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestcustomers.git",
+                "reference": "21bd9f4ee72a5b30461fef0b44d44b57ef99764c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/21bd9f4ee72a5b30461fef0b44d44b57ef99764c",
+                "reference": "21bd9f4ee72a5b30461fef0b44d44b57ef99764c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestcustomers",
+            "homepage": "https://github.com/PrestaShop/statsbestcustomers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestcustomers/tree/dev"
+            },
+            "time": "2015-07-20 12:11:44"
+        },
+        {
+            "name": "PrestaShop/statsbestmanufacturers",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestmanufacturers.git",
+                "reference": "8a7983fc07e3eb95313436ec94adc7ca3071728b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestmanufacturers/zipball/8a7983fc07e3eb95313436ec94adc7ca3071728b",
+                "reference": "8a7983fc07e3eb95313436ec94adc7ca3071728b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestmanufacturers",
+            "homepage": "https://github.com/PrestaShop/statsbestmanufacturers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestmanufacturers/tree/dev"
+            },
+            "time": "2015-07-20 12:11:45"
+        },
+        {
+            "name": "PrestaShop/statsbestproducts",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestproducts.git",
+                "reference": "9e95c920822c1a693f55620c4e63f2a35bc087ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestproducts/zipball/9e95c920822c1a693f55620c4e63f2a35bc087ab",
+                "reference": "9e95c920822c1a693f55620c4e63f2a35bc087ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestproducts",
+            "homepage": "https://github.com/PrestaShop/statsbestproducts",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestproducts/tree/dev"
+            },
+            "time": "2015-07-20 12:11:47"
+        },
+        {
+            "name": "PrestaShop/statsbestsuppliers",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestsuppliers.git",
+                "reference": "79886e7a38806d230cc7fbeb2780c4a0d5a40e0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestsuppliers/zipball/79886e7a38806d230cc7fbeb2780c4a0d5a40e0d",
+                "reference": "79886e7a38806d230cc7fbeb2780c4a0d5a40e0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestsuppliers",
+            "homepage": "https://github.com/PrestaShop/statsbestsuppliers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestsuppliers/tree/dev"
+            },
+            "time": "2015-07-20 12:11:49"
+        },
+        {
+            "name": "PrestaShop/statsbestvouchers",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsbestvouchers.git",
+                "reference": "15bce93cb089f94657567991ff20594c0eca74a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestvouchers/zipball/15bce93cb089f94657567991ff20594c0eca74a9",
+                "reference": "15bce93cb089f94657567991ff20594c0eca74a9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsbestvouchers",
+            "homepage": "https://github.com/PrestaShop/statsbestvouchers",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsbestvouchers/tree/dev"
+            },
+            "time": "2015-07-20 12:11:50"
+        },
+        {
+            "name": "PrestaShop/statscarrier",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statscarrier.git",
+                "reference": "7258468dcb2e67c114e6ecd2731b4e40317dd344"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statscarrier/zipball/7258468dcb2e67c114e6ecd2731b4e40317dd344",
+                "reference": "7258468dcb2e67c114e6ecd2731b4e40317dd344",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statscarrier",
+            "homepage": "https://github.com/PrestaShop/statscarrier",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscarrier/tree/dev"
+            },
+            "time": "2015-07-20 12:11:52"
+        },
+        {
+            "name": "PrestaShop/statscatalog",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statscatalog.git",
+                "reference": "aa99dea79bacf6a917d6a2168ee07d6beae4c6e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statscatalog/zipball/aa99dea79bacf6a917d6a2168ee07d6beae4c6e1",
+                "reference": "aa99dea79bacf6a917d6a2168ee07d6beae4c6e1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statscatalog",
+            "homepage": "https://github.com/PrestaShop/statscatalog",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscatalog/tree/dev"
+            },
+            "time": "2015-07-20 12:11:53"
+        },
+        {
+            "name": "PrestaShop/statscheckup",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statscheckup.git",
+                "reference": "4b17427a4e4223c0114735adcec23ebca4a6aac1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/4b17427a4e4223c0114735adcec23ebca4a6aac1",
+                "reference": "4b17427a4e4223c0114735adcec23ebca4a6aac1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statscheckup",
+            "homepage": "https://github.com/PrestaShop/statscheckup",
+            "support": {
+                "source": "https://github.com/PrestaShop/statscheckup/tree/dev"
+            },
+            "time": "2015-07-20 12:11:55"
+        },
+        {
+            "name": "PrestaShop/statsdata",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsdata.git",
+                "reference": "f773be8e21aa473b38f2e8c568584f019258f9ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsdata/zipball/f773be8e21aa473b38f2e8c568584f019258f9ea",
+                "reference": "f773be8e21aa473b38f2e8c568584f019258f9ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsdata",
+            "homepage": "https://github.com/PrestaShop/statsdata",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsdata/tree/dev"
+            },
+            "time": "2015-07-20 12:11:57"
+        },
+        {
+            "name": "PrestaShop/statsequipment",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsequipment.git",
+                "reference": "cd165ecd0836b313c7e98f1de04efbec32c4b315"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsequipment/zipball/cd165ecd0836b313c7e98f1de04efbec32c4b315",
+                "reference": "cd165ecd0836b313c7e98f1de04efbec32c4b315",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsequipment",
+            "homepage": "https://github.com/PrestaShop/statsequipment",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsequipment/tree/dev"
+            },
+            "time": "2015-07-20 12:11:58"
+        },
+        {
+            "name": "PrestaShop/statsforecast",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsforecast.git",
+                "reference": "e7c198f1e47a9e1bca0c3532c559e4a8f451065c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/e7c198f1e47a9e1bca0c3532c559e4a8f451065c",
+                "reference": "e7c198f1e47a9e1bca0c3532c559e4a8f451065c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsforecast",
+            "homepage": "https://github.com/PrestaShop/statsforecast",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsforecast/tree/dev"
+            },
+            "time": "2015-07-20 12:12:00"
+        },
+        {
+            "name": "PrestaShop/statslive",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statslive.git",
+                "reference": "8c46ffed1e27859e8d832090017f364fa3af2367"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statslive/zipball/8c46ffed1e27859e8d832090017f364fa3af2367",
+                "reference": "8c46ffed1e27859e8d832090017f364fa3af2367",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statslive",
+            "homepage": "https://github.com/PrestaShop/statslive",
+            "support": {
+                "source": "https://github.com/PrestaShop/statslive/tree/dev"
+            },
+            "time": "2015-07-20 12:12:01"
+        },
+        {
+            "name": "PrestaShop/statsnewsletter",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsnewsletter.git",
+                "reference": "92806e7c96a01973b60ba46eda405c351bd1c38b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsnewsletter/zipball/92806e7c96a01973b60ba46eda405c351bd1c38b",
+                "reference": "92806e7c96a01973b60ba46eda405c351bd1c38b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsnewsletter",
+            "homepage": "https://github.com/PrestaShop/statsnewsletter",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsnewsletter/tree/dev"
+            },
+            "time": "2015-07-20 12:12:03"
+        },
+        {
+            "name": "PrestaShop/statsorigin",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsorigin.git",
+                "reference": "b9d586922d2131941cb7644c4b6acfe8c42ed13a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsorigin/zipball/b9d586922d2131941cb7644c4b6acfe8c42ed13a",
+                "reference": "b9d586922d2131941cb7644c4b6acfe8c42ed13a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsorigin",
+            "homepage": "https://github.com/PrestaShop/statsorigin",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsorigin/tree/dev"
+            },
+            "time": "2015-07-20 12:12:05"
+        },
+        {
+            "name": "PrestaShop/statspersonalinfos",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statspersonalinfos.git",
+                "reference": "7e9fc5385c4148058c65eb0eb2b72dd9f15e4245"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/7e9fc5385c4148058c65eb0eb2b72dd9f15e4245",
+                "reference": "7e9fc5385c4148058c65eb0eb2b72dd9f15e4245",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statspersonalinfos",
+            "homepage": "https://github.com/PrestaShop/statspersonalinfos",
+            "support": {
+                "source": "https://github.com/PrestaShop/statspersonalinfos/tree/dev"
+            },
+            "time": "2015-07-20 12:12:06"
+        },
+        {
+            "name": "PrestaShop/statsproduct",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsproduct.git",
+                "reference": "00ddd822de64fe131b2acbad3bd7a4ed578cec7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/00ddd822de64fe131b2acbad3bd7a4ed578cec7e",
+                "reference": "00ddd822de64fe131b2acbad3bd7a4ed578cec7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsproduct",
+            "homepage": "https://github.com/PrestaShop/statsproduct",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsproduct/tree/dev"
+            },
+            "time": "2015-07-20 12:12:08"
+        },
+        {
+            "name": "PrestaShop/statsregistrations",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsregistrations.git",
+                "reference": "ac2ff06ce701091515598eab74f83cfbe1ece06b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsregistrations/zipball/ac2ff06ce701091515598eab74f83cfbe1ece06b",
+                "reference": "ac2ff06ce701091515598eab74f83cfbe1ece06b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsregistrations",
+            "homepage": "https://github.com/PrestaShop/statsregistrations",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsregistrations/tree/dev"
+            },
+            "time": "2015-07-20 12:12:09"
+        },
+        {
+            "name": "PrestaShop/statssales",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statssales.git",
+                "reference": "9c23afe4f37dd48dac6eca42e7375495b29e7ebb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statssales/zipball/9c23afe4f37dd48dac6eca42e7375495b29e7ebb",
+                "reference": "9c23afe4f37dd48dac6eca42e7375495b29e7ebb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statssales",
+            "homepage": "https://github.com/PrestaShop/statssales",
+            "support": {
+                "source": "https://github.com/PrestaShop/statssales/tree/dev"
+            },
+            "time": "2015-07-20 12:12:11"
+        },
+        {
+            "name": "PrestaShop/statssearch",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statssearch.git",
+                "reference": "4137a5943a6f8d23319d42f6ca3ace2e14bde94f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statssearch/zipball/4137a5943a6f8d23319d42f6ca3ace2e14bde94f",
+                "reference": "4137a5943a6f8d23319d42f6ca3ace2e14bde94f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statssearch",
+            "homepage": "https://github.com/PrestaShop/statssearch",
+            "support": {
+                "source": "https://github.com/PrestaShop/statssearch/tree/dev"
+            },
+            "time": "2015-07-20 12:12:12"
+        },
+        {
+            "name": "PrestaShop/statsstock",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsstock.git",
+                "reference": "a1735a42122d2b8b90b32eefe11c9ae8e0625269"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsstock/zipball/a1735a42122d2b8b90b32eefe11c9ae8e0625269",
+                "reference": "a1735a42122d2b8b90b32eefe11c9ae8e0625269",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsstock",
+            "homepage": "https://github.com/PrestaShop/statsstock",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsstock/tree/dev"
+            },
+            "time": "2015-07-20 12:12:14"
+        },
+        {
+            "name": "PrestaShop/statsvisits",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/statsvisits.git",
+                "reference": "595a4c0112e2c364c8be2cff42df885f79f60bd0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/595a4c0112e2c364c8be2cff42df885f79f60bd0",
+                "reference": "595a4c0112e2c364c8be2cff42df885f79f60bd0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module statsvisits",
+            "homepage": "https://github.com/PrestaShop/statsvisits",
+            "support": {
+                "source": "https://github.com/PrestaShop/statsvisits/tree/dev"
+            },
+            "time": "2015-07-20 12:12:16"
+        },
+        {
+            "name": "PrestaShop/themeconfigurator",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/themeconfigurator.git",
+                "reference": "722c4c04bf290e5b65f0a72d48d114841d9b2251"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/themeconfigurator/zipball/722c4c04bf290e5b65f0a72d48d114841d9b2251",
+                "reference": "722c4c04bf290e5b65f0a72d48d114841d9b2251",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module themeconfigurator",
+            "homepage": "https://github.com/PrestaShop/themeconfigurator",
+            "support": {
+                "source": "https://github.com/PrestaShop/themeconfigurator/tree/dev"
+            },
+            "time": "2015-07-20 12:12:18"
+        },
+        {
+            "name": "PrestaShop/trackingfront",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/trackingfront.git",
+                "reference": "af1420357b4d1b02f120e9a468ae24ae5a8e955c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/trackingfront/zipball/af1420357b4d1b02f120e9a468ae24ae5a8e955c",
+                "reference": "af1420357b4d1b02f120e9a468ae24ae5a8e955c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module trackingfront",
+            "homepage": "https://github.com/PrestaShop/trackingfront",
+            "support": {
+                "source": "https://github.com/PrestaShop/trackingfront/tree/dev"
+            },
+            "time": "2015-07-20 12:12:21"
+        },
+        {
+            "name": "PrestaShop/vatnumber",
+            "version": "dev-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/vatnumber.git",
+                "reference": "432c069108ebf52ec1ea9b66cec21005aa5657ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/vatnumber/zipball/432c069108ebf52ec1ea9b66cec21005aa5657ff",
+                "reference": "432c069108ebf52ec1ea9b66cec21005aa5657ff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module vatnumber",
+            "homepage": "https://github.com/PrestaShop/vatnumber",
+            "support": {
+                "source": "https://github.com/PrestaShop/vatnumber/tree/dev"
+            },
+            "time": "2015-07-20 12:12:22"
+        },
+        {
+            "name": "composer/installers",
+            "version": "v1.0.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/installers.git",
+                "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/installers/zipball/d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+                "reference": "d64e23fce42a4063d63262b19b8e7c0f3b5e4c45",
+                "shasum": ""
+            },
+            "replace": {
+                "roundcube/plugin-installer": "*",
+                "shama/baton": "*"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.*@dev",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "composer-installer",
+            "extra": {
+                "class": "Composer\\Installers\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Composer\\Installers\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kyle Robinson Young",
+                    "email": "kyle@dontkry.com",
+                    "homepage": "https://github.com/shama"
+                }
+            ],
+            "description": "A multi-framework Composer library installer",
+            "homepage": "http://composer.github.com/installers/",
+            "keywords": [
+                "Craft",
+                "Dolibarr",
+                "Hurad",
+                "MODX Evo",
+                "OXID",
+                "SMF",
+                "Thelia",
+                "WolfCMS",
+                "agl",
+                "aimeos",
+                "annotatecms",
+                "bitrix",
+                "cakephp",
+                "chef",
+                "codeigniter",
+                "concrete5",
+                "croogo",
+                "dokuwiki",
+                "drupal",
+                "elgg",
+                "fuelphp",
+                "grav",
+                "installer",
+                "joomla",
+                "kohana",
+                "laravel",
+                "lithium",
+                "magento",
+                "mako",
+                "mediawiki",
+                "modulework",
+                "moodle",
+                "phpbb",
+                "piwik",
+                "ppi",
+                "puppet",
+                "roundcube",
+                "shopware",
+                "silverstripe",
+                "symfony",
+                "typo3",
+                "wordpress",
+                "zend",
+                "zikula"
+            ],
+            "time": "2015-02-18 17:17:01"
+        },
         {
             "name": "icanboogie/cldr",
             "version": "v1.3.9",
@@ -426,16 +3071,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.7",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4"
+                "reference": "6044546998c7627ab997501a3d0db972b3db9790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/07e27765596d72c378a6103e80da5d84e802f1e4",
-                "reference": "07e27765596d72c378a6103e80da5d84e802f1e4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6044546998c7627ab997501a3d0db972b3db9790",
+                "reference": "6044546998c7627ab997501a3d0db972b3db9790",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +3129,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-30 06:52:35"
+            "time": "2015-07-13 11:25:58"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -666,16 +3311,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.7.6",
+            "version": "4.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b"
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
-                "reference": "0ebabb4cda7d066be8391dfdbaf57fe70ac9a99b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9b97f9d807b862c2de2a36e86690000801c85724",
+                "reference": "9b97f9d807b862c2de2a36e86690000801c85724",
                 "shasum": ""
             },
             "require": {
@@ -734,7 +3379,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-30 06:53:57"
+            "time": "2015-07-13 11:28:34"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1164,16 +3809,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.7.1",
+            "version": "v2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "9808e75c609a14f6db02f70fccf4ca4aab53c160"
+                "reference": "4bfbe0ed3909bfddd75b70c094391ec1f142f860"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/9808e75c609a14f6db02f70fccf4ca4aab53c160",
-                "reference": "9808e75c609a14f6db02f70fccf4ca4aab53c160",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4bfbe0ed3909bfddd75b70c094391ec1f142f860",
+                "reference": "4bfbe0ed3909bfddd75b70c094391ec1f142f860",
                 "shasum": ""
             },
             "require": {
@@ -1209,12 +3854,87 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-10 15:30:22"
+            "time": "2015-07-01 11:25:50"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "prestashop/bankwire": 20,
+        "prestashop/blockadvertising": 20,
+        "prestashop/blockbanner": 20,
+        "prestashop/blockbestsellers": 20,
+        "prestashop/blockcart": 20,
+        "prestashop/blockcategories": 20,
+        "prestashop/blockcms": 20,
+        "prestashop/blockcmsinfo": 20,
+        "prestashop/blockcontact": 20,
+        "prestashop/blockcontactinfos": 20,
+        "prestashop/blockcurrencies": 20,
+        "prestashop/blockcustomerprivacy": 20,
+        "prestashop/blockfacebook": 20,
+        "prestashop/blocklanguages": 20,
+        "prestashop/blocklayered": 20,
+        "prestashop/blocklink": 20,
+        "prestashop/blockmanufacturer": 20,
+        "prestashop/blockmyaccountfooter": 20,
+        "prestashop/blocknewproducts": 20,
+        "prestashop/blocknewsletter": 20,
+        "prestashop/blockpaymentlogo": 20,
+        "prestashop/blockpermanentlinks": 20,
+        "prestashop/blockreinsurance": 20,
+        "prestashop/blockrss": 20,
+        "prestashop/blocksearch": 20,
+        "prestashop/blocksharefb": 20,
+        "prestashop/blocksocial": 20,
+        "prestashop/blockspecials": 20,
+        "prestashop/blockstore": 20,
+        "prestashop/blocksupplier": 20,
+        "prestashop/blocktags": 20,
+        "prestashop/blocktopmenu": 20,
+        "prestashop/blockuserinfo": 20,
+        "prestashop/blockviewed": 20,
+        "prestashop/crossselling": 20,
+        "prestashop/dashactivity": 20,
+        "prestashop/dashgoals": 20,
+        "prestashop/dashproducts": 20,
+        "prestashop/graphnvd3": 20,
+        "prestashop/gridhtml": 20,
+        "prestashop/homefeatured": 20,
+        "prestashop/homeslider": 20,
+        "prestashop/pagesnotfound": 20,
+        "prestashop/productpaymentlogos": 20,
+        "prestashop/productscategory": 20,
+        "prestashop/producttooltip": 20,
+        "prestashop/sekeywords": 20,
+        "prestashop/socialsharing": 20,
+        "prestashop/statsbestcategories": 20,
+        "prestashop/statsbestcustomers": 20,
+        "prestashop/statsbestmanufacturers": 20,
+        "prestashop/statsbestproducts": 20,
+        "prestashop/statsbestsuppliers": 20,
+        "prestashop/statsbestvouchers": 20,
+        "prestashop/statscarrier": 20,
+        "prestashop/statscatalog": 20,
+        "prestashop/statscheckup": 20,
+        "prestashop/statsdata": 20,
+        "prestashop/statsequipment": 20,
+        "prestashop/statsforecast": 20,
+        "prestashop/statslive": 20,
+        "prestashop/statsnewsletter": 20,
+        "prestashop/statsorigin": 20,
+        "prestashop/statspersonalinfos": 20,
+        "prestashop/statsproduct": 20,
+        "prestashop/statsregistrations": 20,
+        "prestashop/statssales": 20,
+        "prestashop/statssearch": 20,
+        "prestashop/statsstock": 20,
+        "prestashop/statsvisits": 20,
+        "prestashop/themeconfigurator": 20,
+        "prestashop/trackingfront": 20,
+        "prestashop/vatnumber": 20,
+        "prestashop/cheque": 20,
+        "prestashop/sendtoafriend": 20,
         "phake/phake": 0
     },
     "prefer-stable": false,

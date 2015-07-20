@@ -1,7 +1,83 @@
 {
   "require": {
+    "composer/installers": "~1.0",
     "smarty/smarty": "3.1.19",
-    "icanboogie/cldr": "1.3.9"
+    "icanboogie/cldr": "1.3.9",
+    "PrestaShop/bankwire": "dev-dev",
+    "PrestaShop/blockadvertising": "dev-dev",
+    "PrestaShop/blockbanner": "dev-dev",
+    "PrestaShop/blockbestsellers": "dev-dev",
+    "PrestaShop/blockcart": "dev-dev",
+    "PrestaShop/blockcategories": "dev-dev",
+    "PrestaShop/blockcms": "dev-dev",
+    "PrestaShop/blockcmsinfo": "dev-dev",
+    "PrestaShop/blockcontact": "dev-dev",
+    "PrestaShop/blockcontactinfos": "dev-dev",
+    "PrestaShop/blockcurrencies": "dev-dev",
+    "PrestaShop/blockcustomerprivacy": "dev-dev",
+    "PrestaShop/blockfacebook": "dev-dev",
+    "PrestaShop/blocklanguages": "dev-dev",
+    "PrestaShop/blocklayered": "dev-dev",
+    "PrestaShop/blocklink": "dev-dev",
+    "PrestaShop/blockmanufacturer": "dev-dev",
+    "PrestaShop/blockmyaccountfooter": "dev-dev",
+    "PrestaShop/blocknewproducts": "dev-dev",
+    "PrestaShop/blocknewsletter": "dev-dev",
+    "PrestaShop/blockpaymentlogo": "dev-dev",
+    "PrestaShop/blockpermanentlinks": "dev-dev",
+    "PrestaShop/blockreinsurance": "dev-dev",
+    "PrestaShop/blockrss": "dev-dev",
+    "PrestaShop/blocksearch": "dev-dev",
+    "PrestaShop/blocksharefb": "dev-dev",
+    "PrestaShop/blocksocial": "dev-dev",
+    "PrestaShop/blockspecials": "dev-dev",
+    "PrestaShop/blockstore": "dev-dev",
+    "PrestaShop/blocksupplier": "dev-dev",
+    "PrestaShop/blocktags": "dev-dev",
+    "PrestaShop/blocktopmenu": "dev-dev",
+    "PrestaShop/blockuserinfo": "dev-dev",
+    "PrestaShop/blockviewed": "dev-dev",
+    "PrestaShop/crossselling": "dev-dev",
+    "PrestaShop/dashactivity": "dev-dev",
+    "PrestaShop/dashgoals": "dev-dev",
+    "PrestaShop/dashproducts": "dev-dev",
+    "PrestaShop/graphnvd3": "dev-dev",
+    "PrestaShop/gridhtml": "dev-dev",
+    "PrestaShop/homefeatured": "dev-dev",
+    "PrestaShop/homeslider": "dev-dev",
+    "PrestaShop/pagesnotfound": "dev-dev",
+    "PrestaShop/productpaymentlogos": "dev-dev",
+    "PrestaShop/productscategory": "dev-dev",
+    "PrestaShop/producttooltip": "dev-dev",
+    "PrestaShop/sekeywords": "dev-dev",
+    "PrestaShop/socialsharing": "dev-dev",
+    "PrestaShop/statsbestcategories": "dev-dev",
+    "PrestaShop/statsbestcustomers": "dev-dev",
+    "PrestaShop/statsbestmanufacturers": "dev-dev",
+    "PrestaShop/statsbestproducts": "dev-dev",
+    "PrestaShop/statsbestsuppliers": "dev-dev",
+    "PrestaShop/statsbestvouchers": "dev-dev",
+    "PrestaShop/statscarrier": "dev-dev",
+    "PrestaShop/statscatalog": "dev-dev",
+    "PrestaShop/statscheckup": "dev-dev",
+    "PrestaShop/statsdata": "dev-dev",
+    "PrestaShop/statsequipment": "dev-dev",
+    "PrestaShop/statsforecast": "dev-dev",
+    "PrestaShop/statslive": "dev-dev",
+    "PrestaShop/statsnewsletter": "dev-dev",
+    "PrestaShop/statsorigin": "dev-dev",
+    "PrestaShop/statspersonalinfos": "dev-dev",
+    "PrestaShop/statsproduct": "dev-dev",
+    "PrestaShop/statsregistrations": "dev-dev",
+    "PrestaShop/statssales": "dev-dev",
+    "PrestaShop/statssearch": "dev-dev",
+    "PrestaShop/statsstock": "dev-dev",
+    "PrestaShop/statsvisits": "dev-dev",
+    "PrestaShop/themeconfigurator": "dev-dev",
+    "PrestaShop/trackingfront": "dev-dev",
+    "PrestaShop/vatnumber": "dev-dev",
+    "PrestaShop/cheque": "dev-dev",
+    "PrestaShop/sendtoafriend": "dev-dev"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
@@ -13,10 +89,239 @@
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/"
-    }
+    },
+    "classmap": ["modules/"]
   },
-    "scripts": {
-      "post-install-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
-      "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+  "scripts": {
+    "post-install-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/bankwire.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockadvertising.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockbanner.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockbestsellers.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcart.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcategories.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcms.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcmsinfo.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcontact.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcontactinfos.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcurrencies.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockcustomerprivacy.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockfacebook.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocklanguages.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocklayered.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocklink.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockmanufacturer.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockmyaccountfooter.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocknewproducts.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocknewsletter.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockpaymentlogo.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockpermanentlinks.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockreinsurance.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockrss.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocksearch.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocksharefb.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocksocial.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockspecials.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockstore.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocksupplier.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocktags.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blocktopmenu.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockuserinfo.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/blockviewed.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/crossselling.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/dashactivity.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/dashgoals.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/dashproducts.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/graphnvd3.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/gridhtml.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/homefeatured.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/homeslider.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/pagesnotfound.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/productpaymentlogos.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/productscategory.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/producttooltip.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/sekeywords.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/socialsharing.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestcategories.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestcustomers.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestmanufacturers.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestproducts.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestsuppliers.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsbestvouchers.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statscarrier.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statscatalog.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statscheckup.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsdata.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsequipment.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsforecast.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statslive.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsnewsletter.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsorigin.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statspersonalinfos.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsproduct.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsregistrations.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statssales.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statssearch.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsstock.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/statsvisits.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/themeconfigurator.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/trackingfront.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/vatnumber.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/cheque.git"
+    },{
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/sendtoafriend.git"
     }
+  ]
 }
