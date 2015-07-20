@@ -23,6 +23,7 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 <table>
+	<thead>
 	<tr>
 		<td style="text-align: center; font-size: 6pt; color: #444">
 			{if $available_in_your_account}
@@ -52,5 +53,6 @@
 			{/if}
 		</td>
 	</tr>
+	</thead>
 </table>
 
