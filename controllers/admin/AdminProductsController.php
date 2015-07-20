@@ -2525,7 +2525,7 @@ class AdminProductsControllerCore extends AdminController
                 $helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK');
             }
             $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_out_of_stock';
-            $helper->tooltip = $this->l('X% of your products for sale are out of stock.', null, null, false);
+            $helper->tooltip = sprintf($this->l('%s of your products for sale are out of stock.', null, null, false), $helper->value);
             $helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE') < $time);
             $helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
             $kpis[] = $helper->generate();
@@ -2554,7 +2554,7 @@ class AdminProductsControllerCore extends AdminController
             $helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
-        $helper->tooltip = $this->l('X% of your references have been purchased for the past 30 days', null, null, false);
+        $helper->tooltip = sprintf($this->l('%s have been purchased for the past 30 days', null, null, false), $helper->value);
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
         if (Module::isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
@@ -2572,7 +2572,7 @@ class AdminProductsControllerCore extends AdminController
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
         $helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time);
-        $helper->tooltip = $this->l('X% of your products are disabled and not visible to your customers', null, null, false);
+        $helper->tooltip = sprintf($this->l('%s of your products are disabled and not visible to your customers', null, null, false), $helper->value);
         $helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_active=0&submitFilterproduct=1';
         $kpis[] = $helper->generate();
 
