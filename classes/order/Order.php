@@ -1235,29 +1235,7 @@ class OrderCore extends ObjectModel
                 $this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
             }
 
-            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-                $wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
-            } else {
-                $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-                $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
-            }
 
-            $order_invoice->saveCarrierTaxCalculator(
-                $tax_calculator->getTaxesAmount(
-                    $order_invoice->total_shipping_tax_excl,
-                    $order_invoice->total_shipping_tax_incl,
-                    _PS_PRICE_COMPUTE_PRECISION_,
-                    $this->round_mode
-                )
-            );
-            $order_invoice->saveWrappingTaxCalculator(
-                $wrapping_tax_calculator->getTaxesAmount(
-                    $order_invoice->total_wrapping_tax_excl,
-                    $order_invoice->total_wrapping_tax_incl,
-                    _PS_PRICE_COMPUTE_PRECISION_,
-                    $this->round_mode
-                )
-            );
 
             // Update order_carrier
             $id_order_carrier = Db::getInstance()->getValue('
@@ -1354,10 +1332,29 @@ class OrderCore extends ObjectModel
         $order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
         $order_invoice->save();
 
-        $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-        $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
-        $order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
-        $order_invoice->saveWrappingTaxCalculator($wrapping_tax_calculator->getTaxesAmount($order_invoice->total_wrapping_tax_excl));
+        if (Configuration::get('PS_ATCP_SHIPWRAP')) {
+            $wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+        } else {
+            $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+            $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+        }
+
+        $order_invoice->saveCarrierTaxCalculator(
+            $tax_calculator->getTaxesAmount(
+                $order_invoice->total_shipping_tax_excl,
+                $order_invoice->total_shipping_tax_incl,
+                _PS_PRICE_COMPUTE_PRECISION_,
+                $this->round_mode
+            )
+        );
+        $order_invoice->saveWrappingTaxCalculator(
+            $wrapping_tax_calculator->getTaxesAmount(
+                $order_invoice->total_wrapping_tax_excl,
+                $order_invoice->total_wrapping_tax_incl,
+                _PS_PRICE_COMPUTE_PRECISION_,
+                $this->round_mode
+            )
+        );
     }
 
     /**
