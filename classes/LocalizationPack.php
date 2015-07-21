@@ -35,9 +35,10 @@ class LocalizationPackCore
 
     public function loadLocalisationPack($file, $selection, $install_mode = false, $iso_localization_pack = null)
     {
-        if (!$xml = simplexml_load_string($file)) {
+        if (!$xml = @simplexml_load_string($file)) {
             return false;
         }
+        libxml_clear_errors();
         $main_attributes = $xml->attributes();
         $this->name = (string)$main_attributes['name'];
         $this->version = (string)$main_attributes['version'];
@@ -413,7 +414,7 @@ class LocalizationPackCore
     /**
      * Update a configuration variable from a localization file
      * <configuration>
-     *	<configuration name="variable_name" value="variable_value" />
+     * <configuration name="variable_name" value="variable_value" />
      *
      * @param SimpleXMLElement $xml
      * @return bool
