@@ -1226,24 +1226,11 @@ class OrderCore extends ObjectModel
             if (!$id) {
                 $order_invoice->number = 0;
             }
-            $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            $carrier = new Carrier((int)$this->id_carrier);
-            $tax_calculator = $carrier->getTaxCalculator($address, $this->id, Configuration::get('PS_ATCP_SHIPWRAP'));
-            $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
-            $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
-            $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
-            $order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
-            $order_invoice->total_products = $this->total_products;
-            $order_invoice->total_products_wt = $this->total_products_wt;
-            $order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
-            $order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
-            $order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
-            $order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
-            $order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
             // Save Order invoice
 
-            $order_invoice->save();
+            $this->setInvoiceDetails($order_invoice);
+
             if (Configuration::get('PS_INVOICE')) {
                 $this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
             }
@@ -1343,6 +1330,37 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * This method allows to fulfill the object order_invoice with sales figures
+     */
+    protected function setInvoiceDetails($order_invoice)
+    {
+        if (!$order_invoice || !is_object($order_invoice)) {
+            return;
+        }
+
+        $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $carrier = new Carrier((int)$this->id_carrier);
+        $tax_calculator = $carrier->getTaxCalculator($address);
+        $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
+        $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
+        $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
+        $order_invoice->total_paid_tax_incl = $this->total_paid_tax_incl;
+        $order_invoice->total_products = $this->total_products;
+        $order_invoice->total_products_wt = $this->total_products_wt;
+        $order_invoice->total_shipping_tax_excl = $this->total_shipping_tax_excl;
+        $order_invoice->total_shipping_tax_incl = $this->total_shipping_tax_incl;
+        $order_invoice->shipping_tax_computation_method = $tax_calculator->computation_method;
+        $order_invoice->total_wrapping_tax_excl = $this->total_wrapping_tax_excl;
+        $order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
+        $order_invoice->save();
+
+        $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+        $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+        $order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
+        $order_invoice->saveWrappingTaxCalculator($wrapping_tax_calculator->getTaxesAmount($order_invoice->total_wrapping_tax_excl));
+    }
+
+    /**
      * This method allows to generate first delivery slip of the current order
      */
     public function setDeliverySlip()
@@ -1351,7 +1369,7 @@ class OrderCore extends ObjectModel
             $order_invoice = new OrderInvoice();
             $order_invoice->id_order = $this->id;
             $order_invoice->number = 0;
-            $order_invoice->add();
+            $this->setInvoiceDetails($order_invoice);
             $this->delivery_date = $order_invoice->date_add;
             $this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
             $this->update();
