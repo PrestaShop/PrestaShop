@@ -48,9 +48,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
         }
-        
+
         // header informations
-        $this->date = Tools::displayDate($this->order->invoice_date);
+        $this->date = Tools::displayDate($order_invoice->date_add);
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
@@ -70,7 +70,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
-    
+
     /**
      * Returns the template's HTML content
      *
@@ -122,7 +122,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             'carrier' => $carrier,
             'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY')
         ));
-        
+
         $tpls = array(
             'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),
             'addresses_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.addresses-tab')),
