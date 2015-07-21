@@ -2201,20 +2201,8 @@ class ToolsCore
 
     public static function replaceByAbsoluteURL($matches)
     {
-        global $current_css_file;
-        $protocol_link = Tools::getCurrentUrlProtocolPrefix();
-
-        if (array_key_exists(1, $matches) && array_key_exists(2, $matches)) {
-            if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2])) {
-                $sep = '/';
-                $tmp = substr($matches[2], 0, 1) == $sep ? $matches[2] : dirname($current_css_file).$sep.ltrim($matches[2], $sep);
-                $server = Tools::getMediaServer($tmp);
-                return $matches[1].$protocol_link.$server.$tmp;
-            } else {
-                return $matches[0];
-            }
-        }
-        return false;
+        Tools::displayAsDeprecated();
+        return Media::replaceByAbsoluteURL($matches);
     }
 
     /**
