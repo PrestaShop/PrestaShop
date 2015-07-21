@@ -122,7 +122,7 @@ function validate_isPostCode(s, pattern, iso_code)
 	if (typeof iso_code === 'undefined' || iso_code == '')
 		iso_code = '[A-Z]{2}';
 	if (typeof(pattern) == 'undefined' || pattern.length == 0)
-		pattern = '[a-z 0-9-]+';
+		pattern = '[a-zA-Z 0-9-]+';
 	else
 	{
 		var replacements = {
