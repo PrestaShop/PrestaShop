@@ -27,10 +27,14 @@
 function ps1611_fill_old_order_invoice_shop_addresses()
 {
     $db = Db::getInstance();
-    $address = OrderInvoice::getCurrentFormattedShopAddress();
-    $escaped_address = $db->escape($address, true, true);
     
-    $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice`
-        SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL');
+    $shop_ids = Shop::getShops(false, null, true);
+    foreach($shop_ids as $id_shop) {
+        $address = OrderInvoice::getCurrentFormattedShopAddress($id_shop);
+        $escaped_address = $db->escape($address, true, true);
+        
+        $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)
+            SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL AND `id_shop` = '.$id_shop);
+    }
     
 }
