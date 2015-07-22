@@ -839,10 +839,11 @@ class AdminControllerCore extends Controller
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.(float)$value.' ';
                         } elseif ($type == 'select') {
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+                        } elseif ($type == 'price') {
+                            $value = (float)str_replace(',', '.', $value);
+                            $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-                            if ($type == 'price') {
-                                $value = (float)str_replace(',', '.', $value);
-                            }
+                            
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
