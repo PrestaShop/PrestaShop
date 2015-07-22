@@ -800,10 +800,8 @@ class AdminProductsControllerCore extends AdminController
                 }
 
                 $_POST['id_image'] = $image->id;
-            }
-
-            /* Choose product cover image */
-            elseif (Tools::getIsset('coverImage')) {
+            } elseif (Tools::getIsset('coverImage')) {
+                /* Choose product cover image */
                 Image::deleteCover($image->id_product);
                 $image->cover = 1;
                 if (!$image->update()) {
@@ -814,10 +812,8 @@ class AdminProductsControllerCore extends AdminController
                     @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$productId.'_'.$this->context->shop->id.'.jpg');
                     $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
                 }
-            }
-
-            /* Choose product image position */
-            elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
+            } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
+                /* Choose product image position */
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
                 $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
             }
@@ -3274,7 +3270,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->context->currency, $shops, $currencies, $countries, $groups)
             );
 
-            $data->assign('ecotax_tax_excl', (int)$obj->ecotax);
+            $data->assign('ecotax_tax_excl', (float)$obj->ecotax);
             $this->_applyTaxToEcotax($obj);
 
             $data->assign(array(
