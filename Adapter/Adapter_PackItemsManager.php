@@ -59,4 +59,29 @@ class Adapter_PackItemsManager
         return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
     
+    /**
+     * Is this product a pack?
+     *
+     * @param Product $product
+     * @return boolean
+     */
+    public function isPack($product)
+    {
+        return Pack::isPack($product->id);
+    }
+    
+    /**
+     * Is this product in a pack?
+     * If $id_product_attribute specified, then will restrict search on the given combination,
+     * else this method will match a product if at least one of all its combination is in a pack.
+     *
+     * @param Product $product
+     * @param integer $id_product_attribute Optional combination of the product
+     * @return boolean
+     */
+    public function isPacked($product, $id_product_attribute = false)
+    {
+        return Pack::isPacked($product->id, $id_product_attribute);
+    }
+    
 }

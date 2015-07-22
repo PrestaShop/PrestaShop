@@ -455,7 +455,6 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product_attribute Optional
      * @param int $delta_quantity The delta quantity to update
      * @param int $id_shop Optional
-     * @param boolean $avoid_parent_pack_update Used internally in the method to avoid cyclic call (in a recursive behavior).
      */
     public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
     {
@@ -467,39 +466,8 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
         
-        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
-        $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
-
-        // Update quantity of the pack products
-        if (Pack::isPack($id_product)) {
-            // The product is a pack
-            $packStockUpdater = Adapter_ServiceLocator::get('Adapter_PackStockUpdater');
-            $packStockUpdater->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
-        } else {
-            // The product is not a pack
-            $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
-            $stockAvailable->update();
-
-            // Decrease case only: the stock of linked packs should be decreased too.
-            if ($delta_quantity < 0) {
-                // The product is not a pack, but the product combination is part of a pack (use of isPacked, not isPack)
-                if (Pack::isPacked($id_product, $id_product_attribute)) {
-                    $packStockUpdater = Adapter_ServiceLocator::get('Adapter_PackStockUpdater');
-                    $packStockUpdater->updatePacksQuantityContainingProduct($product, $id_product_attribute, $stockAvailable, $id_shop);
-                }
-            }
-        }
-
-        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
-
-        Hook::exec('actionUpdateQuantity',
-                array(
-                    'id_product' => $id_product,
-                    'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stockAvailable->quantity
-                )
-        );
-
+        $stockManager = Adapter_ServiceLocator::get('Core_Business_Stock_StockManager');
+        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
         return true;
     }
 

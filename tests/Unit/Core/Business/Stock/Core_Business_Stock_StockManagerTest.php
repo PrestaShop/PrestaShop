@@ -18,16 +18,17 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
- *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Stock;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Core_Business_Stock_StockManager as StockManager;
 
 class FakeStockAvailable4759
 {
@@ -88,6 +89,14 @@ class FakePackItemsManager4759
     {
         $id_product_attribute = $id_product_attribute?:0;
         return $this->stockAvailables[$product->id][$id_product_attribute];
+    }
+    public function isPack($product)
+    {
+        return isset($this->packs[$product->id]);
+    }
+    public function isPacked($product, $id_product_attribute = false)
+    {
+        return isset($this->items[$product->id][$id_product_attribute]);
     }
 }
 
@@ -177,8 +186,8 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockUpdater = new \Adapter_PackStockUpdater();
-        $stockUpdater->updatePackQuantity($pack, $pack->stock_available, $delta);
+        $stockManager = new StockManager();
+        $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
         foreach($products as $k => $product)
@@ -264,12 +273,120 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockUpdater = new \Adapter_PackStockUpdater();
+        $stockManager = new StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
         $stockAvailable = $products[0][0]->stock_available;
         $stockAvailable->quantity = $stockAvailable->quantity + $delta;
         $stockAvailable->update();
-        $stockUpdater->updatePacksQuantityContainingProduct($products[0][0], $products[0][1], $stockAvailable);
+        $stockManager->updatePacksQuantityContainingProduct($products[0][0], $products[0][1], $stockAvailable);
+        
+        $this->assertEquals($expected[0], $pack->stock_available->quantity);
+        foreach($products as $k => $product)
+            $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
+    }
+    
+    
+    public function get_update_quantity_provider()
+    {
+        return [
+            [ // nominal case: pack decreased with sub products
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 0, // 0 for pack, 1..n for an item in products
+                'delta' => -3,
+                'expected' => [7, 24, 7]
+            ],
+            [ // nominal case: product will decrease pack
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 1, // 0 for pack, 1..n for an item in products
+                'delta' => -11,
+                'expected' => [9, 19, 10]
+            ],
+            [ // product won't decrease pack (sufficient stocks)
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 1, // 0 for pack, 1..n for an item in products
+                'delta' => -10,
+                'expected' => [10, 20, 10]
+            ],
+            [ // out of stock for pack decrease
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 2), // 2: linked stock mode (Decrement both)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 0, // 0 for pack, 1..n for an item in products
+                'delta' => -12,
+                'expected' => [-2, 6, -2]
+            ],
+            [ // not linked stock mode
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 1), // 2: linked stock mode (Decrement both)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 1, // 0 for pack, 1..n for an item in products
+                'delta' => -12,
+                'expected' => [10, 18, 10]
+            ],
+            [ // not linked stock mode
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 3), // 3: not linked stock mode
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 0, // 0 for pack, 1..n for an item in products
+                'delta' => -8,
+                'expected' => [2, 30, 10]
+            ],
+            [ // half linked stock mode
+                'default_stock_type' => 0, // does not matter for this test
+                'pack' => new FakeProduct4759(10, 1), // 1: half linked stock mode (pack decrease will decrease products)
+                'products' => [
+                    [new FakeProduct4759(30), 1, 2],
+                    [new FakeProduct4759(10), 2, 1]
+                ],
+                'product_to_update' => 0, // 0 for pack, 1..n for an item in products
+                'delta' => -8,
+                'expected' => [2, 14, 2]
+            ],
+        ];
+    }
+    
+    /**
+     * @dataProvider get_update_quantity_provider
+     */
+    public function test_update_quantity($default_stock_type, FakeProduct4759 $pack, $products, $product_to_update, $delta, $expected)
+    {
+        $this->setStockType($default_stock_type);
+        $this->packItemsManager = new FakePackItemsManager4759();
+        foreach($products as $product)
+            $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
+        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
+        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        
+        
+        $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
+        $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];
+        
+        $stockManager = new StockManager();
+        $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
         foreach($products as $k => $product)

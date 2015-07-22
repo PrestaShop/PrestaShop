@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class Adapter_PackStockUpdater
+class Core_Business_Stock_StockManager
 {
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
@@ -40,7 +40,7 @@ class Adapter_PackStockUpdater
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
             $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
             $products_pack = $packItemsManager->getPackItems($product);
-            $stockAvailable = new \Core_Business_Stock_StockAvailable();
+            $stockAvailable = new \Core_Business_Stock_StockManager();
             foreach ($products_pack as $product_pack) {
                 $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
@@ -76,7 +76,7 @@ class Adapter_PackStockUpdater
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
-            if ($pack->pack_stock_type !== 2) {
+            if ((int)$pack->pack_stock_type != 2) {
                 continue;
             }
 
@@ -95,4 +95,50 @@ class Adapter_PackStockUpdater
             }
         }
     }
+    
+    /**
+     * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
+     * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
+     *
+     * @param Product $product The product to update its stockAvailable
+     * @param integer $id_product_attribute The declinaison to update (null if not)
+     * @param integer $delta_quantity The quantity change (positive or negative)
+     * @param integer|null $id_shop Optional
+     */
+    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null)
+    {
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+        $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
+        $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
+
+        // Update quantity of the pack products
+        if ($packItemsManager->isPack($product)) {
+            // The product is a pack
+            $this->updatePackQuantity($product, $stockAvailable, $delta_quantity, $id_shop);
+        } else {
+            // The product is not a pack
+            $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
+            $stockAvailable->update();
+
+            // Decrease case only: the stock of linked packs should be decreased too.
+            if ($delta_quantity < 0) {
+                // The product is not a pack, but the product combination is part of a pack (use of isPacked, not isPack)
+                if ($packItemsManager->isPacked($product, $id_product_attribute)) {
+                    $this->updatePacksQuantityContainingProduct($product, $id_product_attribute, $stockAvailable, $id_shop);
+                }
+            }
+        }
+
+        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
+
+        Hook::exec('actionUpdateQuantity',
+                array(
+                    'id_product' => $product->id,
+                    'id_product_attribute' => $id_product_attribute,
+                    'quantity' => $stockAvailable->quantity
+                )
+        );
+    }
+    
+    
 }

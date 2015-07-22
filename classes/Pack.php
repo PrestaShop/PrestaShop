@@ -396,7 +396,14 @@ class PackCore extends Product
         return true;
     }
 
-    // TODO 2 : tester, puis php doc!
+    /**
+     * Returns Packs that conatins the given product in the right declinaison.
+     *
+     * @param integer $id_item Product item id that could be contained in a|many pack(s)
+     * @param integer $id_attribute_item The declinaison of the product
+     * @param integer $id_lang
+     * @return array[Product] Packs that contains the given product
+     */
     public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
     {
         if (!Pack::isFeatureActive()) {
@@ -407,7 +414,7 @@ class PackCore extends Product
 			WHERE `id_product_item` = '.((int)$id_item).' AND `id_product_attribute_item` = '.((int)$id_attribute_item));
         $array_result = array();
         foreach ($result as $row) {
-            $p = new Product($row['id_product_pack'], false, $id_lang);
+            $p = new Product($row['id_product_pack'], true, $id_lang);
             $p->loadStockData();
             $p->pack_item_quantity = $row['quantity']; // Specific need from StockAvailable::updateQuantity()
             $array_result[] = $p;
