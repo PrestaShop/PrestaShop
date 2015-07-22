@@ -41,39 +41,11 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->cldr = new Repository(Context::getContext()->language);
 
         $this->fields_list = array(
-            'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'name' => array('title' => $this->l('Currency'), 'orderby' => false, 'search' => false),
-            'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false, 'search' => false),
             'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'),
+            'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'class' => 'fixed-width-xs'),
             'conversion_rate' => array('title' => $this->l('Exchange rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'),
             'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
-        );
-
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
-                'icon' => 'icon-trash'
-            )
-        );
-
-        $this->fields_options = array(
-            'change' => array(
-                'title' =>    $this->l('Currency rates'),
-                'image' => '../img/admin/exchangesrate.gif',
-                'description' => $this->l('Use PrestaShop\'s webservice to update your currency\'s exchange rates. However, please use caution: rates are provided as-is.'),
-                'submit' => array(
-                    'title' => $this->l('Update currency rates'),
-                    'name' => 'SubmitExchangesRates'
-                )
-            ),
-            'cron' => array(
-                'title' =>    $this->l('Automatically update currency rates'),
-                'image' => '../img/admin/tab-tools.gif',
-                'info' => '<div class="alert alert-block"><p>'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. However, please use caution: rates are provided as-is.').'<br/>'.$this->l('You can place the following URL in your crontab file, or you can click it yourself regularly:').'</p>
-					<p><strong><a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'" onclick="return !window.open($(this).attr(\'href\'));">'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</a></strong></p></div>',
-            )
         );
 
         parent::__construct();
@@ -97,8 +69,8 @@ class AdminCurrenciesControllerCore extends AdminController
             $currency = $this->cldr->getCurrency($this->_list[$k]['iso_code']);
 
             $this->_list[$k]['name'] = ucfirst($currency['name']);
-            $this->_list[$k]['iso_code_num'] = $currency['iso_code'];
             $this->_list[$k]['sign'] = $currency['symbol'];
+            $this->_list[$k]['iso_code'].= ' / '.$currency['iso_code'];
         }
 
         $helper = new HelperList();
@@ -114,6 +86,8 @@ class AdminCurrenciesControllerCore extends AdminController
 
     public function renderForm()
     {
+        $currency = null;
+
         $this->fields_form = array(
             'legend' => array(
                 'title' => $this->l('Currencies'),
@@ -122,7 +96,8 @@ class AdminCurrenciesControllerCore extends AdminController
             'input' => array(
                 array(
                     'type' => 'select',
-                    'label' => $this->l('ISO code'),
+                    'col' => '4',
+                    'label' => $this->l('Currency'),
                     'name' => 'iso_code',
                     'required' => true,
                     'hint' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'),
@@ -134,14 +109,16 @@ class AdminCurrenciesControllerCore extends AdminController
                 ),
                 array(
                     'type' => 'text',
+                    'col' => '6',
                     'label' => $this->l('Exchange rate'),
                     'name' => 'conversion_rate',
                     'maxlength' => 11,
                     'required' => true,
+                    'col' => '2',
                     'hint' => $this->l('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).')
                 ),
                 array(
-                    'type' => 'switch',
+                    'type' => 'hidden',
                     'label' => $this->l('Enable'),
                     'name' => 'active',
                     'required' => false,
@@ -187,6 +164,9 @@ class AdminCurrenciesControllerCore extends AdminController
                 'iso_code' => $this->cldr->getCurrency()['code']
             );
         }
+
+        $this->context->smarty->assign('status', $currency ? $currency->active : 0);
+        $this->context->smarty->assign('isForm', true);
 
         return parent::renderForm();
     }
@@ -317,5 +297,41 @@ class AdminCurrenciesControllerCore extends AdminController
         }
 
         parent::initPageHeaderToolbar();
+    }
+
+    public function ajaxProcessCronjobLiveExchangeRate()
+    {
+        if (!Module::isInstalled('cronjobs')) {
+            die(Tools::jsonEncode(array()));
+        }
+
+        $enable = (int)Tools::getValue('enable');
+        $config = Configuration::get('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', null, null, $this->context->shop->id);
+        $cronJobUrl = 'http://'.ShopUrl::getMainShopDomain($this->context->shop->id).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME'));
+
+        if ($config && $enable == 0) {
+            Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0, false, null, $this->context->shop->id);
+            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cronjobs WHERE `id_cronjob` = \''.(int)$config.'\'');
+        }
+
+        //The cronjob is not defined, create it
+        if ($enable == 1 && (!$config || $config == 0)) {
+            $cronJobs = new CronJobs();
+            $cronJobs->addOneShotTask(
+                $cronJobUrl,
+                sprintf($this->l('Live exchange Rate for %s'), Configuration::get('PS_SHOP_NAME'))
+            );
+
+            Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', Db::getInstance()->Insert_ID(), false, null, $this->context->shop->id);
+        } else {
+            $cronJob = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'cronjobs WHERE `id_cronjob` = \''.(int)$config.'\'');
+
+            //if cronjob do not exsit anymore OR cronjob dis disabled => disable conf
+            if (!$cronJob || $cronJob[0]['active'] == 0) {
+                Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', 0, false, null, $this->context->shop->id);
+            }
+        }
+
+        die(Tools::jsonEncode(array()));
     }
 }
