@@ -2210,7 +2210,7 @@ class AdminControllerCore extends Controller
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
             'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
             'add_permission' => 1,
-            'addons_register_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/login?'
+            'addons_register_link' => 'https://addons.prestashop.com/'.$this->context->language->iso_code.'/login?'
                 .'email='.urlencode($this->context->employee->email)
                 .'&firstname='.urlencode($this->context->employee->firstname)
                 .'&lastname='.urlencode($this->context->employee->lastname)
