@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -43,6 +43,13 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $this->order = new Order((int)$this->order_invoice->id_order);
         $this->smarty = $smarty;
 
+        // If shop_address is null, then update it with current one.
+        // But no DB save required here to avoid massive updates for bulk PDF generation case.
+        // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
+        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+            $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
+        }
+
         // header informations
         $this->date = Tools::displayDate($order_invoice->date_add);
 
@@ -60,9 +67,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array(
-            'header' => $this->l('Invoice'),
-        ));
+        $this->smarty->assign(array('header' => $this->l('Invoice')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
@@ -70,11 +75,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Compute layout elements size
      *
-     * @params $params Array Layout elements
+     * @param $params Array Layout elements
      *
      * @return Array Layout elements columns size
      */
-
     private function computeLayout($params)
     {
         $layout = array(
@@ -283,18 +287,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
          */
         $round_type = null;
         switch ($this->order->round_type) {
-            case Order::ROUND_TOTAL:
+        case Order::ROUND_TOTAL:
                 $round_type = 'total';
-                break;
-            case Order::ROUND_LINE;
+            break;
+        case Order::ROUND_LINE;
                 $round_type = 'line';
-                break;
-            case Order::ROUND_ITEM:
+            break;
+        case Order::ROUND_ITEM:
                 $round_type = 'item';
-                break;
-            default:
+            break;
+        default:
                 $round_type = 'line';
-                break;
+            break;
         }
 
         $display_product_images = Configuration::get('PS_PDF_IMG_INVOICE');

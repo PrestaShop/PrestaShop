@@ -80,10 +80,10 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
         $old_override_cart = preg_replace('~\* date: .*?\n~ism', '', $old_override_cart);
         $old_override_admin_product = preg_replace('~\* date: .*?\n~ism', '', $old_override_admin_product);
 
-        $new_override_cart = str_replace("\t", "", $new_override_cart);
-        $new_override_admin_product = str_replace("\t", "", $new_override_admin_product);
-        $old_override_cart = str_replace("\t", "", $old_override_cart);
-        $old_override_admin_product = str_replace("\t", "", $old_override_admin_product);
+        $new_override_cart = preg_replace("#(^\s*$)#ism", "", $new_override_cart);
+        $new_override_admin_product = preg_replace("#(^\s*$)#ism", "", $new_override_admin_product);
+        $old_override_cart = preg_replace("#(^\s*$)#ism", "", $old_override_cart);
+        $old_override_admin_product = preg_replace("#(^\s*$)#ism", "", $old_override_admin_product);
 
         $this->assertEquals($new_override_cart, $old_override_cart);
         $this->assertEquals($new_override_admin_product, $old_override_admin_product);

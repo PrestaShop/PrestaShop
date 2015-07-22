@@ -588,7 +588,7 @@
 							{if ($customer->isGuest())}
 								{l s='This order has been placed by a guest.'}
 								{if (!Customer::customerExists($customer->email))}
-									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+									<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;id_order={$order->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 										<input type="hidden" name="id_lang" value="{$order->id_lang}" />
 										<input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
 										<p class="help-block">{l s='This feature will generate a random password and send an email to the customer.'}</p>

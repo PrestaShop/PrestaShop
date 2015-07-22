@@ -128,18 +128,9 @@ class OrderInvoiceCore extends ObjectModel
 
     public function add($autodate = true, $null_values = false)
     {
-        $address = new Address();
-        $address->company = Configuration::get('PS_SHOP_NAME');
-        $address->address1 = Configuration::get('PS_SHOP_ADDR1');
-        $address->address2 = Configuration::get('PS_SHOP_ADDR2');
-        $address->postcode = Configuration::get('PS_SHOP_CODE');
-        $address->city = Configuration::get('PS_SHOP_CITY');
-        $address->phone = Configuration::get('PS_SHOP_PHONE');
-        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
-
-        $this->shop_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
-
         $order = new Order($this->id_order);
+        
+        $this->shop_address = self::getCurrentFormattedShopAddress($order->id_shop);
 
         $invoice_address = new Address((int)$order->id_address_invoice);
         $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
@@ -878,5 +869,18 @@ class OrderInvoiceCore extends ObjectModel
         }
 
         return $is_correct;
+    }
+    
+    public static function getCurrentFormattedShopAddress($id_shop = null) {
+        $address = new Address();
+        $address->company = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
+        $address->address1 = Configuration::get('PS_SHOP_ADDR1', null, null, $id_shop);
+        $address->address2 = Configuration::get('PS_SHOP_ADDR2', null, null, $id_shop);
+        $address->postcode = Configuration::get('PS_SHOP_CODE', null, null, $id_shop);
+        $address->city = Configuration::get('PS_SHOP_CITY', null, null, $id_shop);
+        $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
+        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
+
+        return AddressFormat::generateAddress($address, array(), '<br />', ' ');
     }
 }

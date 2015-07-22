@@ -126,7 +126,7 @@ function validate_isPostCode(s, pattern, iso_code)
 	else
 	{
 		var replacements = {
-			' ': '(?: |)',
+			' ': '(?:\ |)',
 			'-': '(?:-|)',
 			'N': '[0-9]',
 			'L': '[a-zA-Z]',

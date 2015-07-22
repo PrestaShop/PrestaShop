@@ -79,6 +79,16 @@ class MediaCore
     protected static $inline_script_src = array();
 
     /**
+     * @var string pattern used in replaceByAbsoluteURL
+     */
+    public static $pattern_callback = '#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s';
+
+    /**
+     * @var string used for preg_replace_callback parameter (avoid global)
+     */
+    protected static $current_css_file;
+
+    /**
      * @var string pattern used in packJSinHTML
      */
     public static $pattern_js = '#\s*(<\s*script(?:\s[^>]*(?:javascript)[^>]*|)+>)(.*)(<\s*/script\s*[^>]*>)\s*#Uims';
@@ -173,13 +183,12 @@ class MediaCore
 
     public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
     {
-        global $current_css_file;
+        Media::$current_css_file = $fileuri;
 
-        $current_css_file = $fileuri;
         if (strlen($css_content) > 0) {
             $limit  = Media::getBackTrackLimit();
             $css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-            $css_content = preg_replace_callback('#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+            $css_content = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $css_content, $limit);
             $css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
             $css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
             $css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
@@ -200,6 +209,22 @@ class MediaCore
             }
 
             return trim($css_content);
+        }
+        return false;
+    }
+
+    public static function replaceByAbsoluteURL($matches)
+    {
+        if (array_key_exists(1, $matches) && array_key_exists(2, $matches)) {
+            if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2])) {
+                $protocol_link = Tools::getCurrentUrlProtocolPrefix();
+                $sep = '/';
+                $tmp = $matches[2][0] == $sep ? $matches[2] : dirname(Media::$current_css_file).$sep.ltrim($matches[2], $sep);
+                $server = Tools::getMediaServer($tmp);
+
+                return $matches[1].$protocol_link.$server.$tmp;
+            } else
+                return $matches[0];
         }
         return false;
     }

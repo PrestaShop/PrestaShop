@@ -1359,7 +1359,7 @@ abstract class ModuleCore
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
                     $tmp_module = Adapter_ServiceLocator::get($module);
-                    
+
                     $item = new stdClass();
                     $item->id = $tmp_module->id;
                     $item->warning = $tmp_module->warning;
@@ -2783,7 +2783,7 @@ abstract class ModuleCore
                     throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
                 }
 
-                $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+                $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1", $module_file);
                 if ($module_file === null) {
                     throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
                 }
@@ -2795,7 +2795,7 @@ abstract class ModuleCore
                     throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
                 }
 
-                $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+                $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2$3", $module_file);
                 if ($module_file === null) {
                     throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
                 }
@@ -2806,7 +2806,7 @@ abstract class ModuleCore
                     throw new Exception(sprintf(Tools::displayError('The constant %1$s in the class %2$s is already defined.'), $constant, $classname));
                 }
 
-                $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+                $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2", $module_file);
                 if ($module_file === null) {
                     throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
                 }
@@ -2845,7 +2845,7 @@ abstract class ModuleCore
 
                 // For each method found in the override, prepend a comment with the module name and version
                 foreach ($module_class->getMethods() as $method) {
-                    $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+                    $module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1", $module_file);
                     if ($module_file === null) {
                         throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
                     }
@@ -2853,7 +2853,7 @@ abstract class ModuleCore
 
                 // Same loop for properties
                 foreach ($module_class->getProperties() as $property) {
-                    $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+                    $module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2$3", $module_file);
                     if ($module_file === null) {
                         throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
                     }
@@ -2861,7 +2861,7 @@ abstract class ModuleCore
 
                 // Same loop for constants
                 foreach ($module_class->getConstants() as $constant => $value) {
-                    $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+                    $module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n    * module: ".$this->name."\n    * date: ".date('Y-m-d H:i:s')."\n    * version: ".$this->version."\n    */\n    $1$2", $module_file);
                     if ($module_file === null) {
                         throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
                     }
@@ -2987,7 +2987,7 @@ abstract class ModuleCore
 
             $count = count($override_file);
             for ($i = 0; $i < $count; ++$i) {
-                if (preg_match('/(\/\/.*)/i', $override_file[$i])) {
+                if (preg_match('/(^\s*\/\/.*)/i', $override_file[$i])) {
                     $override_file[$i] = '#--remove--#';
                 } elseif (preg_match('/(^\s*\/\*)/i', $override_file[$i])) {
                     if (!preg_match('/(^\s*\* module:)/i', $override_file[$i + 1])
