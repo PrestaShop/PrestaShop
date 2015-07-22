@@ -2704,6 +2704,7 @@ class AdminThemesControllerCore extends AdminController
                 }
             }
             Configuration::updateValue($field_name, $logo_name, false, $id_shop_group, $id_shop);
+            Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
             @unlink($tmp_name);
         }
     }
