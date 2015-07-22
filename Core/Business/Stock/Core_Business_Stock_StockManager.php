@@ -132,11 +132,11 @@ class Core_Business_Stock_StockManager
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
 
         Hook::exec('actionUpdateQuantity',
-                array(
-                    'id_product' => $product->id,
-                    'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stockAvailable->quantity
-                )
+            array(
+                'id_product' => $product->id,
+                'id_product_attribute' => $id_product_attribute,
+                'quantity' => $stockAvailable->quantity
+            )
         );
     }
     
