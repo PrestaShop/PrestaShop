@@ -83,14 +83,19 @@
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable"
   },
+  "autoload-dev": {
+    "psr-4": {
+      "PrestaShop\\PrestaShop\\Tests\\": "tests/"
+    }
+  },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Tests\\": "tests/",
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/"
     },
-    "classmap": ["modules/"]
+    "classmap": ["Core/", "Adapter/"],
+    "files": ["config/alias.php", "classes/PrestaShopAutoload.php"]
   },
   "scripts": {
     "post-install-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",

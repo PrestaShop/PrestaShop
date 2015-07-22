@@ -137,9 +137,7 @@ class PrestaShopAutoload
     {
         $classes = array_merge(
             $this->getClassesFromDir('classes/'),
-            $this->getClassesFromDir('controllers/'),
-            $this->getClassesFromDir('Adapter/'),
-            $this->getClassesFromDir('Core/')
+            $this->getClassesFromDir('controllers/')
         );
 
         if ($this->_include_override_path) {
@@ -225,3 +223,5 @@ class PrestaShopAutoload
         return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
     }
 }
+
+spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
