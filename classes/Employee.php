@@ -182,7 +182,6 @@ class EmployeeCore extends ObjectModel
     public function add($autodate = true, $null_values = true)
     {
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
-        $this->saveOptin();
         $this->updateTextDirection();
         return parent::add($autodate, $null_values);
     }
@@ -198,10 +197,6 @@ class EmployeeCore extends ObjectModel
         }
 
         $currentEmployee = new Employee((int)$this->id);
-
-        if ($currentEmployee->optin != $this->optin) {
-            $this->saveOptin();
-        }
 
         $this->updateTextDirection();
         return parent::update($null_values);
@@ -231,20 +226,6 @@ class EmployeeCore extends ObjectModel
         }
     }
 
-    protected function saveOptin()
-    {
-        if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS')) {
-            $language = new Language($this->id_lang);
-            $params = http_build_query(array(
-                'email' => $this->email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $language->iso_code,
-                'visitorType' => 1,
-                'source' => 'backoffice'
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
-    }
 
     /**
      * Return list of employees
