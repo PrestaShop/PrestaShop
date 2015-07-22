@@ -829,7 +829,7 @@ class AdminCategoriesControllerCore extends AdminController
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
                 if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category_parent && $pos[2] == $id_category_to_move)) {
-                    $position = $key + 1;
+                    $position = $key;
                     break;
                 }
             }
