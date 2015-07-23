@@ -131,11 +131,12 @@ var ajaxCart = {
 		$(document).off('click', '.ajax_add_to_cart_button').on('click', '.ajax_add_to_cart_button', function(e){
 			e.preventDefault();
 			var idProduct =  parseInt($(this).data('id-product'));
+			var idProductAttribute =  parseInt($(this).data('id-product-attribute'));
 			var minimalQuantity =  parseInt($(this).data('minimal_quantity'));
 			if (!minimalQuantity)
 				minimalQuantity = 1;
 			if ($(this).prop('disabled') != 'disabled')
-				ajaxCart.add(idProduct, null, false, this, minimalQuantity);
+				ajaxCart.add(idProduct, idProductAttribute, false, this, minimalQuantity);
 		});
 		//for product page 'add' button...
 		$(document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
