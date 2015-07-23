@@ -3136,7 +3136,7 @@ class CartCore extends ObjectModel
             );
 
             if ($product['reduction_type'] == 'amount') {
-                $reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+                $reduction = (float)$product[(Product::getTaxCalculationMethod() ? 'price_with_reduction_without_tax' : 'price_wt')] - (float)$product['price_without_quantity_discount'];
                 $product['reduction_formatted'] = Tools::displayPrice($reduction);
             }
         }

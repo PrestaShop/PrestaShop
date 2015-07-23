@@ -348,7 +348,7 @@ class ProductControllerCore extends FrontController
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
-            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
+            'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, Product::$_taxCalculationMethod == PS_TAX_INC, $ecotax_tax_amount),
             'ecotax_tax_inc' => $ecotax_tax_amount,
             'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
             'ecotaxTax_rate' => $ecotax_rate,
@@ -708,23 +708,31 @@ class ProductControllerCore extends FrontController
         $this->context->smarty->assign('customizationFormTarget', $customization_form_target);
     }
 
-    protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
+    protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $display_tax, $ecotax_amount)
     {
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
             if ($row['price'] >= 0) {
                 // The price may be directly set
 
-                $cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+                $cur_price = !$display_tax ? $row['price'] : $row['price'] * (1 + $tax_rate / 100) + (float)$ecotax_amount;
 
                 if ($row['reduction_type'] == 'amount') {
-                    $cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+                    if (!$display_tax)
+										{
+												$cur_price -= (!$row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+												$row['reduction_with_tax'] = (!$row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+										}
+										else
+										{
+												$cur_price -= (!$row['reduction_tax'] ? $row['reduction'] * (1 + $tax_rate / 100) : $row['reduction'] / (1 + $tax_rate / 100));
+												$row['reduction_with_tax'] = (!$row['reduction_tax'] ? $row['reduction'] * (1 + $tax_rate / 100) : $row['reduction'] / (1 + $tax_rate / 100));
+										}
                 } else {
                     $cur_price *= 1 - $row['reduction'];
                 }
 
-                $row['real_value'] = $price - $cur_price;
+                $row['real_value'] = (($price < $row['price']) ? $row['price'] : $price) - $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
                     $row['real_value'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
