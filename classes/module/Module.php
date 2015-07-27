@@ -1526,7 +1526,7 @@ abstract class ModuleCore
                                 }
                             }
 
-                            $module_list[] = $item;
+                            $module_list[$modaddons->id.'-'.$item->name] = $item;
                         }
                     }
                 }
