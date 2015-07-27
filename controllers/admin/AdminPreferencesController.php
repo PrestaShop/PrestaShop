@@ -92,29 +92,14 @@ class AdminPreferencesControllerCore extends AdminController
                 $activities2[] = array('value' => $value, 'name' => $name);
             }
 
-            $disable_ssl = false;
-
-            if (defined('_PS_HOST_DOMAINS_') && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-                $host_mode_domains = explode(',', (string)_PS_HOST_DOMAINS_);
-                $domain_parts = array_reverse(explode('.', $this->context->shop->domain_ssl));
-
-                if (isset($host_mode_domains) && isset($domain_parts[1]) && isset($domain_parts[0])
-                    && !in_array($domain_parts[1].'.'.$domain_parts[0], $host_mode_domains)) {
-                    $disable_ssl = true;
-                }
-            }
-
             $fields = array(
                 'PS_SSL_ENABLED' => array(
                     'title' => $this->l('Enable SSL'),
-                    'desc' => $disable_ssl
-                        ? $this->l('It is not possible to enable SSL while you are using a custom domain name for your shop. SSL has thus been disabled.')
-                        : $this->l('If your hosting provider allows SSL, you can activate SSL encryption (https://) for customer account identification and order processing.'),
+                    'desc' => $this->l('If your hosting provider allows SSL, you can activate SSL encryption (https://) for customer account identification and order processing.'),
                     'validation' => 'isBool',
                     'cast' => 'intval',
                     'type' => 'bool',
-                    'default' => '0',
-                    'disabled' => $disable_ssl
+                    'default' => '0'
                 ),
             );
 
