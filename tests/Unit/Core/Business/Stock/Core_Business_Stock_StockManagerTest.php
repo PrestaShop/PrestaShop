@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Stock;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Business_Stock_StockManager as StockManager;
 
 class FakeStockAvailable4759
 {
@@ -189,7 +188,7 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockManager = new StockManager();
+        $stockManager = new \Core_Business_Stock_StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
@@ -278,7 +277,7 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockManager = new StockManager();
+        $stockManager = new \Core_Business_Stock_StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
         $stockAvailable = $products[0][0]->stock_available;
         $stockAvailable->quantity = $stockAvailable->quantity + $delta;
@@ -392,7 +391,7 @@ class StockAvailableTest extends UnitTestCase
         $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
         $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];
         
-        $stockManager = new StockManager();
+        $stockManager = new \Core_Business_Stock_StockManager();
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);

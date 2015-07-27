@@ -38,6 +38,7 @@ config/xml/*
 
 modules/*
 override/*
+vendor/*
 
 # Translations and emails templates
 

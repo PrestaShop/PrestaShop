@@ -41,13 +41,14 @@ class Core_Business_Stock_StockManager
             $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
             $products_pack = $packItemsManager->getPackItems($product);
             $stockAvailable = new \Core_Business_Stock_StockManager();
+            $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+            $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
             foreach ($products_pack as $product_pack) {
-                $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
                 $productStockAvailable->update();
                 
-                Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product_pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product_pack->id.'*');
             }
         }
 
@@ -73,6 +74,7 @@ class Core_Business_Stock_StockManager
         $configuration = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
         $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+        $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
@@ -91,7 +93,7 @@ class Core_Business_Stock_StockManager
                 $stock_available_pack->quantity = $max_pack_quantity;
                 $stock_available_pack->update();
 
-                Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$pack->id.'*');
+                $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$pack->id.'*');
             }
         }
     }
@@ -110,6 +112,8 @@ class Core_Business_Stock_StockManager
         $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
         $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
+        $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
+        $hookManager = Adapter_ServiceLocator::get('Adapter_HookManager');
 
         // Update quantity of the pack products
         if ($packItemsManager->isPack($product)) {
@@ -129,9 +133,9 @@ class Core_Business_Stock_StockManager
             }
         }
 
-        Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
+        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
 
-        Hook::exec('actionUpdateQuantity',
+        $hookManager->exec('actionUpdateQuantity',
             array(
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
