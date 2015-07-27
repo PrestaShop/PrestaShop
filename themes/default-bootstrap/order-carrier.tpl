@@ -350,7 +350,7 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions && $cms_id && (isset($advanced_payment_api) && !$advanced_payment_api)}
+			{if $conditions && $cms_id && (! isset($advanced_payment_api) || !$advanced_payment_api)}
 				{if $opc}
 					<hr style="" />
 				{/if}

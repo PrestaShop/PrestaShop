@@ -35,8 +35,8 @@
 	var idTree="{$id|escape:'html':'UTF-8'}";
 	var treeClickFunc = function() {
 						location.href = location.href.replace(
-						/&id_category=[0-9]*/, "")+"&id_category="
-						+$(this).val();
+						/&id_category=[0-9]*/, "&id_category="
+						+$(this).val());
 				};
 	function addDefaultCategory(elem)
 	{

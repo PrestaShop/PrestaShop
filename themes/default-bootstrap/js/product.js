@@ -808,9 +808,9 @@ function updatePrice()
 	}
 
 	if (noTaxForThisProduct || customerGroupWithoutTax)
-		updateDiscountTable(productBasePriceTaxExcl);
+		updateDiscountTable(priceWithDiscountsWithoutTax);
 	else
-		updateDiscountTable(productBasePriceTaxIncl);
+		updateDiscountTable(priceWithDiscountsWithTax);
 }
 
 //update display of the large image
@@ -855,8 +855,6 @@ function displayDiscounts(combination)
 	if (combinationsSpecificQuantityDiscount.length != 0)
 	{
 		combinationsSpecificQuantityDiscount.show();
-		allQuantityDiscount.hide();
-		quantityDiscountTable.show();
 	}
 	else if(allQuantityDiscount.length != 0)
 	{
