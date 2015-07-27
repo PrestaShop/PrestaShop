@@ -50,7 +50,7 @@ class PrestaShopSecurityTest extends IntegrationTestCase
             Assert::assertTrue($extract, 'Fail extract module');
             unlink(_PS_CACHE_DIR_.'sandbox/prestafraud.zip');
         }
-    
+
         self::$prestafraud = Module::getInstanceByName('prestafraud');
 
         Assert::assertTrue(is_object(self::$prestafraud), 'Fail Module::getInstanceByName(\'prestafraud\')');
@@ -58,17 +58,18 @@ class PrestaShopSecurityTest extends IntegrationTestCase
         if (!Module::isInstalled('prestafraud')) {
             Assert::assertTrue((bool)self::$prestafraud->install());
         }
-            
+
         Assert::assertTrue((bool)self::$prestafraud->isRegisteredInHook('actionValidateOrder'), 'Fail Module::isRegisteredInHook(\'actionValidateOrder\')');
-        
+
         $uniqid = uniqid().time();
         $email = 'prestabot+'.$uniqid.'@gmail.com';
         $shop_url = 'http://www.prestashop-unit-test-'.$uniqid.'.com/';
         $result = self::$prestafraud->_createAccount($email, $shop_url);
-        
+
         Assert::assertTrue($result, implode(', ', self::$prestafraud->_errors));
+        Context::getContext()->controller = new FrontController();
     }
-    
+
     public static function tearDownAfterClass()
     {
         Assert::assertTrue((bool)self::$prestafraud->uninstall());
