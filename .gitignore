@@ -13,6 +13,7 @@ config.codekit
 *.sublime-project
 *.sublime-workspace
 nbproject
+bower_components
 
 # Cache, temp and personal files
 
@@ -38,6 +39,12 @@ config/xml/*
 
 modules/*
 override/*
+admin-dev/themes/default/sass/ie.sass
+admin-dev/themes/default/sass/print.sass
+admin-dev/themes/default/sass/screen.sass
+admin-dev/themes/default/css/ie.css
+admin-dev/themes/default/css/print.css
+admin-dev/themes/default/css/screen.css
 
 # Translations and emails templates
 
