@@ -53,7 +53,7 @@ class Update extends Repository
 
     public function __destruct()
     {
-        $this->minifyJsonFiles();
+        //$this->minifyJsonFiles();
         umask($this->oldUmask);
     }
 
