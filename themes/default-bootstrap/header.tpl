@@ -71,20 +71,26 @@
 		<div id="page">
 			<div class="header-container">
 				<header id="header">
-					<div class="banner">
-						<div class="container">
-							<div class="row">
-								{hook h="displayBanner"}
+					{capture name='displayBanner'}{hook h='displayBanner'}{/capture}
+					{if $smarty.capture.displayBanner}
+						<div class="banner">
+							<div class="container">
+								<div class="row">
+									{hook h="displayBanner"}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="nav">
-						<div class="container">
-							<div class="row">
-								<nav>{hook h="displayNav"}</nav>
+					{/if}
+					{capture name='displayNav'}{hook h='displayNav'}{/capture}
+					{if $smarty.capture.displayNav}
+						<div class="nav">
+							<div class="container">
+								<div class="row">
+									<nav>{hook h="displayNav"}</nav>
+								</div>
 							</div>
 						</div>
-					</div>
+					{/if}
 					<div>
 						<div class="container">
 							<div class="row">
@@ -105,7 +111,10 @@
 						{include file="$tpl_dir./breadcrumb.tpl"}
 					{/if}
 					<div id="slider_row" class="row">
-						<div id="top_column" class="center_column col-xs-12 col-sm-12">{hook h="displayTopColumn"}</div>
+						{capture name='displayTopColumn'}{hook h='displayTopColumn'}{/capture}
+						{if $smarty.capture.displayTopColumn}
+							<div id="top_column" class="center_column col-xs-12 col-sm-12">{hook h="displayTopColumn"}</div>
+						{/if}
 					</div>
 					<div class="row">
 						{if isset($left_column_size) && !empty($left_column_size)}
