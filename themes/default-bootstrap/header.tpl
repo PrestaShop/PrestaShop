@@ -76,7 +76,7 @@
 						<div class="banner">
 							<div class="container">
 								<div class="row">
-									{hook h="displayBanner"}
+									{$smarty.capture.displayBanner}
 								</div>
 							</div>
 						</div>
@@ -86,7 +86,7 @@
 						<div class="nav">
 							<div class="container">
 								<div class="row">
-									<nav>{hook h="displayNav"}</nav>
+									<nav>{$smarty.capture.displayNav}</nav>
 								</div>
 							</div>
 						</div>
@@ -113,7 +113,7 @@
 					<div id="slider_row" class="row">
 						{capture name='displayTopColumn'}{hook h='displayTopColumn'}{/capture}
 						{if $smarty.capture.displayTopColumn}
-							<div id="top_column" class="center_column col-xs-12 col-sm-12">{hook h="displayTopColumn"}</div>
+							<div id="top_column" class="center_column col-xs-12 col-sm-12">{$smarty.capture.displayTopColumn}</div>
 						{/if}
 					</div>
 					<div class="row">
