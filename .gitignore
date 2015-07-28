@@ -8,6 +8,7 @@ img/*
 log/*
 upload/*
 vendor/*
+/composer.phar
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
