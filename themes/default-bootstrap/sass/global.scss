@@ -949,7 +949,7 @@ table.table_block td {
 			&:after {
 				display: block;
 				font-family: $font-icon;
-				content: "";
+				content: "?";
 				position: absolute;
 				right: 0;
 				top: 15px;
@@ -959,7 +959,7 @@ table.table_block td {
 				font-weight: normal;
 			}
 			&.active:after {
-				content: "";
+				content: "?";
 			}
 		}
 		a {
@@ -1630,7 +1630,7 @@ div.star a:hover {
 // BREADCRUMB
 .breadcrumb {
 	display: inline-block;
-	padding: 0 11px;
+	padding: 0 13px 0 11px;
 	border: 1px solid $base-border-color;
 	font-weight: bold;
 	font-size: 12px;
@@ -1646,11 +1646,46 @@ div.star a:hover {
 		display: inline-block;
 		text-indent: -5000px;
 	}
+	& > li {		
+		&:first-child + li {
+			&:last-child {
+				span {
+					padding-left: 0;
+				}
+			}
+			a {
+				padding-left: 23px;
+			}
+		}
+		&:first-child + li, &:last-child {
+			&:before {
+				display: none !important;
+			}
+		}
+		&:last-child {		
+			& > span {
+				padding-left: 8px; // 11px from .breadcrumb's padding -3px from display : inline-block
+			}
+		}
+		& + li + li {
+			position: relative;
+			&:before {
+				content: " ";
+				display: block !important;
+				background: $light-background;
+				height: 100%;
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 13px;
+				z-index: -1;
+			}
+		}
+	}
 	a {
 		display: inline-block;
 		background: $light-background;
-		padding: 0 15px 0 22px;
-		margin-left: -26px;
+		padding: 0 13px 0 8px;
 		position: relative;
 		z-index: 2;
 		color: $base-text-color;
@@ -1683,22 +1718,6 @@ div.star a:hover {
 			width: 18px;
 			height: 18px;
 			background: $light-background;
-			border-right: 1px solid $base-border-color;
-			border-top: 1px solid $base-border-color;
-			border-radius: 2px;
-			text-indent: -5000px;
-			z-index: -1;
-			@include rotate(45deg);
-		}
-		&:before {
-			display: inline-block;
-			content: ".";
-			position: absolute;
-			left: -10px;
-			top: 3px;
-			width: 18px;
-			height: 18px;
-			background: transparent;
 			border-right: 1px solid $base-border-color;
 			border-top: 1px solid $base-border-color;
 			border-radius: 2px;
