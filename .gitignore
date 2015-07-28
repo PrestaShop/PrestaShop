@@ -41,6 +41,8 @@ config/xml/*
 # Themes, modules and overrides
 
 modules/*
+!modules/.htaccess
+!modules/index.php
 override/*
 
 admin-dev/themes/default/sass/ie.sass
