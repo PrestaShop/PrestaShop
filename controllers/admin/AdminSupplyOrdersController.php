@@ -2063,10 +2063,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			IFNULL(pa.ean13, IFNULL(p.ean13, \'\')) as ean13,
 			IFNULL(pa.upc, IFNULL(p.upc, \'\')) as upc');
         $query->from('product_supplier', 'ps');
-        $query->leftJoin('stock', 's', '
-			s.id_product = ps.id_product
-			AND s.id_product_attribute = ps.id_product_attribute
-			AND s.id_warehouse = '.(int)$supply_order->id_warehouse);
         $query->innerJoin('warehouse_product_location', 'wpl', '
 			wpl.id_product = ps.id_product
 			AND wpl.id_product_attribute = ps.id_product_attribute
