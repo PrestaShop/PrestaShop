@@ -7134,7 +7134,7 @@ div.star a:hover {
 
 .breadcrumb {
   display: inline-block;
-  padding: 0 11px;
+  padding: 0 13px 0 11px;
   border: 1px solid #d6d4d4;
   font-weight: bold;
   font-size: 12px;
@@ -7151,11 +7151,30 @@ div.star a:hover {
     width: 18px;
     display: inline-block;
     text-indent: -5000px; }
+  .breadcrumb > li:first-child + li:last-child span {
+    padding-left: 0; }
+  .breadcrumb > li:first-child + li a {
+    padding-left: 23px; }
+  .breadcrumb > li:first-child + li:before, .breadcrumb > li:last-child:before {
+    display: none !important; }
+  .breadcrumb > li:last-child > span {
+    padding-left: 8px; }
+  .breadcrumb > li + li + li {
+    position: relative; }
+    .breadcrumb > li + li + li:before {
+      content: " ";
+      display: block !important;
+      background: #fff;
+      height: 100%;
+      position: absolute;
+      right: 100%;
+      top: 0;
+      width: 13px;
+      z-index: -1; }
   .breadcrumb a {
     display: inline-block;
     background: #fff;
-    padding: 0 15px 0 22px;
-    margin-left: -26px;
+    padding: 0 13px 0 8px;
     position: relative;
     z-index: 2;
     color: #333; }
@@ -7189,23 +7208,6 @@ div.star a:hover {
       width: 18px;
       height: 18px;
       background: #fff;
-      border-right: 1px solid #d6d4d4;
-      border-top: 1px solid #d6d4d4;
-      border-radius: 2px;
-      text-indent: -5000px;
-      z-index: -1;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      transform: rotate(45deg); }
-    .breadcrumb a:before {
-      display: inline-block;
-      content: ".";
-      position: absolute;
-      left: -10px;
-      top: 3px;
-      width: 18px;
-      height: 18px;
-      background: transparent;
       border-right: 1px solid #d6d4d4;
       border-top: 1px solid #d6d4d4;
       border-radius: 2px;
@@ -8398,8 +8400,7 @@ div.star.star_hover:after {
 #facebook_block .facebook-fanbox {
   background: #fff;
   border: 1px solid #aaaaaa;
-  display: inline-block;
-  max-width: 100%; }
+  padding-bottom: 10px; }
 
 #cmsinfo_block {
   border-left: 1px solid #d9d9d9; }

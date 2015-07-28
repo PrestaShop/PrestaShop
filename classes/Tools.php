@@ -1302,13 +1302,32 @@ class ToolsCore
 
                 $n = 1;
                 $n_categories = count($categories);
+				$position_in_breadcrumb = 2; // 1 == Home
                 foreach ($categories as $category) {
                     $full_path .=
-                    (($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="">' : '').
-                    htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-                    (($n < $n_categories || $link_on_the_item) ? '</a>' : '').
-                    (($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
+					'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">'.
+                    (($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="" itemprop="item">' : '<span itemprop="item">').
+                    '<span itemprop="name">'.
+					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
+                    '</span>'.
+					'<meta itemprop="position" content="'.$position_in_breadcrumb.'" />'.
+					(($n < $n_categories || $link_on_the_item) ? '</a>' : '</span>').
+                    (($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '').
+					'</li>';
+					$position_in_breadcrumb++;
                 }
+			
+				if (!empty($path)) {
+					$path =
+					'<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">'.
+                    '<span itemprop="item">'.
+                    '<span itemprop="name">'.
+					$path.
+                    '</span>'.
+					'<meta itemprop="position" content="'.$position_in_breadcrumb.'" />'.
+					'</span>'.
+                    '</li>';
+				}
 
                 return $full_path.$path;
             }
@@ -1320,9 +1339,9 @@ class ToolsCore
             $category_link = $context->link->getCMSCategoryLink($category);
 
             if ($path != $category->name) {
-                $full_path .= '<a href="'.Tools::safeOutput($category_link).'" data-gg="">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+                $full_path .= '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="'.Tools::safeOutput($category_link).'" data-gg="" itemprop="item">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span><span itemprop="name">'.$path.'</span></li>';
             } else {
-                $full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
+                $full_path = '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">'.($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="" itemprop="item">' : '<span itemprop="item">').'<span itemprop="name">'.htmlentities($path, ENT_NOQUOTES, 'UTF-8').'</span>'.($link_on_the_item ? '</a>' : '</span>').'</li>';
             }
 
             return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
