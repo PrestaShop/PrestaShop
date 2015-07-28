@@ -55,16 +55,17 @@ class StockManagerCore implements StockManagerInterface
      * @return bool
      * @throws PrestaShopException
      */
-    public function addProduct($id_product,
-                               $id_product_attribute = 0,
-                               Warehouse $warehouse,
-                               $quantity,
-                               $id_stock_mvt_reason,
-                               $price_te,
-                               $is_usable = true,
-                               $id_supply_order = null,
-                               $employee = null
-                              ) {
+    public function addProduct(
+        $id_product,
+        $id_product_attribute = 0,
+        Warehouse $warehouse,
+        $quantity,
+        $id_stock_mvt_reason,
+        $price_te,
+        $is_usable = true,
+        $id_supply_order = null,
+        $employee = null
+    ) {
         if (!Validate::isLoadedObject($warehouse) || (!is_int($price_te) && !is_float($price_te))
         || !$quantity || !$id_product) {
             return false;
