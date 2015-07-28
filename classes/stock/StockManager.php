@@ -65,7 +65,8 @@ class StockManagerCore implements StockManagerInterface
                                $id_supply_order = null,
                                $employee = null
                               ) {
-        if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product) {
+        if (!Validate::isLoadedObject($warehouse) || (!is_int($price_te) && !is_float($price_te))
+        || !$quantity || !$id_product) {
             return false;
         }
 
