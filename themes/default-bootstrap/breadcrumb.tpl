@@ -28,24 +28,39 @@
 <ol class="breadcrumb clearfix" itemscope itemtype="http://schema.org/BreadcrumbList">
 	<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 		<a class="home" href="{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}" title="{l s='Return to Home'}" itemprop="item"><i class="icon-home"></i><meta itemprop="name" content="{l s='Home'}" /><meta itemprop="position" content="1" /></a>
-		{if (isset($path) AND $path) && !$path|strpos:'span'}
-			<span class="navigation-pipe" {if isset($category) && isset($category->id_category) && $category->id_category == 1}style="display:none;"{/if}>{$navigationPipe|escape:'html':'UTF-8'}</span>
+		{if (isset($path) AND $path)}
+			<span class="navigation-pipe" >{$navigationPipe|escape:'html':'UTF-8'}</span>
 		{/if}
 	</li>
 	{if isset($path) AND $path}
-		{if !$path|strpos:'span'}
-			{assign var=breadcrumbPosition value="<meta"|explode:$path}
-			{assign var=breadcrumbPosition value=$breadcrumbPosition|@count}
+		{if isset($path.0.name)}
+			{foreach from=$path item=path_element name="path"}
+				{assign var=breadcrumbPosition value=$smarty.foreach.path.iteration+1}
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+				{if isset($path_element.link) && $path_element.link!='' && !$smarty.foreach.path.last}
+					<a href="{$path_element.link}" title="{l s='Return to Home'} {$path_element.name}" class="navigation_page" itemprop="item">
+				{else}
+					<span class="navigation_page" itemprop="item">
+				{/if}
+						<span itemprop="name">{$path_element.name}</span>
+						<meta itemprop="position" content="{$breadcrumbPosition}" />
+				{if isset($path_element.link) && $path_element.link!=''}
+					</a>
+				{else}
+					</span>
+				{/if}
+				{if !$smarty.foreach.path.last}
+					<span class="navigation-pipe">{$navigationPipe|escape:'html':'UTF-8'}</span>
+				{/if}
+				</li>
+			{/foreach}
+		{else}
 			<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 				<span class="navigation_page" itemprop="item">
-					<span itemprop="name">{$path}</span></a>
-					{if isset($breadcrumbPosition) && $breadcrumbPosition > 0}
-					<meta itemprop="position" content="{if $breadcrumbPosition == 1}{$breadcrumbPosition + 1}{else}{$breadcrumbPosition}{/if}" />
-					{/if}
+					<span itemprop="name">{$path}</span>
+					<meta itemprop="position" content="2" />
 				</span>
 			</li>
-		{else}
-			{$path}
 		{/if}
 	{/if}
 </ol>
