@@ -396,7 +396,7 @@
 		$('#file').fileupload({
 			dataType: 'json',
 			autoUpload: true,
-			acceptFileTypes: /(\.|\/)(csv)$/i,
+			acceptFileTypes: /(\.)?(csv|xls[xt]?|o[td]s)$/mgi,
 			singleFileUploads: true,
 			{if isset ($post_max_size)}maxFileSize: {$post_max_size},{/if}
 			start: function (e) {
