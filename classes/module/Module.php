@@ -263,6 +263,8 @@ abstract class ModuleCore
             // If cache is not generated, we generate it
             if (self::$modules_cache == null && !is_array(self::$modules_cache)) {
                 $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
+
+                self::$modules_cache = array();
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
 				SELECT m.`id_module`, m.`name`, (
