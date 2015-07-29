@@ -420,6 +420,7 @@
 								<th><span class="title_box ">{l s='Code'}</span></th>
 								<th><span class="title_box ">{l s='Name'}</span></th>
 								<th><span class="title_box ">{l s='Status'}</span></th>
+								<th></th>
 							<tr/>
 						</thead>
 						<tbody>
@@ -430,7 +431,7 @@
 								<td>{$discount['name']}</td>
 								<td>
 									{if $discount['active']}
-										<i class="icon-ok"></i>
+										<i class="icon-check"></i>
 									{else}
 										<i class="icon-remove"></i>
 									{/if}

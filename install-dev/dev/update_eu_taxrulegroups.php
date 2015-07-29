@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This script will update the tax rule groups for virtual products from all EU localization packs.
  * All it needs is that the correct tax in each localization pack is marked with `eu-tax-group="virtual"`.
@@ -8,28 +7,28 @@
  *
  *
  * 1)
- * 	Parse all files under /localization,
+ *  Parse all files under /localization,
  *  looking for <tax> elements that have the attribute eu-tax-group="virtual".
  *
- * 	Store the list of files (`$euLocalizationFiles`) where such taxes have been found,
+ *  Store the list of files (`$euLocalizationFiles`) where such taxes have been found,
  *  in a next step we'll store the new tax group in each of them.
  *
  * 2)
- * 	Remove all taxRulesGroup's that have the attribute eu-tax-group="virtual".
+ * Remove all taxRulesGroup's that have the attribute eu-tax-group="virtual".
  *
  * 3)
- * 	Build a new taxRulesGroup containing all the taxes found in the first step.
+ * Build a new taxRulesGroup containing all the taxes found in the first step.
  *
  * 4)
- * 	Inject the new taxRulesGroup into all packs of `$euLocalizationFiles`, not forgetting
- * 	to also inject the required taxes.
+ * Inject the new taxRulesGroup into all packs of `$euLocalizationFiles`, not forgetting
+ * to also inject the required taxes.
  *
- * 	Warning: do not duplicate the tax with attribute eu-tax-group="virtual" of the pack being updated.
+ * Warning: do not duplicate the tax with attribute eu-tax-group="virtual" of the pack being updated.
  *
- * 	Mark the injected group with the attributes eu-tax-group="virtual" and auto-generated="1"
- * 	Mark the injected taxes witth the attributes from-eu-tax-group="virtual" and auto-generated="1"
+ * Mark the injected group with the attributes eu-tax-group="virtual" and auto-generated="1"
+ * Mark the injected taxes witth the attributes from-eu-tax-group="virtual" and auto-generated="1"
  *
- * 	Clean things up by removing all the previous taxes that had the attributes eu-tax-group="virtual" and auto-generated="1"
+ * Clean things up by removing all the previous taxes that had the attributes eu-tax-group="virtual" and auto-generated="1"
  */
 
 @ini_set('display_errors', 'on');
@@ -50,10 +49,10 @@ foreach (scandir($localizationPacksRoot) as $entry) {
 
     $localizationPackFile = $localizationPacksRoot . DIRECTORY_SEPARATOR . $entry;
 
-    $localizationPack = simplexml_load_file($localizationPackFile);
+    $localizationPack = @simplexml_load_file($localizationPackFile);
 
     // Some packs do not have taxes
-    if (!$localizationPack->taxes->tax) {
+    if (!$localizationPack || !$localizationPack->taxes->tax) {
         continue;
     }
 
@@ -153,7 +152,7 @@ foreach ($euLocalizationFiles as $path => $file) {
     $taxId++;
 
     // Prepare new taxRulesGroup
-    
+
     $taxRulesGroup = $file['pack']->taxes->addChild('taxRulesGroup');
     $taxRulesGroup->addAttribute('name', 'EU VAT For Virtual Products');
     $taxRulesGroup->addAttribute('auto-generated', '1');

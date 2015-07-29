@@ -1064,9 +1064,8 @@ abstract class ModuleCore
                 // For controllers in module/controllers path
                 if (basename(dirname(dirname($file_path))) == 'controllers') {
                     self::$classInModule[$current_class] = basename(dirname(dirname(dirname($file_path))));
-                }
-                // For old AdminTab controllers
-                else {
+                } else {
+                    // For old AdminTab controllers
                     self::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
                 }
 
@@ -1201,7 +1200,10 @@ abstract class ModuleCore
 
         // Load config.xml
         libxml_use_internal_errors(true);
-        $xml_module = simplexml_load_file($config_file);
+        $xml_module = @simplexml_load_file($config_file);
+        if (!$xml_module) {
+            return 'Module '.ucfirst($module);
+        }
         foreach (libxml_get_errors() as $error) {
             libxml_clear_errors();
             return 'Module '.ucfirst($module);
@@ -1257,10 +1259,10 @@ abstract class ModuleCore
 
         $modules_installed = array();
         $result = Db::getInstance()->executeS('
-		SELECT m.name, m.version, mp.interest, module_shop.enable_device
-		FROM `'._DB_PREFIX_.'module` m
-		'.Shop::addSqlAssociation('module', 'm').'
-		LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
+        SELECT m.name, m.version, mp.interest, module_shop.enable_device
+        FROM `'._DB_PREFIX_.'module` m
+        '.Shop::addSqlAssociation('module', 'm').'
+        LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
         foreach ($result as $row) {
             $modules_installed[$row['name']] = $row;
         }
@@ -1288,7 +1290,11 @@ abstract class ModuleCore
             if ($use_config && $xml_exist && !$need_new_config_file) {
                 // Load config.xml
                 libxml_use_internal_errors(true);
-                $xml_module = simplexml_load_file($config_file);
+                $xml_module = @simplexml_load_file($config_file);
+                if (!$xml_module) {
+                    $errors[] = Tools::displayError(sprintf('%1s could not be loaded.', $config_file));
+                    break;
+                }
                 foreach (libxml_get_errors() as $error) {
                     $errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
                 }
@@ -1324,7 +1330,7 @@ abstract class ModuleCore
                     $item->onclick_option = false;
                     $item->trusted = Module::isModuleTrusted($item->name);
 
-                    $module_list[] = $item;
+                    $module_list[$item->name.'_disk'] = $item;
 
                     $module_name_list[] = '\''.pSQL($item->name).'\'';
                     $modules_name_to_cursor[Tools::strtolower(strval($item->name))] = $item;
@@ -1361,7 +1367,8 @@ abstract class ModuleCore
                     $tmp_module = Adapter_ServiceLocator::get($module);
 
                     $item = new stdClass();
-                    $item->id = $tmp_module->id;
+
+                    $item->id = (int)$tmp_module->id;
                     $item->warning = $tmp_module->warning;
                     $item->name = $tmp_module->name;
                     $item->version = $tmp_module->version;
@@ -1398,7 +1405,7 @@ abstract class ModuleCore
                         }
                     }
 
-                    $module_list[] = $item;
+                    $module_list[$item->name.'_disk'] = $item;
 
                     if (!$xml_exist || $need_new_config_file) {
                         self::$_generate_config_xml_mode = true;
@@ -1417,10 +1424,10 @@ abstract class ModuleCore
         if (!empty($module_name_list)) {
             $list = Shop::getContextListShopID();
             $sql = 'SELECT m.id_module, m.name, (
-						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
-					) as total
-					FROM '._DB_PREFIX_.'module m
-					WHERE LOWER(m.name) IN ('.Tools::strtolower(implode(',', $module_name_list)).')';
+                        SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
+                    ) as total
+                    FROM '._DB_PREFIX_.'module m
+                    WHERE LOWER(m.name) IN ('.Tools::strtolower(implode(',', $module_name_list)).')';
             $results = Db::getInstance()->executeS($sql);
 
             foreach ($results as $result) {
@@ -1435,8 +1442,8 @@ abstract class ModuleCore
         // Get Default Country Modules and customer module
         $files_list = array(
             array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
-            array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
             array('type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0),
+            array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
         );
         foreach ($files_list as $f) {
             if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $logged_on_addons)) {
@@ -1490,18 +1497,14 @@ abstract class ModuleCore
                             $item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
                             $item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
                             $item->url = isset($modaddons->url) ? $modaddons->url : null;
+                            if (isset($item->description_full) && trim($item->description_full) != '') {
+                                $item->show_quick_view = true;
+                            }
 
                             if (isset($modaddons->img)) {
-                                if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
-                                    if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img))) {
-                                        copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
-                                    }
-                                }
-
-                                if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
-                                    $item->image = '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
-                                }
+                                $item->image = Module::copyModAddonsImg($modaddons);
                             }
+
 
                             if ($item->type == 'addonsMustHave') {
                                 $item->addons_buy_url = strip_tags((string)$modaddons->url);
@@ -1520,7 +1523,14 @@ abstract class ModuleCore
                                 }
                             }
 
-                            $module_list[] = $item;
+                            $module_list[$item->name.'_feed'] = $item;
+                        }
+
+                        if (isset($module_list[$modaddons->name.'_disk'])) {
+                            $module_list[$modaddons->name.'_disk']->description_full = stripslashes(strip_tags((string)$modaddons->description_full));
+                            $module_list[$modaddons->name.'_disk']->additional_description = stripslashes(strip_tags((string)$modaddons->additional_description));
+                            $module_list[$modaddons->name.'_disk']->image = Module::copyModAddonsImg($modaddons);
+                            $module_list[$modaddons->name.'_disk']->show_quick_view = true;
                         }
                     }
                 }
@@ -1560,6 +1570,20 @@ abstract class ModuleCore
         return $module_list;
     }
 
+    public static function copyModAddonsImg($modaddons)
+    {
+        if (!Validate::isLoadedObject($modaddons)) {
+            return;
+        }
+        if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg') &&
+        !file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img))) {
+                copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+        }
+        if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
+            return '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
+        }
+    }
+
     /**
      * Return modules directory list
      *
@@ -1580,6 +1604,7 @@ abstract class ModuleCore
             }
         }
 
+
         return $module_list;
     }
 
@@ -1593,20 +1618,28 @@ abstract class ModuleCore
     public static function getNonNativeModuleList()
     {
         $db = Db::getInstance();
-
         $module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
-        $native_modules = simplexml_load_file($module_list_xml);
-        $native_modules = $native_modules->modules;
-        foreach ($native_modules as $native_modules_type) {
-            if (in_array($native_modules_type['type'], array('native', 'partner'))) {
-                $arr_native_modules[] = '""';
-                foreach ($native_modules_type->module as $module) {
-                    $arr_native_modules[] = '"'.pSQL($module['name']).'"';
+        $native_modules = @simplexml_load_file($module_list_xml);
+        if ($native_modules) {
+            $native_modules = $native_modules->modules;
+        }
+
+        $arr_native_modules = array();
+        if (is_array($native_modules)) {
+            foreach ($native_modules as $native_modules_type) {
+                if (in_array($native_modules_type['type'], array('native', 'partner'))) {
+                    $arr_native_modules[] = '""';
+                    foreach ($native_modules_type->module as $module) {
+                        $arr_native_modules[] = '"'.pSQL($module['name']).'"';
+                    }
                 }
             }
         }
 
-        return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
+        if ($arr_native_modules) {
+            return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
+        }
+        return false;
     }
 
     public static function getNativeModuleList()
@@ -1616,18 +1649,26 @@ abstract class ModuleCore
             return false;
         }
 
-        $native_modules = simplexml_load_file($module_list_xml);
-        $native_modules = $native_modules->modules;
+        $native_modules = @simplexml_load_file($module_list_xml);
+
+        if ($native_modules) {
+            $native_modules = $native_modules->modules;
+        }
+
         $modules = array();
-        foreach ($native_modules as $native_modules_type) {
-            if (in_array($native_modules_type['type'], array('native', 'partner'))) {
-                foreach ($native_modules_type->module as $module) {
-                    $modules[] = $module['name'];
+        if (is_array($native_modules)) {
+            foreach ($native_modules as $native_modules_type) {
+                if (in_array($native_modules_type['type'], array('native', 'partner'))) {
+                    foreach ($native_modules_type->module as $module) {
+                        $modules[] = $module['name'];
+                    }
                 }
             }
         }
-
-        return $modules;
+        if ($modules) {
+            return $modules;
+        }
+        return false;
     }
 
     /**
@@ -1699,16 +1740,14 @@ abstract class ModuleCore
             // If the module is not a partner, then return 1 (which means the module is "trusted")
             if (strpos($modules_list_content, '<module name="'.$module_name.'"/>') == false) {
                 return 1;
-            }
-            // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
-            elseif (strpos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false) {
+            } elseif (strpos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false) {
+                // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
             return 2;
-        }
-        // If the module is already in the untrusted list, then return 0 (untrusted)
-        elseif (strpos($untrusted_modules_list_content, $module_name) !== false) {
+        } elseif (strpos($untrusted_modules_list_content, $module_name) !== false) {
+            // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
             // If the module isn't in one of the xml files
@@ -1756,9 +1795,12 @@ abstract class ModuleCore
             if (file_exists($theme_xml)) {
                 $content  = Tools::file_get_contents($theme_xml);
                 $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-                foreach ($xml->modules->module as $modaddons) {
-                    if ((string)$modaddons['action'] == 'install') {
-                        $trusted[] = Tools::strtolower((string)$modaddons['name']);
+
+                if ($xml) {
+                    foreach ($xml->modules->module as $modaddons) {
+                        if ((string)$modaddons['action'] == 'install') {
+                            $trusted[] = Tools::strtolower((string)$modaddons['name']);
+                        }
                     }
                 }
             }
@@ -2764,12 +2806,12 @@ abstract class ModuleCore
 
             // Make a reflection of the override class and the module override class
             $override_file = file($override_path);
-            $override_file = array_diff($override_file,  array("\n"));
+            $override_file = array_diff($override_file, array("\n"));
             eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
             $override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
             $module_file = file($path_override);
-            $module_file = array_diff($module_file,  array("\n"));
+            $module_file = array_diff($module_file, array("\n"));
             eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
             $module_class = new ReflectionClass($classname.'Override'.$uniq);
 
@@ -2834,7 +2876,7 @@ abstract class ModuleCore
                 throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), $dir_name));
             }
             $module_file = file($override_src);
-            $module_file = array_diff($module_file,  array("\n"));
+            $module_file = array_diff($module_file, array("\n"));
 
             if ($orig_path) {
                 do {
