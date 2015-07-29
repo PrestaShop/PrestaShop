@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <!-- Block languages module -->
 {if count($languages) > 1}
@@ -38,9 +38,9 @@
 				{if $language.iso_code != $lang_iso}
 					{assign var=indice_lang value=$language.id_lang}
 					{if isset($lang_rewrite_urls.$indice_lang)}
-						<a href="{$lang_rewrite_urls.$indice_lang|escape:'html':'UTF-8'}" title="{$language.name}">
+						<a href="{$lang_rewrite_urls.$indice_lang|escape:'html':'UTF-8'}" title="{$language.name}" rel="alternate" hreflang="{$language.iso_code}">
 					{else}
-						<a href="{$link->getLanguageLink($language.id_lang)|escape:'html':'UTF-8'}" title="{$language.name}">
+						<a href="{$link->getLanguageLink($language.id_lang)|escape:'html':'UTF-8'}" title="{$language.name}" rel="alternate" hreflang="{$language.iso_code}">
 					{/if}
 				{/if}
 						<span>{$language.name|regex_replace:"/\s\(.*\)$/":""}</span>
