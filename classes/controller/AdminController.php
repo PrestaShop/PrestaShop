@@ -2594,7 +2594,8 @@ class AdminControllerCore extends Controller
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
         
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
-        
+        Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
+
         Media::addJsDef(array('currency' => array(
             'iso_code' => Context::getContext()->currency->iso_code,
             'sign' => Context::getContext()->currency->sign,
