@@ -242,6 +242,7 @@
             <hook module="blocktopmenu" hook="actionObjectCategoryAddAfter" position="1"/>
             <hook module="blocktopmenu" hook="actionObjectCmsAddAfter" position="1"/>
             <hook module="blocktopmenu" hook="actionObjectProductAddAfter" position="1"/>
+            <hook module="blocktopmenu" hook="displayHeader" position="34"/>
             <hook module="blockuserinfo" hook="displayHeader" position="25"/>
             <hook module="blockuserinfo" hook="displayTop" position="4"/>
             <hook module="blockuserinfo" hook="displayNav" position="1"/>
