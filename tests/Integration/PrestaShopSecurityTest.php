@@ -55,12 +55,23 @@ class PrestaShopSecurityTest extends IntegrationTestCase
             unlink(_PS_CACHE_DIR_.'sandbox/prestafraud.zip');
         }
 
-        self::$prestafraud = Module::getInstanceByName('prestafraud');
+        if (!file_exists(_PS_MODULE_DIR_.'/cheque/cheque.php')) {
+            $download = file_put_contents(_PS_CACHE_DIR_.'sandbox/cheque.zip', Tools::addonsRequest('module', array('id_module' => 4181)));
+            $this->assertGreaterThan(20000, $download, 'Fail download module from Addons');
+            $extract = Tools::ZipExtract(_PS_CACHE_DIR_.'sandbox/cheque.zip', _PS_MODULE_DIR_);
+            $this->assertTrue($extract, 'Fail extract module');
+            unlink(_PS_CACHE_DIR_.'sandbox/cheque.zip');
+        }
 
+        self::$prestafraud = Module::getInstanceByName('prestafraud');
         $this->assertTrue(is_object(self::$prestafraud), 'Fail Module::getInstanceByName(\'prestafraud\')');
         $this->assertEquals('prestafraud', self::$prestafraud->name);
         if (!Module::isInstalled('prestafraud')) {
             $this->assertTrue((bool)self::$prestafraud->install());
+        }
+
+        if (!Module::isInstalled('cheque')) {
+            $this->assertTrue((bool)Module::getInstanceByName('cheque')->install());
         }
 
         $uniqid = uniqid().time();
@@ -69,13 +80,12 @@ class PrestaShopSecurityTest extends IntegrationTestCase
         $result = self::$prestafraud->_createAccount($email, $shop_url);
 
         $this->assertTrue($result, implode(', ', self::$prestafraud->_errors));
-        Context::getContext()->controller = new FrontController();
     }
 
     public function testScoreExistingOrder()
     {
         $id_order = 1;
-        $order = new Order($id_order);
+        $order = new Order($id_order);        
         $this->assertTrue(self::$prestafraud->hookNewOrder(array('order' => $order)), 'Fail Prestafraud::hookNewOrder()');
         $scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
         $this->assertGreaterThan(0, (int)$scoring['scoring']);
