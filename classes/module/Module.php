@@ -262,8 +262,7 @@ abstract class ModuleCore
         if ($this->name != null) {
             // If cache is not generated, we generate it
             if (self::$modules_cache == null && !is_array(self::$modules_cache)) {
-                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : 1);
-                self::$modules_cache = array();
+                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
 				SELECT m.`id_module`, m.`name`, (
@@ -291,6 +290,9 @@ abstract class ModuleCore
                     }
                 }
                 $this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
+            }
+            if (!$this->context->controller instanceof Controller) {
+                self::$modules_cache = null;
             }
             $this->local_path = _PS_MODULE_DIR_.$this->name.'/';
         }
