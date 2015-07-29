@@ -26,7 +26,7 @@
 /* CLDR globals */
 var cldrLoadedCatalogs = [];
 var cldrLoaderError = false;
-var cldrCatalogsPath = '/translations/cldr/datas/';
+var cldrCatalogsPath = (typeof baseDir !== 'undefined' ? baseDir : '') + 'translations/cldr/datas/';
 
 /**
  * Will get list of CLDR catalogs by XHR.
