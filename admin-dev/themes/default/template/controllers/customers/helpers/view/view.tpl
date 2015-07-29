@@ -416,11 +416,12 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th><span class="title_box ">{l s='ID'}</span></th>
-								<th><span class="title_box ">{l s='Code'}</span></th>
-								<th><span class="title_box ">{l s='Name'}</span></th>
-								<th><span class="title_box ">{l s='Status'}</span></th>
-								<th></th>
+								<th><span class="title_box">{l s='ID'}</span></th>
+								<th><span class="title_box">{l s='Code'}</span></th>
+								<th><span class="title_box">{l s='Name'}</span></th>
+								<th><span class="title_box">{l s='Status'}</span></th>
+								<th><span class="title_box">{l s='Qty available'}</span></th>
+								<th><span class="title_box">{l s='Actions'}</span></th>
 							<tr/>
 						</thead>
 						<tbody>
@@ -436,11 +437,12 @@
 										<i class="icon-remove"></i>
 									{/if}
 								</td>
+								<td>{if $discount['quantity'] > 0}{$discount['quantity_for_user']|intval}{else}0{/if}</td>
 								<td>
-									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']}&amp;addcart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
+									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']|intval}&amp;addcart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
 										<i class="icon-pencil"></i>
 									</a>
-									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']}&amp;deletecart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
+									<a href="?tab=AdminCartRules&amp;id_cart_rule={$discount['id_cart_rule']|intval}&amp;deletecart_rule&amp;token={getAdminToken tab='AdminCartRules'}">
 										<i class="icon-remove"></i>
 									</a>
 								</td>
