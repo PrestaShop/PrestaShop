@@ -597,7 +597,7 @@ class AdminImportControllerCore extends AdminController
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
             //exclude .  ..  .svn and index.php and all hidden files
-            if (preg_match('/^\..*|index\.php/i', $filename)) {
+            if (preg_match('/^\..*|index\.php/i', $filename) || is_dir(AdminImportController::getPath().$filename)) {
                 unset($files_to_import[$k]);
             }
         }
@@ -4042,7 +4042,7 @@ class AdminImportControllerCore extends AdminController
 
     protected function openCsvFile($offset = false)
     {
-        $file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))));
+        $file = $this->excelToCsvFile(Tools::getValue('csv'));
         $handle = false;
         if (is_file($file) && is_readable($file)) {
             if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
