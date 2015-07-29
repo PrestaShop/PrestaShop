@@ -35,19 +35,23 @@ class Hook
     public static function init(Event $event)
     {
         $event->getIO()->write("Init CLDR datas download...");
+        $rootDir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 
-        //load prestashop config to get locale env
-        require(dirname(dirname(dirname(dirname(dirname(__FILE__))))).'/config/config.inc.php');
-
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate = new Update($rootDir.'/translations/');
         $cldrUpdate->init();
 
-        //get each defined languages and fetch cldr datas
-        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+        // If settings file exist
+        if (file_exists($rootDir.'/config/settings.inc.php')) {
+            //load prestashop config to get locale env
+            require($rootDir.'/config/config.inc.php');
 
-        foreach ($langs as $lang) {
-            $language_code = explode('-', $lang['language_code']);
-            $cldrUpdate->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
+            //get each defined languages and fetch cldr datas
+            $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+            foreach ($langs as $lang) {
+                $language_code = explode('-', $lang['language_code']);
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
+            }
         }
 
         $event->getIO()->write("Finished...");
