@@ -196,31 +196,33 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
-					<div class="col-lg-8">
-						<label class="switch-light prestashop-switch fixed-width-lg">
-							<input name="convert" id="convert" type="checkbox" />
-							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
-							</span>
-							<a class="slide-button btn"></a>
-						</label>
+				<div id="csv-fields">
+					<div class="form-group">
+						<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
+						<div class="col-lg-8">
+							<label class="switch-light prestashop-switch fixed-width-lg">
+								<input name="convert" id="convert" type="checkbox" />
+								<span>
+									<span>{l s='Yes'}</span>
+									<span>{l s='No'}</span>
+								</span>
+								<a class="slide-button btn"></a>
+							</label>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
-					<div class="col-lg-8">
-						<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
-						<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
+					<div class="form-group">
+						<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
+						<div class="col-lg-8">
+							<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
+							<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
-					<div class="col-lg-8">
-						<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
-						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
+					<div class="form-group">
+						<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
+						<div class="col-lg-8">
+							<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
+							<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
+						</div>
 					</div>
 				</div>
 				<hr />
@@ -372,6 +374,12 @@
 		$('#csv_file_selected').show();
 		$('#csv_file_uploader').hide();
 		$('#csv_files_history').hide();
+		var pattern = /(\.)?(xls[xt]?|o[td]s)$/mgi;
+		if (pattern.exec(filename) != null) {
+			$("#csv-fields").hide();
+		} else {
+			$("#csv-fields").show();
+		}
 	}
 	// when user unselect the .csv
 	function csv_unselect() {
@@ -392,6 +400,7 @@
 
 		var file_add_button = Ladda.create(document.querySelector('#file-add-button'));
 		var file_total_files = 0;
+		$("#csv-fields").hide();
 
 		$('#file').fileupload({
 			dataType: 'json',
