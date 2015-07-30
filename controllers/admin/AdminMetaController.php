@@ -479,6 +479,14 @@ class AdminMetaControllerCore extends AdminController
             // User-Agent
             fwrite($write_fd, "User-agent: *\n");
 
+            // Allow Directives
+            if (count($this->rb_data['Allow'])) {
+                fwrite($write_fd, "# Allow Directives\n");
+                foreach ($this->rb_data['Allow'] as $allow) {
+                    fwrite($write_fd, 'Allow: '.$allow."\n");
+                }
+            }
+
             // Private pages
             if (count($this->rb_data['GB'])) {
                 fwrite($write_fd, "# Private pages\n");
@@ -754,8 +762,11 @@ class AdminMetaControllerCore extends AdminController
     {
         $tab = array();
 
+        // Special allow directives
+        $tab['Allow'] = array('.css', '.js');
+
         // Directories
-        $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'translations/', 'tools/');
+        $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
 
         // Files
         $disallow_controllers = array(
