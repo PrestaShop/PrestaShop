@@ -29,7 +29,7 @@
 {else}
 	{assign var=product_price value=$product['unit_price_tax_incl']}
 {/if}
-	<tr class="customized customized-{$product['id_order_detail']|intval} product-line-row">
+	<tr class="customized customized-{$product['id_order_detail']|intval} product-line-row idproductattr-{$product['product_attribute_id']}">
 		<td>
 			<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
 			{if isset($product['image']) && $product['image']->id|intval}{$product['image_tag']}{else}--{/if}
@@ -117,7 +117,7 @@
 	</tr>
 	{foreach $product['customizedDatas'] as $customizationPerAddress}
 		{foreach $customizationPerAddress as $customizationId => $customization}
-			<tr class="customized customized-{$product['id_order_detail']|intval}">
+			<tr class="customized customized-{$product['id_order_detail']|intval} idproductattr-{$product['product_attribute_id']}">
 				<td colspan="2">
 				<input type="hidden" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
 					<div class="form-horizontal">
