@@ -98,7 +98,12 @@
     "files": ["config/alias.php", "classes/PrestaShopAutoload.php"]
   },
   "scripts": {
-    "post-install-cmd": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "post-install-cmd": [
+      "bash tools/contrib/install.sh",
+      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+    ],
+    "git-hook-install" : "bash tools/contrib/install.sh",
+    "git-hook-uninstall" : "bash tools/contrib/uninstall.sh",
     "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
   },
   "repositories": [

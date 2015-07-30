@@ -53,6 +53,7 @@ admin-dev/themes/default/css/print.css
 admin-dev/themes/default/css/screen.css
 vendor/*
 /composer.phar
+php-cs-fixer
 js/vendor/node_modules/*
 tests/js/node_modules/*
 tests/js/.grunt/*
