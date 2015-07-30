@@ -17,6 +17,10 @@ admin-dev/autoupgrade/*
 admin-dev/backups/*
 admin-dev/import/*
 
+admin-dev/import/*
+!admin-dev/import/.htaccess
+!admin-dev/import/index.php
+
 themes/*/cache/*
 
 # Config

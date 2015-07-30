@@ -144,6 +144,57 @@ function validateImportation(mandatory)
 			}
 			return false
 		}
+	
+	importNow(0, 5, -1); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
+	return false; // We return false to avoid form to be posted on the old Controller::postProcess() action
+}
+
+function importNow(offset, limit, total) {
+    var startingTime = new Date().getTime();
+    $.ajax({
+       type: 'POST',
+       url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token,
+       cache: false,
+       dataType : "json",
+       data: $('form#import_form').serialize(),
+       success: function(jsonData)
+       {
+    	   if (jsonData.totalCount) {
+    		   total = jsonData.totalCount;
+    	   }
+    		   
+    	   if (!jsonData.isFinished == true) {
+	    	   // compute time taken by previous call to adapt amount of elements by call.
+	    	   var previousDelay = new Date().getTime() - startingTime;
+	    	   var targetDelay = 5000; // try to keep around 5 seconds by call
+	    	   // acceleration will be limited to 4 to avoid newLimit to increase too fast (NEVER reach 30 seconds by call!).
+	    	   var acceleration = Math.min(4, (targetDelay / previousDelay));
+	    	   // keep between 5 to 75 elements to import in one call
+	    	   var newLimit = Math.min(75, Math.max(5, Math.floor(limit * acceleration)));
+	    	   var newOffset = offset + limit;
+	    	   // update progression
+	    	   updateProgression(jsonData.doneCount, total);
+	    	   // import next group of elements
+	    	   importNow(newOffset, newLimit, total);
+	       } else {
+	    	   // update progression (will close popin)
+	    	   updateProgression(total, total);
+	       }
+       },
+       error: function(XMLHttpRequest, textStatus, errorThrown)
+       {
+    	   // TODO : identifier les cas d'erreur possibles
+           alert(textStatus);
+       }
+	});
+}
+
+function updateProgression(currentPosition, total) {
+	if (currentPosition > total) currentPosition = total;
+	var progression = currentPosition / total;
+	// TODO : if progression < 1.0, then update progressbar.
+	// TODO : if progression >= 1.0, then show progressbar at 100% + show end message + call ajax to send an email (futur ticket) ?
+	alert('progression: '+progression+', '+currentPosition+'/'+total);
 }
 
 function html_escape(str) {
