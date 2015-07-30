@@ -256,13 +256,49 @@ class OrderDetailCore extends ObjectModel
         $this->context = $context->cloneContext();
     }
 
-    public function delete()
+    public function delete($delete_in_cart = false)
     {
-        if (!$res = parent::delete()) {
+        $res = true;
+
+        if ($delete_in_cart) {
+            $query = new DbQuery();
+            $query->select('o.`id_cart`, o.`id_address_delivery`');
+            $query->from('orders', 'o');
+            $query->where('o.`id_order` = '.(int)$this->id_order);
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+            $res &= Db::getInstance()->delete('cart_product', 'id_cart='.(int)$result['id_cart'].' AND id_product_attribute='.(int)$this->product_attribute_id.' AND id_product='.(int)$this->product_id.' AND id_address_delivery='.(int)$result['id_address_delivery']);
+        }
+
+        if (!$res &= parent::delete()) {
             return false;
         }
 
         Db::getInstance()->delete('order_detail_tax', 'id_order_detail='.(int)$this->id);
+
+        return $res;
+    }
+
+    public function deleteCustomization()
+    {
+        $query = new DbQuery();
+        $query->select('c.`id_customization`, c.`id_cart`, c.`id_product`, c.`id_address_delivery`');
+        $query->from('customization', 'c');
+        $query->join('LEFT JOIN `'._DB_PREFIX_.'orders` o ON (c.`id_cart`=o.`id_cart`)');
+        $query->where('c.`id_product_attribute` = '.(int)$this->product_attribute_id);
+        $query->where('o.`id_order` = '.(int)$this->id_order);
+
+        if (!$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query)) {
+            return false;
+        }
+
+        $res = true;
+
+        foreach ($results as $result) {
+            $res &= Db::getInstance()->delete('customization', 'id_customization='.(int)$result['id_customization']);
+            $res &= Db::getInstance()->delete('customized_data', 'id_customization='.(int)$result['id_customization']);
+            $res &= Db::getInstance()->delete('cart_product', 'id_cart='.(int)$result['id_cart'].' AND id_product_attribute='.(int)$this->product_attribute_id.' AND id_product='.(int)$result['id_product'].' AND id_address_delivery='.(int)$result['id_address_delivery']);
+        }
 
         return $res;
     }

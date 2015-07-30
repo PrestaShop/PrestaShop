@@ -45,6 +45,13 @@
 			<label>{l s='Warehouse'}</label>
 			<select  id="add_product_warehouse" name="add_product_warehouse"></select>
 		</div>
+
+		<div id="add_product_product_customization_area" class="form-group" style="display: none;">
+			<label>{l s='Customization'}</label>
+			<div id="customization" class="id_customization">
+
+			</div>
+		</div>
 	</td>
 
 	<td style="display:none;">
