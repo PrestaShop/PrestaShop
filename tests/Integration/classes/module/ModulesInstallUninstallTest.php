@@ -35,6 +35,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
 {
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         Module::updateTranslationsAfterInstall(false);
         Context::getContext()->employee = new Employee();
         Context::getContext()->employee->id = 1;
@@ -62,7 +63,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
      */
     public function testInstallationAndUnInstallation($moduleName)
     {
-        $module = Module::getInstanceByName($moduleName);
+        $module = Module::getInstanceByName($moduleName);        
         if ($module->id) {
             $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
             $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
