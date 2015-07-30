@@ -204,6 +204,14 @@ function addViewOrderDetailRow(view)
 	// Initialize fields
 	closeAddProduct();
 
+	$.each(html.closest('.product-line-row').attr('class').split(' '), function (index, value) {
+		if (value.indexOf('idproductattr') != -1) {
+			$('.' + value).each(function () {
+				$(this).remove();
+			});
+		}
+	});
+
 	$('tr#new_product').before(html);
 	html.find('td').each(function() {
 		if (!$(this).is('.product_invoice'))
