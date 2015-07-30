@@ -41,6 +41,7 @@
 												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
+												{if $theme->name != 'default-bootstrap' || ($theme->name == 'default-bootstrap'  && $host_mode == 0)}
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 													<i class="icon-caret-down"></i>&nbsp;
 												</button>
@@ -51,6 +52,7 @@
 														</a>
 													</li>
 												</ul>
+												{/if}
 											</div>
 										</div>
 									</div>
@@ -183,4 +185,3 @@
 		var formDestination = "js_theme_form_container";
 	</script>
 {/block}
-
