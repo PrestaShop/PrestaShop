@@ -280,7 +280,7 @@ class EmployeeCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
-		'.($active_only ? ' AND active = 1' : '')
+		'.($active_only ? ' AND `active` = 1' : '')
         .($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
         if (!$result) {
             return false;
@@ -324,7 +324,7 @@ class EmployeeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `id_employee` = '.(int)$id_employee.'
 		AND `passwd` = \''.pSQL($passwd).'\'
-		AND active = 1');
+		AND `active` = 1');
     }
 
     public static function countProfile($id_profile, $active_only = false)
@@ -390,7 +390,7 @@ class EmployeeCore extends ObjectModel
     public function favoriteModulesList()
     {
         return Db::getInstance()->executeS('
-			SELECT module
+			SELECT `module`
 			FROM `'._DB_PREFIX_.'module_preference`
 			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
         );
