@@ -1630,7 +1630,7 @@ div.star a:hover {
 // BREADCRUMB
 .breadcrumb {
 	display: inline-block;
-	padding: 0 11px;
+	padding: 0 13px 0 11px;
 	border: 1px solid $base-border-color;
 	font-weight: bold;
 	font-size: 12px;
@@ -1641,16 +1641,41 @@ div.star a:hover {
 	margin-bottom: 16px;
 	position: relative;
 	z-index: 1;
-	.navigation-pipe {
-		width: 18px;
-		display: inline-block;
-		text-indent: -5000px;
+	& > li {		
+		&:first-child + li {
+			&:last-child {
+				span {
+					padding-left: 0;
+				}
+			}
+		}
+		& + li {
+			position: relative;
+			&:before {
+				content: " ";
+				display: block !important;
+				background: $light-background;
+				height: 100%;
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 22px;
+				z-index: -1;
+			}
+		}
+		&:last-child {
+			&:before {
+				display: none !important;
+			}		
+			& > span {
+				padding-left: 2px;
+			}
+		}
 	}
 	a {
 		display: inline-block;
 		background: $light-background;
-		padding: 0 15px 0 22px;
-		margin-left: -26px;
+		padding: 0 13px 0 2px;
 		position: relative;
 		z-index: 2;
 		color: $base-text-color;
@@ -1690,25 +1715,14 @@ div.star a:hover {
 			z-index: -1;
 			@include rotate(45deg);
 		}
-		&:before {
-			display: inline-block;
-			content: ".";
-			position: absolute;
-			left: -10px;
-			top: 3px;
-			width: 18px;
-			height: 18px;
-			background: transparent;
-			border-right: 1px solid $base-border-color;
-			border-top: 1px solid $base-border-color;
-			border-radius: 2px;
-			text-indent: -5000px;
-			z-index: -1;
-			@include rotate(45deg);
-		}
 		&:hover {
 			color: #777777;
 		}
+	}
+	.navigation-pipe {
+		width: 18px;
+		display: inline-block;
+		text-indent: -5000px;
 	}
 }
 

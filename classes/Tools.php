@@ -1269,18 +1269,17 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
-
         $id_category = (int)$id_category;
-        if ($id_category == 1) {
-            return '<span class="navigation_end">'.$path.'</span>';
-        }
+		if ($id_category == 1) {
+			return $path;
+		}
 
         $pipe = Configuration::get('PS_NAVIGATION_PIPE');
         if (empty($pipe)) {
             $pipe = '>';
         }
 
-        $full_path = '';
+        $full_path = array();
         if ($category_type === 'products') {
             $interval = Category::getInterval($id_category);
             $id_root_category = $context->shop->getCategory();
@@ -1302,15 +1301,21 @@ class ToolsCore
 
                 $n = 1;
                 $n_categories = count($categories);
+				$position_in_breadcrumb = 2; // 1 == Home
                 foreach ($categories as $category) {
-                    $full_path .=
-                    (($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="">' : '').
-                    htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
-                    (($n < $n_categories || $link_on_the_item) ? '</a>' : '').
-                    (($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
+					$full_path[] = array(
+						'name' => htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8'),
+						'link' => (($n < $n_categories || $link_on_the_item) ? Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])) : ''),
+					);
                 }
+			
+				if (!empty($path)) {
+					$full_path[] = array(
+						'name' => $path,
+					);
+				}
 
-                return $full_path.$path;
+                return $full_path;
             }
         } elseif ($category_type === 'CMS') {
             $category = new CMSCategory($id_category, $context->language->id);
@@ -1320,10 +1325,16 @@ class ToolsCore
             $category_link = $context->link->getCMSCategoryLink($category);
 
             if ($path != $category->name) {
-                $full_path .= '<a href="'.Tools::safeOutput($category_link).'" data-gg="">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
-            } else {
-                $full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
-            }
+                $full_path[] = array(
+					'name' => htmlentities($category->name, ENT_NOQUOTES, 'UTF-8'),
+					'link' => Tools::safeOutput($category_link),
+				);
+			} else {
+                $full_path[] = array(
+					'name' => htmlentities($path, ENT_NOQUOTES, 'UTF-8'),
+					'link' => ($link_on_the_item ? Tools::safeOutput($category_link) : ''),
+				);
+			}
 
             return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
         }
@@ -1353,10 +1364,18 @@ class ToolsCore
             $id_category = $default_category;
         }
         if ($id_category == $default_category) {
-            return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
+			$path = array();
+			$path[] = array(
+				'name' => htmlentities($end, ENT_NOQUOTES, 'UTF-8'),
+			);
+            return $path;
         }
-
-        return Tools::getPath($id_category, $category->name, true, $type_cat).'<span class="navigation-pipe">'.$pipe.'</span> <span class="navigation_product">'.htmlentities($end, ENT_NOQUOTES, 'UTF-8').'</span>';
+		
+		$path = Tools::getPath($id_category, $category->name, true, $type_cat);
+		$path[] = array(
+			'name' => htmlentities($end, ENT_NOQUOTES, 'UTF-8'),
+		);
+        return $path;
     }
 
     /**
