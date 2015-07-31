@@ -202,7 +202,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->smarty->assign(array(
             'tax_exempt' => $tax_exempt,
-            'use_one_after_another_method' => $this->order->useOneAfterAnotherTaxComputationMethod(),
             'product_tax_breakdown' => $this->getProductTaxesBreakdown(),
             'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
             'order' => $this->order,
@@ -255,34 +254,12 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
     public function getProductTaxesBreakdown()
     {
-        $sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
-
         // $breakdown will be an array with tax rates as keys and at least the columns:
         // 	- 'total_price_tax_excl'
         // 	- 'total_amount'
         $breakdown = array();
 
         $details = $this->order->getProductTaxesDetails();
-
-        if ($sum_composite_taxes) {
-            $grouped_details = array();
-            foreach ($details as $row) {
-                if (!isset($grouped_details[$row['id_order_detail']])) {
-                    $grouped_details[$row['id_order_detail']] = array(
-                        'tax_rate' => 0,
-                        'total_tax_base' => 0,
-                        'total_amount' => 0,
-                        'id_tax' => $row['id_tax'],
-                    );
-                }
-
-                $grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
-                $grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
-                $grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
-            }
-
-            $details = $grouped_details;
-        }
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
@@ -307,19 +284,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         ksort($breakdown);
 
         return $breakdown;
-    }
-
-    public function useOneAfterAnotherTaxComputationMethod()
-    {
-        // if one of the order details use the tax computation method the display will be different
-        return Db::getInstance()->getValue('
-		SELECT od.`tax_computation_method`
-		FROM `'._DB_PREFIX_.'order_detail_tax` odt
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-		WHERE od.`id_order` = '.(int)$this->id_order.'
-		AND od.`id_order_invoice` = '.(int)$this->id.'
-		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
-        ) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
     }
 
     /**
