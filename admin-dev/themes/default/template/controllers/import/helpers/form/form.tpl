@@ -284,12 +284,22 @@
 						</label>
 					</div>
 				</div>
-<!--
-				{*if empty($files_to_import)*}
-				<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
-				{*if !count($files_to_import)*}
-				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
--->
+				<div class="form-group">
+					<label for="sendemail" class="control-label col-lg-4">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.'}">
+							{l s='Send notification email'}</label>
+						</span>
+					<div class="col-lg-8">
+						<label class="switch-light prestashop-switch fixed-width-lg">
+							<input id="sendemail" name="sendemail" type="checkbox" checked="checked" />
+							<span>
+								<span>{l s='Yes'}</span>
+								<span>{l s='No'}</span>
+							</span>
+							<a class="slide-button btn"></a>
+						</label>
+					</div>
+				</div>
 				<div class="panel-footer">
 					<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default pull-right" >
 						<i class="process-icon-next"></i> <span>{l s='Next step'}</span>

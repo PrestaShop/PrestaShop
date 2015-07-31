@@ -80,7 +80,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your data matching configuration'}</label>
 				<div class="col-lg-7">
-					<input type="text" name="newImportMatchs" id="newImportMatchs" />		
+					<input type="text" name="newImportMatchs" id="newImportMatchs" />
 				</div>
 				<div class="col-lg-2">
 					<a id="saveImportMatchs" class="btn btn-default" href="#"><i class="icon-save"></i> {l s='Save'}</a>
@@ -99,6 +99,7 @@
 			<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
 			<input type="hidden" name="entity" value="{$fields_value.entity}" />
 			<input type="hidden" name="iso_lang" value="{$fields_value.iso_lang}" />
+			<input type="hidden" name="sendemail" value="{$fields_value.sendemail}" />
 			{if $fields_value.truncate}
 				<input type="hidden" name="truncate" value="1" />
 			{/if}

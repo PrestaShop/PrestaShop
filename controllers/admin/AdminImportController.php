@@ -703,6 +703,7 @@ class AdminImportControllerCore extends AdminController
                 'truncate' => Tools::getValue('truncate'),
                 'forceIDs' => Tools::getValue('forceIDs'),
                 'regenerate' => Tools::getValue('regenerate'),
+                'sendemail' => Tools::getValue('sendemail'),
                 'match_ref' => Tools::getValue('match_ref'),
                 'separator' => $this->separator,
                 'multiple_value_separator' => $this->multiple_value_separator
@@ -1162,7 +1163,7 @@ class AdminImportControllerCore extends AdminController
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
-            
+
             $this->categoryImportOne(
                 $info,
                 $default_language_id,
@@ -1177,7 +1178,7 @@ class AdminImportControllerCore extends AdminController
         /* Import has finished, we can regenerate the categories nested tree */
         Category::regenerateEntireNtree();
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -1365,7 +1366,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
         $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
         if (!Validate::isUnsignedId($id_lang)) {
@@ -1388,7 +1389,7 @@ class AdminImportControllerCore extends AdminController
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
-            
+
             $this->productImportOne(
                 $info,
                 $default_language_id,
@@ -1404,7 +1405,7 @@ class AdminImportControllerCore extends AdminController
         Module::processDeferedFuncCall();
         Module::processDeferedClearCache();
         Tag::updateTagCount();
-        
+
         return $line_count;
     }
 
@@ -2068,7 +2069,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $convert = Tools::getValue('convert');
@@ -2087,7 +2088,7 @@ class AdminImportControllerCore extends AdminController
             }
             $info = AdminImportController::getMaskedRow($line);
             $info = array_map('trim', $info);
-            
+
             $this->attributeImportOne(
                 $info,
                 $default_language,
@@ -2098,7 +2099,7 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -2506,7 +2507,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
         $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
         if (!Validate::isUnsignedId($id_lang)) {
@@ -2535,7 +2536,7 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -2757,7 +2758,7 @@ class AdminImportControllerCore extends AdminController
         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $convert = Tools::getValue('convert');
@@ -2777,10 +2778,10 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
-            
+
     protected function addressImportOne($info, $force_ids)
     {
         AdminImportController::setDefaultValues($info);
@@ -2956,7 +2957,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $shop_is_feature_active = Shop::isFeatureActive();
@@ -2980,7 +2981,7 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -3058,7 +3059,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $shop_is_feature_active = Shop::isFeatureActive();
@@ -3074,7 +3075,7 @@ class AdminImportControllerCore extends AdminController
             }
             $info = AdminImportController::getMaskedRow($line);
 
-            
+
             $this->supplierImportOne(
                 $info,
                 $shop_is_feature_active,
@@ -3083,10 +3084,10 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
-            
+
     protected function supplierImportOne($info, $shop_is_feature_active, $regenerate, $force_ids)
     {
             AdminImportController::setDefaultValues($info);
@@ -3159,7 +3160,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $convert = Tools::getValue('convert');
@@ -3179,10 +3180,10 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
-            
+
     protected function aliasImportOne($info, $force_ids)
     {
         AdminImportController::setDefaultValues($info);
@@ -3232,7 +3233,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $convert = Tools::getValue('convert');
@@ -3255,7 +3256,7 @@ class AdminImportControllerCore extends AdminController
         }
         // closes
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -3358,7 +3359,7 @@ class AdminImportControllerCore extends AdminController
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
-        
+
         AdminImportController::setLocale();
 
         $products = array();  // FIXME: cross foreach! must fill between each call with precedent data
@@ -3386,7 +3387,7 @@ class AdminImportControllerCore extends AdminController
         }
         // closes
         $this->closeCsvFile($handle);
-        
+
         return $line_count;
     }
 
@@ -3712,7 +3713,7 @@ class AdminImportControllerCore extends AdminController
         Db::getInstance()->enableCache();
         return parent::postProcess();
     }
-    
+
     public function importByGroups($offset = false, $limit = false, &$results = null)
     {
         // Check if the CSV file exist
@@ -3868,20 +3869,43 @@ class AdminImportControllerCore extends AdminController
         return (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.'import'
             .DIRECTORY_SEPARATOR.$file;
     }
-    
+
     public function ajaxProcessImport()
     {
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
+
 sleep(2);
+
         $results = array();
         $this->importByGroups($offset, $limit, $results);
-        
-        // TODO : envoi de mail ssi $results['isFinished'] == 1
-        
+
+        if ((bool)$results['isFinished'] && (bool)Tools::getValue('sendemail')) {
+            $templateVars = array(
+                            '{firstname}' => $this->context->employee->firstname,
+                            '{lastname}' => $this->context->employee->lastname,
+                            '{filename}' => Tools::getValue('csv')
+                        );
+            @Mail::Send(
+                (int)$this->context->employee->id_lang,
+                'import',
+                Mail::l('Import complete', (int)$this->context->employee->id_lang),
+                $templateVars,
+                $this->context->employee->email,
+                $this->context->employee->firstname.' '.$this->context->employee->lastname,
+                null,
+                null,
+                null,
+                null,
+                _PS_MAIL_DIR_,
+                true,
+                (int)$this->context->shop->id
+            );
+        }
+
         die(json_encode($results));
     }
-    
+
     public function initModal()
     {
         parent::initModal();
