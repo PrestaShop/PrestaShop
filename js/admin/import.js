@@ -150,6 +150,8 @@ function validateImportation(mandatory)
 }
 
 function importNow(offset, limit, total) {
+	if (offset == 0) updateProgressionInit();
+
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
@@ -173,28 +175,73 @@ function importNow(offset, limit, total) {
 	    	   var newLimit = Math.min(75, Math.max(5, Math.floor(limit * acceleration)));
 	    	   var newOffset = offset + limit;
 	    	   // update progression
-	    	   updateProgression(jsonData.doneCount, total);
+	    	   updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit);
 	    	   // import next group of elements
 	    	   importNow(newOffset, newLimit, total);
 	       } else {
 	    	   // update progression (will close popin)
-	    	   updateProgression(total, total);
+	    	   updateProgression(total, total, total);
 	       }
        },
        error: function(XMLHttpRequest, textStatus, errorThrown)
        {
-    	   // TODO : identifier les cas d'erreur possibles
-           alert(textStatus);
+    	   // TODO : identifier les cas d'erreur possibles, les afficher sur la modal
+    	   updateProgressionError(textStatus);
        }
 	});
 }
 
-function updateProgression(currentPosition, total) {
+function updateProgressionInit() {
+	$('#importProgress').modal({backdrop: 'static', keyboard: false, closable: false});
+	$('#importProgress').modal('show');
+	
+	$('#import_details_progressing').show();
+	$('#import_details_finished').hide();
+	$('#import_details_error').hide();
+	
+	$('#import_progression_details').html('&nbsp;');
+	$('#import_progressbar_done').width('0%');
+	$('#import_progression_done').html('0');
+	$('#import_progressbar_next').width('0%');	
+	
+	$('#import_stop_button').show();
+	$('#import_close_button').hide();
+}
+
+function updateProgression(currentPosition, total, nextPosition) {
 	if (currentPosition > total) currentPosition = total;
-	var progression = currentPosition / total;
-	// TODO : if progression < 1.0, then update progressbar.
-	// TODO : if progression >= 1.0, then show progressbar at 100% + show end message + call ajax to send an email (futur ticket) ?
-	alert('progression: '+progression+', '+currentPosition+'/'+total);
+	if (nextPosition > total) nextPosition = total;
+	
+	var progressionDone = currentPosition * 100 / total;
+	var progressionNext = nextPosition * 100 / total;
+	
+	if (total > 0) {
+		$('#import_progression_details').html(currentPosition + '/' + total);
+		$('#import_progressbar_done').width(progressionDone+'%');
+		$('#import_progression_done').html(parseInt(progressionDone));
+		$('#import_progressbar_next').width((progressionNext-progressionDone)+'%');	
+	}
+	
+	if (currentPosition == total && total == nextPosition) {
+		$('#import_details_progressing').hide();
+		$('#import_details_finished').show();
+		$('#importProgress').modal({keyboard: true, closable: true});
+		$('#import_stop_button').hide();
+		$('#import_close_button').show();
+	}
+}
+
+function updateProgressionError(message) {
+	$('#import_details_progressing').hide();
+	$('#import_details_finished').hide();
+	$('#import_details_error').html(message);
+	$('#import_details_error').show();
+	
+	$('#import_progressbar_next').addClass('progress-bar-danger');
+	$('#import_progressbar_next').removeClass('progress-bar-success');
+	
+	$('#import_stop_button').hide();
+	$('#import_close_button').show();
 }
 
 function html_escape(str) {

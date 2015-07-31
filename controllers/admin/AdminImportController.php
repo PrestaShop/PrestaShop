@@ -3873,12 +3873,26 @@ class AdminImportControllerCore extends AdminController
     {
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
-        
+sleep(2);
         $results = array();
         $this->importByGroups($offset, $limit, $results);
         
         // TODO : envoi de mail ssi $results['isFinished'] == 1
         
         die(json_encode($results));
+    }
+    
+    public function initModal()
+    {
+        parent::initModal();
+//         $this->context->smarty->assign(array(
+//         ));
+         $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
+         $this->modals[] = array(
+             'modal_id' => 'importProgress',
+             'modal_class' => 'modal-md',
+             'modal_title' => $this->l('Processing import...'),
+             'modal_content' => $modal_content
+         );
     }
 }
