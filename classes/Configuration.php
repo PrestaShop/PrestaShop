@@ -430,19 +430,17 @@ class ConfigurationCore extends ObjectModel
             // If key does not exists, create it
             else {
                 if (!$configID = Configuration::getIdByName($key, $id_shop_group, $id_shop)) {
-                    $newConfig = new Configuration();
-                    $newConfig->name = $key;
-                    if ($id_shop) {
-                        $newConfig->id_shop = (int)$id_shop;
-                    }
-                    if ($id_shop_group) {
-                        $newConfig->id_shop_group = (int)$id_shop_group;
-                    }
-                    if (!$lang) {
-                        $newConfig->value = $value;
-                    }
-                    $result &= $newConfig->add(true, true);
-                    $configID = $newConfig->id;
+                    $now = date('Y-m-d H:i:s');
+                    $data = array(
+                        'id_shop_group' => $id_shop_group ? (int)$id_shop_group : null,
+                        'id_shop'       => $id_shop ? (int)$id_shop : null,
+                        'name'          => pSQL($key),
+                        'value'         => $lang ? null : pSQL($value, $html),
+                        'date_add'      => $now,
+                        'date_upd'      => $now,
+                    );
+                    Db::getInstance()->insert('configuration', $data, true);
+                    $configID = Db::getInstance()->Insert_ID();
                 }
 
                 if ($lang) {
