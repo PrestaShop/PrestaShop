@@ -168,8 +168,8 @@ class OrderHistoryCore extends ObjectModel
             $error_or_canceled_statuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 
             // foreach products of the order
-            if (Validate::isLoadedObject($old_os)) {
-                foreach ($order->getProductsDetail() as $product) {
+            foreach ($order->getProductsDetail() as $product) {
+                if (Validate::isLoadedObject($old_os)) {
                     // if becoming logable => adds sale
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
@@ -202,77 +202,80 @@ class OrderHistoryCore extends ObjectModel
                     if ((int)$this->id_employee && !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee)))) {
                         $employee = null;
                     }
+                }
+                // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
+                // Or old_os does not exists, and we should consider that initial shipped state is 0 (to allow decrease of stocks)
 
-                    // @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
-                    // decrements the physical stock using $id_warehouse
-                    if ($new_os->shipped == 1 && $old_os->shipped == 0 &&
+                // @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
+                // decrements the physical stock using $id_warehouse
+                if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0) &&
+                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
+                    Warehouse::exists($product['id_warehouse']) &&
+                    $manager != null &&
+                    (int)$product['advanced_stock_management'] == 1) {
+                    // gets the warehouse
+                    $warehouse = new Warehouse($product['id_warehouse']);
+
+                    // decrements the stock (if it's a pack, the StockManager does what is needed)
+                    $manager->removeProduct(
+                        $product['product_id'],
+                        $product['product_attribute_id'],
+                        $warehouse,
+                        ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
+                        Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+                        true,
+                        (int)$order->id,
+                        0,
+                        $employee
+                    );
+                }
+                // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
+                elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
                         Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
                         Warehouse::exists($product['id_warehouse']) &&
                         $manager != null &&
                         (int)$product['advanced_stock_management'] == 1) {
-                        // gets the warehouse
-                        $warehouse = new Warehouse($product['id_warehouse']);
-
-                        // decrements the stock (if it's a pack, the StockManager does what is needed)
-                        $manager->removeProduct(
-                            $product['product_id'],
-                            $product['product_attribute_id'],
-                            $warehouse,
-                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
-                            Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
-                            true,
-                            (int)$order->id,
-                            0,
-                            $employee
-                        );
-                    }
-                    // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
-                    elseif ($new_os->shipped == 0 && $old_os->shipped == 1 &&
-                            Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                            Warehouse::exists($product['id_warehouse']) &&
-                            $manager != null &&
-                            (int)$product['advanced_stock_management'] == 1) {
-                        // if the product is a pack, we restock every products in the pack using the last negative stock mvts
-                        if (Pack::isPack($product['product_id'])) {
-                            $pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
-                            foreach ($pack_products as $pack_product) {
-                                if ($pack_product->advanced_stock_management == 1) {
-                                    $mvts = StockMvt::getNegativeStockMvts($order->id, $pack_product->id, 0, $pack_product->pack_quantity * $product['product_quantity']);
-                                    foreach ($mvts as $mvt) {
-                                        $manager->addProduct(
-                                            $pack_product->id,
-                                            0,
-                                            new Warehouse($mvt['id_warehouse']),
-                                            $mvt['physical_quantity'],
-                                            null,
-                                            $mvt['price_te'],
-                                            true,
-                                            $employee
-                                        );
-                                    }
-                                    if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                                        StockAvailable::updateQuantity($pack_product->id, 0, (int)$pack_product->pack_quantity * $product['product_quantity'], $order->id_shop);
-                                    }
+                    // if the product is a pack, we restock every products in the pack using the last negative stock mvts
+                    if (Pack::isPack($product['product_id'])) {
+                        $pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
+                        foreach ($pack_products as $pack_product) {
+                            if ($pack_product->advanced_stock_management == 1) {
+                                $mvts = StockMvt::getNegativeStockMvts($order->id, $pack_product->id, 0, $pack_product->pack_quantity * $product['product_quantity']);
+                                foreach ($mvts as $mvt) {
+                                    $manager->addProduct(
+                                        $pack_product->id,
+                                        0,
+                                        new Warehouse($mvt['id_warehouse']),
+                                        $mvt['physical_quantity'],
+                                        null,
+                                        $mvt['price_te'],
+                                        true,
+                                        null,
+                                        $employee
+                                    );
+                                }
+                                if (!StockAvailable::dependsOnStock($product['id_product'])) {
+                                    StockAvailable::updateQuantity($pack_product->id, 0, (int)$pack_product->pack_quantity * $product['product_quantity'], $order->id_shop);
                                 }
                             }
                         }
-                        // else, it's not a pack, re-stock using the last negative stock mvts
-                        else {
-                            $mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
-                                $product['product_attribute_id'],
-                                ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
+                    }
+                    // else, it's not a pack, re-stock using the last negative stock mvts
+                    else {
+                        $mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
+                            $product['product_attribute_id'],
+                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
 
-                            foreach ($mvts as $mvt) {
-                                $manager->addProduct(
-                                    $product['product_id'],
-                                    $product['product_attribute_id'],
-                                    new Warehouse($mvt['id_warehouse']),
-                                    $mvt['physical_quantity'],
-                                    null,
-                                    $mvt['price_te'],
-                                    true
-                                );
-                            }
+                        foreach ($mvts as $mvt) {
+                            $manager->addProduct(
+                                $product['product_id'],
+                                $product['product_attribute_id'],
+                                new Warehouse($mvt['id_warehouse']),
+                                $mvt['physical_quantity'],
+                                null,
+                                $mvt['price_te'],
+                                true
+                            );
                         }
                     }
                 }
