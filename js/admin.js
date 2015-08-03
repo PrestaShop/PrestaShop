@@ -1527,7 +1527,11 @@ function parseDate(date){
 function refresh_kpis()
 {
 	$('.box-stats').each(function(){
-		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+		var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
+
+		if (typeof window[functionName] === 'function') {
+			window[functionName]();
+		}
 	});
 }
 

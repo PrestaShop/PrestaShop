@@ -43,11 +43,11 @@ $(document).ready(function(){
 	{
 		bindGrid();
 
- 		$(document).on('change', '.selectProductSort', function(e){
+		$(document).on('change', '.selectProductSort', function(e){
 			if (typeof request != 'undefined' && request)
 				var requestSortProducts = request;
- 			var splitData = $(this).val().split(':');
- 			var url = '';
+			var splitData = $(this).val().split(':');
+			var url = '';
 			if (typeof requestSortProducts != 'undefined' && requestSortProducts)
 			{
 				url += requestSortProducts ;
@@ -59,7 +59,7 @@ $(document).ready(function(){
 				}
 				document.location.href = url;
 			}
-    	});
+		});
 
 		$(document).on('change', 'select[name="n"]', function(){
 			$(this.form).submit();
@@ -92,8 +92,8 @@ $(document).ready(function(){
 			sticky: false,
 			mouseOutClose: true,
 			fx: {
-		    	open:       'fadeIn',
-		    	openSpeed:  'fast'
+				open:       'fadeIn',
+				openSpeed:  'fast'
 			}
 		}).css('opacity', 0.8);
 
@@ -133,29 +133,29 @@ function highdpiInit()
 // Used to compensante Chrome/Safari bug (they don't care about scroll bar for width)
 function scrollCompensate()
 {
-    var inner = document.createElement('p');
-    inner.style.width = "100%";
-    inner.style.height = "200px";
+	var inner = document.createElement('p');
+	inner.style.width = "100%";
+	inner.style.height = "200px";
 
-    var outer = document.createElement('div');
-    outer.style.position = "absolute";
-    outer.style.top = "0px";
-    outer.style.left = "0px";
-    outer.style.visibility = "hidden";
-    outer.style.width = "200px";
-    outer.style.height = "150px";
-    outer.style.overflow = "hidden";
-    outer.appendChild(inner);
+	var outer = document.createElement('div');
+	outer.style.position = "absolute";
+	outer.style.top = "0px";
+	outer.style.left = "0px";
+	outer.style.visibility = "hidden";
+	outer.style.width = "200px";
+	outer.style.height = "150px";
+	outer.style.overflow = "hidden";
+	outer.appendChild(inner);
 
-    document.body.appendChild(outer);
-    var w1 = inner.offsetWidth;
-    outer.style.overflow = 'scroll';
-    var w2 = inner.offsetWidth;
-    if (w1 == w2) w2 = outer.clientWidth;
+	document.body.appendChild(outer);
+	var w1 = inner.offsetWidth;
+	outer.style.overflow = 'scroll';
+	var w2 = inner.offsetWidth;
+	if (w1 == w2) w2 = outer.clientWidth;
 
-    document.body.removeChild(outer);
+	document.body.removeChild(outer);
 
-    return (w1 - w2);
+	return (w1 - w2);
 }
 
 function responsiveResize()
@@ -164,14 +164,16 @@ function responsiveResize()
 	if (($(window).width()+scrollCompensate()) <= 767 && responsiveflag == false)
 	{
 		accordion('enable');
-	    accordionFooter('enable');
+		accordionFooter('enable');
 		responsiveflag = true;
 	}
 	else if (($(window).width()+scrollCompensate()) >= 768)
 	{
 		accordion('disable');
 		accordionFooter('disable');
-	    responsiveflag = false;
+		responsiveflag = false;
+		if (typeof bindUniform !=='undefined')
+			bindUniform();
 	}
 	blockHover();
 }
@@ -411,4 +413,10 @@ function accordion(status)
 		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').removeClass('active').off().parent().find('.block_content').removeAttr('style').slideDown('fast');
 		$('#left_column, #right_column').removeClass('accordion');
 	}
+}
+
+function bindUniform()
+{
+	if (!!$.prototype.uniform)
+		$("select.form-control,input[type='radio'],input[type='checkbox']").uniform();
 }
