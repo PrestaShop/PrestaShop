@@ -1043,15 +1043,14 @@ class AdminImportControllerCore extends AdminController
             break;
         }
 
-        $url = str_replace(' ', '%20', trim($url));
-        $url = urldecode($url);
+        $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
         if (isset($parced_url['path'])) {
             $uri = ltrim($parced_url['path'], '/');
             $parts = explode('/', $uri);
             foreach ($parts as &$part) {
-                $part = urlencode($part);
+                $part = rawurlencode($part);
             }
             unset($part);
             $parced_url['path'] = '/'.implode('/', $parts);
