@@ -580,7 +580,7 @@ class ToolsCore
  } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
      preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
      if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = Country::getByIso($array[0], true);
+         $id_country = (int)Country::getByIso($array[0], true);
      }
  }
         if (!isset($id_country) || !$id_country) {
