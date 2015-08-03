@@ -241,7 +241,7 @@ class StockManagerCore implements StockManagerInterface
                     // Foreach item
                     foreach ($products_pack as $product_pack) {
                         if ($product_pack->advanced_stock_management == 1) {
-                            $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id, $product_pack->id_pack_product_attribute); // XXX : premier pb fixé là, ajouté attribute id !
+                            $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id, $product_pack->id_pack_product_attribute);
                             $warehouse_stock_found = false;
                             foreach ($product_warehouses as $product_warehouse) {
                                 if (!$warehouse_stock_found) {
@@ -567,12 +567,13 @@ class StockManagerCore implements StockManagerInterface
                 if (Validate::isLoadedObject($product = new Product((int)$value['id_product_pack'])) &&
                     ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
                     $query = new DbQuery();
-                    $query->select('od.product_quantity, od.product_quantity_refunded');
+                    $query->select('od.product_quantity, od.product_quantity_refunded, pk.quantity');
                     $query->from('order_detail', 'od');
                     $query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
                     $query->where('od.product_id = '.(int)$value['id_product_pack']);
                     $query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
                     $query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
+                    $query->leftJoin('pack', 'pk', 'pk.id_product_item = '.(int)$id_product.' AND pk.id_product_attribute_item = '.($id_product_attribute ? (int)$id_product_attribute : '0').' AND id_product_pack = od.product_id');
                     $query->where('os.shipped != 1');
                     $query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
 								   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
@@ -583,7 +584,7 @@ class StockManagerCore implements StockManagerInterface
                     $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                     if (count($res)) {
                         foreach ($res as $row) {
-                            $client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
+                            $client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']) * $row['quantity'];
                         }
                     }
                 }
