@@ -142,6 +142,18 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
+        
+        $total_cart_rule = 0;
+        if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
+            foreach($cart_rules as $cart_rule) {
+                if ($tax_excluded_display) {
+                    $total_cart_rule += $cart_rule['value_tax_excl'];
+                } else {
+                    $total_cart_rule += $cart_rule['value'];
+                }
+            }
+        }
+        
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
@@ -152,6 +164,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
             'tax_excluded_display' => $tax_excluded_display,
+            'total_cart_rule' => $total_cart_rule
         ));
 
         $tpls = array(
@@ -209,6 +222,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
             'is_order_slip' => true,
             'tax_breakdowns' => $this->getTaxBreakdown(),
+            'display_tax_bases_in_breakdowns' => false
         ));
 
         return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
