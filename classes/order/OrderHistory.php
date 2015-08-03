@@ -205,7 +205,7 @@ class OrderHistoryCore extends ObjectModel
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
                 // Or old_os does not exists, and we should consider that initial shipped state is 0 (to allow decrease of stocks)
-                
+
                 // @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
                 // decrements the physical stock using $id_warehouse
                 if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0) &&
@@ -250,6 +250,7 @@ class OrderHistoryCore extends ObjectModel
                                         null,
                                         $mvt['price_te'],
                                         true,
+                                        null,
                                         $employee
                                     );
                                 }
