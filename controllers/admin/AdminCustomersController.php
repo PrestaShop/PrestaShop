@@ -763,14 +763,17 @@ class AdminCustomersControllerCore extends AdminController
         for ($i = 0; $i < $total_carts; $i++) {
             $cart = new Cart((int)$carts[$i]['id_cart']);
             $this->context->cart = $cart;
-            $summary = $cart->getSummaryDetails();
             $currency = new Currency((int)$carts[$i]['id_currency']);
+            $this->context->currency = $currency;
+            $summary = $cart->getSummaryDetails();
             $carrier = new Carrier((int)$carts[$i]['id_carrier']);
             $carts[$i]['id_cart'] = sprintf('%06d', $carts[$i]['id_cart']);
             $carts[$i]['date_add'] = Tools::displayDate($carts[$i]['date_add'], null, true);
             $carts[$i]['total_price'] = Tools::displayPrice($summary['total_price'], $currency);
             $carts[$i]['name'] = $carrier->name;
         }
+
+        $this->context->currency = Currency::getDefaultCurrency();
 
         $sql = 'SELECT DISTINCT cp.id_product, c.id_cart, c.id_shop, cp.id_shop AS cp_id_shop
 				FROM '._DB_PREFIX_.'cart_product cp

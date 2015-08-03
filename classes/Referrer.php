@@ -127,7 +127,6 @@ class ReferrerCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $employee
-     * @param Context $context
      */
     public function getStatsVisits($id_product, $employee)
     {
@@ -164,7 +163,6 @@ class ReferrerCore extends ObjectModel
      *
      * @param int $id_product
      * @param int $employee
-     * @param Context $context
      */
     public function getRegistrations($id_product, $employee)
     {
