@@ -223,6 +223,11 @@ class AddressControllerCore extends FrontController
                 $this->context->cart->id_address_invoice = (int)$this->context->cart->id_address_delivery;
             }
             $this->context->cart->update();
+            
+            Hook::exec('actionCustomerAddressChange', array(
+                    'customer' => $this->context->customer,
+                    'address' => $address,
+                ));
 
             if ($this->ajax) {
                 $return = array(
