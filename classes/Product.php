@@ -872,6 +872,16 @@ class ProductCore extends ObjectModel
             if ($real_quantity > $physical_quantity) {
                 return false;
             }
+
+            $warehouse_product_locations = Adapter_ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
+            foreach ($warehouse_product_locations as $warehouse_product_location) {
+                $warehouse_product_location->delete();
+            }
+
+            $stocks = Adapter_ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
+            foreach ($stocks as $stock) {
+                $stock->delete();
+            }
         }
         $result = parent::delete();
 

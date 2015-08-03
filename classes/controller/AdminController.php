@@ -843,7 +843,7 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-                            
+
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -2054,6 +2054,20 @@ class AdminControllerCore extends Controller
         }
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
+
+        $modules = Module::getModulesOnDisk();
+
+        $tmp = array();
+        foreach ($modules as $module) {
+            $tmp[] = $module->name;
+        }
+
+        foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
+            if (!in_array($module, $tmp)) {
+                unset($this->tab_modules_list['slider_list'][$key]);
+            }
+        }
+
 
         if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
             $this->filter_modules_list = $this->tab_modules_list['default_list'];

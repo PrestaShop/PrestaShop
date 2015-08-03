@@ -465,7 +465,7 @@ class InstallModelInstall extends InstallAbstractModel
             Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
         }
 
-        $id_country = Country::getByIso($data['shop_country']);
+        $id_country = (int)Country::getByIso($data['shop_country']);
 
         // Set default configuration
         Configuration::updateGlobalValue('PS_SHOP_DOMAIN',                Tools::getHttpHost());

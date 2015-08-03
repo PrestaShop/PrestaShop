@@ -886,7 +886,7 @@ class FrontControllerCore extends Controller
                     $this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
                 }
 
-                if (isset($this->context->cookie->iso_code_country) && ($id_country = Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
+                if (isset($this->context->cookie->iso_code_country) && ($id_country = (int)Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
                     /* Update defaultCountry */
                     if ($default_country->iso_code != $this->context->cookie->iso_code_country) {
                         $default_country = new Country($id_country);

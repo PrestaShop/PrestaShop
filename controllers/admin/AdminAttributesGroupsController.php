@@ -765,12 +765,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
             }
         } else {
-            if (Tools::getValue('submitDel'.$this->table)) {
+            if (Tools::isSubmit('submitBulkdelete'.$this->table)) {
                 if ($this->tabAccess['delete'] === '1') {
                     if (isset($_POST[$this->table.'Box'])) {
                         /** @var AttributeGroup $object */
                         $object = new $this->className();
                         if ($object->deleteSelection($_POST[$this->table.'Box'])) {
+                            AttributeGroup::cleanPositions();
                             Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
                         }
                         $this->errors[] = Tools::displayError('An error occurred while deleting this selection.');
@@ -802,6 +803,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 parent::postProcess();
             } else {
                 parent::postProcess();
+                if (Tools::isSubmit('delete'.$this->table))
+                {
+                    AttributeGroup::cleanPositions();
+                }
             }
         }
     }

@@ -172,7 +172,12 @@ class CountryCore extends ObjectModel
 			WHERE `iso_code` = \''.pSQL(strtoupper($iso_code)).'\''
             .($active ? ' AND active = 1' : '')
         );
-        return (int)$result['id_country'];
+
+        if (isset($result['id_country']))
+        {
+            return (int)$result['id_country'];
+        }
+        return false;
     }
 
     public static function getIdZone($id_country)
@@ -182,7 +187,7 @@ class CountryCore extends ObjectModel
         }
 
         if (isset(self::$_idZones[$id_country])) {
-            return self::$_idZones[$id_country];
+            return (int)self::$_idZones[$id_country];
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -190,8 +195,12 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
 
-        self::$_idZones[$id_country] = $result['id_zone'];
-        return (int)$result['id_zone'];
+        if (isset($result['id_zone']))
+        {
+            self::$_idZones[$id_country] = (int)$result['id_zone'];
+            return (int)$result['id_zone'];
+        }
+        return false;
     }
 
     /**
@@ -231,8 +240,11 @@ class CountryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
         }
-
-        return Country::$cache_iso_by_id[$id_country];
+        if (isset(Country::$cache_iso_by_id[$id_country]))
+        {
+            return Country::$cache_iso_by_id[$id_country];
+        }
+        return false;
     }
 
     /**
@@ -254,7 +266,11 @@ class CountryCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return (int)$result['id_country'];
+        if (isset($result['id_country']))
+        {
+            return (int)$result['id_country'];
+        }
+        return false;
     }
 
     public static function getNeedZipCode($id_country)
@@ -263,7 +279,7 @@ class CountryCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `need_zip_code`
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
@@ -275,10 +291,16 @@ class CountryCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $zip_code_format = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `zip_code_format`
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
+
+        if (isset($zip_code_format) && $zip_code_format)
+        {
+            return $zip_code_format;
+        }
+        return false;
     }
 
     /**

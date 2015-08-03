@@ -38,6 +38,18 @@ class OrderSlipCore extends ObjectModel
     /** @var float */
     public $conversion_rate;
 
+    /** @var float */
+    public $total_products_tax_excl;
+
+    /** @var float */
+    public $total_products_tax_incl;
+
+    /** @var float */
+    public $total_shipping_tax_excl;
+
+    /** @var float */
+    public $total_shipping_tax_incl;
+
     /** @var int */
     public $amount;
 

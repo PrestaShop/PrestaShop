@@ -2660,8 +2660,8 @@ class AdminImportControllerCore extends AdminController
                     $address->id_country = (int)$address->country;
                 }
             } elseif (isset($address->country) && is_string($address->country) && !empty($address->country)) {
-                if ($id_country = Country::getIdByName(null, $address->country)) {
-                    $address->id_country = (int)$id_country;
+                if ($id_country = (int)Country::getIdByName(null, $address->country)) {
+                    $address->id_country = $id_country;
                 } else {
                     $country = new Country();
                     $country->active = 1;
