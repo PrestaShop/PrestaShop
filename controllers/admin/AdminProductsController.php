@@ -1875,8 +1875,11 @@ class AdminProductsControllerCore extends AdminController
 
             if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->object->getType() != Product::PTYPE_VIRTUAL) {
                 $this->object->advanced_stock_management = 1;
-                StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
                 $this->object->save();
+                $id_shops = Shop::getContextListShopID();
+                foreach ($id_shops as $id_shop) {
+                    StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$id_shop, 0);
+                }
             }
 
             if (empty($this->errors)) {
@@ -1963,6 +1966,14 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $res = parent::processStatus();
+
+        $query = trim(Tools::getValue('bo_query'));
+        $searchType = (int)Tools::getValue('bo_search_type');
+
+        if ($query) {
+            $this->redirect_after = preg_replace('/[\?|&](bo_query|bo_search_type)=([^&]*)/i', '', $this->redirect_after);
+            $this->redirect_after .= '&bo_query='.$query.'&bo_search_type='.$searchType;
+        }
 
         return $res;
     }

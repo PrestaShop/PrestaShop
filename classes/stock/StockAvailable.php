@@ -257,13 +257,15 @@ class StockAvailableCore extends ObjectModel
                 }
                 // updates
                 // if $id_product has attributes, it also updates the sum for all attributes
-                $query = array(
-                    'table' => 'stock_available',
-                    'data' => array('quantity' => $product_quantity),
-                    'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
-                    StockAvailable::addSqlShopRestriction(null, $id_shop)
-                );
-                Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+                if (($order_id_shop != null && array_intersect($warehouses, $order_warehouses)) || $order_id_shop == null) {
+                    $query = array(
+                        'table' => 'stock_available',
+                        'data' => array('quantity' => $product_quantity),
+                        'where' => 'id_product = '.(int)$id_product.' AND id_product_attribute = 0'.
+                        StockAvailable::addSqlShopRestriction(null, $id_shop)
+                    );
+                    Db::getInstance()->update($query['table'], $query['data'], $query['where']);
+                }
             }
         }
         // In case there are no warehouses, removes product from StockAvailable

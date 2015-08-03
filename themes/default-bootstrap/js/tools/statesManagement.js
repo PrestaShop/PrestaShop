@@ -75,12 +75,6 @@ function bindCheckbox()
 		$('#opc_invoice_address').slideUp('slow');
 }
 
-function bindUniform()
-{
-	if (!!$.prototype.uniform)
-		$("select.form-control,input[type='radio'],input[type='checkbox']").uniform();
-}
-
 function bindZipcode()
 {
 	$(document).on('keyup', 'input[name^=postcode]', function(e)
