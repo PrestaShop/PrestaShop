@@ -103,6 +103,9 @@
     <hook id="actionCustomerAccountUpdate" live_edit="0">
       <name>actionCustomerAccountUpdate</name><title>Successful customer account update</title><description>This hook is called when a customer updates its account successfully</description>
     </hook>
+    <hook id="actionCustomerAddressChange" live_edit="0">
+      <name>actionCustomerAddressChange</name><title>Successful customer address creation or update</title><description>This hook is called when a customer creates or updates an address succssfully</description>
+    </hook>
     <hook id="displayCustomerAccount" live_edit="0">
       <name>displayCustomerAccount</name><title>Customer account displayed in Front Office</title><description>This hook displays new elements on the customer account page</description>
     </hook>
