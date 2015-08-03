@@ -43,41 +43,49 @@ class PrestaShopSecurityTest extends IntegrationTestCase
     public static function setupBeforeClass()
     {
         parent::setUpBeforeClass();
+    }
+
+    public function testInstall()
+    {
         if (!file_exists(_PS_MODULE_DIR_.'/prestafraud/prestafraud.php')) {
             $download = file_put_contents(_PS_CACHE_DIR_.'sandbox/prestafraud.zip', Tools::addonsRequest('module', array('id_module' => 4181)));
-            Assert::assertGreaterThan(20000, $download, 'Fail download module from Addons');
+            $this->assertGreaterThan(20000, $download, 'Fail download module from Addons');
             $extract = Tools::ZipExtract(_PS_CACHE_DIR_.'sandbox/prestafraud.zip', _PS_MODULE_DIR_);
-            Assert::assertTrue($extract, 'Fail extract module');
+            $this->assertTrue($extract, 'Fail extract module');
             unlink(_PS_CACHE_DIR_.'sandbox/prestafraud.zip');
         }
-    
-        self::$prestafraud = Module::getInstanceByName('prestafraud');
 
-        Assert::assertTrue(is_object(self::$prestafraud), 'Fail Module::getInstanceByName(\'prestafraud\')');
-        Assert::assertEquals('prestafraud', self::$prestafraud->name);
-        if (!Module::isInstalled('prestafraud')) {
-            Assert::assertTrue((bool)self::$prestafraud->install());
+        if (!file_exists(_PS_MODULE_DIR_.'/cheque/cheque.php')) {
+            $download = file_put_contents(_PS_CACHE_DIR_.'sandbox/cheque.zip', Tools::addonsRequest('module', array('id_module' => 4181)));
+            $this->assertGreaterThan(20000, $download, 'Fail download module from Addons');
+            $extract = Tools::ZipExtract(_PS_CACHE_DIR_.'sandbox/cheque.zip', _PS_MODULE_DIR_);
+            $this->assertTrue($extract, 'Fail extract module');
+            unlink(_PS_CACHE_DIR_.'sandbox/cheque.zip');
         }
-            
-        Assert::assertTrue((bool)self::$prestafraud->isRegisteredInHook('actionValidateOrder'), 'Fail Module::isRegisteredInHook(\'actionValidateOrder\')');
-        
+
+        self::$prestafraud = Module::getInstanceByName('prestafraud');
+        $this->assertTrue(is_object(self::$prestafraud), 'Fail Module::getInstanceByName(\'prestafraud\')');
+        $this->assertEquals('prestafraud', self::$prestafraud->name);
+        if (!Module::isInstalled('prestafraud')) {
+            $this->assertTrue((bool)self::$prestafraud->install());
+        }
+
+        if (!Module::isInstalled('cheque')) {
+            $this->assertTrue((bool)Module::getInstanceByName('cheque')->install());
+        }
+
         $uniqid = uniqid().time();
         $email = 'prestabot+'.$uniqid.'@gmail.com';
         $shop_url = 'http://www.prestashop-unit-test-'.$uniqid.'.com/';
         $result = self::$prestafraud->_createAccount($email, $shop_url);
-        
-        Assert::assertTrue($result, implode(', ', self::$prestafraud->_errors));
-    }
-    
-    public static function tearDownAfterClass()
-    {
-        Assert::assertTrue((bool)self::$prestafraud->uninstall());
+
+        $this->assertTrue($result, implode(', ', self::$prestafraud->_errors));
     }
 
     public function testScoreExistingOrder()
     {
         $id_order = 1;
-        $order = new Order($id_order);
+        $order = new Order($id_order);        
         $this->assertTrue(self::$prestafraud->hookNewOrder(array('order' => $order)), 'Fail Prestafraud::hookNewOrder()');
         $scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
         $this->assertGreaterThan(0, (int)$scoring['scoring']);
@@ -89,5 +97,10 @@ class PrestaShopSecurityTest extends IntegrationTestCase
         $scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
         $this->assertEquals(0, (int)$scoring['scoring']);
         $this->assertEquals('', (string)$scoring['comment']);
+    }
+
+    public function testUninstall()
+    {
+        $this->assertTrue((bool)self::$prestafraud->uninstall());
     }
 }

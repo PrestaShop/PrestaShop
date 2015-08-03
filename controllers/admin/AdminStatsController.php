@@ -200,7 +200,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         if ($granularity == 'day') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -213,7 +213,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } elseif ($granularity == 'month') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -225,7 +225,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return $sales;
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
+			SELECT SUM(total_products / o.conversion_rate)
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
