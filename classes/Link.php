@@ -87,7 +87,7 @@ class LinkCore
      * @param int $ipa ID product attribute
      * @return string
      */
-    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false)
+    public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false, $add_anchor = false)
     {
         $dispatcher = Dispatcher::getInstance();
 
@@ -151,7 +151,7 @@ class LinkCore
             }
             $params['categories'] = implode('/', $cats);
         }
-        $anchor = $ipa ? $product->getAnchor($ipa, $force_routes) : '';
+        $anchor = $ipa ? $product->getAnchor((int)$ipa, (bool)$add_anchor) : '';
 
         return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
     }
