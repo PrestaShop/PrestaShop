@@ -7640,6 +7640,10 @@ a.price_discount_delete {
   border: 1px solid #999999;
   background: #fff; }
 
+.order_carrier_logo {
+  max-width: 65px;
+  max-height: 65px; }
+
 #order_carrier .title_block {
   padding: 0 15px;
   height: 29px;
@@ -8398,8 +8402,7 @@ div.star.star_hover:after {
 #facebook_block .facebook-fanbox {
   background: #fff;
   border: 1px solid #aaaaaa;
-  display: inline-block;
-  max-width: 100%; }
+  padding-bottom: 10px; }
 
 #cmsinfo_block {
   border-left: 1px solid #d9d9d9; }
