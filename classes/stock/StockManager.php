@@ -241,7 +241,7 @@ class StockManagerCore implements StockManagerInterface
                     // Foreach item
                     foreach ($products_pack as $product_pack) {
                         if ($product_pack->advanced_stock_management == 1) {
-                            $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id);
+                            $product_warehouses = Warehouse::getProductWarehouseList($product_pack->id, $product_pack->id_pack_product_attribute); // XXX : premier pb fixé là, ajouté attribute id !
                             $warehouse_stock_found = false;
                             foreach ($product_warehouses as $product_warehouse) {
                                 if (!$warehouse_stock_found) {
@@ -450,7 +450,47 @@ class StockManagerCore implements StockManagerInterface
                     }
                 break;
             }
+
+            if (Pack::isPacked($id_product, $id_product_attribute)) {
+                $packs = Pack::getPacksContainingItem($id_product, $id_product_attribute, (int)Configuration::get('PS_LANG_DEFAULT'));
+                foreach($packs as $pack) {
+                    // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
+                    if (!((int)$pack->pack_stock_type == 2) &&
+                        !((int)$pack->pack_stock_type == 3 && (int)Configuration::get('PS_PACK_STOCK_TYPE') == 2)
+                        ) {
+                        continue;
+                    }
+
+                    // Decrease stocks of the pack only if there is not enough items to constituate the actual pack stocks.
+                    
+                    // How many packs can be constituated with the remaining product stocks
+                    $quantity_by_pack = $pack->pack_item_quantity;
+                    $stock_available_quantity = $quantity_in_stock - $quantity;
+                    $max_pack_quantity = max(array(0, floor($stock_available_quantity / $quantity_by_pack)));
+                    $quantity_delta = Pack::getQuantity($pack->id) - $max_pack_quantity;
+
+                    if ($pack->advanced_stock_management == 1 && $quantity_delta > 0) {
+                        $product_warehouses = Warehouse::getPackWarehouses($pack->id);
+                        $warehouse_stock_found = false;
+                        foreach ($product_warehouses as $product_warehouse) {
+
+                            if (!$warehouse_stock_found) {
+                                if (Warehouse::exists($product_warehouse)) {
+                                    $current_warehouse = new Warehouse($product_warehouse);
+                                    $return[] = $this->removeProduct($pack->id, null, $current_warehouse, $quantity_delta, $id_stock_mvt_reason, $is_usable, $id_order, 1);
+                                    // The product was found on this warehouse. Stop the stock searching.
+                                    $warehouse_stock_found = !empty($return[count($return) - 1]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
         }
+        
+
 
         // if we remove a usable quantity, exec hook
         if ($is_usable) {

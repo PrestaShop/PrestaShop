@@ -465,7 +465,7 @@ class StockAvailableCore extends ObjectModel
         if (!Validate::isLoadedObject($product)) {
             return false;
         }
-        
+
         $stockManager = Adapter_ServiceLocator::get('Core_Business_Stock_StockManager');
         $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
         return true;

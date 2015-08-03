@@ -64,16 +64,18 @@ class PackCore extends Product
      */
     public static function isPacked($id_product, $id_product_attribute = false)
     {
+        
+        
         if (!Pack::isFeatureActive()) {
             return false;
         }
-
         if ($id_product_attribute === false) {
-            if (!array_key_exists($id_product, self::$cacheIsPacked)) {
+            $cache_key = $id_product.'-0';
+            if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
                 $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.(int)$id_product);
-                self::$cacheIsPacked[$id_product] = ($result > 0);
+                self::$cacheIsPacked[$cache_key] = ($result > 0);
             }
-            return self::$cacheIsPacked[$id_product];
+            return self::$cacheIsPacked[$cache_key];
         } else {
             $cache_key = $id_product.'-'.$id_product_attribute;
             if (!array_key_exists($cache_key, self::$cacheIsPacked)) {
@@ -406,7 +408,7 @@ class PackCore extends Product
      */
     public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
     {
-        if (!Pack::isFeatureActive()) {
+        if (!Pack::isFeatureActive() || !$id_item) {
             return array();
         }
         
