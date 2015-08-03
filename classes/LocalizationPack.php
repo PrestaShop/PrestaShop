@@ -43,12 +43,19 @@ class LocalizationPackCore
         $this->name = (string)$main_attributes['name'];
         $this->version = (string)$main_attributes['version'];
         if ($iso_localization_pack) {
-            $id_country = Country::getByIso($iso_localization_pack);
-            $country = new Country($id_country);
+            $id_country = (int)Country::getByIso($iso_localization_pack);
+
+            if ($id_country) {
+                $country = new Country($id_country);
+            }
+            if (!$id_country || !Validate::isLoadedObject($country)) {
+                $this->_errors[] = Tools::displayError(sprintf('Cannot load country : %1d', $id_country));
+                return false;
+            }
             if (!$country->active) {
                 $country->active = 1;
                 if (!$country->update()) {
-                    $this->_errors[] = Tools::displayError('Cannot enable the associated country: ').$country->name;
+                    $this->_errors[] = Tools::displayError(sprintf('Cannot enable the associated country: %1s', $country->name));
                 }
             }
         }
@@ -223,7 +230,7 @@ class LocalizationPackCore
                         continue;
                     }
 
-                    $id_country = Country::getByIso(strtoupper($rule_attributes['iso_code_country']));
+                    $id_country = (int)Country::getByIso(strtoupper($rule_attributes['iso_code_country']));
                     if (!$id_country) {
                         continue;
                     }
