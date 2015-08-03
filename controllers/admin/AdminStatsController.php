@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
@@ -200,7 +200,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         if ($granularity == 'day') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -213,7 +213,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } elseif ($granularity == 'month') {
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
+			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_products / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
@@ -225,7 +225,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return $sales;
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
+			SELECT SUM(total_products / o.conversion_rate)
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1

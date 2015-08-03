@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class AdminControllerCore extends Controller
@@ -1373,13 +1373,13 @@ class AdminControllerCore extends Controller
                 if (isset($values['type']) && $values['type'] == 'textLang') {
                     foreach ($languages as $language) {
                         if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation'])) {
-                            if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang']))) {
+                            if (!Validate::{$values['validation']}(Tools::getValue($field.'_'.$language['id_lang']))) {
                                 $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                             }
                         }
                     }
                 } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                    if (!Validate::$values['validation'](Tools::getValue($field))) {
+                    if (!Validate::{$values['validation']}(Tools::getValue($field))) {
                         $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                     }
                 }
@@ -3436,9 +3436,9 @@ class AdminControllerCore extends Controller
                 foreach ($languages as $language) {
                     if (($value = Tools::getValue($field_lang.'_'.$language['id_lang'])) !== false && !empty($value)) {
                         if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME')) {
-                            $res = Validate::$function($value, true);
+                            $res = Validate::{$function}($value, true);
                         } else {
-                            $res = Validate::$function($value);
+                            $res = Validate::{$function}($value);
                         }
                         if (!$res) {
                             $this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
@@ -3636,7 +3636,7 @@ class AdminControllerCore extends Controller
         if (isset($field['validation'])) {
             $valid_method_exists = method_exists('Validate', $field['validation']);
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
-                if (!Validate::$field['validation']($value)) {
+                if (!Validate::{$field['validation']}($value)) {
                     $this->errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }
