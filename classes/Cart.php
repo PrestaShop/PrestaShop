@@ -1876,8 +1876,9 @@ class CartCore extends ObjectModel
                 $key = 'in_stock';
             } else {
                 $key = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
-                if ($product['in_stock']) {
-                    $out_stock_part = $product['cart_quantity'] - $product['in_stock'];
+                $product_quantity_in_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']);
+                if ($product['in_stock'] && $product['cart_quantity'] > $product_quantity_in_stock) {
+                    $out_stock_part = $product['cart_quantity'] - $product_quantity_in_stock;
                     $product_bis = $product;
                     $product_bis['cart_quantity'] = $out_stock_part;
                     $product_bis['in_stock'] = 0;
@@ -3136,7 +3137,7 @@ class CartCore extends ObjectModel
             );
 
             if ($product['reduction_type'] == 'amount') {
-                $reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+				$reduction = (!Product::getTaxCalculationMethod() ? (float)$product['price_wt'] : (float)$product['price']) - (float)$product['price_without_quantity_discount'];
                 $product['reduction_formatted'] = Tools::displayPrice($reduction);
             }
         }
