@@ -109,7 +109,7 @@ class AdminCarriersControllerCore extends AdminController
             )
         );
         parent::__construct();
-        
+
         if (Tools::isSubmit('onboarding_carrier')) {
             $this->display = 'view';
         }
@@ -118,7 +118,7 @@ class AdminCarriersControllerCore extends AdminController
     public function initToolbar()
     {
         parent::initToolbar();
-        
+
         if (isset($this->toolbar_btn['new']) && $this->display != 'view') {
             $this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
         }
@@ -137,7 +137,7 @@ class AdminCarriersControllerCore extends AdminController
 
         parent::initPageHeaderToolbar();
     }
-    
+
     public function renderView()
     {
         $this->initTabModuleList();
@@ -147,11 +147,11 @@ class AdminCarriersControllerCore extends AdminController
         unset($this->page_header_toolbar_btn['modules-list']);
         return parent::renderView();
     }
-    
+
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
         $this->_use_found_rows = false;
         return parent::renderList();
     }
@@ -414,7 +414,7 @@ class AdminCarriersControllerCore extends AdminController
         if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1') {
             $this->ajaxProcessGetModuleQuickView();
         }
-        
+
         if (Tools::getValue('submitAdd'.$this->table)) {
             /* Checking fields validity */
             $this->validateRules();
@@ -710,7 +710,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
             return;
         }
     }
-    
+
     public function displayDeleteLink($token = null, $id, $name = null)
     {
         if ($this->tabAccess['delete'] == 1) {
@@ -749,7 +749,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
             return;
         }
     }
-    
+
     protected function initTabModuleList()
     {
         if (Tools::isSubmit('onboarding_carrier')) {
