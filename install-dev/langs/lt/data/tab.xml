@@ -77,7 +77,7 @@
   <tab id="Performance" name="Na&#x161;umas"/>
   <tab id="E-mail" name="El. pa&#x161;tas"/>
   <tab id="Multistore" name="MultiParduotuv&#x117;"/>
-  <tab id="CSV_Import" name="CSV importas"/>
+  <tab id="CSV_Import" name="Importas"/>
   <tab id="DB_Backup" name="DB atsarg. kopija"/>
   <tab id="SQL_Manager" name="SQL valdymas"/>
   <tab id="Logs" name="&#x12E;vyki&#x173; &#x17E;urnalas"/>

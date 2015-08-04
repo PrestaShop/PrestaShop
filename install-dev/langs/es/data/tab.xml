@@ -19,7 +19,7 @@
   <tab id="Contacts" name="Contacto"/>
   <tab id="Countries" name="Pa&#xED;ses"/>
   <tab id="Credit_Slips" name="Vales"/>
-  <tab id="CSV_Import" name="Importes de CSV"/>
+  <tab id="CSV_Import" name="Importes"/>
   <tab id="Currencies" name="Monedas"/>
   <tab id="Customer_Service" name="Servicio clientela"/>
   <tab id="Customers" name="clientes"/>

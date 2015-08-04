@@ -78,7 +78,7 @@
   <tab id="Performance" name="ביצועים"/>
   <tab id="E-mail" name="מיילים"/>
   <tab id="Multistore" name="ריבוי חנויות"/>
-  <tab id="CSV_Import" name="יבוא קבצי CSV"/>
+  <tab id="CSV_Import" name="יבוא קבצי"/>
   <tab id="DB_Backup" name="גיבוי מסד נתונים"/>
   <tab id="SQL_Manager" name="ניהול SQL"/>
   <tab id="Logs" name="קובצי לוג"/>
