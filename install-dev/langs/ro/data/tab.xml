@@ -78,7 +78,7 @@
   <tab id="Performance" name="Performanță"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Multistore" name="Magazine multiple"/>
-  <tab id="CSV_Import" name="Import CSV"/>
+  <tab id="CSV_Import" name="Import"/>
   <tab id="DB_Backup" name="Creare backup pentru baza de date"/>
   <tab id="SQL_Manager" name="Administrare SQL"/>
   <tab id="Logs" name="Jurnale"/>

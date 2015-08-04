@@ -25,7 +25,7 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
 <div class="alert alert-success clearfix">
-	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
+	{l s='Your file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
 </div>
 {/if}
 <div class="row">
@@ -38,7 +38,7 @@
 			</h3>
 			<div class="alert alert-info">
 				<ul class="list-unstyled">
-					<li>{l s='You can read information on CSV import at:'}
+					<li>{l s='You can read information on import at:'}
 						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" class="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
@@ -84,6 +84,7 @@
 							{l s="Choose from history / FTP"}
 						</button>
 						<p class="help-block">
+							{l s='Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'}.<br/>
 							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed'}.<br/>
 							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=$path_import}
 						</p>
