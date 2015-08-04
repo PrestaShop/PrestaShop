@@ -467,7 +467,7 @@ $(document).ready(function () {
 				timeOnlyTitle: '{l s='Choose Time' js=1}',
 				timeText: '{l s='Time' js=1}',
 				hourText: '{l s='Hour' js=1}',
-				minuteText: '{l s='Minute' js=1}',
+				minuteText: '{l s='Minute' js=1}'
 			});
 			$('#sp_reduction_type').on('change', function() {
 				if (this.value == 'percentage')
