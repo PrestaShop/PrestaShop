@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Stock;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Core_Business_Stock_StockManager;
 
 class FakeStockAvailable4759
 {
@@ -49,7 +50,7 @@ class FakeProduct4759
     public function __construct($stock_available, $pack_stock_type = false)
     {
         $this->id = ++FakeProduct4759::$LAST_ID;
-        $this->pack_stock_type = $pack_stock_type ? $id_product_attribute : 0;
+        $this->pack_stock_type = $pack_stock_type ? $pack_stock_type : 0;
         $this->stock_available = new FakeStockAvailable4759($stock_available);
     }
 }
@@ -188,7 +189,7 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockManager = new \Core_Business_Stock_StockManager();
+        $stockManager = new Core_Business_Stock_StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
@@ -277,7 +278,7 @@ class StockAvailableTest extends UnitTestCase
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
         $this->container->bind('Adapter_StockManager', $this->packItemsManager);
         
-        $stockManager = new \Core_Business_Stock_StockManager();
+        $stockManager = new Core_Business_Stock_StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
         $stockAvailable = $products[0][0]->stock_available;
         $stockAvailable->quantity = $stockAvailable->quantity + $delta;
