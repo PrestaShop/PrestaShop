@@ -74,7 +74,7 @@ $(document).ready(function(){
 			$('#openNewAccountBlock').show();
 			$(this).hide();
 			$('#login_form_content').slideDown('slow');
-			$('#new_account_form_content').slideUp('slow');
+			$('#new_account_form').slideUp('slow');
 		});
 		// LOGIN FORM SENDING
 		$(document).on('click', '#SubmitLogin', function(e){

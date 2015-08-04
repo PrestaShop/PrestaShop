@@ -202,9 +202,9 @@ class AdminModulesControllerCore extends AdminController
             }
         }
 
-        // If logged to Addons Webservices, refresh customer modules list every day
+        // If logged to Addons Webservices, refresh customer modules list every 5 minutes
         if ($this->logged_on_addons && $this->status != 'error') {
-            if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 60) || $force_reload_cache) {
+            if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 300) || $force_reload_cache) {
                 if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_CUSTOMER_MODULES_LIST, Tools::addonsRequest('customer'))) {
                     $this->status = 'refresh';
                 } else {

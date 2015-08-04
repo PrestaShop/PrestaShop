@@ -105,10 +105,11 @@ class OrderHistoryCore extends ObjectModel
         Hook::exec('actionOrderStatusUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
         if (Validate::isLoadedObject($order) && ($new_os instanceof OrderState)) {
+            $context = Context::getContext();
+
             // An email is sent the first time a virtual item is validated
             $virtual_products = $order->getVirtualProducts();
             if ($virtual_products && (!$old_os || !$old_os->logable) && $new_os && $new_os->logable) {
-                $context = Context::getContext();
                 $assign = array();
                 foreach ($virtual_products as $key => $virtual_product) {
                     $id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
@@ -167,6 +168,20 @@ class OrderHistoryCore extends ObjectModel
 
             $error_or_canceled_statuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 
+            $employee = null;
+            if (!(int)$this->id_employee || !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee)))) {
+                if (!Validate::isLoadedObject($old_os) && $context != null) {
+                    // First OrderHistory, there is no $old_os, so $employee is null before here
+                    $employee = $context->employee; // filled if from BO and order created (because no old_os)
+                    if ($employee) {
+                        $this->id_employee = $employee->id;
+                    }
+                } else {
+                    $employee = null;
+                }
+            }
+            
+
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
                 if (Validate::isLoadedObject($old_os)) {
@@ -197,10 +212,6 @@ class OrderHistoryCore extends ObjectModel
                             !in_array($old_os->id, $error_or_canceled_statuses) &&
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
-                    }
-
-                    if ((int)$this->id_employee && !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee)))) {
-                        $employee = null;
                     }
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
@@ -378,14 +389,11 @@ class OrderHistoryCore extends ObjectModel
     /**
      * @param bool $autodate Optional
      * @param array $template_vars Optional
-     * @param Context $context Optional
+     * @param Context $context Deprecated
      * @return bool
      */
     public function addWithemail($autodate = true, $template_vars = false, Context $context = null)
     {
-        if (!$context) {
-            $context = Context::getContext();
-        }
         $order = new Order($this->id_order);
 
         if (!$this->add($autodate)) {
