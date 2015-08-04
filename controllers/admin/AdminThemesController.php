@@ -845,7 +845,7 @@ class AdminThemesControllerCore extends AdminController
         if (is_dir($server_path.$file)) {
             $dir = scandir($server_path.$file);
             foreach ($dir as $row) {
-                if ($row != '.' && $row != '..') {
+                if ($row[0] != '.') {
                     $this->archiveThisFile($obj, $row, $server_path.$file.'/', $archive_path.$file.'/');
                 }
             }
@@ -891,6 +891,10 @@ class AdminThemesControllerCore extends AdminController
             }
 
             $zip->close();
+
+            if (!is_file(_PS_CACHE_DIR_.$zip_file_name)) {
+                $this->errors[] = $this->l(sprintf('Could not create %1s', _PS_CACHE_DIR_.$zip_file_name));
+            }
 
             if (!$this->errors) {
                 if (ob_get_length() > 0) {

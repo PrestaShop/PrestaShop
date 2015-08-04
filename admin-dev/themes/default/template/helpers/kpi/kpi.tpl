@@ -41,7 +41,7 @@
 
 </{if isset($href) && $href}a{else}div{/if}>
 
-{if isset($source) && $source != ''}
+{if isset($source) && $source != '' && isset($refresh) && $refresh != ''}
 <script>
 	function refresh_{$id|replace:'-':'_'|addslashes}()
 	{
@@ -68,9 +68,6 @@
 			}
 		});
 	}
-	{if isset($refresh) && $refresh != ''}
-		refresh_{$id|replace:'-':'_'|addslashes}();
-	{/if}
 </script>
 {/if}
 

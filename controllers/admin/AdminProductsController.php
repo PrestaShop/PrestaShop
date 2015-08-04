@@ -1967,6 +1967,14 @@ class AdminProductsControllerCore extends AdminController
 
         $res = parent::processStatus();
 
+        $query = trim(Tools::getValue('bo_query'));
+        $searchType = (int)Tools::getValue('bo_search_type');
+
+        if ($query) {
+            $this->redirect_after = preg_replace('/[\?|&](bo_query|bo_search_type)=([^&]*)/i', '', $this->redirect_after);
+            $this->redirect_after .= '&bo_query='.$query.'&bo_search_type='.$searchType;
+        }
+
         return $res;
     }
 
