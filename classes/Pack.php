@@ -411,9 +411,13 @@ class PackCore extends Product
         if (!Pack::isFeatureActive() || !$id_item) {
             return array();
         }
-        
-        $result = Db::getInstance()->executeS('SELECT `id_product_pack`, `quantity` FROM `'._DB_PREFIX_.'pack`
-			WHERE `id_product_item` = '.((int)$id_item).' AND `id_product_attribute_item` = '.((int)$id_attribute_item));
+
+        $query = 'SELECT `id_product_pack`, `quantity` FROM `'._DB_PREFIX_.'pack`
+			WHERE `id_product_item` = '.((int)$id_item);
+        if (Combination::isFeatureActive()) {
+            $query .= ' AND `id_product_attribute_item` = '.((int)$id_attribute_item);
+        }
+        $result = Db::getInstance()->executeS($query);
         $array_result = array();
         foreach ($result as $row) {
             $p = new Product($row['id_product_pack'], true, $id_lang);
