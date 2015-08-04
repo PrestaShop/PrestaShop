@@ -1136,7 +1136,7 @@ class AdminImportControllerCore extends AdminController
         return $path;
     }
 
-    public function categoryImport($offset = false, $limit = false)
+    public function categoryImport($offset = false, $limit = false, &$crossStepsVariables = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -1154,7 +1154,11 @@ class AdminImportControllerCore extends AdminController
         $regenerate = Tools::getValue('regenerate');
         $shop_is_feature_active = Shop::isFeatureActive();
 
-        $cat_moved = array(); // FIXME: cross foreach! must fill between each call with precedent data
+        
+        $cat_moved = array();
+        if ($crossStepsVariables !== false && array_key_exists('cat_moved', $crossStepsVariables)) {
+            $cat_moved = $crossStepsVariables['cat_moved'];
+        }
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
@@ -1179,6 +1183,9 @@ class AdminImportControllerCore extends AdminController
         Category::regenerateEntireNtree();
         $this->closeCsvFile($handle);
 
+        if ($crossStepsVariables !== false) {
+            $crossStepsVariables['cat_moved'] = $cat_moved;
+        }
         return $line_count;
     }
 
@@ -2052,16 +2059,22 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function attributeImport($offset = false, $limit = false)
+    public function attributeImport($offset = false, $limit = false, &$crossStepsVariables = false)
     {
         $default_language = Configuration::get('PS_LANG_DEFAULT');
 
-        $groups = array(); // FIXME: cross foreach! must fill between each call with precedent data
+        $groups = array();
+        if ($crossStepsVariables !== false && array_key_exists('groups', $crossStepsVariables)) {
+            $groups = $crossStepsVariables['groups'];
+        }
         foreach (AttributeGroup::getAttributesGroups($default_language) as $group) {
             $groups[$group['name']] = (int)$group['id_attribute_group'];
         }
 
-        $attributes = array(); // FIXME: cross foreach! must fill between each call with precedent data
+        $attributes = array();
+        if ($crossStepsVariables !== false && array_key_exists('attributes', $crossStepsVariables)) {
+            $attributes = $crossStepsVariables['attributes'];
+        }
         foreach (Attribute::getAttributes($default_language) as $attribute) {
             $attributes[$attribute['attribute_group'].'_'.$attribute['name']] = (int)$attribute['id_attribute'];
         }
@@ -2100,6 +2113,10 @@ class AdminImportControllerCore extends AdminController
         }
         $this->closeCsvFile($handle);
 
+        if ($crossStepsVariables !== false) {
+            $crossStepsVariables['groups'] = $groups;
+            $crossStepsVariables['attributes'] = $attributes;
+        }
         return $line_count;
     }
 
@@ -3353,7 +3370,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function supplyOrdersDetailsImport($offset = false, $limit = false)
+    public function supplyOrdersDetailsImport($offset = false, $limit = false, &$crossStepsVariables = false)
     {
         // opens CSV & sets locale
         $this->receiveTab();
@@ -3362,8 +3379,14 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
 
-        $products = array();  // FIXME: cross foreach! must fill between each call with precedent data
-        $reset = true;  // FIXME: cross foreach! must fill between each call with precedent data
+        $products = array();
+        $reset = true;
+        if ($crossStepsVariables !== false && array_key_exists('products', $crossStepsVariables)) {
+            $products = $crossStepsVariables['products'];
+        }
+        if ($crossStepsVariables !== false && array_key_exists('reset', $crossStepsVariables)) {
+            $reset = $crossStepsVariables['reset'];
+        }
 
         $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
@@ -3388,6 +3411,10 @@ class AdminImportControllerCore extends AdminController
         // closes
         $this->closeCsvFile($handle);
 
+        if ($crossStepsVariables !== false) {
+            $crossStepsVariables['products'] = $products;
+            $crossStepsVariables['reset'] = $reset;
+        }
         return $line_count;
     }
 
@@ -3725,10 +3752,19 @@ class AdminImportControllerCore extends AdminController
             }
             $import_type = false;
             $doneCount = 0;
+            // Sometime, import will use registers to memorize data across all elements to import (for trees, or else).
+            // Since import is splitted in multiple ajax calls, we must keep these data across all steps of the full import.
+            $crossStepsVariables = array();
+            if ($crossStepsVars = Tools::getValue('crossStepsVars')) {
+                $crossStepsVars = json_decode($crossStepsVars, true);
+                if (sizeof($crossStepsVars) > 0) {
+                    $crossStepsVariables = $crossStepsVars;
+                }
+            }
             Db::getInstance()->disableCache();
             switch ((int)Tools::getValue('entity')) {
                 case $this->entities[$import_type = $this->l('Categories')]:
-                    $doneCount += $this->categoryImport($offset, $limit);
+                    $doneCount += $this->categoryImport($offset, $limit, $crossStepsVariables);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Products')]:
@@ -3745,7 +3781,7 @@ class AdminImportControllerCore extends AdminController
                     $doneCount += $this->addressImport($offset, $limit);
                     break;
                 case $this->entities[$import_type = $this->l('Combinations')]:
-                    $doneCount += $this->attributeImport($offset, $limit);
+                    $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Manufacturers')]:
@@ -3771,7 +3807,7 @@ class AdminImportControllerCore extends AdminController
                         break;
                     case $this->entities[$import_type = $this->l('Supply Order Details')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $doneCount += $this->supplyOrdersDetailsImport($offset, $limit);
+                            $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables);
                         }
                         break;
                 }
@@ -3791,6 +3827,13 @@ class AdminImportControllerCore extends AdminController
                         $results['totalCount'] = $count;
                     }
                     $this->closeCsvFile($handle);
+                }
+                if (!$results['isFinished']) {
+                    // Since we'll have to POST this array from ajax for the next call, we should care about it size.
+                    $nextPostSize = mb_strlen(json_encode($crossStepsVariables));
+                    $results['crossStepsVariables'] = $crossStepsVariables;
+                    $results['nextPostSize'] = $nextPostSize + (1024*64) ; // 64KB more for the rest of the POST query.
+                    $results['postSizeLimit'] = Tools::getMaxUploadSize();
                 }
             }
 
@@ -3874,9 +3917,7 @@ class AdminImportControllerCore extends AdminController
     {
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
-
-sleep(2);
-
+sleep(1);
         $results = array();
         $this->importByGroups($offset, $limit, $results);
 

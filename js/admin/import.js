@@ -145,20 +145,23 @@ function validateImportation(mandatory)
 			return false
 		}
 	
-	importNow(0, 5, -1); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
+	importNow(0, 5, -1, {}); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
 	return false; // We return false to avoid form to be posted on the old Controller::postProcess() action
 }
 
-function importNow(offset, limit, total) {
+function importNow(offset, limit, total, crossStepsVariables) {
 	if (offset == 0) updateProgressionInit();
 
+	var data = $('form#import_form').serializeArray();
+	data.push({'name': 'crossStepsVars', 'value': JSON.stringify(crossStepsVariables)});
+	
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
        url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token,
        cache: false,
-       dataType : "json",
-       data: $('form#import_form').serialize(),
+       dataType: "json",
+       data: data,
        success: function(jsonData)
        {
     	   if (jsonData.totalCount) {
@@ -177,7 +180,16 @@ function importNow(offset, limit, total) {
 	    	   // update progression
 	    	   updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit);
 	    	   // import next group of elements
-	    	   importNow(newOffset, newLimit, total);
+	    	   importNow(newOffset, newLimit, total, jsonData.crossStepsVariables);
+	    	   
+	    	   // checks if we could go over post_max_size setting. Warns when reach 90% of the actual setting
+	    	   if (jsonData.nextPostSize >= jsonData.postSizeLimit * 0.9) {
+	    		   var progressionDone = jsonData.doneCount * 100 / total;
+	    		   var increase = Math.max(7, parseInt(jsonData.postSizeLimit/(progressionDone*1024*1024))) + 1; // min 8MB
+	    		   $('#import_details_post_limit_value').html(increase+" MB");
+	    		   $('#import_details_post_limit').show();
+	    	   }
+	    	   
 	       } else {
 	    	   // update progression (will close popin)
 	    	   updateProgression(total, total, total);
@@ -185,7 +197,6 @@ function importNow(offset, limit, total) {
        },
        error: function(XMLHttpRequest, textStatus, errorThrown)
        {
-    	   // TODO : identifier les cas d'erreur possibles, les afficher sur la modal
     	   updateProgressionError(textStatus);
        }
 	});
@@ -223,6 +234,7 @@ function updateProgression(currentPosition, total, nextPosition) {
 	}
 	
 	if (currentPosition == total && total == nextPosition) {
+		$('#import_details_post_limit').hide();
 		$('#import_details_progressing').hide();
 		$('#import_details_finished').show();
 		$('#importProgress').modal({keyboard: true, closable: true});

@@ -23,6 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="modal-body">
+    <div class="alert alert-warning" id="import_details_post_limit" style="display:none;">
+        Warning, the current import MAY requires to modify a PHP setting in order to allow more
+        data to be tranfered. If the current import stops before the end, then you should increase your PHP "post_max_size" setting to
+        <span id="import_details_post_limit_value">16MB</span> at least, and try again.
+    </div>
     <p id="import_details_progressing">
         Please wait, Preston is trying to import your Excel shit...
         <br/>
@@ -37,7 +42,7 @@
         <br/>
         Good luck!
     </div>
-    <div class="alert alert-warning" id="import_details_error" style="display:none;">
+    <div class="alert alert-danger" id="import_details_error" style="display:none;">
         &nbsp;
     </div>
     
