@@ -28,6 +28,11 @@
         data to be tranfered. If the current import stops before the end, then you should increase your PHP "post_max_size" setting to
         <span id="import_details_post_limit_value">16MB</span> at least, and try again.
     </div>
+    <div class="alert alert-warning" id="import_details_stop" style="display:none;">
+        Stopping the import...
+        <br/>
+        Please wait...
+    </div>
     <p id="import_details_progressing">
         Please wait, Preston is trying to import your Excel shit...
         <br/>
@@ -61,7 +66,7 @@
     </div>
     
     <div class="input-group">
-		<button type="button" class="btn btn-default" tabindex="-1" disabled="disabled" id="import_stop_button">
+		<button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">
 			<i class="icon-flag"></i>
 			I give up! Please stop!
 		</button>

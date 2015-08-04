@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+var importCancelRequest = false;
+
 $(document).ready(function(){
 
 	$('#saveImportMatchs').unbind('click').click(function(){
@@ -105,6 +107,15 @@ $(document).ready(function(){
 		   });
 
 	});
+	
+	$('#import_stop_button').unbind('click').click(function(){
+		importCancelRequest = true;
+		$('#import_details_progressing').hide();
+		$('#import_details_finished').hide();
+		$('#import_details_stop').show();
+		$('#import_stop_button').hide();
+		$('#import_close_button').hide();
+	});
 });
 
 function validateImportation(mandatory)
@@ -179,6 +190,13 @@ function importNow(offset, limit, total, crossStepsVariables) {
 	    	   var newOffset = offset + limit;
 	    	   // update progression
 	    	   updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit);
+	    	   
+	    	   if (importCancelRequest == true) {
+	    		   $('#importProgress').modal('hide');
+	    		   importCancelRequest = false;
+	    		   return; // stops execution
+	    	   }
+	    	   
 	    	   // import next group of elements
 	    	   importNow(newOffset, newLimit, total, jsonData.crossStepsVariables);
 	    	   
@@ -209,6 +227,8 @@ function updateProgressionInit() {
 	$('#import_details_progressing').show();
 	$('#import_details_finished').hide();
 	$('#import_details_error').hide();
+	$('#import_details_stop').hide();
+	$('#import_details_post_limit').hide();
 	
 	$('#import_progression_details').html('&nbsp;');
 	$('#import_progressbar_done').width('0%');
