@@ -78,7 +78,7 @@
   <tab id="Performance" name="Kinerja"/>
   <tab id="E-mail" name="Email"/>
   <tab id="Multistore" name="Multistore"/>
-  <tab id="CSV_Import" name="Impor CSV"/>
+  <tab id="CSV_Import" name="Impor"/>
   <tab id="DB_Backup" name="Backup database"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Logs" name="Log"/>

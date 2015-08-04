@@ -77,7 +77,7 @@
   <tab id="Performance" name="Rendimiento"/>
   <tab id="E-mail" name="Correo Electrónico"/>
   <tab id="Multistore" name="Multitienda"/>
-  <tab id="CSV_Import" name="Importación CSV"/>
+  <tab id="CSV_Import" name="Importación"/>
   <tab id="DB_Backup" name="Copia BD"/>
   <tab id="SQL_Manager" name="Gestor SQL"/>
   <tab id="Logs" name="Registros/Logs"/>

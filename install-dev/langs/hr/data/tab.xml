@@ -78,7 +78,7 @@
   <tab id="Performance" name="Performanse"/>
   <tab id="E-mail" name="Email"/>
   <tab id="Multistore" name="Više trgovina"/>
-  <tab id="CSV_Import" name="Uvoz CSV"/>
+  <tab id="CSV_Import" name="Uvoz"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Logs" name="Dnevnici"/>
