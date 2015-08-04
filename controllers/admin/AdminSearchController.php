@@ -362,6 +362,14 @@ class AdminSearchControllerCore extends AdminController
                 $helper->show_toolbar = false;
                 $helper->table = 'product';
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminProducts', false);
+
+                $query = trim(Tools::getValue('bo_query'));
+                $searchType = (int)Tools::getValue('bo_search_type');
+
+                if ($query) {
+                    $helper->currentIndex .= '&bo_query='.$query.'&bo_search_type='.$searchType;
+                }
+
                 $helper->token = Tools::getAdminTokenLite('AdminProducts');
 
                 if ($this->_list['products']) {

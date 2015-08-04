@@ -34,10 +34,18 @@
 	var currentToken="{$token|@addslashes}";
 	var idTree="{$id|escape:'html':'UTF-8'}";
 	var treeClickFunc = function() {
-						location.href = location.href.replace(
-						/&id_category=[0-9]*/, "&id_category="
-						+$(this).val());
-				};
+		var loc = location.href;
+		if (loc.indexOf("&id_category") !== -1) {
+			loc = location.href.replace(
+				/&id_category=[0-9]*/, "&id_category="
+				+ $(this).val());
+		}
+		else {
+			loc = location.href + "&id_category="
+				+ $(this).val();
+		}
+		location.href = loc;
+	};
 	function addDefaultCategory(elem)
 	{
 		$('select#id_category_default').append('<option value="' + elem.val()+'">' + (elem.val() !=1 ? elem.parent().find('label').html() : home) + '</option>');

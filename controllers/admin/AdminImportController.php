@@ -1043,15 +1043,14 @@ class AdminImportControllerCore extends AdminController
             break;
         }
 
-        $url = str_replace(' ', '%20', trim($url));
-        $url = urldecode($url);
+        $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
         if (isset($parced_url['path'])) {
             $uri = ltrim($parced_url['path'], '/');
             $parts = explode('/', $uri);
             foreach ($parts as &$part) {
-                $part = urlencode($part);
+                $part = rawurlencode($part);
             }
             unset($part);
             $parced_url['path'] = '/'.implode('/', $parts);
@@ -2660,8 +2659,8 @@ class AdminImportControllerCore extends AdminController
                     $address->id_country = (int)$address->country;
                 }
             } elseif (isset($address->country) && is_string($address->country) && !empty($address->country)) {
-                if ($id_country = Country::getIdByName(null, $address->country)) {
-                    $address->id_country = (int)$id_country;
+                if ($id_country = (int)Country::getIdByName(null, $address->country)) {
+                    $address->id_country = $id_country;
                 } else {
                     $country = new Country();
                     $country->active = 1;
