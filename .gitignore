@@ -39,6 +39,7 @@ config/xml/*
 
 modules/*
 override/*
+
 admin-dev/themes/default/sass/ie.sass
 admin-dev/themes/default/sass/print.sass
 admin-dev/themes/default/sass/screen.sass

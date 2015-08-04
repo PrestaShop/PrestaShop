@@ -2656,9 +2656,7 @@ class CartCore extends ObjectModel
             if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
                 continue;
             }
-            if ($delivery_option_list[$id_address][$key]['is_free']) {
-                $total_shipping += 0;
-            } elseif ($use_tax) {
+            if ($use_tax) {
                 $total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
             } else {
                 $total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
@@ -3155,6 +3153,7 @@ class CartCore extends ObjectModel
         foreach ($cart_rules as &$cart_rule) {
             // If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code']))) {
+
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
                 $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
@@ -3170,6 +3169,7 @@ class CartCore extends ObjectModel
                 $total_shipping = 0;
                 $total_shipping_tax_exc = 0;
             }
+
             if ($cart_rule['gift_product']) {
                 foreach ($products as $key => &$product) {
                     if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
@@ -3211,7 +3211,7 @@ class CartCore extends ObjectModel
         }
 
         foreach ($cart_rules as $key => &$cart_rule) {
-            if ((float)$cart_rule['value_real'] == 0 && (int)$cart_rule['free_shipping'] == 0) {
+            if ((int)$cart_rule['free_shipping'] == 1 || ((float)$cart_rule['value_real'] == 0 && (int)$cart_rule['free_shipping'] == 0)) {
                 unset($cart_rules[$key]);
             }
         }
