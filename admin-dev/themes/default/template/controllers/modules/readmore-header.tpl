@@ -22,16 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<li class="favoriteproducts">
-	<a
-	href="{$link->getModuleLink('favoriteproducts', 'account', [], true)|escape:'html':'UTF-8'}"
-	title="{l s='My favorite products.' mod='favoriteproducts'}">
-		{if !$in_footer}
-			<i class="icon-heart-empty"></i>
-			<span>{l s='My favorite products' mod='favoriteproducts'}</span>
-		{else}
-			{l s='My favorite products' mod='favoriteproducts'}
-		{/if}
-	</a>
-</li>
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 class="modal-title">
+	<div class="module_name">
+		<a href="#" class="icon icon-chevron-left" onclick="openModulesList()"></a>
+			{$displayName}
+			<small class="text-muted">{l s='v'}{$version} - {l s='by'} {$author}</small>
+	</div>
+</h3>

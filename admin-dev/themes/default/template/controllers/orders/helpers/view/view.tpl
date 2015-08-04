@@ -1351,21 +1351,22 @@
 				}
 			});
 
-			var date = new Date();
-			var hours = date.getHours();
-			if (hours < 10)
-				hours = "0" + hours;
-			var mins = date.getMinutes();
-			if (mins < 10)
-				mins = "0" + mins;
-			var secs = date.getSeconds();
-			if (secs < 10)
-				secs = "0" + secs;
-
 			$('.datepicker').datetimepicker({
 				prevText: '',
 				nextText: '',
-				dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+				dateFormat: 'yy-mm-dd',
+				// Define a custom regional settings in order to use PrestaShop translation tools
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
+				ampm: false,
+				amNames: ['AM', 'A'],
+				pmNames: ['PM', 'P'],
+				timeFormat: 'hh:mm:ss tt',
+				timeSuffix: '',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}'
 			});
 		});
 

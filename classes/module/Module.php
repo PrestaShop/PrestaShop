@@ -262,7 +262,8 @@ abstract class ModuleCore
         if ($this->name != null) {
             // If cache is not generated, we generate it
             if (self::$modules_cache == null && !is_array(self::$modules_cache)) {
-                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : 1);
+                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
+
                 self::$modules_cache = array();
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
@@ -291,6 +292,9 @@ abstract class ModuleCore
                     }
                 }
                 $this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
+            }
+            if (!$this->context->controller instanceof Controller) {
+                self::$modules_cache = null;
             }
             $this->local_path = _PS_MODULE_DIR_.$this->name.'/';
         }
@@ -1259,10 +1263,10 @@ abstract class ModuleCore
 
         $modules_installed = array();
         $result = Db::getInstance()->executeS('
-		SELECT m.name, m.version, mp.interest, module_shop.enable_device
-		FROM `'._DB_PREFIX_.'module` m
-		'.Shop::addSqlAssociation('module', 'm').'
-		LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
+        SELECT m.name, m.version, mp.interest, module_shop.enable_device
+        FROM `'._DB_PREFIX_.'module` m
+        '.Shop::addSqlAssociation('module', 'm').'
+        LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
         foreach ($result as $row) {
             $modules_installed[$row['name']] = $row;
         }
@@ -1330,7 +1334,7 @@ abstract class ModuleCore
                     $item->onclick_option = false;
                     $item->trusted = Module::isModuleTrusted($item->name);
 
-                    $module_list[] = $item;
+                    $module_list[$item->name.'_disk'] = $item;
 
                     $module_name_list[] = '\''.pSQL($item->name).'\'';
                     $modules_name_to_cursor[Tools::strtolower(strval($item->name))] = $item;
@@ -1367,7 +1371,8 @@ abstract class ModuleCore
                     $tmp_module = Adapter_ServiceLocator::get($module);
 
                     $item = new stdClass();
-                    $item->id = $tmp_module->id;
+
+                    $item->id = (int)$tmp_module->id;
                     $item->warning = $tmp_module->warning;
                     $item->name = $tmp_module->name;
                     $item->version = $tmp_module->version;
@@ -1404,7 +1409,7 @@ abstract class ModuleCore
                         }
                     }
 
-                    $module_list[] = $item;
+                    $module_list[$item->name.'_disk'] = $item;
 
                     if (!$xml_exist || $need_new_config_file) {
                         self::$_generate_config_xml_mode = true;
@@ -1423,10 +1428,10 @@ abstract class ModuleCore
         if (!empty($module_name_list)) {
             $list = Shop::getContextListShopID();
             $sql = 'SELECT m.id_module, m.name, (
-						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
-					) as total
-					FROM '._DB_PREFIX_.'module m
-					WHERE LOWER(m.name) IN ('.Tools::strtolower(implode(',', $module_name_list)).')';
+                        SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
+                    ) as total
+                    FROM '._DB_PREFIX_.'module m
+                    WHERE LOWER(m.name) IN ('.Tools::strtolower(implode(',', $module_name_list)).')';
             $results = Db::getInstance()->executeS($sql);
 
             foreach ($results as $result) {
@@ -1496,18 +1501,14 @@ abstract class ModuleCore
                             $item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
                             $item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
                             $item->url = isset($modaddons->url) ? $modaddons->url : null;
+                            if (isset($item->description_full) && trim($item->description_full) != '') {
+                                $item->show_quick_view = true;
+                            }
 
                             if (isset($modaddons->img)) {
-                                if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
-                                    if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img))) {
-                                        copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
-                                    }
-                                }
-
-                                if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
-                                    $item->image = '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
-                                }
+                                $item->image = Module::copyModAddonsImg($modaddons);
                             }
+
 
                             if ($item->type == 'addonsMustHave') {
                                 $item->addons_buy_url = strip_tags((string)$modaddons->url);
@@ -1526,7 +1527,14 @@ abstract class ModuleCore
                                 }
                             }
 
-                            $module_list[$modaddons->id.'-'.$item->name] = $item;
+                            $module_list[$item->name.'_feed'] = $item;
+                        }
+
+                        if (isset($module_list[$modaddons->name.'_disk'])) {
+                            $module_list[$modaddons->name.'_disk']->description_full = stripslashes(strip_tags((string)$modaddons->description_full));
+                            $module_list[$modaddons->name.'_disk']->additional_description = stripslashes(strip_tags((string)$modaddons->additional_description));
+                            $module_list[$modaddons->name.'_disk']->image = Module::copyModAddonsImg($modaddons);
+                            $module_list[$modaddons->name.'_disk']->show_quick_view = true;
                         }
                     }
                 }
@@ -1566,6 +1574,20 @@ abstract class ModuleCore
         return $module_list;
     }
 
+    public static function copyModAddonsImg($modaddons)
+    {
+        if (!Validate::isLoadedObject($modaddons)) {
+            return;
+        }
+        if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg') &&
+        !file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img))) {
+                copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+        }
+        if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
+            return '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
+        }
+    }
+
     /**
      * Return modules directory list
      *
@@ -1585,6 +1607,7 @@ abstract class ModuleCore
                 $module_list[] = $name;
             }
         }
+
 
         return $module_list;
     }
