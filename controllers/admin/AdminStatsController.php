@@ -586,7 +586,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'product_avg_gross_margin':
                 $value = AdminStatsController::getProductAverageGrossMargin();
-                $tooltip = $this->l('The gross margin is the difference between the retail price and the wholesale price, on all your products for sale.', null, null, false);
+                $tooltip = sprintf($this->l('Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%s to cover profit and expenses.', null, null, false), str_replace('%', '', $value));
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
                 break;
@@ -606,7 +606,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case '8020_sales_catalog':
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
-                $tooltip = sprintf($this->l('%s of your references have been purchased for the past 30 days', null, null, false), $value);
+                $tooltip = sprintf($this->l('Within your catalog, %s of your products have had sales in the last 30 days', null, null, false), $value);
                 $value = sprintf($this->l('%d%% of your Catalog'), $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
