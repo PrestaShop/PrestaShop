@@ -168,19 +168,19 @@ class OrderHistoryCore extends ObjectModel
 
             $error_or_canceled_statuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 
-            $employee == null;
-            if ((int)$this->id_employee && !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee)))) {
-                $employee = null;
-            }
-
-            // First OrderHistory, there is no $old_os, so $employee is null from here
-            if (!Validate::isLoadedObject($old_os) && $employee == null && $context != null) {
-                // if from BO and order created (because no old_os)
-                $employee = $context->employee;
-                if ($employee) {
-                    $this->id_employee = $employee->id;
+            $employee = null;
+            if (!(int)$this->id_employee || !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee)))) {
+                if (!Validate::isLoadedObject($old_os) && $context != null) {
+                    // First OrderHistory, there is no $old_os, so $employee is null before here
+                    $employee = $context->employee; // filled if from BO and order created (because no old_os)
+                    if ($employee) {
+                        $this->id_employee = $employee->id;
+                    }
+                } else {
+                    $employee = null;
                 }
             }
+            
 
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
