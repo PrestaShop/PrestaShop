@@ -1295,6 +1295,10 @@ class CarrierCore extends ObjectModel
             $cart = Context::getContext()->cart;
         }
 
+        if (is_null($error) || !is_array($error)) {
+            $error = array();
+        }
+
         $id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
         if ($id_address) {
             $id_zone = Address::getZoneById($id_address);
