@@ -328,8 +328,8 @@ class AuthControllerCore extends FrontController
                 CartRule::autoAddToCart($this->context);
 
                 if (!$this->ajax) {
-                    $back = Tools::getValue('back','my-account')
-                    
+                    $back = Tools::getValue('back','my-account');
+
                     if ($back == Tools::secureReferrer($back)) {
                         Tools::redirect(html_entity_decode($back));
                     }
