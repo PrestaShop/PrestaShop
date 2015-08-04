@@ -45,7 +45,7 @@
 		</tr>
 
 	{/if}
-
+	{if !$order->isVirtual()}
 	<tr>
 		<td class="grey" width="70%">
 			{l s='Shipping Cost' pdf='true'}
@@ -58,6 +58,7 @@
 			{/if}
 		</td>
 	</tr>
+	{/if}
 
 	{if $footer.wrapping_tax_excl > 0}
 		<tr>

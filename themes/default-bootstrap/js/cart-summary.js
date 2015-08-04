@@ -928,7 +928,7 @@ function updateCartSummary(json)
 	}
 
 	// Block cart
-	if (typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc')
+	if (typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc' && !json.is_virtual_cart)
 		$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
 
 	if (json.total_shipping > 0)
@@ -980,7 +980,11 @@ function updateCartSummary(json)
 	else
 	{
 		if (json.carrier.id != null || json.free_ship == 1)
+		{
 			$('#total_shipping').html(freeShippingTranslation);
+			if (json.is_virtual_cart)
+				$('.cart_total_delivery').hide();
+		}
 		else if (!hasDeliveryAddress)
 			$('.cart_total_delivery').hide();
 	}
