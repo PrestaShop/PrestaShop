@@ -107,7 +107,7 @@
 					{assign var='rowspan_total' value=$rowspan_total+1}
 				{/if}
 
-				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				{if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart)}
 					{assign var='rowspan_total' value=$rowspan_total+1}
 				{else}
 					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
@@ -242,7 +242,7 @@
 						{/if}
 					</td>
 				</tr>
-				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+				{if $total_shipping_tax_exc <= 0 && (!isset($isVirtualCart) || !$isVirtualCart)}
 					<tr class="cart_total_delivery{if !$opc && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						<td colspan="{$col_span_subtotal}" class="text-right">{l s='Total shipping'}</td>
 						<td colspan="2" class="price" id="total_shipping">{l s='Free Shipping!'}</td>
@@ -494,8 +494,7 @@
 		{$addresses_style.phone_mobile = 'address_phone_mobile'}
 		{$addresses_style.alias = 'address_title'}
 	{/if}
-
-	{if !$advanced_payment_api && ((!empty($delivery_option) && !isset($virtualCart)) OR $delivery->id || $invoice->id) && !$opc}
+	{if !$advanced_payment_api && ((!empty($delivery_option) && (!isset($isVirtualCart) || !$isVirtualCart)) OR $delivery->id || $invoice->id) && !$opc}
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}
