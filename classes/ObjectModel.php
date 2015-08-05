@@ -1818,6 +1818,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         if ($field !== null || !Cache::isStored($cache_id)) {
             $reflection = new ReflectionClass($class);
+
+            if (!$reflection->hasProperty('definition')) {
+                return false;
+            }
+
             $definition = $reflection->getStaticPropertyValue('definition');
 
             $definition['classname'] = $class;
