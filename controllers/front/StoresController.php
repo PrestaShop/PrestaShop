@@ -225,7 +225,7 @@ class StoresControllerCore extends FrontController
     /**
      * Display the Xml for showing the nodes in the google map
      */
-    protected function displayAjax()
+    public function displayAjax()
     {
         $stores = $this->getStores();
         $parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
