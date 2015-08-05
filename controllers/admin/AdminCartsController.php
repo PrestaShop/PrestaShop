@@ -82,14 +82,15 @@ class AdminCartsControllerCore extends AdminController
             ),
             'carrier' => array(
                 'title' => $this->l('Carrier'),
-                'align' => 'text-center',
+                'align' => 'text-left',
                 'callback' => 'replaceZeroByShopName',
                 'filter_key' => 'ca!name'
             ),
             'date_add' => array(
                 'title' => $this->l('Date'),
-                'align' => 'text-right',
+                'align' => 'text-left',
                 'type' => 'datetime',
+                'class' => 'fixed-width-lg',
                 'filter_key' => 'a!date_add'
             ),
             'id_guest' => array(
@@ -97,6 +98,7 @@ class AdminCartsControllerCore extends AdminController
                 'align' => 'text-center',
                 'type' => 'bool',
                 'havingFilter' => true,
+                'class' => 'fixed-width-xs',
                 'icon' => array(0 => 'icon-', 1 => 'icon-user')
             )
         );
