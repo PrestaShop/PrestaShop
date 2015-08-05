@@ -221,3 +221,7 @@ ALTER TABLE `PREFIX_pack` ADD KEY `product_item` (`id_product_item`,`id_product_
 ALTER TABLE `PREFIX_supply_order_detail` DROP KEY `id_supply_order`, DROP KEY `id_product`, ADD KEY `id_supply_order` (`id_supply_order`, `id_product`);
 
 ALTER TABLE `PREFIX_carrier` ADD KEY `reference` (`id_reference`, `deleted`, `active`);
+
+ALTER TABLE `PREFIX_customer` CHANGE `passwd` `passwd` VARCHAR(34);
+ALTER TABLE `PREFIX_employee` CHANGE `passwd` `passwd` VARCHAR(34);
+ALTER TABLE `PREFIX_referrer` CHANGE `passwd` `passwd` VARCHAR(34);

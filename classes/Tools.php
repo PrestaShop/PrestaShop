@@ -24,6 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once(_PS_TOOL_DIR_.'phpass/PasswordHash.php');
+
 class ToolsCore
 {
     protected static $file_exists_cache = array();
@@ -31,6 +33,7 @@ class ToolsCore
     protected static $_caching;
     protected static $_user_plateform;
     protected static $_user_browser;
+    protected static $_hasher;
 
     public static $round_mode = null;
 
@@ -1168,12 +1171,62 @@ class ToolsCore
     }
 
     /**
+    * Hash string
+    *
+    * Note that if you're hashing sensitive information, you might consider hashPassword instead.
+    *
+    * @param string $string String to hash
+    */
+    public static function hash($string)
+    {
+        return md5(_COOKIE_KEY_.$string);
+    }
+
+    /**
+    * Hash password
+    *
+    * @param string $passwd The password to hash
+    * @return string
+    */
+    public static function hashPassword($passwd)
+    {
+        if (!self::$_hasher) {
+            self::$_hasher = new PasswordHash(10, TRUE);
+        }
+
+        return self::$_hasher->HashPassword($passwd);
+    }
+
+    /**
+    * Check a hashed password
+    *
+    * @param string $passwd The password to check
+    * @param string $storedHash The stored hash for this password
+    * @return boolean
+    */
+    public static function checkPassword($passwd, $storedHash)
+    {
+        if (!self::$_hasher) {
+            self::$_hasher = new PasswordHash(10, TRUE);
+        }
+
+        // $passwd is already hashed, do a straight comparison
+        if (Validate::isPasswordHash($passwd)) {
+            return $passwd === $storedHash;
+        }
+
+        return self::$_hasher->CheckPassword($passwd, $storedHash);
+    }
+
+    /**
     * Encrypt password
     *
     * @param string $passwd String to encrypt
+    * @deprecated 1.6.1.0
     */
     public static function encrypt($passwd)
     {
+        Tools::displayAsDeprecated();
         return md5(_COOKIE_KEY_.$passwd);
     }
 
@@ -1181,9 +1234,11 @@ class ToolsCore
     * Encrypt data string
     *
     * @param string $data String to encrypt
+    * @deprecated 1.6.1.0
     */
     public static function encryptIV($data)
     {
+        Tools::displayAsDeprecated();
         return md5(_COOKIE_IV_.$data);
     }
 
@@ -1198,9 +1253,9 @@ class ToolsCore
             $context = Context::getContext();
         }
         if ($page === true) {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
         } else {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$page));
         }
     }
 
@@ -1211,7 +1266,7 @@ class ToolsCore
     */
     public static function getAdminToken($string)
     {
-        return !empty($string) ? Tools::encrypt($string) : false;
+        return !empty($string) ? Tools::hash($string) : false;
     }
 
     public static function getAdminTokenLite($tab, Context $context = null)
