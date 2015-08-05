@@ -57,7 +57,9 @@ class AdminAttachmentsControllerCore extends AdminController
                 'title' => $this->l('Name')
             ),
             'file' => array(
-                'title' => $this->l('File')
+                'title' => $this->l('File'),
+                'orderby' => false,
+                'search' => false
             ),
             'file_size' => array(
                 'title' => $this->l('Size'),
