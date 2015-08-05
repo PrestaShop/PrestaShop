@@ -851,7 +851,25 @@ class CustomerCore extends ObjectModel
         $this->logged = 0;
     }
 
+    /**
+     * Depricated since 2015-08-05
+     * Please use: getLastEmptyCart($with_order)
+     *
+     * @param bool|true $with_order
+     */
     public function getLastCart($with_order = true)
+    {
+        Tools::displayAsDeprecated('Use getLastEmptyCart($with_order)');
+        $this->getLastEmptyCart($with_order);
+    }
+
+    /**
+     * Get last empty Cart for this Customer, when last cart is not empty return false
+     *
+     * @param bool|true $with_order
+     * @return bool|int
+     */
+    public function getLastEmptyCart($with_order = true)
     {
         $carts = Cart::getCustomerCarts((int)$this->id, $with_order);
         if (!count($carts)) {
