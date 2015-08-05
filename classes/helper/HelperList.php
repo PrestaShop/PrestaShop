@@ -675,13 +675,13 @@ class HelperListCore extends Helper
             'toolbar_scroll' => $this->toolbar_scroll,
             'toolbar_btn' => $this->toolbar_btn,
             'has_bulk_actions' => $this->hasBulkActions($has_value),
+            'filters_has_value' => (bool)$has_value
         ));
 
         $this->header_tpl->assign(array_merge(array(
             'ajax' => $ajax,
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
             'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
-            'filters_has_value' => $has_value,
             'currentIndex' => $this->currentIndex,
             'action' => $action,
             'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
