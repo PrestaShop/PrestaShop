@@ -154,6 +154,7 @@ class AdminAttachmentsControllerCore extends AdminController
                     'size' => isset($size) ? $size : null,
                     'label' => $this->l('File'),
                     'name' => 'file',
+                    'required' => true,
                     'col' => 6
                 ),
             ),
