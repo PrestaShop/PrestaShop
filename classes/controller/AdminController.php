@@ -636,7 +636,7 @@ class AdminControllerCore extends Controller
         }
 
         if ($filter = $this->addFiltersToBreadcrumbs()) {
-            $this->toolbar_title[] = $filter;
+            $this->toolbar_title[] = Tools::htmlentitiesDecodeUTF8($filter);
         }
     }
 
@@ -647,6 +647,7 @@ class AdminControllerCore extends Controller
     {
         if ($this->filter && is_array($this->fields_list)) {
             $filters = array();
+
             foreach ($this->fields_list as $field => $t) {
                 if (isset($t['filter_key'])) {
                     $field = $t['filter_key'];
@@ -831,7 +832,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $sql_filter .= ' AND ';
                         $check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
-                        $alias = !empty($definition['fields'][$filter]['shop']) ? 'sa' : 'a';
+                        $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {
                             $sql_filter .= (($check_key || $key == '`active`') ?  $alias.'.' : '').pSQL($key).' = '.(int)$value.' ';
