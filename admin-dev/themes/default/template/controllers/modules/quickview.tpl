@@ -27,7 +27,13 @@
 		<img src="{$image}" alt="{$displayName}" class="img-thumbnail" />
 		{if isset($badges)}
 			{foreach $badges as $badge}
-				<img src="{$badge}" alt="" class="clearfix quickview-badge" />
+				{if is_array($badge)}
+					{foreach $badge as $_badge}
+						<img src="{$_badge}" alt="" class="clearfix quickview-badge" />
+					{/foreach}
+				{else}
+					<img src="{$badge}" alt="" class="clearfix quickview-badge" />
+				{/if}
 			{/foreach}
 		{/if}
 	</div>
