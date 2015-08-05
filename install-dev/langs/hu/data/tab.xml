@@ -1,103 +1,102 @@
-<?xml version="1.0"?>
-<entity_tab>
-  <tab id="Dashboard" name="Dashboard"/>
+<entity_tab encoding="UTF-8">
+  <tab id="Dashboard" name="Vez&#xE9;rl&#x151;pult"/>
   <tab id="CMS_Pages" name="CMS Pages"/>
   <tab id="CMS_Categories" name="CMS Categories"/>
   <tab id="Combinations_Generator" name="Combinations Generator"/>
-  <tab id="Search" name="Search"/>
+  <tab id="Search" name="Keres&#xE9;s"/>
   <tab id="Login" name="Login"/>
-  <tab id="Shops" name="Shops"/>
+  <tab id="Shops" name="Boltok"/>
   <tab id="Shop_URLs" name="Shop URLs"/>
-  <tab id="Catalog" name="Catalog"/>
-  <tab id="Orders" name="Orders"/>
-  <tab id="Customers" name="Customers"/>
+  <tab id="Catalog" name="Katal&#xF3;gus"/>
+  <tab id="Orders" name="Rendel&#xE9;sek"/>
+  <tab id="Customers" name="V&#xE1;s&#xE1;rl&#xF3;k"/>
   <tab id="Price_Rules" name="Price Rules"/>
-  <tab id="Shipping" name="Shipping"/>
+  <tab id="Shipping" name="Sz&#xE1;ll&#xED;t&#xE1;s"/>
   <tab id="Localization" name="Localization"/>
-  <tab id="Modules" name="Modules"/>
+  <tab id="Modules" name="Modules and Services"/>
   <tab id="Preferences" name="Preferences"/>
   <tab id="Advanced_Parameters" name="Advanced Parameters"/>
-  <tab id="Administration" name="Administration"/>
-  <tab id="Stats" name="Stats"/>
-  <tab id="Stock" name="Stock"/>
-  <tab id="Products" name="Products"/>
-  <tab id="Categories" name="Categories"/>
+  <tab id="Administration" name="Adminisztr&#xE1;ci&#xF3;"/>
+  <tab id="Stats" name="Statisztika"/>
+  <tab id="Stock" name="K&#xE9;szlet"/>
+  <tab id="Products" name="Term&#xE9;k"/>
+  <tab id="Categories" name="Kateg&#xF3;ri&#xE1;k"/>
   <tab id="Monitoring" name="Monitoring"/>
   <tab id="Attributes_and_Values" name="Product Attributes"/>
   <tab id="Features" name="Product Features"/>
-  <tab id="Manufacturers" name="Manufacturers"/>
-  <tab id="Suppliers" name="Suppliers"/>
-  <tab id="Tags" name="Tags"/>
-  <tab id="Attachments" name="Attachments"/>
-  <tab id="Orders_1" name="Orders"/>
-  <tab id="Invoices" name="Invoices"/>
-  <tab id="Merchandise_Returns" name="Merchandise Returns"/>
+  <tab id="Manufacturers" name="Gy&#xE1;rt&#xF3;k"/>
+  <tab id="Suppliers" name="Besz&#xE1;ll&#xED;t&#xF3;k"/>
+  <tab id="Tags" name="C&#xED;mk&#xE9;k"/>
+  <tab id="Attachments" name="Csatolm&#xE1;nyok"/>
+  <tab id="Orders_1" name="Rendel&#xE9;sek"/>
+  <tab id="Invoices" name="Sz&#xE1;ml&#xE1;k"/>
+  <tab id="Merchandise_Returns" name="&#xC1;ru visszat&#xE9;r&#xED;t&#xE9;sek"/>
   <tab id="Delivery_Slips" name="Delivery Slips"/>
   <tab id="Credit_Slips" name="Credit Slips"/>
   <tab id="Statuses" name="Statuses"/>
   <tab id="Order_Messages" name="Order Messages"/>
-  <tab id="Customers_1" name="Customers"/>
-  <tab id="Addresses" name="Addresses"/>
-  <tab id="Groups" name="Groups"/>
+  <tab id="Customers_1" name="V&#xE1;s&#xE1;rl&#xF3;k"/>
+  <tab id="Addresses" name="C&#xED;mek"/>
+  <tab id="Groups" name="Csoportok"/>
   <tab id="Shopping_Carts" name="Shopping Carts"/>
   <tab id="Customer_Service" name="Customer Service"/>
-  <tab id="Contacts" name="Contacts"/>
+  <tab id="Contacts" name="Kapcsolatok"/>
   <tab id="Titles" name="Titles"/>
   <tab id="Outstanding" name="Outstanding"/>
-  <tab id="Cart_Rules" name="Cart Rules"/>
+  <tab id="Cart_Rules" name="Kos&#xE1;rszab&#xE1;lyok"/>
   <tab id="Catalog_Price_Rules" name="Catalog Price Rules"/>
   <tab id="Marketing" name="Marketing"/>
   <tab id="Shipping_1" name="Preferences"/>
-  <tab id="Carriers" name="Carriers"/>
+  <tab id="Carriers" name="Sz&#xE1;ll&#xED;t&#xF3;k"/>
   <tab id="Localization_1" name="Localization"/>
-  <tab id="Languages" name="Languages"/>
-  <tab id="Zones" name="Zones"/>
-  <tab id="Countries" name="Countries"/>
-  <tab id="States" name="States"/>
-  <tab id="Currencies" name="Currencies"/>
-  <tab id="Taxes" name="Taxes"/>
-  <tab id="Tax_Rules" name="Tax Rules"/>
+  <tab id="Languages" name="Nyelvek"/>
+  <tab id="Zones" name="Z&#xF3;n&#xE1;k"/>
+  <tab id="Countries" name="Orsz&#xE1;gok"/>
+  <tab id="States" name="Megy&#xE9;k"/>
+  <tab id="Currencies" name="P&#xE9;nznemek"/>
+  <tab id="Taxes" name="Ad&#xF3;k"/>
+  <tab id="Tax_Rules" name="Ad&#xF3;szab&#xE1;lyok"/>
   <tab id="Translations" name="Translations"/>
-  <tab id="Modules_1" name="Modules"/>
+  <tab id="Modules_1" name="Modules and Services"/>
   <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
   <tab id="Positions" name="Positions"/>
-  <tab id="Payment" name="Payment"/>
-  <tab id="General" name="General"/>
-  <tab id="Orders_2" name="Orders"/>
-  <tab id="Products_1" name="Products"/>
-  <tab id="Customers_2" name="Customers"/>
+  <tab id="Payment" name="Fizet&#xE9;s"/>
+  <tab id="General" name="&#xC1;ltal&#xE1;nos"/>
+  <tab id="Orders_2" name="Rendel&#xE9;sek"/>
+  <tab id="Products_1" name="Term&#xE9;k"/>
+  <tab id="Customers_2" name="V&#xE1;s&#xE1;rl&#xF3;k"/>
   <tab id="Themes" name="Themes"/>
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="CMS" name="CMS"/>
-  <tab id="Images" name="Images"/>
+  <tab id="Images" name="K&#xE9;pek"/>
   <tab id="Store_Contacts" name="Store Contacts"/>
-  <tab id="Search_1" name="Search"/>
+  <tab id="Search_1" name="Keres&#xE9;s"/>
   <tab id="Maintenance" name="Maintenance"/>
   <tab id="Geolocation" name="Geolocation"/>
   <tab id="Configuration_Information" name="Configuration Information"/>
-  <tab id="Performance" name="Performance"/>
+  <tab id="Performance" name="Teljes&#xED;tm&#xE9;ny"/>
   <tab id="E-mail" name="E-mail"/>
-  <tab id="Multistore" name="Multistore"/>
+  <tab id="Multistore" name="Multi"/>
   <tab id="CSV_Import" name="CSV Import"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="SQL_Manager" name="SQL Manager"/>
   <tab id="Logs" name="Logs"/>
   <tab id="Webservice" name="Webservice"/>
   <tab id="Preferences_1" name="Preferences"/>
-  <tab id="Quick_Access" name="Quick Access"/>
-  <tab id="Employees" name="Employees"/>
+  <tab id="Quick_Access" name="Gyors el&#xE9;r&#xE9;s"/>
+  <tab id="Employees" name="Alkalmazottak"/>
   <tab id="Profiles" name="Profiles"/>
-  <tab id="Permissions" name="Permissions"/>
-  <tab id="Menus" name="Menus"/>
-  <tab id="Stats_1" name="Stats"/>
+  <tab id="Permissions" name="Jogosults&#xE1;gok"/>
+  <tab id="Menus" name="Men&#xFC;k"/>
+  <tab id="Stats_1" name="Statisztika"/>
   <tab id="Search_Engines" name="Search Engines"/>
-  <tab id="Referrers" name="Referrers"/>
-  <tab id="Warehouses" name="Warehouses"/>
+  <tab id="Referrers" name="Aj&#xE1;nl&#xF3;k"/>
+  <tab id="Warehouses" name="Rakt&#xE1;rak"/>
   <tab id="Stock_Management" name="Stock Management"/>
   <tab id="Stock_Movement" name="Stock Movement"/>
   <tab id="Instant_Stock_Status" name="Instant Stock Status"/>
   <tab id="Stock_Coverage" name="Stock Coverage"/>
   <tab id="Supply_orders" name="Supply orders"/>
   <tab id="Configuration" name="Configuration"/>
-  <tab id="CarrierWizard" name="Carrier"/>
+  <tab id="CarrierWizard" name="Sz&#xE1;ll&#xED;t&#xF3;"/>
 </entity_tab>
