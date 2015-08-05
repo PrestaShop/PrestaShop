@@ -1189,6 +1189,7 @@ class AdminImportControllerCore extends AdminController
                     if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                         ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add()) {
                         $category->id_parent = $category_to_create->id;
+                        Cache::clean('Category::searchByName_'.$category->parent);
                     } else {
                         $this->errors[] = sprintf(
                             Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
