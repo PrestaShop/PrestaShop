@@ -33,6 +33,7 @@ class PDFCore
     public $pdf_renderer;
     public $objects;
     public $template;
+    public $send_bulk_flag = false;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
@@ -55,6 +56,17 @@ class PDFCore
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
+        }
+        
+        if (count($this->objects)>1) { // when bulk mode only
+            $class_name = 'HTMLTemplate'.$this->template;
+            if (class_exists($class_name)) {
+                $classMethod = new ReflectionMethod($class_name,'__construct');
+                $argumentCount = count($classMethod->getParameters());
+                if ($argumentCount == 3) { // For Core templates (and other if exists) that accepts optional third param $bulk_mode
+                    $this->send_bulk_flag = true;
+                }
+            }
         }
     }
 
@@ -115,7 +127,11 @@ class PDFCore
         $class_name = 'HTMLTemplate'.$this->template;
 
         if (class_exists($class_name)) {
-            $class = new $class_name($object, $this->smarty);
+            if ($this->send_bulk_flag) {
+                $class = new $class_name($object, $this->smarty, true);
+            } else {
+                $class = new $class_name($object, $this->smarty);
+            }
 
             if (!($class instanceof HTMLTemplate)) {
                 throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');
