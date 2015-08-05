@@ -351,6 +351,9 @@
 				<a class="list-group-item _blank" href="../docs/csv_import/alias_import.csv">
 					{l s='Sample Aliases file'}
 				</a>
+				<a class="list-group-item _blank" href="../docs/csv_import/store_contacts.csv">
+					{l s='Sample Store Contacts file'}
+				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
 				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_import.csv">
 					{l s='Sample Supply Orders file'}
@@ -523,7 +526,8 @@
 				$(".import_products_categories").hide();
 			}
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
-				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6) {
+				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 ||
+				$("#entity > option:selected").val() == 8) {
 					$("#regenerate").closest('.form-group').show();
 			}
 			else {
@@ -532,7 +536,7 @@
 			if ($("#entity > option:selected").val() == 0 || $("#entity > option:selected").val() == 1 ||
 				$("#entity > option:selected").val() == 3 || $("#entity > option:selected").val() == 4 ||
 				$("#entity > option:selected").val() == 5 || $("#entity > option:selected").val() == 6 ||
-				$("#entity > option:selected").val() == 7) {
+				$("#entity > option:selected").val() == 7 || $("#entity > option:selected").val() == 8) {
 				$("#forceIDs").closest('.form-group').show();
 			}
 			else {
