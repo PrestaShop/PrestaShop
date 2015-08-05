@@ -40,7 +40,7 @@ class Core_Business_Stock_StockManager
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
             $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
             $products_pack = $packItemsManager->getPackItems($product);
-            $stockAvailable = new \Core_Business_Stock_StockManager();
+            $stockAvailable = new Core_Business_Stock_StockManager();
             $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
             $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
             foreach ($products_pack as $product_pack) {
