@@ -113,6 +113,7 @@ $(document).ready(function(){
 		if (importContinueRequest) {
 			$('#importProgress').modal('hide');
 			importContinueRequest = false;
+			window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
 		} else {
 			importCancelRequest = true;
 			$('#import_details_progressing').hide();
@@ -127,8 +128,8 @@ $(document).ready(function(){
 		$('#import_continue_button').hide();
 		importContinueRequest = false;
 		$('#import_progress_div').show();
-		$('#import_details_warning ul').html('');
-		$('#import_details_warning').hide();
+		$('#import_details_warning ul, #import_details_info ul,').html('');
+		$('#import_details_warning, #import_details_info').hide();
 		importNow(0, 5, -1, false, {});
 	});
 });
@@ -194,6 +195,9 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
     		   total = jsonData.totalCount;
     	   }
     	   
+    	   if (jsonData.informations && jsonData.informations.length > 0) {
+    		   updateValidationInfo('<li>'+jsonData.informations.join('</li><li>')+'</li>');
+    	   }
     	   if (jsonData.warnings && jsonData.warnings.length > 0) {
     		   if (validateOnly)
     			   updateValidationError('<li>'+jsonData.warnings.join('</li><li>')+'</li>', true);
@@ -228,6 +232,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    	   if (importCancelRequest == true) {
 	    		   $('#importProgress').modal('hide');
 	    		   importCancelRequest = false;
+	    		   window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
 	    		   return; // stops execution
 	    	   }
 	    	   
@@ -246,7 +251,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    	   if (validateOnly) {
 	    		   // update validation bar and process real import
 	    		   updateValidation(total, total, total);
-	    		   if ($('#import_details_warning').css('visibility') === 'hidden') {
+	    		   if (!$('#import_details_warning').is(":visible")) {
 	    			   // no warning, directly import now
 	    			   $('#import_progress_div').show();
 	    			   importNow(0, 5, -1, false, {});
@@ -275,27 +280,35 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 function updateProgressionInit() {
 	$('#importProgress').modal({backdrop: 'static', keyboard: false, closable: false});
 	$('#importProgress').modal('show');
+	$('#importProgress').on('hidden.bs.modal', function () {
+		window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
+	})
 	
 	$('#import_details_progressing').show();
 	$('#import_details_finished').hide();
 	$('#import_details_error').hide();
+	$('#import_details_warning, #import_details_info').hide();
 	$('#import_details_stop').hide();
 	$('#import_details_post_limit').hide();
 	$('#import_details_error ul').html('');
-	$('#import_details_warning ul').html('');
+	$('#import_details_warning ul, #import_details_info ul').html('');
 	
 	$('#import_validation_details').html($('#import_validation_details').attr('default-value'));
 	$('#validate_progressbar_done').width('0%');
 	$('#validate_progressbar_done').parent().addClass('active progress-striped');
 	$('#validate_progression_done').html('0');
 	$('#validate_progressbar_next').width('0%');
+	$('#validate_progressbar_next').removeClass('progress-bar-danger');
+	$('#validate_progressbar_next').addClass('progress-bar-info');
 	
 	$('#import_progress_div').hide();
 	$('#import_progression_details').html($('#import_progression_details').attr('default-value'));
 	$('#import_progressbar_done').width('0%');
 	$('#import_progressbar_done').parent().addClass('active progress-striped');
 	$('#import_progression_done').html('0');
-	$('#import_progressbar_next').width('0%');	
+	$('#import_progressbar_next').width('0%');
+	$('#import_progressbar_next').removeClass('progress-bar-danger');
+	$('#import_progressbar_next').addClass('progress-bar-success');
 	
 	$('#import_stop_button').show();
 	$('#import_close_button').hide();
@@ -364,6 +377,13 @@ function updateValidationError(message, forWarnings) {
 		$('#import_stop_button').hide();
 		$('#import_close_button').show();
 	}
+}
+
+function updateValidationInfo(message) {
+	$('#import_details_progressing').hide();
+	$('#import_details_finished').hide();
+	$('#import_details_info ul').append(message);
+	$('#import_details_info').show();
 }
 
 function updateProgressionError(message, forWarnings) {

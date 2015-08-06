@@ -40,6 +40,9 @@
         Good luck!
     </div>
     <div id="import_messages_div" style="max-height:250px; overflow:auto;">
+        <div class="alert alert-danger" id="import_details_error" style="display:none;">
+            Errors occurred:<br/><ul></ul>
+        </div>
         <div class="alert alert-warning" id="import_details_post_limit" style="display:none;">
             Warning, the current import MAY requires to modify a PHP setting in order to allow more
             data to be tranfered. If the current import stops before the end, then you should increase your PHP "post_max_size" setting to
@@ -48,8 +51,8 @@
         <div class="alert alert-warning" id="import_details_warning" style="display:none;">
             Warnings occurred:<br/><ul></ul>
         </div>
-        <div class="alert alert-danger" id="import_details_error" style="display:none;">
-            Errors occurred:<br/><ul></ul>
+        <div class="alert alert-info" id="import_details_info" style="display:none;">
+            We made the following adjustments:<br/><ul></ul>
         </div>
     </div>
     

@@ -1190,7 +1190,7 @@ class AdminImportControllerCore extends AdminController
         $regenerate = Tools::getValue('regenerate');
         $shop_is_feature_active = Shop::isFeatureActive();
 
-        
+
         $cat_moved = array();
         if ($crossStepsVariables !== false && array_key_exists('cat_moved', $crossStepsVariables)) {
             $cat_moved = $crossStepsVariables['cat_moved'];
@@ -1251,11 +1251,27 @@ class AdminImportControllerCore extends AdminController
 
         // Parent category
         if (isset($category->parent) && is_numeric($category->parent)) {
+            // Validation for parenting itself
+            if ($validationOnly && ($category->parent == $category->id) || (isset($info['id']) && $category->parent == (int)$info['id'])) {
+                $this->errors[] = sprintf(
+                    Tools::displayError('A category cannot be its own parent (ID: %1$s)'),
+                    (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+                );
+                return;
+            }
             if (isset($cat_moved[$category->parent])) {
                 $category->parent = $cat_moved[$category->parent];
             }
             $category->id_parent = $category->parent;
         } elseif (isset($category->parent) && is_string($category->parent)) {
+            // Validation for parenting itself
+            if ($validationOnly && isset($category->name) && ($category->parent == $category->name)) {
+                $this->errors[] = sprintf(
+                    Tools::displayError('A category cannot be its own parent (Name: %1$s)'),
+                    $category->parent
+                );
+                return;
+            }
             $category_parent = Category::searchByName($id_lang, $category->parent, true);
             if ($category_parent['id_category']) {
                 $category->id_parent = (int)$category_parent['id_category'];
@@ -1267,7 +1283,7 @@ class AdminImportControllerCore extends AdminController
                 $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
                 $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                 $category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
-                
+
                 if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                     ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
                     !$validateOnly && // Do not move the position of this test. Only ->add() should not be triggered is !validateOnly. Previous tests should be always run.
@@ -1321,7 +1337,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$valid_link) {
-            $this->warnings[] = sprintf(
+            $this->informations[] = sprintf(
                 Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
                 $bak,
                 (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
@@ -1347,7 +1363,10 @@ class AdminImportControllerCore extends AdminController
             }
 
             if ($category->id && $category->id == $category->id_parent) {
-                $this->errors[] = Tools::displayError('A category cannot be its own parent');
+                $this->errors[] = sprintf(
+                    Tools::displayError('A category cannot be its own parent, or the parent category is unknown (ID: %1$s)'),
+                    (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+                );
                 return;
             }
 
@@ -1371,12 +1390,12 @@ class AdminImportControllerCore extends AdminController
                 $res = $category->add();
             }
         }
-        
+
         // ValidateOnly mode : stops here
         if ($validateOnly) {
             return;
         }
-        
+
         //copying images of categories
         if (isset($category->image) && !empty($category->image)) {
             if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !$regenerate))) {
@@ -1386,7 +1405,7 @@ class AdminImportControllerCore extends AdminController
         // If both failed, mysql error
         if (!$res) {
             $this->errors[] = sprintf(
-                Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                Tools::displayError('%1$s (ID: %2$s) cannot be '.($validateOnly?'validated':'saved')),
                 (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
                 (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
             );
@@ -1477,7 +1496,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, $validateOnly = false)
     {
-        // FIXME
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
             $product = new Product((int)$info['id']);
         } elseif ($match_ref && array_key_exists('reference', $info)) {
@@ -1562,19 +1580,24 @@ class AdminImportControllerCore extends AdminController
                 $manufacturer = new Manufacturer();
                 $manufacturer->name = $product->manufacturer;
                 $manufacturer->active = true;
-
                 if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add()) {
+                    ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    $manufacturer->add()) {
                     $product->id_manufacturer = (int)$manufacturer->id;
                     $manufacturer->associateTo($product->id_shop_list);
                 } else {
-                    $this->errors[] = sprintf(
-                        Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                        $manufacturer->name,
-                        (isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
-                    );
-                    $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                        Db::getInstance()->getMsgError();
+                    if (!$validateOnly) {
+                        $this->errors[] = sprintf(
+                            Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                            $manufacturer->name,
+                            (isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
+                        );
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
                 }
             }
         }
@@ -1590,17 +1613,23 @@ class AdminImportControllerCore extends AdminController
                 $supplier->active = true;
 
                 if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add()) {
+                    ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly &&  // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    $supplier->add()) {
                     $product->id_supplier = (int)$supplier->id;
                     $supplier->associateTo($product->id_shop_list);
                 } else {
-                    $this->errors[] = sprintf(
-                        Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                        $supplier->name,
-                        (isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
-                    );
-                    $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                        Db::getInstance()->getMsgError();
+                    if (!$validateOnly) {
+                        $this->errors[] = sprintf(
+                            Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                            $supplier->name,
+                            (isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
+                        );
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
                 }
             }
         }
@@ -1636,20 +1665,26 @@ class AdminImportControllerCore extends AdminController
                         $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
                         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                         if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                            ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add()) {
+                            ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                            !$validateOnly &&  // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                            $category_to_create->add()) {
                             $product->id_category[] = (int)$category_to_create->id;
                         } else {
-                            $this->errors[] = sprintf(
-                                Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                                $category_to_create->name[$default_language_id],
-                                (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
-                            );
-                            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                                Db::getInstance()->getMsgError();
+                            if (!$validateOnly) {
+                                $this->errors[] = sprintf(
+                                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                                    $category_to_create->name[$default_language_id],
+                                    (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
+                                );
+                            }
+                            if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                                    Db::getInstance()->getMsgError();
+                            }
                         }
                     }
-                } elseif (is_string($value) && !empty($value)) {
-                    $category = Category::searchByPath($default_language_id, trim($value), $this, 'productImportCreateCat'); // FIXME : on peut pas en validateOnly
+                } elseif (!$validateOnly && is_string($value) && !empty($value)) {
+                    $category = Category::searchByPath($default_language_id, trim($value), $this, 'productImportCreateCat');
                     if ($category['id_category']) {
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
@@ -1666,6 +1701,14 @@ class AdminImportControllerCore extends AdminController
                 }
             }
             $product->id_category = array_values(array_unique($product->id_category));
+
+            // Will update default category if category column is not ignored AND if there is categories that are set in the import file row.
+            if (isset($product->id_category[0])) {
+                $product->id_category_default = (int)$product->id_category[0];
+            } else {
+                $defaultProductShop = new Shop($product->id_shop_default);
+                $product->id_category_default = Category::getRootCategory(null, Validate::isLoadedObject($defaultProductShop)?$defaultProductShop:null)->id;
+            }
         }
 
 
@@ -1680,7 +1723,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$valid_link) {
-            $this->warnings[] = sprintf(
+            $this->informations[] = sprintf(
                 Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
                 $product->name[$id_lang],
                 (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
@@ -1741,7 +1784,7 @@ class AdminImportControllerCore extends AdminController
 				', false);
                 $product->id = (int)$datas['id_product'];
                 $product->date_add = pSQL($datas['date_add']);
-                $res = $product->update();
+                $res = ($validateOnly || $product->update());
             } // Else If id product && id product already in base, trying to update
             elseif ($productExistsInDatabase) {
                 $datas = Db::getInstance()->getRow('
@@ -1750,23 +1793,25 @@ class AdminImportControllerCore extends AdminController
 					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE p.`id_product` = '.(int)$product->id, false);
                 $product->date_add = pSQL($datas['date_add']);
-                $res = $product->update();
+                $res = ($validateOnly || $product->update());
             }
             // If no id_product or update failed
             $product->force_id = (bool)$force_ids;
 
             if (!$res) {
                 if (isset($product->date_add) && $product->date_add != '') {
-                    $res = $product->add(false);
+                    $res = ($validateOnly || $product->add(false));
                 } else {
-                    $res = $product->add();
+                    $res = ($validateOnly || $product->add());
                 }
             }
 
-            if ($product->getType() == Product::PTYPE_VIRTUAL) {
-                StockAvailable::setProductOutOfStock((int)$product->id, 1);
-            } else {
-                StockAvailable::setProductOutOfStock((int)$product->id, (int)$product->out_of_stock);
+            if (!$validateOnly) {
+                if ($product->getType() == Product::PTYPE_VIRTUAL) {
+                    StockAvailable::setProductOutOfStock((int)$product->id, 1);
+                } else {
+                    StockAvailable::setProductOutOfStock((int)$product->id, (int)$product->out_of_stock);
+                }
             }
         }
 
@@ -1801,7 +1846,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->getMsgError();
         } else {
             // Product supplier
-            if (isset($product->id) && $product->id && isset($product->id_supplier) && property_exists($product, 'supplier_reference')) {
+            if (!$validateOnly && isset($product->id) && $product->id && isset($product->id_supplier) && property_exists($product, 'supplier_reference')) {
                 $id_product_supplier = (int)ProductSupplier::getIdByProductAndSupplier((int)$product->id, 0, (int)$product->id_supplier);
                 if ($id_product_supplier) {
                     $product_supplier = new ProductSupplier($id_product_supplier);
@@ -1858,13 +1903,13 @@ class AdminImportControllerCore extends AdminController
                     $specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
                     $specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
                     $specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
-                    if (!$specific_price->save()) {
+                    if (!$validateOnly && !$specific_price->save()) {
                         $this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
                     }
                 }
             }
 
-            if (isset($product->tags) && !empty($product->tags)) {
+            if (!$validateOnly && isset($product->tags) && !empty($product->tags)) {
                 if (isset($product->id) && $product->id) {
                     $tags = Tag::getProductTags($product->id);
                     if (is_array($tags) && count($tags)) {
@@ -1925,7 +1970,7 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            if (isset($product->image) && is_array($product->image) && count($product->image)) {
+            if (!$validateOnly && isset($product->image) && is_array($product->image) && count($product->image)) {
                 $product_has_images = (bool)Image::getImages($this->context->language->id, (int)$product->id);
                 foreach ($product->image as $key => $url) {
                     $url = trim($url);
@@ -1959,19 +2004,19 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            if (isset($product->id_category) && is_array($product->id_category)) {
+            if (!$validateOnly && isset($product->id_category) && is_array($product->id_category)) {
                 $product->updateCategories(array_map('intval', $product->id_category));
             }
 
             $product->checkDefaultAttributes();
-            if (!$product->cache_default_attribute) {
+            if (!$validateOnly && !$product->cache_default_attribute) {
                 Product::updateDefaultAttribute($product->id);
             }
 
             // Features import
             $features = get_object_vars($product);
 
-            if (isset($features['features']) && !empty($features['features'])) {
+            if (!$validateOnly && isset($features['features']) && !empty($features['features'])) {
                 foreach (explode($this->multiple_value_separator, $features['features']) as $single_feature) {
                     if (empty($single_feature)) {
                         continue;
@@ -1996,7 +2041,7 @@ class AdminImportControllerCore extends AdminController
             Feature::cleanPositions();
 
             // set advanced stock managment
-            if (isset($product->advanced_stock_management)) {
+            if (!$validateOnly && isset($product->advanced_stock_management)) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
@@ -2014,7 +2059,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($product->warehouse) && $product->warehouse) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '), $product->name[$default_language_id]);
-                } else {
+                } elseif (!$validateOnly) {
                     if (Warehouse::exists($product->warehouse)) {
                         // Get already associated warehouses
                         $associated_warehouses_collection = WarehouseProductLocation::getCollection($product->id);
@@ -2044,12 +2089,12 @@ class AdminImportControllerCore extends AdminController
                     $this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '), $product->name[$default_language_id]);
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, cannot set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
-                } else {
+                } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
                 }
 
                 // This code allows us to set qty and disable depends on stock
-                if (isset($product->quantity) && (int)$product->quantity) {
+                if (!$validateOnly && isset($product->quantity) && (int)$product->quantity) {
                     // if depends on stock and quantity, add quantity to stock
                     if ($product->depends_on_stock == 1) {
                         $stock_manager = StockManagerFactory::getManager();
@@ -2072,9 +2117,8 @@ class AdminImportControllerCore extends AdminController
                         }
                     }
                 }
-            } else {
+            } elseif (!$validateOnly) {
                 // if not depends_on_stock set, use normal qty
-
                 if ($shop_is_feature_active) {
                     foreach ($shops as $shop) {
                         StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
@@ -2101,21 +2145,18 @@ class AdminImportControllerCore extends AdminController
         $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 
-        if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add()) {
-            /**
-             * @see AdminImportController::productImport() @ Line 1480
-             * @TODO Refactor if statement
-             */
-            // $product->id_category[] = (int)$category_to_create->id;
-        } else {
+        if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) !== true ||
+            ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) !== true ||
+            !$category_to_create->add()) {
             $this->errors[] = sprintf(
                 Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
                 $category_to_create->name[$default_language_id],
                 (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
             );
-            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                Db::getInstance()->getMsgError();
+            if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                    Db::getInstance()->getMsgError();
+            }
         }
     }
 
@@ -2183,7 +2224,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function attributeImportOne($info, $default_language, &$groups, &$attributes, $regenerate, $shop_is_feature_active, $validateOnly = false)
     {
-        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if (!$shop_is_feature_active) {
@@ -2225,7 +2265,7 @@ class AdminImportControllerCore extends AdminController
         $id_image = array();
 
         //delete existing images if "delete_existing_images" is set to 1
-        if (array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id])) {
+        if (!$validateOnly && array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id])) {
             $product->deleteImages();
             $this->cache_image_deleted[(int)$product->id] = true;
         }
@@ -2246,20 +2286,29 @@ class AdminImportControllerCore extends AdminController
                     $field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
                     $lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
 
-                    if ($field_error === true && $lang_field_error === true && $image->add()) {
+                    if ($field_error === true &&
+                        $lang_field_error === true &&
+                        !$validateOnly &&
+                        $image->add()) {
                         $image->associateTo($id_shop_list);
+// FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
                             $this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
                             $image->delete();
                         } else {
                             $id_image[] = (int)$image->id;
                         }
+// until here
                     } else {
-                        $this->warnings[] = sprintf(
-                            Tools::displayError('%s cannot be saved'),
-                            (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
-                        );
-                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
+                        if (!$validateOnly) {
+                            $this->warnings[] = sprintf(
+                                Tools::displayError('%s cannot be saved'),
+                                (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+                            );
+                        }
+                        if ($field_error !== true || $lang_field_error !== true) {
+                            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
+                        }
                     }
                 }
             }
@@ -2326,9 +2375,11 @@ class AdminImportControllerCore extends AdminController
 
                     if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                         ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
-                        $obj->add();
-                        $obj->associateTo($id_shop_list);
-                        $groups[$group] = $obj->id;
+                        if (!$validateOnly) {
+                            $obj->add();
+                            $obj->associateTo($id_shop_list);
+                            $groups[$group] = $obj->id;
+                        }
                     } else {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
                     }
@@ -2342,7 +2393,7 @@ class AdminImportControllerCore extends AdminController
                     $id_attribute_group = $groups[$group];
                     $groups_attributes[$key]['id'] = $id_attribute_group;
                 }
-            }
+             }
         }
 
         // inits attribute
@@ -2377,9 +2428,11 @@ class AdminImportControllerCore extends AdminController
 
                         if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                             ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
-                            $obj->add();
-                            $obj->associateTo($id_shop_list);
-                            $attributes[$group.'_'.$attribute] = $obj->id;
+                            if (!$validateOnly) {
+                                $obj->add();
+                                $obj->associateTo($id_shop_list);
+                                $attributes[$group.'_'.$attribute] = $obj->id;
+                            }
                         } else {
                             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
                         }
@@ -2398,20 +2451,21 @@ class AdminImportControllerCore extends AdminController
                         $info['ean13'] = '';
                     }
 
-                    if ($info['default_on']) {
+                    if ($info['default_on'] && !$validateOnly) {
                         $product->deleteDefaultAttributes();
                     }
 
                     // if a reference is specified for this product, get the associate id_product_attribute to UPDATE
                     if (isset($info['reference']) && !empty($info['reference'])) {
-                        $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+                         $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
 
                         // updates the attribute
-                        if ($id_product_attribute) {
+                        if ($id_product_attribute && !$validateOnly) {
                             // gets all the combinations of this product
                             $attribute_combinations = $product->getAttributeCombinations($default_language);
                             foreach ($attribute_combinations as $attribute_combination) {
                                 if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination)) {
+// FIXME: ~3s/declinaison
                                     $product->updateAttribute(
                                         $id_product_attribute,
                                         (float)$info['wholesale_price'],
@@ -2434,13 +2488,14 @@ class AdminImportControllerCore extends AdminController
                                     if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
                                         $product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
                                     }
+// until here
                                 }
                             }
                         }
                     }
 
                     // if no attribute reference is specified, creates a new one
-                    if (!$id_product_attribute) {
+                    if (!$id_product_attribute && !$validateOnly) {
                         $id_product_attribute = $product->addCombinationEntity(
                             (float)$info['wholesale_price'],
                             (float)$info['price'],
@@ -2471,29 +2526,34 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     // after insertion, we clean attribute position and group attribute position
-                    $obj = new Attribute();
-                    $obj->cleanPositions((int)$id_attribute_group, false);
-                    AttributeGroup::cleanPositions();
+                    if (!$validateOnly) {
+                        $obj = new Attribute();
+                        $obj->cleanPositions((int)$id_attribute_group, false);
+                        AttributeGroup::cleanPositions();
+                    }
                 }
-            }
+           }
         }
 
         $product->checkDefaultAttributes();
-        if (!$product->cache_default_attribute) {
+        if (!$product->cache_default_attribute && !$validateOnly) {
             Product::updateDefaultAttribute($product->id);
         }
         if ($id_product_attribute) {
-            // now adds the attributes in the attribute_combination table
-            if ($id_product_attribute_update) {
-                Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'product_attribute_combination
-					WHERE id_product_attribute = '.(int)$id_product_attribute);
-            }
 
-            foreach ($attributes_to_add as $attribute_to_add) {
-                Db::getInstance()->execute('
-					INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-					VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
+            if (!$validateOnly) {
+                // now adds the attributes in the attribute_combination table
+                if ($id_product_attribute_update) {
+                    Db::getInstance()->execute('
+    					DELETE FROM '._DB_PREFIX_.'product_attribute_combination
+    					WHERE id_product_attribute = '.(int)$id_product_attribute);
+                }
+    
+                foreach ($attributes_to_add as $attribute_to_add) {
+                    Db::getInstance()->execute('
+    					INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+    					VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
+                }
             }
 
             // set advanced stock managment
@@ -2502,11 +2562,11 @@ class AdminImportControllerCore extends AdminController
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %d.'), $product->id);
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1) {
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product with id %d.'), $product->id);
-                } else {
+                } elseif (!$validateOnly) {
                     $product->setAdvancedStockManagement($info['advanced_stock_management']);
                 }
                 // automaticly disable depends on stock, if a_s_m set to disabled
-                if (StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0) {
+                if (!$validateOnly && StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0) {
                     StockAvailable::setProductDependsOnStock($product->id, 0, null, $id_product_attribute);
                 }
             }
@@ -2521,12 +2581,14 @@ class AdminImportControllerCore extends AdminController
                         $warehouse_location_entity->id_product = $product->id;
                         $warehouse_location_entity->id_product_attribute = $id_product_attribute;
                         $warehouse_location_entity->id_warehouse = $info['warehouse'];
-                        if (WarehouseProductLocation::getProductLocation($product->id, $id_product_attribute, $info['warehouse']) !== false) {
-                            $warehouse_location_entity->update();
-                        } else {
-                            $warehouse_location_entity->save();
+                        if (!$validateOnly) {
+                            if (WarehouseProductLocation::getProductLocation($product->id, $id_product_attribute, $info['warehouse']) !== false) {
+                                $warehouse_location_entity->update();
+                            } else {
+                                $warehouse_location_entity->save();
+                            }
+                            StockAvailable::synchronize($product->id);
                         }
-                        StockAvailable::synchronize($product->id);
                     } else {
                         $this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language]);
                     }
@@ -2539,7 +2601,7 @@ class AdminImportControllerCore extends AdminController
                     $this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language]);
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
                     $this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language]);
-                } else {
+                } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
                 }
 
@@ -2554,10 +2616,10 @@ class AdminImportControllerCore extends AdminController
                         }
                         $price = round(floatval($price), 6);
                         $warehouse = new Warehouse($info['warehouse']);
-                        if ($stock_manager->addProduct((int)$product->id, $id_product_attribute, $warehouse, (int)$info['quantity'], 1, $price, true)) {
+                        if (!$validateOnly && $stock_manager->addProduct((int)$product->id, $id_product_attribute, $warehouse, (int)$info['quantity'], 1, $price, true)) {
                             StockAvailable::synchronize((int)$product->id);
                         }
-                    } else {
+                    } elseif (!$validateOnly) {
                         if ($shop_is_feature_active) {
                             foreach ($id_shop_list as $shop) {
                                 StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
@@ -2569,7 +2631,7 @@ class AdminImportControllerCore extends AdminController
                 }
             }
             // if not depends_on_stock set, use normal qty
-            else {
+            elseif (!$validateOnly) {
                 if ($shop_is_feature_active) {
                     foreach ($id_shop_list as $shop) {
                         StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
@@ -2578,7 +2640,7 @@ class AdminImportControllerCore extends AdminController
                     StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], $this->context->shop->id);
                 }
             }
-        }
+         }
     }
 
     public function customerImport($offset = false, $limit = false, $validateOnly = false)
@@ -2622,7 +2684,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function customerImportOne($info, $default_language_id, $id_lang, $shop_is_feature_active, $force_ids, $validateOnly = false)
     {
-        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -2673,9 +2734,11 @@ class AdminImportControllerCore extends AdminController
                         $my_group->name = $my_group->name + array($default_language_id => $group);
                     }
                     $my_group->price_display_method = 1;
-                    $my_group->add();
-                    if (Validate::isLoadedObject($my_group)) {
-                        $id_group = (int)$my_group->id;
+                    if (!$validateOnly) {
+                        $my_group->add();
+                        if (Validate::isLoadedObject($my_group)) {
+                            $id_group = (int)$my_group->id;
+                        }
                     }
                 }
                 if ($id_group) {
@@ -2721,7 +2784,7 @@ class AdminImportControllerCore extends AdminController
             $customers_shop[$default_shop->id] = $default_shop->getGroup()->id;
         }
 
-        //set temporally for validate field
+        //set temporary for validate field
         $customer->id_shop = $default_shop->id;
         $customer->id_shop_group = $default_shop->getGroup()->id;
         if (isset($info['id_default_group']) && !empty($info['id_default_group']) && !is_numeric($info['id_default_group'])) {
@@ -2768,7 +2831,7 @@ class AdminImportControllerCore extends AdminController
                         $customer->id_shop_group = $id_group;
                         if ($customer_exist && (int)$id_shop == (int)$current_id_shop) {
                             $customer->id = (int)$current_id_customer;
-                            $res &= $customer->update();
+                            $res &= ($validateOnly || $customer->update());
                         } else {
                             $res &= $customer->add($autodate);
                             if (isset($addresses)) {
@@ -2779,7 +2842,7 @@ class AdminImportControllerCore extends AdminController
                                 }
                             }
                         }
-                        if ($res && isset($customer_groups)) {
+                        if ($res && !$validateOnly && isset($customer_groups)) {
                             $customer->updateGroup($customer_groups);
                         }
                     }
@@ -2788,10 +2851,10 @@ class AdminImportControllerCore extends AdminController
                     $customer->id_shop_group = $id_group;
                     if ($customer_exist && (int)$id_shop == (int)$current_id_shop) {
                         $customer->id = (int)$current_id_customer;
-                        $res &= $customer->update();
+                        $res &= ($validateOnly || $customer->update());
                     } else {
-                        $res &= $customer->add();
-                        if (isset($addresses)) {
+                        $res &= ($validateOnly || $customer->add());
+                        if (!$validateOnly && isset($addresses)) {
                             foreach ($addresses as $address) {
                                 $address['id_customer'] = $customer->id;
                                 unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
@@ -2799,7 +2862,7 @@ class AdminImportControllerCore extends AdminController
                             }
                         }
                     }
-                    if ($res && isset($customer_groups)) {
+                    if ($res && !$validateOnly && isset($customer_groups)) {
                         $customer->updateGroup($customer_groups);
                     }
                 }
@@ -2824,7 +2887,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$res) {
             $this->errors[] = sprintf(
-                Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                Tools::displayError('%1$s (ID: %2$s) cannot be '.($validateOnly?'validated':'saved')),
                 $info['email'],
                 (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
             );
@@ -2866,7 +2929,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function addressImportOne($info, $force_ids, $validateOnly = false)
     {
-        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -2889,9 +2951,13 @@ class AdminImportControllerCore extends AdminController
                 if ($id_country = (int)Country::getIdByName(null, $address->country)) {
                     $address->id_country = $id_country;
                 } else {
-                    $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
-                    $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                        Db::getInstance()->getMsgError();
+                    if (!$validateOnly) {
+                        $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
                 }
             }
         }
@@ -2912,12 +2978,18 @@ class AdminImportControllerCore extends AdminController
                 $state->iso_code = Tools::strtoupper(Tools::substr($address->state, 0, 2)); // Default iso for state to create
                 $state->tax_behavior = 0;
                 if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $state->add()) {
+                    ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    $state->add()) {
                     $address->id_state = (int)$state->id;
                 } else {
-                    $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
-                    $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                        Db::getInstance()->getMsgError();
+                    if (!$validateOnly) {
+                        $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
                 }
             }
         }
@@ -2929,7 +3001,7 @@ class AdminImportControllerCore extends AdminController
 
                 if (count($customer_list) == 0) {
                     $this->errors[] = sprintf(
-                        Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
+                        Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be '.($validateOnly?'validated':'saved')),
                         Db::getInstance()->getMsgError(),
                         $address->customer_email,
                         (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
@@ -2948,14 +3020,14 @@ class AdminImportControllerCore extends AdminController
 
                 if (count($customer_list) == 0) {
                     $this->errors[] = sprintf(
-                        Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
+                        Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be '.($validateOnly?'validated':'saved')),
                         Db::getInstance()->getMsgError(),
                         $customer->email,
                         (int)$address->id_customer
                     );
                 }
             } else {
-                $this->errors[] = sprintf(Tools::displayError('The customer ID #%d does not exist in the database, and therefore cannot be saved.'), $address->id_customer);
+                $this->errors[] = sprintf(Tools::displayError('The customer ID #%d does not exist in the database, and therefore cannot be '.($validateOnly?'validated':'saved')), $address->id_customer);
             }
         } else {
             $customer_list = array();
@@ -2965,38 +3037,59 @@ class AdminImportControllerCore extends AdminController
         if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer)) {
             $address->id_manufacturer = (int)$address->manufacturer;
         } elseif (isset($address->manufacturer) && is_string($address->manufacturer) && !empty($address->manufacturer)) {
-            $manufacturer = new Manufacturer();
-            $manufacturer->name = $address->manufacturer;
-            if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add()) {
-                $address->id_manufacturer = (int)$manufacturer->id;
+            if ($manufacturerId = Manufacturer::getIdByName($address->manufacturer)) {
+                $address->id_manufacturer = $manufacturerId;
             } else {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                    $manufacturer->name,
-                    (isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
-                );
-                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                    Db::getInstance()->getMsgError();
+                $manufacturer = new Manufacturer();
+                $manufacturer->name = $address->manufacturer;
+                if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                    ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    $manufacturer->add()) {
+                    $address->id_manufacturer = (int)$manufacturer->id;
+                } else {
+                    if (!$validateOnly) {
+                        $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                            Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                            $manufacturer->name,
+                            (isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
+                        );
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
+                }
             }
+            
         }
 
         if (isset($address->supplier) && is_numeric($address->supplier) && Supplier::supplierExists((int)$address->supplier)) {
             $address->id_supplier = (int)$address->supplier;
         } elseif (isset($address->supplier) && is_string($address->supplier) && !empty($address->supplier)) {
-            $supplier = new Supplier();
-            $supplier->name = $address->supplier;
-            if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add()) {
-                $address->id_supplier = (int)$supplier->id;
+            if ($supplierId = Supplier::getIdByName($address->supplier)) {
+                $address->id_supplier = $supplierId;
             } else {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                    $supplier->name,
-                    (isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
-                );
-                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                    Db::getInstance()->getMsgError();
+                $supplier = new Supplier();
+                $supplier->name = $address->supplier;
+                if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                    ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    $supplier->add()) {
+                    $address->id_supplier = (int)$supplier->id;
+                } else {
+                    if (!$validateOnly) {
+                        $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                            Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                            $supplier->name,
+                            (isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
+                        );
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                            Db::getInstance()->getMsgError();
+                    }
+                }
             }
         }
 
@@ -3018,20 +3111,24 @@ class AdminImportControllerCore extends AdminController
             }
 
             if ($address->id && $address->addressExists($address->id)) {
-                $res = $address->update();
+                $res = ($validateOnly || $address->update());
             }
             if (!$res) {
-                $res = $address->add();
+                $res = ($validateOnly || $address->add());
             }
         }
         if (!$res) {
-            $this->errors[] = sprintf(
-                Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                $info['alias'],
-                (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
-            );
-            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                Db::getInstance()->getMsgError();
+            if (!$validateOnly) {
+                $this->errors[] = sprintf(
+                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                    $info['alias'],
+                    (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+                );
+            }
+            if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                    Db::getInstance()->getMsgError();
+            }
         }
     }
 
@@ -3089,21 +3186,21 @@ class AdminImportControllerCore extends AdminController
         if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
             ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
             if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id)) {
-                $res = $manufacturer->update();
+                $res = ($validateOnly || $manufacturer->update());
             }
             $manufacturer->force_id = (bool)$force_ids;
             if (!$res) {
-                $res = $manufacturer->add();
+                $res = ($validateOnly || $manufacturer->add());
             }
 
             //copying images of manufacturer
-            if (isset($manufacturer->image) && !empty($manufacturer->image)) {
+            if (!$validateOnly && isset($manufacturer->image) && !empty($manufacturer->image)) {
                 if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !$regenerate)) {
                     $this->warnings[] = $manufacturer->image.' '.Tools::displayError('cannot be copied.');
                 }
             }
 
-            if ($res) {
+            if (!$validateOnly && $res) {
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $manufacturer->shop) {
                     Db::getInstance()->execute('
@@ -3128,13 +3225,17 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$res) {
-            $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-                Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-                (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
-            );
-            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-                Db::getInstance()->getMsgError();
+            if (!$validateOnly) {
+                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                    (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+                    (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+                );
+            }
+            if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
+                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                    Db::getInstance()->getMsgError();
+            }
         }
     }
 
@@ -3175,7 +3276,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function supplierImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
-        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -3193,15 +3293,15 @@ class AdminImportControllerCore extends AdminController
             ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
             $res = false;
             if ($supplier->id && $supplier->supplierExists($supplier->id)) {
-                $res = $supplier->update();
+                $res = ($validateOnly || $supplier->update());
             }
             $supplier->force_id = (bool)$force_ids;
             if (!$res) {
-                $res = $supplier->add();
+                $res = ($validateOnly || $supplier->add());
             }
 
             //copying images of suppliers
-            if (isset($supplier->image) && !empty($supplier->image)) {
+            if (!$validateOnly && isset($supplier->image) && !empty($supplier->image)) {
                 if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !$regenerate)) {
                     $this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
                 }
@@ -3213,7 +3313,7 @@ class AdminImportControllerCore extends AdminController
                     (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
                     (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
                 );
-            } else {
+            } elseif (!$validateOnly) {
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $supplier->shop) {
                     Db::getInstance()->execute('
@@ -3273,7 +3373,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function aliasImportOne($info, $force_ids, $validateOnly = false)
     {
-        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -3292,11 +3391,11 @@ class AdminImportControllerCore extends AdminController
         if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true &&
             ($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
             if ($alias->id && $alias->aliasExists($alias->id)) {
-                $res = $alias->update();
+                $res = ($validateOnly || $alias->update());
             }
             $alias->force_id = (bool)$force_ids;
             if (!$res) {
-                $res = $alias->add();
+                $res = ($validateOnly || $alias->add());
             }
 
             if (!$res) {
@@ -3494,7 +3593,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function supplyOrdersImportOne($info, $force_ids, $validateOnly = false)
     {
-        // FIXME
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
 
@@ -3571,10 +3669,10 @@ class AdminImportControllerCore extends AdminController
             $res = false;
 
             if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference))) {
-                $res = $supply_order->update();
+                $res = ($validateOnly || $supply_order->update());
             } else {
                 $supply_order->force_id = (bool)$force_ids;
-                $res = $supply_order->add();
+                $res = ($validateOnly || $supply_order->add());
             }
 
             // errors
@@ -3637,7 +3735,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids, $validateOnly = false)
     {
-        // FIXME
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
 
@@ -3645,7 +3742,7 @@ class AdminImportControllerCore extends AdminController
         if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference']))) {
             $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['supply_order_reference']));
         } else {
-            $this->errors[] = sprintf($this->l('Supply Order (%s) could not be loaded (at line %d).'), (int)$info['supply_order_reference'], $current_line + 1);
+            $this->errors[] = sprintf($this->l('Supply Order (%s) could not be loaded (at line %d).'), $info['supply_order_reference'], $current_line + 1);
         }
 
         if (empty($this->errors)) {
@@ -3691,7 +3788,7 @@ class AdminImportControllerCore extends AdminController
             // if no errors, sets supply order details
             if (empty($this->errors)) {
                 // resets order if needed
-                if ($reset) {
+                if (!$validateOnly && $reset) {
                     $supply_order->resetProducts();
                     $reset = false;
                 }
@@ -3726,8 +3823,10 @@ class AdminImportControllerCore extends AdminController
                 $supply_order_detail->ean13 = $product_infos['ean13'];
                 $supply_order_detail->upc = $product_infos['upc'];
                 $supply_order_detail->force_id = (bool)$force_ids;
-                $supply_order_detail->add();
-                $supply_order->update();
+                if (!$validateOnly) {
+                    $supply_order_detail->add();
+                    $supply_order->update();
+                }
                 unset($supply_order_detail);
             }
         }
@@ -4140,7 +4239,7 @@ class AdminImportControllerCore extends AdminController
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
         $validateOnly = ((int)Tools::getValue('validateOnly') == 1);
-usleep(800000);
+
         $results = array();
         $this->importByGroups($offset, $limit, $results, $validateOnly);
 
@@ -4150,6 +4249,9 @@ usleep(800000);
         }
         if (count($this->warnings) > 0) {
             $results['warnings'] = $this->warnings;
+        }
+        if (count($this->informations) > 0) {
+            $results['informations'] = $this->informations;
         }
 
         if (!$validateOnly && (bool)$results['isFinished'] && (bool)Tools::getValue('sendemail')) {
