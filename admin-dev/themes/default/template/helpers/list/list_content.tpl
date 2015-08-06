@@ -71,9 +71,8 @@
 						{else}
 							<i class="icon-remove"></i> {l s='Disabled'}
 						{/if}
-
 					{elseif isset($params.position)}
-						{if $order_by == 'position' && $order_way != 'DESC'}
+						{if !$filters_has_value && $order_by == 'position' && $order_way != 'DESC'}
 							<div class="dragGroup">
 								<div class="positions">
 									{$tr.$key.position + 1}
