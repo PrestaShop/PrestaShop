@@ -3238,7 +3238,7 @@ class CartCore extends ObjectModel
             'total_tax' => $total_tax,
             'total_price_without_tax' => $base_total_tax_exc,
             'is_multi_address_delivery' => $this->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1),
-            'free_ship' => $total_shipping ? 0 : 1,
+            'free_ship' =>!$total_shipping && !count($this->getDeliveryAddressesWithoutCarriers(true, $errors)),
             'carrier' => new Carrier($this->id_carrier, $id_lang),
         );
 

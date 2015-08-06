@@ -950,7 +950,7 @@ function updateCartSummary(json)
 	{
 		if (parseFloat(json.total_shipping) > 0)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
-		else if (json.carrier.id == null && typeof(toBeDetermined) !== 'undefined')
+		else if (json.carrier.id == null && typeof(toBeDetermined) !== 'undefined' && !json.free_ship)
 			$('.ajax_cart_shipping_cost').html(toBeDetermined);
 		else if (typeof(freeShippingTranslation) != 'undefined')
 			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
@@ -979,13 +979,13 @@ function updateCartSummary(json)
 	}
 	else
 	{
-		if (json.carrier.id != null || json.free_ship == 1)
+		if (json.carrier.id != null || json.free_ship)
 		{
 			$('#total_shipping').html(freeShippingTranslation);
 			if (json.is_virtual_cart)
 				$('.cart_total_delivery').hide();
 		}
-		else if (!hasDeliveryAddress)
+		if (!hasDeliveryAddress)
 			$('.cart_total_delivery').hide();
 	}
 

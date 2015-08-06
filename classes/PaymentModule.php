@@ -567,6 +567,7 @@ abstract class PaymentModuleCore extends Module
                             }
 
                             $voucher->quantity = 1;
+                            $voucher->reduction_currency = $order->id_currency;
                             $voucher->quantity_per_user = 1;
                             $voucher->free_shipping = 0;
                             if ($voucher->add()) {
