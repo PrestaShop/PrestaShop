@@ -180,6 +180,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'hint' => $this->l('Create new threads for unrecognized emails.'),
                         'type' => 'bool',
                     ),
+                    'PS_SAV_IMAP_OPT_POP3' => array(
+                        'title' => $this->l('IMAP options').' (/pop3)',
+                        'hint' => $this->l('Use POP3 instead of IMAP.'),
+                        'type' => 'bool'
+                    ),
                     'PS_SAV_IMAP_OPT_NORSH' => array(
                         'title' => $this->l('IMAP options').' (/norsh)',
                         'type' => 'bool',
@@ -920,11 +925,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $conf = Configuration::getMultiple(array(
-            'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
+            'PS_SAV_IMAP_OPT_POP3', 'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
             'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
             'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
 
         $conf_str = '';
+        if ($conf['PS_SAV_IMAP_OPT_POP3']) {
+            $conf_str .= '/pop3';
+        }
         if ($conf['PS_SAV_IMAP_OPT_NORSH']) {
             $conf_str .= '/norsh';
         }
