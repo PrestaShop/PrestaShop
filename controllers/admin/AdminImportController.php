@@ -1187,7 +1187,6 @@ class AdminImportControllerCore extends AdminController
 
     protected function categoryImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, &$cat_moved, $validateOnly = false)
     {
-        // FIXME
         $tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
         if (isset($info['id']) && in_array((int)$info['id'], $tab_categ)) {
             $this->errors[] = Tools::displayError('The category ID cannot be the same as the Root category ID or the Home category ID.');
@@ -1225,8 +1224,11 @@ class AdminImportControllerCore extends AdminController
                 $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
                 $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                 $category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+                
                 if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add()) {
+                    ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                    !$validateOnly && // Do not move the position of this test. Only ->add() should not be triggered is !validateOnly. Previous tests should be always run.
+                    $category_to_create->add()) {
                     $category->id_parent = $category_to_create->id;
                 } else {
                     $category_to_create = new Category();
@@ -1245,6 +1247,8 @@ class AdminImportControllerCore extends AdminController
                             $category_to_create->name[$id_lang],
                             (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
                         );
+                    }
+                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
                             Db::getInstance()->getMsgError();
                     }
@@ -1309,7 +1313,10 @@ class AdminImportControllerCore extends AdminController
 
             // If id category AND id category already in base, trying to update
             $categories_home_root = array(Configuration::get('PS_ROOT_CATEGORY'), Configuration::get('PS_HOME_CATEGORY'));
-            if ($category->id && $category->categoryExists($category->id) && !in_array($category->id, $categories_home_root)) {
+            if ($category->id &&
+                $category->categoryExists($category->id) &&
+                !in_array($category->id, $categories_home_root) &&
+                !$validateOnly) {
                 $res = $category->update();
             }
             if ($category->id == Configuration::get('PS_ROOT_CATEGORY')) {
@@ -1317,10 +1324,16 @@ class AdminImportControllerCore extends AdminController
             }
             // If no id_category or update failed
             $category->force_id = (bool)$force_ids;
-            if (!$res) {
+            if (!$res && !$validateOnly) {
                 $res = $category->add();
             }
         }
+        
+        // ValidateOnly mode : stops here
+        if ($validateOnly) {
+            return;
+        }
+        
         //copying images of categories
         if (isset($category->image) && !empty($category->image)) {
             if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !$regenerate))) {

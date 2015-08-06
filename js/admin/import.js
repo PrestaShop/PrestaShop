@@ -24,6 +24,7 @@
  */
 
 var importCancelRequest = false;
+var importContinueRequest = false;
 
 $(document).ready(function(){
 
@@ -109,12 +110,26 @@ $(document).ready(function(){
 	});
 	
 	$('#import_stop_button').unbind('click').click(function(){
-		importCancelRequest = true;
-		$('#import_details_progressing').hide();
-		$('#import_details_finished').hide();
-		$('#import_details_stop').show();
-		$('#import_stop_button').hide();
-		$('#import_close_button').hide();
+		if (importContinueRequest) {
+			$('#importProgress').modal('hide');
+			importContinueRequest = false;
+		} else {
+			importCancelRequest = true;
+			$('#import_details_progressing').hide();
+			$('#import_details_finished').hide();
+			$('#import_details_stop').show();
+			$('#import_stop_button').hide();
+			$('#import_close_button').hide();
+		}
+	});
+	
+	$('#import_continue_button').unbind('click').click(function(){
+		$('#import_continue_button').hide();
+		importContinueRequest = false;
+		$('#import_progress_div').show();
+		$('#import_details_warning ul').html('');
+		$('#import_details_warning').hide();
+		importNow(0, 5, -1, false, {});
 	});
 });
 
@@ -231,7 +246,15 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    	   if (validateOnly) {
 	    		   // update validation bar and process real import
 	    		   updateValidation(total, total, total);
-	    		   importNow(0, 5, -1, false, {});
+	    		   if ($('#import_details_warning').css('visibility') === 'hidden') {
+	    			   // no warning, directly import now
+	    			   $('#import_progress_div').show();
+	    			   importNow(0, 5, -1, false, {});
+	    		   } else {
+	    			   // warnings occured. Ask if should continue to true import now
+	    			   importContinueRequest = true;
+	    			   $('#import_continue_button').show();
+	    		   }
 	    	   } else {
 	    		   // update progression (will close popin)
 	    		   updateProgression(total, total, total);
@@ -258,6 +281,8 @@ function updateProgressionInit() {
 	$('#import_details_error').hide();
 	$('#import_details_stop').hide();
 	$('#import_details_post_limit').hide();
+	$('#import_details_error ul').html('');
+	$('#import_details_warning ul').html('');
 	
 	$('#import_validation_details').html($('#import_validation_details').attr('default-value'));
 	$('#validate_progressbar_done').width('0%');
@@ -274,6 +299,7 @@ function updateProgressionInit() {
 	
 	$('#import_stop_button').show();
 	$('#import_close_button').hide();
+	$('#import_continue_button').hide();
 }
 
 function updateValidation(currentPosition, total, nextPosition) {
@@ -292,7 +318,6 @@ function updateValidation(currentPosition, total, nextPosition) {
 	}
 	
 	if (currentPosition == total && total == nextPosition) {
-		$('#import_progress_div').show();
 		$('#validate_progressbar_done').parent().removeClass('active progress-striped');
 	}
 }
@@ -332,13 +357,13 @@ function updateValidationError(message, forWarnings) {
 	} else {
 		$('#import_details_error ul').append(message);
 		$('#import_details_error').show();
+		
+		$('#validate_progressbar_next').addClass('progress-bar-danger');
+		$('#validate_progressbar_next').removeClass('progress-bar-info');
+		
+		$('#import_stop_button').hide();
+		$('#import_close_button').show();
 	}
-	
-	$('#validate_progressbar_next').addClass('progress-bar-danger');
-	$('#validate_progressbar_next').removeClass('progress-bar-info');
-	
-	$('#import_stop_button').hide();
-	$('#import_close_button').show();
 }
 
 function updateProgressionError(message, forWarnings) {
@@ -350,13 +375,13 @@ function updateProgressionError(message, forWarnings) {
 	} else {
 		$('#import_details_error ul').append(message);
 		$('#import_details_error').show();
+		
+		$('#import_progressbar_next').addClass('progress-bar-danger');
+		$('#import_progressbar_next').removeClass('progress-bar-success');
+		
+		$('#import_stop_button').hide();
+		$('#import_close_button').show();
 	}
-	
-	$('#import_progressbar_next').addClass('progress-bar-danger');
-	$('#import_progressbar_next').removeClass('progress-bar-success');
-	
-	$('#import_stop_button').hide();
-	$('#import_close_button').show();
 }
 
 function html_escape(str) {

@@ -29,15 +29,12 @@
         Please wait...
     </div>
     <p id="import_details_progressing">
-        Please wait, Preston is trying to import your Excel shit...
+        Please wait, Preston is trying to import your data...
         <br/>
         // TODO @Julie and @Alex, if want a better wording...
-        <br/>
-        // TODO: Put a happy dancing Preston here...
     </p>
     <div class="alert alert-success" id="import_details_finished" style="display:none;">
-        Thank you for your patience! You can now close this dialog box with
-        the little cross at the top right corner, and look after you data
+        Thank you for your patience! You can now check your data looking 
         somewhere in the database...
         <br/>
         Good luck!
@@ -85,12 +82,16 @@
     </div>
     
     <div class="input-group">
+        <button type="button" class="btn btn-primary" tabindex="-1" id="import_continue_button" style="display: none;">
+            Ignore warnings and continue?
+        </button>
+        &nbsp;
 		<button type="button" class="btn btn-default" tabindex="-1" id="import_stop_button">
-			<i class="icon-flag"></i>
-			I give up! Please stop!
+			Abort import
 		</button>
-		<button type="button" class="btn btn-default" data-dismiss="modal" tabindex="-1" id="import_close_button" style="display: none;">
-            Close me, I'm useless now!
+		&nbsp;
+		<button type="button" class="btn btn-success" data-dismiss="modal" tabindex="-1" id="import_close_button" style="display: none;">
+            Close
         </button>
 	</div>
 </div>
