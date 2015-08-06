@@ -950,6 +950,9 @@ $(document).ready(function()
             }
         });
     }
+    if ($('.kpi-container').length) {
+        refresh_kpis();
+    }
 });
 
 function bindSwapSave()
