@@ -539,13 +539,6 @@ class AdminImportControllerCore extends AdminController
             $this->displayWarning($this->l('The import directory must be writable (CHMOD 755 / 777).'));
         }
 
-        if (isset($this->warnings) && count($this->warnings)) {
-            $warnings = array();
-            foreach ($this->warnings as $warning) {
-                $warnings[] = $warning;
-            }
-        }
-
         $files_to_import = scandir(AdminImportController::getPath());
         uasort($files_to_import, array('AdminImportController', 'usortFiles'));
         foreach ($files_to_import as $k => &$filename) {
@@ -1136,7 +1129,7 @@ class AdminImportControllerCore extends AdminController
         return $path;
     }
 
-    public function categoryImport($offset = false, $limit = false, &$crossStepsVariables = false)
+    public function categoryImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -1175,12 +1168,15 @@ class AdminImportControllerCore extends AdminController
                 $force_ids,
                 $regenerate,
                 $shop_is_feature_active,
-                $cat_moved // by ref
+                $cat_moved, // by ref
+                $validateOnly
             );
         }
 
-        /* Import has finished, we can regenerate the categories nested tree */
-        Category::regenerateEntireNtree();
+        if (!$validateOnly) {
+            /* Import has finished, we can regenerate the categories nested tree */
+            Category::regenerateEntireNtree();
+        }
         $this->closeCsvFile($handle);
 
         if ($crossStepsVariables !== false) {
@@ -1189,12 +1185,13 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function categoryImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, &$cat_moved)
+    protected function categoryImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, &$cat_moved, $validateOnly = false)
     {
+        // FIXME
         $tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
         if (isset($info['id']) && in_array((int)$info['id'], $tab_categ)) {
             $this->errors[] = Tools::displayError('The category ID cannot be the same as the Root category ID or the Home category ID.');
-            continue;
+            return;
         }
         AdminImportController::setDefaultValues($info);
 
@@ -1210,6 +1207,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
 
+        // Parent category
         if (isset($category->parent) && is_numeric($category->parent)) {
             if (isset($cat_moved[$category->parent])) {
                 $category->parent = $cat_moved[$category->parent];
@@ -1303,7 +1301,7 @@ class AdminImportControllerCore extends AdminController
 
             if ($category->id && $category->id == $category->id_parent) {
                 $this->errors[] = Tools::displayError('A category cannot be its own parent');
-                continue;
+                return;
             }
 
             /* No automatic nTree regeneration for import */
@@ -1368,7 +1366,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function productImport($offset = false, $limit = false)
+    public function productImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -1387,7 +1385,9 @@ class AdminImportControllerCore extends AdminController
         $match_ref = Tools::getValue('match_ref');
         $regenerate = Tools::getValue('regenerate');
         $shop_is_feature_active = Shop::isFeatureActive();
-        Module::setBatchMode(true);
+        if (!$validateOnly) {
+            Module::setBatchMode(true);
+        }
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
@@ -1405,19 +1405,23 @@ class AdminImportControllerCore extends AdminController
                 $regenerate,
                 $shop_is_feature_active,
                 $shop_ids,
-                $match_ref
+                $match_ref,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
-        Module::processDeferedFuncCall();
-        Module::processDeferedClearCache();
-        Tag::updateTagCount();
+        if (!$validateOnly) {
+            Module::processDeferedFuncCall();
+            Module::processDeferedClearCache();
+            Tag::updateTagCount();
+        }
 
         return $line_count;
     }
 
-    protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref)
+    protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, $validateOnly = false)
     {
+        // FIXME
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
             $product = new Product((int)$info['id']);
         } elseif ($match_ref && array_key_exists('reference', $info)) {
@@ -1589,7 +1593,7 @@ class AdminImportControllerCore extends AdminController
                         }
                     }
                 } elseif (is_string($value) && !empty($value)) {
-                    $category = Category::searchByPath($default_language_id, trim($value), $this, 'productImportCreateCat');
+                    $category = Category::searchByPath($default_language_id, trim($value), $this, 'productImportCreateCat'); // FIXME : on peut pas en validateOnly
                     if ($category['id_category']) {
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
@@ -2059,7 +2063,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function attributeImport($offset = false, $limit = false, &$crossStepsVariables = false)
+    public function attributeImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
     {
         $default_language = Configuration::get('PS_LANG_DEFAULT');
 
@@ -2108,7 +2112,8 @@ class AdminImportControllerCore extends AdminController
                 $groups, // by ref
                 $attributes, // by ref
                 $regenerate,
-                $shop_is_feature_active
+                $shop_is_feature_active,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -2120,8 +2125,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function attributeImportOne($info, $default_language, &$groups, &$attributes, $regenerate, $shop_is_feature_active)
+    protected function attributeImportOne($info, $default_language, &$groups, &$attributes, $regenerate, $shop_is_feature_active, $validateOnly = false)
     {
+        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if (!$shop_is_feature_active) {
@@ -2157,7 +2163,7 @@ class AdminImportControllerCore extends AdminController
                 $product = new Product((int)$datas['id_product'], false, $default_language);
             }
         } else {
-            continue;
+            return;
         }
 
         $id_image = array();
@@ -2519,7 +2525,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function customerImport($offset = false, $limit = false)
+    public function customerImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -2549,7 +2555,8 @@ class AdminImportControllerCore extends AdminController
                 $default_language_id,
                 $id_lang,
                 $shop_is_feature_active,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -2557,8 +2564,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function customerImportOne($info, $default_language_id, $id_lang, $shop_is_feature_active, $force_ids)
+    protected function customerImportOne($info, $default_language_id, $id_lang, $shop_is_feature_active, $force_ids, $validateOnly = false)
     {
+        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -2769,7 +2777,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function addressImport($offset = false, $limit = false)
+    public function addressImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -2791,7 +2799,8 @@ class AdminImportControllerCore extends AdminController
 
             $this->addressImportOne(
                 $info,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -2799,8 +2808,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function addressImportOne($info, $force_ids)
+    protected function addressImportOne($info, $force_ids, $validateOnly = false)
     {
+        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -2871,7 +2881,7 @@ class AdminImportControllerCore extends AdminController
                 }
             } else {
                 $this->errors[] = sprintf(Tools::displayError('"%s" is not a valid email address.'), $address->customer_email);
-                continue;
+                return;
             }
         } elseif (isset($address->id_customer) && !empty($address->id_customer)) {
             if (Customer::customerIdExistsStatic((int)$address->id_customer)) {
@@ -2969,7 +2979,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function manufacturerImport($offset = false, $limit = false)
+    public function manufacturerImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -2994,7 +3004,8 @@ class AdminImportControllerCore extends AdminController
                 $info,
                 $shop_is_feature_active,
                 $regenerate,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -3002,7 +3013,7 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function manufacturerImportOne($info, $shop_is_feature_active, $regenerate, $force_ids)
+    protected function manufacturerImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
         AdminImportController::setDefaultValues($info);
 
@@ -3071,7 +3082,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function supplierImport($offset = false, $limit = false)
+    public function supplierImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -3097,7 +3108,8 @@ class AdminImportControllerCore extends AdminController
                 $info,
                 $shop_is_feature_active,
                 $regenerate,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -3105,74 +3117,75 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function supplierImportOne($info, $shop_is_feature_active, $regenerate, $force_ids)
+    protected function supplierImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
     {
-            AdminImportController::setDefaultValues($info);
+        // FIXME
+        AdminImportController::setDefaultValues($info);
 
-            if ($force_ids && isset($info['id']) && (int)$info['id']) {
+        if ($force_ids && isset($info['id']) && (int)$info['id']) {
+            $supplier = new Supplier((int)$info['id']);
+        } else {
+            if (array_key_exists('id', $info) && (int)$info['id'] && Supplier::existsInDatabase((int)$info['id'], 'supplier')) {
                 $supplier = new Supplier((int)$info['id']);
             } else {
-                if (array_key_exists('id', $info) && (int)$info['id'] && Supplier::existsInDatabase((int)$info['id'], 'supplier')) {
-                    $supplier = new Supplier((int)$info['id']);
-                } else {
-                    $supplier = new Supplier();
+                $supplier = new Supplier();
+            }
+        }
+
+        AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
+        if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+            ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+            $res = false;
+            if ($supplier->id && $supplier->supplierExists($supplier->id)) {
+                $res = $supplier->update();
+            }
+            $supplier->force_id = (bool)$force_ids;
+            if (!$res) {
+                $res = $supplier->add();
+            }
+
+            //copying images of suppliers
+            if (isset($supplier->image) && !empty($supplier->image)) {
+                if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !$regenerate)) {
+                    $this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
                 }
             }
 
-            AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
-            if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
-                $res = false;
-                if ($supplier->id && $supplier->supplierExists($supplier->id)) {
-                    $res = $supplier->update();
-                }
-                $supplier->force_id = (bool)$force_ids;
-                if (!$res) {
-                    $res = $supplier->add();
-                }
-
-                //copying images of suppliers
-                if (isset($supplier->image) && !empty($supplier->image)) {
-                    if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !$regenerate)) {
-                        $this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
-                    }
-                }
-
-                if (!$res) {
-                    $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-                        Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-                        (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-                        (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
-                    );
-                } else {
-                    // Associate supplier to group shop
-                    if ($shop_is_feature_active && $supplier->shop) {
-                        Db::getInstance()->execute('
-							DELETE FROM '._DB_PREFIX_.'supplier_shop
-							WHERE id_supplier = '.(int)$supplier->id
-                        );
-                        $supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
-                        $shops = array();
-                        foreach ($supplier->shop as $shop) {
-                            if (empty($shop)) {
-                                continue;
-                            }
-                            $shop = trim($shop);
-                            if (!is_numeric($shop)) {
-                                $shop = ShopGroup::getIdByName($shop);
-                            }
-                            $shops[] = $shop;
-                        }
-                        $supplier->associateTo($shops);
-                    }
-                }
+            if (!$res) {
+                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+                    Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
+                    (isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
+                    (isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+                );
             } else {
-                $this->errors[] = $this->l('Supplier is invalid').' ('.$supplier->name.')';
-                $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
+                // Associate supplier to group shop
+                if ($shop_is_feature_active && $supplier->shop) {
+                    Db::getInstance()->execute('
+						DELETE FROM '._DB_PREFIX_.'supplier_shop
+						WHERE id_supplier = '.(int)$supplier->id
+                    );
+                    $supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
+                    $shops = array();
+                    foreach ($supplier->shop as $shop) {
+                        if (empty($shop)) {
+                            continue;
+                        }
+                        $shop = trim($shop);
+                        if (!is_numeric($shop)) {
+                            $shop = ShopGroup::getIdByName($shop);
+                        }
+                        $shops[] = $shop;
+                    }
+                    $supplier->associateTo($shops);
+                }
             }
+        } else {
+            $this->errors[] = $this->l('Supplier is invalid').' ('.$supplier->name.')';
+            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
+        }
     }
 
-    public function aliasImport($offset = false, $limit = false)
+    public function aliasImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -3193,7 +3206,8 @@ class AdminImportControllerCore extends AdminController
 
             $this->aliasImportOne(
                 $info,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         $this->closeCsvFile($handle);
@@ -3201,8 +3215,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function aliasImportOne($info, $force_ids)
+    protected function aliasImportOne($info, $force_ids, $validateOnly = false)
     {
+        // FIXME
         AdminImportController::setDefaultValues($info);
 
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
@@ -3244,7 +3259,7 @@ class AdminImportControllerCore extends AdminController
     /**
      * @since 1.5.0
      */
-    public function supplyOrdersImport($offset = false, $limit = false)
+    public function supplyOrdersImport($offset = false, $limit = false, $validateOnly = false)
     {
         // opens CSV & sets locale
         $this->receiveTab();
@@ -3268,7 +3283,8 @@ class AdminImportControllerCore extends AdminController
 
             $this->supplyOrdersImportOne(
                 $info,
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         // closes
@@ -3277,8 +3293,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function supplyOrdersImportOne($info, $force_ids)
+    protected function supplyOrdersImportOne($info, $force_ids, $validateOnly = false)
     {
+        // FIXME
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
 
@@ -3370,7 +3387,7 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function supplyOrdersDetailsImport($offset = false, $limit = false, &$crossStepsVariables = false)
+    public function supplyOrdersDetailsImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
     {
         // opens CSV & sets locale
         $this->receiveTab();
@@ -3405,7 +3422,8 @@ class AdminImportControllerCore extends AdminController
                 $info,
                 $products, // by ref
                 $reset, // by ref
-                $force_ids
+                $force_ids,
+                $validateOnly
             );
         }
         // closes
@@ -3418,8 +3436,9 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids)
+    protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids, $validateOnly = false)
     {
+        // FIXME
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
 
@@ -3741,13 +3760,13 @@ class AdminImportControllerCore extends AdminController
         return parent::postProcess();
     }
 
-    public function importByGroups($offset = false, $limit = false, &$results = null)
+    public function importByGroups($offset = false, $limit = false, &$results = null, $validateOnly = false)
     {
         // Check if the CSV file exist
         if (Tools::getValue('csv')) {
             $shop_is_feature_active = Shop::isFeatureActive();
-            // If i am a superadmin, i can truncate table
-            if ((($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate')  && !$offset) {
+            // If i am a superadmin, i can truncate table (ONLY IF OFFSET == 0 or false and NOT FOR VALIDATION MODE!)
+            if (!$offset && !$validateOnly &&(($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate')) {
                 $this->truncateTables((int)Tools::getValue('entity'));
             }
             $import_type = false;
@@ -3764,36 +3783,36 @@ class AdminImportControllerCore extends AdminController
             Db::getInstance()->disableCache();
             switch ((int)Tools::getValue('entity')) {
                 case $this->entities[$import_type = $this->l('Categories')]:
-                    $doneCount += $this->categoryImport($offset, $limit, $crossStepsVariables);
+                    $doneCount += $this->categoryImport($offset, $limit, $crossStepsVariables, $validateOnly);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Products')]:
                     if (!defined('PS_MASS_PRODUCT_CREATION')) {
                         define('PS_MASS_PRODUCT_CREATION', true);
                     }
-                    $doneCount += $this->productImport($offset, $limit);
+                    $doneCount += $this->productImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Customers')]:
-                    $doneCount += $this->customerImport($offset, $limit);
+                    $doneCount += $this->customerImport($offset, $limit, $validateOnly);
                     break;
                 case $this->entities[$import_type = $this->l('Addresses')]:
-                    $doneCount += $this->addressImport($offset, $limit);
+                    $doneCount += $this->addressImport($offset, $limit, $validateOnly);
                     break;
                 case $this->entities[$import_type = $this->l('Combinations')]:
-                    $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables);
+                    $doneCount += $this->attributeImport($offset, $limit, $crossStepsVariables, $validateOnly);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Manufacturers')]:
-                    $doneCount += $this->manufacturerImport($offset, $limit);
+                    $doneCount += $this->manufacturerImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Suppliers')]:
-                    $doneCount += $this->supplierImport($offset, $limit);
+                    $doneCount += $this->supplierImport($offset, $limit, $validateOnly);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Alias')]:
-                    $doneCount += $this->aliasImport($offset, $limit);
+                    $doneCount += $this->aliasImport($offset, $limit, $validateOnly);
                     break;
             }
 
@@ -3802,12 +3821,12 @@ class AdminImportControllerCore extends AdminController
                 switch ((int)Tools::getValue('entity')) {
                     case $this->entities[$import_type = $this->l('Supply Orders')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $doneCount += $this->supplyOrdersImport($offset, $limit);
+                            $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
                         }
                         break;
                     case $this->entities[$import_type = $this->l('Supply Order Details')]:
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables);
+                            $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
                         }
                         break;
                 }
@@ -3917,11 +3936,20 @@ class AdminImportControllerCore extends AdminController
     {
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
-sleep(1);
+        $validateOnly = ((int)Tools::getValue('validateOnly') == 1);
+usleep(800000);
         $results = array();
-        $this->importByGroups($offset, $limit, $results);
+        $this->importByGroups($offset, $limit, $results, $validateOnly);
 
-        if ((bool)$results['isFinished'] && (bool)Tools::getValue('sendemail')) {
+        // Retrieve errors/warnings if any
+        if (count($this->errors) > 0) {
+            $results['errors'] = $this->errors;
+        }
+        if (count($this->warnings) > 0) {
+            $results['warnings'] = $this->warnings;
+        }
+
+        if (!$validateOnly && (bool)$results['isFinished'] && (bool)Tools::getValue('sendemail')) {
             $templateVars = array(
                             '{firstname}' => $this->context->employee->firstname,
                             '{lastname}' => $this->context->employee->lastname,
@@ -3950,8 +3978,6 @@ sleep(1);
     public function initModal()
     {
         parent::initModal();
-//         $this->context->smarty->assign(array(
-//         ));
          $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
          $this->modals[] = array(
              'modal_id' => 'importProgress',
