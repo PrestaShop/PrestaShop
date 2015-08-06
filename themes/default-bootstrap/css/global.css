@@ -6229,6 +6229,8 @@ table.table_block td {
     border-bottom-width: 1px;
     color: #333;
     vertical-align: middle; }
+  .table td ul, .table td ol {
+    margin-bottom: 0 !important; }
   .table td a.color-myaccount {
     color: #777;
     text-decoration: underline; }
