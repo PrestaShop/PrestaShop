@@ -7,11 +7,11 @@
   <tab id="Attributes_and_Values" name="Atributos y Valores"/>
   <tab id="Carriers" name="Transportistas"/>
   <tab id="Cart_Rules" name="Reglas de compra"/>
-  <tab id="Catalog" name="catalogo"/>
+  <tab id="Catalog" name="Catalogo"/>
   <tab id="Catalog_Price_Rules" name="Reglas de precio del cat&#xE1;logo"/>
   <tab id="Categories" name="Categor&#xED;as"/>
   <tab id="CMS" name="CMS"/>
-  <tab id="CMS_Categories" name="categor&#xED;as CMS"/>
+  <tab id="CMS_Categories" name="Categor&#xED;as CMS"/>
   <tab id="CMS_Pages" name="Paginas CMS"/>
   <tab id="Combinations_Generator" name="Generador de Combinaciones"/>
   <tab id="Configuration" name="Configuraci&#xF3;n"/>
@@ -22,9 +22,9 @@
   <tab id="CSV_Import" name="Importes de CSV"/>
   <tab id="Currencies" name="Monedas"/>
   <tab id="Customer_Service" name="Servicio clientela"/>
-  <tab id="Customers" name="clientes"/>
-  <tab id="Customers_2" name="clientes"/>
-  <tab id="Customers_1" name="clientes"/>
+  <tab id="Customers" name="Clientes"/>
+  <tab id="Customers_2" name="Clientes"/>
+  <tab id="Customers_1" name="Clientes"/>
   <tab id="DB_Backup" name="Copia de seguridad DB"/>
   <tab id="Delivery_Slips" name="Bonos de entrega"/>
   <tab id="E-mail" name="Correo electr&#xF3;nico"/>
@@ -36,7 +36,7 @@
   <tab id="Dashboard" name="Dashboard"/>
   <tab id="Images" name="Im&#xE1;genes"/>
   <tab id="Instant_Stock_Status" name="Estado de existencias instantes"/>
-  <tab id="Invoices" name="facturas"/>
+  <tab id="Invoices" name="Facturas"/>
   <tab id="Languages" name="Idiomas"/>
   <tab id="Localization" name="Localizaci&#xF3;n"/>
   <tab id="Localization_1" name="Localizaci&#xF3;n"/>
@@ -47,15 +47,15 @@
   <tab id="Marketing" name="Marketing"/>
   <tab id="Menus" name="Men&#xFA;s"/>
   <tab id="Merchandise_Returns" name="Devoluciones de mercanc&#xED;a"/>
-  <tab id="Modules_1" name="m&#xF3;dulos"/>
-  <tab id="Modules" name="m&#xF3;dulos"/>
+  <tab id="Modules_1" name="M&#xF3;dulos y Servicios"/>
+  <tab id="Modules" name="M&#xF3;dulos"/>
   <tab id="Modules_Themes_Catalog" name="Catalogo de M&#xF3;dulos y Temas"/>
   <tab id="Monitoring" name="Monitorizaci&#xF3;n"/>
   <tab id="Multistore" name="Tiendas M&#xFA;ltiples"/>
   <tab id="Order_Messages" name="Orden de los mensajes"/>
-  <tab id="Orders_2" name="pedidos"/>
-  <tab id="Orders" name="pedidos"/>
-  <tab id="Orders_1" name="pedidos"/>
+  <tab id="Orders_2" name="Pedidos"/>
+  <tab id="Orders" name="Pedidos"/>
+  <tab id="Orders_1" name="Pedidos"/>
   <tab id="Outstanding" name="Inacabado (?)"/>
   <tab id="Payment" name="Modo de pago"/>
   <tab id="Performance" name="Rendimiento"/>
