@@ -1052,10 +1052,25 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     } //check if order exist in database
 
                     if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct)) {
-                        $message = imap_fetchbody($mbox, $overview->msgno, 1);
-                        $message = quoted_printable_decode($message);
-                        $message = utf8_encode($message);
-                        $message = quoted_printable_decode($message);
+                        $structure = imap_bodystruct($mbox, $overview->msgno, '1');
+                        if ($structure->type == 0) {
+                            $message = imap_fetchbody($mbox, $overview->msgno, '1');
+                        } elseif ($structure->type == 1) {
+                            $structure = imap_bodystruct($mbox, $overview->msgno, '1.1');
+                            $message = imap_fetchbody($mbox, $overview->msgno, '1.1');
+                        } else {
+                            continue;
+                        }
+
+                        switch ($structure->encoding) {
+                            case 3:
+                                $message = imap_base64($message);
+                                break;
+                            case 4:
+                                $message = imap_qprint($message);
+                                break;
+                        }
+                        $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
@@ -1080,4 +1095,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
             return array('hasError' => false, 'errors' => '');
         }
     }
+
+	protected function getEncoding($structure)
+	{
+		foreach ($structure->parameters as $parameter) {
+			if ($parameter->attribute == 'CHARSET') {
+				return $parameter->value;
+			}
+		}
+		return 'utf-8';
+	}
 }
