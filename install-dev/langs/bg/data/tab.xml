@@ -77,7 +77,7 @@
   <tab id="Performance" name="&#x41F;&#x440;&#x43E;&#x438;&#x437;&#x432;&#x43E;&#x434;&#x438;&#x442;&#x435;&#x43B;&#x43D;&#x43E;&#x441;&#x442;"/>
   <tab id="E-mail" name="E-mail"/>
   <tab id="Multistore" name="Multiboutique"/>
-  <tab id="CSV_Import" name="&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x430;&#x43D;&#x435; &#x43D;&#x430; CSV"/>
+  <tab id="CSV_Import" name="&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x430;&#x43D;&#x435; &#x43D;&#x430;"/>
   <tab id="DB_Backup" name="&#x410;&#x440;&#x445;&#x438;&#x432; &#x43D;&#x430; &#x411;&#x414;"/>
   <tab id="SQL_Manager" name="SQL &#x43C;&#x435;&#x43D;&#x438;&#x434;&#x436;&#x44A;&#x440;"/>
   <tab id="Logs" name="&#x41B;&#x43E;&#x433;&#x43E;&#x432;&#x435;"/>
