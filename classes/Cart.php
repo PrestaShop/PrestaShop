@@ -3255,7 +3255,8 @@ class CartCore extends ObjectModel
         if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')) {
             return false;
         }
-
+        
+	$products = array();
         foreach ($this->getProducts() as $product) {
             if (!$this->allow_seperated_package && !$product['allow_oosp'] && StockAvailable::dependsOnStock($product['id_product']) &&
                 $product['advanced_stock_management'] && (bool)Context::getContext()->customer->isLogged() && ($delivery = $this->getDeliveryOption()) && !empty($delivery)) {
@@ -3263,7 +3264,10 @@ class CartCore extends ObjectModel
             }
             if (!$product['active'] || !$product['available_for_order']
                 || (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity'])) {
-                return $return_product ? $product : false;
+                if ($return_product)
+                	$products[] = $product;
+                else
+                	return false;
             }
         }
 
