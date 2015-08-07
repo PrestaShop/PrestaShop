@@ -1556,11 +1556,13 @@ function parseDate(date){
 
 function refresh_kpis()
 {
-	$('.box-stats').each(function(){
-		var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
+	$('.box-stats').each(function() {
+		if ($(this).attr('id')) {
+			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
 
-		if (typeof window[functionName] === 'function') {
-			window[functionName]();
+			if (typeof window[functionName] === 'function') {
+				window[functionName]();
+			}
 		}
 	});
 }
