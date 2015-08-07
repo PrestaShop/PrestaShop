@@ -68,6 +68,13 @@ $(document).ready(function(){
 		$(document).on('change', 'select[name="currency_payment"]', function(){
 			setCurrency($(this).val());
 		});
+
+		$(document).on('click', 'button[data-trigger="disabled"]', function(){
+			$(this).prop('disabled', true).parents('form').submit();
+		});
+		$(document).on('click', 'button[data-trigger="hide"]', function(){
+			$(this).slideUp();
+		});
 	}
 
 	$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
