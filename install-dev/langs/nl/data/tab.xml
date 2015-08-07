@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <entity_tab>
   <tab id="Dashboard" name="Dashboard"/>
   <tab id="CMS_Pages" name="CMS-pagina's"/>

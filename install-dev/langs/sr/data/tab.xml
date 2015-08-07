@@ -1,4 +1,5 @@
-<entity_tab encoding="UTF-8">
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_tab>
   <tab id="Dashboard" name="Kontrolna tabla"/>
   <tab id="CMS_Pages" name="CMS stranice"/>
   <tab id="CMS_Categories" name="CMS kategorije"/>
