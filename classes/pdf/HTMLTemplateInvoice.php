@@ -38,7 +38,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      * @param $smarty
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty)
+    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order((int)$this->order_invoice->id_order);
@@ -49,6 +49,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
         if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
+            if (!$bulk_mode) {
+                OrderInvoice::fixAllShopAddresses();
+            }
         }
         
         // header informations
@@ -68,7 +71,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => $this->l('Invoice')));
+        $this->smarty->assign(array('header' => HTMLTemplateInvoice::l('Invoice')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
