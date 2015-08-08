@@ -1586,7 +1586,7 @@ class AdminProductsControllerCore extends AdminController
         $id_product = Tools::getValue('id_product');
         if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop'))) {
             if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`, `cover`) VALUES('.(int)$id_image.', '.(int)$id_shop.', \'0\')');
+                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`, `cover`) VALUES('.(int)$id_image.', '.(int)$id_shop.', NULL)');
             } else {
                 $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
             }
@@ -1608,7 +1608,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if ($count_cover_image > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 0 WHERE i.id_image <> '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product);
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = NULL WHERE i.id_image <> '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product);
         }
 
         // Clean covers in image_shop table
@@ -1622,7 +1622,7 @@ class AdminProductsControllerCore extends AdminController
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
         if ($count_cover_image_shop > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = NULL WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
         }
 
         if ($res) {
