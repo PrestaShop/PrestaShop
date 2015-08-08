@@ -883,4 +883,24 @@ class OrderInvoiceCore extends ObjectModel
 
         return AddressFormat::generateAddress($address, array(), '<br />', ' ');
     }
+    
+    /**
+     * This method is used to fix shop addresses that cannot be fixed during upgrade process
+     * (because uses the whole environnement of PS classes that is not available during upgrade).
+     * This method should execute once on an upgraded PrestaShop to fix all OrderInvoices in one shot.
+     * This method is triggered once during a (non bulk) creation of a PDF from an OrderInvoice that is not fixed yet.
+     *
+     * @since 1.6.1.1
+     */
+    public static function fixAllShopAddresses() {
+        $shop_ids = Shop::getShops(false, null, true);
+        $db = Db::getInstance();
+        foreach($shop_ids as $id_shop) {
+            $address = self::getCurrentFormattedShopAddress($id_shop);
+            $escaped_address = $db->escape($address, true, true);
+
+            $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)
+                SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL AND `id_shop` = '.$id_shop);
+        }
+    }
 }
