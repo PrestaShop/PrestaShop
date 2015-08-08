@@ -139,10 +139,12 @@ var ajaxCart = {
 				ajaxCart.add(idProduct, idProductAttribute, false, this, minimalQuantity);
 		});
 		//for product page 'add' button...
-		$(document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
-			e.preventDefault();
-			ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
-		});
+		if ($('.cart_block').length) {
+			$(document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
+				e.preventDefault();
+				ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
+			});
+		}
 
 		//for 'delete' buttons in the cart block...
 		$(document).off('click', '.cart_block_list .ajax_cart_block_remove_link').on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
@@ -794,7 +796,7 @@ var ajaxCart = {
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost).parent().find('.unvisible').show();
 		else if ((hasDeliveryAddress || typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc') && typeof(freeShippingTranslation) != 'undefined')
 			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
-		else if (!hasDeliveryAddress)
+		else if ((typeof toBeDetermined !== 'undefined') && !hasDeliveryAddress)
 			$('.ajax_cart_shipping_cost').html(toBeDetermined);
 
 		if (!jsonData.shippingCostFloat && !jsonData.free_ship)

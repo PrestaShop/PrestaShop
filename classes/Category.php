@@ -332,7 +332,7 @@ class CategoryCore extends ObjectModel
 
         $this->clearCache();
 
-        $all_cat = $this->getAllChildren();
+        $deleted_children = $all_cat = $this->getAllChildren();
         $all_cat[] = $this;
         foreach ($all_cat as $cat) {
             /** @var Category $cat */
@@ -356,7 +356,7 @@ class CategoryCore extends ObjectModel
             Category::regenerateEntireNtree();
         }
 
-        Hook::exec('actionCategoryDelete', array('category' => $this));
+        Hook::exec('actionCategoryDelete', array('category' => $this, 'deleted_children' => $deleted_children));
 
         return true;
     }

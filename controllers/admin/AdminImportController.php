@@ -1068,16 +1068,15 @@ class AdminImportControllerCore extends AdminController
 
         $url = http_build_url('', $parced_url);
 
-        // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
-        if (!ImageManager::checkImageMemoryLimit($url)) {
-            return false;
-        }
-
         $orig_tmpfile = $tmpfile;
 
-        // 'file_exists' doesn't work on distant file, and getimagesize makes the import slower.
-        // Just hide the warning, the processing will be the same.
         if (Tools::copy($url, $tmpfile)) {
+            // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+            if (!ImageManager::checkImageMemoryLimit($tmpfile)) {
+                @unlink($tmpfile);
+                return false;
+            }
+
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
