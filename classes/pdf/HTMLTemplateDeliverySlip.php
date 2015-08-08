@@ -66,7 +66,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => $this->l('Delivery')));
+        $this->smarty->assign(array('header' => HTMLTemplateInvoice::l('Delivery')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }
