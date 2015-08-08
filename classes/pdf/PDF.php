@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -33,6 +33,7 @@ class PDFCore
     public $pdf_renderer;
     public $objects;
     public $template;
+    public $send_bulk_flag = false;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
@@ -55,6 +56,10 @@ class PDFCore
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
+        }
+        
+        if (count($this->objects)>1) { // when bulk mode only
+            $this->send_bulk_flag = true;
         }
     }
 
@@ -115,7 +120,9 @@ class PDFCore
         $class_name = 'HTMLTemplate'.$this->template;
 
         if (class_exists($class_name)) {
-            $class = new $class_name($object, $this->smarty);
+            // Some HTMLTemplateXYZ implementations won't use the third param but this is not a problem (no warning in PHP),
+            // the third param is then ignored if not added to the method signature.
+            $class = new $class_name($object, $this->smarty, $this->send_bulk_flag);
 
             if (!($class instanceof HTMLTemplate)) {
                 throw new PrestaShopException('Invalid class. It should be an instance of HTMLTemplate');

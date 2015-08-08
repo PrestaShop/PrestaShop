@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CustomerCore extends ObjectModel
 {
@@ -831,10 +831,15 @@ class CustomerCore extends ObjectModel
      */
     public function logout()
     {
+        Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
+
         if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->logout();
         }
+
         $this->logged = 0;
+
+        Hook::exec('actionCustomerLogoutAfter', array('customer' => $this));
     }
 
     /**
@@ -845,13 +850,36 @@ class CustomerCore extends ObjectModel
      */
     public function mylogout()
     {
+        Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
+
         if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->mylogout();
         }
+
         $this->logged = 0;
+
+        Hook::exec('actionCustomerLogoutAfter', array('customer' => $this));
     }
 
+    /**
+     * Depricated since 2015-08-05
+     * Please use: getLastEmptyCart($with_order)
+     *
+     * @param bool|true $with_order
+     */
     public function getLastCart($with_order = true)
+    {
+        Tools::displayAsDeprecated('Use getLastEmptyCart($with_order)');
+        $this->getLastEmptyCart($with_order);
+    }
+
+    /**
+     * Get last empty Cart for this Customer, when last cart is not empty return false
+     *
+     * @param bool|true $with_order
+     * @return bool|int
+     */
+    public function getLastEmptyCart($with_order = true)
     {
         $carts = Cart::getCustomerCarts((int)$this->id, $with_order);
         if (!count($carts)) {

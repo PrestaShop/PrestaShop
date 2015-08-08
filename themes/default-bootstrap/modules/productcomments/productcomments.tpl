@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="idTab5">
 	<div id="product_comments_block_tab">
@@ -136,11 +136,11 @@
 							<li>
 								<label>{$criterion.name|escape:'html':'UTF-8'}:</label>
 								<div class="star_content">
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" checked="checked" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" checked="checked" />
+									<input class="star not_uniform" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" />
 								</div>
 								<div class="clearfix"></div>
 							</li>

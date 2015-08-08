@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @deprecated 1.5.0.1
@@ -2376,9 +2376,9 @@ class ProductCore extends ObjectModel
             }
 
             $ids_products = rtrim($ids_products, ',');
-            Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('CREATE TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions` (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY', false);
+            Db::getInstance()->execute('CREATE TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions` (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY', false);
             if ($ids_products) {
-                Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('INSERT INTO `'._DB_PREFIX_.'product_reductions` VALUES '.$ids_products, false);
+                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_reductions` VALUES '.$ids_products, false);
             }
 
             $groups = FrontController::getCurrentCustomerGroups();
@@ -2399,7 +2399,7 @@ class ProductCore extends ObjectModel
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					ORDER BY RAND()';
 
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+            $result = Db::getInstance()->getRow($sql);
 
             if (!$id_product = $result['id_product']) {
                 return false;
@@ -2519,7 +2519,7 @@ class ProductCore extends ObjectModel
 
         $sql = '
 		SELECT
-			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
+			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`,
 			IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 			pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 			pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
@@ -5336,11 +5336,12 @@ class ProductCore extends ObjectModel
     public function setCoverWs($id_image)
     {
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, `'._DB_PREFIX_.'image` i
-			SET image_shop.`cover` = 0
-			WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
-			AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+            SET image_shop.`cover` = NULL
+            WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
+            AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop`
-			SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
+            SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
 
         return true;
     }
@@ -5353,26 +5354,26 @@ class ProductCore extends ObjectModel
     public function getWsImages()
     {
         return Db::getInstance()->executeS('
-		SELECT i.`id_image` as id
-		FROM `'._DB_PREFIX_.'image` i
-		'.Shop::addSqlAssociation('image', 'i').'
-		WHERE i.`id_product` = '.(int)$this->id.'
-		ORDER BY i.`position`');
+            SELECT i.`id_image` as id
+            FROM `'._DB_PREFIX_.'image` i
+            '.Shop::addSqlAssociation('image', 'i').'
+            WHERE i.`id_product` = '.(int)$this->id.'
+            ORDER BY i.`position`');
     }
 
     public function getWsStockAvailables()
     {
         return Db::getInstance()->executeS('SELECT `id_stock_available` id, `id_product_attribute`
-														FROM `'._DB_PREFIX_.'stock_available`
-														WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
+			FROM `'._DB_PREFIX_.'stock_available`
+			WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
     }
 
     public function getWsTags()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_tag` as id
-		FROM `'._DB_PREFIX_.'product_tag`
-		WHERE `id_product` = '.(int)$this->id);
+    		SELECT `id_tag` as id
+    		FROM `'._DB_PREFIX_.'product_tag`
+    		WHERE `id_product` = '.(int)$this->id);
     }
 
     /**

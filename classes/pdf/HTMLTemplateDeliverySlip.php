@@ -18,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2015 PrestaShop SA
- *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -36,7 +36,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      * @param $smarty
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty)
+    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order($this->order_invoice->id_order);
@@ -47,6 +47,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
         if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop);
+            if (!$bulk_mode) {
+                OrderInvoice::fixAllShopAddresses();
+            }
         }
 
         // header informations
@@ -66,7 +69,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
     public function getHeader()
     {
         $this->assignCommonHeaderData();
-        $this->smarty->assign(array('header' => $this->l('Delivery')));
+        $this->smarty->assign(array('header' => HTMLTemplateDeliverySlip::l('Delivery')));
 
         return $this->smarty->fetch($this->getTemplate('header'));
     }

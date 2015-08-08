@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class OrderInvoiceCore extends ObjectModel
 {
@@ -882,5 +882,25 @@ class OrderInvoiceCore extends ObjectModel
         $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, array(), '<br />', ' ');
+    }
+    
+    /**
+     * This method is used to fix shop addresses that cannot be fixed during upgrade process
+     * (because uses the whole environnement of PS classes that is not available during upgrade).
+     * This method should execute once on an upgraded PrestaShop to fix all OrderInvoices in one shot.
+     * This method is triggered once during a (non bulk) creation of a PDF from an OrderInvoice that is not fixed yet.
+     *
+     * @since 1.6.1.1
+     */
+    public static function fixAllShopAddresses() {
+        $shop_ids = Shop::getShops(false, null, true);
+        $db = Db::getInstance();
+        foreach($shop_ids as $id_shop) {
+            $address = self::getCurrentFormattedShopAddress($id_shop);
+            $escaped_address = $db->escape($address, true, true);
+
+            $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)
+                SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL AND `id_shop` = '.$id_shop);
+        }
     }
 }

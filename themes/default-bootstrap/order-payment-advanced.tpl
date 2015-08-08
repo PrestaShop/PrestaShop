@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 {if !isset($addresses_style)}
     {$addresses_style.company = 'address_company'}
@@ -53,6 +53,7 @@
 <p class="alert alert-warning">{l s='This store has not accepted your new order.'}</p>
 {else}
     <p id="emptyCartWarning" class="alert alert-warning unvisible">{l s='Your shopping cart is empty.'}</p>
+    <div id="HOOK_TOP_PAYMENT">{$HOOK_TOP_PAYMENT}</div>
     <h2>{l s='Payment Options'}</h2>
     <!-- HOOK_ADVANCED_PAYMENT -->
     <div id="HOOK_ADVANCED_PAYMENT">

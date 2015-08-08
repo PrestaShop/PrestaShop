@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
 
@@ -167,7 +167,8 @@ class SearchCore
             }
         }
 
-        $string = trim(preg_replace('/\s+/', ' ', $string));
+        $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
+
         return $string;
     }
 
@@ -197,8 +198,7 @@ class SearchCore
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
-                $word = str_replace('%', '\\%', $word);
-                $word = str_replace('_', '\\_', $word);
+                $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
 
@@ -567,8 +567,6 @@ class SearchCore
             foreach ($words as $word) {
                 if (!empty($word)) {
                     $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
-                    // Remove accents
-                    $word = Tools::replaceAccentedChars($word);
 
                     if (!isset($product_array[$word])) {
                         $product_array[$word] = 0;
