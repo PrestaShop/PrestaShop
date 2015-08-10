@@ -553,7 +553,7 @@ class OrderDetailCore extends ObjectModel
         $this->setContext((int)$product['id_shop']);
         Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
         $this->specificPrice = $specific_price;
-        $this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
+        $this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, null, true, true, $this->context);
         $this->product_price = $this->original_product_price;
         $this->unit_price_tax_incl = (float)$product['price_wt'];
         $this->unit_price_tax_excl = (float)$product['price'];
@@ -573,11 +573,11 @@ class OrderDetailCore extends ObjectModel
 
         $quantity_discount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $shop_id,
         (int)$cart->id_currency, (int)$this->vat_address->id_country,
-        (int)$this->customer->id_default_group, (int)$product['cart_quantity'], false, null, null, $null, true, true, $this->context);
+        (int)$this->customer->id_default_group, (int)$product['cart_quantity'], false, null, null, null, true, true, $this->context);
 
         $unit_price = Product::getPriceStatic((int)$product['id_product'], true,
             ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
-            2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
+            2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, null, true, true, $this->context);
         $this->product_quantity_discount = 0.00;
         if ($quantity_discount) {
             $this->product_quantity_discount = $unit_price;

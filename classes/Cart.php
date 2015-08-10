@@ -1544,7 +1544,7 @@ class CartCore extends ObjectModel
                 (int)$this->id_customer ? (int)$this->id_customer : null,
                 (int)$this->id,
                 $id_address,
-                $null,
+                null,
                 $ps_use_ecotax,
                 true,
                 $virtual_context
