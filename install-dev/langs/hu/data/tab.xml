@@ -59,7 +59,7 @@
   <tab id="Tax_Rules" name="Adószabályok"/>
   <tab id="Translations" name="Translations"/>
   <tab id="Modules_1" name="Modules and Services"/>
-  <tab id="Modules_Themes_Catalog" name="Modules & Themes Catalog"/>
+  <tab id="Modules_Themes_Catalog" name="Modules &amp; Themes Catalog"/>
   <tab id="Positions" name="Positions"/>
   <tab id="Payment" name="Fizetés"/>
   <tab id="General" name="Általános"/>
@@ -67,7 +67,7 @@
   <tab id="Products_1" name="Termék"/>
   <tab id="Customers_2" name="Vásárlók"/>
   <tab id="Themes" name="Themes"/>
-  <tab id="SEO_URLs" name="SEO & URLs"/>
+  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="CMS" name="CMS"/>
   <tab id="Images" name="Képek"/>
   <tab id="Store_Contacts" name="Store Contacts"/>
