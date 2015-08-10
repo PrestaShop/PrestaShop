@@ -23,7 +23,7 @@
   <tab id="Products" name="Produkter"/>
   <tab id="Categories" name="Kategorier"/>
   <tab id="Monitoring" name="Övervakning"/>
-  <tab id="Attributes_and_Values" name="Attribut & grupper"/>
+  <tab id="Attributes_and_Values" name="Attribut &amp; grupper"/>
   <tab id="Features" name="Egenskaper"/>
   <tab id="Manufacturers" name="Tillverkare"/>
   <tab id="Suppliers" name="Leverantörer"/>
@@ -59,7 +59,7 @@
   <tab id="Tax_Rules" name="Momsregler"/>
   <tab id="Translations" name="Översättningar"/>
   <tab id="Modules_1" name="Moduler och Tjänster"/>
-  <tab id="Modules_Themes_Catalog" name="Katalog med moduler & teman"/>
+  <tab id="Modules_Themes_Catalog" name="Katalog med moduler &amp; teman"/>
   <tab id="Positions" name="Positioner"/>
   <tab id="Payment" name="Betalning"/>
   <tab id="General" name="Allmänt"/>
@@ -67,7 +67,7 @@
   <tab id="Products_1" name="Produkter"/>
   <tab id="Customers_2" name="Kunder"/>
   <tab id="Themes" name="Teman"/>
-  <tab id="SEO_URLs" name="SEO & URLs"/>
+  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="CMS" name="CMS"/>
   <tab id="Images" name="Bilder"/>
   <tab id="Store_Contacts" name="Butikskontakter"/>
