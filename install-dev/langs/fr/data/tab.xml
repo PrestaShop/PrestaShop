@@ -72,7 +72,7 @@
   <tab id="Search_1" name="Recherche"/>
   <tab id="Search" name="Recherche"/>
   <tab id="Search_Engines" name="Moteurs de recherche"/>
-  <tab id="SEO_URLs" name="SEO & URLs"/>
+  <tab id="SEO_URLs" name="SEO &amp; URLs"/>
   <tab id="Shipping" name="Transport"/>
   <tab id="Shipping_1" name="Préférences"/>
   <tab id="Shop_URLs" name="URLs de boutique"/>
@@ -87,7 +87,7 @@
   <tab id="Stock_Coverage" name="Couverture du stock"/>
   <tab id="Stock_Management" name="Gestion du stock"/>
   <tab id="Stock_Movement" name="Mouvements de Stock"/>
-  <tab id="Store_Contacts" name="Coordonnées & magasins"/>
+  <tab id="Store_Contacts" name="Coordonnées &amp; magasins"/>
   <tab id="Suppliers" name="Fournisseurs"/>
   <tab id="Supply_orders" name="Commandes fournisseurs"/>
   <tab id="Tags" name="Tags"/>
