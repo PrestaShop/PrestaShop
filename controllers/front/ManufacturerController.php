@@ -44,6 +44,8 @@ class ManufacturerControllerCore extends FrontController
         }
         if (Validate::isLoadedObject($this->manufacturer)) {
             parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
         }
     }
 
