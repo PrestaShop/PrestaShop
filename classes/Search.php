@@ -193,12 +193,11 @@ class SearchCore
 
         $intersect_array = array();
         $score_array = array();
-        $words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
+        $words = explode(' ', Tools::replaceAccentedChars(Search::sanitize($expr, $id_lang, false, $context->language->iso_code)));
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
-                $word = str_replace('%', '\\%', $word);
-                $word = str_replace('_', '\\_', $word);
+                $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
 
