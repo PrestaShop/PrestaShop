@@ -724,7 +724,7 @@ class ProductControllerCore extends FrontController
                     $cur_price *= 1 - $row['reduction'];
                 }
 
-                $row['real_value'] = $price - $cur_price;
+                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
 					if (Product::$_taxCalculationMethod == PS_TAX_INC) {
