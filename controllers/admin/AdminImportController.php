@@ -270,6 +270,17 @@ class AdminImportControllerCore extends AdminController
                     'uploadable_files' => array('label' => $this->l('Uploadable files (0 = No, 1 = Yes)')),
                     'text_fields' => array('label' => $this->l('Text fields (0 = No, 1 = Yes)')),
                     'out_of_stock' => array('label' => $this->l('Action when out of stock')),
+                    'is_virtual' => array('label' => $this->l('Virtual product (0 = No, 1 = Yes)')),
+                    'file_url' => array('label' => $this->l('File URL')),
+                    'nb_downloadable' => array(
+                        'label' => $this->l('Number of allowed downloads'),
+                        'help' => $this->l('Number of downloads allowed per customer. Set to 0 for unlimited downloads.'),
+                    ),
+                    'date_expiration' => array('label' => $this->l('Expiration date (yyyy-mm-dd)')),
+                    'nb_days_accessible' => array(
+                        'label' => $this->l('Number of days'),
+                        'help' => $this->l('Number of days this file can be accessed by customers. Set to zero for unlimited access.'),
+                    ),
                     'shop' => array(
                         'label' => $this->l('ID / Name of shop'),
                         'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -315,6 +326,7 @@ class AdminImportControllerCore extends AdminController
                     'text_fields' => 0,
                     'advanced_stock_management' => 0,
                     'depends_on_stock' => 0,
+                    'is_virtual' => 0,
                 );
             break;
 
@@ -1812,7 +1824,25 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     StockAvailable::setProductOutOfStock((int)$product->id, (int)$product->out_of_stock);
                 }
+
+                if ($product_download_id = ProductDownload::getIdFromIdProduct((int)$product->id)) {
+                    $product_download = new ProductDownload($product_download_id);
+                    $product_download->delete(true);
+                }
+
+                if ($product->getType() == Product::PTYPE_VIRTUAL) {
+                    $product_download = new ProductDownload();
+                    $product_download->filename = ProductDownload::getNewFilename();
+                    Tools::copy($info['file_url'], _PS_DOWNLOAD_DIR_.$product_download->filename);
+                    $product_download->id_product = (int)$product->id;
+                    $product_download->nb_downloadable = (int)$info['nb_downloadable'];
+                    $product_download->date_expiration = $info['date_expiration'];
+                    $product_download->nb_days_accessible = (int)$info['nb_days_accessible'];
+                    $product_download->display_filename = basename($info['file_url']);
+                    $product_download->add();
+                }
             }
+
         }
 
         $shops = array();
@@ -2548,7 +2578,7 @@ class AdminImportControllerCore extends AdminController
     					DELETE FROM '._DB_PREFIX_.'product_attribute_combination
     					WHERE id_product_attribute = '.(int)$id_product_attribute);
                 }
-    
+
                 foreach ($attributes_to_add as $attribute_to_add) {
                     Db::getInstance()->execute('
     					INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
@@ -3061,7 +3091,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
             }
-            
+
         }
 
         if (isset($address->supplier) && is_numeric($address->supplier) && Supplier::supplierExists((int)$address->supplier)) {
