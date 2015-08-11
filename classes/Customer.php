@@ -648,6 +648,7 @@ class CustomerCore extends ObjectModel
 
     public function addGroups($groups)
     {
+        Hook::exec('actionCustomerAddGroups', array('id_customer' => $this->id, 'groups' => $groups));
         foreach ($groups as $group) {
             $row = array('id_customer' => (int)$this->id, 'id_group' => (int)$group);
             Db::getInstance()->insert('customer_group', $row, false, true, Db::INSERT_IGNORE);
