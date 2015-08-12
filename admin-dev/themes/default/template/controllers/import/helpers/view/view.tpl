@@ -95,7 +95,6 @@
 		</div>
 		<form action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" id="import_form" name="import_form" class="form-horizontal">
 			<input type="hidden" name="csv" value="{$fields_value.csv}" />
-			<input type="hidden" name="convert" value="{$fields_value.convert}" />
 			<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />
 			<input type="hidden" name="entity" value="{$fields_value.entity}" />
 			<input type="hidden" name="iso_lang" value="{$fields_value.iso_lang}" />

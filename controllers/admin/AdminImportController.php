@@ -76,6 +76,7 @@ class AdminImportControllerCore extends AdminController
     );
 
     public $separator;
+    public $convert;
     public $multiple_value_separator;
 
     public function __construct()
@@ -556,6 +557,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator :  ';';
+        $this->convert = false;
         $this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
         parent::__construct();
     }
@@ -742,7 +744,6 @@ class AdminImportControllerCore extends AdminController
             'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match', true, false),
             'fields_value' => array(
                 'csv' => Tools::getValue('csv'),
-                'convert' => Tools::getValue('convert'),
                 'entity' => (int)Tools::getValue('entity'),
                 'iso_lang' => Tools::getValue('iso_lang'),
                 'truncate' => Tools::getValue('truncate'),
@@ -808,7 +809,7 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setLocale();
         for ($current_line = 0; $current_line < 10 && $line = fgetcsv($handle, MAX_LINE_SIZE, $glue); $current_line++) {
             /* UTF-8 conversion */
-            if (Tools::getValue('convert')) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $html .= '<tr id="table_'.$current_table.'_line_'.$current_line.'">';
@@ -1197,7 +1198,6 @@ class AdminImportControllerCore extends AdminController
         }
         AdminImportController::setLocale();
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
         $regenerate = Tools::getValue('regenerate');
         $shop_is_feature_active = Shop::isFeatureActive();
@@ -1211,7 +1211,7 @@ class AdminImportControllerCore extends AdminController
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -1467,7 +1467,6 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setLocale();
         $shop_ids = Shop::getCompleteListOfShopsID();
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
         $match_ref = Tools::getValue('match_ref');
         $regenerate = Tools::getValue('regenerate');
@@ -1476,10 +1475,15 @@ class AdminImportControllerCore extends AdminController
             Module::setBatchMode(true);
         }
 
+        $accessories = array();
+        if ($crossStepsVariables !== false && array_key_exists('accessories', $crossStepsVariables)) {
+            $accessories = $crossStepsVariables['accessories'];
+        }
+
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -2216,7 +2220,6 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
 
-        $convert = Tools::getValue('convert');
         $regenerate = Tools::getValue('regenerate');
         $shop_is_feature_active = Shop::isFeatureActive();
 
@@ -2227,7 +2230,7 @@ class AdminImportControllerCore extends AdminController
                 continue;
             }
 
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -2687,13 +2690,12 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setLocale();
 
         $shop_is_feature_active = Shop::isFeatureActive();
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -2935,13 +2937,12 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3171,14 +3172,13 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setLocale();
 
         $shop_is_feature_active = Shop::isFeatureActive();
-        $convert = Tools::getValue('convert');
         $regenerate = Tools::getValue('regenerate');
         $force_ids = Tools::getValue('forceIDs');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3278,14 +3278,13 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setLocale();
 
         $shop_is_feature_active = Shop::isFeatureActive();
-        $convert = Tools::getValue('convert');
         $regenerate = Tools::getValue('regenerate');
         $force_ids = Tools::getValue('forceIDs');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3379,13 +3378,12 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3447,14 +3445,13 @@ class AdminImportControllerCore extends AdminController
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
         $regenerate = Tools::getValue('regenerate');
 
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3596,15 +3593,13 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::setLocale();
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
 
         // main loop, for each supply orders to import
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); ++$current_line) {
             $line_count++;
-            // if convert requested
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3732,15 +3727,13 @@ class AdminImportControllerCore extends AdminController
             $reset = $crossStepsVariables['reset'];
         }
 
-        $convert = Tools::getValue('convert');
         $force_ids = Tools::getValue('forceIDs');
 
         // main loop, for each supply orders details to import
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); ++$current_line) {
             $line_count++;
-            // if convert requested
-            if ($convert) {
+            if ($this->convert) {
                 $line = $this->utf8EncodeArray($line);
             }
             $info = AdminImportController::getMaskedRow($line);
@@ -3890,6 +3883,9 @@ class AdminImportControllerCore extends AdminController
         $file = AdminImportController::getPath(strval(preg_replace('/\.{2,}/', '.', Tools::getValue('csv'))));
         $handle = false;
         if (is_file($file) && is_readable($file)) {
+            if (!mb_check_encoding(file_get_contents($file), 'UTF-8')) {
+                $this->convert = true;
+            }
             $handle = fopen($file, 'r');
         }
 

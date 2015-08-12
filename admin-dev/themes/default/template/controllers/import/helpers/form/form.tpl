@@ -197,19 +197,6 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
-					<div class="col-lg-8">
-						<label class="switch-light prestashop-switch fixed-width-lg">
-							<input name="convert" id="convert" type="checkbox" />
-							<span>
-								<span>{l s='Yes'}</span>
-								<span>{l s='No'}</span>
-							</span>
-							<a class="slide-button btn"></a>
-						</label>
-					</div>
-				</div>
-				<div class="form-group">
 					<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
 					<div class="col-lg-8">
 						<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
@@ -480,6 +467,7 @@
 		if(selected){
 			$('#csv_file_selected').show();
 			$('#csv_file_uploader').hide();
+			csv_select(selected);
 		}
 
 		var truncateAuthorized = {$truncateAuthorized|intval};
