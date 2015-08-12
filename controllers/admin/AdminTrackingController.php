@@ -268,11 +268,11 @@ class AdminTrackingControllerCore extends AdminController
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND NOT EXISTS (
 			SELECT 1
-			FROM `'._DB_PREFIX_.'image` i
-			WHERE a.id_product = i.id_product
+			FROM `'._DB_PREFIX_.'image` img
+			WHERE a.id_product = img.id_product
 		)';
         $this->toolbar_title = $this->l('List of products without images:');
-        return $this->renderList();
+        return $this->renderList(true);
     }
 
     public function getCustomListProductsWithoutDescription()
@@ -313,7 +313,7 @@ class AdminTrackingControllerCore extends AdminController
 			description = "" AND description_short = ""
 		)';
         $this->toolbar_title = $this->l('List of products without description:');
-        return $this->renderList();
+        return $this->renderList(true);
     }
 
     public function getCustomListProductsWithoutPrice()
@@ -342,7 +342,7 @@ class AdminTrackingControllerCore extends AdminController
         $this->clearFilters();
 
         $this->_join = Shop::addSqlAssociation('product', 'a');
-        $this->_filter = ' AND a.price = 0.000000 AND a.wholesale_price = 0.000000 AND NOT EXISTS (
+        $this->_filter = ' AND a.price = "0.000000" AND a.wholesale_price = "0.000000" AND NOT EXISTS (
 			SELECT 1
 			FROM `'._DB_PREFIX_.'specific_price` sp
 			WHERE a.id_product = sp.id_product
@@ -351,14 +351,16 @@ class AdminTrackingControllerCore extends AdminController
         return $this->renderList();
     }
 
-    public function renderList()
+    public function renderList($withPagination = false)
     {
+        $paginationLimit = 20;
         $this->processFilter();
 
         if (!($this->fields_list && is_array($this->fields_list))) {
             return false;
         }
-        $this->getList($this->context->language->id);
+
+        $this->getList($this->context->language->id, null, null, 0, $withPagination ? $paginationLimit : null);
 
         $helper = new HelperList();
 
@@ -369,6 +371,10 @@ class AdminTrackingControllerCore extends AdminController
         }
 
         $this->setHelperDisplay($helper);
+        if ($withPagination) {
+            $helper->_default_pagination = $paginationLimit;
+            $helper->_pagination = $this->_pagination;
+        }
         $helper->tpl_vars = $this->tpl_list_vars;
         $helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
