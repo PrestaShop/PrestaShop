@@ -286,7 +286,7 @@ class AdminEmployeesControllerCore extends AdminController
         $this->fields_form['input'] = array_merge($this->fields_form['input'], array(
             array(
                 'type' => 'switch',
-                'label' => $this->l('Connect to PrestaShop'),
+                'label' => $this->l('Subscribe to PrestaShop newsletter'),
                 'name' => 'optin',
                 'required' => false,
                 'is_bool' => true,
@@ -302,7 +302,7 @@ class AdminEmployeesControllerCore extends AdminController
                         'label' => $this->l('No')
                     )
                 ),
-                'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.')
+                'hint' => $this->l('PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.')
             ),
             array(
                 'type' => 'default_tab',
