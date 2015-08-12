@@ -3509,7 +3509,8 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Delete product accessories
+     * Delete product accessories.
+     * Wrapper to static method deleteAccessories($product_id).
      *
      * @return mixed Deletion result
      */
@@ -3608,14 +3609,26 @@ class ProductCore extends ObjectModel
 
     /**
      * Link accessories with product
+     * Wrapper to static method changeAccessories($accessories_id, $product_id).
      *
      * @param array $accessories_id Accessories ids
      */
     public function changeAccessories($accessories_id)
     {
+        self::changeAccessoriesForProduct($accessories_id, $this->id);
+    }
+
+    /**
+     * Link accessories with product. No need to inflate a full Product (better performances).
+     *
+     * @param array $accessories_id Accessories ids
+     * @param int The product ID to link accessories on.
+     */
+    public static function changeAccessoriesForProduct($accessories_id, $product_id)
+    {
         foreach ($accessories_id as $id_product_2) {
             Db::getInstance()->insert('accessory', array(
-                'id_product_1' => (int)$this->id,
+                'id_product_1' => (int)$product_id,
                 'id_product_2' => (int)$id_product_2
             ));
         }
@@ -6141,5 +6154,50 @@ class ProductCore extends ObjectModel
     {
         return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product p
 		'.Shop::addSqlAssociation('product', 'p').' SET product_shop.pack_stock_type = '.(int)$pack_stock_type.' WHERE p.`id_product` = '.(int)$id_product);
+    }
+    
+    /**
+     * Gets a list of IDs from a list of IDs/Refs. The result will avoid duplicates, and checks if given IDs/Refs exists in DB.
+     * Useful when a product list should be checked before a bulk operation on them (Only 1 query => performances).
+     *
+     * @return array The IDs list, whithout duplicate and only existing ones.
+     */
+    public static function getExistingIdsFromIdsOrRefs($ids_or_refs)
+    {
+        // separate IDs and Refs
+        $ids = array();
+        $refs = array();
+        $whereStatements = array();
+        foreach ((is_array($ids_or_refs) ? $ids_or_refs : array($ids_or_refs)) as $id_or_ref) {
+            if (is_numeric($id_or_ref)) {
+                $ids[] = (int)$id_or_ref;
+            } elseif (is_string($id_or_ref)) {
+                $refs[] = '\''.pSQL($id_or_ref).'\'';
+            }
+        }
+        
+        // construct WHERE statement with OR combination
+        if (count($ids) > 0) {
+            $whereStatements[] = ' p.id_product IN ('.implode(',', $ids).') ';
+        }
+        if (count($refs) > 0) {
+            $whereStatements[] = ' p.reference IN ('.implode(',', $refs).') ';
+        }
+        if (!count($whereStatements)) {
+            return false;
+        }
+
+        $results = Db::getInstance()->executeS('
+		SELECT DISTINCT `id_product`
+		FROM `'._DB_PREFIX_.'product` p
+		WHERE '. implode(' OR ', $whereStatements));
+
+        // simplify array since there is 1 useless dimension.
+        // FIXME : find a better way to avoid this, directly in SQL?
+        foreach ($results as $k => $v) {
+            $results[$k] = (int)$v['id_product'];
+        }
+
+        return $results;
     }
 }

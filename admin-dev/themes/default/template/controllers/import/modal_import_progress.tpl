@@ -75,8 +75,11 @@
             &nbsp;
         </div>
         <div class="progress active progress-striped" style="display: block; width: 100%">
+            <div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%" id="import_progressbar_done2">
+                <span>Linking accessories...</span>
+            </div>
             <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%" id="import_progressbar_done">
-                <span><span id="import_progression_done">0</span>% Complete</span>
+                <span><span id="import_progression_done">0</span>% Imported</span>
             </div>
             <div class="progress-bar progress-bar-success progress-bar-stripes active" role="progressbar" id="import_progressbar_next" style="opacity: 0.5 ;width: 0%">
                 <span class="sr-only">Processing next page...</span>

@@ -73,6 +73,7 @@ class AdminImportControllerCore extends AdminController
         'available_later' => array('AdminImportController', 'createMultiLangField'),
         'category' => array('AdminImportController', 'split'),
         'online_only' => array('AdminImportController', 'getBoolean'),
+        'accessories' => array('AdminImportController', 'split'),
     );
 
     public $separator;
@@ -298,6 +299,7 @@ class AdminImportControllerCore extends AdminController
                         'label' => $this->l('Warehouse'),
                         'help' => $this->l('ID of the warehouse to set as storage.')
                     ),
+                    'accessories' => array('label' => $this->l('Accessories (x,y,z...)')),
                 );
 
                 self::$default_values = array(
@@ -960,8 +962,8 @@ class AdminImportControllerCore extends AdminController
             if ($k === 'no') {
                 continue;
             }
-            if ($k === 'price_tin') {
-                $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].' '.$this->l('or').' '.$field['label'].'</div>';
+            if ($k === 'price_tin') { // Special case for Product : either one or the other. Not both.
+                $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->l('or').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
             } else {
                 if (isset($field['help'])) {
                     $html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
@@ -1453,8 +1455,11 @@ class AdminImportControllerCore extends AdminController
         }
     }
 
-    public function productImport($offset = false, $limit = false, $validateOnly = false)
+    public function productImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false, $moreStep = 0)
     {
+        if ($moreStep == 1) {
+            return $this->productImportAccessories($offset, $limit, $crossStepsVariables);
+        }
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) return false;
@@ -1480,6 +1485,11 @@ class AdminImportControllerCore extends AdminController
             $accessories = $crossStepsVariables['accessories'];
         }
 
+        $accessories = array();
+        if ($crossStepsVariables !== false && array_key_exists('accessories', $crossStepsVariables)) {
+            $accessories = $crossStepsVariables['accessories'];
+        }
+
         $line_count = 0;
         for ($current_line = 0; ($line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) && (!$limit || $current_line < $limit); $current_line++) {
             $line_count++;
@@ -1497,6 +1507,7 @@ class AdminImportControllerCore extends AdminController
                 $shop_is_feature_active,
                 $shop_ids,
                 $match_ref,
+                $accessories, // by ref
                 $validateOnly
             );
         }
@@ -1507,10 +1518,68 @@ class AdminImportControllerCore extends AdminController
             Tag::updateTagCount();
         }
 
+        if ($crossStepsVariables !== false) {
+            $crossStepsVariables['accessories'] = $accessories;
+        }
         return $line_count;
     }
 
-    protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, $validateOnly = false)
+    protected function productImportAccessories($offset, $limit, &$crossStepsVariables)
+    {
+        if ($crossStepsVariables === false || !array_key_exists('accessories', $crossStepsVariables)) {
+            return 0;
+        }
+
+        $accessories = $crossStepsVariables['accessories'];
+
+        if ($offset == 0) {
+//             AdminImportController::setLocale();
+            Module::setBatchMode(true);
+        }
+
+        // Case if we want to unlink all accessories when a product does not specify accessories in the import file.
+        // FIXME: Please choose between this, and the case by case delete in the next loop (leave the accessories.
+//         if ($offset == 0 && count($accessories) > 0) { // only first pass!
+//             Product::deleteAccessoriesForProduct(array_keys($accessories));
+//         }
+
+        $line_count = 0;
+        $i = 0;
+        foreach($accessories as $product_id => $links) {
+            // skip elements until reaches offset
+            if ($i < $offset) {
+                $i++;
+                continue;
+            }
+
+            if (count($links) > 0) { // We delete and relink only if there is accessories to link...
+                // Bulk jobs: for performances, we need to do a minimum amount of SQL queries. No product inflation.
+                $unique_ids = Product::getExistingIdsFromIdsOrRefs($links);
+                Product::deleteAccessoriesForProduct($product_id); // FIXME : delete this action if we choose the other behavior described just before the loop.
+                Product::changeAccessoriesForProduct($unique_ids, $product_id);
+            }
+            $line_count++;
+
+            // Empty value to reduce array weight (that goes through HTTP requests each time) but do not unset array entry!
+            $accessories[$product_id] = 0; // In JSON, 0 is lighter than null or false
+
+            // stop when limit reached
+            if ($line_count >= $limit) {
+                break;
+            }
+        }
+
+        if ($line_count < $limit) { // last pass only
+            Module::processDeferedFuncCall();
+            Module::processDeferedClearCache();
+        }
+
+        $crossStepsVariables['accessories'] = $accessories;
+
+        return $line_count;
+    }
+
+    protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, &$accessories, $validateOnly = false)
     {
         if ($force_ids && isset($info['id']) && (int)$info['id']) {
             $product = new Product((int)$info['id']);
@@ -2160,6 +2229,11 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
                 }
+            }
+
+            // Accessories linkage
+            if (isset($product->accessories) && !$validateOnly && is_array($product->accessories) && count($product->accessories)) {
+                $accessories[$product->id] = $product->accessories;
             }
         }
     }
@@ -4084,7 +4158,7 @@ class AdminImportControllerCore extends AdminController
         return parent::postProcess();
     }
 
-    public function importByGroups($offset = false, $limit = false, &$results = null, $validateOnly = false)
+    public function importByGroups($offset = false, $limit = false, &$results = null, $validateOnly = false, $moreStep = 0)
     {
         // Check if the CSV file exist
         if (Tools::getValue('csv')) {
@@ -4114,7 +4188,8 @@ class AdminImportControllerCore extends AdminController
                     if (!defined('PS_MASS_PRODUCT_CREATION')) {
                         define('PS_MASS_PRODUCT_CREATION', true);
                     }
-                    $doneCount += $this->productImport($offset, $limit, $validateOnly);
+                    $moreStepLabels = array('Linking Accessories...'); // FIXME : i18n
+                    $doneCount += $this->productImport($offset, $limit, $crossStepsVariables, $validateOnly, $moreStep);
                     $this->clearSmartyCache();
                     break;
                 case $this->entities[$import_type = $this->l('Customers')]:
@@ -4175,12 +4250,16 @@ class AdminImportControllerCore extends AdminController
                     }
                     $this->closeCsvFile($handle);
                 }
-                if (!$results['isFinished']) {
+                if (!$results['isFinished'] || (!$validateOnly && ($moreStep < count($moreStepLabels)))) {
                     // Since we'll have to POST this array from ajax for the next call, we should care about it size.
                     $nextPostSize = mb_strlen(json_encode($crossStepsVariables));
                     $results['crossStepsVariables'] = $crossStepsVariables;
                     $results['nextPostSize'] = $nextPostSize + (1024*64) ; // 64KB more for the rest of the POST query.
                     $results['postSizeLimit'] = Tools::getMaxUploadSize();
+                }
+                if ($results['isFinished'] && !$validateOnly && ($moreStep < count($moreStepLabels))) {
+                    $results['oneMoreStep'] = $moreStep + 1;
+                    $results['moreStepLabel'] = $stepLabels[$moreStep];
                 }
             }
 
@@ -4265,9 +4344,10 @@ class AdminImportControllerCore extends AdminController
         $offset = (int)Tools::getValue('offset');
         $limit = (int)Tools::getValue('limit');
         $validateOnly = ((int)Tools::getValue('validateOnly') == 1);
+        $moreStep = (int)Tools::getValue('moreStep');
 
         $results = array();
-        $this->importByGroups($offset, $limit, $results, $validateOnly);
+        $this->importByGroups($offset, $limit, $results, $validateOnly, $moreStep);
 
         // Retrieve errors/warnings if any
         if (count($this->errors) > 0) {
@@ -4280,7 +4360,7 @@ class AdminImportControllerCore extends AdminController
             $results['informations'] = $this->informations;
         }
 
-        if (!$validateOnly && (bool)$results['isFinished'] && (bool)Tools::getValue('sendemail')) {
+        if (!$validateOnly && (bool)$results['isFinished'] && !isset($results['oneMoreStep']) && (bool)Tools::getValue('sendemail')) {
             $templateVars = array(
                             '{firstname}' => $this->context->employee->firstname,
                             '{lastname}' => $this->context->employee->lastname,

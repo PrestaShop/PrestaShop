@@ -130,7 +130,7 @@ $(document).ready(function(){
 		$('#import_progress_div').show();
 		$('#import_details_warning ul, #import_details_info ul,').html('');
 		$('#import_details_warning, #import_details_info').hide();
-		importNow(0, 5, -1, false, {});
+		importNow(0, 5, -1, false, {}, 0);
 	});
 });
 
@@ -172,12 +172,13 @@ function validateImportation(mandatory)
 			return false
 		}
 	
-	importNow(0, 5, -1, true, {}); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
+	importNow(0, 5, -1, true, {}, 0); // starts with 5 elements to import, but the limit will be adapted for next calls automatically.
 	return false; // We return false to avoid form to be posted on the old Controller::postProcess() action
 }
 
-function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
+function importNow(offset, limit, total, validateOnly, crossStepsVariables, moreStep) {
 	if (offset == 0 && validateOnly) updateProgressionInit(); // first step only, in validation mode
+	if (offset == 0 && !validateOnly) updateProgression(0, total, limit, false, moreStep, null);
 
 	var data = $('form#import_form').serializeArray();
 	data.push({'name': 'crossStepsVars', 'value': JSON.stringify(crossStepsVariables)});
@@ -185,7 +186,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
     var startingTime = new Date().getTime();
     $.ajax({
        type: 'POST',
-       url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':''),
+       url: 'index.php?ajax=1&action=import&tab=AdminImport&offset='+offset+'&limit='+limit+'&token='+token+(validateOnly?'&validateOnly=1':'')+((moreStep>0)?'&moreStep='+moreStep:''),
        cache: false,
        dataType: "json",
        data: data,
@@ -226,7 +227,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    	   if (validateOnly) {
 	    		   updateValidation(jsonData.doneCount, total, jsonData.doneCount+newLimit);
 	    	   } else {
-	    	       updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit);
+	    		   updateProgression(jsonData.doneCount, total, jsonData.doneCount+newLimit, false, moreStep, jsonData.moreStepLabel);
 	    	   }
 	    	   
 	    	   if (importCancelRequest == true) {
@@ -237,7 +238,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    	   }
 	    	   
 	    	   // process next group of elements
-	    	   importNow(newOffset, newLimit, total, validateOnly, jsonData.crossStepsVariables);
+	    	   importNow(newOffset, newLimit, total, validateOnly, jsonData.crossStepsVariables, moreStep);
 	    	   
 	    	   // checks if we could go over post_max_size setting. Warns when reach 90% of the actual setting
 	    	   if (jsonData.nextPostSize >= jsonData.postSizeLimit * 0.9) {
@@ -254,15 +255,20 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables) {
 	    		   if (!$('#import_details_warning').is(":visible")) {
 	    			   // no warning, directly import now
 	    			   $('#import_progress_div').show();
-	    			   importNow(0, 5, -1, false, {});
+	    			   importNow(0, 5, total, false, {}, 0);
 	    		   } else {
 	    			   // warnings occured. Ask if should continue to true import now
 	    			   importContinueRequest = true;
 	    			   $('#import_continue_button').show();
 	    		   }
 	    	   } else {
-	    		   // update progression (will close popin)
-	    		   updateProgression(total, total, total);
+	    		   if (jsonData.oneMoreStep > moreStep) {
+	    			   updateProgression(total, total, total, false, false, null); // do not close now
+	    			   importNow(0, 5, total, false, jsonData.crossStepsVariables, jsonData.oneMoreStep);
+	    		   } else {
+	    			   updateProgression(total, total, total, true, moreStep, jsonData.moreStepLabel);
+	    		   }
+	    		   
 	    	   }
 	       }
        },
@@ -297,6 +303,7 @@ function updateProgressionInit() {
 	$('#validate_progressbar_done').width('0%');
 	$('#validate_progressbar_done').parent().addClass('active progress-striped');
 	$('#validate_progression_done').html('0');
+	$('#validate_progressbar_done2').width('0%');
 	$('#validate_progressbar_next').width('0%');
 	$('#validate_progressbar_next').removeClass('progress-bar-danger');
 	$('#validate_progressbar_next').addClass('progress-bar-info');
@@ -335,7 +342,7 @@ function updateValidation(currentPosition, total, nextPosition) {
 	}
 }
 
-function updateProgression(currentPosition, total, nextPosition) {
+function updateProgression(currentPosition, total, nextPosition, finish, moreStep, moreStepLabel) {
 	if (currentPosition > total) currentPosition = total;
 	if (nextPosition > total) nextPosition = total;
 	
@@ -345,12 +352,19 @@ function updateProgression(currentPosition, total, nextPosition) {
 	if (total > 0) {
 		$('#import_progress_div').show();
 		$('#import_progression_details').html(currentPosition + '/' + total);
-		$('#import_progressbar_done').width(progressionDone+'%');
-		$('#import_progression_done').html(parseInt(progressionDone));
-		$('#import_progressbar_next').width((progressionNext-progressionDone)+'%');	
+		if (moreStep == 0) {
+			$('#import_progressbar_done').width(progressionDone+'%');
+			$('#import_progression_done').html(parseInt(progressionDone));
+			$('#import_progressbar_next').width((progressionNext-progressionDone)+'%');
+		} else {
+			$('#import_progressbar_next').width('0%');
+			$('#import_progressbar_done').width((100-progressionDone)+'%');
+			$('#import_progressbar_done2').width(progressionDone+'%');
+			if (moreStepLabel) $('#import_progressbar_done2 span').html(moreStepLabel);
+		}
 	}
 	
-	if (currentPosition == total && total == nextPosition) {
+	if (finish) {
 		$('#import_progressbar_done').parent().removeClass('active progress-striped');
 		$('#import_details_post_limit').hide();
 		$('#import_details_progressing').hide();
