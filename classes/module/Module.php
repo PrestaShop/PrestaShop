@@ -1135,7 +1135,7 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = new $override;
+                $r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($override);
             }
         }
 
