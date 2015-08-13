@@ -138,6 +138,12 @@ class TagCore extends ObjectModel
     public static function updateTagCount()
     {
         if (!Module::getBatchMode()) {
+        	
+            if (!$context) {
+                $context = Context::getContext();
+            }
+            $id_lang = $context->language->id;
+        
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 				FROM `'._DB_PREFIX_.'product_tag` pt
@@ -147,7 +153,7 @@ class TagCore extends ObjectModel
 					ON (product_shop.id_product = p.id_product)
 				JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
 				JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
-				WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+				WHERE pt.`id_lang` = '.(int)$id_lang.' AND product_shop.`active` = 1
 				AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
 								LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
 								WHERE cgo.`id_group` = cg.id_group AND p.`id_product` = cp.`id_product`)
@@ -161,7 +167,7 @@ class TagCore extends ObjectModel
 				INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
 					ON (product_shop.id_product = p.id_product)
 				JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
-				WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+				WHERE pt.`id_lang` = '.(int)$id_lang.' AND product_shop.`active` = 1
 				AND product_shop.id_shop = ps.id_shop
 				GROUP BY pt.id_tag');
         }
