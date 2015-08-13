@@ -266,10 +266,14 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitLogin()
     {
-        Hook::exec('actionBeforeAuthentication');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeAuthentication');
+        Hook::exec('actionAuthenticationBefore');
+
+        $email = trim(Tools::getValue('email'));
         $passwd = trim(Tools::getValue('passwd'));
         $_POST['passwd'] = null;
-        $email = trim(Tools::getValue('email'));
+
         if (empty($email)) {
             $this->errors[] = Tools::displayError('An email address required.');
         } elseif (!Validate::isEmail($email)) {
@@ -377,7 +381,10 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitAccount()
     {
-        Hook::exec('actionBeforeSubmitAccount');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeSubmitAccount');
+        Hook::exec('actionSubmitAccountBefore');
+
         $this->create_account = true;
         if (Tools::isSubmit('submitAccount')) {
             $this->context->smarty->assign('email_create', 1);
