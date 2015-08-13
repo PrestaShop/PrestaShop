@@ -44,6 +44,8 @@ class SupplierControllerCore extends FrontController
         }
         if (Validate::isLoadedObject($this->supplier)) {
             parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
         }
     }
 
