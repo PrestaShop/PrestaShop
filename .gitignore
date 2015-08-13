@@ -14,6 +14,7 @@ config.codekit
 *.sublime-workspace
 nbproject
 bower_components
+composer.lock
 
 # Cache, temp and personal files
 
@@ -22,9 +23,11 @@ download/*
 img/*
 log/*
 upload/*
+vendor/*
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
+admin-dev/import/*
 
 themes/*/cache/*
 
