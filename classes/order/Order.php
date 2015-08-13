@@ -2292,7 +2292,11 @@ class OrderCore extends ObjectModel
             $unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
             $order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
 
-            $discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+            $discount_ratio = 0;
+
+            if ($this->total_products > 0) {
+                $discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+            }
 
             // share of global discount
             $discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
