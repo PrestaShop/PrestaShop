@@ -33,11 +33,11 @@
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
-    <name>On backorder (paid)</name>
+    <name>Momenteel in backorder (betaald)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="On_backorder_unpaid">
-    <name>On backorder (not paid)</name>
+    <name>Momenteel in backorder (niet betaald)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id='Awaiting_bank_wire_payment'>
@@ -53,7 +53,7 @@
     <template>payment</template>
   </order_state>
   <order_state id="Awaiting_cod_validation">
-    <name>Awaiting cod validation</name>
+    <name>Wachten op bevestiging (rembours)</name>
     <template>cashondelivery</template>
   </order_state>
 </entity_order_state>
