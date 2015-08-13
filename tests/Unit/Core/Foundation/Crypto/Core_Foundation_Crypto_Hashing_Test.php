@@ -41,18 +41,30 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 
     public function test_simple_check_hash_md5()
     {
-        $this->assertTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), _COOKIE_KEY_));
+        $this->isTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), array('cookie_key' => _COOKIE_KEY_)));
+        $this->isFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), array('cookie_key' => _COOKIE_KEY_)));
     }
 
-    public function test_simple_encrypt()
+    public function test_simple_hash()
     {
-        $this->assertTrue(is_string($this->hashing->encrypt("123", _COOKIE_KEY_)));
+        $this->assertTrue(is_string($this->hashing->hash("123")));
     }
 
-    public function test_simple_first_hash()
+    public function test_upgrades_md5_hash()
     {
-        $this->assertTrue($this->hashing->isFirstHash("123", $this->hashing->encrypt("123", _COOKIE_KEY_), _COOKIE_KEY_));
-        $this->assertFalse($this->hashing->isFirstHash("123", md5("123", _COOKIE_KEY_), _COOKIE_KEY_));
+        $old_style_hash = md5(_COOKIE_KEY_."123");
+        $success = $this->hashing->checkHash("123", $old_style_hash, array('cookie_key' => _COOKIE_KEY_));
+        $this->isTrue($success);
+        $this->assertTrue(is_string($success));
+        $this->assertNotEquals($old_style_hash, $success);
+    }
+
+    public function test_upgrades_hashes_on_cost_change()
+    {
+        $hash = $this->hashing->hash('123456789');
+        $success = $this->hashing->checkHash('123456789', $hash, array('cost' => 20));
+        $this->isTrue($success);
+        $this->assertTrue(is_string($success));
+        $this->assertNotEquals($success, $hash);
     }
 }

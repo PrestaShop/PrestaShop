@@ -18,7 +18,7 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @author     PrestaShop SA <contact@prestashop.com>
  *  @copyright  2007-2015 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Crypto;
 
 class Hashing
 {
-    /** @var array should contain encryption methods */
+    /** @var array should contain additional hashing methods */
     private $hash_methods = [];
 
     /**
@@ -37,82 +37,73 @@ class Hashing
     private function initHashMethods()
     {
         $this->hash_methods = [
-                'BCryptSHA256' => [
-                    'option' => [],
-                    'encrypt' => function ($passwd, $cookie_key, $option) {
-                        return password_hash($cookie_key.$passwd, PASSWORD_BCRYPT);
-                    },
-                    'verify' => function ($passwd, $hash, $cookie_key) {
-                        return password_verify($cookie_key.$passwd, $hash);
-                    }
-                ],
                 'md5' => [
-                    'option' => [],
-                    'encrypt' => function ($passwd, $cookie_key, $option) {
+                    'options' => ['should_rehash' => TRUE],
+                    'hash' => function ($passwd, $options) {
+                        $cookie_key = (isset($options['cookie_key']) ? $options['cookie_key'] : '');
                         return md5($cookie_key.$passwd);
                     },
-                    'verify' => function ($passwd, $hash, $cookie_key) {
+                    'verify' => function ($passwd, $hash, $options) {
+                        $cookie_key = (isset($options['cookie_key']) ? $options['cookie_key'] : '');
+                        /* FIXME: This should be a constant time string check */
                         return md5($cookie_key.$passwd) === $hash;
-                    }
-                ]
+                    },
+                ],
             ];
     }
 
     /**
-     * check if it's the first function of the array that was used for encryption
-     * @param  string  $passwd     the password you want to check
-     * @param  string  $hash       the hash you want to check
-     * @param  string  $cookie_key the define _COOKIE_KEY_
-     * @return bool                result of the verify function
+     * Check a password against a given hash.
+     *
+     * @param  string  $passwd        the password you want to check
+     * @param  string  $hash          the hash to check against. Note that this is passed by reference,
+     *                                so the hash can be transparently updated if needed.
+     * @param  string  $options       some additional options :
+     *                 - 'cookie_key' the _COOKIE_KEY_ define, used for backward compatibility
+     *                                with the deprecated md5 hashing method.
+     *
+     * @return bool/string            true if the password matches the hash,
+     *                                a string if the hash has been updated,
+     *                                false otherwise.
      */
-    public function isFirstHash($passwd, $hash, $cookie_key)
+    public function checkHash($passwd, $hash, $options = array())
     {
-        if (!count($this->hash_methods)) {
-            $this->initHashMethods();
-        }
-
-        $closure = reset($this->hash_methods);
-
-        return $closure['verify']($passwd, $hash, $cookie_key);
-    }
-
-    /**
-     * Iter on hash_methods array and return true if it match
-     * @param  string  $passwd     the password you want to check
-     * @param  string  $hash       the hash you want to check
-     * @param  string  $cookie_key the define _COOKIE_KEY_
-     * @return bool                true is returned if the function find a match else false
-     */
-    public function checkHash($passwd, $hash, $cookie_key)
-    {
-        if (!count($this->hash_methods)) {
-            $this->initHashMethods();
-        }
-
-        foreach ($this->hash_methods as $closure) {
-            if ($closure['verify']($passwd, $hash, $cookie_key)) {
-                return true;
+        $should_rehash = false;
+        $success = password_verify($passwd, $hash);
+        if (!$success) {
+            // This hash doesn't come from password_hash, check our own hashing methods
+            if (!count($this->hash_methods)) {
+                $this->initHashMethods();
             }
+
+            foreach ($this->hash_methods as $name => $method) {
+                $success = $method['verify']($passwd, $hash, $options);
+                if ($success) {
+                    $should_rehash = isset($method['options']['should_rehash']) && $method['options']['should_rehash'];
+                    break;
+                }
+            }
+        } else {
+            $should_rehash = password_needs_rehash($hash, PASSWORD_DEFAULT, $options);
         }
 
-        return false;
+        // Upgrade the hash only if it's correct, and needs to be upgraded
+        if ($success && $should_rehash) {
+            $success = $this->hash($passwd);
+        }
+
+        return $success;
     }
 
     /**
-     * encrypt the $passwd string and return the result of the 1st encryption method
-     * contained in \PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing::hash_methods
-     * @param  string  $passwd     the password you want to encrypt
-     * @param  string  $cookie_key the define _COOKIE_KEY_
-     * @return string
+     * Returns the hash of the given password.
+     *
+     * @param  string  $passwd     the password you want to hash.
+     *
+     * @return string              the hashed password.
      */
-    public function encrypt($passwd, $cookie_key)
+    public function hash($passwd)
     {
-        if (!count($this->hash_methods)) {
-            $this->initHashMethods();
-        }
-
-        $closure = reset($this->hash_methods);
-
-        return $closure['encrypt']($passwd, $cookie_key, $closure['option']);
+        return password_hash($passwd, PASSWORD_DEFAULT);
     }
 }
