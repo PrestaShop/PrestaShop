@@ -2212,6 +2212,14 @@ class OrderCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @deprecated since 1.6.1
+     */
+    public function getWsCurrentState()
+    {
+        return $this->getCurrentState();
+    }
+
     public function setWsCurrentState($state)
     {
         if ($this->id) {
