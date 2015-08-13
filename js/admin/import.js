@@ -128,7 +128,7 @@ $(document).ready(function(){
 		$('#import_continue_button').hide();
 		importContinueRequest = false;
 		$('#import_progress_div').show();
-		$('#import_details_warning ul, #import_details_info ul,').html('');
+		$('#import_details_warning ul, #import_details_info ul').html('');
 		$('#import_details_warning, #import_details_info').hide();
 		importNow(0, 5, -1, false, {}, 0);
 	});
