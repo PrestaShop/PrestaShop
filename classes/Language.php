@@ -480,26 +480,13 @@ class LanguageCore extends ObjectModel
         return $return;
     }
 
+    /**
+     * @deprecated 1.6.1.1 Use Tools::deleteDirectory($dir) instead
+     * @param string $dir is the path of the directory to delete
+     */
     public static function recurseDeleteDir($dir)
     {
-        if (!is_dir($dir)) {
-            return false;
-        }
-        if ($handle = @opendir($dir)) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != '.' && $file != '..') {
-                    if (is_dir($dir.'/'.$file)) {
-                        Language::recurseDeleteDir($dir.'/'.$file);
-                    } elseif (file_exists($dir.'/'.$file)) {
-                        @unlink($dir.'/'.$file);
-                    }
-                }
-            }
-            closedir($handle);
-        }
-        if (is_writable($dir)) {
-            rmdir($dir);
-        }
+        return Tools::deleteDirectory($dir);
     }
 
     public function delete()
@@ -535,26 +522,26 @@ class LanguageCore extends ObjectModel
 
             $modList = scandir(_PS_MODULE_DIR_);
             foreach ($modList as $mod) {
-                Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
+                Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
                 $files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
                 if (count($files) <= 2) {
-                    Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
+                    Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/');
                 }
 
                 if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php')) {
                     unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
                     $files = @scandir(_PS_MODULE_DIR_.$mod);
                     if (count($files) <= 2) {
-                        Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
+                        Tools::deleteDirectory(_PS_MODULE_DIR_.$mod);
                     }
                 }
             }
 
             if (file_exists(_PS_MAIL_DIR_.$this->iso_code)) {
-                Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
+                Tools::deleteDirectory(_PS_MAIL_DIR_.$this->iso_code);
             }
             if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code)) {
-                Language::recurseDeleteDir(_PS_TRANSLATIONS_DIR_.$this->iso_code);
+                Tools::deleteDirectory(_PS_TRANSLATIONS_DIR_.$this->iso_code);
             }
 
             $images = array(

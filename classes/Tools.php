@@ -941,7 +941,7 @@ class ToolsCore
                 foreach ($files as $file) {
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname.$file)) {
-                            Tools::deleteDirectory($dirname.$file, true);
+                            Tools::deleteDirectory($dirname.$file);
                         } elseif (file_exists($dirname.$file)) {
                             @chmod($dirname.$file, 0777); // NT ?
                                 unlink($dirname.$file);
