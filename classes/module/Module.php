@@ -348,6 +348,7 @@ abstract class ModuleCore
 
         if (!$this->installControllers()) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Could not install module controllers.', array(), 'Admin.Modules.Notification');
+            $this->uninstallOverrides();
             return false;
         }
 
@@ -360,6 +361,8 @@ abstract class ModuleCore
         $result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', array(), 'Admin.Modules.Notification');
+            $this->uninstallTabs();
+            $this->uninstallOverrides();
             return false;
         }
         $this->id = Db::getInstance()->Insert_ID();
