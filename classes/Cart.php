@@ -352,15 +352,6 @@ class CartCore extends ObjectModel
         }
     }
 
-    /**
-     * @deprecated 1.5.0, use Cart->getCartRules()
-     */
-    public function getDiscounts($lite = false, $refresh = false)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getCartRules();
-    }
-
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL)
     {
         // If the cart has not been saved, then there can't be any cart rule applied
@@ -828,15 +819,6 @@ class CartCore extends ObjectModel
         return self::$_nbProducts[$id];
     }
 
-    /**
-     * @deprecated 1.5.0, use Cart->addCartRule()
-     */
-    public function addDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->addCartRule($id_cart_rule);
-    }
-
     public function addCartRule($id_cart_rule)
     {
         // You can't add a cart rule that does not exist
@@ -1208,15 +1190,6 @@ class CartCore extends ObjectModel
             return $result;
         }
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->removeCartRule()
-     */
-    public function deleteDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->removeCartRule($id_cart_rule);
     }
 
     public function removeCartRule($id_cart_rule)
@@ -2382,59 +2355,6 @@ class CartCore extends ObjectModel
         return true;
     }
 
-    /**
-     * Get all deliveries options available for the current cart formated like Carriers::getCarriersForOrder
-     * This method was wrote for retrocompatibility with 1.4 theme
-     * New theme need to use Cart::getDeliveryOptionList() to generate carriers option in the checkout process
-     *
-     * @since 1.5.0
-     *
-     * @param Country $default_country
-     * @param bool $flush Force flushing cache
-     *
-     */
-    public function simulateCarriersOutput(Country $default_country = null, $flush = false)
-    {
-        $delivery_option_list = $this->getDeliveryOptionList($default_country, $flush);
-
-        // This method cannot work if there is multiple address delivery
-        if (count($delivery_option_list) > 1 || empty($delivery_option_list)) {
-            return array();
-        }
-
-        $carriers = array();
-        foreach (reset($delivery_option_list) as $key => $option) {
-            $price = $option['total_price_with_tax'];
-            $price_tax_exc = $option['total_price_without_tax'];
-
-            if ($option['unique_carrier']) {
-                $carrier = reset($option['carrier_list']);
-                $name = $carrier['instance']->name;
-                $img = $carrier['logo'];
-                $delay = $carrier['instance']->delay;
-                $delay = isset($delay[Context::getContext()->language->id]) ? $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
-            } else {
-                $nameList = array();
-                foreach ($option['carrier_list'] as $carrier) {
-                    $nameList[] = $carrier['instance']->name;
-                }
-                $name = join(' -', $nameList);
-                $img = ''; // No images if multiple carriers
-                $delay = '';
-            }
-            $carriers[] = array(
-                'name' => $name,
-                'img' => $img,
-                'delay' => $delay,
-                'price' => $price,
-                'price_tax_exc' => $price_tax_exc,
-                'id_carrier' => Cart::intifier($key), // Need to translate to an integer for retrocompatibility reason, in 1.4 template we used intval
-                'is_module' => false,
-            );
-        }
-        return $carriers;
-    }
-
     public function simulateCarrierSelectedOutput($use_cache = true)
     {
         $delivery_option = $this->getDeliveryOption(null, false, $use_cache);
@@ -2700,15 +2620,6 @@ class CartCore extends ObjectModel
         }
 
         return $total_shipping;
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
-     */
-    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getPackageShippingCost($id_carrier, $use_tax, $default_country, $product_list);
     }
 
     /**
