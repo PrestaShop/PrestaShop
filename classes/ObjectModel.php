@@ -1097,18 +1097,6 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     }
 
     /**
-     * @deprecated 1.5.0.1 Use validateController() instead
-     * @param bool $htmlentities
-     *
-     * @return array
-     */
-    public function validateControler($htmlentities = true)
-    {
-        Tools::displayAsDeprecated();
-        return $this->validateController($htmlentities);
-    }
-
-    /**
      * Validates submitted values and returns an array of errors, if any.
      *
      * @param bool $htmlentities If true, uses htmlentities() for field name translations in errors.
