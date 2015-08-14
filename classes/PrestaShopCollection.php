@@ -356,7 +356,8 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         $this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
-        $this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
+        if ($this->results && is_array($this->results))
+            $this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
 
         return $this;
     }
