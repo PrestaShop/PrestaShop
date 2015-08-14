@@ -138,10 +138,7 @@ class TagCore extends ObjectModel
     public static function updateTagCount()
     {
         if (!Module::getBatchMode()) {
-        	
-            if (!$context) {
-                $context = Context::getContext();
-            }
+            $context = Context::getContext();
             $id_lang = $context->language->id;
         
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
