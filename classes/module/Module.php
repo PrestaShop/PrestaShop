@@ -352,6 +352,7 @@ abstract class ModuleCore
         }
 
         if (!$this->installControllers()) {
+            $this->uninstallOverrides();
             return false;
         }
 
@@ -364,6 +365,8 @@ abstract class ModuleCore
         $result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
         if (!$result) {
             $this->_errors[] = Tools::displayError('Technical error: PrestaShop could not install this module.');
+            $this->uninstallTabs();
+            $this->uninstallOverrides();
             return false;
         }
         $this->id = Db::getInstance()->Insert_ID();
