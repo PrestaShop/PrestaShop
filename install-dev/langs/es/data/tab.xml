@@ -34,7 +34,7 @@
   <tab id="Delivery_Slips" name="Albaranes de entrega"/>
   <tab id="Credit_Slips" name="Factura de abonos"/>
   <tab id="Statuses" name="Estados"/>
-  <tab id="Order_Messages" name="Mensajes de Pedidos"/>
+  <tab id="Order_Messages" name="Mensajes predefinidos"/>
   <tab id="Customers_1" name="Clientes"/>
   <tab id="Addresses" name="Direcciones"/>
   <tab id="Groups" name="Grupos"/>
@@ -42,7 +42,7 @@
   <tab id="Customer_Service" name="Atención al cliente"/>
   <tab id="Contacts" name="Datos"/>
   <tab id="Titles" name="Tratamientos"/>
-  <tab id="Outstanding" name="Sorprendente"/>
+  <tab id="Outstanding" name="Cuentas por pagar"/>
   <tab id="Cart_Rules" name="Vales descuento"/>
   <tab id="Catalog_Price_Rules" name="Reglas del catálogo"/>
   <tab id="Marketing" name="Márketing"/>
@@ -54,8 +54,8 @@
   <tab id="Countries" name="Países"/>
   <tab id="States" name="Provincias"/>
   <tab id="Currencies" name="Monedas"/>
-  <tab id="Taxes" name="Tassas"/>
-  <tab id="Tax_Rules" name="Reglas de tassas"/>
+  <tab id="Taxes" name="Tasas"/>
+  <tab id="Tax_Rules" name="Reglas de tasas"/>
   <tab id="Translations" name="Traducciones"/>
   <tab id="Modules_1" name="Módulos y Servicios"/>
   <tab id="Modules_Themes_Catalog" name="Catálogo de Módulos y Temas"/>
@@ -94,7 +94,7 @@
   <tab id="Warehouses" name="Almacenes"/>
   <tab id="Stock_Management" name="Gestión de existencias"/>
   <tab id="Stock_Movement" name="Movimiento de Stock"/>
-  <tab id="Instant_Stock_Status" name="Estado inmediato de existencias"/>
+  <tab id="Instant_Stock_Status" name="Estado actual del stock"/>
   <tab id="Stock_Coverage" name="Cobertura de stock"/>
   <tab id="Supply_orders" name="Pedidos de materiales"/>
   <tab id="Configuration" name="Configuración"/>
