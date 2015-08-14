@@ -1190,6 +1190,42 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
+/**
+ * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example). 
+ * Action is 'index' by default.
+ * For instance, only used for back-office.
+ */
+function getControllerActionMap() {
+	query = window.location.search.substring(1);
+	vars = query.split("&");
+	controller = "Admin";
+	action = "index";
+
+	for (i = 0 ; i < vars.length; i++) {
+		pair = vars[i].split("=");
+		
+		if (pair[0] == "token") continue;
+		if (pair[0] == "controller")
+			controller = pair[1];
+		
+		if (pair.length == 1) {
+			if (pair[0].indexOf("add") != -1)
+				action = "new";
+			else if (pair[0].indexOf("view") != -1)
+				action = "view";
+			else if (pair[0].indexOf("edit") != -1 || pair[0].indexOf("modify") != -1 || pair[0].indexOf("update") != -1)
+				action = "edit";
+			else if (pair[0].indexOf("delete") != -1)
+				action = "delete";
+		}
+	}
+	
+	if (typeof help_class_name != 'undefined')
+		controller = help_class_name;
+
+	return new Array('back-office',controller, action);
+}
+
 function openModulesList()
 {
 	if (!modules_list_loaded)
@@ -1203,7 +1239,8 @@ function openModulesList()
 				controller : "AdminModules",
 				action : "getTabModulesList",
 				tab_modules_list : tab_modules_list,
-				back_tab_modules_list : window.location.href
+				back_tab_modules_list : window.location.href,
+				admin_list_from_source : getControllerActionMap().join()
 			},
 			success : function(data)
 			{
