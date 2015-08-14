@@ -167,7 +167,8 @@ class SearchCore
             }
         }
 
-        $string = trim(preg_replace('/\s+/', ' ', $string));
+        $string = Tools::replaceAccentedChars(trim(preg_replace('/\s+/', ' ', $string)));
+
         return $string;
     }
 
@@ -193,7 +194,7 @@ class SearchCore
 
         $intersect_array = array();
         $score_array = array();
-        $words = explode(' ', Tools::replaceAccentedChars(Search::sanitize($expr, $id_lang, false, $context->language->iso_code)));
+        $words = explode(' ', Search::sanitize($expr, $id_lang, false, $context->language->iso_code));
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
@@ -566,8 +567,6 @@ class SearchCore
             foreach ($words as $word) {
                 if (!empty($word)) {
                     $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
-                    // Remove accents
-                    $word = Tools::replaceAccentedChars($word);
 
                     if (!isset($product_array[$word])) {
                         $product_array[$word] = 0;
