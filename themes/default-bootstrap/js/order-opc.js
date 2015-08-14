@@ -803,13 +803,24 @@ function updateNewAccountToAddressBlock(is_adv_api)
 					if (typeof json.order_opc_adress !== 'undefined' && json.order_opc_adress)
 						$('#opc_new_account').html(json.order_opc_adress);
 					// update block user info
+
+					// 1.5 template
 					if (json.block_user_info !== '' && $('#header_user').length == 1)
 					{
 						var elt = $(json.block_user_info).find('#header_user_info').html();
-						$('#header_user_info').fadeOut('nortmal', function() {
+						$('#header_user_info').fadeOut('normal', function() {
 							$(this).html(elt).fadeIn();
 						});
 					}
+
+					// 1.6 temmplate
+					if (json.block_user_info_nav !== '' && $('.header_user_info').length == 1)
+					{
+						$('.header_user_info').fadeOut('normal', function() {
+							$(this).html(json.block_user_info_nav).fadeIn();
+						});
+					}
+
 					$(this).fadeIn('fast', function() {
                         if ($('#gift-price').length == 1)
                             $('#gift-price').html(json.gift_price);
