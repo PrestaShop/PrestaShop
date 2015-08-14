@@ -274,11 +274,7 @@ class AdminModulesControllerCore extends AdminController
         }
         if ($tab_modules_list) {
             $tab_modules_list = explode(',', $tab_modules_list);
-            if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
-                $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, $admin_list_from_source);
-            } else {
-                $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list);
-            }
+            $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
         }
 
         $installed = $uninstalled = array();
@@ -795,9 +791,18 @@ class AdminModulesControllerCore extends AdminController
                                 $this->errors[] = sprintf(Tools::displayError('You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s'), '<strong>'.$name.'</strong>', '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in.').'</a>');
                             } elseif (!is_null($attr['id'])) {
                                 $download_ok = false;
-                                if ($attr['need_loggedOnAddons'] == 0 && file_put_contents(_PS_MODULE_DIR_.$name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'source' => Tools::getValue('source'))))) {
+                                if ($attr['need_loggedOnAddons'] == 0
+                                        && file_put_contents(
+                                            _PS_MODULE_DIR_.$name.'.zip',
+                                            Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'source' => Tools::getValue('source')))
+                                        )) {
                                     $download_ok = true;
-                                } elseif ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons && file_put_contents(_PS_MODULE_DIR_.$name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons)))))) {
+                                } elseif ($attr['need_loggedOnAddons'] == 1
+                                        && $this->logged_on_addons
+                                        && file_put_contents(
+                                            _PS_MODULE_DIR_.$name.'.zip',
+                                            Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))
+                                        )) {
                                     $download_ok = true;
                                 }
 
@@ -1648,7 +1653,18 @@ class AdminModulesControllerCore extends AdminController
         $url = $module->url;
 
         if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
-            $url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+            $url = $this->context->link->getAdminLink('AdminModules')
+                .'&install='.urlencode($module->name)
+                .'&tab_module='.$module->tab
+                .'&module_name='.$module->name
+                .'&anchor='.ucfirst($module->name);
+            if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
+                $url .= '&source='.$admin_list_from_source;
+            }
+        } else {
+            if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
+                $url .= '&utm_term='.$admin_list_from_source;
+            }
         }
 
         $this->context->smarty->assign(array(
