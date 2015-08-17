@@ -72,7 +72,6 @@ return array(
         'Recommended PHP parameters' => 'Javasolt PHP paraméterek',
         'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
         'Cannot open external URLs' => 'Nem nyithatóak meg külső URL-ek',
-        'PHP register_globals option is enabled' => 'PHP register_globals opció engedélyezve',
         'GZIP compression is not activated' => 'GZIP tömörítés nem aktív',
         'Mcrypt extension is not enabled' => 'Mcrypt kiterjesztés nem bekapcsolt',
         'Mbstring extension is not enabled' => 'Mbstring kiterjesztés nem bekapcsolt',

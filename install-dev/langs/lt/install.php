@@ -72,7 +72,6 @@ return array(
         'Recommended PHP parameters' => 'Rekomenduojami PHP parametrai',
         'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Jūs naudojate  PHP %s versiją. Greitai, paskutinė PrestaShop palaikoma PHP versija bus PHP 5.4. Kad būtumėte pasiruošę ateičiai, siūlome jums atsinaujinti iki PHP 5.4 dabar!',
         'Cannot open external URLs' => 'Nepavyko atidaryti išorinio URL',
-        'PHP register_globals option is enabled' => 'PHP register_globals funkcija įjungta',
         'GZIP compression is not activated' => 'GZIP suspaudimas neaktyvuotas',
         'Mcrypt extension is not enabled' => 'Mcrypt plėtinys neįjungtas',
         'Mbstring extension is not enabled' => 'Mbstring plėtinys neįjungtas',

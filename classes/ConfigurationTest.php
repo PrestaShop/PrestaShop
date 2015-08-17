@@ -104,7 +104,6 @@ class ConfigurationTestCore
         return array(
             'new_phpversion' => false,
             'fopen' => false,
-            'register_globals' => false,
             'gz' => false,
             'mcrypt' => false,
             'mbstring' => false,
@@ -185,11 +184,6 @@ class ConfigurationTestCore
     public static function test_gd()
     {
         return function_exists('imagecreatetruecolor');
-    }
-
-    public static function test_register_globals()
-    {
-        return !ini_get('register_globals');
     }
 
     public static function test_gz()

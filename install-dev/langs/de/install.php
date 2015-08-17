@@ -74,7 +74,6 @@ return array(
     'Recursive write permissions for %1$s user on %2$s' => 'Rekursive Schreibrechte für Benutzer %1$s bei %2$s',
     'Recommended PHP parameters' => 'Empfohlene PHP-Einstellungen',
     'Cannot open external URLs' => 'Externe URLs können nicht geöffnet werden',
-    'PHP register_globals option is enabled' => 'PHP-Anweisung register_globals ist aktiviert',
     'GZIP compression is not activated' => 'GZIP-Komprimierung ist nicht aktiviert',
     'Mcrypt extension is not enabled' => 'Mcrypt-Erweiterung ist nicht aktiviert',
     'Mbstring extension is not enabled' => 'Mbstring-Erweiterung ist nicht aktiviert',

@@ -72,7 +72,6 @@ return array(
         'Recommended PHP parameters' => 'Preporučeni PHP parametri',
         'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Vi koristite PHP inačicu %s . Uskoro, najnovija verzija PHP podržana od PrestaShopa će biti PHP 5.4. Da biste bili sigurni da ste spremni za budućnost, preporučujemo vam da nadogradite PHP 5.4 sada!',
         'Cannot open external URLs' => 'Ne mogu otvoriti vanjske URL-ove',
-        'PHP register_globals option is enabled' => 'PHP register_globals opcija je uključena',
         'GZIP compression is not activated' => 'GZIP kompresija nije aktivirana',
         'Mcrypt extension is not enabled' => 'Mcrypt ekstenzija nije uključena',
         'Mbstring extension is not enabled' => 'Mbstring proširenje nije omogućeno',

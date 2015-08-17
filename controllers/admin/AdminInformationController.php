@@ -123,7 +123,6 @@ class AdminInformationControllerCore extends AdminController
             'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
             'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
             'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
-            'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
             'gz' => $this->l('Enable GZIP compression on your server.'),
             'files' => $this->l('Some PrestaShop files are missing from your server.'),
             'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion())
