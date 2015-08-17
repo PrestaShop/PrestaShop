@@ -56,7 +56,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->shop = new Shop((int)$this->order->id_shop);
     }
-    
+
     /**
      * Returns the template's HTML header
      *
@@ -142,7 +142,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
-        
+
         $total_cart_rule = 0;
         if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
             foreach ($cart_rules as $cart_rule) {
@@ -153,13 +153,13 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 }
             }
         }
-        
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
             'order_details' => $this->order->products,
             'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules($this->order_invoice->id) : false,
-            'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
+            'amount_choosen' => ($this->order_slip->order_slip_type == 2),
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
@@ -177,7 +177,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'tax_tab' => $this->getTaxTabContent(),
         );
         $this->smarty->assign($tpls);
-        
+
         return $this->smarty->fetch($this->getTemplate('order-slip'));
     }
 

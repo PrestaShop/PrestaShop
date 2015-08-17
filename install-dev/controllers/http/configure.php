@@ -183,7 +183,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
     public function processTimezoneByIso()
     {
         $timezone = $this->getTimezoneByIso(Tools::getValue('iso'));
-        $this->ajaxJsonAnswer(($timezone) ? true : false, $timezone);
+        $this->ajaxJsonAnswer((bool)$timezone, $timezone);
     }
 
     /**

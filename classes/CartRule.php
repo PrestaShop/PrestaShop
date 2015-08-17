@@ -826,7 +826,8 @@ class CartRuleCore extends ObjectModel
         if ($return_products) {
             return $selected_products;
         }
-        return (!$display_error) ? true : false;
+
+        return !$display_error;
     }
 
     protected static function array_uintersect($array1, $array2)

@@ -360,7 +360,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 }
             }
 
-            $purify = (isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml') ? true : false;
+            $purify = (isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml');
             // Format field value
             $fields[$field] = ObjectModel::formatValue($value, $data['type'], false, $purify, !empty($data['allow_null']));
         }
@@ -1573,7 +1573,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
      */
     public function isLangMultishop()
     {
-        return !empty($this->def['multilang']) && !empty($this->def['multilang_shop']);
+        return !(empty($this->def['multilang']) || empty($this->def['multilang_shop']));
     }
 
     /**

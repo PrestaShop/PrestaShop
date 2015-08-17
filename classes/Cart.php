@@ -2306,7 +2306,7 @@ class CartCore extends ObjectModel
                 }
                 $delivery_option_list[$id_address][$key]['total_price_with_tax'] = $total_price_with_tax;
                 $delivery_option_list[$id_address][$key]['total_price_without_tax'] = $total_price_without_tax;
-                $delivery_option_list[$id_address][$key]['is_free'] = !$total_price_without_tax_with_rules ? true : false;
+                $delivery_option_list[$id_address][$key]['is_free'] = !$total_price_without_tax_with_rules;
                 $delivery_option_list[$id_address][$key]['position'] = $position / count($value['carrier_list']);
             }
         }

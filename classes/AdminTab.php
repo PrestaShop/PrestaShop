@@ -1158,7 +1158,7 @@ abstract class AdminTabCore
                 }
             }
         }
-        return !count($this->_errors) ? true : false;
+        return !count($this->_errors);
     }
 
     /**

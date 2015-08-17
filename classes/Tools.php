@@ -186,6 +186,7 @@ class ToolsCore
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }
+
             if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
@@ -198,6 +199,7 @@ class ToolsCore
             // used when logout for example
             $use_ssl = !empty($url);
             $url = $link->getPageLink($explode[0], $use_ssl);
+
             if (isset($explode[1])) {
                 $url .= '?'.$explode[1];
             }
@@ -229,15 +231,19 @@ class ToolsCore
             if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0) {
                 $url = substr($url, strlen(__PS_BASE_URI__));
             }
+
             if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
                 $url = substr($url, strlen('index.php?controller='));
             }
+
             $explode = explode('?', $url);
             $url = Context::getContext()->link->getPageLink($explode[0]);
+
             if (isset($explode[1])) {
                 $url .= '?'.$explode[1];
             }
         }
+
         header('Location: '.$url);
         exit;
     }
@@ -273,7 +279,7 @@ class ToolsCore
      */
     public static function getProtocol($use_ssl = null)
     {
-        return (!is_null($use_ssl) && $use_ssl ? 'https://' : 'http://');
+        return (!is_null($use_ssl) && $use_ssl) ? 'https://' : 'http://';
     }
 
     /**
@@ -288,15 +294,19 @@ class ToolsCore
     public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
     {
         $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
+
         if ($ignore_port && $pos = strpos($host, ':')) {
             $host = substr($host, 0, $pos);
         }
+
         if ($entities) {
             $host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
         }
+
         if ($http) {
             $host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$host;
         }
+
         return $host;
     }
 
@@ -312,12 +322,15 @@ class ToolsCore
         if (!$domain = ShopUrl::getMainShopDomain()) {
             $domain = Tools::getHttpHost();
         }
+
         if ($entities) {
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
         }
+
         if ($http) {
             $domain = 'http://'.$domain;
         }
+
         return $domain;
     }
 
@@ -333,12 +346,15 @@ class ToolsCore
         if (!$domain = ShopUrl::getMainShopDomainSSL()) {
             $domain = Tools::getHttpHost();
         }
+
         if ($entities) {
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
         }
+
         if ($http) {
             $domain = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$domain;
         }
+
         return $domain;
     }
 
@@ -352,6 +368,7 @@ class ToolsCore
         if (isset($_SERVER['HTTP_X_FORWARDED_SERVER']) && $_SERVER['HTTP_X_FORWARDED_SERVER']) {
             return $_SERVER['HTTP_X_FORWARDED_SERVER'];
         }
+
         return $_SERVER['SERVER_NAME'];
     }
 
@@ -378,12 +395,12 @@ class ToolsCore
             if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
                 return $ips[0];
-            } else {
-                return $_SERVER['HTTP_X_FORWARDED_FOR'];
             }
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
+
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
+
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
@@ -421,11 +438,7 @@ class ToolsCore
     */
     public static function getCurrentUrlProtocolPrefix()
     {
-        if (Tools::usingSecureMode()) {
-            return 'https://';
-        } else {
-            return 'http://';
-        }
+        return Tools::usingSecureMode() ? 'https://' : 'http://';
     }
 
     /**
@@ -439,6 +452,7 @@ class ToolsCore
         if (preg_match('/^http[s]?:\/\/'.Tools::getServerName().'(:'._PS_SSL_PORT_.')?\/.*$/Ui', $referrer)) {
             return $referrer;
         }
+
         return __PS_BASE_URI__;
     }
 
@@ -480,7 +494,8 @@ class ToolsCore
         if (!isset($key) || empty($key) || !is_string($key)) {
             return false;
         }
-        return isset($_POST[$key]) ? true : (isset($_GET[$key]) ? true : false);
+
+        return isset($_POST[$key]) || isset($_GET[$key]);
     }
 
     /**
@@ -496,6 +511,7 @@ class ToolsCore
         /* If language does not exist or is disabled, erase it */
         if ($cookie->id_lang) {
             $lang = new Language((int)$cookie->id_lang);
+
             if (!Validate::isLoadedObject($lang) || !$lang->active || !$lang->isAssociatedToShop()) {
                 $cookie->id_lang = null;
             }
@@ -513,6 +529,7 @@ class ToolsCore
 
             if (Validate::isLanguageCode($string)) {
                 $lang = Language::getLanguageByIETFCode($string);
+
                 if (Validate::isLoadedObject($lang) && $lang->active && $lang->isAssociatedToShop()) {
                     Context::getContext()->language = $lang;
                     $cookie->id_lang = (int)$lang->id;
@@ -558,10 +575,12 @@ class ToolsCore
         // or if default language changed
         $cookie_id_lang = $context->cookie->id_lang;
         $configuration_id_lang = Configuration::get('PS_LANG_DEFAULT');
+
         if ((($id_lang = (int)Tools::getValue('id_lang')) && Validate::isUnsignedId($id_lang) && $cookie_id_lang != (int)$id_lang)
             || (($id_lang == $configuration_id_lang) && Validate::isUnsignedId($id_lang) && $id_lang != $cookie_id_lang)) {
             $context->cookie->id_lang = $id_lang;
             $language = new Language($id_lang);
+
             if (Validate::isLoadedObject($language) && $language->active) {
                 $context->language = $language;
             }
@@ -576,16 +595,19 @@ class ToolsCore
     public static function getCountry($address = null)
     {
         if ($id_country = Tools::getValue('id_country')); elseif (isset($address) && isset($address->id_country) && $address->id_country) {
-     $id_country = $address->id_country;
- } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-     preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-     if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = (int)Country::getByIso($array[0], true);
-     }
- }
+            $id_country = $address->id_country;
+        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+
+            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
+                $id_country = (int)Country::getByIso($array[0], true);
+            }
+        }
+
         if (!isset($id_country) || !$id_country) {
             $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
         }
+
         return (int)$id_country;
     }
 
@@ -608,6 +630,7 @@ class ToolsCore
         if ((int)$cookie->id_currency) {
             $currency = Currency::getCurrencyInstance((int)$cookie->id_currency);
         }
+
         if (!Validate::isLoadedObject($currency) || (bool)$currency->deleted || !(bool)$currency->active) {
             $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
@@ -615,13 +638,15 @@ class ToolsCore
         $cookie->id_currency = (int)$currency->id;
         if ($currency->isAssociatedToShop()) {
             return $currency;
-        } else {
-            // get currency from context
-            $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
-            if (isset($currency[0]) && $currency[0]['id_currency']) {
-                $cookie->id_currency = $currency[0]['id_currency'];
-                return Currency::getCurrencyInstance((int)$cookie->id_currency);
-            }
+        }
+
+        // get currency from context
+        $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+
+        if (isset($currency[0]) && $currency[0]['id_currency']) {
+            $cookie->id_currency = $currency[0]['id_currency'];
+
+            return Currency::getCurrencyInstance((int)$cookie->id_currency);
         }
 
         return $currency;
@@ -639,9 +664,11 @@ class ToolsCore
         if (!is_numeric($price)) {
             return $price;
         }
+
         if (!$context) {
             $context = Context::getContext();
         }
+
         if ($currency === null) {
             $currency = $context->currency;
         } elseif (is_int($currency)) { // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
@@ -669,10 +696,12 @@ class ToolsCore
     {
         if (array_key_exists('currency', $params)) {
             $currency = Currency::getCurrencyInstance((int)$params['currency']);
+
             if (Validate::isLoadedObject($currency)) {
                 return Tools::displayPrice($params['price'], $currency, false);
             }
         }
+
         return Tools::displayPrice($params['price']);
     }
 
@@ -696,6 +725,7 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
+
         if ($currency === null) {
             $currency = $context->currency;
         } elseif (is_numeric($currency)) {
@@ -727,6 +757,7 @@ class ToolsCore
             $args     = func_get_args();
             $num_args = func_num_args();
             $res      = array();
+
             for ($i = 0; $i < $num_args; $i++) {
                 if (is_array($args[$i])) {
                     foreach ($args[$i] as $key => $val) {
@@ -738,9 +769,9 @@ class ToolsCore
                 }
             }
             return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
         }
+
+        return call_user_func_array('array_replace', func_get_args());
     }
 
     /**
@@ -817,6 +848,7 @@ class ToolsCore
 
         $context = Context::getContext();
         $date_format = ($full ? $context->language->date_format_full : $context->language->date_format_lite);
+
         return date($date_format, $time);
     }
 
@@ -832,6 +864,7 @@ class ToolsCore
         if (!$html) {
             $string = strip_tags($string);
         }
+
         return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);
     }
 
@@ -850,6 +883,7 @@ class ToolsCore
             $string = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $string);
             return (string)array_shift($string);
         }
+
         return html_entity_decode((string)$string, ENT_QUOTES, 'utf-8');
     }
 
@@ -878,7 +912,7 @@ class ToolsCore
                             Tools::deleteDirectory($dirname.$file);
                         } elseif (file_exists($dirname.$file)) {
                             @chmod($dirname.$file, 0777); // NT ?
-                                unlink($dirname.$file);
+                            unlink($dirname.$file);
                         }
                     }
                 }
@@ -888,9 +922,11 @@ class ToolsCore
                         return false;
                     }
                 }
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -955,6 +991,7 @@ class ToolsCore
         }
         $key = md5(str_replace('\'', '\\\'', $string));
         $str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? $_ERRORS[$key] : $string;
+
         return $htmlentities ? Tools::htmlentitiesUTF8(stripslashes($str)) : $str;
     }
 
@@ -1131,11 +1168,12 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
+
         if ($page === true) {
             return (Tools::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
-        } else {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
         }
+
+        return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
     }
 
     /**
@@ -1153,12 +1191,14 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
+
         return Tools::getAdminToken($tab.(int)Tab::getIdFromClassName($tab).(int)$context->employee->id);
     }
 
     public static function getAdminTokenLiteSmarty($params, &$smarty)
     {
         $context = Context::getContext();
+
         return Tools::getAdminToken($params['tab'].(int)Tab::getIdFromClassName($params['tab']).(int)$context->employee->id);
     }
 
@@ -1219,6 +1259,7 @@ class ToolsCore
             $interval = Category::getInterval($id_category);
             $id_root_category = $context->shop->getCategory();
             $interval_root = Category::getInterval($id_root_category);
+
             if ($interval) {
                 $sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
 						FROM '._DB_PREFIX_.'category c
@@ -1286,6 +1327,7 @@ class ToolsCore
         if (!Validate::isLoadedObject($category)) {
             $id_category = $default_category;
         }
+
         if ($id_category == $default_category) {
             return htmlentities($end, ENT_NOQUOTES, 'UTF-8');
         }
@@ -1305,6 +1347,7 @@ class ToolsCore
         if ($utf8_decode !== null) {
             Tools::displayParameterAsDeprecated('utf8_decode');
         }
+
         return Tools::str2url($str);
     }
 
@@ -1628,27 +1671,33 @@ class ToolsCore
     public static function dateYears()
     {
         $tab = array();
+
         for ($i = date('Y'); $i >= 1900; $i--) {
             $tab[] = $i;
         }
+
         return $tab;
     }
 
     public static function dateDays()
     {
         $tab = array();
+
         for ($i = 1; $i != 32; $i++) {
             $tab[] = $i;
         }
+
         return $tab;
     }
 
     public static function dateMonths()
     {
         $tab = array();
+
         for ($i = 1; $i != 13; $i++) {
             $tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
         }
+
         return $tab;
     }
 
@@ -1660,18 +1709,22 @@ class ToolsCore
     public static function dateFrom($date)
     {
         $tab = explode(' ', $date);
+
         if (!isset($tab[1])) {
             $date .= ' '.Tools::hourGenerate(0, 0, 0);
         }
+
         return $date;
     }
 
     public static function dateTo($date)
     {
         $tab = explode(' ', $date);
+
         if (!isset($tab[1])) {
             $date .= ' '.Tools::hourGenerate(23, 59, 59);
         }
+
         return $date;
     }
 
@@ -1680,9 +1733,11 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
+
         if (function_exists('mb_strtolower')) {
             return mb_strtolower($str, 'utf-8');
         }
+
         return strtolower($str);
     }
 
@@ -1691,10 +1746,13 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
+
         $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
+
         if (function_exists('mb_strlen')) {
             return mb_strlen($str, $encoding);
         }
+
         return strlen($str);
     }
 
@@ -1703,6 +1761,7 @@ class ToolsCore
         if (_PS_MAGIC_QUOTES_GPC_) {
             $string = stripslashes($string);
         }
+
         return $string;
     }
 
@@ -1711,9 +1770,11 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
+
         if (function_exists('mb_strtoupper')) {
             return mb_strtoupper($str, 'utf-8');
         }
+
         return strtoupper($str);
     }
 
@@ -1722,9 +1783,11 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
+
         if (function_exists('mb_substr')) {
             return mb_substr($str, (int)$start, ($length === false ? Tools::strlen($str) : (int)$length), $encoding);
         }
+
         return substr($str, $start, ($length === false ? Tools::strlen($str) : (int)$length));
     }
 
@@ -1733,6 +1796,7 @@ class ToolsCore
         if (function_exists('mb_strpos')) {
             return mb_strpos($str, $find, $offset, $encoding);
         }
+
         return strpos($str, $find, $offset);
     }
 
@@ -1741,6 +1805,7 @@ class ToolsCore
         if (function_exists('mb_strrpos')) {
             return mb_strrpos($str, $find, $offset, $encoding);
         }
+
         return strrpos($str, $find, $offset);
     }
 
@@ -1754,6 +1819,7 @@ class ToolsCore
         if (function_exists('mb_convert_case')) {
             return mb_convert_case($str, MB_CASE_TITLE);
         }
+
         return ucwords(Tools::strtolower($str));
     }
 
@@ -1770,6 +1836,7 @@ class ToolsCore
         } else {
             uasort($array, 'cmpPriceAsc');
         }
+
         foreach ($array as &$row) {
             unset($row['price_tmp']);
         }
@@ -1837,12 +1904,7 @@ class ToolsCore
         * is returned, pre-round the result to the precision */
         if ($precision_places > $places && $precision_places - $places < 15) {
             $f2 = pow(10.0, (double)abs($precision_places));
-
-            if ($precision_places >= 0) {
-                $tmp_value = $value * $f2;
-            } else {
-                $tmp_value = $value / $f2;
-            }
+            $tmp_value = ($precision_places >= 0) ? ($value * $f2) : ($value / $f2);
 
             /* preround the result (tmp_value will always be something * 1e14,
             * thus never larger than 1e15 here) */
@@ -1853,11 +1915,7 @@ class ToolsCore
             $tmp_value = $tmp_value / $f2;
         } else {
             /* adjust the value */
-            if ($places >= 0) {
-                $tmp_value = $value * $f1;
-            } else {
-                $tmp_value = $value / $f1;
-            }
+            $tmp_value = ($places >= 0) ? ($value * $f1) : ($value / $f1);
 
             /* This value is beyond our precision, so rounding it is pointless */
             if (abs($tmp_value) >= 1e15) {
@@ -1915,13 +1973,16 @@ class ToolsCore
         $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
         $tmp = $value * $precision_factor;
         $tmp2 = (string)$tmp;
+
         // If the current value has already the desired precision
         if (strpos($tmp2, '.') === false) {
             return ($value);
         }
+
         if ($tmp2[strlen($tmp2) - 1] == 0) {
             return $value;
         }
+
         return ceil($tmp) / $precision_factor;
     }
 
@@ -1937,13 +1998,16 @@ class ToolsCore
         $precision_factor = $precision == 0 ? 1 : pow(10, $precision);
         $tmp = $value * $precision_factor;
         $tmp2 = (string)$tmp;
+
         // If the current value has already the desired precision
         if (strpos($tmp2, '.') === false) {
             return ($value);
         }
+
         if ($tmp2[strlen($tmp2) - 1] == 0) {
             return $value;
         }
+
         return floor($tmp) / $precision_factor;
     }
 
@@ -1958,6 +2022,7 @@ class ToolsCore
         if (!isset(self::$file_exists_cache[$filename])) {
             self::$file_exists_cache[$filename] = file_exists($filename);
         }
+
         return self::$file_exists_cache[$filename];
     }
 
@@ -1978,6 +2043,7 @@ class ToolsCore
         if ($stream_context == null && preg_match('/^https?:\/\//', $url)) {
             $stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout)));
         }
+
         if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url)) {
             return @file_get_contents($url, $use_include_path, $stream_context);
         } elseif (function_exists('curl_init')) {
@@ -1999,28 +2065,33 @@ class ToolsCore
             }
             $content = curl_exec($curl);
             curl_close($curl);
+
             return $content;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static function simplexml_load_file($url, $class_name = null)
     {
         $cache_id = 'Tools::simplexml_load_file'.$url;
+
         if (!Cache::isStored($cache_id)) {
             $result = @simplexml_load_string(Tools::file_get_contents($url), $class_name);
             Cache::store($cache_id, $result);
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
     public static function copy($source, $destination, $stream_context = null)
     {
         if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source)) {
+
             return @copy($source, $destination);
         }
+
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
     }
 
@@ -2040,9 +2111,11 @@ class ToolsCore
     public static function toCamelCase($str, $catapitalise_first_char = false)
     {
         $str = Tools::strtolower($str);
+
         if ($catapitalise_first_char) {
             $str = Tools::ucfirst($str);
         }
+
         return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
     }
 
@@ -2074,6 +2147,7 @@ class ToolsCore
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
+
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
@@ -2121,6 +2195,7 @@ class ToolsCore
             $parser = new PHPSQLParser($sql);
             return $parser->parsed;
         }
+
         return false;
     }
 
@@ -2638,13 +2713,17 @@ exit;
         if (!$context) {
             $context = Context::getContext();
         }
+
         $smarty = $context->smarty;
+
         if (!Configuration::get('PS_SMARTY_CACHE')) {
             return;
         }
+
         if ($smarty->force_compile == 0 && $smarty->caching == $level) {
             return;
         }
+
         self::$_forceCompile = (int)$smarty->force_compile;
         self::$_caching = (int)$smarty->caching;
         $smarty->force_compile = 0;
@@ -2675,21 +2754,26 @@ exit;
     public static function pRegexp($s, $delim)
     {
         $s = str_replace($delim, '\\'.$delim, $s);
+
         foreach (array('?', '[', ']', '(', ')', '{', '}', '-', '.', '+', '*', '^', '$', '`', '"', '%') as $char) {
             $s = str_replace($char, '\\'.$char, $s);
         }
+
         return $s;
     }
 
     public static function str_replace_once($needle, $replace, $haystack)
     {
         $pos = false;
+
         if ($needle) {
             $pos = strpos($haystack, $needle);
         }
+
         if ($pos === false) {
             return $haystack;
         }
+
         return substr_replace($haystack, $replace, $pos, strlen($needle));
     }
 
@@ -2704,12 +2788,12 @@ exit;
         if (defined('PHP_VERSION')) {
             $version = PHP_VERSION;
         } else {
-            $version  = phpversion('');
+            $version = phpversion('');
         }
 
         //Case management system of ubuntu, php version return 5.2.4-2ubuntu5.2
         if (strpos($version, '-') !== false) {
-            $version  = substr($version, 0, strpos($version, '-'));
+            return substr($version, 0, strpos($version, '-'));
         }
 
         return $version;
@@ -2723,9 +2807,11 @@ exit;
     {
         if (class_exists('ZipArchive', false)) {
             $zip = new ZipArchive();
+
             return ($zip->open($from_file, ZIPARCHIVE::CHECKCONS) === true);
         } else {
             require_once(_PS_ROOT_DIR_.'/tools/pclzip/pclzip.lib.php');
+
             $zip = new PclZip($from_file);
             return ($zip->privCheckFormat() === true);
         }
@@ -2749,21 +2835,26 @@ exit;
         if (!file_exists($to_dir)) {
             mkdir($to_dir, 0777);
         }
+
         if (class_exists('ZipArchive', false)) {
             $zip = new ZipArchive();
-            if ($zip->open($from_file) === true && $zip->extractTo($to_dir) && $zip->close()) {
+            if (($zip->open($from_file) === true) && $zip->extractTo($to_dir) && $zip->close()) {
                 return true;
             }
+
             return false;
         } else {
             require_once(_PS_ROOT_DIR_.'/tools/pclzip/pclzip.lib.php');
+
             $zip = new PclZip($from_file);
             $list = $zip->extract(PCLZIP_OPT_PATH, $to_dir, PCLZIP_OPT_REPLACE_NEWER);
+
             foreach ($list as $file) {
                 if ($file['status'] != 'ok' && $file['status'] != 'already_a_directory') {
                     return false;
                 }
             }
+
             return true;
         }
     }
@@ -2773,10 +2864,12 @@ exit;
         if (!is_dir($path)) {
             return @chmod($path, $filemode);
         }
+
         $dh = opendir($path);
-        while (($file = readdir($dh)) !== false) {
-            if ($file != '.' && $file != '..') {
+        while (($file = (readdir($dh)) !== false)) {
+            if (($file != '.') && ($file != '..')) {
                 $fullpath = $path.'/'.$file;
+
                 if (is_link($fullpath)) {
                     return false;
                 } elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode)) {
@@ -2786,12 +2879,10 @@ exit;
                 }
             }
         }
+
         closedir($dh);
-        if (@chmod($path, $filemode)) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return @chmod($path, $filemode);
     }
 
     /**

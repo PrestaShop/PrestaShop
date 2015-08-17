@@ -561,7 +561,7 @@ class ConfigurationCore extends ObjectModel
             }
         } else {
             $testContext = ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, null, Shop::CONTEXT_SHOP))
-                            || (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP))) ? true : false;
+                            || (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, null, Shop::CONTEXT_GROUP)));
         }
 
         return (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $testContext);
@@ -575,7 +575,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function isLangKey($key)
     {
-        return (isset(self::$types[$key]) && self::$types[$key] == 'lang') ? true : false;
+        return (isset(self::$types[$key]) && self::$types[$key] == 'lang');
     }
 
     /**

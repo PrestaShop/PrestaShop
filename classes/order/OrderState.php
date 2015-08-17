@@ -153,6 +153,6 @@ class OrderStateCore extends ObjectModel
 
     public function isRemovable()
     {
-        return !($this->unremovable);
+        return !$this->unremovable;
     }
 }

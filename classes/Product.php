@@ -3853,12 +3853,11 @@ class ProductCore extends ObjectModel
             Db::getInstance()->execute($impact_sql);
         }
 
-        return !$return ? false : $combination_images;
+        return (!$return) ? false : $combination_images;
     }
 
     public static function getAttributesImpacts($id_product)
     {
-        $return = array();
         $result = Db::getInstance()->executeS(
             'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
 			FROM `'._DB_PREFIX_.'attribute_impact` ai
@@ -3867,10 +3866,13 @@ class ProductCore extends ObjectModel
         if (!$result) {
             return array();
         }
+
+        $return = array();
         foreach ($result as $impact) {
             $return[$impact['id_attribute']]['price'] = (float)$impact['price'];
             $return[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
         }
+
         return $return;
     }
 
@@ -3886,9 +3888,11 @@ class ProductCore extends ObjectModel
 			SELECT `id_image`
 			FROM `'._DB_PREFIX_.'product_attribute_image`
 			WHERE `id_product_attribute` = '.(int)$id_product_attribute);
+
         foreach ($data as $row) {
             $combination_images[] = (int)$row['id_image'];
         }
+
         return $combination_images;
     }
 
@@ -3900,12 +3904,16 @@ class ProductCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'accessory`
 		WHERE `id_product_1` = '.(int)$id_product_old);
+
         foreach ($result as $row) {
             $data = array(
                 'id_product_1' => (int)$id_product_new,
-                'id_product_2' => (int)$row['id_product_2']);
+                'id_product_2' => (int)$row['id_product_2']
+            );
+
             $return &= Db::getInstance()->insert('accessory', $data);
         }
+
         return $return;
     }
 
@@ -3933,6 +3941,7 @@ class ProductCore extends ObjectModel
         $sql = 'SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`
 				FROM `'._DB_PREFIX_.'product_download`
 				WHERE `id_product` = '.(int)$id_product_old;
+
         $results = Db::getInstance()->executeS($sql);
         if (!$results) {
             return true;
@@ -4839,7 +4848,7 @@ class ProductCore extends ObjectModel
             if (!Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
                 return false;
             }
-            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0 ? true : false);
+            self::$_incat[$hash] = (Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows() > 0);
         }
         return self::$_incat[$hash];
     }

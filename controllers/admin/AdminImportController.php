@@ -1531,7 +1531,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
                 $product->id_category = array_values(array_unique($product->id_category));
-                
+
                 // Will update default category if category column is not ignored AND if there is categories that are set in the import file row.
                 if (isset($product->id_category[0])) {
                     $product->id_category_default = (int)$product->id_category[0];
@@ -1811,7 +1811,7 @@ class AdminImportControllerCore extends AdminController
                             $image = new Image();
                             $image->id_product = (int)$product->id;
                             $image->position = Image::getHighestPosition($product->id) + 1;
-                            $image->cover = (!$key && !$product_has_images) ? true : false;
+                            $image->cover = (!$key && !$product_has_images);
                             // file_exists doesn't work with HTTP protocol
                             if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                                 ($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add()) {
@@ -2089,7 +2089,7 @@ class AdminImportControllerCore extends AdminController
                         $image = new Image();
                         $image->id_product = (int)$product->id;
                         $image->position = Image::getHighestPosition($product->id) + 1;
-                        $image->cover = (!$product_has_images) ? true : false;
+                        $image->cover = (!$product_has_images);
 
                         $field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
                         $lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);

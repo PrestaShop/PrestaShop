@@ -84,11 +84,8 @@ class UpgraderCore
         }
 
         $destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
-        if (@copy($this->link, $destPath)) {
-            return true;
-        } else {
-            return false;
-        }
+        
+        return @copy($this->link, $destPath);
     }
     public function isLastVersion()
     {

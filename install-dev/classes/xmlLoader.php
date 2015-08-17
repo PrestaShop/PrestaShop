@@ -444,7 +444,7 @@ class InstallXmlLoader
             if ($data_lang) {
                 $object->hydrate($data_lang);
             }
-            $object->add(true, (isset($xml->fields['null'])) ? true : false);
+            $object->add(true, isset($xml->fields['null']));
             $entity_id = $object->id;
             unset($object);
         } else {
@@ -522,7 +522,7 @@ class InstallXmlLoader
 
         $this->storeId($entity, $identifier, $entity_id);
     }
-    
+
     public function createEntityStockAvailable($identifier, array $data, array $data_lang)
     {
         $stock_available = new StockAvailable();
@@ -711,7 +711,7 @@ class InstallXmlLoader
             foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
                 $table = current($row);
                 if (preg_match('#^'._DB_PREFIX_.'(.+?)(_lang)?$#i', $table, $m)) {
-                    $tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+                    $tables[$m[1]] = (isset($m[2]) && $m[2]);
                 }
             }
         }
@@ -790,8 +790,9 @@ class InstallXmlLoader
         }
 
         if (preg_match('#^varchar\(([0-9]+)\)$#i', $type, $m)) {
-            return intval($m[1]) >= 64 ? true : false;
+            return (intval($m[1]) >= 64);
         }
+
         return false;
     }
 

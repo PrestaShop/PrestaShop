@@ -1397,7 +1397,7 @@ abstract class ModuleCore
                     $item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
                     $item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
                     $item->url = isset($tmp_module->url) ? $tmp_module->url : null;
-                    $item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
+                    $item->onclick_option  = method_exists($module, 'onclickOption');
 
                     if ($item->onclick_option) {
                         $href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;

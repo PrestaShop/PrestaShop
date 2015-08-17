@@ -211,7 +211,7 @@ class AdminGendersControllerCore extends AdminController
                 return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'].'/', false, $width, $height);
             }
         }
-        return !count($this->errors) ? true : false;
+        return !count($this->errors);
     }
 
     protected function afterImageUpload()

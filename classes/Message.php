@@ -157,10 +157,9 @@ class MessageCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        $result = Db::getInstance()->execute('
+        return Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
 			('.(int)$id_message.', '.(int)$id_employee.', NOW());
 		');
-        return $result;
     }
 }

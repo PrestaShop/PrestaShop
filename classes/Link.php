@@ -497,6 +497,7 @@ class LinkCore
         } else {
             $uri_path = _THEME_CAT_DIR_.$id_category.($type ? '-'.$type : '').'.jpg';
         }
+
         return $this->protocol_content.Tools::getMediaServer($uri_path).$uri_path;
     }
 
@@ -585,6 +586,7 @@ class LinkCore
             } else {
                 $name = Dispatcher::getInstance()->getController();
             }
+
             $url = $this->getPageLink($name);
         }
 
@@ -617,9 +619,9 @@ class LinkCore
         if (!$array) {
             if (count($vars)) {
                 return $url.(!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
-            } else {
-                return $url;
             }
+
+            return $url;
         }
 
         $vars['requestUrl'] = $url;
@@ -667,7 +669,7 @@ class LinkCore
             $ssl = $force_ssl;
         }
 
-        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null) {
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && ($id_shop !== null)) {
             $shop = new Shop($id_shop);
         } else {
             $shop = Context::getContext()->shop;
@@ -690,16 +692,18 @@ class LinkCore
             parse_str($parsedUrl['query'], $output);
             unset($output['token'], $output['conf'], $output['id_quick_access']);
         }
+
         return http_build_query($output);
     }
 
     public function matchQuickLink($url)
     {
         $quicklink = $this->getQuickLink($url);
-        if (isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI']))) {
+
+        if (isset($quicklink) && ($quicklink === $this->getQuickLink($_SERVER['REQUEST_URI']))) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }
