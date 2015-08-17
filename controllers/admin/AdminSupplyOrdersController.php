@@ -1721,7 +1721,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
             }
         }
         if ($items) {
-            die(Tools::jsonEncode($items));
+            die(json_encode($items));
         }
 
         die(1);

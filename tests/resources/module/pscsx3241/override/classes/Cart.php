@@ -45,7 +45,7 @@ class Cart extends CartCore
             }
         } else {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
-            $params = Tools::jsonDecode($params, true);
+            $params = json_decode($params, true);
             if (isset($params['products'])) {
                 return $params['products'];
             } else {

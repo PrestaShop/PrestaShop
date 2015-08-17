@@ -1059,7 +1059,7 @@ class ToolsCore
 
         echo '
 			<script type="text/javascript">
-				console.'.$type.'('.Tools::jsonEncode($object).');
+				console.'.$type.'('.json_encode($object).');
 			</script>
 		';
     }
@@ -2618,38 +2618,34 @@ exit;
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_decode instead
      * jsonDecode convert json string to php array / object
      *
-     * @param string $json
+     * @param string $data
      * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
      * @return array
      */
-    public static function jsonDecode($json, $assoc = false)
+    public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
     {
-        if (function_exists('json_decode')) {
-            return json_decode($json, $assoc);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
-            return $pear_json->decode($json);
-        }
+        return json_decode($data, $assoc, $depth, $options);
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_encode instead
      * Convert an array to json string
      *
      * @param array $data
      * @return string json
      */
-    public static function jsonEncode($data)
+    public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (function_exists('json_encode')) {
-            return json_encode($data);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON();
-            return $pear_json->encode($data);
+        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
+            return json_encode($data, $options);
         }
+
+        return json_encode($data, $options, $depth);
     }
 
     /**
@@ -2660,9 +2656,11 @@ exit;
         $backtrace = debug_backtrace();
         $callee = next($backtrace);
         $class = isset($callee['class']) ? $callee['class'] : null;
+
         if ($message === null) {
             $message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
         }
+
         $error = 'Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />';
 
         Tools::throwDeprecated($error, $message, $class);

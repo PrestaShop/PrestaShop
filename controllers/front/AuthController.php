@@ -164,7 +164,7 @@ class AuthControllerCore extends FrontController
                 'page' => $this->context->smarty->fetch($this->template),
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         }
     }
 
@@ -344,7 +344,7 @@ class AuthControllerCore extends FrontController
                 'errors' => $this->errors,
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         } else {
             $this->context->smarty->assign('authentification_error', $this->errors);
         }
@@ -473,7 +473,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
 
                         if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
@@ -647,7 +647,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
                         // if registration type is in two steps, we redirect to register address
                         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount')) {
@@ -687,7 +687,7 @@ class AuthControllerCore extends FrontController
                     'isSaved' => false,
                     'id_customer' => 0
                 );
-                $this->ajaxDie(Tools::jsonEncode($return));
+                $this->ajaxDie(json_encode($return));
             }
             $this->context->smarty->assign('account_error', $this->errors);
         }

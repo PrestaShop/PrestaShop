@@ -1095,7 +1095,7 @@ class AdminCustomersControllerCore extends AdminController
             $to_return = array('found' => false);
         }
 
-        $this->content = Tools::jsonEncode($to_return);
+        $this->content = json_encode($to_return);
     }
 
     /**
