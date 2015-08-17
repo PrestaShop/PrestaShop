@@ -797,7 +797,7 @@ class AdminControllerCore extends Controller
 
                 if ($field = $this->filterToField($key, $filter)) {
                     $type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
-                    if (($type == 'date' || $type == 'datetime') && is_string($value)) {
+                    if (($type == 'date' || $type == 'datetime' || $type == 'range') && is_string($value)) {
                         $value = Tools::unSerialize($value);
                     }
                     $key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
@@ -811,8 +811,10 @@ class AdminControllerCore extends Controller
                         $sql_filter = & $this->_filter;
                     }
 
-                    /* Only for date filtering (from, to) */
+                    /* Only for date filtering (from, to) and range filter */
                     if (is_array($value)) {
+
+                        // filter type date
                         if (isset($value[0]) && !empty($value[0])) {
                             if (!Validate::isDate($value[0])) {
                                 $this->errors[] = Tools::displayError('The \'From\' date format is invalid (YYYY-MM-DD)');
@@ -828,6 +830,20 @@ class AdminControllerCore extends Controller
                                 $sql_filter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
                             }
                         }
+
+                        // filter type range
+                        if(isset($value['from'])){
+
+                            $sql_filter .= 'AND '.pSQL($key).' >= \''.pSQL($value['from']).'\'';
+
+                        }
+
+                        if(isset($value['to']) && !empty($value['to'])){
+
+                            $sql_filter .= 'AND '.pSQL($key).' <= \''.pSQL($value['to']).'\'';
+
+                        }
+
                     } else {
                         $sql_filter .= ' AND ';
                         $check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
