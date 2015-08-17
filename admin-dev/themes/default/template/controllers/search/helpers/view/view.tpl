@@ -121,13 +121,14 @@ $(function() {
 	</div>
 	{/if}
 
-	{if isset($customers) && $customers}
+	{if isset($customers) && $customers &&
+        isset($customerCount) && $customerCount}
 	<div class="panel">
 		<h3>
-			{if $customers|@count == 1}
+			{if $customerCount == 1}
 				{l s='1 customer'}
 			{else}
-				{l s='%d customers' sprintf=$customers|@count}
+				{l s='%d customers' sprintf=$customerCount}
 			{/if}
 		</h3>
 		{$customers}
