@@ -166,6 +166,12 @@
                                                     {$address['address1']}
                                                     {$address['postcode']}
                                                     {$address['city']}
+                                                    {if !empty($address['phone'])}
+                                                        {$address['phone']}
+                                                    {/if},
+                                                    {if !empty($address['phone_mobile'])}
+                                                        {$address['phone_mobile']}
+                                                    {/if},
                                                     {if !empty($address['state'])}
                                                         {$address['state']}
                                                     {/if},
