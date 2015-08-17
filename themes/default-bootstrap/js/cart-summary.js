@@ -989,14 +989,6 @@ function updateCartSummary(json)
 			$('.cart_total_delivery').hide();
 	}
 
-	if (json.free_ship > 0 && !json.is_virtual_cart)
-	{
-		$('.cart_free_shipping').fadeIn();
-		$('#free_shipping').html(formatCurrency(json.free_ship, currencyFormat, currencySign, currencyBlank));
-	}
-	else
-		$('.cart_free_shipping').hide();
-
 	if (json.total_wrapping > 0)
 	{
 		$('#total_wrapping').html(formatCurrency(json.total_wrapping, currencyFormat, currencySign, currencyBlank));

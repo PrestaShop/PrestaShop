@@ -321,7 +321,7 @@ class AuthControllerCore extends FrontController
                 $this->context->cookie->write();
                 $this->context->cart->autosetProductAddress();
 
-                Hook::exec('actionAuthentication');
+                Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
 
                 // Login information have changed, so we check if the cart rules still apply
                 CartRule::autoRemoveFromCart($this->context);
