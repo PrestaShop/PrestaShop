@@ -948,6 +948,7 @@ class AdminControllerCore extends Controller
         header('Cache-Control: no-store, no-cache');
         header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.csv"');
 
+        $fd = fopen('php://output', 'wb');
         $headers = array();
         foreach ($this->fields_list as $key => $datas) {
             if ($datas['title'] == 'PDF') {
@@ -956,9 +957,10 @@ class AdminControllerCore extends Controller
                 $headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
             }
         }
-        $content = array();
+        fputcsv($fd, $headers, ';', $text_delimiter);
+        
         foreach ($this->_list as $i => $row) {
-            $content[$i] = array();
+            $content = array();
             $path_to_image = false;
             foreach ($this->fields_list as $key => $params) {
                 $field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8(Tools::nl2br($row[$key])) : '';
@@ -978,19 +980,12 @@ class AdminControllerCore extends Controller
                         $field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
                     }
                 }
-                $content[$i][] = $field_value;
+                $content[] = $field_value;
             }
+            fputcsv($fd, $content, ';', $text_delimiter);
         }
-
-        $this->context->smarty->assign(array(
-            'export_precontent' => "",
-            'export_headers' => $headers,
-            'export_content' => $content,
-            'text_delimiter' => $text_delimiter
-            )
-        );
-
-        $this->layout = 'layout-export.tpl';
+        @fclose($fd);
+        die;
     }
 
     /**
