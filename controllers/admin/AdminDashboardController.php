@@ -157,7 +157,7 @@ class AdminDashboardControllerCore extends AdminController
         $forms['carriers']['description'] = $this->l('Method: Indicate the percentage of your carrier margin. For example, if you charge $10 of shipping fees to your customer for each shipment, but you really pay $4 to this carrier, then you should indicate "40" in the percentage field.');
 
         $forms['other']['fields']['CONF_AVERAGE_PRODUCT_MARGIN'] = array(
-            'title' => $this->l('Average gross margin'),
+            'title' => $this->l('Average gross margin percentage'),
             'desc' => $this->l('You should calculate this percentage as follows: ((total sales revenue) - (cost of goods sold)) / (total sales revenue) * 100. This value is only used to calculate the Dashboard approximate gross margin, if you do not specify the wholesale price for each product.'),
             'validation' => 'isPercentage',
             'cast' => 'intval',
