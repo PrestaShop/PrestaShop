@@ -470,14 +470,7 @@ if (empty($return_type) || $return_type == 'xml') {
         switch ($return_type) {
             case 'json':
                 header('Content-Type: application/json');
-                if (function_exists('json_encode')) {
-                    $result = json_encode($result);
-                } else {
-                    include_once(INSTALL_PATH.'/../tools/json/json.php');
-                    $pearJson = new Services_JSON();
-                    $result = $pearJson->encode($result);
-                }
-                echo $result;
+                echo json_encode($result);
                 break;
             case 'eval':
                 return $result;
