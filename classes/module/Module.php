@@ -1962,14 +1962,6 @@ abstract class ModuleCore
     }
 
     /**
-     * @deprecated 1.5.0 Use Translate::getModuleTranslation()
-     */
-    public static function findTranslation($name, $string, $source)
-    {
-        return Translate::getModuleTranslation($name, $string, $source);
-    }
-
-    /**
      * Get translation for a given module text
      *
      * Note: $specific parameter is mandatory for library files.
