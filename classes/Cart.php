@@ -958,7 +958,7 @@ class CartCore extends ObjectModel
             unset(self::$_totalWeight[$this->id]);
         }
 
-        Hook::exec('actionBeforeCartUpdateQty', array(
+        $data = array(
             'cart' => $this,
             'product' => $product,
             'id_product_attribute' => $id_product_attribute,
@@ -968,7 +968,11 @@ class CartCore extends ObjectModel
             'id_address_delivery' => $id_address_delivery,
             'shop' => $shop,
             'auto_add_cart_rule' => $auto_add_cart_rule,
-        ));
+        );
+
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeCartUpdateQty', $data);
+        Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int)$quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
