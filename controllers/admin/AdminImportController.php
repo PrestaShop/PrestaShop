@@ -74,6 +74,7 @@ class AdminImportControllerCore extends AdminController
         'category' => array('AdminImportController', 'split'),
         'online_only' => array('AdminImportController', 'getBoolean'),
         'accessories' => array('AdminImportController', 'split'),
+        'image_alt' => array('AdminImportController', 'split'),
     );
 
     public $separator;
@@ -141,6 +142,7 @@ class AdminImportControllerCore extends AdminController
                         'label' => $this->l('Choose among product images by position (1,2,3...)')
                     ),
                     'image_url' => array('label' => $this->l('Image URLs (x,y,z...)')),
+                    'image_alt' => array('label' => $this->l('Image alt texts (x,y,z...)')),
                     'delete_existing_images' => array(
                         'label' => $this->l('Delete existing images (0 = No, 1 = Yes).')
                     ),
@@ -262,6 +264,7 @@ class AdminImportControllerCore extends AdminController
                     'date_add' => array('label' => $this->l('Product creation date')),
                     'show_price' => array('label' => $this->l('Show price (0 = No, 1 = Yes)')),
                     'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
+                    'image_alt' => array('label' => $this->l('Image alt texts (x,y,z...)')),
                     'delete_existing_images' => array(
                         'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
                     ),
@@ -903,18 +906,24 @@ class AdminImportControllerCore extends AdminController
             $separator = ',';
         }
 
-        do {
-            $uniqid_path = _PS_UPLOAD_DIR_.uniqid();
-        } while (file_exists($uniqid_path));
-        file_put_contents($uniqid_path, $field);
         $tab = '';
-        if (!empty($uniqid_path)) {
+        $uniqid_path = false;
+
+        // try data:// protocole. If failed, old school file on filesystem.
+        if (($fd = @fopen('data://text/plain;base64,'.base64_encode($field), 'rb')) === false) {
+            do {
+                $uniqid_path = _PS_UPLOAD_DIR_.uniqid();
+            } while (file_exists($uniqid_path));
+            file_put_contents($uniqid_path, $field);
             $fd = fopen($uniqid_path, 'r');
-            $tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
-            fclose($fd);
-            if (file_exists($uniqid_path)) {
-                @unlink($uniqid_path);
-            }
+        }
+        
+        if ($fd === false) return array();
+        
+        $tab = fgetcsv($fd, MAX_LINE_SIZE, $separator);
+        fclose($fd);
+        if ($uniqid_path !== false && file_exists($uniqid_path)) {
+            @unlink($uniqid_path);
         }
 
         if (empty($tab) || (!is_array($tab))) {
@@ -2086,7 +2095,7 @@ class AdminImportControllerCore extends AdminController
             }
 
             //delete existing images if "delete_existing_images" is set to 1
-            if (isset($product->delete_existing_images)) {
+            if (!$validateOnly && isset($product->delete_existing_images)) {
                 if ((bool)$product->delete_existing_images) {
                     $product->deleteImages();
                 }
@@ -2104,6 +2113,10 @@ class AdminImportControllerCore extends AdminController
                         $image->id_product = (int)$product->id;
                         $image->position = Image::getHighestPosition($product->id) + 1;
                         $image->cover = (!$key && !$product_has_images) ? true : false;
+                        $alt = $product->image_alt[$key];
+                        if (strlen($alt) > 0) {
+                            $image->legend = self::createMultiLangField($alt);
+                        }
                         // file_exists doesn't work with HTTP protocol
                         if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                             ($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add()) {
@@ -2391,6 +2404,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         $id_image = array();
+        
+// FIXME: problem here: we can delete images on PRODUCT (all of them !), not combinations. I suppose it's anormal. We should delete product images only from product import.
+// FIXME: second problem, cache_image_deleted is not a crossStepVariable! Should either remove feature, or add it to crossStepVariables.
 
         //delete existing images if "delete_existing_images" is set to 1
         if (!$validateOnly && array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id])) {
@@ -2402,7 +2418,7 @@ class AdminImportControllerCore extends AdminController
             $info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
 
             if (is_array($info['image_url']) && count($info['image_url'])) {
-                foreach ($info['image_url'] as $url) {
+                foreach ($info['image_url'] as $key => $url) {
                     $url = trim($url);
                     $product_has_images = (bool)Image::getImages($this->context->language->id, $product->id);
 
@@ -2410,7 +2426,15 @@ class AdminImportControllerCore extends AdminController
                     $image->id_product = (int)$product->id;
                     $image->position = Image::getHighestPosition($product->id) + 1;
                     $image->cover = (!$product_has_images) ? true : false;
-
+                    
+                    if (isset($info['image_alt'])) {
+                        $alt = self::split($info['image_alt']);
+                        if (isset($alt[$key]) && strlen($alt[$key]) > 0) {
+                            $alt = self::createMultiLangField($alt[$key]);
+                            $image->legend = $alt;
+                        }
+                    }
+                    
                     $field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
                     $lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
 
@@ -4238,7 +4262,7 @@ class AdminImportControllerCore extends AdminController
                     if (!defined('PS_MASS_PRODUCT_CREATION')) {
                         define('PS_MASS_PRODUCT_CREATION', true);
                     }
-                    $moreStepLabels = array('Linking Accessories...'); // FIXME : i18n
+                    $moreStepLabels = array($this->l('Linking Accessories...'));
                     $doneCount += $this->productImport($offset, $limit, $crossStepsVariables, $validateOnly, $moreStep);
                     $this->clearSmartyCache();
                     break;
