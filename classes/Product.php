@@ -1139,14 +1139,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0 Use Combination::getPrice()
-     */
-    public static function getProductAttributePrice($id_product_attribute)
-    {
-        return Combination::getPrice($id_product_attribute);
-    }
-
-    /**
     * Get all available products
     *
     * @param int $id_lang Language id
@@ -4244,7 +4236,7 @@ class ProductCore extends ObjectModel
 
         $row['attribute_price'] = 0;
         if ($id_product_attribute) {
-            $row['attribute_price'] = (float)Product::getProductAttributePrice($id_product_attribute);
+            $row['attribute_price'] = (float)Combination::getPrice($id_product_attribute);
         }
 
         $row['price_tax_exc'] = Product::getPriceStatic(

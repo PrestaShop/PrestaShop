@@ -587,59 +587,6 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Compiles and outputs page header section (including HTML <head>)
-     *
-     * @param bool $display If true, renders visual page header section
-     * @deprecated 1.5.0.1
-     */
-    public function displayHeader($display = true)
-    {
-        Tools::displayAsDeprecated();
-
-        $this->initHeader();
-        $hook_header = Hook::exec('displayHeader');
-        if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache')) {
-            // CSS compressor management
-            if (Configuration::get('PS_CSS_THEME_CACHE')) {
-                $this->css_files = Media::cccCss($this->css_files);
-            }
-
-            //JS compressor management
-            if (Configuration::get('PS_JS_THEME_CACHE')) {
-                $this->js_files = Media::cccJs($this->js_files);
-            }
-        }
-
-        // Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
-        $this->context->smarty->assign(array(
-            'HOOK_HEADER'       => $hook_header,
-            'HOOK_TOP'          => Hook::exec('displayTop'),
-            'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
-            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
-            'HOOK_FOOTER'       => Hook::exec('displayFooter')
-        ));
-
-        $this->context->smarty->assign(array(
-            'css_files' => $this->css_files,
-            'js_files'  => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files
-        ));
-
-        $this->display_header = $display;
-        $this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
-    }
-
-    /**
-     * Compiles and outputs page footer section
-     *
-     * @deprecated 1.5.0.1
-     */
-    public function displayFooter($display = true)
-    {
-        Tools::displayAsDeprecated();
-        $this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-    }
-
-    /**
      * Renders and outputs maintenance page and ends controller process.
      */
     public function initCursedPage()
