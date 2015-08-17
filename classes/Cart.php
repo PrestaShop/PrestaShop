@@ -2406,13 +2406,19 @@ class CartCore extends ObjectModel
         foreach (reset($delivery_option_list) as $key => $option) {
             $price = $option['total_price_with_tax'];
             $price_tax_exc = $option['total_price_without_tax'];
+            $name = $img = $delay = '';
 
             if ($option['unique_carrier']) {
                 $carrier = reset($option['carrier_list']);
-                $name = $carrier['instance']->name;
-                $img = $carrier['logo'];
-                $delay = $carrier['instance']->delay;
-                $delay = isset($delay[Context::getContext()->language->id]) ? $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
+                if (isset($carrier['instance'])) {
+                    $name = $carrier['instance']->name;
+                    $delay = $carrier['instance']->delay;
+                    $delay = isset($delay[Context::getContext()->language->id]) ?
+                        $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
+                }
+                if (isset($carrier['logo'])) {
+                    $img = $carrier['logo'];
+                }
             } else {
                 $nameList = array();
                 foreach ($option['carrier_list'] as $carrier) {
