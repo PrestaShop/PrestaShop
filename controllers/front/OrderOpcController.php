@@ -170,6 +170,7 @@ class OrderOpcControllerCore extends ParentOrderController
                                 $return = array_merge(array(
                                     'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.$tpl),
                                     'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
+                                    'block_user_info_nav' => (isset($block_user_info) ? $block_user_info->hookDisplayNav(array()) : ''),
                                     'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
                                     'carrier_data' => ($is_adv_api ? '' : $this->_getCarrierList()),
                                     'HOOK_TOP_PAYMENT' => ($is_adv_api ? '' : Hook::exec('displayPaymentTop')),
