@@ -694,17 +694,6 @@ class AdminImagesControllerCore extends AdminController
         return (count($this->errors) > 0 ? false : true);
     }
 
-    /**
-     * Init display for move images block
-     */
-    public function initMoveImages()
-    {
-        $this->context->smarty->assign(array(
-            'safe_mode' => Tools::getSafeModeStatus(),
-            'link_ppreferences' => 'index.php?tab=AdminPPreferences&token='.Tools::getAdminTokenLite('AdminPPreferences').'#PS_LEGACY_IMAGES_on',
-        ));
-    }
-
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
@@ -742,7 +731,6 @@ class AdminImagesControllerCore extends AdminController
     {
         if ($this->display != 'edit' && $this->display != 'add') {
             $this->initRegenerate();
-            $this->initMoveImages();
 
             $this->context->smarty->assign(array(
                 'display_regenerate' => true,

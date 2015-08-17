@@ -751,10 +751,6 @@ class ImageCore extends ObjectModel
      */
     public static function testFileSystem()
     {
-        $safe_mode = Tools::getSafeModeStatus();
-        if ($safe_mode) {
-            return false;
-        }
         $folder1 = _PS_PROD_IMG_DIR_.'testfilesystem/';
         $test_folder = $folder1.'testsubfolder/';
         // check if folders are already existing from previous failed test
@@ -773,6 +769,7 @@ class ImageCore extends ObjectModel
         }
         @rmdir($test_folder);
         @rmdir($folder1);
+
         if (file_exists($folder1)) {
             return false;
         }
