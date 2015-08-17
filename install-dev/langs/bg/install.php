@@ -72,7 +72,6 @@ return array(
         'Recommended PHP parameters' => 'Препоръчвани PHP параметри',
         'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'Вие имате инсталиран PHP версия %s. Скоро минималната поддържана версия от PrestaShop ще бъде PHP 5.4. За нормалната работа в бъдеще, препоръчваме да обновите версията си до PHP 5.4 сега!',
         'Cannot open external URLs' => 'Невъзможни за отваряне външни адреси (URL)',
-        'PHP register_globals option is enabled' => 'Опцията PHP register_globals е разрешена',
         'GZIP compression is not activated' => 'GZIP компресията не е активирана',
         'Mcrypt extension is not enabled' => 'Разширението Mcrypt не е разрешено',
         'Mbstring extension is not enabled' => 'Разширението Mbstring не е разрешено',
