@@ -174,7 +174,7 @@ class ConfigurationCore extends ObjectModel
      * @param int $id_lang Language ID
      * @return string Value
      */
-    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
+    public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null, $default = false)
     {
         if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_) {
             return false;
@@ -206,7 +206,7 @@ class ConfigurationCore extends ObjectModel
         } elseif (Configuration::hasKey($key, $id_lang)) {
             return self::$_cache[self::$definition['table']][$id_lang]['global'][$key];
         }
-        return false;
+        return $default;
     }
 
     public static function getGlobalValue($key, $id_lang = null)
