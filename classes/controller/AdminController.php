@@ -2266,9 +2266,10 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * @param string|bool $tracking_source Source information for URL used by "Install" button
      * @return string
      */
-    public function renderModulesList()
+    public function renderModulesList($tracking_source = false)
     {
         // Load cache file modules list (natives and partners modules)
         $xml_modules = false;
@@ -2292,7 +2293,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if ($this->getModulesList($this->filter_modules_list)) {
+        if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $tmp = array();
             foreach ($this->modules_list as $key => $module) {
                 if ($module->active) {
@@ -3235,10 +3236,11 @@ class AdminControllerCore extends Controller
 
     /**
      * @param array|string $filter_modules_list
+     * @param string|bool $tracking_source
      * @return bool
      * @throws PrestaShopException
      */
-    public function getModulesList($filter_modules_list)
+    public function getModulesList($filter_modules_list, $tracking_source = false)
     {
         if (!is_array($filter_modules_list) && !is_null($filter_modules_list)) {
             $filter_modules_list = array($filter_modules_list);
@@ -3263,7 +3265,7 @@ class AdminControllerCore extends Controller
             }
 
             if (in_array($module->name, $filter_modules_list) && $perm) {
-                $this->fillModuleData($module, 'array');
+                $this->fillModuleData($module, 'array', null, $tracking_source);
                 $this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
             }
         }
@@ -3993,8 +3995,9 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type
      * @param string|null $back
+     * @param string|bool $install_source_tracking
      */
-    public function fillModuleData(&$module, $output_type = 'link', $back = null)
+    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
         /** @var Module $obj */
         $obj = null;
@@ -4015,11 +4018,17 @@ class AdminControllerCore extends Controller
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 
-        $module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+        $module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name
+            .'&anchor='.ucfirst($module->name).($install_source_tracking ? '&source='.$install_source_tracking : '');
         $module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
         $module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
-        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
+        // free modules get their source tracking data here
+        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back, $install_source_tracking);
+        // pay modules get their source tracking data here
+        if ($install_source_tracking && isset($module->addons_buy_url)) {
+            $module->addons_buy_url .= ($install_source_tracking ? '&utm_term='.$install_source_tracking : '');
+        }
 
         $module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
             ((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -4043,9 +4052,10 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type (link or select)
      * @param string|null $back
+     * @param string|bool $install_source_tracking
      * @return string|array
      */
-    public function displayModuleOptions($module, $output_type = 'link', $back = null)
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
         if (!isset($module->enable_device)) {
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
@@ -4151,7 +4161,8 @@ class AdminControllerCore extends Controller
         );
 
         $install = array(
-            'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+            'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name)
+                .(!is_null($back) ? '&back='.urlencode($back) : '').($install_source_tracking ? '&source='.$install_source_tracking : ''),
             'onclick' => '',
             'title' => $this->translationsTab['Install'],
             'text' => $this->translationsTab['Install'],
