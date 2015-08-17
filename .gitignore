@@ -14,6 +14,7 @@ config.codekit
 *.sublime-workspace
 nbproject
 bower_components
+composer.lock
 
 # Cache, temp and personal files
 
@@ -22,9 +23,11 @@ download/*
 img/*
 log/*
 upload/*
+vendor/*
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
+admin-dev/import/*
 
 themes/*/cache/*
 
@@ -54,7 +57,10 @@ mails/*
 !mails/en/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
-
+themes/default-bootstrap/mails/*
+!themes/default-bootstrap/mails/en/
+themes/default-bootstrap/modules/*/mails/*
+!themes/default-bootstrap/modules/*/mails/en
 
 # MISC
 

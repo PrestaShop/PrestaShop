@@ -395,7 +395,6 @@ function accordionFooter(status)
 
 function accordion(status)
 {
-	leftColumnBlocks = $('#left_column');
 	if(status == 'enable')
 	{
 		var accordion_selector = '#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4,' +
@@ -418,5 +417,5 @@ function accordion(status)
 function bindUniform()
 {
 	if (!!$.prototype.uniform)
-		$("select.form-control,input[type='radio'],input[type='checkbox']").uniform();
+		$("select.form-control,input[type='radio'],input[type='checkbox']").not(".not_unifrom").uniform();
 }
