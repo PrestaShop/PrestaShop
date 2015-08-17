@@ -57,8 +57,9 @@ class OrderControllerCore extends ParentOrderController
         // If some products have disappear
         if (is_array($products)) {
             $this->step = 0;
-            foreach ($products as $product)
+            foreach ($products as $product) {
                 $this->errors[] = sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity (%s available). You cannot proceed with your order until the quantity is adjusted.'), $product['name'], $product['stock_quantity']);
+            }
         }
 
         // Check minimal amount
