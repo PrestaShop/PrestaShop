@@ -240,7 +240,6 @@ class OrderCore extends ObjectModel
             'id_carrier' => array('xlink_resource'=> 'carriers'),
             'current_state' => array(
                 'xlink_resource'=> 'order_states',
-                'getter' => 'getWsCurrentState',
                 'setter' => 'setWsCurrentState'
             ),
             'module' => array('required' => true),
@@ -2213,6 +2212,9 @@ class OrderCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @deprecated since 1.6.1
+     */
     public function getWsCurrentState()
     {
         return $this->getCurrentState();

@@ -229,6 +229,8 @@ class CategoryControllerCore extends FrontController
             // Pagination must be call after "getProducts"
             $this->pagination($this->nbProducts);
         }
+        
+        $this->addColorsToProductList($this->cat_products);
 
         Hook::exec('actionProductListModifier', array(
             'nb_products'  => &$this->nbProducts,
@@ -240,9 +242,7 @@ class CategoryControllerCore extends FrontController
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
         }
-
-        $this->addColorsToProductList($this->cat_products);
-
+        
         $this->context->smarty->assign('nb_products', $this->nbProducts);
     }
 
