@@ -26,9 +26,9 @@
 
 {block name="input_row"}
 	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display:none"{/if}>{/if}
-	{if $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache'}<div id="{$input.name}_wrapper"{if isset($fields_value.smarty_cache) && !$fields_value.smarty_cache} style="display:none"{/if}>{/if}
+	{if $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache' || $input.name == 'smarty_local'}<div id="{$input.name}_wrapper"{if isset($fields_value.smarty_cache) && !$fields_value.smarty_cache} style="display:none"{/if}>{/if}
 	{$smarty.block.parent}
-	{if $input.name == 'caching_system' || $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache'}</div>{/if}
+	{if $input.name == 'caching_system' || $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache' || $input.name == 'smarty_local'}</div>{/if}
 {/block}
 
 {block name="input"}
@@ -165,6 +165,7 @@
 		$('input[name="smarty_cache"]').change(function() {
 			$('#smarty_caching_type_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
 			$('#smarty_clear_cache_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
+			$('#smarty_local_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
 		});
 
 		$('#addMemcachedServer').click(function() {
@@ -195,7 +196,7 @@
 					success: function(data)
 					{
 						if (data && $.isArray(data))
-						{
+						{<
 							var color = data[0] != 0 ? 'green' : 'red';
 							$('#formMemcachedServerStatus').show();
 							$('input:text[name=memcachedIp]').css('background', color);
@@ -207,7 +208,7 @@
 			return false;
 		});
 
-		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_clear_cache"], input[name="smarty_caching_type"], input[name="smarty_console"], input[name="smarty_console_key"]').change(function(){
+		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_local"], input[name="smarty_clear_cache"], input[name="smarty_caching_type"], input[name="smarty_console"], input[name="smarty_console_key"]').change(function(){
 			$('#smarty_up').val(1);
 		});
 
