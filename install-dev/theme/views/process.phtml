@@ -21,7 +21,6 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<?php foreach ($this->process_steps as $item): ?>
 				<li id="process_step_<?php echo $item['key'] ?>" class="process_step">
 					<?php echo $item['lang'] ?>
-					<div class="error_log"></div>
 				</li>
 			<?php endforeach; ?>
 		</ol>
