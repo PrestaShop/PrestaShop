@@ -263,7 +263,7 @@ class AdminPaymentControllerCore extends AdminController
         }
 
         $this->tpl_view_vars = array(
-            'modules_list' => $this->renderModulesList(),
+            'modules_list' => $this->renderModulesList('back-office,AdminPayment,index'),
             'display_restrictions' => $display_restrictions,
             'lists' => $lists,
             'ps_base_uri' => __PS_BASE_URI__,
@@ -275,9 +275,9 @@ class AdminPaymentControllerCore extends AdminController
         return parent::renderView();
     }
 
-    public function renderModulesList()
+    public function renderModulesList($tracking_source = false)
     {
-        if ($this->getModulesList($this->filter_modules_list)) {
+        if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $active_list = array();
             foreach ($this->modules_list as $key => $module) {
                 if (in_array($module->name, $this->list_partners_modules)) {
