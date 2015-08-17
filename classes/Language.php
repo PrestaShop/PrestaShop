@@ -898,13 +898,13 @@ class LanguageCore extends ObjectModel
         if (!file_exists($file)) {
             $errors[] = Tools::displayError('No language pack is available for your version.');
         } elseif ($install) {
-            Language::installLanguagePack($iso, $errors, $params);
+            Language::installLanguagePack($iso, $params, $errors);
         }
 
         return count($errors) ? $errors : true;
     }
 
-    public static function downloadLanguagePack($iso, $version, &$errors)
+    public static function downloadLanguagePack($iso, $version, &$errors = array())
     {
         $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
@@ -929,7 +929,7 @@ class LanguageCore extends ObjectModel
         return ! count($errors);
     }
 
-    public static function installLanguagePack($iso, &$errors, $params)
+    public static function installLanguagePack($iso, $params, &$errors = array())
     {
         $file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
@@ -945,13 +945,7 @@ class LanguageCore extends ObjectModel
 
             if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array)) {
                 $error = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check permissions for %s'), $path);
-
-                if (count($tmp_array) == 0) {
-                    $errors[] = Tools::displayError('The archive cannot be extracted.').' '.$error;
-                } else {
-                    $errors[] = $error;
-                }
-
+                $errors[] = (count($tmp_array) == 0) ? Tools::displayError('The archive cannot be extracted.').' '.$error : $error;
                 $tmp_array[] = $path;
             }
         }
