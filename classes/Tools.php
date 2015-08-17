@@ -2824,12 +2824,13 @@ exit;
         }
     }
 
+    /**
+     * @deprecated Deprecated since 1.7.0
+     * @return boolean
+     */
     public static function getSafeModeStatus()
     {
-        if (!$safe_mode = @ini_get('safe_mode')) {
-            $safe_mode = '';
-        }
-        return in_array(Tools::strtolower($safe_mode), array(1, 'on'));
+        return false;
     }
 
     /**

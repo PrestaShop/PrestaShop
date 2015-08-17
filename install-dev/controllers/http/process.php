@@ -107,9 +107,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             if (Tools::getValue('restart')) {
                 $this->session->process_validated = array();
                 $this->session->database_clear = true;
-                if (Tools::getSafeModeStatus()) {
-                    $this->session->safe_mode = true;
-                }
             } elseif (!Tools::getValue('submitNext')) {
                 $this->session->step = 'configure';
                 $this->session->last_step = 'configure';
@@ -230,7 +227,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
         $this->ajaxJsonAnswer(true);
     }
-    
+
     /**
      * PROCESS : installModulesAddons
      * Install modules from addons
@@ -331,7 +328,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             }
         }
         $this->process_steps[] = $install_modules;
-        
+
         $install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
         $params = array(
