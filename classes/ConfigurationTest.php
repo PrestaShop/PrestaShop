@@ -156,11 +156,6 @@ class ConfigurationTestCore
         return extension_loaded('pdo_mysql');
     }
 
-    public static function test_magicquotes()
-    {
-        return !get_magic_quotes_gpc();
-    }
-
     public static function test_upload()
     {
         return ini_get('file_uploads');
