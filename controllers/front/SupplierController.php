@@ -44,6 +44,8 @@ class SupplierControllerCore extends FrontController
         }
         if (Validate::isLoadedObject($this->supplier)) {
             parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
         }
     }
 
@@ -53,8 +55,6 @@ class SupplierControllerCore extends FrontController
      */
     public function init()
     {
-        parent::init();
-
         if ($id_supplier = (int)Tools::getValue('id_supplier')) {
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
@@ -66,6 +66,8 @@ class SupplierControllerCore extends FrontController
                 $this->canonicalRedirection();
             }
         }
+
+        parent::init();
     }
 
     /**
