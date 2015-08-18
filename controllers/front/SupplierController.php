@@ -24,25 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
- use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
- use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
- use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
- use PrestaShop\PrestaShop\Adapter\Translator;
- use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
- class SupplierControllerCore extends ProductListingFrontController
- {
-     public $php_self = 'supplier';
+class SupplierControllerCore extends ProductListingFrontController
+{
+    public $php_self = 'supplier';
 
     /** @var Supplier */
     protected $supplier;
 
-     public function canonicalRedirection($canonicalURL = '')
-     {
-         if (Validate::isLoadedObject($this->supplier)) {
-             parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
-         }
-     }
+    public function canonicalRedirection($canonicalURL = '')
+    {
+        if (Validate::isLoadedObject($this->supplier)) {
+            parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
+        } elseif ($canonicalURL) {
+            parent::canonicalRedirection($canonicalURL);
+        }
+    }
 
     /**
      * Initialize supplier controller
@@ -50,8 +52,6 @@
      */
     public function init()
     {
-        parent::init();
-
         if ($id_supplier = (int)Tools::getValue('id_supplier')) {
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
@@ -62,6 +62,8 @@
                 $this->canonicalRedirection();
             }
         }
+
+        parent::init();
     }
 
     /**
