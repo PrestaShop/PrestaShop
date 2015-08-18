@@ -468,12 +468,14 @@ class AdminProductsControllerCore extends AdminController
         $full_tree = Tools::getValue('fullTree', 0);
         $use_check_box = Tools::getValue('useCheckBox', 1);
         $selected = Tools::getValue('selected', array());
+        $id_tree = Tools::getValue('type');
         $input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
 
         $tree = new HelperTreeCategories('subtree_associated_categories');
         $tree->setTemplate('subtree_associated_categories.tpl')
             ->setUseCheckBox($use_check_box)
             ->setUseSearch(true)
+            ->setIdTree($id_tree)
             ->setSelectedCategories($selected)
             ->setFullTree($full_tree)
             ->setChildrenOnly(true)
