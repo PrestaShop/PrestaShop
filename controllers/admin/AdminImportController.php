@@ -47,8 +47,6 @@ class AdminImportControllerCore extends AdminController
 
     public $required_fields = array();
 
-    public $cache_image_deleted = array();
-
     public static $default_values = array();
 
     public static $validators = array(
@@ -143,9 +141,6 @@ class AdminImportControllerCore extends AdminController
                     ),
                     'image_url' => array('label' => $this->l('Image URLs (x,y,z...)')),
                     'image_alt' => array('label' => $this->l('Image alt texts (x,y,z...)')),
-                    'delete_existing_images' => array(
-                        'label' => $this->l('Delete existing images (0 = No, 1 = Yes).')
-                    ),
                     'shop' => array(
                         'label' => $this->l('ID / Name of shop'),
                         'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
@@ -2404,15 +2399,6 @@ class AdminImportControllerCore extends AdminController
         }
 
         $id_image = array();
-        
-// FIXME: problem here: we can delete images on PRODUCT (all of them !), not combinations. I suppose it's anormal. We should delete product images only from product import.
-// FIXME: second problem, cache_image_deleted is not a crossStepVariable! Should either remove feature, or add it to crossStepVariables.
-
-        //delete existing images if "delete_existing_images" is set to 1
-        if (!$validateOnly && array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id])) {
-            $product->deleteImages();
-            $this->cache_image_deleted[(int)$product->id] = true;
-        }
 
         if (isset($info['image_url']) && $info['image_url']) {
             $info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
