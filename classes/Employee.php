@@ -139,9 +139,13 @@ class EmployeeCore extends ObjectModel
 
     protected $associated_shops = array();
 
+    public $filters;
+    private $dbInstance;
+
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, null, $id_shop);
+        $this->dbInstance = Adapter_ServiceLocator::get('Adapter_Database');
 
         if (!is_null($id_lang)) {
             $this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
@@ -149,6 +153,7 @@ class EmployeeCore extends ObjectModel
 
         if ($this->id) {
             $this->associated_shops = $this->getAssociatedShops();
+            $this->filters = new Core_Business_Employee_FiltersManager($this, $id_shop ? (int)$id_shop : Context::getContext()->shop->id);
         }
 
         $this->image_dir = _PS_EMPLOYEE_IMG_DIR_;
@@ -492,5 +497,38 @@ class EmployeeCore extends ObjectModel
 			SET `last_connection_date` = CURRENT_DATE()
 			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
 		');
+    }
+
+    /**
+     * Get employee filters data for current shop
+     * @param int $idShop
+     * @return array
+     */
+    public function getFilters($idShop)
+    {
+        if (!$this->id) {
+            return [];
+        }
+
+        $sql = 'SELECT data_filters FROM `'._DB_PREFIX_.'employee_shop` WHERE `id_employee` = '.(int)$this->id.' AND `id_shop` = '.(int)$idShop;
+        $res = $this->dbInstance->select($sql, true, false);
+        return $res ? json_decode($res[0]['data_filters'], true) : [];
+    }
+
+    /**
+     * Save employee filters data for current shop
+     * @param int $idShop
+     * @param string $data
+     * @return bool
+     */
+    public function saveFilters($idShop, $data)
+    {
+        if (!$this->id || !is_array($data)) {
+            return false;
+        }
+
+        return $this->dbInstance->execute('UPDATE `'._DB_PREFIX_.'employee_shop`
+			SET `data_filters` = "'.$this->dbInstance->escape(json_encode($data), false, true).'"
+			WHERE `id_employee` = '.(int)$this->id.' AND `id_shop` = '.(int)$idShop, false);
     }
 }

@@ -38,15 +38,26 @@ class Adapter_Database implements Core_Foundation_Database_DatabaseInterface
     }
 
     /**
+     * Executes a query
+     * @param $sqlString
+     * @param $use_cache
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
+    public function execute($sqlString, $use_cache = true)
+    {
+        return Db::getInstance()->execute($sqlString, $use_cache);
+    }
+
+    /**
      * Escape $unsafe to be used into a SQL statement
      * @param $unsafeData
+     * @param bool $html_ok allow HTML code (optional)
+     * @param bool $bq_sql escape char(`)
      * @return string
      */
-    public function escape($unsafeData)
+    public function escape($unsafeData, $html_ok = true, $bq_sql = true)
     {
-        // Prepare required params
-        $html_ok = true;
-        $bq_sql = true;
         return Db::getInstance()->escape($unsafeData, $html_ok, $bq_sql);
     }
 }

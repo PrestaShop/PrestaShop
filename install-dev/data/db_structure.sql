@@ -768,6 +768,7 @@ CREATE TABLE `PREFIX_employee` (
 CREATE TABLE `PREFIX_employee_shop` (
 `id_employee` INT( 11 ) UNSIGNED NOT NULL ,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
+`data_filters` TEXT NOT NULL ,
   PRIMARY KEY ( `id_employee` , `id_shop` ),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

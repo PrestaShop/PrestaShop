@@ -344,6 +344,8 @@ abstract class DbCore
      */
     public function __destruct()
     {
+        Core_Foundation_Event_EventManager::getInstance()->trigger('onBeforeDbClose');
+
         if ($this->link) {
             $this->disconnect();
         }
