@@ -4441,6 +4441,7 @@ class AdminImportControllerCore extends AdminController
                 true,
                 (int)$this->context->shop->id
             );
+            unset($this->context->cookie->csv_selected); // remove CSV selection file if finished with no error.
         }
 
         die(json_encode($results));
