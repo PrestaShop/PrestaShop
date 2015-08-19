@@ -275,6 +275,7 @@ class WebserviceRequestCore
             'image_types' => array('description' => 'The image types', 'class' => 'ImageType'),
             'languages' => array('description' => 'Shop languages', 'class' => 'Language'),
             'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
+            'messages' => array('description' => 'The Messages','class' => 'Message'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
             'order_histories' => array('description' => 'The Order histories','class' => 'OrderHistory'),
