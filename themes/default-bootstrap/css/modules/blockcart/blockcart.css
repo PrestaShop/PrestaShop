@@ -275,22 +275,23 @@
     padding: 30px 30px 30px 30px;
     overflow: hidden;
     position: static; }
-    #layer_cart .layer_cart_product h2 {
+    #layer_cart .layer_cart_product .title {
+      display: block;
       font: 400 23px/29px Arial, Helvetica, sans-serif;
       color: #46a74e;
       margin-bottom: 22px; }
       @media (max-width: 767px) {
-        #layer_cart .layer_cart_product h2 {
+        #layer_cart .layer_cart_product .title {
           font-size: 18px;
           padding-right: 0;
           line-height: normal; } }
-      #layer_cart .layer_cart_product h2 i {
+      #layer_cart .layer_cart_product .title i {
         font-size: 30px;
         line-height: 30px;
         float: left;
         padding-right: 8px; }
         @media (max-width: 767px) {
-          #layer_cart .layer_cart_product h2 i {
+          #layer_cart .layer_cart_product .title i {
             font-size: 22px;
             line-height: 22px; } }
     #layer_cart .layer_cart_product .product-image-container {
@@ -334,14 +335,15 @@
         border-radius: 0px 0 4px 4px;
         border-left: none;
         border-top: 1px solid #d6d4d4; } }
-    #layer_cart .layer_cart_cart h2 {
+    #layer_cart .layer_cart_cart .title {
+      display: block;
       font: 400 23px/29px Arial, Helvetica, sans-serif;
       color: #333;
       border-bottom: 1px solid #d6d4d4;
       padding-bottom: 13px;
       margin-bottom: 17px; }
       @media (max-width: 767px) {
-        #layer_cart .layer_cart_cart h2 {
+        #layer_cart .layer_cart_cart .title {
           font-size: 18px; } }
     #layer_cart .layer_cart_cart .layer_cart_row {
       padding: 0 0 7px 0; }
