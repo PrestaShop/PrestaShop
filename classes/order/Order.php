@@ -2287,7 +2287,7 @@ class OrderCore extends ObjectModel
         $breakdown = array();
 
         // Get order_details
-        $order_details = $limitToOrderDetails ?: $this->getOrderDetailList();
+        $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
 
