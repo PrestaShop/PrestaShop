@@ -1596,15 +1596,16 @@ class AdminProductsControllerCore extends AdminController
         $count_cover_image = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i
 			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-			WHERE i.cover = 1 AND `id_product` = '.(int)$id_product);
+			WHERE i.cover = 1 AND i.`id_product` = '.(int)$id_product);
 
         $id_image = Db::getInstance()->getValue('
 			SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
 			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-			WHERE `id_product` = '.(int)$id_product);
+			WHERE i.`id_product` = '.(int)$id_product);
 
         if ($count_cover_image < 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product.' LIMIT 1');
+            // Need to fix this, when no covers it tries to update image table, not image_shop. It try to dublicate cover.
+            #Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product.' LIMIT 1');
         }
 
         if ($count_cover_image > 1) {
