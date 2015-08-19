@@ -53,6 +53,10 @@ class CartRuleCore extends ObjectModel
     public $minimum_amount_tax;
     public $minimum_amount_currency;
     public $minimum_amount_shipping;
+    public $maximum_amount;
+    public $maximum_amount_tax;
+    public $maximum_amount_currency;
+    public $maximum_amount_shipping;
     public $country_restriction;
     public $carrier_restriction;
     public $group_restriction;
@@ -93,6 +97,10 @@ class CartRuleCore extends ObjectModel
             'minimum_amount_tax' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'minimum_amount_currency' =>array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'minimum_amount_shipping' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'maximum_amount' =>         array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
+            'maximum_amount_tax' =>     array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'maximum_amount_currency' =>array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            'maximum_amount_shipping' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'country_restriction' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'carrier_restriction' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'group_restriction' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -623,6 +631,29 @@ class CartRuleCore extends ObjectModel
             if ($cartTotal < $minimum_amount) {
                 return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
             }
+        }
+
+        if ($this->maximum_amount && $check_carrier)
+        {
+            // Maximum amount is converted to the contextual currency
+            $maximum_amount = $this->maximum_amount;
+            if ($this->maximum_amount_currency != Context::getContext()->currency->id)
+                $maximum_amount = Tools::convertPriceFull($maximum_amount, new Currency($this->maximum_amount_currency), Context::getContext()->currency);
+
+            $cartTotal = $context->cart->getOrderTotal($this->maximum_amount_tax, Cart::ONLY_PRODUCTS);
+            if ($this->maximum_amount_shipping)
+                $cartTotal += $context->cart->getOrderTotal($this->maximum_amount_tax, Cart::ONLY_SHIPPING);
+            $products = $context->cart->getProducts();
+            $cart_rules = $context->cart->getCartRules();
+
+            foreach ($cart_rules as &$cart_rule)
+                if ($cart_rule['gift_product'])
+                    foreach ($products as $key => &$product)
+                        if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
+                            $cartTotal = Tools::ps_round($cartTotal - $product[$this->maximum_amount_tax ? 'price_wt' : 'price'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+            
+            if ($cartTotal > $maximum_amount)
+                return (!$display_error) ? false : Tools::displayError('You have reached the maximum amount to use this voucher');
         }
 
         /* This loop checks:

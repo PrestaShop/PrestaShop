@@ -89,6 +89,48 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
+			title="{l s='You can choose a maximum amount for the cart either with or without the taxes and shipping.'}">
+			{l s='Maximum amount'}
+		</span>
+	</label>
+	<div class="col-lg-9">
+		<div class="row">
+			<div class="col-lg-3">
+				<input type="text" name="maximum_amount" value="{$currentTab->getFieldValue($currentObject, 'maximum_amount')|floatval}" />
+			</div>
+			<div class="col-lg-2">
+				<select name="maximum_amount_currency">
+				{foreach from=$currencies item='currency'}
+					<option value="{$currency.id_currency|intval}"
+					{if $currentTab->getFieldValue($currentObject, 'maximum_amount_currency') == $currency.id_currency
+						|| (!$currentTab->getFieldValue($currentObject, 'maximum_amount_currency') && $currency.id_currency == $defaultCurrency)}
+						selected="selected"
+					{/if}
+					>
+						{$currency.iso_code}
+					</option>
+				{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-3">
+				<select name="maximum_amount_tax">
+					<option value="0" {if $currentTab->getFieldValue($currentObject, 'maximum_amount_tax') == 0}selected="selected"{/if}>{l s='Tax excluded'}</option>
+					<option value="1" {if $currentTab->getFieldValue($currentObject, 'maximum_amount_tax') == 1}selected="selected"{/if}>{l s='Tax included'}</option>
+				</select>
+			</div>
+			<div class="col-lg-4">
+				<select name="maximum_amount_shipping">
+					<option value="0" {if $currentTab->getFieldValue($currentObject, 'maximum_amount_shipping') == 0}selected="selected"{/if}>{l s='Shipping excluded'}</option>
+					<option value="1" {if $currentTab->getFieldValue($currentObject, 'maximum_amount_shipping') == 1}selected="selected"{/if}>{l s='Shipping included'}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">
+		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='The cart rule will be applied to the first "X" customers only.'}">
 			{l s='Total available'}
 		</span>
