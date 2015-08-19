@@ -669,8 +669,7 @@ class AdminEmployeesControllerCore extends AdminController
 
     protected function ajaxProcessToggleMenu()
     {
-        $this->context->cookie->collapse_menu = (int)Tools::getValue('collapse');
-        $this->context->cookie->write();
+        $this->context->employee->filters->collapse_menu = (int)Tools::getValue('collapse');
     }
     public function ajaxProcessGetTabByIdProfile()
     {

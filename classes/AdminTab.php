@@ -844,7 +844,7 @@ abstract class AdminTabCore
 
         /* Cancel all filters for this tab */
         elseif (isset($_POST['submitReset'.$this->table])) {
-            $filters = $this->context->cookie->getFamily($this->table.'Filter_');
+            $filters = $this->context->employee->filters->getAllByPrefix($this->table.'Filter_');
             foreach ($filters as $cookieKey => $filter) {
                 if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0) {
                     $key = Tools::substr($cookieKey, 7 + Tools::strlen($this->table));
@@ -852,18 +852,18 @@ abstract class AdminTabCore
                         $tmpTab = explode('!', $key);
                     $key = (count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0]);
                     if (array_key_exists($key, $this->fieldsDisplay)) {
-                        unset($this->context->cookie->$cookieKey);
+                        unset($this->context->employee->filters->$cookieKey);
                     }
                 }
             }
-            if (isset($this->context->cookie->{'submitFilter'.$this->table})) {
-                unset($this->context->cookie->{'submitFilter'.$this->table});
+            if (isset($this->context->employee->filters->{'submitFilter'.$this->table})) {
+                unset($this->context->employee->filters->{'submitFilter'.$this->table});
             }
-            if (isset($this->context->cookie->{$this->table.'Orderby'})) {
-                unset($this->context->cookie->{$this->table.'Orderby'});
+            if (isset($this->context->employee->filters->{$this->table.'Orderby'})) {
+                unset($this->context->employee->filters->{$this->table.'Orderby'});
             }
-            if (isset($this->context->cookie->{$this->table.'Orderway'})) {
-                unset($this->context->cookie->{$this->table.'Orderway'});
+            if (isset($this->context->employee->filters->{$this->table.'Orderway'})) {
+                unset($this->context->employee->filters->{$this->table.'Orderway'});
             }
             unset($_POST);
         }
@@ -874,8 +874,8 @@ abstract class AdminTabCore
         }
 
         /* Manage list filtering */
-        elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
-            $_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
+        elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->employee->filters->{'submitFilter'.$this->table} !== false) {
+            $_POST = array_merge($this->context->employee->filters->getAllByPrefix($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
             foreach ($_POST as $key => $value) {
                 /* Extracting filters from $_POST on key filter_ */
                 if ($value != null && !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table))) {
@@ -1305,7 +1305,7 @@ abstract class AdminTabCore
     {
         /* Manage default params values */
         if (empty($limit)) {
-            $limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->cookie->{$this->table.'_pagination'});
+            $limit = ((!isset($this->context->employee->filters->{$this->table.'_pagination'})) ? $this->_pagination[1] : $limit = $this->context->employee->filters->{$this->table.'_pagination'});
         }
 
         if (!Validate::isTableOrIdentifier($this->table)) {
@@ -1313,14 +1313,14 @@ abstract class AdminTabCore
         }
 
         if (empty($orderBy)) {
-            $orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
+            $orderBy = $this->context->employee->filters->{$this->table.'Orderby'} ? $this->context->employee->filters->{$this->table.'Orderby'} : $this->_defaultOrderBy;
         }
         if (empty($orderWay)) {
-            $orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
+            $orderWay = $this->context->employee->filters->{$this->table.'Orderway'} ? $this->context->employee->filters->{$this->table.'Orderway'} : 'ASC';
         }
 
         $limit = (int)(Tools::getValue('pagination', $limit));
-        $this->context->cookie->{$this->table.'_pagination'} = $limit;
+        $this->context->employee->filters->{$this->table.'_pagination'} = $limit;
 
         /* Check params validity */
         if (!Validate::isOrderBy($orderBy) || !Validate::isOrderWay($orderWay)
@@ -1435,7 +1435,7 @@ abstract class AdminTabCore
         }
 
         /* Determine total page number */
-        $totalPages = ceil($this->_listTotal / Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : $this->_pagination[0])));
+        $totalPages = ceil($this->_listTotal / Tools::getValue('pagination', (isset($this->context->employee->filters->{$this->table.'_pagination'}) ? $this->context->employee->filters->{$this->table.'_pagination'} : $this->_pagination[0])));
         if (!$totalPages) {
             $totalPages = 1;
         }
@@ -1475,7 +1475,7 @@ abstract class AdminTabCore
         echo '			| '.$this->l('Display').'
 						<select name="pagination">';
         /* Choose number of results per page */
-        $selectedPagination = Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null));
+        $selectedPagination = Tools::getValue('pagination', (isset($this->context->employee->filters->{$this->table.'_pagination'}) ? $this->context->employee->filters->{$this->table.'_pagination'} : null));
         foreach ($this->_pagination as $value) {
             echo '<option value="'.(int)($value).'"'.($selectedPagination == $value ? ' selected="selected"' : (($selectedPagination == null && $value == $this->_pagination[1]) ? ' selected="selected2"' : '')).'>'.(int)($value).'</option>';
         }

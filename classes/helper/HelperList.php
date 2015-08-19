@@ -546,8 +546,8 @@ class HelperListCore extends Helper
         $pagination = $this->_default_pagination;
         if (in_array((int)Tools::getValue($this->list_id.'_pagination'), $this->_pagination)) {
             $pagination = (int)Tools::getValue($this->list_id.'_pagination');
-        } elseif (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'}) {
-            $pagination = $this->context->cookie->{$this->list_id.'_pagination'};
+        } elseif (isset($this->context->employee->filters->{$this->list_id.'_pagination'}) && $this->context->employee->filters->{$this->list_id.'_pagination'}) {
+            $pagination = $this->context->employee->filters->{$this->list_id.'_pagination'};
         }
 
         $total_pages = max(1, ceil($this->listTotal / $pagination));
@@ -575,7 +575,7 @@ class HelperListCore extends Helper
 
         /* Choose number of results per page */
         $selected_pagination = Tools::getValue($this->list_id.'_pagination',
-            isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : $this->_default_pagination
+            isset($this->context->employee->filters->{$this->list_id.'_pagination'}) ? $this->context->employee->filters->{$this->list_id.'_pagination'} : $this->_default_pagination
         );
 
         if (!isset($this->table_id) && $this->position_identifier && (int)Tools::getValue($this->position_identifier, 1)) {
@@ -594,7 +594,7 @@ class HelperListCore extends Helper
             }
 
             $value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
-            $value = Context::getContext()->cookie->{$value_key};
+            $value = Context::getContext()->employee->filters->{$value_key};
             if (!$value && Tools::getIsset($value_key)) {
                 $value = Tools::getValue($value_key);
             }
@@ -625,9 +625,9 @@ class HelperListCore extends Helper
 
                 case 'select':
                     foreach ($params['list'] as $option_value => $option_display) {
-                        if (isset(Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']})
-                            && Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} == $option_value
-                            && Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} != '') {
+                        if (isset(Context::getContext()->employee->filters->{$prefix.$this->list_id.'Filter_'.$params['filter_key']})
+                            && Context::getContext()->employee->filters->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} == $option_value
+                            && Context::getContext()->employee->filters->{$prefix.$this->list_id.'Filter_'.$params['filter_key']} != '') {
                             $this->fields_list[$key]['select'][$option_value]['selected'] = 'selected';
                         }
                     }

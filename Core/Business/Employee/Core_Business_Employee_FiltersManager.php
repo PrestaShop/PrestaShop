@@ -57,6 +57,11 @@ class Core_Business_Employee_FiltersManager implements Core_Business_Employee_Fi
         $this->data[$name] = $value;
     }
 
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
+
     public function __unset($name)
     {
         unset($this->data[$name]);

@@ -242,7 +242,7 @@ class AdminStatusesControllerCore extends AdminController
     protected function checkFilterForOrdersReturnsList()
     {
         // test if a filter is applied for this list
-        if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
+        if (Tools::isSubmit('submitFilter'.$this->table) || $this->context->employee->filters->{'submitFilter'.$this->table} !== false) {
             $this->filter = true;
         }
 

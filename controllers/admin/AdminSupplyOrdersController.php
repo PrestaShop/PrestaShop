@@ -502,7 +502,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->_filterHaving = null;
 
         if (Tools::isSubmit('submitFilter'.$this->list_id)
-            || $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+            || $this->context->employee->filters->{'submitFilter'.$this->list_id} !== false
             || Tools::getValue($this->list_id.'Orderby')
             || Tools::getValue($this->list_id.'Orderway')) {
             $this->filter = true;
@@ -568,7 +568,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->_filterHaving = null;
 
         if (Tools::isSubmit('submitFilter'.$this->list_id)
-            || $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+            || $this->context->employee->filters->{'submitFilter'.$this->list_id} !== false
             || Tools::getValue($this->list_id.'Orderby')
             || Tools::getValue($this->list_id.'Orderway')) {
             $this->filter = true;

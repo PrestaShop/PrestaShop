@@ -545,7 +545,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (!($thread = $this->loadObject())) {
             return;
         }
-        $this->context->cookie->{'customer_threadFilter_cl!id_contact'} = $thread->id_contact;
+        $this->context->employee->filters->{'customer_threadFilter_cl!id_contact'} = $thread->id_contact;
 
         $employees = Employee::getEmployees();
 

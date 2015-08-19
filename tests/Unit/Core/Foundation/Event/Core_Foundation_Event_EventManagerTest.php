@@ -39,7 +39,7 @@ class fakeEvent2
 {
     public function getName()
     {
-        return 'primtemps';
+        return 'automne';
     }
 }
 

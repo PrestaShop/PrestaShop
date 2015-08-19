@@ -225,11 +225,11 @@ class AdminBackupControllerCore extends AdminController
                 $order_way = 'desc';
         }
         if (empty($limit)) {
-            $limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
-                $this->context->cookie->{$this->table.'_pagination'});
+            $limit = ((!isset($this->context->employee->filters->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
+                $this->context->employee->filters->{$this->table.'_pagination'});
         }
         $limit = (int)Tools::getValue('pagination', $limit);
-        $this->context->cookie->{$this->table.'_pagination'} = $limit;
+        $this->context->employee->filters->{$this->table.'_pagination'} = $limit;
 
         /* Determine offset from current page */
         if (!empty($_POST['submitFilter'.$this->list_id]) && is_numeric($_POST['submitFilter'.$this->list_id])) {

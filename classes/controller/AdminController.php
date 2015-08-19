@@ -725,7 +725,7 @@ class AdminControllerCore extends Controller
         }
 
         $cookie = Context::getContext()->cookie;
-        $whitelist = array('date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum');
+        $whitelist = array('date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'checksum');
         foreach ($cookie->getAll() as $key => $value) {
             if (!in_array($key, $whitelist)) {
                 unset($cookie->$key);
@@ -755,37 +755,37 @@ class AdminControllerCore extends Controller
         if (isset($this->list_id)) {
             foreach ($_POST as $key => $value) {
                 if ($value === '') {
-                    unset($this->context->cookie->{$prefix.$key});
+                    unset($this->context->employee->filters->{$prefix.$key});
                 } elseif (stripos($key, $this->list_id.'Filter_') === 0) {
-                    $this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
+                    $this->context->employee->filters->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
-                    $this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
+                    $this->context->employee->filters->$key = !is_array($value) ? $value : serialize($value);
                 }
             }
 
             foreach ($_GET as $key => $value) {
                 if (stripos($key, $this->list_id.'Filter_') === 0) {
-                    $this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
+                    $this->context->employee->filters->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
-                    $this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
+                    $this->context->employee->filters->$key = !is_array($value) ? $value : serialize($value);
                 }
                 if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value)) {
                     if ($value === '' || $value == $this->_defaultOrderBy) {
-                        unset($this->context->cookie->{$prefix.$key});
+                        unset($this->context->employee->filters->{$prefix.$key});
                     } else {
-                        $this->context->cookie->{$prefix.$key} = $value;
+                        $this->context->employee->filters->{$prefix.$key} = $value;
                     }
                 } elseif (stripos($key, $this->list_id.'Orderway') === 0 && Validate::isOrderWay($value)) {
                     if ($value === '' || $value == $this->_defaultOrderWay) {
-                        unset($this->context->cookie->{$prefix.$key});
+                        unset($this->context->employee->filters->{$prefix.$key});
                     } else {
-                        $this->context->cookie->{$prefix.$key} = $value;
+                        $this->context->employee->filters->{$prefix.$key} = $value;
                     }
                 }
             }
         }
 
-        $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
+        $filters = $this->context->employee->filters->getAllByPrefix($prefix.$this->list_id.'Filter_');
         $definition = ObjectModel::getDefinition($this->className);
 
         foreach ($filters as $key => $value) {
@@ -1285,7 +1285,7 @@ class AdminControllerCore extends Controller
         }
 
         $prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
-        $filters = $this->context->cookie->getFamily($prefix.$list_id.'Filter_');
+        $filters = $this->context->employee->filters->getAllByPrefix($prefix.$list_id.'Filter_');
         foreach ($filters as $cookie_key => $filter) {
             if (strncmp($cookie_key, $prefix.$list_id.'Filter_', 7 + Tools::strlen($prefix.$list_id)) == 0) {
                 $key = substr($cookie_key, 7 + Tools::strlen($prefix.$list_id));
@@ -1296,14 +1296,14 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if (isset($this->context->cookie->{'submitFilter'.$list_id})) {
-            unset($this->context->cookie->{'submitFilter'.$list_id});
+        if (isset($this->context->employee->filters->{'submitFilter'.$list_id})) {
+            unset($this->context->employee->filters->{'submitFilter'.$list_id});
         }
-        if (isset($this->context->cookie->{$prefix.$list_id.'Orderby'})) {
-            unset($this->context->cookie->{$prefix.$list_id.'Orderby'});
+        if (isset($this->context->employee->filters->{$prefix.$list_id.'Orderby'})) {
+            unset($this->context->employee->filters->{$prefix.$list_id.'Orderby'});
         }
-        if (isset($this->context->cookie->{$prefix.$list_id.'Orderway'})) {
-            unset($this->context->cookie->{$prefix.$list_id.'Orderway'});
+        if (isset($this->context->employee->filters->{$prefix.$list_id.'Orderway'})) {
+            unset($this->context->employee->filters->{$prefix.$list_id.'Orderway'});
         }
 
         $_POST = array();
@@ -1909,7 +1909,7 @@ class AdminControllerCore extends Controller
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
                 'login_link' => $this->context->link->getAdminLink('AdminLogin'),
-                'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0,
+                'collapse_menu' => (int)$this->context->employee->filters->collapse_menu,
             ));
         } else {
             $this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
@@ -2822,7 +2822,7 @@ class AdminControllerCore extends Controller
 
         // Manage list filtering
         if (Tools::isSubmit('submitFilter'.$this->list_id)
-            || $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+            || ($this->context->employee->filters->{'submitFilter'.$this->list_id} !== null && $this->context->employee->filters->{'submitFilter'.$this->list_id} !== false)
             || Tools::getValue($this->list_id.'Orderby')
             || Tools::getValue($this->list_id.'Orderway')) {
             $this->filter = true;
@@ -3019,8 +3019,8 @@ class AdminControllerCore extends Controller
         if ($limit === false) {
             $use_limit = false;
         } elseif (empty($limit)) {
-            if (isset($this->context->cookie->{$this->list_id.'_pagination'}) && $this->context->cookie->{$this->list_id.'_pagination'}) {
-                $limit = $this->context->cookie->{$this->list_id.'_pagination'};
+            if (isset($this->context->employee->filters->{$this->list_id.'_pagination'}) && $this->context->employee->filters->{$this->list_id.'_pagination'}) {
+                $limit = $this->context->employee->filters->{$this->list_id.'_pagination'};
             } else {
                 $limit = $this->_default_pagination;
             }
@@ -3031,8 +3031,8 @@ class AdminControllerCore extends Controller
         }
         $prefix = str_replace(array('admin', 'controller'), '', Tools::strtolower(get_class($this)));
         if (empty($order_by)) {
-            if ($this->context->cookie->{$prefix.$this->list_id.'Orderby'}) {
-                $order_by = $this->context->cookie->{$prefix.$this->list_id.'Orderby'};
+            if ($this->context->employee->filters->{$prefix.$this->list_id.'Orderby'}) {
+                $order_by = $this->context->employee->filters->{$prefix.$this->list_id.'Orderby'};
             } elseif ($this->_orderBy) {
                 $order_by = $this->_orderBy;
             } else {
@@ -3041,8 +3041,8 @@ class AdminControllerCore extends Controller
         }
 
         if (empty($order_way)) {
-            if ($this->context->cookie->{$prefix.$this->list_id.'Orderway'}) {
-                $order_way = $this->context->cookie->{$prefix.$this->list_id.'Orderway'};
+            if ($this->context->employee->filters->{$prefix.$this->list_id.'Orderway'}) {
+                $order_way = $this->context->employee->filters->{$prefix.$this->list_id.'Orderway'};
             } elseif ($this->_orderWay) {
                 $order_way = $this->_orderWay;
             } else {
@@ -3052,9 +3052,9 @@ class AdminControllerCore extends Controller
 
         $limit = (int)Tools::getValue($this->list_id.'_pagination', $limit);
         if (in_array($limit, $this->_pagination) && $limit != $this->_default_pagination) {
-            $this->context->cookie->{$this->list_id.'_pagination'} = $limit;
+            $this->context->employee->filters->{$this->list_id.'_pagination'} = $limit;
         } else {
-            unset($this->context->cookie->{$this->list_id.'_pagination'});
+            unset($this->context->employee->filters->{$this->list_id.'_pagination'});
         }
 
         /* Check params validity */
@@ -3076,15 +3076,15 @@ class AdminControllerCore extends Controller
         $start = 0;
         if ((int)Tools::getValue('submitFilter'.$this->list_id)) {
             $start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
-        } elseif (empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table)) {
-            $start = $this->context->cookie->{$this->list_id.'_start'};
+        } elseif (empty($start) && isset($this->context->employee->filters->{$this->list_id.'_start'}) && Tools::isSubmit('export'.$this->table)) {
+            $start = $this->context->employee->filters->{$this->list_id.'_start'};
         }
 
         // Either save or reset the offset in the cookie
         if ($start) {
-            $this->context->cookie->{$this->list_id.'_start'} = $start;
-        } elseif (isset($this->context->cookie->{$this->list_id.'_start'})) {
-            unset($this->context->cookie->{$this->list_id.'_start'});
+            $this->context->employee->filters->{$this->list_id.'_start'} = $start;
+        } elseif (isset($this->context->employee->filters->{$this->list_id.'_start'})) {
+            unset($this->context->employee->filters->{$this->list_id.'_start'});
         }
 
         /* Cache */

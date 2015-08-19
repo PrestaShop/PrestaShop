@@ -311,11 +311,11 @@ class AdminStockInstantStateControllerCore extends AdminController
             $order_by_valuation = false;
             $order_by_real_quantity = false;
 
-            if ($this->context->cookie->{$this->table.'Orderby'} == 'valuation') {
-                unset($this->context->cookie->{$this->table.'Orderby'});
+            if ($this->context->employee->filters->{$this->table.'Orderby'} == 'valuation') {
+                unset($this->context->employee->filters->{$this->table.'Orderby'});
                 $order_by_valuation = true;
-            } elseif ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity') {
-                unset($this->context->cookie->{$this->table.'Orderby'});
+            } elseif ($this->context->employee->filters->{$this->table.'Orderby'} == 'real_quantity') {
+                unset($this->context->employee->filters->{$this->table.'Orderby'});
                 $order_by_real_quantity = true;
             }
 
@@ -381,7 +381,7 @@ class AdminStockInstantStateControllerCore extends AdminController
      */
     public function valuationCmp($n, $m)
     {
-        if ($this->context->cookie->{$this->table.'Orderway'} == 'desc') {
+        if ($this->context->employee->filters->{$this->table.'Orderway'} == 'desc') {
             return $n['valuation'] > $m['valuation'];
         } else {
             return $n['valuation'] < $m['valuation'];
@@ -398,7 +398,7 @@ class AdminStockInstantStateControllerCore extends AdminController
      */
     public function realQuantityCmp($n, $m)
     {
-        if ($this->context->cookie->{$this->table.'Orderway'} == 'desc') {
+        if ($this->context->employee->filters->{$this->table.'Orderway'} == 'desc') {
             return $n['real_quantity'] > $m['real_quantity'];
         } else {
             return $n['real_quantity'] < $m['real_quantity'];

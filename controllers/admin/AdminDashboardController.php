@@ -200,7 +200,7 @@ class AdminDashboardControllerCore extends AdminController
         // 	'Save' => $this->l('Save', 'AdminStatsTab')
         // );
 
-        if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d'))) {
+        if ($this->context->employee->filters->stats_date_update < strtotime(date('Y-m-d'))) {
             switch ($this->context->employee->preselect_date_range) {
                 case 'day':
                     $date_from = date('Y-m-d');
@@ -231,8 +231,7 @@ class AdminDashboardControllerCore extends AdminController
             $this->context->employee->stats_date_from = $date_from;
             $this->context->employee->stats_date_to = $date_to;
             $this->context->employee->update();
-            $this->context->cookie->__set('stats_date_update', strtotime(date('Y-m-d')));
-            $this->context->cookie->write();
+            $this->context->employee->filters->stats_date_update = strtotime(date('Y-m-d'));
         }
 
         $calendar_helper = new HelperCalendar();

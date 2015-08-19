@@ -136,12 +136,12 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if (Tools::getValue('reset_filter_category')) {
-            $this->context->cookie->id_category_products_filter = false;
+            $this->context->employee->filters->id_category_products_filter = false;
         }
-        if (Shop::isFeatureActive() && $this->context->cookie->id_category_products_filter) {
-            $category = new Category((int)$this->context->cookie->id_category_products_filter);
+        if (Shop::isFeatureActive() && $this->context->employee->filters->id_category_products_filter) {
+            $category = new Category((int)$this->context->employee->filters->id_category_products_filter);
             if (!$category->inShop()) {
-                $this->context->cookie->id_category_products_filter = false;
+                $this->context->employee->filters->id_category_products_filter = false;
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts'));
             }
         }
@@ -152,8 +152,8 @@ class AdminProductsControllerCore extends AdminController
         } else {
             if ($id_category = (int)Tools::getValue('id_category')) {
                 $this->id_current_category = $id_category;
-                $this->context->cookie->id_category_products_filter = $id_category;
-            } elseif ($id_category = $this->context->cookie->id_category_products_filter) {
+                $this->context->employee->filters->id_category_products_filter = $id_category;
+            } elseif ($id_category = $this->context->employee->filters->id_category_products_filter) {
                 $this->id_current_category = $id_category;
             }
             if ($this->id_current_category) {
@@ -400,8 +400,8 @@ class AdminProductsControllerCore extends AdminController
 
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
-        $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
-        $orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderby') : 'ASC') : $orderWay);
+        $orderByPriceFinal = (empty($orderBy) ? ($this->context->employee->filters->__get($this->table.'Orderby') ? $this->context->employee->filters->__get($this->table.'Orderby') : 'id_'.$this->table) : $orderBy);
+        $orderWayPriceFinal = (empty($orderWay) ? ($this->context->employee->filters->__get($this->table.'Orderway') ? $this->context->employee->filters->__get($this->table.'Orderby') : 'ASC') : $orderWay);
         if ($orderByPriceFinal == 'price_final') {
             $orderBy = 'id_'.$this->table;
             $orderWay = 'ASC';
@@ -2487,9 +2487,9 @@ class AdminProductsControllerCore extends AdminController
             // If products from all categories are displayed, we don't want to use sorting by position
             if (!$id_category) {
                 $this->_defaultOrderBy = $this->identifier;
-                if ($this->context->cookie->{$this->table.'Orderby'} == 'position') {
-                    unset($this->context->cookie->{$this->table.'Orderby'});
-                    unset($this->context->cookie->{$this->table.'Orderway'});
+                if ($this->context->employee->filters->{$this->table.'Orderby'} == 'position') {
+                    unset($this->context->employee->filters->{$this->table.'Orderby'});
+                    unset($this->context->employee->filters->{$this->table.'Orderway'});
                 }
             }
             if (!$id_category) {
@@ -3181,7 +3181,7 @@ class AdminProductsControllerCore extends AdminController
         $data = $this->createTemplate($this->tpl_form);
         // Prepare Categories tree for display in Associations tab
         $root = Category::getRootCategory();
-        $default_category = $this->context->cookie->id_category_products_filter ? $this->context->cookie->id_category_products_filter : Context::getContext()->shop->id_category;
+        $default_category = $this->context->employee->filters->id_category_products_filter ? $this->context->employee->filters->id_category_products_filter : Context::getContext()->shop->id_category;
         if (!$product->id || !$product->isAssociatedToShop()) {
             $selected_cat = Category::getCategoryInformations(Tools::getValue('categoryBox', array($default_category)), $this->default_form_language);
         } else {

@@ -565,32 +565,32 @@ class AdminImportControllerCore extends AdminController
         $entity_selected = 0;
         if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))])) {
             $entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
-            $this->context->cookie->entity_selected = (int)$entity_selected;
-        } elseif (isset($this->context->cookie->entity_selected)) {
-            $entity_selected = (int)$this->context->cookie->entity_selected;
+            $this->context->employee->filters->entity_selected = (int)$entity_selected;
+        } elseif ($this->context->employee->filters->entity_selected) {
+            $entity_selected = (int)$this->context->employee->filters->entity_selected;
         }
 
         $csv_selected = '';
-        if (isset($this->context->cookie->csv_selected) && @filemtime(AdminImportController::getPath(
-            urldecode($this->context->cookie->csv_selected)))) {
-            $csv_selected = urldecode($this->context->cookie->csv_selected);
+        if (isset($this->context->employee->filters->csv_selected) && @filemtime(AdminImportController::getPath(
+            urldecode($this->context->employee->filters->csv_selected)))) {
+            $csv_selected = urldecode($this->context->employee->filters->csv_selected);
         } else {
-            $this->context->cookie->csv_selected = $csv_selected;
+            $this->context->employee->filters->csv_selected = $csv_selected;
         }
 
         $id_lang_selected = '';
-        if (isset($this->context->cookie->iso_lang_selected) && $this->context->cookie->iso_lang_selected) {
-            $id_lang_selected = (int)Language::getIdByIso(urldecode($this->context->cookie->iso_lang_selected));
+        if (isset($this->context->employee->filters->iso_lang_selected) && $this->context->employee->filters->iso_lang_selected) {
+            $id_lang_selected = (int)Language::getIdByIso(urldecode($this->context->employee->filters->iso_lang_selected));
         }
 
         $separator_selected = $this->separator;
-        if (isset($this->context->cookie->separator_selected) && $this->context->cookie->separator_selected) {
-            $separator_selected = urldecode($this->context->cookie->separator_selected);
+        if (isset($this->context->employee->filters->separator_selected) && $this->context->employee->filters->separator_selected) {
+            $separator_selected = urldecode($this->context->employee->filters->separator_selected);
         }
 
         $multiple_value_separator_selected = $this->multiple_value_separator;
-        if (isset($this->context->cookie->multiple_value_separator_selected) && $this->context->cookie->multiple_value_separator_selected) {
-            $multiple_value_separator_selected = urldecode($this->context->cookie->multiple_value_separator_selected);
+        if (isset($this->context->employee->filters->multiple_value_separator_selected) && $this->context->employee->filters->multiple_value_separator_selected) {
+            $multiple_value_separator_selected = urldecode($this->context->employee->filters->multiple_value_separator_selected);
         }
 
         //get post max size
@@ -685,11 +685,11 @@ class AdminImportControllerCore extends AdminController
             $data[$i] = $this->generateContentTable($i, $nb_column, $handle, $this->separator);
         }
 
-        $this->context->cookie->entity_selected = (int)Tools::getValue('entity');
-        $this->context->cookie->iso_lang_selected = urlencode(Tools::getValue('iso_lang'));
-        $this->context->cookie->separator_selected = urlencode($this->separator);
-        $this->context->cookie->multiple_value_separator_selected = urlencode($this->multiple_value_separator);
-        $this->context->cookie->csv_selected = urlencode(Tools::getValue('csv'));
+        $this->context->employee->filters->entity_selected = (int)Tools::getValue('entity');
+        $this->context->employee->filters->iso_lang_selected = urlencode(Tools::getValue('iso_lang'));
+        $this->context->employee->filters->separator_selected = urlencode($this->separator);
+        $this->context->employee->filters->multiple_value_separator_selected = urlencode($this->multiple_value_separator);
+        $this->context->employee->filters->csv_selected = urlencode(Tools::getValue('csv'));
 
         $this->tpl_view_vars = array(
             'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match', true, false),

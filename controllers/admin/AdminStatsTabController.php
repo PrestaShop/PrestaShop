@@ -306,9 +306,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
     protected function getDate()
     {
-        $year = isset($this->context->cookie->stats_year) ? $this->context->cookie->stats_year : date('Y');
-        $month = isset($this->context->cookie->stats_month) ? sprintf('%02d', $this->context->cookie->stats_month) : '%';
-        $day = isset($this->context->cookie->stats_day) ? sprintf('%02d', $this->context->cookie->stats_day) : '%';
+        $year = isset($this->context->employee->filters->stats_year) ? $this->context->employee->filters->stats_year : date('Y');
+        $month = isset($this->context->employee->filters->stats_month) ? sprintf('%02d', $this->context->employee->filters->stats_month) : '%';
+        $day = isset($this->context->employee->filters->stats_day) ? sprintf('%02d', $this->context->employee->filters->stats_day) : '%';
         return $year.'-'.$month.'-'.$day;
     }
 }
