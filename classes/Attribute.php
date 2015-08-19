@@ -210,16 +210,6 @@ class AttributeCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0, use StockAvailable::getQuantityAvailableByProduct()
-     */
-    public static function getAttributeQty($id_product)
-    {
-        Tools::displayAsDeprecated();
-
-        return StockAvailable::getQuantityAvailableByProduct($id_product);
-    }
-
-    /**
      * Update array with veritable quantity
      *
      * @deprecated since 1.5.0

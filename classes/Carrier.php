@@ -178,14 +178,6 @@ class CarrierCore extends ObjectModel
             $this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
         }
 
-        /**
-         * keep retrocompatibility id_tax_rules_group
-         * @deprecated 1.5.0
-         */
-        if ($this->id) {
-            $this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
-        }
-
         if ($this->name == '0') {
             $this->name = Carrier::getCarrierNameFromShopName();
         }

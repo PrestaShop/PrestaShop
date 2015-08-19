@@ -192,12 +192,6 @@ define('_PS_ADMIN_PROFILE_', 1);
 define('_STOCK_MOVEMENT_ORDER_REASON_', 3);
 define('_STOCK_MOVEMENT_MISSING_REASON_', 4);
 
-/**
- * @deprecated 1.5.0.1
- * @see Configuration::get('PS_CUSTOMER_GROUP')
- */
-define('_PS_DEFAULT_CUSTOMER_GROUP_', 3);
-
 define('_PS_CACHEFS_DIRECTORY_', _PS_ROOT_DIR_.'/cache/cachefs/');
 
 /* Geolocation */

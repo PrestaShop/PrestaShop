@@ -382,41 +382,6 @@ class ImageCore extends ObjectModel
     }
 
     /**
-     * Reposition image
-     *
-     * @param int $position Position
-     * @param bool $direction Direction
-     * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
-     */
-    public function positionImage($position, $direction)
-    {
-        Tools::displayAsDeprecated();
-
-        $position = (int)$position;
-        $direction = (int)$direction;
-
-        // temporary position
-        $high_position = Image::getHighestPosition($this->id_product) + 1;
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = '.(int)$high_position.'
-		WHERE `id_product` = '.(int)$this->id_product.'
-		AND `position` = '.($direction ? $position - 1 : $position + 1));
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = `position`'.($direction ? '-1' : '+1').'
-		WHERE `id_image` = '.(int)$this->id);
-
-        Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'image`
-		SET `position` = '.$this->position.'
-		WHERE `id_product` = '.(int)$this->id_product.'
-		AND `position` = '.(int)$high_position);
-    }
-
-    /**
      * Change an image position and update relative positions
      *
      * @param int $way position is moved up if 0, moved down if 1

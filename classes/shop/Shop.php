@@ -1203,15 +1203,6 @@ class ShopCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0 Use shop->id
-     */
-    public static function getCurrentShop()
-    {
-        Tools::displayAsDeprecated();
-        return Context::getContext()->shop->id;
-    }
-
-    /**
      * @param string $entity
      * @param int $id_shop
      * @return array|bool

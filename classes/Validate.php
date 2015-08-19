@@ -621,17 +621,6 @@ class ValidateCore
     }
 
     /**
-     * @deprecated 1.5.0 You should not use list like this, please use an array when you build a SQL query
-     */
-    public static function isValuesList()
-    {
-        Tools::displayAsDeprecated();
-        return true;
-        /* For history reason, we keep this line */
-        // return preg_match('/^[0-9,\'(). NULL]+$/', $list);
-    }
-
-    /**
      * Check for tags list validity
      *
      * @param string $list List to validate
@@ -925,15 +914,6 @@ class ValidateCore
     public static function isBoolId($ids)
     {
         return (bool)preg_match('#^[01]_[0-9]+$#', $ids);
-    }
-
-    /**
-     * @deprecated 1.5.0 Use Validate::isBoolId()
-     */
-    public static function isBool_Id($ids)
-    {
-        Tools::displayAsDeprecated();
-        return Validate::isBoolId($ids);
     }
 
     /**

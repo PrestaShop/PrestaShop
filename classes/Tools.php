@@ -2760,31 +2760,6 @@ exit;
     }
 
     /**
-     * Function property_exists does not exist in PHP < 5.1
-     *
-     * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
-     * @param object $class
-     * @param string $property
-     * @return bool
-     */
-    public static function property_exists($class, $property)
-    {
-        Tools::displayAsDeprecated();
-
-        if (function_exists('property_exists')) {
-            return property_exists($class, $property);
-        }
-
-        if (is_object($class)) {
-            $vars = get_object_vars($class);
-        } else {
-            $vars = get_class_vars($class);
-        }
-
-        return array_key_exists($property, $vars);
-    }
-
-    /**
      * @desc identify the version of php
      * @return string
      */
@@ -3350,13 +3325,18 @@ exit;
             return false;
         }
 
-        $post_data = http_build_query(array(
+        $post_query_data = array(
             'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
             'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
             'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
-        ));
+        );
+        if (isset($params['source'])) {
+            $post_query_data['source'] = $params['source'];
+        }
+
+        $post_data = http_build_query($post_query_data);
 
         $protocols = array('https');
         $end_point = 'api.addons.prestashop.com';

@@ -352,15 +352,6 @@ class CartCore extends ObjectModel
         }
     }
 
-    /**
-     * @deprecated 1.5.0, use Cart->getCartRules()
-     */
-    public function getDiscounts($lite = false, $refresh = false)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getCartRules();
-    }
-
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL)
     {
         // If the cart has not been saved, then there can't be any cart rule applied
@@ -828,15 +819,6 @@ class CartCore extends ObjectModel
         return self::$_nbProducts[$id];
     }
 
-    /**
-     * @deprecated 1.5.0, use Cart->addCartRule()
-     */
-    public function addDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->addCartRule($id_cart_rule);
-    }
-
     public function addCartRule($id_cart_rule)
     {
         // You can't add a cart rule that does not exist
@@ -1212,15 +1194,6 @@ class CartCore extends ObjectModel
             return $result;
         }
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->removeCartRule()
-     */
-    public function deleteDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->removeCartRule($id_cart_rule);
     }
 
     public function removeCartRule($id_cart_rule)
@@ -2410,13 +2383,19 @@ class CartCore extends ObjectModel
         foreach (reset($delivery_option_list) as $key => $option) {
             $price = $option['total_price_with_tax'];
             $price_tax_exc = $option['total_price_without_tax'];
+            $name = $img = $delay = '';
 
             if ($option['unique_carrier']) {
                 $carrier = reset($option['carrier_list']);
-                $name = $carrier['instance']->name;
-                $img = $carrier['logo'];
-                $delay = $carrier['instance']->delay;
-                $delay = isset($delay[Context::getContext()->language->id]) ? $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
+                if (isset($carrier['instance'])) {
+                    $name = $carrier['instance']->name;
+                    $delay = $carrier['instance']->delay;
+                    $delay = isset($delay[Context::getContext()->language->id]) ?
+                        $delay[Context::getContext()->language->id] : $delay[(int)Configuration::get('PS_LANG_DEFAULT')];
+                }
+                if (isset($carrier['logo'])) {
+                    $img = $carrier['logo'];
+                }
             } else {
                 $nameList = array();
                 foreach ($option['carrier_list'] as $carrier) {
@@ -2704,15 +2683,6 @@ class CartCore extends ObjectModel
         }
 
         return $total_shipping;
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
-     */
-    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getPackageShippingCost($id_carrier, $use_tax, $default_country, $product_list);
     }
 
     /**

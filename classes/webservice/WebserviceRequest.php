@@ -277,7 +277,6 @@ class WebserviceRequestCore
             'manufacturers' => array('description' => 'The product manufacturers','class' => 'Manufacturer'),
             'order_carriers' => array('description' => 'The Order carriers','class' => 'OrderCarrier'),
             'order_details' => array('description' => 'Details of an order', 'class' => 'OrderDetail'),
-            'order_discounts' => array('description' => 'Discounts of an order', 'class' => 'OrderDiscount'),
             'order_histories' => array('description' => 'The Order histories','class' => 'OrderHistory'),
             'order_invoices' => array('description' => 'The Order invoices','class' => 'OrderInvoice'),
             'orders' => array('description' => 'The Customers orders','class' => 'Order'),
