@@ -803,11 +803,8 @@ $(document).ready(function()
 		});
 
 		$(document.body).find("select[name*='"+list_id+"Filter']").each(function() {
-			if ($(this).val() != '')
-			{
-				empty_filters = false;
-				return false;
-			}
+			empty_filters = false;
+			return false;
 		});
 
 		if (empty_filters)
