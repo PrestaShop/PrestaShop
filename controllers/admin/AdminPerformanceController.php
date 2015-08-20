@@ -514,8 +514,12 @@ class AdminPerformanceControllerCore extends AdminController
         $phpdoc_langs = array('en', 'zh', 'fr', 'de', 'ja', 'pl', 'ro', 'ru', 'fa', 'es', 'tr');
         $php_lang = in_array($this->context->language->iso_code, $phpdoc_langs) ? $this->context->language->iso_code : 'en';
 
-        $warning_memcached = ' '.$this->l('(you must install the [a]Memcache PECL extension[/a])');
-        $warning_memcached = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">', $warning_memcached);
+        $warning_memcache = ' '.$this->l('(you must install the [a]Memcache PECL extension[/a])');
+        $warning_memcache = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcache.installation.php" target="_blank">', $warning_memcache);
+        $warning_memcache = str_replace('[/a]', '</a>', $warning_memcache);
+
+        $warning_memcached = ' '.$this->l('(you must install the [a]Memcached PECL extension[/a])');
+        $warning_memcached = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/memcached.installation.php" target="_blank">', $warning_memcached);
         $warning_memcached = str_replace('[/a]', '</a>', $warning_memcached);
 
         $warning_apc = ' '.$this->l('(you must install the [a]APC PECL extension[/a])');
@@ -570,7 +574,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'CacheMemcache',
                             'value' => 'CacheMemcache',
-                            'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcached)
+                            'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcache)
                         ),
                         array(
                             'id' => 'CacheMemcached',
@@ -993,15 +997,28 @@ class AdminPerformanceControllerCore extends AdminController
         if (Tools::isSubmit('action') && Tools::getValue('action') == 'test_server') {
             $host = pSQL(Tools::getValue('sHost', ''));
             $port = (int)Tools::getValue('sPort', 0);
+            $type = Tools::getValue('type', '');
 
             if ($host != '' && $port != 0) {
                 $res = 0;
 
-                if (function_exists('memcache_get_server_status') &&
-                    function_exists('memcache_connect') &&
-                    @fsockopen($host, $port)) {
-                    $memcache = @memcache_connect($host, $port);
-                    $res = @memcache_get_server_status($memcache, $host, $port);
+                if ($type == 'memcached') {
+                    if (extension_loaded('memcached') &&
+                        @fsockopen($host, $port)
+                    ) {
+                        $memcache = new Memcached();
+                        $memcache->addServer($host, $port);
+
+                        $res =  in_array('255.255.255', $memcache->getVersion(), true) === false;
+                    }
+                } else {
+                    if (function_exists('memcache_get_server_status') &&
+                        function_exists('memcache_connect') &&
+                        @fsockopen($host, $port)
+                    ) {
+                        $memcache = @memcache_connect($host, $port);
+                        $res      = @memcache_get_server_status($memcache, $host, $port);
+                    }
                 }
                 die(Tools::jsonEncode(array($res)));
             }
