@@ -579,12 +579,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'percent_product_out_of_stock':
                 $value = AdminStatsController::getPercentProductOutOfStock();
+                $tooltip = sprintf($this->l('%s of your products for sale are out of stock.', null, null, false), $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
                 break;
 
             case 'product_avg_gross_margin':
                 $value = AdminStatsController::getProductAverageGrossMargin();
+                $tooltip = sprintf($this->l('Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%s to cover profit and expenses.', null, null, false), str_replace('%', '', $value));
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
                 break;
@@ -597,12 +599,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case 'disabled_products':
                 $value = round(100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(), 2).'%';
+                $tooltip = sprintf($this->l('%s of your products are disabled and not visible to your customers', null, null, false), $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
                 break;
 
             case '8020_sales_catalog':
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
+                $tooltip = sprintf($this->l('Within your catalog, %s of your products have had sales in the last 30 days', null, null, false), $value);
                 $value = sprintf($this->l('%d%% of your Catalog'), $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
@@ -789,7 +793,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = false;
         }
         if ($value !== false) {
-            $array = array('value' => $value);
+            $array = array('value' => $value, 'tooltip' => $tooltip);
             if (isset($data)) {
                 $array['data'] = $data;
             }
