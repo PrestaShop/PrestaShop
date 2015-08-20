@@ -223,6 +223,7 @@ class PrestaShopBackupCore
         // Find all tables
         $tables = Db::getInstance()->executeS('SHOW TABLES');
         $found = 0;
+        $create_views = '';
         foreach ($tables as $table) {
             $table = current($table);
 
@@ -234,67 +235,78 @@ class PrestaShopBackupCore
             // Export the table schema
             $schema = Db::getInstance()->executeS('SHOW CREATE TABLE `'.$table.'`');
 
-            if (count($schema) != 1 || !isset($schema[0]['Table']) || !isset($schema[0]['Create Table'])) {
+            if (count($schema) == 1 && isset($schema[0]['Table']) && isset($schema[0]['Create Table'])) {
+                fwrite($fp, '/* Scheme for table '.$schema[0]['Table']." */\n");
+    
+                if ($this->psBackupDropTable) {
+                    fwrite($fp, 'DROP TABLE IF EXISTS `'.$schema[0]['Table'].'`;'."\n");
+                }
+    
+                fwrite($fp, $schema[0]['Create Table'].";\n\n");
+    
+                if (!in_array($schema[0]['Table'], $ignore_insert_table)) {
+                    $data = Db::getInstance()->query('SELECT * FROM `'.$schema[0]['Table'].'`', false);
+                    $sizeof = DB::getInstance()->NumRows();
+                    $lines = explode("\n", $schema[0]['Create Table']);
+    
+                    if ($data && $sizeof > 0) {
+                        // Export the table data
+                        fwrite($fp, 'INSERT INTO `'.$schema[0]['Table']."` VALUES\n");
+                        $i = 1;
+                        while ($row = DB::getInstance()->nextRow($data)) {
+                            $s = '(';
+    
+                            foreach ($row as $field => $value) {
+                                $tmp = "'".pSQL($value, true)."',";
+                                if ($tmp != "'',") {
+                                    $s .= $tmp;
+                                } else {
+                                    foreach ($lines as $line) {
+                                        if (strpos($line, '`'.$field.'`') !== false) {
+                                            if (preg_match('/(.*NOT NULL.*)/Ui', $line)) {
+                                                $s .= "'',";
+                                            } else {
+                                                $s .= 'NULL,';
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            $s = rtrim($s, ',');
+    
+                            if ($i % 200 == 0 && $i < $sizeof) {
+                                $s .= ");\nINSERT INTO `".$schema[0]['Table']."` VALUES\n";
+                            } elseif ($i < $sizeof) {
+                                $s .= "),\n";
+                            } else {
+                                $s .= ");\n";
+                            }
+    
+                            fwrite($fp, $s);
+                            ++$i;
+                        }
+                    }
+                }
+            }
+            else if (count($schema) == 1 && isset($schema[0]['View']) && isset($schema[0]['Create View'])) {
+                // Do not create now, but wait for all tables to be created
+                $create_views .= '/* Scheme for view '.$schema[0]['View']." */\n";
+                if ($this->psBackupDropTable) {
+                    $create_views .= 'DROP VIEW IF EXISTS `'.$schema[0]['View'].'`;'."\n";
+                }
+                $create_views .= $schema[0]['Create View'].";\n\n";
+            }
+            else {
                 fclose($fp);
                 $this->delete();
                 echo Tools::displayError('An error occurred while backing up. Unable to obtain the schema of').' "'.$table;
                 return false;
             }
 
-            fwrite($fp, '/* Scheme for table '.$schema[0]['Table']." */\n");
-
-            if ($this->psBackupDropTable) {
-                fwrite($fp, 'DROP TABLE IF EXISTS `'.$schema[0]['Table'].'`;'."\n");
-            }
-
-            fwrite($fp, $schema[0]['Create Table'].";\n\n");
-
-            if (!in_array($schema[0]['Table'], $ignore_insert_table)) {
-                $data = Db::getInstance()->query('SELECT * FROM `'.$schema[0]['Table'].'`', false);
-                $sizeof = DB::getInstance()->NumRows();
-                $lines = explode("\n", $schema[0]['Create Table']);
-
-                if ($data && $sizeof > 0) {
-                    // Export the table data
-                    fwrite($fp, 'INSERT INTO `'.$schema[0]['Table']."` VALUES\n");
-                    $i = 1;
-                    while ($row = DB::getInstance()->nextRow($data)) {
-                        $s = '(';
-
-                        foreach ($row as $field => $value) {
-                            $tmp = "'".pSQL($value, true)."',";
-                            if ($tmp != "'',") {
-                                $s .= $tmp;
-                            } else {
-                                foreach ($lines as $line) {
-                                    if (strpos($line, '`'.$field.'`') !== false) {
-                                        if (preg_match('/(.*NOT NULL.*)/Ui', $line)) {
-                                            $s .= "'',";
-                                        } else {
-                                            $s .= 'NULL,';
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        $s = rtrim($s, ',');
-
-                        if ($i % 200 == 0 && $i < $sizeof) {
-                            $s .= ");\nINSERT INTO `".$schema[0]['Table']."` VALUES\n";
-                        } elseif ($i < $sizeof) {
-                            $s .= "),\n";
-                        } else {
-                            $s .= ");\n";
-                        }
-
-                        fwrite($fp, $s);
-                        ++$i;
-                    }
-                }
-            }
             $found++;
         }
+        fwrite($fp, $create_views);
 
         fclose($fp);
         if ($found == 0) {
