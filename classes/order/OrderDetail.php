@@ -757,11 +757,11 @@ class OrderDetailCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+				'.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
 				WHERE od.id_order IN ('.$list.')
 					AND pl.id_lang = '.(int)$id_lang.'
 					AND cl.id_lang = '.(int)$id_lang.'
 					AND od.product_id != '.(int)$id_product.'
-					AND i.cover = 1
 					AND product_shop.active = 1'
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 				ORDER BY RAND()
