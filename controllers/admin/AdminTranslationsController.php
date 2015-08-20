@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -179,8 +179,7 @@ class AdminTranslationsControllerCore extends AdminController
         $file_name = $this->link_lang_pack.'?version='._PS_VERSION_;
         $array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
         if ($lang_packs = Tools::file_get_contents($file_name, false, $array_stream_context)) {
-            // Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
-            if ($lang_packs != '' && $lang_packs = Tools::jsonDecode($lang_packs, true)) {
+            if ($lang_packs != '' && $lang_packs = json_decode($lang_packs, true)) {
                 foreach ($lang_packs as $key => $lang_pack) {
                     if (!Language::isInstalled($lang_pack['iso_code'])) {
                         $packs_to_install[$key] = $lang_pack;

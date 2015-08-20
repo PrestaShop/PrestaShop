@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class ToolsCore
@@ -1059,7 +1059,7 @@ class ToolsCore
 
         echo '
 			<script type="text/javascript">
-				console.'.$type.'('.Tools::jsonEncode($object).');
+				console.'.$type.'('.json_encode($object).');
 			</script>
 		';
     }
@@ -2581,29 +2581,29 @@ FileETag none
     {
         return '<?php
 /**
-* 2007-'.date('Y').' PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-'.date('Y').' PrestaShop SA
-*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-'.date('Y').' PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-'.date('Y').' PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
@@ -2618,38 +2618,34 @@ exit;
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_decode instead
      * jsonDecode convert json string to php array / object
      *
-     * @param string $json
+     * @param string $data
      * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
      * @return array
      */
-    public static function jsonDecode($json, $assoc = false)
+    public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
     {
-        if (function_exists('json_decode')) {
-            return json_decode($json, $assoc);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON(($assoc) ? SERVICES_JSON_LOOSE_TYPE : 0);
-            return $pear_json->decode($json);
-        }
+        return json_decode($data, $assoc, $depth, $options);
     }
 
     /**
+     * @deprecated Deprecated since 1.7.0
+     * Use json_encode instead
      * Convert an array to json string
      *
      * @param array $data
      * @return string json
      */
-    public static function jsonEncode($data)
+    public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (function_exists('json_encode')) {
-            return json_encode($data);
-        } else {
-            include_once(_PS_TOOL_DIR_.'json/json.php');
-            $pear_json = new Services_JSON();
-            return $pear_json->encode($data);
+        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
+            return json_encode($data, $options);
         }
+
+        return json_encode($data, $options, $depth);
     }
 
     /**
@@ -2660,9 +2656,11 @@ exit;
         $backtrace = debug_backtrace();
         $callee = next($backtrace);
         $class = isset($callee['class']) ? $callee['class'] : null;
+
         if ($message === null) {
             $message = 'The function '.$callee['function'].' (Line '.$callee['line'].') is deprecated and will be removed in the next major version.';
         }
+
         $error = 'Function <b>'.$callee['function'].'()</b> is deprecated in <b>'.$callee['file'].'</b> on line <b>'.$callee['line'].'</b><br />';
 
         Tools::throwDeprecated($error, $message, $class);
@@ -2762,31 +2760,6 @@ exit;
     }
 
     /**
-     * Function property_exists does not exist in PHP < 5.1
-     *
-     * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
-     * @param object $class
-     * @param string $property
-     * @return bool
-     */
-    public static function property_exists($class, $property)
-    {
-        Tools::displayAsDeprecated();
-
-        if (function_exists('property_exists')) {
-            return property_exists($class, $property);
-        }
-
-        if (is_object($class)) {
-            $vars = get_object_vars($class);
-        } else {
-            $vars = get_class_vars($class);
-        }
-
-        return array_key_exists($property, $vars);
-    }
-
-    /**
      * @desc identify the version of php
      * @return string
      */
@@ -2824,12 +2797,13 @@ exit;
         }
     }
 
+    /**
+     * @deprecated Deprecated since 1.7.0
+     * @return boolean
+     */
     public static function getSafeModeStatus()
     {
-        if (!$safe_mode = @ini_get('safe_mode')) {
-            $safe_mode = '';
-        }
-        return in_array(Tools::strtolower($safe_mode), array(1, 'on'));
+        return false;
     }
 
     /**
@@ -3351,13 +3325,18 @@ exit;
             return false;
         }
 
-        $post_data = http_build_query(array(
+        $post_query_data = array(
             'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
             'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
             'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL')
-        ));
+        );
+        if (isset($params['source'])) {
+            $post_query_data['source'] = $params['source'];
+        }
+
+        $post_data = http_build_query($post_query_data);
 
         $protocols = array('https');
         $end_point = 'api.addons.prestashop.com';

@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author		PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class HookCore extends ObjectModel
@@ -726,48 +726,6 @@ class HookCore extends ObjectModel
             return false;
         }
         return Hook::exec('updateCarrier', array('id_carrier' => $id_carrier, 'carrier' => $carrier));
-    }
-
-    /**
-     * Preload hook modules cache
-     *
-     * @deprecated 1.5.0 use Hook::getHookModuleList() instead
-     *
-     * @return bool preload_needed
-     */
-    public static function preloadHookModulesCache()
-    {
-        Tools::displayAsDeprecated();
-
-        if (!is_null(self::$_hook_modules_cache)) {
-            return false;
-        }
-
-        self::$_hook_modules_cache = Hook::getHookModuleList();
-        return true;
-    }
-
-    /**
-     * Return hook ID from name
-     *
-     * @param string $hook_name Hook name
-     * @return int Hook ID
-     *
-     * @deprecated since 1.5.0 use Hook::getIdByName() instead
-     */
-    public static function get($hook_name)
-    {
-        Tools::displayAsDeprecated();
-        if (!Validate::isHookName($hook_name)) {
-            die(Tools::displayError());
-        }
-
-        $result = Db::getInstance()->getRow('
-		SELECT `id_hook`, `name`
-		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hook_name).'\'');
-
-        return ($result ? $result['id_hook'] : false);
     }
 
     /**

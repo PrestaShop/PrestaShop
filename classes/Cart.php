@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class CartCore extends ObjectModel
 {
@@ -350,15 +350,6 @@ class CartCore extends ObjectModel
         } else {
             return Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
         }
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->getCartRules()
-     */
-    public function getDiscounts($lite = false, $refresh = false)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getCartRules();
     }
 
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL)
@@ -828,15 +819,6 @@ class CartCore extends ObjectModel
         return self::$_nbProducts[$id];
     }
 
-    /**
-     * @deprecated 1.5.0, use Cart->addCartRule()
-     */
-    public function addDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->addCartRule($id_cart_rule);
-    }
-
     public function addCartRule($id_cart_rule)
     {
         // You can't add a cart rule that does not exist
@@ -958,7 +940,7 @@ class CartCore extends ObjectModel
             unset(self::$_totalWeight[$this->id]);
         }
 
-        Hook::exec('actionBeforeCartUpdateQty', array(
+        $data = array(
             'cart' => $this,
             'product' => $product,
             'id_product_attribute' => $id_product_attribute,
@@ -968,7 +950,11 @@ class CartCore extends ObjectModel
             'id_address_delivery' => $id_address_delivery,
             'shop' => $shop,
             'auto_add_cart_rule' => $auto_add_cart_rule,
-        ));
+        );
+
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeCartUpdateQty', $data);
+        Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int)$quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
@@ -1208,15 +1194,6 @@ class CartCore extends ObjectModel
             return $result;
         }
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->removeCartRule()
-     */
-    public function deleteDiscount($id_cart_rule)
-    {
-        Tools::displayAsDeprecated();
-        return $this->removeCartRule($id_cart_rule);
     }
 
     public function removeCartRule($id_cart_rule)
@@ -2706,15 +2683,6 @@ class CartCore extends ObjectModel
         }
 
         return $total_shipping;
-    }
-
-    /**
-     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
-     */
-    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
-    {
-        Tools::displayAsDeprecated();
-        return $this->getPackageShippingCost($id_carrier, $use_tax, $default_country, $product_list);
     }
 
     /**
