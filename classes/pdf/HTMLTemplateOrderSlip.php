@@ -273,7 +273,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // 	- 'total_amount'
         $breakdown = array();
 
-        $details = $this->order->getProductTaxesDetails();
+        $details = $this->order->getProductTaxesDetails($this->order->products);
 
         foreach ($details as $row) {
             $rate = sprintf('%.3f', $row['tax_rate']);
