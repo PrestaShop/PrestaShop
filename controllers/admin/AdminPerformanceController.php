@@ -93,6 +93,25 @@ class AdminPerformanceControllerCore extends AdminController
                     'hint' => $this->l('Should be enabled except for debugging.')
                 ),
                 array(
+                    'type' => 'switch',
+                    'label' => $this->l('Multi-front optimizations'),
+                    'name' => 'smarty_local',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'smarty_local_1',
+                            'value' => 1,
+                            'label' => $this->l('Yes'),
+                        ),
+                        array(
+                            'id' => 'smarty_local_0',
+                            'value' => 0,
+                            'label' => $this->l('No')
+                        )
+                    ),
+                    'hint' => $this->l('Should be enabled if you want to avoid to store the smarty cache on NFS.')
+                ),
+                array(
                     'type' => 'radio',
                     'label' => $this->l('Caching type'),
                     'name' => 'smarty_caching_type',
@@ -135,6 +154,7 @@ class AdminPerformanceControllerCore extends AdminController
 
         $this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
         $this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+        $this->fields_value['smarty_local'] = Configuration::get('PS_SMARTY_LOCAL');
         $this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
         $this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
         $this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
@@ -725,6 +745,7 @@ class AdminPerformanceControllerCore extends AdminController
                 Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
                 Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
                 Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
+                Configuration::updateValue('PS_SMARTY_LOCAL', Tools::getValue('smarty_local', 0));
                 $redirectAdmin = true;
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
