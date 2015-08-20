@@ -143,7 +143,7 @@ class AdminCarriersControllerCore extends AdminController
         $this->initTabModuleList();
         $this->filterTabModuleList();
         $this->context->smarty->assign('panel_title', $this->l('Use one of our recommended carrier modules'));
-        $this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
+        $this->tpl_view_vars = array('modules_list' => $this->renderModulesList('back-office,AdminCarriers,new'));
         unset($this->page_header_toolbar_btn['modules-list']);
         return parent::renderView();
     }
