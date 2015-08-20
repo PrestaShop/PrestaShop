@@ -846,24 +846,22 @@ function displayImage(domAAroundImgThumb, no_animation)
 function displayDiscounts(combination)
 {
 	// Tables & rows selection
-	var quantityDiscountTable = $('#quantityDiscount');
-	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
-	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
+	var quantityDiscountTable = $('#quantityDiscount').parent();
+	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
 
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
-	if (combinationsSpecificQuantityDiscount.length != 0)
-	{
+	if (combinationsSpecificQuantityDiscount.length != 0) {
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_'+combination).hide();
 		combinationsSpecificQuantityDiscount.show();
-	}
-	else if(allQuantityDiscount.length != 0)
-	{
 		allQuantityDiscount.show();
-		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
-	}
-	else
-	{
+	} else if(allQuantityDiscount.length != 0) {
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
+		allQuantityDiscount.show();
+		quantityDiscountTable.show();
+	} else {
 		quantityDiscountTable.hide();
 	}
 }

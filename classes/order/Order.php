@@ -2228,7 +2228,16 @@ class OrderCore extends ObjectModel
         return true;
     }
 
-    public function getProductTaxesDetails()
+    
+    /**
+     * By default this function was made for invoice, to compute tax amounts and balance delta (because of computation made on round values).
+     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is usefull for order slip for example,
+     * where only sublist of the order is refunded.
+     *
+     * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
+     * @return array A list of tax rows applied to the given OrderDetails (or all OrderDetails linked to the current Order).
+     */
+    public function getProductTaxesDetails($limitToOrderDetails = false)
     {
         $round_type = $this->round_type;
         if ($round_type == 0) {
@@ -2278,7 +2287,7 @@ class OrderCore extends ObjectModel
         $breakdown = array();
 
         // Get order_details
-        $order_details = $this->getOrderDetailList();
+        $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
 

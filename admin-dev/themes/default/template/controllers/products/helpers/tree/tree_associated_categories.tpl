@@ -25,14 +25,13 @@
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="cattree tree">
 		{$nodes}
 	</ul>
 	{/if}
 </div>
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
-	var idTree="{$id|escape:'html':'UTF-8'}";
 	var treeClickFunc = function() {
 		var loc = location.href;
 		if (loc.indexOf("&id_category") !== -1) {
