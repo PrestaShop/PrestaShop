@@ -82,23 +82,6 @@ class PrestaShopSecurityTest extends IntegrationTestCase
         $this->assertTrue($result, implode(', ', self::$prestafraud->_errors));
     }
 
-    /*public function testScoreExistingOrder()
-    {
-        $id_order = 1;
-        $order = new Order($id_order);
-        $this->assertTrue(self::$prestafraud->hookNewOrder(array('order' => $order)), 'Fail Prestafraud::hookNewOrder()');
-        $scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
-        $this->assertGreaterThan(0, (int)$scoring['scoring']);
-    }
-
-    public function testScoreFakeOrder()
-    {
-        $id_order = 3000000000;
-        $scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
-        $this->assertEquals(0, (int)$scoring['scoring']);
-        $this->assertEquals('', (string)$scoring['comment']);
-    }*/
-
     public function testUninstall()
     {
         $this->assertTrue((bool)self::$prestafraud->uninstall());
