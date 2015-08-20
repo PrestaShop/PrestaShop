@@ -1418,24 +1418,14 @@ class AdminThemesControllerCore extends AdminController
         return true;
     }
 
+    /**
+     * @deprecated 1.6.1.1 Use Tools::recurseCopy($src, $dst) instead
+     * @param string $src is the path of the directory to copy
+     * @param string $dst is the path where you want to copy
+     */
     private function recurseCopy($src, $dst)
     {
-        if (!$dir = opendir($src)) {
-            return;
-        }
-        if (!file_exists($dst)) {
-            mkdir($dst);
-        }
-        while (($file = readdir($dir)) !== false) {
-            if (strncmp($file, '.', 1) != 0) {
-                if (is_dir($src.'/'.$file)) {
-                    self::recurseCopy($src.'/'.$file, $dst.'/'.$file);
-                } elseif (is_readable($src.'/'.$file) && $file != 'Thumbs.db' && $file != '.DS_Store' && substr($file, -1) != '~') {
-                    copy($src.'/'.$file, $dst.'/'.$file);
-                }
-            }
-        }
-        closedir($dir);
+        return Tools::recurseCopy($src, $dst);
     }
 
     public function processImportTheme()
