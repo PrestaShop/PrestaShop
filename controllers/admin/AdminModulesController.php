@@ -303,10 +303,12 @@ class AdminModulesControllerCore extends AdminController
             'not_installed' => $uninstalled
             );
 
-        $this->context->smarty->assign(array(
-            'tab_modules_list' => $modules_list_sort,
-            'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
-        ));
+		$this->context->smarty->assign(array(
+			'currentIndex' => self::$currentIndex,
+			'tab_modules_list' => $modules_list_sort,
+			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
+		));
+
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
             $this->context->smarty->assign('admin_list_from_source', $admin_list_from_source);
         }
@@ -1642,7 +1644,7 @@ class AdminModulesControllerCore extends AdminController
         $smarty->assign($tpl_vars);
     }
 
-    public function ajaxProcessGetModuleQuickView()
+    public function assignReadMoreSmartyVar()
     {
         $modules = Module::getModulesOnDisk();
 
@@ -1669,6 +1671,8 @@ class AdminModulesControllerCore extends AdminController
             }
         }
 
+		$this->fillModuleData($module, 'array');
+
         $this->context->smarty->assign(array(
             'displayName' => $module->displayName,
             'image' => $module->image,
@@ -1680,8 +1684,26 @@ class AdminModulesControllerCore extends AdminController
             'additional_description' => $module->additional_description,
             'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
             'url' => $url,
-            'price' => $module->price
+            'price' => $module->price,
+            'options' => $module->optionsHtml,
+            'installed' => (bool)$module->installed
         ));
+    }
+
+    public function ajaxProcessGetModuleQuickView()
+    {
+        $this->assignReadMoreSmartyVar();
+
         $this->smartyOutputContent('controllers/modules/quickview.tpl');
+    }
+
+    public function ajaxProcessGetModuleReadMoreView()
+    {
+        $this->assignReadMoreSmartyVar();
+
+        die (Tools::jsonEncode(array(
+            'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
+            'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl')
+        )));
     }
 }
