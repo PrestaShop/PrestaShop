@@ -80,7 +80,7 @@
 							<input class="form-control" type="text" name="memcachedPort" value="11211" />
 						</div>
 					</div>
-					<div class="form-group">	
+					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='Weight'} </label>
 						<div class="col-lg-9">
 							<input class="form-control" type="text" name="memcachedWeight" value="1" />
@@ -198,7 +198,7 @@
 					success: function(data)
 					{
 						if (data && $.isArray(data))
-						{<
+						{
 							var color = data[0] != 0 ? 'green' : 'red';
 							$('#formMemcachedServerStatus').show();
 							$('input:text[name=memcachedIp]').css('background', color);

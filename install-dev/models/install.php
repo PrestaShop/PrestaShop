@@ -339,7 +339,20 @@ class InstallModelInstall extends InstallAbstractModel
                 'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url
             );
 
-            Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
+            if (InstallSession::getInstance()->safe_mode) {
+                Language::checkAndAddLanguage($iso, false, true, $params_lang);
+            } else {
+                if (file_exists(_PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip') == false) {
+                    $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+
+                    if ($language == false) {
+                        throw new PrestashopInstallerException($this->language->l('Cannot download language pack "%s"', $iso));
+                    }
+                }
+
+                Language::installLanguagePack($iso, $params_lang, $errors);
+            }
+
             Language::loadLanguages();
 
             Tools::clearCache();

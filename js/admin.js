@@ -1234,8 +1234,11 @@ function getControllerActionMap(force_action) {
 
 function openModulesList()
 {
+
 	if (!modules_list_loaded)
 	{
+		header = $('#modules_list_container .modal-header').html();
+
 		$.ajax({
 			type: "POST",
 			url : admin_modules_link,
@@ -1252,17 +1255,44 @@ function openModulesList()
 			{
 				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
-				modules_list_loaded = true;
+				modules_list_loaded = data;
 				$('.help-tooltip').tooltip();
+				controllerQuickView();
 			}
 		});
 	}
 	else
 	{
-		$('#modules_list_container_tab_modal').slideDown();
+		$('#modules_list_container_tab_modal').html(modules_list_loaded).slideDown();
 		$('#modules_list_loader').hide();
+		$('#modules_list_container .modal-header').html(header);
+		controllerQuickView();
 	}
 	return false;
+}
+
+function controllerQuickView()
+{
+	$('.controller-quick-view').click(function()
+	{
+		$.ajax({
+			type: "POST",
+			url : admin_modules_link,
+			dataType: 'json',
+			async: true,
+			data : {
+				ajax : "1",
+				controller : "AdminModules",
+				action : "GetModuleReadMoreView",
+				module: $(this).data("name"),
+			},
+			success : function(data)
+			{
+				$('#modules_list_container_tab_modal').html(data.body);
+				$('#modules_list_container .modal-header').html(data.header);
+			}
+		});
+	});
 }
 
 function bindAddonsButtons()

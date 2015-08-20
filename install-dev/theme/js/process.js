@@ -38,7 +38,7 @@ function start_install()
 		return;
 	is_installing = true;
 
-	$('.process_step').removeClass('fail').removeClass('success').hide();
+	$('.process_step').removeClass('fail').removeClass('success').slideUp().hide();
 	$('.error_log').hide();
 	$('#progress_bar').show();
 	$('#progress_bar .installing').show();
@@ -56,6 +56,7 @@ function process_install(step)
 	if (!step)
 		step = process_steps[0];
 
+	$('#process_step_'+step.key).slideDown();
 	$('.installing').hide().html(step.lang + '...').fadeIn('slow');
 
 	$.ajax({
@@ -68,7 +69,7 @@ function process_install(step)
 			// No error during this step
 			if (json && json.success === true)
 			{
-				$('#process_step_'+step.key).show().addClass('success');
+				$('#process_step_'+step.key).addClass('success');
 				current_step++;
 				if (current_step >= process_steps.length)
 				{
@@ -146,7 +147,7 @@ function process_install_subtask(step, current_subtask)
 				else
 					process_install_subtask(step, current_subtask);
 			}
-			else 
+			else
 				install_error(step, (json) ? json.message : '');
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
@@ -164,33 +165,35 @@ function install_error(step, errors)
 	$('#error_process').show();
 	$('#process_step_'+step.key).show().addClass('fail');
 	$('#progress_bar .total .progress').stop();
-	$('#progress_bar .installing').hide();
+	$('#progress_bar .installing').slideUp();
 	$('.stepList li:last-child').addClass('ko');
 
-	if (errors)
-	{
+	if (errors) {
 		var list_errors = errors;
-		if ($.type(list_errors) == 'string')
-		{
+
+		if ($.type(list_errors) == 'string') {
 			list_errors = [];
 			list_errors[0] = errors;
-		}
-		else if ($.type(list_errors) == 'array')
+		} else if ($.type(list_errors) == 'array') {
 			list_errors = list_errors[0];
+		}
 
 		var display = '<ol>';
 
-		$.each(list_errors, function(k, v)
-		{
-			if (typeof psuser_assistance != 'undefined')
-				psuser_assistance.setStep('install_process_error', {'error':v});
-			display += '<li>' + v + '</li>';
+		$.each(list_errors, function(k, v) {
+			if (typeof psuser_assistance != 'undefined') {
+				psuser_assistance.setStep('install_process_error', {'error': v});
+			}
+			display += '<li>' + (k + 1) + ': ' + v + '</li>';
 		});
+
 		display += '</ol>';
-		$('#process_step_'+step.key+' .error_log').html(display).show();
+		$('#error_process').append(display);
 	}
-	if (typeof psuser_assistance != 'undefined')
+
+	if (typeof psuser_assistance != 'undefined') {
 		psuser_assistance.setStep('install_process_error');
+	}
 
 	$('#tabs li a').each(function() {
 		 this.href=this.rel;
