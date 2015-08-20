@@ -34,6 +34,7 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+require(_PS_ADMIN_DIR_.'/../vendor/autoload.php');
 require(_PS_ADMIN_DIR_.'/functions.php');
 
 //small test to clear cache after upgrade
@@ -55,4 +56,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 }
 
 // Prepare and trigger admin dispatcher
-Dispatcher::getInstance()->dispatch();
+if (!PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter::getInstance()->dispatch(true)) {
+    // else, use legacy Dispatcher
+    Dispatcher::getInstance()->dispatch();
+}

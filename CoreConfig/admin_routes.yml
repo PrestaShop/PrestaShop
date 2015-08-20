@@ -1,0 +1,16 @@
+# routes.yml
+admin_route1:
+    path:     /a
+    defaults: { _controller: 'Admin\TestController::aAction' }
+
+admin_route2:
+    path:     /b/{id_order}
+    defaults: { _controller: 'Admin\TestController::bAction', id_order: 1 }
+
+admin_route3:
+    path:     /c/{id_order}
+    defaults: { _controller: 'Admin\TestController::cAction', id_order: 1 }
+
+admin_route4:
+    path:     /d
+    defaults: { _controller: 'Admin\TestController::dAction' }
