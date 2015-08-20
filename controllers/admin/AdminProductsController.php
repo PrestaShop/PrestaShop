@@ -2542,7 +2542,7 @@ class AdminProductsControllerCore extends AdminController
         $helper->id = 'box-avg-gross-margin';
         $helper->icon = 'icon-tags';
         $helper->color = 'color2';
-        $helper->title = $this->l('Average Gross Margin', null, null, false);
+        $helper->title = $this->l('Average Gross Margin %', null, null, false);
         if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false) {
             $helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
         }
