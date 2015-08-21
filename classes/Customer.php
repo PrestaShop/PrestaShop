@@ -294,13 +294,15 @@ class CustomerCore extends ObjectModel
     /**
      * Return customers list
      *
+     * @param null|bool $only_active Returns only active customers when true
      * @return array Customers
      */
-    public static function getCustomers()
+    public static function getCustomers($only_active = null)
     {
         $sql = 'SELECT `id_customer`, `email`, `firstname`, `lastname`
 				FROM `'._DB_PREFIX_.'customer`
-				WHERE 1 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+				WHERE 1 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).
+				($only_active ? ' AND `active` = 1' : '').'
 				ORDER BY `id_customer` ASC';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
