@@ -439,7 +439,7 @@ abstract class Controller extends ControllerCore
 				}
 			}
 		</style>
-		<script type="text/javascript" src="https://raw.githubusercontent.com/drvic10k/bootstrap-sortable/master/Scripts/bootstrap-sortable.js"></script>';
+		<script type="text/javascript" src="https://cdn.rawgit.com/drvic10k/bootstrap-sortable/1.11.2/Scripts/bootstrap-sortable.js"></script>';
     }
 
     protected function displayProfilingSummary()
