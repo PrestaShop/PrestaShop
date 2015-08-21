@@ -95,8 +95,15 @@
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/"
     },
-    "classmap": ["Core/", "Adapter/"],
-    "files": ["config/alias.php", "classes/PrestaShopAutoload.php"]
+    "classmap": [
+        "Adapter/",
+        "Core/"
+    ],
+    "files": [
+        "config/alias.php",
+        "classes/PrestaShopAutoload.php",
+        "Core/Helpers/helpers.php"
+    ]
   },
   "scripts": {
     "post-install-cmd": [
