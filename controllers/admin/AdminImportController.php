@@ -308,6 +308,7 @@ class AdminImportControllerCore extends AdminController
                     'condition' => 'new',
                     'available_date' => date('Y-m-d'),
                     'date_add' => date('Y-m-d H:i:s'),
+                    'date_upd' => date('Y-m-d H:i:s'),
                     'customizable' => 0,
                     'uploadable_files' => 0,
                     'text_fields' => 0,
