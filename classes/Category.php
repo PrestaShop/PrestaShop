@@ -232,7 +232,7 @@ class CategoryCore extends ObjectModel
     public function toggleStatus()
     {
         $result = parent::toggleStatus();
-        Hook::exec('actionCategoryUpdate');
+        Hook::exec('actionCategoryUpdate', array('category' => $this));
         return $result;
     }
 
