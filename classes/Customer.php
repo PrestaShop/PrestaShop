@@ -862,7 +862,7 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Depricated since 2015-08-05
+     * Deprecated since 1.6.1.1 (August 2015)
      * Please use: getLastEmptyCart($with_order)
      *
      * @param bool|true $with_order
