@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Business\Cldr\Composer;
 
 use Composer\Script\Event;
-
 use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
 class Hook
@@ -35,22 +34,22 @@ class Hook
     public static function init(Event $event)
     {
         $event->getIO()->write("Init CLDR datas download...");
-        $rootDir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+        $root_dir = realpath('');
 
-        $cldrUpdate = new Update($rootDir.'/translations/');
-        $cldrUpdate->init();
+        $cldr_update = new Update($root_dir.'/translations/');
+        $cldr_update->init();
 
         // If settings file exist
-        if (file_exists($rootDir.'/config/settings.inc.php')) {
+        if (file_exists($root_dir.'/config/settings.inc.php')) {
             //load prestashop config to get locale env
-            require($rootDir.'/config/config.inc.php');
+            require($root_dir.'/config/config.inc.php');
 
             //get each defined languages and fetch cldr datas
             $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
 
             foreach ($langs as $lang) {
                 $language_code = explode('-', $lang['language_code']);
-                $cldrUpdate->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
+                $cldr_update->fetchLocale($language_code['0'].'-'.strtoupper($language_code[1]));
             }
         }
 
