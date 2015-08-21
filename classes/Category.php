@@ -1246,12 +1246,12 @@ class CategoryCore extends ObjectModel
 
     public function cleanGroups()
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
+    	return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
     }
 
     public function cleanAssoProducts()
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$this->id);
+    	return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
     }
 
     public function addGroups($groups)
