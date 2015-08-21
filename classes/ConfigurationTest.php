@@ -74,23 +74,23 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download'
         );
 
-        if (!defined('_PS_HOST_MODE_')) {
-            $tests = array_merge($tests, array(
-                'system' => array(
-                    'fopen', 'fclose', 'fread', 'fwrite',
-                    'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
-                    'getcwd', 'chdir', 'chmod'
-                ),
-                'phpversion' => false,
-                'gd' => false,
-                'mysql_support' => false,
-                'config_dir' => 'config',
-                'files' => false,
-                'mails_dir' => 'mails',
-            ));
+        if (defined('_PS_HOST_MODE_')) {
+            return $test;
         }
 
-        return $tests;
+        return $tests + array(
+            'system' => array(
+                'fopen', 'fclose', 'fread', 'fwrite',
+                'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
+                'getcwd', 'chdir', 'chmod'
+            ),
+            'phpversion' => false,
+            'gd' => false,
+            'mysql_support' => false,
+            'config_dir' => 'config',
+            'files' => false,
+            'mails_dir' => 'mails',
+        );
     }
 
     /**
@@ -107,7 +107,6 @@ class ConfigurationTestCore
             'gz' => false,
             'mcrypt' => false,
             'mbstring' => false,
-            'magicquotes' => false,
             'dom' => false,
             'pdo_mysql' => false,
         );
@@ -121,19 +120,18 @@ class ConfigurationTestCore
      */
     public static function check($tests)
     {
-        $res = array();
+        $result = array();
+
         foreach ($tests as $key => $test) {
-            $res[$key] = ConfigurationTest::run($key, $test);
+            $result[$key] = ConfigurationTest::run($key, $test);
         }
-        return $res;
+
+        return $result;
     }
 
     public static function run($ptr, $arg = 0)
     {
-        if (call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg)) {
-            return 'ok';
-        }
-        return 'fail';
+        return call_user_func(array('ConfigurationTest', 'test_'.$ptr), $arg) ? 'ok' : 'fail';
     }
 
     public static function test_phpversion()
@@ -186,19 +184,24 @@ class ConfigurationTestCore
         if (function_exists('gzencode')) {
             return @gzencode('dd') !== false;
         }
+
         return false;
     }
 
     public static function test_dir($relative_dir, $recursive = false, &$full_report = null)
     {
         $dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
+
         if (!file_exists($dir) || !$dh = @opendir($dir)) {
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
             return false;
         }
+
         $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
+
         if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
+
             if (!$recursive) {
                 closedir($dh);
                 return true;
@@ -225,6 +228,7 @@ class ConfigurationTestCore
     public static function test_file($file_relative)
     {
         $file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
+
         return (file_exists($file) && is_writable($file));
     }
 
@@ -296,28 +300,22 @@ class ConfigurationTestCore
     public static function test_theme_lang_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
-            return true;
-        }
-        return ConfigurationTest::test_dir($dir, true);
+
+        return file_exists($absoluteDir) ? ConfigurationTest::test_dir($dir, true) : true;
     }
 
     public static function test_theme_pdf_lang_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
-            return true;
-        }
-        return ConfigurationTest::test_dir($dir, true);
+
+        return file_exists($absoluteDir) ? ConfigurationTest::test_dir($dir, true) : true;
     }
 
     public static function test_theme_cache_dir($dir)
     {
         $absoluteDir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($dir, '\\/');
-        if (!file_exists($absoluteDir)) {
-            return true;
-        }
-        return ConfigurationTest::test_dir($dir, true);
+
+        return file_exists($absoluteDir) ? ConfigurationTest::test_dir($dir, true) : true;
     }
 
     public static function test_customizable_products_dir($dir)
@@ -342,12 +340,11 @@ class ConfigurationTestCore
 
     public static function test_sessions()
     {
-        if (!$path = @ini_get('session.save_path')) {
-            return true;
-        }
+        $path = @ini_get('session.save_path');
 
-        return is_writable($path);
+        return $path ? is_writable($path) : true;
     }
+
     public static function test_dom()
     {
         return extension_loaded('Dom');
@@ -356,19 +353,19 @@ class ConfigurationTestCore
     public static function test_files($full = false)
     {
         $return = array();
-        foreach (ConfigurationTest::$test_files as $file) {
-            if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file))) {
+
+        foreach (ConfigurationTest::$test_files as $test_file) {
+            $file = rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $test_file);
+
+            if (!file_exists($file)) {
                 if ($full) {
-                    array_push($return, $file);
+                    array_push($return, $test_file);
                 } else {
                     return false;
                 }
             }
         }
 
-        if ($full) {
-            return $return;
-        }
-        return true;
+        return $full ? $return : true;
     }
 }

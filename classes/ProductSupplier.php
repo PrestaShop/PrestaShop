@@ -94,10 +94,11 @@ class ProductSupplierCore extends ObjectModel
      */
     public function delete()
     {
-        $res = parent::delete();
+        $result = parent::delete();
 
-        if ($res && $this->id_product_attribute == 0) {
+        if ($result && ($this->id_product_attribute == 0)) {
             $items = ProductSupplier::getSupplierCollection($this->id_product, false);
+
             foreach ($items as $item) {
                 /** @var ProductSupplier $item */
                 if ($item->id_product_attribute > 0) {
@@ -106,7 +107,7 @@ class ProductSupplierCore extends ObjectModel
             }
         }
 
-        return $res;
+        return $result;
     }
 
     /**
@@ -145,25 +146,24 @@ class ProductSupplierCore extends ObjectModel
         // build query
         $query = new DbQuery();
         $query->select('ps.product_supplier_price_te');
+
         if ($with_currency) {
             $query->select('ps.id_currency');
         }
+
         $query->from('product_supplier', 'ps');
         $query->where('ps.id_product = '.(int)$id_product.'
 			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
 			AND ps.id_supplier = '.(int)$id_supplier
         );
 
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
         if (!$with_currency) {
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            return $result;
         }
 
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        if (isset($res[0])) {
-            return $res[0];
-        }
-
-        return $res;
+        return isset($result[0]) ? $result[0] : $result;
     }
 
     /**
@@ -228,6 +228,7 @@ class ProductSupplierCore extends ObjectModel
         $query->where('id_supplier = '.(int)$id_supplier);
 
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
         if ($converted_price) {
             return Tools::convertPrice($row['price_te'], $row['id_currency']);
         }

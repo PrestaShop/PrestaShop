@@ -62,6 +62,7 @@ class PrestaShopAutoload
     {
         $this->root_dir = _PS_CORE_DIR_.'/';
         $file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+
         if (@filemtime($file) && is_readable($file)) {
             $this->index = include($file);
         } else {
@@ -154,6 +155,7 @@ class PrestaShopAutoload
         // Write classes index on disc to cache it
         $filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
         $filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
+
         if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false) {
             if (!@rename($filename_tmp, $filename)) {
                 unlink($filename_tmp);
@@ -165,6 +167,7 @@ class PrestaShopAutoload
         else {
             Tools::error_log('Cannot write temporary file '.$filename_tmp);
         }
+
         $this->index = $classes;
     }
 
@@ -188,7 +191,7 @@ class PrestaShopAutoload
 
                     $namespacePattern = '[\\a-z0-9_]*[\\]';
                     $pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
-                                .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+                        .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
 
                     //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
                     if (false === strpos($content, 'namespace ') && preg_match($pattern, $content, $m)) {

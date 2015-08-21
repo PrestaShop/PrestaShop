@@ -31,6 +31,7 @@ class ConnectionsSourceCore extends ObjectModel
     public $request_uri;
     public $keywords;
     public $date_add;
+
     public static $uri_max_size = 255;
 
     /**
@@ -50,9 +51,12 @@ class ConnectionsSourceCore extends ObjectModel
 
     public function add($autodate = true, $nullValues = false)
     {
-        if ($result = parent::add($autodate, $nullValues)) {
+        $result = parent::add($autodate, $nullValues);
+
+        if ($result) {
             Referrer::cacheNewSource($this->id);
         }
+
         return $result;
     }
 
@@ -61,6 +65,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (!$cookie) {
             $cookie = Context::getContext()->cookie;
         }
+
         if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections)) {
             return false;
         }
@@ -69,6 +74,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (isset($_SERVER['HTTP_REFERER']) && !Validate::isAbsoluteUrl($_SERVER['HTTP_REFERER'])) {
             return false;
         }
+
         // If there is no referrer and we do not want to save direct traffic (as opposed to referral traffic), we drop the connection
         if (!isset($_SERVER['HTTP_REFERER']) && !Configuration::get('TRACKING_DIRECT_TRAFFIC')) {
             return false;
@@ -81,6 +87,7 @@ class ConnectionsSourceCore extends ObjectModel
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
             $parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
+
             if ((!isset($parsed['path']) || !isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__))) {
                 return false;
             }
@@ -101,19 +108,24 @@ class ConnectionsSourceCore extends ObjectModel
         if (!Validate::isUrl($source->request_uri)) {
             $source->request_uri = '';
         }
+
         $source->request_uri = substr($source->request_uri, 0, ConnectionsSource::$uri_max_size);
+
         return $source->add();
     }
 
     public static function getOrderSources($id_order)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
-		FROM '._DB_PREFIX_.'orders o
-		INNER JOIN '._DB_PREFIX_.'guest g ON g.id_customer = o.id_customer
-		INNER JOIN '._DB_PREFIX_.'connections co  ON co.id_guest = g.id_guest
-		INNER JOIN '._DB_PREFIX_.'connections_source cos ON cos.id_connections = co.id_connections
-		WHERE id_order = '.(int)($id_order).'
-		ORDER BY cos.date_add DESC');
+    		SELECT cos.http_referer, cos.request_uri, cos.keywords, cos.date_add
+    		FROM '._DB_PREFIX_.'orders o
+    		INNER JOIN '._DB_PREFIX_.'guest g
+                ON g.id_customer = o.id_customer
+    		INNER JOIN '._DB_PREFIX_.'connections co
+                ON co.id_guest = g.id_guest
+    		INNER JOIN '._DB_PREFIX_.'connections_source cos
+                ON cos.id_connections = co.id_connections
+    		WHERE id_order = '.(int)($id_order).'
+    		ORDER BY cos.date_add DESC');
     }
 }

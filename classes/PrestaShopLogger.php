@@ -131,11 +131,14 @@ class    PrestaShopLoggerCore extends ObjectModel
 
         if ($allow_duplicate || !$log->_isPresent()) {
             $res = $log->add();
+
             if ($res) {
-                self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()])?self::$is_present[$log->getHash()] + 1:1;
+                self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()]) ? self::$is_present[$log->getHash()] + 1 : 1;
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -166,10 +169,10 @@ class    PrestaShopLoggerCore extends ObjectModel
     protected function _isPresent()
     {
         if (!isset(self::$is_present[md5($this->message)])) {
-            self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
+            self::$is_present[$this->getHash()] = Db::getInstance()->getValue('
+                SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'log`
-				WHERE
-					`message` = \''.$this->message.'\'
+				WHERE `message` = \''.$this->message.'\'
 					AND `severity` = \''.$this->severity.'\'
 					AND `error_code` = \''.$this->error_code.'\'
 					AND `object_type` = \''.$this->object_type.'\'

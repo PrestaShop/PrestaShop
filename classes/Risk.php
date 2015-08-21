@@ -48,9 +48,11 @@ class RiskCore extends ObjectModel
     public function getFields()
     {
         $this->validateFields();
+
         $fields['id_risk'] = (int)$this->id_risk;
         $fields['color'] = pSQL($this->color);
         $fields['percent'] = (int)$this->percent;
+
         return $fields;
     }
 
@@ -62,6 +64,7 @@ class RiskCore extends ObjectModel
     public function getTranslationsFieldsChild()
     {
         $this->validateFieldsLang();
+
         return $this->getTranslationsFields(array('name'));
     }
 
@@ -71,7 +74,6 @@ class RiskCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        $risks = new PrestaShopCollection('Risk', $id_lang);
-        return $risks;
+        return new PrestaShopCollection('Risk', $id_lang);
     }
 }

@@ -88,18 +88,21 @@ class GuestCore extends ObjectModel
         // $langsArray is filled with all the languages accepted, ordered by priority
         $langsArray = array();
         preg_match_all('/([a-z]{2}(-[a-z]{2})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/', $acceptLanguage, $array);
-        if (count($array[1])) {
+
+        if (!empty($array[1])) {
             $langsArray = array_combine($array[1], $array[4]);
+
             foreach ($langsArray as $lang => $val) {
                 if ($val === '') {
                     $langsArray[$lang] = 1;
                 }
             }
+
             arsort($langsArray, SORT_NUMERIC);
         }
 
         // Only the first language is returned
-        return (count($langsArray) ? key($langsArray) : '');
+        return empty($langsArray) ? '' : key($langsArray);
     }
 
     protected function getBrowser($userAgent)
@@ -117,16 +120,18 @@ class GuestCore extends ObjectModel
             'IE 7' => 'MSIE 7',
             'IE 6' => 'MSIE 6'
         );
+
         foreach ($browserArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `id_web_browser`
-				FROM `'._DB_PREFIX_.'web_browser` wb
-				WHERE wb.`name` = \''.pSQL($k).'\'');
+    				SELECT `id_web_browser`
+    				FROM `'._DB_PREFIX_.'web_browser` wb
+    				WHERE wb.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_web_browser'];
             }
         }
+
         return null;
     }
 
@@ -145,13 +150,14 @@ class GuestCore extends ObjectModel
         foreach ($osArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `id_operating_system`
-				FROM `'._DB_PREFIX_.'operating_system` os
-				WHERE os.`name` = \''.pSQL($k).'\'');
+    				SELECT `id_operating_system`
+    				FROM `'._DB_PREFIX_.'operating_system` os
+    				WHERE os.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_operating_system'];
             }
         }
+
         return null;
     }
 
@@ -160,10 +166,12 @@ class GuestCore extends ObjectModel
         if (!Validate::isUnsignedId($id_customer)) {
             return false;
         }
+
         $result = Db::getInstance()->getRow('
-		SELECT `id_guest`
-		FROM `'._DB_PREFIX_.'guest`
-		WHERE `id_customer` = '.(int)($id_customer));
+    		SELECT `id_guest`
+    		FROM `'._DB_PREFIX_.'guest`
+    		WHERE `id_customer` = '.(int)($id_customer));
+
         return $result['id_guest'];
     }
 
@@ -171,9 +179,9 @@ class GuestCore extends ObjectModel
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'connections` c
-		SET c.`id_guest` = '.(int)($id_guest).'
-		WHERE c.`id_guest` = '.(int)($this->id));
+    		UPDATE `'._DB_PREFIX_.'connections` c
+    		SET c.`id_guest` = '.(int)($id_guest).'
+    		WHERE c.`id_guest` = '.(int)($this->id));
 
         // The current guest is removed from the database
         $this->delete();
@@ -191,6 +199,7 @@ class GuestCore extends ObjectModel
         $guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int)($cookie->id_customer)) : null);
         $guest->userAgent();
         $guest->save();
+        
         $cookie->id_guest = (int)($guest->id);
     }
 }

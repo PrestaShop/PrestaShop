@@ -44,15 +44,16 @@ class ChartCore
     public static function init()
     {
         if (!self::$poolId) {
-            ++self::$poolId;
-            return true;
+            self::$poolId++;
         }
+
+        return true;
     }
 
     /** @prototype void public function __construct() */
     public function __construct()
     {
-        ++self::$poolId;
+        self::$poolId++;
     }
 
     /** @prototype void public function setSize(int $width, int $height) */
@@ -70,22 +71,22 @@ class ChartCore
         if (Validate::isDate($from)) {
             $from = strtotime($from);
         }
+
         $this->from = $from;
+
         if (Validate::isDate($to)) {
             $to = strtotime($to);
         }
+
         $this->to = $to;
 
         if ($granularity == 'd') {
             $this->format = '%d/%m/%y';
-        }
-        if ($granularity == 'w') {
+        } elseif ($granularity == 'w') {
             $this->format = '%d/%m/%y';
-        }
-        if ($granularity == 'm') {
+        } elseif ($granularity == 'm') {
             $this->format = '%m/%y';
-        }
-        if ($granularity == 'y') {
+        } elseif ($granularity == 'y') {
             $this->format = '%y';
         }
 
@@ -97,6 +98,7 @@ class ChartCore
         if (!array_key_exists($i, $this->curves)) {
             $this->curves[$i] = new Curve();
         }
+
         return $this->curves[$i];
     }
 
@@ -110,8 +112,10 @@ class ChartCore
     {
         if ($this->timeMode) {
             $options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
+
             if ($this->granularity == 'd') {
                 foreach ($this->curves as $curve) {
+
                     /** @var Curve $curve */
                     for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i)) {
                         if (!$curve->getPoint($i)) {
@@ -122,22 +126,23 @@ class ChartCore
             }
         }
 
-        $jsCurves = array();
+        $js_curves = array();
+
         foreach ($this->curves as $curve) {
-            $jsCurves[] = $curve->getValues($this->timeMode);
+            $js_curves[] = $curve->getValues($this->timeMode);
         }
 
-        if (count($jsCurves)) {
+        if (!empty($js_curves)) {
             return '
 			<div id="flot'.self::$poolId.'" style="width:'.$this->width.'px;height:'.$this->height.'px"></div>
 			<script type="text/javascript">
 				$(function () {
-					$.plot($(\'#flot'.self::$poolId.'\'), ['.implode(',', $jsCurves).'], {'.$options.'});
+					$.plot($(\'#flot'.self::$poolId.'\'), ['.implode(',', $js_curves).'], {'.$options.'});
 				});
 			</script>';
-        } else {
-            return ErrorFacade::Display(PS_ERROR_UNDEFINED, 'No values for this chart.');
         }
+
+        return ErrorFacade::Display(PS_ERROR_UNDEFINED, 'No values for this chart.');
     }
 }
 
@@ -157,9 +162,11 @@ class Curve
     {
         ksort($this->values);
         $string = '';
+
         foreach ($this->values as $key => $value) {
             $string .= '['.addslashes((string)$key).($time_mode ? '000' : '').','.(float)$value.'],';
         }
+
         return '{data:['.rtrim($string, ',').']'.(!empty($this->label) ? ',label:"'.$this->label.'"' : '').''.(!empty($this->type) ? ','.$this->type : '').'}';
     }
 
@@ -177,9 +184,11 @@ class Curve
     public function setType($type)
     {
         $this->type = '';
+
         if ($type == 'bars') {
             $this->type = 'bars:{show:true,lineWidth:10}';
         }
+
         if ($type == 'steps') {
             $this->type = 'lines:{show:true,steps:true}';
         }

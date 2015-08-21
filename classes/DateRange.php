@@ -44,9 +44,13 @@ class DateRangeCore extends ObjectModel
     public static function getCurrentRange()
     {
         $result = Db::getInstance()->getRow('
-		SELECT `id_date_range`, `time_end`
-		FROM `'._DB_PREFIX_.'date_range`
-		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `'._DB_PREFIX_.'date_range`)');
+    		SELECT `id_date_range`, `time_end`
+    		FROM `'._DB_PREFIX_.'date_range`
+    		WHERE `time_end` = (
+                SELECT MAX(`time_end`)
+                FROM `'._DB_PREFIX_.'date_range`
+            )');
+
         if (!$result['id_date_range'] || strtotime($result['time_end']) < strtotime(date('Y-m-d H:i:s'))) {
             // The default range is set to 1 day less 1 second (in seconds)
             $rangeSize = 86399;
@@ -54,8 +58,10 @@ class DateRangeCore extends ObjectModel
             $dateRange->time_start = date('Y-m-d');
             $dateRange->time_end = strftime('%Y-%m-%d %H:%M:%S', strtotime($dateRange->time_start) + $rangeSize);
             $dateRange->add();
+
             return $dateRange->id;
         }
+        
         return $result['id_date_range'];
     }
 }

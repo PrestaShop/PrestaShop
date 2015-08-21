@@ -61,6 +61,7 @@ class PaymentCCCore extends OrderPayment
     public function add($autodate = true, $nullValues = false)
     {
         Tools::displayAsDeprecated();
+
         return parent::add($autodate, $nullValues);
     }
 
@@ -74,7 +75,9 @@ class PaymentCCCore extends OrderPayment
     public static function getByOrderId($id_order)
     {
         Tools::displayAsDeprecated();
+
         $order = new Order($id_order);
+        
         return OrderPayment::getByOrderReference($order->reference);
     }
 }

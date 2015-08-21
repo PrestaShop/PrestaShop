@@ -115,11 +115,10 @@ class AddressFormatCore extends ObjectModel
      */
     protected function _checkValidateClassField($className, $fieldName, $isIdField)
     {
-        $isValide = false;
+        $isValid = false;
 
         if (!class_exists($className)) {
-            $this->_errorFormatList[] = Tools::displayError('This class name does not exist.').
-            ': '.$className;
+            $this->_errorFormatList[] = Tools::displayError('This class name does not exist.').": $className";
         } else {
             $obj = new $className();
             $reflect = new ReflectionObject($obj);
@@ -128,21 +127,21 @@ class AddressFormatCore extends ObjectModel
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
+
                 if (($propertyName == $fieldName) && ($isIdField ||
                         (!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName)))) {
-                    $isValide = true;
+                    $isValid = true;
                 }
             }
 
-            if (!$isValide) {
-                $this->_errorFormatList[] = Tools::displayError('This property does not exist in the class or is forbidden.').
-                ': '.$className.': '.$fieldName;
+            if (!$isValid) {
+                $this->_errorFormatList[] = Tools::displayError('This property does not exist in the class or is forbidden.').": $className: $fieldName";
             }
 
             unset($obj);
             unset($reflect);
         }
-        return $isValide;
+        return $isValid;
     }
 
     /*
@@ -158,25 +157,26 @@ class AddressFormatCore extends ObjectModel
 
         if ($associationName = explode(':', $patternName)) {
             $totalNameUsed = count($associationName);
+
             if ($totalNameUsed > 2) {
                 $this->_errorFormatList[] = Tools::displayError('This association has too many elements.');
             } elseif ($totalNameUsed == 1) {
                 $associationName[0] = strtolower($associationName[0]);
+
                 if (in_array($associationName[0], self::$forbiddenPropertyList) ||
                     !$this->_checkValidateClassField('Address', $associationName[0], false)) {
-                    $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
-                    $associationName[0];
+                    $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.$associationName[0];
                 }
             } elseif ($totalNameUsed == 2) {
+
                 if (empty($associationName[0]) || empty($associationName[1])) {
-                    $this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').': '.$patternName;
+                    $this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').": $patternName";
                 } else {
                     $associationName[0] = ucfirst($associationName[0]);
                     $associationName[1] = strtolower($associationName[1]);
 
                     if (in_array($associationName[0], self::$forbiddenClassList)) {
-                        $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
-                        $associationName[0];
+                        $this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.$associationName[0];
                     } else {
                         // Check if the id field name exist in the Address class
                         // Don't check this attribute on Address (no sense)
@@ -211,8 +211,7 @@ class AddressFormatCore extends ObjectModel
                                 $this->_checkLiableAssociation($patternName, $fieldsValidate);
                                 $usedKeyList[] = $patternName;
                             } else {
-                                $this->_errorFormatList[] = Tools::displayError('This key has already been used.').
-                                    ': '.$patternName;
+                                $this->_errorFormatList[] = Tools::displayError('This key has already been used.').": $patternName";
                             }
                         }
                     }
@@ -291,10 +290,13 @@ class AddressFormatCore extends ObjectModel
     {
         foreach ($orderedAddressField as &$line) {
             $cleanedLine = '';
+
             if (($keyList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
+
                 foreach ($keyList as $key) {
                     $cleanedLine .= $key.' ';
                 }
+
                 $cleanedLine = trim($cleanedLine);
                 $line = $cleanedLine;
             }
@@ -313,6 +315,7 @@ class AddressFormatCore extends ObjectModel
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
         }
+
         $tab = array();
         $temporyObject = array();
 
@@ -337,6 +340,7 @@ class AddressFormatCore extends ObjectModel
                                     if (!isset($temporyObject[$associateName[0]])) {
                                         $temporyObject[$associateName[0]] = new $associateName[0]($address->{$idFieldName});
                                     }
+
                                     if ($temporyObject[$associateName[0]]) {
                                         $tab[$pattern] = (is_array($temporyObject[$associateName[0]]->{$associateName[1]})) ?
                                             ((isset($temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang])) ?
@@ -352,10 +356,12 @@ class AddressFormatCore extends ObjectModel
             }
         }
         AddressFormat::cleanOrderedAddress($addressFormat);
+
         // Free the instanciate objects
         foreach ($temporyObject as &$object) {
             unset($object);
         }
+
         return $tab;
     }
 
@@ -375,9 +381,11 @@ class AddressFormatCore extends ObjectModel
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
 
         $addressText = '';
+
         foreach ($addressFields as $line) {
             if (($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
                 $tmpText = '';
+
                 foreach ($patternsList as $pattern) {
                     if ((!array_key_exists('avoid', $patternRules)) ||
                                 (array_key_exists('avoid', $patternRules) && !in_array($pattern, $patternRules['avoid']))) {
@@ -387,6 +395,7 @@ class AddressFormatCore extends ObjectModel
                                     $addressFormatedValues[$pattern]).$separator) : '';
                     }
                 }
+
                 $tmpText = trim($tmpText);
                 $addressText .= (!empty($tmpText)) ? $tmpText.$newLine: '';
             }
@@ -423,16 +432,20 @@ class AddressFormatCore extends ObjectModel
 
             // Check if the property is accessible
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
+
                 if ((!in_array($propertyName, AddressFormat::$forbiddenPropertyList)) &&
                         (!preg_match('#id|id_\w#', $propertyName))) {
                     $propertyList[] = $propertyName;
                 }
             }
+
             unset($object);
             unset($reflect);
         }
+
         return $propertyList;
     }
 
@@ -449,16 +462,20 @@ class AddressFormatCore extends ObjectModel
 
             // Get all the name object liable to the Address class
             $publicProperties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+
             foreach ($publicProperties as $property) {
                 $propertyName = $property->getName();
+
                 if (preg_match('#id_\w#', $propertyName) && strlen($propertyName) > 3) {
                     $nameObject = ucfirst(substr($propertyName, 3));
+
                     if (!in_array($nameObject, self::$forbiddenClassList) &&
                             class_exists($nameObject)) {
                         $objectList[$nameObject] = new $nameObject();
                     }
                 }
             }
+
             unset($object);
             unset($reflect);
         }
@@ -477,18 +494,22 @@ class AddressFormatCore extends ObjectModel
     {
         $out = array();
         $field_set = explode("\n", AddressFormat::getAddressCountryFormat($id_country));
+
         foreach ($field_set as $field_item) {
             if ($split_all) {
                 if ($cleaned) {
-                    $keyList = ($cleaned) ? preg_split(self::_CLEANING_REGEX_, $field_item, -1, PREG_SPLIT_NO_EMPTY) :
-                        explode(' ', $field_item);
+                    $keyList = preg_split(self::_CLEANING_REGEX_, $field_item, -1, PREG_SPLIT_NO_EMPTY);
+                } else {
+                    $keyList = explode(' ', $field_item);
                 }
+
                 foreach ($keyList as $word_item) {
                     $out[] = trim($word_item);
                 }
+            } elseif ($cleaned) {
+                $out[] = implode(' ', preg_split(self::_CLEANING_REGEX_, trim($field_item), -1, PREG_SPLIT_NO_EMPTY));
             } else {
-                $out[] = ($cleaned) ? implode(' ', preg_split(self::_CLEANING_REGEX_, trim($field_item), -1, PREG_SPLIT_NO_EMPTY))
-                    : trim($field_item);
+                $out[] = trim($field_item);
             }
         }
         return $out;
@@ -508,9 +529,12 @@ class AddressFormatCore extends ObjectModel
 
             $reflect = new ReflectionObject($address);
             $public_properties = $reflect->getProperties(ReflectionProperty::IS_PUBLIC);
+
             foreach ($public_properties as $property) {
-                if (isset($address->{$property->getName()})) {
-                    $layoutData['object'][$property->getName()] = $address->{$property->getName()};
+                $name = $property->getName();
+
+                if (isset($address->{$name})) {
+                    $layoutData['object'][$name] = $address->{$name};
                 }
             }
         }
@@ -529,9 +553,8 @@ class AddressFormatCore extends ObjectModel
 
         $tmp_obj = new AddressFormat();
         $tmp_obj->id_country = $id_country;
-        $out = $tmp_obj->getFormat($tmp_obj->id_country);
-        unset($tmp_obj);
-        return $out;
+
+        return $tmp_obj->getFormat($tmp_obj->id_country);
     }
 
     /**
@@ -543,9 +566,11 @@ class AddressFormatCore extends ObjectModel
     public function getFormat($id_country)
     {
         $out = $this->_getFormatDB($id_country);
+
         if (empty($out)) {
-            $out = $this->_getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
+            return $this->_getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
+
         return $out;
     }
 
@@ -553,19 +578,24 @@ class AddressFormatCore extends ObjectModel
     {
         if (!Cache::isStored('AddressFormat::_getFormatDB'.$id_country)) {
             $format = Db::getInstance()->getValue('
-			SELECT format
-			FROM `'._DB_PREFIX_.$this->def['table'].'`
-			WHERE `id_country` = '.(int)$id_country);
+    			SELECT format
+    			FROM `'._DB_PREFIX_.$this->def['table'].'`
+    			WHERE `id_country` = '.(int)$id_country);
+
             $format = trim($format);
+
             Cache::store('AddressFormat::_getFormatDB'.$id_country, $format);
+
             return $format;
         }
+
         return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
     }
 
     public static function getFieldsRequired()
     {
         $address = new Address;
+        
         return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
     }
 }
