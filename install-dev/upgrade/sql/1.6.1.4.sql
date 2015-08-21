@@ -213,6 +213,4 @@ UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
 ALTER IGNORE TABLE `PREFIX_specific_price` DROP KEY `id_product_2`;
 ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
 
-ALTER TABLE  `PREFIX_currency` DROP  `iso_code_num` ,DROP  `sign` ,DROP  `blank` ,DROP  `format` ,DROP  `decimals` ;
-
 INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL ,  'PS_ACTIVE_CRONJOB_EXCHANGE_RATE',  '0',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00');
