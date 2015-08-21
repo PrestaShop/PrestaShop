@@ -27,11 +27,8 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
 
 use Exception;
-
 use PHPUnit_Framework_TestCase;
-
 use Core_Foundation_IoC_Container as Container;
-
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;

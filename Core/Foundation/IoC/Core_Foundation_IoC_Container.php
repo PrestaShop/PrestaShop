@@ -108,7 +108,7 @@ class Core_Foundation_IoC_Container
                 $paramClass = $param->getClass();
                 if ($paramClass) {
                     $args[] = $this->doMake($param->getClass()->getName(), $alreadySeen);
-                } else if ($param->isDefaultValueAvailable()) {
+                } elseif ($param->isDefaultValueAvailable()) {
                     $args[] = $param->getDefaultValue();
                 } else {
                     throw new Core_Foundation_IoC_Exception(sprintf('Cannot build a `%s`.', $className));
@@ -149,7 +149,7 @@ class Core_Foundation_IoC_Container
 
             if (is_callable($constructor)) {
                 $service = call_user_func($constructor);
-            } else if (!is_string($constructor)) {
+            } elseif (!is_string($constructor)) {
                 // user already provided the value, no need to construct it.
                 $service = $constructor;
             } else {

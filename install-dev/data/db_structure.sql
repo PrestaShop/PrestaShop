@@ -627,7 +627,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `id_customer_message` int(10) unsigned NOT NULL auto_increment,
   `id_customer_thread` int(11) DEFAULT NULL,
   `id_employee` int(10) unsigned DEFAULT NULL,
-  `message` text NOT NULL,
+  `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address`  varchar(16) DEFAULT NULL,
   `user_agent` varchar(128) DEFAULT NULL,
@@ -1235,6 +1235,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `total_shipping_price_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `purchase_supplier_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_product_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (`product_id`),
@@ -1796,7 +1797,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`),
-  UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`)
+  UNIQUE KEY `id_product_2` (`id_cart`, `id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (

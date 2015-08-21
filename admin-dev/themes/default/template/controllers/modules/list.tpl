@@ -42,7 +42,7 @@
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
+						<img width="57" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
 						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName|escape:'html':'UTF-8'}">
@@ -81,7 +81,7 @@
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
 									<a class="btn btn-default _blank" href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}">
-										<i class="icon-shopping-cart"></i> &nbsp;{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
+										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->price)}{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency)}{displayPrice price=$module->price currency=$module->id_currency}{/if}{/if}
 									</a>
 								{else}
 									{if isset($module->id) && $module->id gt 0}

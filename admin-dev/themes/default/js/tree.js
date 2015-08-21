@@ -13,6 +13,7 @@ Tree.prototype =
 	{
 		var that = $(this);
 		var name = this.$element.parent().find('ul.tree input').first().attr('name');
+		var idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").unbind('click');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
 			function ()
@@ -95,17 +96,10 @@ Tree.prototype =
 					}
 				});
 			}
-			if (name != 'id_parent')
+			if (typeof(treeClickFunc) != 'undefined')
 			{
 				this.$element.find(":input[type=radio]").unbind('click');
-				this.$element.find(":input[type=radio]").click(
-					function()
-					{
-						location.href = location.href.replace(
-							/&id_category=[0-9]*/, "")+"&id_category="
-							+$(this).val();
-					}
-				);
+				this.$element.find(":input[type=radio]").click(treeClickFunc);
 			}
 		}
 
@@ -144,7 +138,8 @@ Tree.prototype =
 
 	expandAll : function($speed)
 	{
-		if (typeof(idTree) != 'undefined' && typeof(full_loaded) == 'undefined')
+		var idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+		if (typeof(idTree) != 'undefined' && !$('#'+idTree).hasClass('full_loaded'))
 		{
 			var selected = [];
 			that = this;
@@ -154,13 +149,14 @@ Tree.prototype =
 					selected.push($(this).val());
 				}
 			);
-			var name = $('#'+idTree).parent().find('ul.tree input').first().attr('name');
-			var inputType = $('#'+idTree).parent().find('ul.tree input').first().attr('type');
+			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
+			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
 			var useCheckBox = 0;
 			if (inputType == 'checkbox')
 			{
 				useCheckBox = 1;
 			}
+
 			$.get(
 				'ajax-tab.php',
 				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected, inputName:name,useCheckBox:useCheckBox},
@@ -175,7 +171,7 @@ Tree.prototype =
 								.removeClass("icon-folder-close")
 								.addClass("icon-folder-open");
 							$(this).parent().parent().children("ul.tree").show($speed);
-							full_loaded = true;
+							$('#'+idTree).addClass('full_loaded');
 						}
 					);
 				}

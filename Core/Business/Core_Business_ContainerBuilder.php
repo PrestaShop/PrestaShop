@@ -26,12 +26,12 @@
 
 class Core_Business_ContainerBuilder
 {
-	/**
-	 * Construct PrestaShop Core Service container
-	 * @return Core_Foundation_IoC_Container
-	 * @throws Core_Foundation_IoC_Exception
-	 */
-	public function build()
+    /**
+     * Construct PrestaShop Core Service container
+     * @return Core_Foundation_IoC_Container
+     * @throws Core_Foundation_IoC_Exception
+     */
+    public function build()
     {
         $container = new Core_Foundation_IoC_Container;
 

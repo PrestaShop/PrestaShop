@@ -209,7 +209,7 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoi
 
 UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
 
-ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
+ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_cart`, `id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_INVOICE_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());

@@ -77,7 +77,7 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase
                 $compiler->extends_uid[$uid] = true;
             }
         }
-        unset ($_template);
+        unset($_template);
         $compiler->inheritance_child = true;
         $compiler->lex->yypushstate(Smarty_Internal_Templatelexer::CHILDBODY);
         return '';

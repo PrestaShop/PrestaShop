@@ -382,7 +382,7 @@ class Smarty_Internal_Compile_Private_Child_Block extends Smarty_Internal_Compil
             $compiler->template->template_resource = trim($_attr['resource'], "'");
         }
         // source object
-        unset ($compiler->template->source);
+        unset($compiler->template->source);
         $exists = $compiler->template->source->exists;
 
         // must merge includes

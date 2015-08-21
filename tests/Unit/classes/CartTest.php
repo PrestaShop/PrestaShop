@@ -27,18 +27,14 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use Exception;
-
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use Adapter_ProductPriceCalculator;
 use Adapter_AddressFactory;
 use Core_Business_ConfigurationInterface;
-
 use Address;
 use Cart;
 use Order;
 use Tools;
-
 use Phake;
 
 class FakeProduct
@@ -115,7 +111,7 @@ class CartTest extends UnitTestCase
             'PS_USE_ECOTAX' => 0,
             'PS_ROUND_TYPE' => $type,
             'PS_ECOTAX_TAX_RULES_GROUP_ID' => 0,
-			'PS_ATCP_SHIPWRAP' => false
+            'PS_ATCP_SHIPWRAP' => false
         ));
     }
 

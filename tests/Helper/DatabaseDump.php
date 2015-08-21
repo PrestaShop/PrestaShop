@@ -46,13 +46,10 @@ class DatabaseDump
     {
         $host_and_maybe_port = explode(':', _DB_SERVER_);
 
-        if (count($host_and_maybe_port) === 1)
-        {
+        if (count($host_and_maybe_port) === 1) {
             $this->host = $host_and_maybe_port[0];
             $this->port = 3306;
-        }
-        else if (count($host_and_maybe_port) === 2)
-        {
+        } elseif (count($host_and_maybe_port) === 2) {
             $this->host = $host_and_maybe_port[0];
             $this->port = $host_and_maybe_port[1];
         }
@@ -67,8 +64,7 @@ class DatabaseDump
      */
     public function __destruct()
     {
-        if ($this->dumpFile && file_exists($this->dumpFile))
-        {
+        if ($this->dumpFile && file_exists($this->dumpFile)) {
             unlink($this->dumpFile);
             $this->dumpFile = null;
         }
@@ -83,11 +79,10 @@ class DatabaseDump
             escapeshellarg($executable),
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
-			'-h', escapeshellarg($this->host),
+            '-h', escapeshellarg($this->host),
         );
 
-        if ($this->password)
-        {
+        if ($this->password) {
             $parts[] = '-p'.escapeshellarg($this->password);
         }
 
@@ -105,8 +100,7 @@ class DatabaseDump
         $ret = 1;
         exec($command, $output, $ret);
 
-        if ($ret !== 0)
-        {
+        if ($ret !== 0) {
             throw new Exception(sprintf('Unable to exec command: `%s`, missing a binary?', $command));
         }
 

@@ -218,7 +218,7 @@ class FromProcessor extends AbstractProcessor {
                         $parseInfo['table'] = $token;
                         $parseInfo['no_quotes'] = $this->revokeQuotation($token);
                     }
-                } else if ($parseInfo['token_count'] === 1) {
+                } elseif ($parseInfo['token_count'] === 1) {
                     $parseInfo['alias'] = array('as' => false, 'name' => trim($token),
                                                 'no_quotes' => $this->revokeQuotation($token),
                                                 'base_expr' => trim($token));

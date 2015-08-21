@@ -808,9 +808,9 @@ function updatePrice()
 	}
 
 	if (noTaxForThisProduct || customerGroupWithoutTax)
-		updateDiscountTable(productBasePriceTaxExcl);
+		updateDiscountTable(priceWithDiscountsWithoutTax);
 	else
-		updateDiscountTable(productBasePriceTaxIncl);
+		updateDiscountTable(priceWithDiscountsWithTax);
 }
 
 //update display of the large image
@@ -846,26 +846,22 @@ function displayImage(domAAroundImgThumb, no_animation)
 function displayDiscounts(combination)
 {
 	// Tables & rows selection
-	var quantityDiscountTable = $('#quantityDiscount');
-	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
-	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
+	var quantityDiscountTable = $('#quantityDiscount').parent();
+	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
 
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
-	if (combinationsSpecificQuantityDiscount.length != 0)
-	{
+	if (combinationsSpecificQuantityDiscount.length != 0) {
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_'+combination).hide();
 		combinationsSpecificQuantityDiscount.show();
-		allQuantityDiscount.hide();
-		quantityDiscountTable.show();
-	}
-	else if(allQuantityDiscount.length != 0)
-	{
 		allQuantityDiscount.show();
-		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
-	}
-	else
-	{
+	} else if(allQuantityDiscount.length != 0) {
+		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
+		allQuantityDiscount.show();
+		quantityDiscountTable.show();
+	} else {
 		quantityDiscountTable.hide();
 	}
 }
@@ -1096,7 +1092,10 @@ function checkUrl()
 
 			var len = tabParams.length;
 			for (var i=0; i<len; i++)
-				tabValues.push(tabParams[i].split(attribute_anchor_separator));
+			{
+				tabParams[i] = tabParams[i].replace(attribute_anchor_separator, '-');
+				tabValues.push(tabParams[i].split('-'));
+			}
 
 			// fill html with values
 			$('.color_pick').removeClass('selected').parent().parent().children().removeClass('selected');

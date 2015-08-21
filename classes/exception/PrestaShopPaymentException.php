@@ -29,5 +29,4 @@
  */
 class PrestaShopPaymentExceptionCore extends PrestaShopException
 {
-
 }

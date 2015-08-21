@@ -27,8 +27,8 @@
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php');
 
 try {
-	require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');
-	InstallControllerHttp::execute();
+    require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');
+    InstallControllerHttp::execute();
 } catch (PrestashopInstallerException $e) {
-	$e->displayMessage();
+    $e->displayMessage();
 }

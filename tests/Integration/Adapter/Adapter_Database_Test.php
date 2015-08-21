@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-
 use Adapter_Database;
 
 class Adapter_Database_Test extends IntegrationTestCase
@@ -39,7 +38,7 @@ class Adapter_Database_Test extends IntegrationTestCase
 
     public function test_values_are_escaped_dataProvider()
     {
-        return array (
+        return array(
             array( 'hello'       , 'hello'    ),
             array( '\\\'inject'  , '\'inject' ),
             array( '\\"inject'   , '"inject'  ),

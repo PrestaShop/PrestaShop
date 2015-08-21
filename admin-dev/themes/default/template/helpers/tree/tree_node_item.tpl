@@ -24,8 +24,8 @@
 *}
 
 <li class="tree-item">
-	<label class="tree-item-name">
+	<span class="tree-item-name">
 		<i class="tree-dot"></i>
-		{$node['name']}
-	</label>
+		<label class="tree-toggler">{$node['name']}</label>
+	</span>
 </li>

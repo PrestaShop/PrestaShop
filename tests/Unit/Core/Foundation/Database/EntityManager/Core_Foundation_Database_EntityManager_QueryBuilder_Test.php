@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database\EntityManager;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use Core_Foundation_Database_EntityManager_QueryBuilder;
-
 use Phake;
 
 class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestCase

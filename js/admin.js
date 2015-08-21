@@ -803,11 +803,8 @@ $(document).ready(function()
 		});
 
 		$(document.body).find("select[name*='"+list_id+"Filter']").each(function() {
-			if ($(this).val() != '')
-			{
-				empty_filters = false;
-				return false;
-			}
+			empty_filters = false;
+			return false;
 		});
 
 		if (empty_filters)
@@ -949,6 +946,9 @@ $(document).ready(function()
                 $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
             }
         });
+    }
+    if ($('.kpi-container').length) {
+        refresh_kpis();
     }
 });
 
@@ -1526,8 +1526,14 @@ function parseDate(date){
 
 function refresh_kpis()
 {
-	$('.box-stats').each(function(){
-		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	$('.box-stats').each(function() {
+		if ($(this).attr('id')) {
+			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
+
+			if (typeof window[functionName] === 'function') {
+				window[functionName]();
+			}
+		}
 	});
 }
 
