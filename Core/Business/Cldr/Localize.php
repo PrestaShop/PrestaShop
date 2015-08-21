@@ -155,8 +155,7 @@ class Localize
             $locale = self::DEFAULT_LOCALE;
         }
 
-        $locale = self::canonicalize($locale);
-        return (string)$locale;
+        return (string)self::canonicalize($locale);
     }
 
     public static function getRegion($locale = null)
