@@ -65,7 +65,7 @@ class AdminCurrenciesControllerCore extends AdminController
         //retrieve datas list
         $this->getList($this->context->language->id);
 
-        foreach($this->_list as $k=>$v){
+        foreach ($this->_list as $k => $v) {
             $currency = $this->cldr->getCurrency($this->_list[$k]['iso_code']);
 
             $this->_list[$k]['name'] = ucfirst($currency['name']);
@@ -148,18 +148,18 @@ class AdminCurrenciesControllerCore extends AdminController
         }
 
         $this->fields_form['submit'] = array(
-            'title' => $this->l('Save'),
+            'title' => $this->l('Save')
         );
 
         //form preselect : define the default currency or object value
-        if(Tools::getValue('id_currency')){
+        if (Tools::getValue('id_currency')) {
             $currency = new Currency((int)Tools::getValue('id_currency'));
-            if($currency) {
+            if ($currency) {
                 $this->fields_value = array(
                     'iso_code' => $currency->iso_code
                 );
             }
-        }else{
+        } else {
             $this->fields_value = array(
                 'iso_code' => $this->cldr->getCurrency()['code']
             );
@@ -302,7 +302,7 @@ class AdminCurrenciesControllerCore extends AdminController
     public function ajaxProcessCronjobLiveExchangeRate()
     {
         if (!Module::isInstalled('cronjobs')) {
-            die(Tools::jsonEncode(array()));
+            die(json_encode(array()));
         }
 
         $enable = (int)Tools::getValue('enable');
@@ -332,6 +332,6 @@ class AdminCurrenciesControllerCore extends AdminController
             }
         }
 
-        die(Tools::jsonEncode(array()));
+        die(json_encode(array()));
     }
 }

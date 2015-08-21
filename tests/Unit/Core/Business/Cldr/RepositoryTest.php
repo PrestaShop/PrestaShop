@@ -53,16 +53,12 @@ class RepositoryTest extends UnitTestCase
 
     public static function setUpBeforeClass()
     {
-        if (file_exists(_PS_CACHE_DIR_.'cldr-test')) {
-            self::rrmdir(_PS_CACHE_DIR_.'cldr-test');
-        }
+        \Tools::deleteDirectory(_PS_CACHE_DIR_.'cldr-test');
     }
 
     public static function tearDownAfterClass()
     {
-        if (file_exists(_PS_CACHE_DIR_.'cldr-test')) {
-            self::rrmdir(_PS_CACHE_DIR_.'cldr-test');
-        }
+        \Tools::deleteDirectory(_PS_CACHE_DIR_.'cldr-test');
     }
 
     public function testCacheFolderIsCreated()
@@ -99,7 +95,6 @@ class RepositoryTest extends UnitTestCase
 
     public function testGetCurrencyWithoutCode()
     {
-
         $territory = $this->repository->territories[$this->region];
 
         $this->assertEquals($territory->code, 'FR');
@@ -116,7 +111,6 @@ class RepositoryTest extends UnitTestCase
 
     public function testGetCurrencyWithCode()
     {
-
         $code = 'EUR';
 
         $currency = new Currency($this->repository, $code);
@@ -140,23 +134,5 @@ class RepositoryTest extends UnitTestCase
         }
 
         $this->assertCount(177, $datas);
-    }
-
-    private static function rrmdir($dir)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir") {
-                        rrmdir($dir."/".$object);
-                    } else {
-                        unlink($dir."/".$object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
     }
 }

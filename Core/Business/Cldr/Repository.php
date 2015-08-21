@@ -33,7 +33,6 @@ use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\Numbers;
 use ICanBoogie\CLDR\NumberFormatter;
 use ICanBoogie\CLDR\Repository as cldrRepository;
-
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
 
 class Repository
@@ -56,7 +55,6 @@ class Repository
         if (!is_dir($this->cldrCacheFolder)) {
             try {
                 mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas', 0777, true);
-
             } catch (\Exception $e) {
                 throw new \Exception('Cldr cache folder can\'t be created');
             }
@@ -134,14 +132,14 @@ class Repository
     {
         $currencies = $this->repository->supplemental['codeMappings'];
         $datas = array();
-        foreach ($currencies as $k => $v) {
-            if ($k === 'XTS' ||  strlen($k)!==3) {
+        foreach ($currencies as $currency_code => $currency_data) {
+            if ($currency_code === 'XTS' || strlen($currency_code) !== 3) {
                 continue;
             }
-            $currency = $this->getCurrency($k);
+            $currency = $this->getCurrency($currency_code);
             $datas[] = array(
-                'name' => ucfirst($currency['name']).' ('.$k.')',
-                'code' => $k,
+                'name' => ucfirst($currency['name']).' ('.$currency_code.')',
+                'code' => $currency_code,
                 'iso_code' => $currency['iso_code']
             );
         }
@@ -259,7 +257,7 @@ class Repository
      */
     private function isCurrencyValid($str)
     {
-        if ($str === 'XTS' ||  strlen($str)!==3 || empty($this->repository->supplemental['codeMappings'][$str])) {
+        if ($str === 'XTS' || strlen($str) !==3 || empty($this->repository->supplemental['codeMappings'][$str])) {
             return false;
         }
 

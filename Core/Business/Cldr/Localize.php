@@ -206,10 +206,6 @@ class Localize
             }
         }
 
-        if ($result) {
-            return implode('_', $result);
-        }
-
-        return $result;
+        return $result ? implode('_', $result) : $result;
     }
 }

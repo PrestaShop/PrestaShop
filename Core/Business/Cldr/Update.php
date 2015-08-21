@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Cldr;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
 use PrestaShop\PrestaShop\Core\Foundation\Net\Curl;
-use PrestaShop\PrestaShop\Core\Foundation\Compression\JSONMin;
 
 class Update extends Repository
 {
@@ -53,29 +52,7 @@ class Update extends Repository
 
     public function __destruct()
     {
-        //$this->minifyJsonFiles();
         umask($this->oldUmask);
-    }
-
-    /*
-     * for all new file, compress JSON
-     */
-    private function minifyJsonFiles()
-    {
-        if (empty($this->newDatasFile) || !is_array($this->newDatasFile)) {
-            return;
-        }
-
-        foreach ($this->newDatasFile as $file) {
-            if (!is_writable($file)) {
-                throw new \Exception('Cldr JSON files are not writable');
-            }
-            $json = file_get_contents($file);
-            $jsonMin = JSONMin::minify($json);
-            $fp = fopen($file, 'w+');
-            fwrite($fp, $jsonMin);
-            fclose($fp);
-        }
     }
 
     /*

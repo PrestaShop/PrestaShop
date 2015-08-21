@@ -899,7 +899,7 @@ class AdminTranslationsControllerCore extends AdminController
                             //fetch cldr datas for the new imported locale
                             $languageCode = explode('-', Language::getLanguageCodeByIso($arr_import_lang[0]));
                             $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                            $cldrUpdate->fetchLocale($languageCode[0].'-'.strtoupper($languageCode[1]));
+                            $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
 
                             $this->redirect(false, (isset($conf) ? $conf : '15'));
                         }
