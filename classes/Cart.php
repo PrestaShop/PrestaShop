@@ -413,7 +413,7 @@ class CartCore extends ObjectModel
      */
     public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
     {
-        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-ids';
+        $cache_key = 'Cart::getOrderedCartRulesIds_'.$this->id.'-'.$filter.'-ids';
         if (!Cache::isStored($cache_key)) {
             $result = Db::getInstance()->executeS('
 				SELECT cr.`id_cart_rule`
