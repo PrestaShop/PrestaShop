@@ -1249,8 +1249,7 @@ class AdminTranslationsControllerCore extends AdminController
                     // Parsing PDF file
                     if ($type_file == 'php') {
                         $regex = array(
-                            '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
-                            '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
+                            '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U'
                         );
                     } else {
                         $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
