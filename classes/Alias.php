@@ -128,8 +128,8 @@ class AliasCore extends ObjectModel
      */
     public static function aliasExists($id_alias)
     {
-        $row = Db::getInstance()->getRow('
-			SELECT `id_alias`
+        $row = Db::getInstance()->getRow(
+            'SELECT `id_alias`
 			FROM '._DB_PREFIX_.'alias a
 			WHERE a.`id_alias` = '.(int)$id_alias
         );

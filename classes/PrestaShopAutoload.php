@@ -123,9 +123,9 @@ class PrestaShopAutoload
                     require_once($class_dir.$this->index[$classname]['path']);
                 }
             }
-        }
-        // Call directly ProductCore, ShopCore class
-        elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path']) {
+        } elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path']) {
+            // Call directly ProductCore, ShopCore class
+
             require_once($this->root_dir.$this->index[$classname]['path']);
         }
     }
@@ -162,9 +162,9 @@ class PrestaShopAutoload
             } else {
                 @chmod($filename, 0666);
             }
-        }
-        // $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
-        else {
+        } else {
+            // $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
+
             Tools::error_log('Cannot write temporary file '.$filename_tmp);
         }
         $this->index = $classes;

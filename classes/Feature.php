@@ -61,8 +61,8 @@ class FeatureCore extends ObjectModel
      */
     public static function getFeature($id_lang, $id_feature)
     {
-        return Db::getInstance()->getRow('
-			SELECT *
+        return Db::getInstance()->getRow(
+            'SELECT *
 			FROM `'._DB_PREFIX_.'feature` f
 			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
 				ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = '.(int)$id_lang.')
@@ -128,13 +128,13 @@ class FeatureCore extends ObjectModel
 			WHERE
 				`'._DB_PREFIX_.'feature_value`.`id_feature` = '.(int)$this->id.'
 		');
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_value`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'feature_value`
 			WHERE `id_feature` = '.(int)$this->id
         );
         /* Also delete related products */
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_product`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'feature_product`
 			WHERE `id_feature` = '.(int)$this->id
         );
 
@@ -280,8 +280,8 @@ class FeatureCore extends ObjectModel
      */
     public function updatePosition($way, $position, $id_feature = null)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT `position`, `id_feature`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT `position`, `id_feature`
 			FROM `'._DB_PREFIX_.'feature`
 			WHERE `id_feature` = '.(int)($id_feature ? $id_feature : $this->id).'
 			ORDER BY `position` ASC'

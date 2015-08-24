@@ -229,8 +229,7 @@ class UpgraderCore
 
         if (strpos($path, 'mails/') !== false) {
             $this->changed_files['mail'][] = $path;
-        } elseif (
-            strpos($path, '/en.php') !== false
+        } elseif (strpos($path, '/en.php') !== false
             || strpos($path, '/fr.php') !== false
             || strpos($path, '/es.php') !== false
             || strpos($path, '/it.php') !== false

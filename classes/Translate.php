@@ -185,9 +185,9 @@ class TranslateCore
                 $ret = stripslashes($_MODULES[$current_key]);
             } elseif (!empty($_MODULES[$default_key])) {
                 $ret = stripslashes($_MODULES[$default_key]);
-            }
-            // if translation was not found in module, look for it in AdminController or Helpers
-            elseif (!empty($_LANGADM)) {
+            } elseif (!empty($_LANGADM)) {
+                // if translation was not found in module, look for it in AdminController or Helpers
+
                 $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
             } else {
                 $ret = stripslashes($string);

@@ -170,8 +170,8 @@ class SpecificPriceRuleCore extends ObjectModel
 
     public function getConditions()
     {
-        $conditions = Db::getInstance()->executeS('
-			SELECT g.*, c.*
+        $conditions = Db::getInstance()->executeS(
+            'SELECT g.*, c.*
 			FROM '._DB_PREFIX_.'specific_price_rule_condition_group g
 			LEFT JOIN '._DB_PREFIX_.'specific_price_rule_condition c
 				ON (c.id_specific_price_rule_condition_group = g.id_specific_price_rule_condition_group)

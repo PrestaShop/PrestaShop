@@ -469,8 +469,8 @@ class CustomerCore extends ObjectModel
      */
     public static function getAddressesTotalById($id_customer)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(`id_address`)
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(`id_address`)
 			FROM `'._DB_PREFIX_.'address`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `deleted` = 0'
@@ -710,8 +710,8 @@ class CustomerCore extends ObjectModel
         }
 
         if (!isset(self::$_defaultGroupId[(int)$id_customer])) {
-            self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
-				SELECT `id_default_group`
+            self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue(
+                'SELECT `id_default_group`
 				FROM `'._DB_PREFIX_.'customer`
 				WHERE `id_customer` = '.(int)$id_customer
             );
@@ -725,8 +725,8 @@ class CustomerCore extends ObjectModel
             $cart = Context::getContext()->cart;
         }
         if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
-            $id_address = (int)Db::getInstance()->getValue('
-				SELECT `id_address`
+            $id_address = (int)Db::getInstance()->getValue(
+                'SELECT `id_address`
 				FROM `'._DB_PREFIX_.'address`
 				WHERE `id_customer` = '.(int)$id_customer.'
 				AND `deleted` = 0 ORDER BY `id_address`'
@@ -896,8 +896,8 @@ class CustomerCore extends ObjectModel
 
     public function getWsGroups()
     {
-        return Db::getInstance()->executeS('
-			SELECT cg.`id_group` as id
+        return Db::getInstance()->executeS(
+            'SELECT cg.`id_group` as id
 			FROM '._DB_PREFIX_.'customer_group cg
 			'.Shop::addSqlAssociation('group', 'cg').'
 			WHERE cg.`id_customer` = '.(int)$this->id

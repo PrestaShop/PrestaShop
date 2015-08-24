@@ -587,8 +587,8 @@ class CMSCategoryCore extends ObjectModel
 
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent`
 			FROM `'._DB_PREFIX_.'cms_category` cp
 			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
 			ORDER BY cp.`position` ASC'

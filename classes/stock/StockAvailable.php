@@ -190,17 +190,15 @@ class StockAvailableCore extends ObjectModel
 
                     $product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
 
-                    Hook::exec('actionUpdateQuantity',
-                                    array(
-                                        'id_product' => $id_product,
-                                        'id_product_attribute' => 0,
-                                        'quantity' => $product_quantity,
-                                        'id_shop' => $id_shop
-                                        )
-                    );
-                }
-                // else this product has attributes, hence loops on $ids_product_attribute
-                else {
+                    Hook::exec('actionUpdateQuantity', array(
+                        'id_product' => $id_product,
+                        'id_product_attribute' => 0,
+                        'quantity' => $product_quantity,
+                        'id_shop' => $id_shop
+                    ));
+                } else {
+                    // else this product has attributes, hence loops on $ids_product_attribute
+
                     foreach ($ids_product_attribute as $id_product_attribute) {
                         $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
                         $allowed_warehouse_for_combination_clean = array();
@@ -245,14 +243,12 @@ class StockAvailableCore extends ObjectModel
 
                         $product_quantity += $quantity;
 
-                        Hook::exec('actionUpdateQuantity',
-                                    array(
-                                        'id_product' => $id_product,
-                                        'id_product_attribute' => $id_product_attribute,
-                                        'quantity' => $quantity,
-                                        'id_shop' => $id_shop
-                                    )
-                        );
+                        Hook::exec('actionUpdateQuantity', array(
+                            'id_product' => $id_product,
+                            'id_product_attribute' => $id_product_attribute,
+                            'quantity' => $quantity,
+                            'id_shop' => $id_shop
+                        ));
                     }
                 }
                 // updates
@@ -437,8 +433,8 @@ class StockAvailableCore extends ObjectModel
             }
         }
 
-        $total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT SUM(quantity) as quantity
+        $total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT SUM(quantity) as quantity
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id_product.'
 			AND id_product_attribute <> 0 '.
@@ -528,13 +524,11 @@ class StockAvailableCore extends ObjectModel
                 $stock_available->add();
             }
 
-            Hook::exec('actionUpdateQuantity',
-                array(
-                    'id_product' => $id_product,
-                    'id_product_attribute' => $id_product_attribute,
-                    'quantity' => $stock_available->quantity
-                )
-            );
+            Hook::exec('actionUpdateQuantity', array(
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'quantity' => $stock_available->quantity
+            ));
         }
 
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');

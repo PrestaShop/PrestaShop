@@ -185,8 +185,8 @@ class CombinationCore extends ObjectModel
                 $sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
             }
 
-            $result = Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
+            $result = Db::getInstance()->execute(
+                'INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sql_values)
             );
         }
@@ -239,8 +239,8 @@ class CombinationCore extends ObjectModel
             }
 
             if (is_array($sql_values) && count($sql_values)) {
-                Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
+                Db::getInstance()->execute(
+                    'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES '.implode(',', $sql_values)
                 );
             }
@@ -335,8 +335,8 @@ class CombinationCore extends ObjectModel
      */
     public static function getPrice($id_product_attribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT product_attribute_shop.`price`
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT product_attribute_shop.`price`
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product_attribute` = '.(int)$id_product_attribute

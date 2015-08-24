@@ -172,17 +172,20 @@ class ContextCore
                     $this->mobile_device = true;
                 } else {
                     switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
-                        case 1: // Only for mobile device
+                        case 1:
+                            // Only for mobile device
                             if ($this->isMobile() && !$this->isTablet()) {
                                 $this->mobile_device = true;
                             }
                             break;
-                        case 2: // Only for touchpads
+                        case 2:
+                            // Only for touchpads
                             if ($this->isTablet() && !$this->isMobile()) {
                                 $this->mobile_device = true;
                             }
                             break;
-                        case 3: // For touchpad or mobile devices
+                        case 3:
+                            // For touchpad or mobile devices
                             if ($this->isMobile() || $this->isTablet()) {
                                 $this->mobile_device = true;
                             }

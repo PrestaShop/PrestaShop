@@ -271,7 +271,8 @@ class TreeCore
     {
         if (!isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(
-                self::DEFAULT_TEMPLATE_DIRECTORY);
+                self::DEFAULT_TEMPLATE_DIRECTORY
+            );
         }
 
         return $this->_template_directory;
@@ -283,12 +284,14 @@ class TreeCore
             $controller_name = strtolower($matches[0][1]);
         }
 
-        if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
+        if ($this->getContext()->controller instanceof ModuleAdminController
+            && isset($controller_name) && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
+                .$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
                 $controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
-        } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+        } elseif ($this->getContext()->controller instanceof ModuleAdminController
+            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -408,8 +411,7 @@ class TreeCore
                 $this->getTemplateFile($this->getHeaderTemplate()),
                 $this->getContext()->smarty
             );
-            $headerTemplate->assign($this->getAttributes())
-                ->assign(array(
+            $headerTemplate->assign($this->getAttributes())->assign(array(
                 'title'   => $this->getTitle(),
                 'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null
             ));

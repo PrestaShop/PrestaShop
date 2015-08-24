@@ -139,11 +139,11 @@ class CustomizationCore extends ObjectModel
             $id_shop = (int)Context::getContext()->shop->id;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `name`
-		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
-		AND `id_lang` = '.(int)($id_lang)
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            'SELECT `name`
+		    FROM `'._DB_PREFIX_.'customization_field_lang`
+		    WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
+		    AND `id_lang` = '.(int)($id_lang)
         );
 
         return $result['name'];
@@ -163,9 +163,10 @@ class CustomizationCore extends ObjectModel
 
         if (!empty($in_values)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
-							 FROM `'._DB_PREFIX_.'customization`
-							 WHERE `id_customization` IN ('.$in_values.')');
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+			    FROM `'._DB_PREFIX_.'customization`
+			    WHERE `id_customization` IN ('.$in_values.')'
+            );
 
             foreach ($results as $row) {
                 $quantities[$row['id_customization']] = $row;

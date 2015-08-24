@@ -263,7 +263,7 @@ class DispatcherCore
         // Dispatch with right front controller
         switch ($this->front_controller) {
             // Dispatch front office controller
-            case self::FC_FRONT :
+            case self::FC_FRONT:
                 $controllers = Dispatcher::getControllers(array(_PS_FRONT_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/front/'));
                 $controllers['index'] = 'IndexController';
                 if (isset($controllers['auth'])) {
@@ -281,10 +281,10 @@ class DispatcherCore
                 }
                 $controller_class = $controllers[strtolower($this->controller)];
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 0);
-            break;
+                break;
 
             // Dispatch module controller for front office
-            case self::FC_MODULE :
+            case self::FC_MODULE:
                 $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
@@ -296,10 +296,10 @@ class DispatcherCore
                     }
                 }
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
-            break;
+                break;
 
             // Dispatch back office controller + module back office controller
-            case self::FC_ADMIN :
+            case self::FC_ADMIN:
                 if ($this->use_default_controller && !Tools::getValue('token') && Validate::isLoadedObject(Context::getContext()->employee) && Context::getContext()->employee->isLoggedBack()) {
                     Tools::redirectAdmin('index.php?controller='.$this->controller.'&token='.Tools::getAdminTokenLite($this->controller));
                 }
@@ -347,9 +347,9 @@ class DispatcherCore
                     runAdminTab($this->controller, !empty($_REQUEST['ajaxMode']));
                     return;
                 }
-            break;
+                break;
 
-            default :
+            default:
                 throw new PrestaShopException('Bad front controller chosen');
         }
 
@@ -688,9 +688,9 @@ class DispatcherCore
             if (count($add_param)) {
                 $url .= '?'.http_build_query($add_param, '', '&');
             }
-        }
-        // Build a classic url index.php?controller=foo&...
-        else {
+        } else {
+            // Build a classic url index.php?controller=foo&...
+
             $add_params = array();
             foreach ($params as $key => $value) {
                 if (!isset($route['keywords'][$key]) && !isset($this->default_routes[$route_id]['keywords'][$key])) {

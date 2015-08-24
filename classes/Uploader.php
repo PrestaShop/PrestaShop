@@ -116,9 +116,15 @@ class UploaderCore
         $last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
 
         switch ($last) {
-            case 'g': $bytes *= 1024;
-            case 'm': $bytes *= 1024;
-            case 'k': $bytes *= 1024;
+            case 'g':
+                $bytes *= 1024;
+                // no break
+            case 'm':
+                $bytes *= 1024;
+                // no break
+            case 'k':
+                $bytes *= 1024;
+                // no break
         }
 
         if ($bytes == '') {

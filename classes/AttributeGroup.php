@@ -126,8 +126,8 @@ class AttributeGroupCore extends ObjectModel
     {
         if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL) {
             /* Select children in order to find linked combinations */
-            $attribute_ids = Db::getInstance()->executeS('
-				SELECT `id_attribute`
+            $attribute_ids = Db::getInstance()->executeS(
+                'SELECT `id_attribute`
 				FROM `'._DB_PREFIX_.'attribute`
 				WHERE `id_attribute_group` = '.(int)$this->id
             );
@@ -238,15 +238,15 @@ class AttributeGroupCore extends ObjectModel
         foreach ($values as $value) {
             $ids[] = intval($value['id']);
         }
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'attribute`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'attribute`
 			WHERE `id_attribute_group` = '.(int)$this->id.'
 			AND `id_attribute` NOT IN ('.implode(',', $ids).')'
         );
         $ok = true;
         foreach ($values as $value) {
-            $result = Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute`
+            $result = Db::getInstance()->execute(
+                'UPDATE `'._DB_PREFIX_.'attribute`
 				SET `id_attribute_group` = '.(int)$this->id.'
 				WHERE `id_attribute` = '.(int)$value['id']
             );
@@ -259,8 +259,8 @@ class AttributeGroupCore extends ObjectModel
 
     public function getWsProductOptionValues()
     {
-        $result = Db::getInstance()->executeS('
-			SELECT a.id_attribute AS id
+        $result = Db::getInstance()->executeS(
+            'SELECT a.id_attribute AS id
 			FROM `'._DB_PREFIX_.'attribute` a
 			'.Shop::addSqlAssociation('attribute', 'a').'
 			WHERE a.id_attribute_group = '.(int)$this->id
@@ -276,8 +276,8 @@ class AttributeGroupCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT ag.`position`, ag.`id_attribute_group`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT ag.`position`, ag.`id_attribute_group`
 			FROM `'._DB_PREFIX_.'attribute_group` ag
 			WHERE ag.`id_attribute_group` = '.(int)Tools::getValue('id_attribute_group', 1).'
 			ORDER BY ag.`position` ASC'
@@ -297,8 +297,8 @@ class AttributeGroupCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'attribute_group`
+        return (Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'attribute_group`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
@@ -329,8 +329,8 @@ class AttributeGroupCore extends ObjectModel
 
         $i = 0;
         foreach ($result as $value) {
-            $return = Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute_group`
+            $return = Db::getInstance()->execute(
+                'UPDATE `'._DB_PREFIX_.'attribute_group`
 				SET `position` = '.(int)$i++.'
 				WHERE `id_attribute_group` = '.(int)$value['id_attribute_group']
             );

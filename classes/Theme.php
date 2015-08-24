@@ -315,7 +315,8 @@ class ThemeCore extends ObjectModel
 				AND m.page = "'.pSQL($page).'" ) , default_right_column
 			)
 			FROM '._DB_PREFIX_.'theme
-			WHERE id_theme ='.(int)$this->id);
+			WHERE id_theme ='.(int)$this->id
+        );
     }
 
     /**

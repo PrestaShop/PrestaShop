@@ -240,6 +240,7 @@ class AddressCore extends ObjectModel
         }
         return $errors;
     }
+
     /**
      * Get zone id for a given address
      *
@@ -355,8 +356,8 @@ class AddressCore extends ObjectModel
         }
         $cache_id = 'Address::getFirstCustomerAddressId_'.(int)$id_customer.'-'.(bool)$active;
         if (!Cache::isStored($cache_id)) {
-            $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_address`
+            $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `id_address`
 				FROM `'._DB_PREFIX_.'address`
 				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
             );

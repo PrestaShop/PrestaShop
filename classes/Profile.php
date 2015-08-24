@@ -69,8 +69,8 @@ class ProfileCore extends ObjectModel
             $id_lang = Configuration::get('PS_LANG_DEFAULT');
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `name`
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            'SELECT `name`
 			FROM `'._DB_PREFIX_.'profile` p
 			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
 			WHERE p.`id_profile` = '.(int)$id_profile.'

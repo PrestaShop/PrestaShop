@@ -67,8 +67,8 @@ class FeatureValueCore extends ObjectModel
      */
     public static function getFeatureValues($id_feature)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT *
 			FROM `'._DB_PREFIX_.'feature_value`
 			WHERE `id_feature` = '.(int)$id_feature
         );
@@ -185,8 +185,8 @@ class FeatureValueCore extends ObjectModel
     public function delete()
     {
         /* Also delete related products */
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_product`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'feature_product`
 			WHERE `id_feature_value` = '.(int)$this->id
         );
         $return = parent::delete();
