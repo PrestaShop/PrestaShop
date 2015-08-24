@@ -67,4 +67,18 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_string($success));
         $this->assertNotEquals($success, $hash);
     }
+
+    public function test_register_hash_method()
+    {
+        $callback_called = false;
+        $this->hashing->registerHashMethod('dummy',
+            function ($passwd, $hash, $options) use (&$callback_called) {
+                $callback_called = true;
+                return $passwd == 'dummypass';
+            }
+        );
+        $success = $this->hashing->checkHash('dummypass', 'ignored');
+        $this->isTrue($success);
+        $this->assertTrue($callback_called);
+    }
 }

@@ -106,4 +106,34 @@ class Hashing
     {
         return password_hash($passwd, PASSWORD_DEFAULT);
     }
+
+    /**
+     * Registers a new hash method so we can support other kinds of hashes.
+     *
+     * @param string    The hash name.
+     * @param callback  A callback to use for checking a hash.
+     *                  Expected signature is $callback($passwd, $hash, $options)
+     * @param array     Options to use for the hash method.
+     *
+     */
+    public function registerHashMethod($name, $verifyCallback, $options = array()) {
+        if (!count($this->hash_methods)) {
+            $this->initHashMethods();
+        }
+
+        if (isset($this->hash_methods[$name])) {
+            // We already have a registered method with that name
+            return;
+        }
+
+        if (!is_callable($verifyCallback)) {
+            throw new Core_Foundation_Exception_Exception('$verifyCallback must be callable');
+        }
+
+        $method = array();
+        $method['verify'] = $verifyCallback;
+        $method['options'] = $options;
+
+        $this->hash_methods[$name] = $method;
+    }
 }
