@@ -47,10 +47,12 @@ If you installed PrestaShop from GitHug :
 
 * Install Composer ([https://getcomposer.org][22])
 * Install Node.js ([https://nodejs.org][23])
+* Install Grunt-cli globally ([http://gruntjs.com][24])
 * Then run :
 
 >
     composer install
+    npm install -g grunt-cli
     npm install
 
 User documentation
@@ -125,3 +127,4 @@ Thank you for downloading and using the PrestaShop open-source e-commerce soluti
 [21]: CONTRIBUTORS.md
 [22]: https://getcomposer.org
 [23]: https://nodejs.org
+[24]: http://gruntjs.com
