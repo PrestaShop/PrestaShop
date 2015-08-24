@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Cldr;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
-use PrestaShop\PrestaShop\Core\Foundation\Net\Curl;
+use Curl\Curl;
 
 class Update extends Repository
 {
@@ -62,19 +62,18 @@ class Update extends Repository
     {
         if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
             $fp = fopen($file, "w");
-            $curl = new Curl();
-            $curl->setOptions(array(
-                CURLOPT_FILE => $fp,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HEADER => false
-            ));
 
-            if ($curl->exec(self::ZIP_CORE_URL) === false) {
-                throw new \Exception("Failed to download from '" .
+            $curl = new Curl();
+            $curl->setopt(CURLOPT_FILE, $fp);
+            $curl->setopt(CURLOPT_FOLLOWLOCATION, true);
+            $curl->setopt(CURLOPT_HEADER, false);
+            $curl->get(self::ZIP_CORE_URL);
+
+            if ($curl->error) {
+                throw new \Exception("Failed to download '" .
                     self::ZIP_CORE_URL . "'.");
             };
 
-            $curl->close();
             fclose($fp);
         }
 

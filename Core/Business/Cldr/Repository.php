@@ -132,7 +132,7 @@ class Repository
     {
         $currencies = $this->repository->supplemental['codeMappings'];
         $datas = array();
-        foreach ($currencies as $currency_code => $currency_data) {
+        foreach (array_keys($currencies) as $currency_code) {
             if ($currency_code === 'XTS' || strlen($currency_code) !== 3) {
                 continue;
             }
