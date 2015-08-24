@@ -1,6 +1,10 @@
 {
   "require": {
-<<<<<<< Upstream, based on 1cc6fc2376c6daf12f6a4c36925fd6a77bfa55d4
+    "php": ">=5.4",
+    "symfony/routing": "~2.7",
+    "symfony/finder": "~2.7",
+    "symfony/config": "~2.7",
+    "symfony/http-kernel": "~2.7"
     "composer/installers": "~1.0",
     "smarty/smarty": "3.1.19",
     "icanboogie/cldr": "1.3.9",
@@ -81,14 +85,6 @@
     "prestashop/trackingfront": "dev-master",
     "prestashop/themeconfigurator": "dev-master",
     "prestashop/vatnumber": "dev-master"
-=======
-    "php": ">=5.4",
-    "symfony/routing": "~2.7",
-    "symfony/finder": "~2.7",
-    "friendsofsymfony/rest-bundle": "@stable",
-    "jms/serializer-bundle": "@stable",
-    "nelmio/api-doc-bundle": "@stable"
->>>>>>> 3f0badd [+] Project: Start Controller structure in new architecture
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",

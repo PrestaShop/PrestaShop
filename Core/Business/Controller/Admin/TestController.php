@@ -6,11 +6,13 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
 
 class TestController extends AdminController
 {
-    use AutoObjectInflaterTrait;
-    use AutoResponseFormatTrait;
+    use AutoObjectInflaterTrait; // auto inflate objects if pattern found in the route format.
+    use AutoResponseFormatTrait; // try to auto fill template engine parameters according to the current action.
+    use SfControllerResolverTrait; // dependency injection in sf way.
 
     public function aAction(Request &$request, Response &$response)
     {
@@ -20,13 +22,13 @@ class TestController extends AdminController
 
     public function bAction(Request &$request, Response &$response)
     {
-        $response->setContentData(array('b' => 'à bas (de la part du Back, en JSON)'));
+        $response->addContentData('b', 'à bas (de la part du Back, en JSON)');
         return self::RESPONSE_JSON;
     }
 
-    public function cAction(Request &$request, Response &$response)
+    public function cAction(Request &$request, Response &$response, \Order $order)
     {
-        $response->setContentData(array('c' => 'cédille (de la part du Back, format auto, selon la requete HTTP)'));
+        $response->addContentData('c', 'cédille (de la part du Back, format auto, selon la requete HTTP)');
         //return ??? // --> auto, with AutoResponseFormatTrait magic!
     }
 

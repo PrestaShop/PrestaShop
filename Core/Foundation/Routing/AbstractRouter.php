@@ -44,17 +44,17 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
  * will cache routes YML files, will scan module directories to add new routes and Controller overrides.
  * The router will find the route, and extended classes will dispatch to the controllers through doDispatch().
  */
-abstract class Router
+abstract class AbstractRouter
 {
     /**
      * @var \Core_Business_ConfigurationInterface
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @var string
      */
-    private $cacheFileName;
+    protected $cacheFileName;
 
     /**
      * @var YamlFileLoader
@@ -74,7 +74,7 @@ abstract class Router
     /**
      * @var array[string]
      */
-    private $controllerNamespaces;
+    protected $controllerNamespaces;
 
     /**
      * @var ConfigCacheFactoryInterface|null
@@ -182,6 +182,7 @@ abstract class Router
                     ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/') // modules routes first (but will be prefixed)
                     ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
                 foreach($routingFilesFinder as $file) {
+                    // TODO : ajouter un check des route_id en doublon (pour empecher un module de remplacer une route existante / doublons écrasants)
                     $path = $file->getRealpath();
                     $matches = array();
                     if (1 === preg_match('&modules/([^/]+)/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) && isset($matches[1])) {
@@ -219,14 +220,14 @@ abstract class Router
 $this->routingFiles = array('.implode(', ', $routingFiles).');
 $this->controllerNamespaces = array('.implode(', ', $namespaces).');
 '; // Raw php code inside a string, do not indent please.
-                $cache->write($phpCode); // FIXME : add cache freshness option, how ?
+                $cache->write($phpCode);
             }
         );
 
         include $cache->getPath();
     }
 
-    private final function getConfigCacheFactory()
+    protected final function getConfigCacheFactory()
     {
         if (null === $this->configCacheFactory) {
             $this->configCacheFactory = new ConfigCacheFactory($this->configuration->get('_PS_MODE_DEV_'));
@@ -247,46 +248,7 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         }
     }
 
-    /**
-     * Will scan modules to find an override of the Core controller.
-     * If not, use the Core controller (most of the cases).
-     * If more than one controller found, the conflict is rejected, and the default Core controller is used.
-     *
-     * @param string $controllerName
-     * @throws \ErrorException If no default controller found in the Core. The routes YML file is incorrect.
-     * @return BaseController The controller instance
-     */
-    protected final function instantiateController($controllerName)
-    {
-        $foundOverrides = array();
-        foreach($this->controllerNamespaces as $namespace) {
-            $className = '\\'.$namespace.'\\'.$controllerName;
-            if (!class_exists($className)) {
-                continue;
-            }
-            $foundOverrides[] = $className;
-        }
-
-        // One override found, use it.
-        if (count($foundOverrides) === 1) {
-            $class = new \ReflectionClass($foundOverrides[0]);
-            $controller = $class->newInstance();
-            return $controller;
-        }
-
-        // More overrides found: problem! do not use it but Warn!
-        if (count($foundOverrides) > 1) {
-            // TODO : faire Warning/log, avec le detail: On a plus de 2 overrides qui se battent, donc on fallback sur le controller du Core avec le warning.
-        }
-
-        // fallback on default Core controller (most of the time).
-        $className = '\\PrestaShop\\PrestaShop\\Core\\Business\\Controller\\'.$controllerName;
-        if (!class_exists($className)) {
-            throw new \ErrorException('Default Controller is not found for: '.$className);
-        }
-        $class = new \ReflectionClass($className);
-        $controller = $class->newInstance();
-        return $controller;
-    }
+    
+    
 
 }

@@ -97,9 +97,9 @@ trait AutoResponseFormatTrait
         // no template if no HTML output!
         if (strpos($response->getResponseFormat(), 'html') !== false
             && isset($request->attributes)
-            && $request->attributes->has('_controller')
+            && $request->attributes->has('_controller_short')
         ) {
-            $controllerString = $request->attributes->get('_controller');
+            $controllerString = $request->attributes->get('_controller_short');
             $path = explode('\\', $controllerString);
             if (count($path) < 2) {
                 return true; // not enough info to suggest template

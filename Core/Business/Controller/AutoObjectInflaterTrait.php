@@ -55,7 +55,7 @@ trait AutoObjectInflaterTrait
     public function beforeActionInflateRequestedObjects(Request &$request, Response &$response)
     {
         foreach($request->attributes->all() as $key => $value) {
-            
+
             // Find parameters that begins with id_ to try to inflate corresponding object
             if (strpos($key, 'id_') === 0) {
                 $className = ucfirst(substr($key, 3));
