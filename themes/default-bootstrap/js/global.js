@@ -118,7 +118,9 @@ $(document).ready(function(){
 
 function highdpiInit()
 {
-	if($('.replace-2x').css('font-size') == "1px")
+	if (typeof highDPI === 'undefined')
+		return;
+	if(highDPI && $('.replace-2x').css('font-size') == "1px")
 	{
 		var els = $("img.replace-2x").get();
 		for(var i = 0; i < els.length; i++)

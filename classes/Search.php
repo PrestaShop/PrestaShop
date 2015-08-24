@@ -109,21 +109,6 @@ class SearchCore
         if ($indexation) {
             $string = preg_replace('/[._-]+/', ' ', $string);
         } else {
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
-        }
-
-        $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
-        if (!empty($blacklist)) {
-            $string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
-            $string = preg_replace('/^('.$blacklist.')(?=\s)/Su', '', $string);
-            $string = preg_replace('/(?<=\s)('.$blacklist.')$/Su', '', $string);
-            $string = preg_replace('/^('.$blacklist.')$/Su', '', $string);
-        }
-
-        if (!$indexation) {
             $words = explode(' ', $string);
             $processed_words = array();
             // search for aliases for each word of the query
@@ -136,6 +121,18 @@ class SearchCore
                 }
             }
             $string = implode(' ', $processed_words);
+            $string = preg_replace('/[._]+/', '', $string);
+            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
+            $string = preg_replace('/[._]+/', '', $string);
+            $string = preg_replace('/[^\s]-+/', '', $string);
+        }
+
+        $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
+        if (!empty($blacklist)) {
+            $string = preg_replace('/(?<=\s)('.$blacklist.')(?=\s)/Su', '', $string);
+            $string = preg_replace('/^('.$blacklist.')(?=\s)/Su', '', $string);
+            $string = preg_replace('/(?<=\s)('.$blacklist.')$/Su', '', $string);
+            $string = preg_replace('/^('.$blacklist.')$/Su', '', $string);
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars

@@ -51,4 +51,5 @@
 {addJsDef instantsearch=Configuration::get('PS_INSTANT_SEARCH')|boolval}
 {addJsDef quickView=$quick_view|boolval}
 {addJsDef displayList=Configuration::get('PS_GRID_PRODUCT')|boolval}
+{addJsDef highDPI=Configuration::get('PS_HIGHT_DPI')|boolval}
 {/strip}
