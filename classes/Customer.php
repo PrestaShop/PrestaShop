@@ -604,12 +604,12 @@ class CustomerCore extends ObjectModel
      * Specify if a customer already in base
      * @deprecated Use Customer::customerIdExistsStatic((int)$id_customer) instead
      * @param int $id_customer Customer ID
-     * @return bool
+     * @return int
      */
     public function customerIdExists($id_customer)
     {
         Tools::displayAsDeprecated('Use Customer::customerIdExistsStatic((int)$id_customer) instead');
-        return (bool)Customer::customerIdExistsStatic((int)$id_customer);
+        return (int)Customer::customerIdExistsStatic((int)$id_customer);
     }
 
     public static function customerIdExistsStatic($id_customer)
