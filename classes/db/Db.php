@@ -367,19 +367,15 @@ abstract class DbCore
     {
         $type = strtoupper($type);
         switch ($type) {
-            case 'INSERT' :
+            case 'INSERT':
                 return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT, false);
-
-            case 'INSERT IGNORE' :
+            case 'INSERT IGNORE':
                 return $this->insert($table, $data, $use_null, $use_cache, Db::INSERT_IGNORE, false);
-
-            case 'REPLACE' :
+            case 'REPLACE':
                 return $this->insert($table, $data, $use_null, $use_cache, Db::REPLACE, false);
-
-            case 'UPDATE' :
+            case 'UPDATE':
                 return $this->update($table, $data, $where, $limit, $use_null, $use_cache, false);
-
-            default :
+            default:
                 throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
         }
     }

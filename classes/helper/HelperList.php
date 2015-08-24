@@ -236,11 +236,17 @@ class HelperListCore extends Helper
                     $is_first = false;
 
                     if (!preg_match('/a\s*.*class/', $this->_list[$index][$action])) {
-                        $this->_list[$index][$action] = preg_replace('/href\s*=\s*\"([^\"]*)\"/',
-                            'href="$1" class="btn btn-default"', $this->_list[$index][$action]);
+                        $this->_list[$index][$action] = preg_replace(
+                            '/href\s*=\s*\"([^\"]*)\"/',
+                            'href="$1" class="btn btn-default"',
+                            $this->_list[$index][$action]
+                        );
                     } elseif (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action])) {
-                        $this->_list[$index][$action] = preg_replace('/a(\s*.*)class\s*=\s*\"(.*)\"/',
-                            'a $1 class="$2 btn btn-default"', $this->_list[$index][$action]);
+                        $this->_list[$index][$action] = preg_replace(
+                            '/a(\s*.*)class\s*=\s*\"(.*)\"/',
+                            'a $1 class="$2 btn btn-default"',
+                            $this->_list[$index][$action]
+                        );
                     }
                 }
             }
@@ -388,7 +394,6 @@ class HelperListCore extends Helper
 
         return $tpl->fetch();
     }
-
 
     /**
      * Display action show details of a table row
@@ -574,7 +579,8 @@ class HelperListCore extends Helper
         $this->page = (int)$page;
 
         /* Choose number of results per page */
-        $selected_pagination = Tools::getValue($this->list_id.'_pagination',
+        $selected_pagination = Tools::getValue(
+            $this->list_id.'_pagination',
             isset($this->context->cookie->{$this->list_id.'_pagination'}) ? $this->context->cookie->{$this->list_id.'_pagination'} : $this->_default_pagination
         );
 

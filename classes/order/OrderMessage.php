@@ -52,7 +52,7 @@ class OrderMessageCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-            'fields' => array(
+        'fields' => array(
             'id' => array('sqlId' => 'id_discount_type', 'xlink_resource' => 'order_message_lang'),
             'date_add' => array('sqlId' => 'date_add')
         )

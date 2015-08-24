@@ -748,8 +748,8 @@ abstract class ModuleCore
 
     public function enableDevice($device)
     {
-        Db::getInstance()->execute('
-			UPDATE '._DB_PREFIX_.'module_shop
+        Db::getInstance()->execute(
+            'UPDATE '._DB_PREFIX_.'module_shop
 			SET enable_device = enable_device + '.(int)$device.'
 			WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
@@ -760,8 +760,8 @@ abstract class ModuleCore
 
     public function disableDevice($device)
     {
-        Db::getInstance()->execute('
-			UPDATE '._DB_PREFIX_.'module_shop
+        Db::getInstance()->execute(
+            'UPDATE '._DB_PREFIX_.'module_shop
 			SET enable_device = enable_device - '.(int)$device.'
 			WHERE enable_device & '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
@@ -2202,8 +2202,8 @@ abstract class ModuleCore
 
     public function isEnabledForShopContext()
     {
-        return (bool)Db::getInstance()->getValue('
-			SELECT COUNT(*) n
+        return (bool)Db::getInstance()->getValue(
+            'SELECT COUNT(*) n
 			FROM `'._DB_PREFIX_.'module_shop`
 			WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
 			GROUP BY id_module
@@ -2238,9 +2238,9 @@ abstract class ModuleCore
         return Db::getInstance()->getValue($sql);
     }
 
-    /*
-    ** Template management (display, overload, cache)
-    */
+    /**
+     * Template management (display, overload, cache)
+     */
     protected static function _isTemplateOverloadedStatic($module_name, $template)
     {
         if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/'.$template)) {
@@ -2388,7 +2388,7 @@ abstract class ModuleCore
     }
 
 
-    /*
+    /**
      * Clear template cache
      *
      * @param string $template Template name
@@ -2433,7 +2433,7 @@ abstract class ModuleCore
         }
     }
 
-        /*
+    /**
      * Clear defered template cache
      *
      * @param string $template_path Template path

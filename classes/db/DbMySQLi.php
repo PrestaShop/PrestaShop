@@ -286,7 +286,7 @@ class DbMySQLiCore extends Db
      * @param string $user Login for database connection
      * @param string $pwd Password for database connection
      * @param string $db Database name
-     * @param bool $newDbLink
+     * @param bool $new_db_link
      * @param string|bool $engine
      * @param int $timeout
      * @return int Error code or 0 if connection was successful
