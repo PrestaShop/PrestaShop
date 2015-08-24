@@ -83,7 +83,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      *
      * @return Array Layout elements columns size
      */
-    private function computeLayout($params)
+    protected function computeLayout($params)
     {
         $layout = array(
             'reference' => array(
