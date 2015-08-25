@@ -66,10 +66,10 @@ class StateCore extends ObjectModel
     public static function getStates($id_lang = false, $active = false)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT `id_state`, `id_country`, `id_zone`, `iso_code`, `name`, `active`
-		FROM `'._DB_PREFIX_.'state`
-		'.($active ? 'WHERE active = 1' : '').'
-		ORDER BY `name` ASC');
+        SELECT `id_state`, `id_country`, `id_zone`, `iso_code`, `name`, `active`
+        FROM `'._DB_PREFIX_.'state`
+        '.($active ? 'WHERE active = 1' : '').'
+        ORDER BY `name` ASC');
     }
 
     /**
@@ -85,10 +85,10 @@ class StateCore extends ObjectModel
         }
         $cache_id = 'State::getNameById_'.(int)$id_state;
         if (!Cache::isStored($cache_id)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `name`
-				FROM `'._DB_PREFIX_.'state`
-				WHERE `id_state` = '.(int)$id_state
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `name`
+                FROM `'._DB_PREFIX_.'state`
+                WHERE `id_state` = '.(int)$id_state
             );
             Cache::store($cache_id, $result);
             return $result;
@@ -110,10 +110,10 @@ class StateCore extends ObjectModel
         $cache_id = 'State::getIdByName_'.pSQL($state);
         if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance()->getValue('
-				SELECT `id_state`
-				FROM `'._DB_PREFIX_.'state`
-				WHERE `name` = \''.pSQL($state).'\'
-			');
+                SELECT `id_state`
+                FROM `'._DB_PREFIX_.'state`
+                WHERE `name` = \''.pSQL($state).'\'
+            ');
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -129,10 +129,10 @@ class StateCore extends ObjectModel
     public static function getIdByIso($iso_code, $id_country = null)
     {
         return Db::getInstance()->getValue('
-		SELECT `id_state`
-		FROM `'._DB_PREFIX_.'state`
-		WHERE `iso_code` = \''.pSQL($iso_code).'\'
-		'.($id_country ? 'AND `id_country` = '.(int)$id_country : ''));
+        SELECT `id_state`
+        FROM `'._DB_PREFIX_.'state`
+        WHERE `iso_code` = \''.pSQL($iso_code).'\'
+        '.($id_country ? 'AND `id_country` = '.(int)$id_country : ''));
     }
 
     /**
@@ -176,10 +176,10 @@ class StateCore extends ObjectModel
      */
     public function countUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'address`
-			WHERE `'.$this->def['primary'].'` = '.(int)$this->id
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(*)
+            FROM `'._DB_PREFIX_.'address`
+            WHERE `'.$this->def['primary'].'` = '.(int)$this->id
         );
         return $result;
     }
@@ -190,10 +190,10 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'state` s
-			WHERE s.`id_country` = '.(int)$id_country
+        return Db::getInstance()->executeS(
+            'SELECT *
+            FROM `'._DB_PREFIX_.'state` s
+            WHERE s.`id_country` = '.(int)$id_country
         );
     }
 
@@ -208,10 +208,10 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_zone`
-			FROM `'._DB_PREFIX_.'state`
-			WHERE `id_state` = '.(int)$id_state
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_zone`
+            FROM `'._DB_PREFIX_.'state`
+            WHERE `id_state` = '.(int)$id_state
         );
     }
 
@@ -225,7 +225,7 @@ class StateCore extends ObjectModel
         // cast every array values to int (security)
         $ids_states = array_map('intval', $ids_states);
         return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
-		');
+        UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
+        ');
     }
 }
