@@ -108,9 +108,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&conf=3&id_cms_category='.(int)$object->id.'&token='.Tools::getValue('token'));
             }
             return $object;
-        }
-        /* Change object statuts (active, inactive) */
-        elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
+        } elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
+            /* Change object statuts (active, inactive) */
+
             if ($this->tabAccess['edit'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     if ($object->toggleStatus()) {
@@ -126,9 +126,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        /* Delete object */
-        elseif (Tools::isSubmit('delete'.$this->table)) {
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
+            /* Delete object */
+
             if ($this->tabAccess['delete'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
                     // check if request at least one object with noZeroObject
@@ -170,9 +170,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$identifier.'&token='.$token
                 );
             }
-        }
-        /* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table)) {
+            /* Delete multiple objects */
+
             if ($this->tabAccess['delete'] === '1') {
                 if (Tools::isSubmit($this->table.'Box')) {
                     $cms_category = new CMSCategory();

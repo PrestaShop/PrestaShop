@@ -350,10 +350,12 @@ class AdminStockInstantStateControllerCore extends AdminController
                 $item['usable_quantity'] = $res['usable_quantity'];
 
                 // gets real_quantity depending on the warehouse
-                $item['real_quantity'] = $manager->getProductRealQuantities($item['id_product'],
-                                                                            $item['id_product_attribute'],
-                                                                            ($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
-                                                                            true);
+                $item['real_quantity'] = $manager->getProductRealQuantities(
+                    $item['id_product'],
+                    $item['id_product_attribute'],
+                    ($this->getCurrentCoverageWarehouse() == -1 ? null : array($this->getCurrentCoverageWarehouse())),
+                    true
+                );
 
                 // removes the valuation if the filter corresponds to 'all warehouses'
                 if ($this->getCurrentCoverageWarehouse() == -1) {
@@ -484,9 +486,9 @@ class AdminStockInstantStateControllerCore extends AdminController
                 // puts one row
                 echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row_csv)));
             }
-        }
-        // if prices requested
-        elseif (Tools::isSubmit('csv_prices')) {
+        } elseif (Tools::isSubmit('csv_prices')) {
+            // if prices requested
+
             // sets filename
             $filename = $this->l('stock_instant_state_prices').'_'.$warehouse_name.'.csv';
 

@@ -394,7 +394,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedFrom" error');
                     }
-                break;
+                    break;
 
                 case 'checkedSelect':
                     if (isset($e[$key]['table'])) {
@@ -410,7 +410,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedSelect" error');
                     }
-                break;
+                    break;
 
                 case 'checkedWhere':
                     if (isset($e[$key]['operator'])) {
@@ -424,7 +424,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedWhere" error');
                     }
-                break;
+                    break;
 
                 case 'checkedHaving':
                     if (isset($e[$key]['operator'])) {
@@ -438,7 +438,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedHaving" error');
                     }
-                break;
+                    break;
 
                 case 'checkedOrder':
                     if (isset($e[$key]['attribut'])) {
@@ -450,7 +450,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedOrder" error');
                     }
-                break;
+                    break;
 
                 case 'checkedGroupBy':
                     if (isset($e[$key]['attribut'])) {
@@ -462,11 +462,11 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('Undefined "checkedGroupBy" error');
                     }
-                break;
+                    break;
 
                 case 'checkedLimit':
                     $this->errors[] = Tools::displayError('The LIMIT clause must contain numeric arguments.');
-                break;
+                    break;
 
                 case 'returnNameTable':
                     if (isset($e[$key]['reference'])) {
@@ -478,15 +478,15 @@ class AdminRequestSqlControllerCore extends AdminController
                     } else {
                         $this->errors[] = Tools::displayError('When multiple tables are used, each attribute must refer back to a table.');
                     }
-                break;
+                    break;
 
                 case 'testedRequired':
                     $this->errors[] = sprintf(Tools::displayError('%s does not exist.'), $e[$key]);
-                break;
+                    break;
 
                 case 'testedUnauthorized':
                     $this->errors[] = sprintf(Tools::displayError('Is an unauthorized keyword.'), $e[$key]);
-                break;
+                    break;
             }
         }
     }

@@ -443,8 +443,14 @@ class AdminCategoriesControllerCore extends AdminController
         }
 
         $image = _PS_CAT_IMG_DIR_.$obj->id.'.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table.'_'.(int)$obj->id.'.'.$this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $this->fields_form = array(
@@ -797,14 +803,16 @@ class AdminCategoriesControllerCore extends AdminController
                 ImageManager::resize(
                     _PS_CAT_IMG_DIR_.$id_category.'.jpg',
                     _PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.jpg',
-                    (int)$image_type['width'], (int)$image_type['height']
+                    (int)$image_type['width'],
+                    (int)$image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
                     ImageManager::resize(
                         _PS_CAT_IMG_DIR_.$id_category.'.jpg',
                         _PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'2x.jpg',
-                        (int)$image_type['width']*2, (int)$image_type['height']*2
+                        (int)$image_type['width']*2,
+                        (int)$image_type['height']*2
                     );
                 }
             }

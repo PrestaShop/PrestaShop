@@ -261,10 +261,10 @@ class AdminStockCoverControllerCore extends AdminController
                 if (array_key_exists('variations', $item) && (int)$item['variations'] <= 0) {
                     // computes coverage and displays (highlights if needed)
                     $coverage = StockManagerFactory::getManager()->getProductCoverage(
-                                    $item['id'],
-                                    0,
-                                    $this->getCurrentCoveragePeriod(),
-                                    (($this->getCurrentCoverageWarehouse() == -1) ? null : $this->getCurrentCoverageWarehouse())
+                        $item['id'],
+                        0,
+                        $this->getCurrentCoveragePeriod(),
+                        (($this->getCurrentCoverageWarehouse() == -1) ? null : $this->getCurrentCoverageWarehouse())
                     );
                     if ($coverage != -1) {
                         // coverage is available

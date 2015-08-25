@@ -97,8 +97,8 @@ class AdminCmsContentControllerCore extends AdminController
             $this->content .= $this->admin_cms->renderForm();
         } elseif ($this->display == 'view_page') {
             $fixme = 'fixme';
-        }// @FIXME
-        else {
+            // @FIXME
+        } else {
             $id_cms_category = (int)Tools::getValue('id_cms_category');
             if (!$id_cms_category) {
                 $id_cms_category = 1;
@@ -182,7 +182,9 @@ class AdminCmsContentControllerCore extends AdminController
 
         $template = $this->context->smarty->createTemplate(
             $this->context->smarty->getTemplateDir(0).DIRECTORY_SEPARATOR
-            .'page_header_toolbar.tpl', $this->context->smarty);
+            .'page_header_toolbar.tpl',
+            $this->context->smarty
+        );
 
         $this->context->smarty->assign(array(
             'show_page_header_toolbar' => $this->show_page_header_toolbar,

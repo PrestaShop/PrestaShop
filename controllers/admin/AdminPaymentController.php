@@ -44,8 +44,8 @@ class AdminPaymentControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->country = array();
                     }
-                    $countries = DB::getInstance()->executeS('
-						SELECT id_country
+                    $countries = DB::getInstance()->executeS(
+                        'SELECT id_country
 						FROM '._DB_PREFIX_.'module_country
 						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
                     );
@@ -56,8 +56,8 @@ class AdminPaymentControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->currency = array();
                     }
-                    $currencies = DB::getInstance()->executeS('
-						SELECT id_currency
+                    $currencies = DB::getInstance()->executeS(
+                        'SELECT id_currency
 						FROM '._DB_PREFIX_.'module_currency
 						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
                     );
@@ -68,8 +68,8 @@ class AdminPaymentControllerCore extends AdminController
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->group = array();
                     }
-                    $groups = DB::getInstance()->executeS('
-						SELECT id_group
+                    $groups = DB::getInstance()->executeS(
+                        'SELECT id_group
 						FROM '._DB_PREFIX_.'module_group
 						WHERE id_module = '.(int)$module->id.' AND `id_shop`='.(int)$shop_id
                     );
@@ -134,8 +134,8 @@ class AdminPaymentControllerCore extends AdminController
             }
         }
 
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'`
 			WHERE id_shop = '.Context::getContext()->shop->id.'
 			AND `id_module` IN ('.implode(', ', $modules).')'
         );
@@ -227,8 +227,11 @@ class AdminPaymentControllerCore extends AdminController
 
                 if ($name_id === 'currency'
                     && Tools::strpos($list['items'][$key_item]['name'], '('.$list['items'][$key_item]['iso_code'].')') === false) {
-                    $list['items'][$key_item]['name'] = sprintf($this->l('%1$s (%2$s)'), $list['items'][$key_item]['name'],
-                        $list['items'][$key_item]['iso_code']);
+                    $list['items'][$key_item]['name'] = sprintf(
+                        $this->l('%1$s (%2$s)'),
+                        $list['items'][$key_item]['name'],
+                        $list['items'][$key_item]['iso_code']
+                    );
                 }
 
                 foreach ($this->payment_modules as $key_module => $module) {

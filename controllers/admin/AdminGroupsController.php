@@ -504,12 +504,12 @@ class AdminGroupsControllerCore extends AdminController
     protected function updateCategoryReduction()
     {
         $category_reduction = Tools::getValue('category_reduction');
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'group_reduction`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'group_reduction`
 			WHERE `id_group` = '.(int)Tools::getValue('id_group')
         );
-        Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache`
 			WHERE `id_group` = '.(int)Tools::getValue('id_group')
         );
         if (is_array($category_reduction) && count($category_reduction)) {

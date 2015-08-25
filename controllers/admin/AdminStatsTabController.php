@@ -292,14 +292,14 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
                     'has_errors' => true,
                     'errors' => array($this->errors),
                     'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to)
-                ));
+                    'date_to' => $this->context->employee->stats_date_to
+                )));
             } else {
                 die(Tools::jsonEncode(array(
                     'has_errors' => false,
                     'date_from' => $this->context->employee->stats_date_from,
-                    'date_to' => $this->context->employee->stats_date_to)
-                    ));
+                    'date_to' => $this->context->employee->stats_date_to
+                )));
             }
         }
     }

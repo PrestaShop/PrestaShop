@@ -400,11 +400,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
-                    Tools::getValue('name_'.$language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_'.$language['id_lang']] =
-                        sprintf(Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
-                        Tools::getValue('name_'.$language['id_lang']), $language['name']);
+                if ($object->isAttribute(
+                    (int)Tools::getValue('id_attribute_group'),
+                    Tools::getValue('name_'.$language['id_lang']),
+                    $language['id_lang']
+                )) {
+                    $this->errors['name_'.$language['id_lang']] = sprintf(
+                        Tools::displayError('The attribute value "%1$s" already exist for %2$s language'),
+                        Tools::getValue('name_'.$language['id_lang']),
+                        $language['name']
+                    );
                 }
             }
 
@@ -569,7 +574,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     'desc' => $this->l('Back to list', null, null, false)
                 );
                 break;
-            default: // list
+            default:
+                // list
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
                     'desc' => $this->l('Add New Attributes', null, null, false)
@@ -803,8 +809,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 parent::postProcess();
             } else {
                 parent::postProcess();
-                if (Tools::isSubmit('delete'.$this->table))
-                {
+                if (Tools::isSubmit('delete'.$this->table)) {
                     AttributeGroup::cleanPositions();
                 }
             }

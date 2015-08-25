@@ -505,19 +505,18 @@ class AdminWarehousesControllerCore extends AdminController
         for ($i = 0; $i < $nb_items; ++$i) {
             // depending on the management type, translates the management type
             $item = &$this->_list[$i];
-            switch ($item['management_type']) {// management type can be either WA/FIFO/LIFO
 
+            // management type can be either WA/FIFO/LIFO
+            switch ($item['management_type']) {
                 case 'WA':
                     $item['management_type'] = $this->l('WA: Weighted Average');
-                break;
-
+                    break;
                 case 'FIFO':
                     $item['management_type'] = $this->l('FIFO: First In, First Out');
-                break;
-
+                    break;
                 case 'LIFO':
                     $item['management_type'] = $this->l('LIFO: Last In, First Out');
-                break;
+                    break;
             }
         }
     }
