@@ -145,8 +145,8 @@ class SceneCore extends ObjectModel
     public function deleteCategories()
     {
         return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'scene_category`
-		WHERE `id_scene` = '.(int)$this->id);
+        DELETE FROM `'._DB_PREFIX_.'scene_category`
+        WHERE `id_scene` = '.(int)$this->id);
     }
 
     public function updateCategories()
@@ -180,8 +180,8 @@ class SceneCore extends ObjectModel
     public function deleteZoneProducts()
     {
         return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'scene_products`
-		WHERE `id_scene` = '.(int)$this->id);
+        DELETE FROM `'._DB_PREFIX_.'scene_products`
+        WHERE `id_scene` = '.(int)$this->id);
     }
 
     public function updateZoneProducts()
@@ -200,9 +200,14 @@ class SceneCore extends ObjectModel
      *
      * @return array Products
      */
-    public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true,
-        Context $context = null)
-    {
+    public static function getScenes(
+        $id_category,
+        $id_lang = null,
+        $only_active = true,
+        $lite_result = true,
+        $hide_scene_position = true,
+        Context $context = null
+    ) {
         if (!Scene::isFeatureActive()) {
             return array();
         }
@@ -215,14 +220,14 @@ class SceneCore extends ObjectModel
             $id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
             $sql = 'SELECT s.*
-					FROM `'._DB_PREFIX_.'scene_category` sc
-					LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
-					'.Shop::addSqlAssociation('scene', 's').'
-					LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
-					WHERE sc.id_category = '.(int)$id_category.'
-						AND sl.id_lang = '.(int)$id_lang
+                    FROM `'._DB_PREFIX_.'scene_category` sc
+                    LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
+                    '.Shop::addSqlAssociation('scene', 's').'
+                    LEFT JOIN `'._DB_PREFIX_.'scene_lang` sl ON (sl.id_scene = s.id_scene)
+                    WHERE sc.id_category = '.(int)$id_category.'
+                        AND sl.id_lang = '.(int)$id_lang
                         .($only_active ? ' AND s.active = 1' : '').'
-					ORDER BY sl.name ASC';
+                    ORDER BY sl.name ASC';
             $scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
             if (!$lite_result && $scenes) {
@@ -254,11 +259,11 @@ class SceneCore extends ObjectModel
         $id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
 
         $products = Db::getInstance()->executeS('
-		SELECT s.*
-		FROM `'._DB_PREFIX_.'scene_products` s
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
-		'.Shop::addSqlAssociation('product', 'p').'
-		WHERE s.id_scene = '.(int)$this->id.($only_active ? ' AND product_shop.active = 1' : ''));
+        SELECT s.*
+        FROM `'._DB_PREFIX_.'scene_products` s
+        LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = s.id_product)
+        '.Shop::addSqlAssociation('product', 'p').'
+        WHERE s.id_scene = '.(int)$this->id.($only_active ? ' AND product_shop.active = 1' : ''));
 
         if (!$lite_result && $products) {
             foreach ($products as &$product) {
@@ -289,9 +294,9 @@ class SceneCore extends ObjectModel
     public static function getIndexedCategories($id_scene)
     {
         return Db::getInstance()->executeS('
-		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'scene_category`
-		WHERE `id_scene` = '.(int)$id_scene);
+        SELECT `id_category`
+        FROM `'._DB_PREFIX_.'scene_category`
+        WHERE `id_scene` = '.(int)$id_scene);
     }
 
     /**
