@@ -123,12 +123,12 @@ class CountryCore extends ObjectModel
     {
         $countries = array();
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT cl.*,c.*, cl.`name` country, z.`name` zone
-		FROM `'._DB_PREFIX_.'country` c '.Shop::addSqlAssociation('country', 'c').'
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = c.`id_zone`)
-		WHERE 1'.($active ? ' AND c.active = 1' : '').($contain_states ? ' AND c.`contains_states` = '.(int)$contain_states : '').'
-		ORDER BY cl.name ASC');
+        SELECT cl.*,c.*, cl.`name` country, z.`name` zone
+        FROM `'._DB_PREFIX_.'country` c '.Shop::addSqlAssociation('country', 'c').'
+        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+        LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = c.`id_zone`)
+        WHERE 1'.($active ? ' AND c.active = 1' : '').($contain_states ? ' AND c.`contains_states` = '.(int)$contain_states : '').'
+        ORDER BY cl.name ASC');
         foreach ($result as $row) {
             $countries[$row['id_country']] = $row;
         }
@@ -147,11 +147,11 @@ class CountryCore extends ObjectModel
     public static function getCountriesByIdShop($id_shop, $id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'country` c
-		LEFT JOIN `'._DB_PREFIX_.'country_shop` cs ON (cs.`id_country`= c.`id_country`)
-		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
-		WHERE `id_shop` = '.(int)$id_shop);
+        SELECT *
+        FROM `'._DB_PREFIX_.'country` c
+        LEFT JOIN `'._DB_PREFIX_.'country_shop` cs ON (cs.`id_country`= c.`id_country`)
+        LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
+        WHERE `id_shop` = '.(int)$id_shop);
     }
 
     /**
@@ -166,15 +166,14 @@ class CountryCore extends ObjectModel
         if (!Validate::isLanguageIsoCode($iso_code)) {
             die(Tools::displayError());
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_country`
-			FROM `'._DB_PREFIX_.'country`
-			WHERE `iso_code` = \''.pSQL(strtoupper($iso_code)).'\''
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            'SELECT `id_country`
+            FROM `'._DB_PREFIX_.'country`
+            WHERE `iso_code` = \''.pSQL(strtoupper($iso_code)).'\''
             .($active ? ' AND active = 1' : '')
         );
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -191,12 +190,11 @@ class CountryCore extends ObjectModel
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_zone`
-		FROM `'._DB_PREFIX_.'country`
-		WHERE `id_country` = '.(int)$id_country);
+        SELECT `id_zone`
+        FROM `'._DB_PREFIX_.'country`
+        WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($result['id_zone']))
-        {
+        if (isset($result['id_zone'])) {
             self::$_idZones[$id_country] = (int)$result['id_zone'];
             return (int)$result['id_zone'];
         }
@@ -214,12 +212,12 @@ class CountryCore extends ObjectModel
     {
         $key = 'country_getNameById_'.$id_country.'_'.$id_lang;
         if (!Cache::isStored($key)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-							SELECT `name`
-							FROM `'._DB_PREFIX_.'country_lang`
-							WHERE `id_lang` = '.(int)$id_lang.'
-							AND `id_country` = '.(int)$id_country
-                        );
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `name`
+                FROM `'._DB_PREFIX_.'country_lang`
+                WHERE `id_lang` = '.(int)$id_lang.'
+                AND `id_country` = '.(int)$id_country
+            );
             Cache::store($key, $result);
             return $result;
         }
@@ -236,12 +234,11 @@ class CountryCore extends ObjectModel
     {
         if (!isset(Country::$cache_iso_by_id[$id_country])) {
             Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `iso_code`
-			FROM `'._DB_PREFIX_.'country`
-			WHERE `id_country` = '.(int)$id_country);
+            SELECT `iso_code`
+            FROM `'._DB_PREFIX_.'country`
+            WHERE `id_country` = '.(int)$id_country);
         }
-        if (isset(Country::$cache_iso_by_id[$id_country]))
-        {
+        if (isset(Country::$cache_iso_by_id[$id_country])) {
             return Country::$cache_iso_by_id[$id_country];
         }
         return false;
@@ -257,17 +254,16 @@ class CountryCore extends ObjectModel
     public static function getIdByName($id_lang = null, $country)
     {
         $sql = '
-		SELECT `id_country`
-		FROM `'._DB_PREFIX_.'country_lang`
-		WHERE `name` = \''.pSQL($country).'\'';
+        SELECT `id_country`
+        FROM `'._DB_PREFIX_.'country_lang`
+        WHERE `name` = \''.pSQL($country).'\'';
         if ($id_lang) {
             $sql .= ' AND `id_lang` = '.(int)$id_lang;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -280,9 +276,9 @@ class CountryCore extends ObjectModel
         }
 
         return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `need_zip_code`
-		FROM `'._DB_PREFIX_.'country`
-		WHERE `id_country` = '.(int)$id_country);
+        SELECT `need_zip_code`
+        FROM `'._DB_PREFIX_.'country`
+        WHERE `id_country` = '.(int)$id_country);
     }
 
     public static function getZipCodeFormat($id_country)
@@ -292,12 +288,11 @@ class CountryCore extends ObjectModel
         }
 
         $zip_code_format = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `zip_code_format`
-		FROM `'._DB_PREFIX_.'country`
-		WHERE `id_country` = '.(int)$id_country);
+        SELECT `zip_code_format`
+        FROM `'._DB_PREFIX_.'country`
+        WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($zip_code_format) && $zip_code_format)
-        {
+        if (isset($zip_code_format) && $zip_code_format) {
             return $zip_code_format;
         }
         return false;
@@ -322,12 +317,12 @@ class CountryCore extends ObjectModel
         }
 
         $sql = ' SELECT DISTINCT c.*, cl.*
-				FROM `'._DB_PREFIX_.'country` c
-				'.Shop::addSqlAssociation('country', 'c', false).'
-				LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
-				LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-				WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
-				AND `id_lang` = '.(int)$id_lang;
+                FROM `'._DB_PREFIX_.'country` c
+                '.Shop::addSqlAssociation('country', 'c', false).'
+                LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_country` = c.`id_country`)
+                LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+                WHERE (c.`id_zone` = '.(int)$id_zone.' OR s.`id_zone` = '.(int)$id_zone.')
+                AND `id_lang` = '.(int)$id_lang;
         return Db::getInstance()->executeS($sql);
     }
 
@@ -339,17 +334,17 @@ class CountryCore extends ObjectModel
     public static function isNeedDniByCountryId($id_country)
     {
         return (bool)Db::getInstance()->getValue('
-			SELECT `need_identification_number`
-			FROM `'._DB_PREFIX_.'country`
-			WHERE `id_country` = '.(int)$id_country);
+            SELECT `need_identification_number`
+            FROM `'._DB_PREFIX_.'country`
+            WHERE `id_country` = '.(int)$id_country);
     }
 
     public static function containsStates($id_country)
     {
         return (bool)Db::getInstance()->getValue('
-			SELECT `contains_states`
-			FROM `'._DB_PREFIX_.'country`
-			WHERE `id_country` = '.(int)$id_country);
+            SELECT `contains_states`
+            FROM `'._DB_PREFIX_.'country`
+            WHERE `id_country` = '.(int)$id_country);
     }
 
     /**
@@ -362,8 +357,8 @@ class CountryCore extends ObjectModel
         // cast every array values to int (security)
         $ids_countries = array_map('intval', $ids_countries);
         return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'country` SET `id_zone` = '.(int)$id_zone.' WHERE `id_country` IN ('.implode(',', $ids_countries).')
-		');
+        UPDATE `'._DB_PREFIX_.'country` SET `id_zone` = '.(int)$id_zone.' WHERE `id_country` IN ('.implode(',', $ids_countries).')
+        ');
     }
 
     /**
