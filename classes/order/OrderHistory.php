@@ -155,8 +155,21 @@ class OrderHistoryCore extends ObjectModel
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
-                    Mail::Send((int)$order->id_lang, 'download_product', Mail::l('The virtual product that you bought is available for download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
-                        null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+                    Mail::Send(
+                        (int)$order->id_lang,
+                        'download_product',
+                        Mail::l('The virtual product that you bought is available for download', $order->id_lang),
+                        $data,
+                        $customer->email,
+                        $customer->firstname.' '.$customer->lastname,
+                        null,
+                        null,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        false,
+                        (int)$order->id_shop
+                    );
                 }
             }
 
@@ -194,9 +207,8 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
                         }
-                    }
-                    // if becoming unlogable => removes sale
-                    elseif (!$new_os->logable && $old_os->logable) {
+                    } elseif (!$new_os->logable && $old_os->logable) {
+                        // if becoming unlogable => removes sale
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
@@ -205,12 +217,12 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
                         }
-                    }
-                    // if waiting for payment => payment error/canceled
-                    elseif (!$new_os->logable && !$old_os->logable &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
+                    } elseif (!$new_os->logable && !$old_os->logable &&
+                        in_array($new_os->id, $error_or_canceled_statuses) &&
+                        !in_array($old_os->id, $error_or_canceled_statuses) &&
+                        !StockAvailable::dependsOnStock($product['id_product'])
+                    ) {
+                        // if waiting for payment => payment error/canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
                     }
                 }
@@ -239,13 +251,14 @@ class OrderHistoryCore extends ObjectModel
                         0,
                         $employee
                     );
-                }
-                // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
-                elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
-                        Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                        Warehouse::exists($product['id_warehouse']) &&
-                        $manager != null &&
-                        (int)$product['advanced_stock_management'] == 1) {
+                } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
+                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
+                    Warehouse::exists($product['id_warehouse']) &&
+                    $manager != null &&
+                    (int)$product['advanced_stock_management'] == 1
+                ) {
+                    // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
+
                     // if the product is a pack, we restock every products in the pack using the last negative stock mvts
                     if (Pack::isPack($product['product_id'])) {
                         $pack_products = Pack::getItems($product['product_id'], Configuration::get('PS_LANG_DEFAULT', null, null, $order->id_shop));
@@ -270,12 +283,15 @@ class OrderHistoryCore extends ObjectModel
                                 }
                             }
                         }
-                    }
-                    // else, it's not a pack, re-stock using the last negative stock mvts
-                    else {
-                        $mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
+                    } else {
+                        // else, it's not a pack, re-stock using the last negative stock mvts
+
+                        $mvts = StockMvt::getNegativeStockMvts(
+                            $order->id,
+                            $product['product_id'],
                             $product['product_attribute_id'],
-                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
+                            ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return'])
+                        );
 
                         foreach ($mvts as $mvt) {
                             $manager->addProduct(
@@ -465,8 +481,21 @@ class OrderHistoryCore extends ObjectModel
                     $file_attachement = null;
                 }
 
-                if (!Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-                    null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop)) {
+                if (!Mail::Send(
+                    (int)$order->id_lang,
+                    $result['template'],
+                    $topic,
+                    $data,
+                    $result['email'],
+                    $result['firstname'].' '.$result['lastname'],
+                    null,
+                    null,
+                    $file_attachement,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false,
+                    (int)$order->id_shop
+                )) {
                     return false;
                 }
             }

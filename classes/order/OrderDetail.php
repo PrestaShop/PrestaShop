@@ -227,7 +227,8 @@ class OrderDetailCore extends ObjectModel
             'taxes'  => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
                 'fields' => array('id' =>  array(), ),
             ),
-        ));
+        )
+    );
 
     /** @var bool */
     protected $outOfStock = false;
@@ -524,7 +525,7 @@ class OrderDetailCore extends ObjectModel
             switch ($this->specificPrice['reduction_type']) {
                 case 'percentage':
                     $this->reduction_percent = (float)$this->specificPrice['reduction'] * 100;
-                break;
+                    break;
 
                 case 'amount':
                     $price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
@@ -543,7 +544,7 @@ class OrderDetailCore extends ObjectModel
                         $this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
                         $this->reduction_amount_tax_excl = $this->reduction_amount;
                     }
-                break;
+                    break;
             }
         }
     }
@@ -577,13 +578,40 @@ class OrderDetailCore extends ObjectModel
 
         $shop_id = $this->context->shop->id;
 
-        $quantity_discount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $shop_id,
-        (int)$cart->id_currency, (int)$this->vat_address->id_country,
-        (int)$this->customer->id_default_group, (int)$product['cart_quantity'], false, null, null, $null, true, true, $this->context);
+        $quantity_discount = SpecificPrice::getQuantityDiscount(
+            (int)$product['id_product'],
+            $shop_id,
+            (int)$cart->id_currency,
+            (int)$this->vat_address->id_country,
+            (int)$this->customer->id_default_group,
+            (int)$product['cart_quantity'],
+            false,
+            null,
+            null,
+            $null,
+            true,
+            true,
+            $this->context
+        );
 
-        $unit_price = Product::getPriceStatic((int)$product['id_product'], true,
+        $unit_price = Product::getPriceStatic(
+            (int)$product['id_product'],
+            true,
             ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
-            2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
+            2,
+            null,
+            false,
+            true,
+            1,
+            false,
+            (int)$order->id_customer,
+            null,
+            (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')},
+            $null,
+            true,
+            true,
+            $this->context
+        );
         $this->product_quantity_discount = 0.00;
         if ($quantity_discount) {
             $this->product_quantity_discount = $unit_price;
@@ -771,10 +799,17 @@ class OrderDetailCore extends ObjectModel
             $tax_calc = Product::getTaxCalculationMethod();
             if (is_array($order_products)) {
                 foreach ($order_products as &$order_product) {
-                    $order_product['image'] = Context::getContext()->link->getImageLink($order_product['link_rewrite'],
-                        (int)$order_product['product_id'].'-'.(int)$order_product['id_image'], ImageType::getFormatedName('medium'));
-                    $order_product['link'] = Context::getContext()->link->getProductLink((int)$order_product['product_id'],
-                        $order_product['link_rewrite'], $order_product['category'], $order_product['ean13']);
+                    $order_product['image'] = Context::getContext()->link->getImageLink(
+                        $order_product['link_rewrite'],
+                        (int)$order_product['product_id'].'-'.(int)$order_product['id_image'],
+                        ImageType::getFormatedName('medium')
+                    );
+                    $order_product['link'] = Context::getContext()->link->getProductLink(
+                        (int)$order_product['product_id'],
+                        $order_product['link_rewrite'],
+                        $order_product['category'],
+                        $order_product['ean13']
+                    );
                     if ($tax_calc == 0 || $tax_calc == 2) {
                         $order_product['displayed_price'] = Product::getPriceStatic((int)$order_product['product_id'], true, null);
                     } elseif ($tax_calc == 1) {
@@ -808,7 +843,7 @@ class OrderDetailCore extends ObjectModel
         $product = new Product($this->product_id);
         $wholesale_price = $product->wholesale_price;
 
-        if($this->product_attribute_id){
+        if ($this->product_attribute_id) {
             $combination = new Combination((int)$this->product_attribute_id);
             if ($combination && $combination->wholesale_price != '0.000000') {
                 $wholesale_price = $combination->wholesale_price;

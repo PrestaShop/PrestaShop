@@ -146,10 +146,11 @@ class OrderSlipCore extends ObjectModel
     public static function getOrdersSlipDetail($id_order_slip = false, $id_order_detail = false)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-        ($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
-        'FROM `'._DB_PREFIX_.'order_slip_detail`'
-        .($id_order_slip ? ' WHERE `id_order_slip` = '.(int)($id_order_slip) : '')
-        .($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
+            ($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
+            'FROM `'._DB_PREFIX_.'order_slip_detail`'
+            .($id_order_slip ? ' WHERE `id_order_slip` = '.(int)($id_order_slip) : '')
+            .($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : '')
+        );
     }
 
     /**
@@ -457,15 +458,15 @@ class OrderSlipCore extends ObjectModel
 
             $tab['amount_tax_excl'] = $tab['amount_tax_incl'] = $tab['amount'];
 
-            $id_tax = (int)Db::getInstance()->getValue('
-                SELECT `id_tax`
+            $id_tax = (int)Db::getInstance()->getValue(
+                'SELECT `id_tax`
                 FROM `'._DB_PREFIX_.'order_detail_tax`
                 WHERE `id_order_detail` = '.(int)$id_order_detail
             );
 
             if ($id_tax > 0) {
-                $rate = (float)Db::getInstance()->getValue('
-                    SELECT `rate`
+                $rate = (float)Db::getInstance()->getValue(
+                    'SELECT `rate`
                     FROM `'._DB_PREFIX_.'tax`
                     WHERE `id_tax` = '.(int)$id_tax
                 );
@@ -497,11 +498,11 @@ class OrderSlipCore extends ObjectModel
     {
         $ecotax_detail = array();
         foreach ($this->getOrdersSlipDetail((int)$this->id) as $order_slip_details) {
-            $row = Db::getInstance()->getRow('
-                    SELECT `ecotax_tax_rate` as `rate`, `ecotax` as `ecotax_tax_excl`, `ecotax` as `ecotax_tax_incl`, `product_quantity`
-                    FROM `'._DB_PREFIX_.'order_detail`
-                    WHERE `id_order_detail` = '.(int)$order_slip_details['id_order_detail']
-                );
+            $row = Db::getInstance()->getRow(
+                'SELECT `ecotax_tax_rate` as `rate`, `ecotax` as `ecotax_tax_excl`, `ecotax` as `ecotax_tax_incl`, `product_quantity`
+                FROM `'._DB_PREFIX_.'order_detail`
+                WHERE `id_order_detail` = '.(int)$order_slip_details['id_order_detail']
+            );
 
             if (!isset($ecotax_detail[$row['rate']])) {
                 $ecotax_detail[$row['rate']] = array('ecotax_tax_incl' => 0, 'ecotax_tax_excl' => 0, 'rate' => $row['rate']);
