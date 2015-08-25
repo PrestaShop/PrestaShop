@@ -89,7 +89,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wpl.location');
         $query->from('warehouse_product_location', 'wpl');
-        $query->where('wpl.id_product = '.(int)$id_product.'
+        $query->where(
+            'wpl.id_product = '.(int)$id_product.'
             AND wpl.id_product_attribute = '.(int)$id_product_attribute.'
             AND wpl.id_warehouse = '.(int)$id_warehouse
         );
@@ -111,7 +112,8 @@ class WarehouseProductLocationCore extends ObjectModel
         $query = new DbQuery();
         $query->select('wpl.id_warehouse_product_location');
         $query->from('warehouse_product_location', 'wpl');
-        $query->where('wpl.id_product = '.(int)$id_product.'
+        $query->where(
+            'wpl.id_product = '.(int)$id_product.'
             AND wpl.id_product_attribute = '.(int)$id_product_attribute.'
             AND wpl.id_warehouse = '.(int)$id_warehouse
         );
