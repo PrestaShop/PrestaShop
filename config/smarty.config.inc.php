@@ -110,7 +110,7 @@ function smartyMaxWords($params, &$smarty)
         }
     }
 
-    return implode(' ',  Tools::htmlentitiesUTF8($words));
+    return implode(' ', Tools::htmlentitiesUTF8($words));
 }
 
 function smartyTruncate($params, &$smarty)
