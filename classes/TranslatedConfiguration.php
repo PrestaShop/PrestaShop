@@ -57,9 +57,9 @@ class TranslatedConfigurationCore extends Configuration
         // Otherwise configuration is not set as translated configuration.
         if ($id !== null) {
             $id_translated = Db::getInstance()->executeS('				SELECT `'.bqSQL($this->def['primary']).'`
-				FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-				WHERE `'.bqSQL($this->def['primary']).'`='.(int)$id.' LIMIT 0,1
-			');
+                FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+                WHERE `'.bqSQL($this->def['primary']).'`='.(int)$id.' LIMIT 0,1
+            ');
 
             if (empty($id_translated)) {
                 $id = null;
@@ -85,9 +85,9 @@ class TranslatedConfigurationCore extends Configuration
         Configuration::updateValue($this->name, $this->value, $ishtml);
 
         $last_insert = Db::getInstance()->getRow('
-			SELECT `id_configuration` AS id
-			FROM `'._DB_PREFIX_.'configuration`
-			WHERE `name` = \''.pSQL($this->name).'\'');
+            SELECT `id_configuration` AS id
+            FROM `'._DB_PREFIX_.'configuration`
+            WHERE `name` = \''.pSQL($this->name).'\'');
         if ($last_insert) {
             $this->id = $last_insert['id'];
         }
@@ -98,15 +98,15 @@ class TranslatedConfigurationCore extends Configuration
     public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
     {
         $query = '
-		SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
-		'.$sql_join.'
-		WHERE id_configuration IN
-		(	SELECT id_configuration
-			FROM '._DB_PREFIX_.$this->def['table'].'_lang
-		) '.$sql_filter.'
-		'.($sql_sort != '' ? $sql_sort : '').'
-		'.($sql_limit != '' ? $sql_limit : '').'
-		';
+        SELECT DISTINCT main.`'.$this->def['primary'].'` FROM `'._DB_PREFIX_.$this->def['table'].'` main
+        '.$sql_join.'
+        WHERE id_configuration IN
+        (	SELECT id_configuration
+            FROM '._DB_PREFIX_.$this->def['table'].'_lang
+        ) '.$sql_filter.'
+        '.($sql_sort != '' ? $sql_sort : '').'
+        '.($sql_limit != '' ? $sql_limit : '').'
+        ';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
 }
