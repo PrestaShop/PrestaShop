@@ -71,9 +71,9 @@ class ImageManagerCore
             // Size is already ok
             if ($y < $size && $x <= $max_x) {
                 copy($image, _PS_TMP_IMG_DIR_.$cache_image);
-            }
-            // We need to resize */
-            else {
+            } else {
+                // We need to resize */
+
                 $ratio_x = $x / ($y / $size);
                 if ($ratio_x > $max_x) {
                     $ratio_x = $max_x;
@@ -138,10 +138,20 @@ class ImageManagerCore
      * @param int    $src_height
      * @return bool Operation result
      */
-    public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg',
-                                $force_type = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
-                                &$src_width = null, &$src_height = null)
-    {
+    public static function resize(
+        $src_file,
+        $dst_file,
+        $dst_width = null,
+        $dst_height = null,
+        $file_type = 'jpg',
+        $force_type = false,
+        &$error = 0,
+        &$tgt_width = null,
+        &$tgt_height = null,
+        $quality = 5,
+        &$src_width = null,
+        &$src_height = null
+    ) {
         if (PHP_VERSION_ID < 50300) {
             clearstatcache();
         } else {
@@ -472,18 +482,16 @@ class ImageManagerCore
     public static function create($type, $filename)
     {
         switch ($type) {
-            case IMAGETYPE_GIF :
+            case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
-            break;
-
-            case IMAGETYPE_PNG :
+                break;
+            case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
-            break;
-
-            case IMAGETYPE_JPEG :
+                break;
+            case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
-            break;
+                break;
         }
     }
 
@@ -526,20 +534,18 @@ class ImageManagerCore
         switch ($type) {
             case 'gif':
                 $success = imagegif($resource, $filename);
-            break;
-
+                break;
             case 'png':
                 $quality = ($ps_png_quality === false ? 7 : $ps_png_quality);
                 $success = imagepng($resource, $filename, (int)$quality);
-            break;
-
+                break;
             case 'jpg':
             case 'jpeg':
             default:
                 $quality = ($ps_jpeg_quality === false ? 90 : $ps_jpeg_quality);
                 imageinterlace($resource, 1); /// make it PROGRESSIVE
                 $success = imagejpeg($resource, $filename, (int)$quality);
-            break;
+                break;
         }
         imagedestroy($resource);
         @chmod($filename, 0664);
@@ -555,10 +561,10 @@ class ImageManagerCore
     public static function getMimeTypeByExtension($file_name)
     {
         $types = array(
-                        'image/gif' => array('gif'),
-                        'image/jpeg' => array('jpg', 'jpeg'),
-                        'image/png' => array('png')
-                    );
+            'image/gif' => array('gif'),
+            'image/jpeg' => array('jpg', 'jpeg'),
+            'image/png' => array('png')
+        );
         $extension = substr($file_name, strrpos($file_name, '.') + 1);
 
         $mime_type = null;
