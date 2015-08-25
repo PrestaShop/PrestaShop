@@ -96,10 +96,10 @@ class CustomizationCore extends ObjectModel
     public static function getReturnedCustomizations($id_order)
     {
         if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
-			FROM `'._DB_PREFIX_.'order_return` ore
-			INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
-			WHERE ore.`id_order` = '.(int)($id_order).' AND ord.`id_customization` != 0')) === false) {
+            SELECT ore.`id_order_return`, ord.`id_order_detail`, ord.`id_customization`, ord.`product_quantity`
+            FROM `'._DB_PREFIX_.'order_return` ore
+            INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (ord.`id_order_return` = ore.`id_order_return`)
+            WHERE ore.`id_order` = '.(int)($id_order).' AND ord.`id_customization` != 0')) === false) {
             return false;
         }
         $customizations = array();
@@ -139,11 +139,11 @@ class CustomizationCore extends ObjectModel
             $id_shop = (int)Context::getContext()->shop->id;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `name`
-		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
-		AND `id_lang` = '.(int)($id_lang)
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+            'SELECT `name`
+            FROM `'._DB_PREFIX_.'customization_field_lang`
+            WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
+            AND `id_lang` = '.(int)($id_lang)
         );
 
         return $result['name'];
@@ -163,9 +163,10 @@ class CustomizationCore extends ObjectModel
 
         if (!empty($in_values)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
-							 FROM `'._DB_PREFIX_.'customization`
-							 WHERE `id_customization` IN ('.$in_values.')');
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+                FROM `'._DB_PREFIX_.'customization`
+                WHERE `id_customization` IN ('.$in_values.')'
+            );
 
             foreach ($results as $row) {
                 $quantities[$row['id_customization']] = $row;
@@ -180,11 +181,11 @@ class CustomizationCore extends ObjectModel
         $quantity = array();
 
         $results = Db::getInstance()->executeS('
-			SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
-			FROM `'._DB_PREFIX_.'customization`
-			WHERE `id_cart` = '.(int)$id_cart.'
-			GROUP BY `id_cart`, `id_product`, `id_product_attribute`
-		');
+            SELECT `id_product`, `id_product_attribute`, SUM(`quantity`) AS quantity
+            FROM `'._DB_PREFIX_.'customization`
+            WHERE `id_cart` = '.(int)$id_cart.'
+            GROUP BY `id_cart`, `id_product`, `id_product_attribute`
+        ');
 
         foreach ($results as $row) {
             $quantity[$row['id_product']][$row['id_product_attribute']] = $row['quantity'];
@@ -213,19 +214,19 @@ class CustomizationCore extends ObjectModel
     public static function isCurrentlyUsed($table = null, $has_active_column = false)
     {
         return (bool)Db::getInstance()->getValue('
-			SELECT `id_customization_field`
-			FROM `'._DB_PREFIX_.'customization_field`
-		');
+            SELECT `id_customization_field`
+            FROM `'._DB_PREFIX_.'customization_field`
+        ');
     }
 
     public function getWsCustomizedDataTextFields()
     {
         if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value
-			FROM `'._DB_PREFIX_.'customization_field` cf
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
-			WHERE `id_product` = '.(int)$this->id_product.'
-			AND cf.type = 1')) {
+            SELECT id_customization_field, value
+            FROM `'._DB_PREFIX_.'customization_field` cf
+            LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
+            WHERE `id_product` = '.(int)$this->id_product.'
+            AND cf.type = 1')) {
             return array();
         }
         return $results;
@@ -234,11 +235,11 @@ class CustomizationCore extends ObjectModel
     public function getWsCustomizedDataImages()
     {
         if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value
-			FROM `'._DB_PREFIX_.'customization_field` cf
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
-			WHERE `id_product` = '.(int)$this->id_product.'
-			AND cf.type = 0')) {
+            SELECT id_customization_field, value
+            FROM `'._DB_PREFIX_.'customization_field` cf
+            LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
+            WHERE `id_product` = '.(int)$this->id_product.'
+            AND cf.type = 0')) {
             return array();
         }
         return $results;
@@ -252,12 +253,12 @@ class CustomizationCore extends ObjectModel
             return false;
         }
         Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'customized_data`
-		WHERE id_customization = '.(int)$this->id.'
-		AND type = 1');
+        DELETE FROM `'._DB_PREFIX_.'customized_data`
+        WHERE id_customization = '.(int)$this->id.'
+        AND type = 1');
         foreach ($values as $value) {
             $query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
-				VALUES ('.(int)$this->id.', 1, '.(int)$value['id_customization_field'].', \''.pSQL($value['value']).'\')';
+                VALUES ('.(int)$this->id.', 1, '.(int)$value['id_customization_field'].', \''.pSQL($value['value']).'\')';
 
             if (!Db::getInstance()->execute($query)) {
                 return false;
