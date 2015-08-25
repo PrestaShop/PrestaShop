@@ -256,8 +256,8 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        $uploaded_files = Db::getInstance()->executeS('
-            SELECT cd.`value`
+        $uploaded_files = Db::getInstance()->executeS(
+            'SELECT cd.`value`
             FROM `'._DB_PREFIX_.'customized_data` cd
             INNER JOIN `'._DB_PREFIX_.'customization` c ON (cd.`id_customization`= c.`id_customization`)
             WHERE cd.`type`= 0 AND c.`id_cart`='.(int)$this->id
@@ -268,8 +268,8 @@ class CartCore extends ObjectModel
             unlink(_PS_UPLOAD_DIR_.$must_unlink['value']);
         }
 
-        Db::getInstance()->execute('
-            DELETE FROM `'._DB_PREFIX_.'customized_data`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'customized_data`
             WHERE `id_customization` IN (
                 SELECT `id_customization`
                 FROM `'._DB_PREFIX_.'customization`
@@ -277,8 +277,8 @@ class CartCore extends ObjectModel
             )'
         );
 
-        Db::getInstance()->execute('
-            DELETE FROM `'._DB_PREFIX_.'customization`
+        Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'customization`
             WHERE `id_cart` = '.(int)$this->id
         );
 
@@ -361,8 +361,8 @@ class CartCore extends ObjectModel
 
         $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter;
         if (!Cache::isStored($cache_key)) {
-            $result = Db::getInstance()->executeS('
-                SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
+            $result = Db::getInstance()->executeS(
+                'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
                 FROM `'._DB_PREFIX_.'cart_cart_rule` cd
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
@@ -406,8 +406,8 @@ class CartCore extends ObjectModel
     {
         $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-ids';
         if (!Cache::isStored($cache_key)) {
-            $result = Db::getInstance()->executeS('
-                SELECT cr.`id_cart_rule`
+            $result = Db::getInstance()->executeS(
+                'SELECT cr.`id_cart_rule`
                 FROM `'._DB_PREFIX_.'cart_cart_rule` cd
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
@@ -512,13 +512,17 @@ class CartCore extends ObjectModel
         // Build JOIN
         $sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
         $sql->innerJoin('product_shop', 'product_shop', '(product_shop.`id_shop` = cp.`id_shop` AND product_shop.`id_product` = p.`id_product`)');
-        $sql->leftJoin('product_lang', 'pl', '
-            p.`id_product` = pl.`id_product`
+        $sql->leftJoin(
+            'product_lang',
+            'pl',
+            'p.`id_product` = pl.`id_product`
             AND pl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('pl', 'cp.id_shop')
         );
 
-        $sql->leftJoin('category_lang', 'cl', '
-            product_shop.`id_category_default` = cl.`id_category`
+        $sql->leftJoin(
+            'category_lang',
+            'cl',
+            'product_shop.`id_category_default` = cl.`id_category`
             AND cl.`id_lang` = '.(int)$this->id_lang.Shop::addSqlRestrictionOnLang('cl', 'cp.id_shop')
         );
 
@@ -539,8 +543,11 @@ class CartCore extends ObjectModel
 
         if (Customization::isFeatureActive()) {
             $sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
-            $sql->leftJoin('customization', 'cu',
-                'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.`id_product_attribute` AND cu.`id_cart` = '.(int)$this->id);
+            $sql->leftJoin(
+                'customization',
+                'cu',
+                'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.`id_product_attribute` AND cu.`id_cart` = '.(int)$this->id
+            );
             $sql->groupBy('cp.`id_product_attribute`, cp.`id_product`, cp.`id_shop`');
         } else {
             $sql->select('NULL AS customization_quantity, NULL AS id_customization');
@@ -754,8 +761,8 @@ class CartCore extends ObjectModel
             return;
         }
 
-        $result = Db::getInstance()->executeS('
-            SELECT pac.`id_product_attribute`, agl.`public_name` AS public_group_name, al.`name` AS attribute_name
+        $result = Db::getInstance()->executeS(
+            'SELECT pac.`id_product_attribute`, agl.`public_name` AS public_group_name, al.`name` AS attribute_name
             FROM `'._DB_PREFIX_.'product_attribute_combination` pac
             LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
             LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
@@ -810,8 +817,8 @@ class CartCore extends ObjectModel
             return self::$_nbProducts[$id];
         }
 
-        self::$_nbProducts[$id] = (int)Db::getInstance()->getValue('
-            SELECT SUM(`quantity`)
+        self::$_nbProducts[$id] = (int)Db::getInstance()->getValue(
+            'SELECT SUM(`quantity`)
             FROM `'._DB_PREFIX_.'cart_product`
             WHERE `id_cart` = '.(int)$id
         );
@@ -892,9 +899,16 @@ class CartCore extends ObjectModel
      * @param int $id_product_attribute Attribute ID if needed
      * @param string $operator Indicate if quantity must be increased or decreased
      */
-    public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
-        $operator = 'up', $id_address_delivery = 0, Shop $shop = null, $auto_add_cart_rule = true)
-    {
+    public function updateQty(
+        $quantity,
+        $id_product,
+        $id_product_attribute = null,
+        $id_customization = false,
+        $operator = 'up',
+        $id_address_delivery = 0,
+        Shop $shop = null,
+        $auto_add_cart_rule = true
+    ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
         }
@@ -1002,8 +1016,8 @@ class CartCore extends ObjectModel
                 } elseif ($new_qty < $minimal_quantity) {
                     return -1;
                 } else {
-                    Db::getInstance()->execute('
-                        UPDATE `'._DB_PREFIX_.'cart_product`
+                    Db::getInstance()->execute(
+                        'UPDATE `'._DB_PREFIX_.'cart_product`
                         SET `quantity` = `quantity` '.$qty.', `date_add` = NOW()
                         WHERE `id_product` = '.(int)$id_product.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
@@ -1011,9 +1025,9 @@ class CartCore extends ObjectModel
                         LIMIT 1'
                     );
                 }
-            }
-            /* Add product to the cart */
-            elseif ($operator == 'up') {
+            } elseif ($operator == 'up') {
+                /* Add product to the cart */
+
                 $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
                         FROM '._DB_PREFIX_.'product p
                         '.Product::sqlStock('p', $id_product_attribute, true, $shop).'
@@ -1137,8 +1151,8 @@ class CartCore extends ObjectModel
      */
     public function _addCustomization($id_product, $id_product_attribute, $index, $type, $field, $quantity)
     {
-        $exising_customization = Db::getInstance()->executeS('
-            SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
+        $exising_customization = Db::getInstance()->executeS(
+            'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
             LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
             ON cu.`id_customization` = cd.`id_customization`
             WHERE cu.id_cart = '.(int)$this->id.'
@@ -1242,7 +1256,8 @@ class CartCore extends ObjectModel
                 FROM `'._DB_PREFIX_.'cart_product`
                 WHERE `id_product` = '.(int)$id_product.'
                 AND `id_cart` = '.(int)$this->id.'
-                AND `id_product_attribute` = '.(int)$id_product_attribute);
+                AND `id_product_attribute` = '.(int)$id_product_attribute
+            );
 
             $customization_quantity = (int)Db::getInstance()->getValue('
             SELECT `quantity`
@@ -1275,8 +1290,8 @@ class CartCore extends ObjectModel
 
         /* If the product still possesses customization it does not have to be deleted */
         if (Db::getInstance()->NumRows() && (int)$result['quantity']) {
-            return Db::getInstance()->execute('
-                UPDATE `'._DB_PREFIX_.'cart_product`
+            return Db::getInstance()->execute(
+                'UPDATE `'._DB_PREFIX_.'cart_product`
                 SET `quantity` = '.(int)$result['quantity'].'
                 WHERE `id_cart` = '.(int)$this->id.'
                 AND `id_product` = '.(int)$id_product.
@@ -2326,17 +2341,17 @@ class CartCore extends ObjectModel
         if ($order_by_price) {
             if ($order_way) {
                 return ($option1['total_price_with_tax'] < $option2['total_price_with_tax']) * 2 - 1;
-            } // return -1 or 1
-            else {
+            } else {
+                // return -1 or 1
                 return ($option1['total_price_with_tax'] >= $option2['total_price_with_tax']) * 2 - 1;
             }
-        } // return -1 or 1
-        elseif ($order_way) {
+        } elseif ($order_way) {
+            // return -1 or 1
             return ($option1['position'] < $option2['position']) * 2 - 1;
-        } // return -1 or 1
-            else {
-                return ($option1['position'] >= $option2['position']) * 2 - 1;
-            } // return -1 or 1
+        } else {
+            // return -1 or 1
+            return ($option1['position'] >= $option2['position']) * 2 - 1;
+        }
     }
 
     public function carrierIsSelected($id_carrier, $id_address)
@@ -2760,8 +2775,8 @@ class CartCore extends ObjectModel
             if (!$this->isMultiAddressDelivery()
                 && isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
                 && $this->id_address_delivery
-                && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery
-            )) {
+                && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)
+            ) {
                 $id_zone = Address::getZoneById((int)$this->id_address_delivery);
             } else {
                 if (!Validate::isLoadedObject($default_country)) {
@@ -3127,7 +3142,6 @@ class CartCore extends ObjectModel
         foreach ($cart_rules as &$cart_rule) {
             // If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code']))) {
-
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
                 $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
@@ -3378,8 +3392,8 @@ class CartCore extends ObjectModel
     {
         $result = true;
 
-        $cust_data = Db::getInstance()->getRow('
-            SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
+        $cust_data = Db::getInstance()->getRow(
+            'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `'._DB_PREFIX_.'customization` cu
             LEFT JOIN `'._DB_PREFIX_.'customized_data` cd
             ON cu.`id_customization` = cd.`id_customization`
             WHERE cu.`id_cart` = '.(int)$this->id.'
@@ -3393,8 +3407,8 @@ class CartCore extends ObjectModel
             $result &= (@unlink(_PS_UPLOAD_DIR_.$cust_data['value']) && @unlink(_PS_UPLOAD_DIR_.$cust_data['value'].'_small'));
         }
 
-        $result &= Db::getInstance()->execute('DELETE
-            FROM `'._DB_PREFIX_.'customized_data`
+        $result &= Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'customized_data`
             WHERE `id_customization` = '.(int)$cust_data['id_customization'].'
             AND `index` = '.(int)$index
         );
@@ -3415,8 +3429,8 @@ class CartCore extends ObjectModel
             return array();
         }
 
-        $result = Db::getInstance()->executeS('
-            SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
+        $result = Db::getInstance()->executeS(
+            'SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
             FROM `'._DB_PREFIX_.'customization` cu
             LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cu.`id_customization` = cd.`id_customization`)
             WHERE cu.id_cart = '.(int)$this->id.'
@@ -3505,8 +3519,8 @@ class CartCore extends ObjectModel
         }
 
         // Customized products
-        $customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT *
+        $customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT *
             FROM '._DB_PREFIX_.'customization c
             LEFT JOIN '._DB_PREFIX_.'customized_data cd ON cd.id_customization = c.id_customization
             WHERE c.id_cart = '.(int)$this->id
@@ -3527,8 +3541,8 @@ class CartCore extends ObjectModel
         // Insert new customizations
         $custom_ids = array();
         foreach ($customs_by_id as $customization_id => $val) {
-            Db::getInstance()->execute('
-                INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
+            Db::getInstance()->execute(
+                'INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
                 VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
             );
             $custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
@@ -3556,8 +3570,8 @@ class CartCore extends ObjectModel
 
     public function getWsCartRows()
     {
-        return Db::getInstance()->executeS('
-            SELECT id_product, id_product_attribute, quantity, id_address_delivery
+        return Db::getInstance()->executeS(
+            'SELECT id_product, id_product_attribute, quantity, id_address_delivery
             FROM `'._DB_PREFIX_.'cart_product`
             WHERE id_cart = '.(int)$this->id.' AND id_shop = '.(int)Context::getContext()->shop->id
         );
@@ -3648,9 +3662,14 @@ class CartCore extends ObjectModel
         return true;
     }
 
-    public function duplicateProduct($id_product, $id_product_attribute, $id_address_delivery,
-        $new_id_address_delivery, $quantity = 1, $keep_quantity = false)
-    {
+    public function duplicateProduct(
+        $id_product,
+        $id_product_attribute,
+        $id_address_delivery,
+        $new_id_address_delivery,
+        $quantity = 1,
+        $keep_quantity = false
+    ) {
         // Check address is linked with the customer
         if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
             return false;
