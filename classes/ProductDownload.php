@@ -177,11 +177,11 @@ class ProductDownloadCore extends ObjectModel
             return self::$_productIds[$id_product];
         }
         self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
-		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.'
-		AND `active` = 1
-		ORDER BY `id_product_download` DESC');
+        SELECT `id_product_download`
+        FROM `'._DB_PREFIX_.'product_download`
+        WHERE `id_product` = '.(int)$id_product.'
+        AND `active` = 1
+        ORDER BY `id_product_download` DESC');
 
         return self::$_productIds[$id_product];
     }
@@ -198,9 +198,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getIdFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+        SELECT `id_product_download`
+        FROM `'._DB_PREFIX_.'product_download`
+        WHERE `filename` = \''.pSQL($filename).'\'');
     }
 
     /**
@@ -212,11 +212,11 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromIdProduct($id_product)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `filename`
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` = '.(int)$id_product.'
-				AND `active` = 1
-		');
+            SELECT `filename`
+            FROM `'._DB_PREFIX_.'product_download`
+            WHERE `id_product` = '.(int)$id_product.'
+                AND `active` = 1
+        ');
     }
 
     /**
@@ -228,9 +228,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `display_filename`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+        SELECT `display_filename`
+        FROM `'._DB_PREFIX_.'product_download`
+        WHERE `filename` = \''.pSQL($filename).'\'');
     }
 
     /**
