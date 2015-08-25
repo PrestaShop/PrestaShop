@@ -169,8 +169,8 @@ class OrderInvoiceCore extends ObjectModel
             return false;
         }
 
-        $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_order_invoice`
+        $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE number = '.(int)$id_invoice
         );
@@ -331,13 +331,13 @@ class OrderInvoiceCore extends ObjectModel
     public function useOneAfterAnotherTaxComputationMethod()
     {
         // if one of the order details use the tax computation method the display will be different
-        return Db::getInstance()->getValue('
-		SELECT od.`tax_computation_method`
-		FROM `'._DB_PREFIX_.'order_detail_tax` odt
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-		WHERE od.`id_order` = '.(int)$this->id_order.'
-		AND od.`id_order_invoice` = '.(int)$this->id.'
-		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+        return Db::getInstance()->getValue(
+            'SELECT od.`tax_computation_method`
+		    FROM `'._DB_PREFIX_.'order_detail_tax` odt
+		    LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+		    WHERE od.`id_order` = '.(int)$this->id_order.'
+		    AND od.`id_order_invoice` = '.(int)$this->id.'
+		    AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
         ) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
     }
 
@@ -722,8 +722,11 @@ class OrderInvoiceCore extends ObjectModel
         $query = new DbQuery();
         $query->select('oip2.id_order_invoice');
         $query->from('order_invoice_payment', 'oip1');
-        $query->innerJoin('order_invoice_payment', 'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice');
+        $query->innerJoin(
+            'order_invoice_payment',
+            'oip2',
+            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+        );
         $query->where('oip1.id_order_invoice = '.$this->id);
 
         $invoices = Db::getInstance()->executeS($query);
@@ -755,10 +758,12 @@ class OrderInvoiceCore extends ObjectModel
         $query = new DbQuery();
         $query->select('SUM(oi.total_paid_tax_incl) as total_paid_tax_incl, SUM(oi.total_paid_tax_excl) as total_paid_tax_excl');
         $query->from('order_invoice_payment', 'oip1');
-        $query->innerJoin('order_invoice_payment', 'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice');
-        $query->leftJoin('order_invoice', 'oi',
-            'oi.id_order_invoice = oip2.id_order_invoice');
+        $query->innerJoin(
+            'order_invoice_payment',
+            'oip2',
+            'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice'
+        );
+        $query->leftJoin('order_invoice', 'oi', 'oi.id_order_invoice = oip2.id_order_invoice');
         $query->where('oip1.id_order_invoice = '.$this->id);
 
         $row = Db::getInstance()->getRow($query);
@@ -871,7 +876,8 @@ class OrderInvoiceCore extends ObjectModel
         return $is_correct;
     }
     
-    public static function getCurrentFormattedShopAddress($id_shop = null) {
+    public static function getCurrentFormattedShopAddress($id_shop = null)
+    {
         $address = new Address();
         $address->company = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
         $address->address1 = Configuration::get('PS_SHOP_ADDR1', null, null, $id_shop);
@@ -892,10 +898,11 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.6.1.1
      */
-    public static function fixAllShopAddresses() {
+    public static function fixAllShopAddresses()
+    {
         $shop_ids = Shop::getShops(false, null, true);
         $db = Db::getInstance();
-        foreach($shop_ids as $id_shop) {
+        foreach ($shop_ids as $id_shop) {
             $address = self::getCurrentFormattedShopAddress($id_shop);
             $escaped_address = $db->escape($address, true, true);
 
