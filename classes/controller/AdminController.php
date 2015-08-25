@@ -3108,7 +3108,7 @@ class AdminControllerCore extends Controller
         if ($this->shopLinkType) {
             $select_shop = ', shop.name as shop_name ';
             $join_shop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
-							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
+                            ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
             $where_shop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
         }
 
@@ -3117,10 +3117,10 @@ class AdminControllerCore extends Controller
                 $test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table)) {
                     $this->_where .= ' AND EXISTS (
-						SELECT 1
-						FROM `'._DB_PREFIX_.$this->table.'_shop` sa
-						WHERE a.'.$this->identifier.' = sa.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
-					)';
+                        SELECT 1
+                        FROM `'._DB_PREFIX_.$this->table.'_shop` sa
+                        WHERE a.'.$this->identifier.' = sa.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
+                    )';
                 }
             }
         }
@@ -3176,30 +3176,30 @@ class AdminControllerCore extends Controller
             }
 
             $this->_listsql .= '
-			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop;
+            '.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop;
 
             $sql_from = '
-			FROM `'._DB_PREFIX_.$sql_table.'` a ';
+            FROM `'._DB_PREFIX_.$sql_table.'` a ';
             $sql_join = '
-			'.$lang_join.'
-			'.(isset($this->_join) ? $this->_join.' ' : '').'
-			'.$join_shop;
+            '.$lang_join.'
+            '.(isset($this->_join) ? $this->_join.' ' : '').'
+            '.$join_shop;
             $sql_where = ' '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
             (isset($this->_filter) ? $this->_filter : '').$where_shop.'
-			'.(isset($this->_group) ? $this->_group.' ' : '').'
-			'.$having_clause;
+            '.(isset($this->_group) ? $this->_group.' ' : '').'
+            '.$having_clause;
             $sql_order_by = ' ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
             ($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
             $sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.', '.(int)$limit : '');
 
             if ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having)) {
                 $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS
-								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+                                '.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
                                 $sql_order_by.$sql_limit;
                 $list_count = 'SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`';
             } else {
                 $this->_listsql = 'SELECT
-								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+                                '.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
                                 $sql_order_by.$sql_limit;
                 $list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
             }
@@ -3789,28 +3789,28 @@ class AdminControllerCore extends Controller
     {
         $help_class_name = $_GET['controller'];
         $popup_content = "<!doctype html>
-		<html>
-			<head>
-				<meta charset='UTF-8'>
-				<title>PrestaShop Help</title>
-				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
-				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
-				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
-				<script src='"._PS_JS_DIR_."admin.js'></script>
-				<script src='"._PS_JS_DIR_."tools.js'></script>
-				<script>
-					help_class_name='".addslashes($help_class_name)."';
-					iso_user = '".addslashes($this->context->language->iso_code)."'
-				</script>
-				<script src='themes/default/js/help.js'></script>
-				<script>
-					$(function(){
-						initHelp();
-					});
-				</script>
-			</head>
-			<body><div id='help-container' class='help-popup'></div></body>
-		</html>";
+        <html>
+            <head>
+                <meta charset='UTF-8'>
+                <title>PrestaShop Help</title>
+                <link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
+                <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
+                <script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
+                <script src='"._PS_JS_DIR_."admin.js'></script>
+                <script src='"._PS_JS_DIR_."tools.js'></script>
+                <script>
+                    help_class_name='".addslashes($help_class_name)."';
+                    iso_user = '".addslashes($this->context->language->iso_code)."'
+                </script>
+                <script src='themes/default/js/help.js'></script>
+                <script>
+                    $(function(){
+                        initHelp();
+                    });
+                </script>
+            </head>
+            <body><div id='help-container' class='help-popup'></div></body>
+        </html>";
         die($popup_content);
     }
 
