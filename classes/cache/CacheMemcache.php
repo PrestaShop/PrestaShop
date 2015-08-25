@@ -55,16 +55,20 @@ class CacheMemcacheCore extends Cache
      */
     public function connect()
     {
-        if (class_exists('Memcache') && extension_loaded('memcache'))
+        if (class_exists('Memcache') && extension_loaded('memcache')) {
             $this->memcache = new Memcache();
-        else
+        } else {
             return;
+        }
 
         $servers = self::getMemcachedServers();
-        if (!$servers)
+        if (!$servers) {
             return;
-        foreach ($servers as $server)
+        }
+
+        foreach ($servers as $server) {
             $this->memcache->addServer($server['ip'], $server['port'], true, (int)$server['weight']);
+        }
 
         $this->is_connected = true;
     }
@@ -74,8 +78,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function _set($key, $value, $ttl = 0)
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return $this->memcache->set($key, $value, 0, $ttl);
     }
 
@@ -84,8 +90,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function _get($key)
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return $this->memcache->get($key);
     }
 
@@ -94,8 +102,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function _exists($key)
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return ($this->memcache->get($key) !== false);
     }
 
@@ -104,8 +114,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function _delete($key)
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return $this->memcache->delete($key);
     }
 
@@ -114,8 +126,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function _writeKeys()
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return true;
     }
 
@@ -124,8 +138,10 @@ class CacheMemcacheCore extends Cache
      */
     public function flush()
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return $this->memcache->flush();
     }
 
@@ -166,46 +182,39 @@ class CacheMemcacheCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return bool
      */
     public function delete($key)
     {
-        if ($key == '*')
+        if ($key == '*') {
             $this->flush();
-        elseif (strpos($key, '*') === false)
+        } elseif (strpos($key, '*') === false) {
             $this->_delete($key);
-        else
-        {
+        } else {
             // Get keys (this code comes from Doctrine 2 project)
             $pattern = str_replace('\\*', '.*', preg_quote($key));
             $servers = $this->getMemcachedServers();
-            if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
+            if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats')) {
                 $all_slabs = $this->memcache->getStats('slabs');
+            }
 
-            if (isset($all_slabs) && is_array($all_slabs))
-            {
-                foreach ($all_slabs as $server => $slabs)
-                {
-                    if (is_array($slabs))
-                    {
-                        foreach (array_keys($slabs) as $i => $slab_id) // $slab_id is not an int but a string, using the key instead ?
-                        {
-                            if (is_int($i))
-                            {
+            if (isset($all_slabs) && is_array($all_slabs)) {
+                foreach ($all_slabs as $server => $slabs) {
+                    if (is_array($slabs)) {
+                        // $slab_id is not an int but a string, using the key instead ?{
+                        foreach (array_keys($slabs) as $i => $slab_id) {
+                            if (is_int($i)) {
                                 $dump = $this->memcache->getStats('cachedump', (int)$i);
-                                if ($dump)
-                                {
-                                    foreach ($dump as $entries)
-                                    {
-                                        if ($entries)
-                                        {
-                                            foreach ($entries as $key => $data)
-                                            {
-                                                if (preg_match('#^'.$pattern.'$#', $key))
+                                if ($dump) {
+                                    foreach ($dump as $entries) {
+                                        if ($entries) {
+                                            foreach ($entries as $key => $data) {
+                                                if (preg_match('#^'.$pattern.'$#', $key)) {
                                                     $this->_delete($key);
+                                                }
                                             }
                                         }
                                     }
@@ -226,8 +235,10 @@ class CacheMemcacheCore extends Cache
      */
     protected function close()
     {
-        if (!$this->is_connected)
+        if (!$this->is_connected) {
             return false;
+        }
+
         return $this->memcache->close();
     }
 

@@ -125,12 +125,11 @@ abstract class CacheCore
      */
     public static function getInstance()
     {
-        if (!self::$instance)
-        {
+        if (!self::$instance) {
             $caching_system = _PS_CACHING_SYSTEM_;
             self::$instance = new $caching_system();
-
         }
+
         return self::$instance;
     }
 
@@ -161,10 +160,10 @@ abstract class CacheCore
      */
     public function set($key, $value, $ttl = 0)
     {
-        if ($this->_set($key, $value, $ttl))
-        {
-            if ($ttl < 0)
+        if ($this->_set($key, $value, $ttl)) {
+            if ($ttl < 0) {
                 $ttl = 0;
+            }
 
             $this->keys[$key] = ($ttl == 0) ? 0 : time() + $ttl;
             $this->_writeKeys();
@@ -181,8 +180,9 @@ abstract class CacheCore
      */
     public function get($key)
     {
-        if (!isset($this->keys[$key]))
+        if (!isset($this->keys[$key])) {
             return false;
+        }
 
         return $this->_get($key);
     }
@@ -195,15 +195,16 @@ abstract class CacheCore
      */
     public function exists($key)
     {
-        if (!isset($this->keys[$key]))
+        if (!isset($this->keys[$key])) {
             return false;
+        }
 
         return $this->_exists($key);
     }
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return array List of deleted keys
@@ -212,26 +213,28 @@ abstract class CacheCore
     {
         // Get list of keys to delete
         $keys = array();
-        if ($key == '*')
+        if ($key == '*') {
             $keys = $this->keys;
-        elseif (strpos($key, '*') === false)
+        } elseif (strpos($key, '*') === false) {
             $keys = array($key);
-        else
-        {
+        } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
-            foreach ($this->keys as $k => $ttl)
-                if (preg_match('#^'.$pattern.'$#', $k))
+            foreach ($this->keys as $k => $ttl) {
+                if (preg_match('#^'.$pattern.'$#', $k)) {
                     $keys[] = $k;
+                }
+            }
         }
 
         // Delete keys
-        foreach ($keys as $key)
-        {
-            if (!isset($this->keys[$key]))
+        foreach ($keys as $key) {
+            if (!isset($this->keys[$key])) {
                 continue;
+            }
 
-            if ($this->_delete($key))
+            if ($this->_delete($key)) {
                 unset($this->keys[$key]);
+            }
         }
 
         $this->_writeKeys();
@@ -246,17 +249,19 @@ abstract class CacheCore
      */
     public function setQuery($query, $result)
     {
-        if ($this->isBlacklist($query))
+        if ($this->isBlacklist($query)) {
             return true;
+        }
 
-        if (empty($result) || $result === false)
+        if (empty($result) || $result === false) {
             $result = array();
+        }
 
-        if (is_null($this->sql_tables_cached))
-        {
+        if (is_null($this->sql_tables_cached)) {
             $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached))
+            if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
+            }
         }
 
         // Store query results in cache
@@ -266,15 +271,15 @@ abstract class CacheCore
         $this->set($key, $result);
 
         // Get all table from the query and save them in cache
-        if ($tables = $this->getTables($query))
-            foreach ($tables as $table)
-            {
-                if (!isset($this->sql_tables_cached[$table][$key]))
-                {
+        if ($tables = $this->getTables($query)) {
+            foreach ($tables as $table) {
+                if (!isset($this->sql_tables_cached[$table][$key])) {
                     $this->adjustTableCacheSize($table);
                     $this->sql_tables_cached[$table][$key] = true;
                 }
             }
+        }
+
         $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
@@ -285,13 +290,10 @@ abstract class CacheCore
      */
     protected function adjustTableCacheSize($table)
     {
-        if (isset($this->sql_tables_cached[$table])
-            && count($this->sql_tables_cached[$table]) > 5000)
-        {
+        if (isset($this->sql_tables_cached[$table]) && count($this->sql_tables_cached[$table]) > 5000) {
             // make sure the cache doesn't contains too many elements : delete the first 1000
             $table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
-            foreach($table_buffer as $fs_key => $value)
-            {
+            foreach ($table_buffer as $fs_key => $value) {
                 $this->delete($fs_key);
                 $this->delete($fs_key.'_nrows');
                 unset($this->sql_tables_cached[$table][$fs_key]);
@@ -301,15 +303,17 @@ abstract class CacheCore
 
     protected function getTables($string)
     {
-        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res))
-        {
-            foreach ($res[2] as $table)
-                if ($table != '')
+        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
+            foreach ($res[2] as $table) {
+                if ($table != '') {
                     $res[1][] = $table;
+                }
+            }
+
             return array_unique($res[1]);
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -319,24 +323,25 @@ abstract class CacheCore
      */
     public function deleteQuery($query)
     {
-        if (is_null($this->sql_tables_cached))
-        {
+        if (is_null($this->sql_tables_cached)) {
             $this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached))
+            if (!is_array($this->sql_tables_cached)) {
                 $this->sql_tables_cached = array();
+            }
         }
 
-        if ($tables = $this->getTables($query))
-            foreach ($tables as $table)
-                if (isset($this->sql_tables_cached[$table]))
-                {
-                    foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key)
-                    {
+        if ($tables = $this->getTables($query)) {
+            foreach ($tables as $table) {
+                if (isset($this->sql_tables_cached[$table])) {
+                    foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
                         $this->delete($fs_key);
                         $this->delete($fs_key.'_nrows');
                     }
                     unset($this->sql_tables_cached[$table]);
                 }
+            }
+        }
+
         $this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
@@ -348,9 +353,12 @@ abstract class CacheCore
      */
     protected function isBlacklist($query)
     {
-        foreach ($this->blacklist as $find)
-            if (false !== strpos($query, _DB_PREFIX_.$find))
+        foreach ($this->blacklist as $find) {
+            if (false !== strpos($query, _DB_PREFIX_.$find)) {
                 return true;
+            }
+        }
+
         return false;
     }
 
@@ -382,15 +390,15 @@ abstract class CacheCore
 
     public static function clean($key)
     {
-        if (strpos($key, '*') !== false)
-        {
+        if (strpos($key, '*') !== false) {
             $regexp = str_replace('\\*', '.*', preg_quote($key, '#'));
-            foreach (array_keys(Cache::$local) as $key)
-                if (preg_match('#^'.$regexp.'$#', $key))
+            foreach (array_keys(Cache::$local) as $key) {
+                if (preg_match('#^'.$regexp.'$#', $key)) {
                     unset(Cache::$local[$key]);
-        }
-        else
+                }
+            }
+        } else {
             unset(Cache::$local[$key]);
+        }
     }
-
 }

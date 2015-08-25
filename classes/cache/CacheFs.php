@@ -36,8 +36,9 @@ class CacheFsCore extends Cache
         $this->depth = Db::getInstance()->getValue('SELECT value FROM '._DB_PREFIX_.'configuration WHERE name= \'PS_CACHEFS_DIRECTORY_DEPTH\'', false);
 
         $keys_filename = $this->getFilename(self::KEYS_NAME);
-        if (@filemtime($keys_filename))
+        if (@filemtime($keys_filename)) {
             $this->keys = unserialize(file_get_contents($keys_filename));
+        }
     }
 
     /**
@@ -53,15 +54,13 @@ class CacheFsCore extends Cache
      */
     protected function _get($key)
     {
-        if ($this->keys[$key] > 0 && $this->keys[$key] < time())
-        {
+        if ($this->keys[$key] > 0 && $this->keys[$key] < time()) {
             $this->delete($key);
             return false;
         }
 
         $filename = $this->getFilename($key);
-        if (!@filemtime($filename))
-        {
+        if (!@filemtime($filename)) {
             unset($this->keys[$key]);
             $this->_writeKeys();
             return false;
@@ -75,8 +74,7 @@ class CacheFsCore extends Cache
      */
     protected function _exists($key)
     {
-        if ($this->keys[$key] > 0 && $this->keys[$key] < time())
-        {
+        if ($this->keys[$key] > 0 && $this->keys[$key] < time()) {
             $this->delete($key);
             return false;
         }
@@ -90,8 +88,9 @@ class CacheFsCore extends Cache
     protected function _delete($key)
     {
         $filename = $this->getFilename($key);
-        if (!@filemtime($filename))
+        if (!@filemtime($filename)) {
             return true;
+        }
         return unlink($filename);
     }
 
@@ -128,16 +127,19 @@ class CacheFsCore extends Cache
      */
     public static function createCacheDirectories($level_depth, $directory = false)
     {
-        if (!$directory)
+        if (!$directory) {
             $directory = _PS_CACHEFS_DIRECTORY_;
+        }
         $chars = '0123456789abcdef';
-        for ($i = 0, $length = strlen($chars); $i < $length; $i++)
-        {
+        for ($i = 0, $length = strlen($chars); $i < $length; $i++) {
             $new_dir = $directory.$chars[$i].'/';
-            if (mkdir($new_dir))
-                if (chmod($new_dir, 0777))
-                    if ($level_depth - 1 > 0)
+            if (mkdir($new_dir)) {
+                if (chmod($new_dir, 0777)) {
+                    if ($level_depth - 1 > 0) {
                         CacheFs::createCacheDirectories($level_depth - 1, $new_dir);
+                    }
+                }
+            }
         }
     }
 
@@ -151,11 +153,13 @@ class CacheFsCore extends Cache
     {
         $key = md5($key);
         $path = _PS_CACHEFS_DIRECTORY_;
-        for ($i = 0; $i < $this->depth; $i++)
+        for ($i = 0; $i < $this->depth; $i++) {
             $path .= $key[$i].'/';
+        }
 
-        if (!is_dir($path))
+        if (!is_dir($path)) {
             @mkdir($path, 0777, true);
+        }
 
         return $path.$key;
     }

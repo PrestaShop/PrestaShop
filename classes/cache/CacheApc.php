@@ -33,46 +33,46 @@ class CacheApcCore extends Cache
 {
     public function __construct()
     {
-        if (!function_exists('apc_exists'))
-        {
+        if (!function_exists('apc_exists')) {
             $this->keys = array();
             $cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
-            foreach ($cache_info['cache_list'] as $entry)
-            {
-                if (isset($entry['key']))
+            foreach ($cache_info['cache_list'] as $entry) {
+                if (isset($entry['key'])) {
                     $this->keys[$entry['key']] = $entry['ttl'];
-                else
+                } else {
                     $this->keys[$entry['info']] = $entry['ttl'];
+                }
             }
         }
     }
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return bool
      */
     public function delete($key)
     {
-        if ($key == '*')
+        if ($key == '*') {
             $this->flush();
-        elseif (strpos($key, '*') === false)
+        } elseif (strpos($key, '*') === false) {
             $this->_delete($key);
-        else
-        {
+        } else {
             $pattern = str_replace('\\*', '.*', preg_quote($key));
 
             $cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
-            foreach ($cache_info['cache_list'] as $entry)
-            {
-                if (isset($entry['key']))
+            foreach ($cache_info['cache_list'] as $entry) {
+                if (isset($entry['key'])) {
                     $key = $entry['key'];
-                else
+                } else {
                     $key = $entry['info'];
-                if (preg_match('#^'.$pattern.'$#', $key))
+                }
+
+                if (preg_match('#^'.$pattern.'$#', $key)) {
                     $this->_delete($key);
+                }
             }
         }
         return true;
@@ -99,10 +99,11 @@ class CacheApcCore extends Cache
      */
     protected function _exists($key)
     {
-        if (!function_exists('apc_exists'))
+        if (!function_exists('apc_exists')) {
             return isset($this->keys[$key]);
-        else
+        } else {
             return apc_exists($key);
+        }
     }
 
     /**
