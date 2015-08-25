@@ -32,7 +32,7 @@ class FileLoggerCore extends AbstractLogger
     * Write the message in the log file
     *
     * @param string message
-    * @param level
+    * @param $level
     */
     protected function logMessage($message, $level)
     {
@@ -57,12 +57,6 @@ class FileLoggerCore extends AbstractLogger
         }
     }
 
-    /**
-    * Log the message
-    *
-    * @param string message
-    * @param level
-    */
     public function getFilename()
     {
         if (empty($this->filename)) {

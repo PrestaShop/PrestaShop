@@ -60,7 +60,7 @@ abstract class AbstractLoggerCore
      * Check the level and log the message if needed
      *
      * @param string message
-     * @param level
+     * @param $level
      */
     public function log($message, $level = self::DEBUG)
     {

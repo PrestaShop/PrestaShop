@@ -705,8 +705,8 @@ class OrderCore extends ObjectModel
         }
 
         if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue('
-				SELECT `image_shop`.id_image
+            $id_image = Db::getInstance()->getValue(
+                'SELECT `image_shop`.id_image
 				FROM `'._DB_PREFIX_.'image` i'.
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
 				WHERE i.id_product = '.(int)$product['product_id']
@@ -1203,8 +1203,8 @@ class OrderCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance()->getValue('
-			SELECT `number`
+        return Db::getInstance()->getValue(
+            'SELECT `number`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE `id_order_invoice` = '.(int)$order_invoice_id
         );
@@ -1406,8 +1406,8 @@ class OrderCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance()->getValue('
-			SELECT `delivery_number`
+        return Db::getInstance()->getValue(
+            'SELECT `delivery_number`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE `id_order_invoice` = '.(int)$order_invoice_id
         );
@@ -1651,12 +1651,12 @@ class OrderCore extends ObjectModel
     public function useOneAfterAnotherTaxComputationMethod()
     {
         // if one of the order details use the tax computation method the display will be different
-        return Db::getInstance()->getValue('
-		SELECT od.`tax_computation_method`
-		FROM `'._DB_PREFIX_.'order_detail_tax` odt
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-		WHERE od.`id_order` = '.(int)$this->id.'
-		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+        return Db::getInstance()->getValue(
+            'SELECT od.`tax_computation_method`
+		    FROM `'._DB_PREFIX_.'order_detail_tax` odt
+		    LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+		    WHERE od.`id_order` = '.(int)$this->id.'
+		    AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
         );
     }
 
@@ -1772,8 +1772,8 @@ class OrderCore extends ObjectModel
      */
     public function getShipping()
     {
-        return Db::getInstance()->executeS('
-			SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name, c.`name` as state_name
+        return Db::getInstance()->executeS(
+            'SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name, c.`name` as state_name
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_history` oh
 				ON (o.`id_order` = oh.`id_order`)
@@ -1784,7 +1784,8 @@ class OrderCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
 				ON (oh.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE o.`id_order` = '.(int)$this->id.'
-			GROUP BY c.id_carrier');
+			GROUP BY c.id_carrier'
+        );
     }
 
 
@@ -1887,8 +1888,8 @@ class OrderCore extends ObjectModel
      */
     public function getOrdersTotalPaid()
     {
-        return Db::getInstance()->getValue('
-			SELECT SUM(total_paid_tax_incl)
+        return Db::getInstance()->getValue(
+            'SELECT SUM(total_paid_tax_incl)
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE `reference` = \''.pSQL($this->reference).'\'
 			AND `id_cart` = '.(int)$this->id_cart
@@ -1931,12 +1932,12 @@ class OrderCore extends ObjectModel
         if ($this->useOneAfterAnotherTaxComputationMethod()) {
             // sum by taxes
             $taxes_by_tax = Db::getInstance()->executeS('
-			SELECT odt.`id_order_detail`, t.`name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id.'
-			GROUP BY odt.`id_tax`
+			    SELECT odt.`id_order_detail`, t.`name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
+			    FROM `'._DB_PREFIX_.'order_detail_tax` odt
+			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+			    LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+			    WHERE od.`id_order` = '.(int)$this->id.'
+			    GROUP BY odt.`id_tax`
 			');
 
             // format response
@@ -2017,10 +2018,10 @@ class OrderCore extends ObjectModel
      */
     public function getEcoTaxTaxesBreakdown()
     {
-        return Db::getInstance()->executeS('
-		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
-		FROM `'._DB_PREFIX_.'order_detail`
-		WHERE `id_order` = '.(int)$this->id
+        return Db::getInstance()->executeS(
+            'SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
+		    FROM `'._DB_PREFIX_.'order_detail`
+		    WHERE `id_order` = '.(int)$this->id
         );
     }
 
@@ -2031,8 +2032,8 @@ class OrderCore extends ObjectModel
      */
     public function hasInvoice()
     {
-        return (bool)Db::getInstance()->getValue('
-			SELECT `id_order_invoice`
+        return (bool)Db::getInstance()->getValue(
+            'SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE `id_order` =  '.(int)$this->id.
             (Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')
@@ -2046,8 +2047,8 @@ class OrderCore extends ObjectModel
      */
     public function hasDelivery()
     {
-        return (bool)Db::getInstance()->getValue('
-			SELECT `id_order_invoice`
+        return (bool)Db::getInstance()->getValue(
+            'SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE `id_order` =  '.(int)$this->id.'
 			AND `delivery_number` > 0'
@@ -2061,11 +2062,12 @@ class OrderCore extends ObjectModel
      */
     public function getWarehouseList()
     {
-        $results = Db::getInstance()->executeS('
-			SELECT id_warehouse
+        $results = Db::getInstance()->executeS(
+            'SELECT id_warehouse
 			FROM `'._DB_PREFIX_.'order_detail`
 			WHERE `id_order` =  '.(int)$this->id.'
-			GROUP BY id_warehouse');
+			GROUP BY id_warehouse'
+        );
         if (!$results) {
             return array();
         }
