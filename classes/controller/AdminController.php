@@ -844,7 +844,6 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -1546,7 +1545,8 @@ class AdminControllerCore extends Controller
                     'desc' => $this->l('Save')
                 );
                 break;
-            default: // list
+            default:
+                // list
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
                     'desc' => $this->l('Add new')
@@ -1748,8 +1748,7 @@ class AdminControllerCore extends Controller
                 'page' =>  $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-            )
-        );
+        ));
 
         $this->smartyOutputContent($this->layout);
     }
@@ -3405,9 +3404,9 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field.'_'.$default_language->id);
                     if (empty($value)) {
                         $this->errors[$field.'_'.$default_language->id] = sprintf(
-                                Tools::displayError('The field %1$s is required at least in %2$s.'),
-                                $object->displayFieldName($field, $class_name),
-                                $default_language->name
+                            Tools::displayError('The field %1$s is required at least in %2$s.'),
+                            $object->displayFieldName($field, $class_name),
+                            $default_language->name
                         );
                     }
                 }

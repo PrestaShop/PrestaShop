@@ -307,18 +307,18 @@ class FrontControllerCore extends Controller
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
-            }
-            /* Delete product of cart, if user can't make an order from his country */
-            elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) &&
-                    !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) &&
-                    $cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
-                    !FrontController::isInWhitelistForGeolocation() &&
-                    !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
+            } elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED'))
+                && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
+                && $cart->nbProducts()
+                && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
+                && !FrontController::isInWhitelistForGeolocation()
+                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))
+            ) {
+                /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
-            }
-            // update cart values
-            elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
+            } elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
+                // update cart values
                 if ($this->context->cookie->id_customer) {
                     $cart->id_customer = (int)$this->context->cookie->id_customer;
                 }
@@ -381,9 +381,8 @@ class FrontControllerCore extends Controller
             $page_name = $this->php_self;
         } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
-        }
-        // @retrocompatibility Are we in a module ?
-        elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+        } elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+            // @retrocompatibility Are we in a module ?
             $page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();
