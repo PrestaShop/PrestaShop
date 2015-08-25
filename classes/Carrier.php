@@ -477,16 +477,16 @@ class CarrierCore extends ObjectModel
         }
 
         switch ($modules_filters) {
-            case 1 :
+            case 1:
                 $sql .= ' AND c.is_module = 0 ';
                 break;
-            case 2 :
+            case 2:
                 $sql .= ' AND c.is_module = 1 ';
                 break;
-            case 3 :
+            case 3:
                 $sql .= ' AND c.is_module = 1 AND c.need_range = 1 ';
                 break;
-            case 4 :
+            case 4:
                 $sql .= ' AND (c.is_module = 0 OR c.need_range = 1) ';
                 break;
         }
@@ -510,18 +510,18 @@ class CarrierCore extends ObjectModel
 
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue('
-					SELECT id_tax_rules_group
-					FROM (
-						SELECT COUNT(*) n, c.id_tax_rules_group
-						FROM '._DB_PREFIX_.'carrier c
-						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
-						WHERE trg.active = 1 AND trg.deleted = 0
-						GROUP BY c.id_tax_rules_group
-						ORDER BY n DESC
-						LIMIT 1
-					) most_used'
-                );
+        return Db::getInstance()->getValue(
+            'SELECT id_tax_rules_group
+			FROM (
+			    SELECT COUNT(*) n, c.id_tax_rules_group
+			    FROM '._DB_PREFIX_.'carrier c
+				JOIN '._DB_PREFIX_.'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
+				WHERE trg.active = 1 AND trg.deleted = 0
+				GROUP BY c.id_tax_rules_group
+				ORDER BY n DESC
+				LIMIT 1
+			) most_used'
+        );
     }
 
     public static function getDeliveredCountries($id_lang, $active_countries = false, $active_carriers = false, $contain_states = null)
@@ -851,8 +851,8 @@ class CarrierCore extends ObjectModel
             }
 
             if ($delete) {
-                Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'delivery`
+                Db::getInstance()->execute(
+                    'DELETE FROM `'._DB_PREFIX_.'delivery`
 					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
 					AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
 					AND id_carrier='.(int)$values['id_carrier'].
@@ -1189,8 +1189,8 @@ class CarrierCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT `id_carrier`, `position`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT `id_carrier`, `position`
 			FROM `'._DB_PREFIX_.'carrier`
 			WHERE `deleted` = 0
 			ORDER BY `position` ASC'
@@ -1318,8 +1318,7 @@ class CarrierCore extends ObjectModel
             $query = new DbQuery();
             $query->select('id_carrier');
             $query->from('product_carrier', 'pc');
-            $query->innerJoin('carrier', 'c',
-                              'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1');
+            $query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1');
             $query->where('pc.id_product = '.(int)$product->id);
             $query->where('pc.id_shop = '.(int)$id_shop);
 

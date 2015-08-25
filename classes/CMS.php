@@ -132,8 +132,8 @@ class CMSCore extends ObjectModel
 
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
 			FROM `'._DB_PREFIX_.'cms` cp
 			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
 			ORDER BY cp.`position` ASC'

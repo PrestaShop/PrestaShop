@@ -137,7 +137,8 @@ class MediaCore
                 Media::$pattern_js,
                 array('Media', 'packJSinHTMLpregCallback'),
                 $html_content,
-                Media::getBackTrackLimit());
+                Media::getBackTrackLimit()
+            );
 
             // If the string is too big preg_replace return an error
             // In this case, we don't compress the content
@@ -223,8 +224,9 @@ class MediaCore
                 $server = Tools::getMediaServer($tmp);
 
                 return $matches[1].$protocol_link.$server.$tmp;
-            } else
+            } else {
                 return $matches[0];
+            }
         }
         return false;
     }

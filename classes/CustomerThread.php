@@ -87,10 +87,11 @@ class CustomerThreadCore extends ObjectModel
 
     public function getWsCustomerMessages()
     {
-        return Db::getInstance()->executeS('
-		SELECT `id_customer_message` id
-		FROM `'._DB_PREFIX_.'customer_message`
-		WHERE `id_customer_thread` = '.(int)$this->id);
+        return Db::getInstance()->executeS(
+            'SELECT `id_customer_message` id
+		    FROM `'._DB_PREFIX_.'customer_message`
+		    WHERE `id_customer_thread` = '.(int)$this->id
+        );
     }
 
     public function delete()
@@ -100,8 +101,8 @@ class CustomerThreadCore extends ObjectModel
         }
 
         $return = true;
-        $result = Db::getInstance()->executeS('
-			SELECT `id_customer_message`
+        $result = Db::getInstance()->executeS(
+            'SELECT `id_customer_message`
 			FROM `'._DB_PREFIX_.'customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
         );
@@ -140,8 +141,8 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getIdCustomerThreadByEmailAndIdOrder($email, $id_order)
     {
-        return Db::getInstance()->getValue('
-			SELECT cm.id_customer_thread
+        return Db::getInstance()->getValue(
+            'SELECT cm.id_customer_thread
 			FROM '._DB_PREFIX_.'customer_thread cm
 			WHERE cm.email = \''.pSQL($email).'\'
 				AND cm.id_shop = '.(int)Context::getContext()->shop->id.'
@@ -174,14 +175,14 @@ class CustomerThreadCore extends ObjectModel
     public static function getTotalCustomerThreads($where = null)
     {
         if (is_null($where)) {
-            return (int)Db::getInstance()->getValue('
-				SELECT COUNT(*)
+            return (int)Db::getInstance()->getValue(
+                'SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_thread
 				WHERE 1 '.Shop::addSqlRestriction()
             );
         } else {
-            return (int)Db::getInstance()->getValue('
-				SELECT COUNT(*)
+            return (int)Db::getInstance()->getValue(
+                'SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_thread
 				WHERE '.$where.Shop::addSqlRestriction()
             );

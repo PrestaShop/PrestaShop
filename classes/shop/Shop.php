@@ -261,8 +261,8 @@ class ShopCore extends ObjectModel
             } else {
                 $table_name .= '_'.$row['type'];
             }
-            $res &= Db::getInstance()->execute('
-				DELETE FROM `'.bqSQL(_DB_PREFIX_.$table_name).'`
+            $res &= Db::getInstance()->execute(
+                'DELETE FROM `'.bqSQL(_DB_PREFIX_.$table_name).'`
 				WHERE `'.bqSQL($id).'`='.(int)$this->id
             );
         }
@@ -287,16 +287,16 @@ class ShopCore extends ObjectModel
     public static function hasDependency($id_shop)
     {
         $has_dependency = false;
-        $nbr_customer = (int)Db::getInstance()->getValue('
-			SELECT count(*)
+        $nbr_customer = (int)Db::getInstance()->getValue(
+            'SELECT count(*)
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `id_shop`='.(int)$id_shop
         );
         if ($nbr_customer) {
             $has_dependency = true;
         } else {
-            $nbr_order = (int)Db::getInstance()->getValue('
-				SELECT count(*)
+            $nbr_order = (int)Db::getInstance()->getValue(
+                'SELECT count(*)
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE `id_shop`='.(int)$id_shop
             );
@@ -887,8 +887,8 @@ class ShopCore extends ObjectModel
      */
     public static function getShopById($id, $identifier, $table)
     {
-        return Db::getInstance()->executeS('
-			SELECT `id_shop`, `'.bqSQL($identifier).'`
+        return Db::getInstance()->executeS(
+            'SELECT `id_shop`, `'.bqSQL($identifier).'`
 			FROM `'._DB_PREFIX_.bqSQL($table).'_shop`
 			WHERE `'.bqSQL($identifier).'` = '.(int)$id
         );
@@ -903,22 +903,22 @@ class ShopCore extends ObjectModel
     public static function setContext($type, $id = null)
     {
         switch ($type) {
-            case self::CONTEXT_ALL :
+            case self::CONTEXT_ALL:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = null;
-            break;
+                break;
 
-            case self::CONTEXT_GROUP :
+            case self::CONTEXT_GROUP:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = (int)$id;
-            break;
+                break;
 
-            case self::CONTEXT_SHOP :
+            case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int)$id;
                 self::$context_id_shop_group = Shop::getGroupFromShop($id);
-            break;
+                break;
 
-            default :
+            default:
                 throw new PrestaShopException('Unknown context for shop');
         }
 
@@ -1222,8 +1222,8 @@ class ShopCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT entity.`id_'.pSQL($entity).'`
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT entity.`id_'.pSQL($entity).'`
 			FROM `'._DB_PREFIX_.pSQL($entity).'_shop`es
 			LEFT JOIN '._DB_PREFIX_.pSQL($entity).' entity
 				ON (entity.`id_'.pSQL($entity).'` = es.`id_'.pSQL($entity).'`)

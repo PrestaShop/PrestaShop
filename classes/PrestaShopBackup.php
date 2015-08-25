@@ -30,7 +30,7 @@ class PrestaShopBackupCore
     public $id;
     /** @var string Last error messages */
     public $error;
-/** @var string default backup directory. */
+    /** @var string default backup directory. */
     public static $backupDir = '/backups/';
     /** @var string custom backup directory. */
     public $customBackupDir = null;
@@ -84,8 +84,11 @@ class PrestaShopBackupCore
     {
         $backupDir = PrestaShopBackup::getBackupPath($filename);
         if (!empty($this->customBackupDir)) {
-            $backupDir = str_replace((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir,
-                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$this->customBackupDir, $backupDir);
+            $backupDir = str_replace(
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir,
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$this->customBackupDir,
+                $backupDir
+            );
 
             if (strrpos($backupDir, DIRECTORY_SEPARATOR)) {
                 $backupDir .= DIRECTORY_SEPARATOR;

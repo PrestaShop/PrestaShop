@@ -169,9 +169,17 @@ class SearchCore
         return $string;
     }
 
-    public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
-        $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
-    {
+    public static function find(
+        $id_lang,
+        $expr,
+        $page_number = 1,
+        $page_size = 1,
+        $order_by = 'position',
+        $order_way = 'desc',
+        $ajax = false,
+        $use_cookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -440,16 +448,16 @@ class SearchCore
                     switch ($key) {
                         case 'pa_reference':
                             $sql .= ', pa.reference AS pa_reference';
-                        break;
+                            break;
                         case 'pa_supplier_reference':
                             $sql .= ', pa.supplier_reference AS pa_supplier_reference';
-                        break;
+                            break;
                         case 'pa_ean13':
                             $sql .= ', pa.ean13 AS pa_ean13';
-                        break;
+                            break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
-                        break;
+                            break;
                     }
                 }
             }
@@ -486,31 +494,31 @@ class SearchCore
                     switch ($key) {
                         case 'pname':
                             $sql .= ', pl.name pname';
-                        break;
+                            break;
                         case 'reference':
                             $sql .= ', p.reference';
-                        break;
+                            break;
                         case 'supplier_reference':
                             $sql .= ', p.supplier_reference';
-                        break;
+                            break;
                         case 'ean13':
                             $sql .= ', p.ean13';
-                        break;
+                            break;
                         case 'upc':
                             $sql .= ', p.upc';
-                        break;
+                            break;
                         case 'description_short':
                             $sql .= ', pl.description_short';
-                        break;
+                            break;
                         case 'description':
                             $sql .= ', pl.description';
-                        break;
+                            break;
                         case 'cname':
                             $sql .= ', cl.name cname';
-                        break;
+                            break;
                         case 'mname':
                             $sql .= ', m.name mname';
-                        break;
+                            break;
                     }
                 }
             }
@@ -761,15 +769,24 @@ class SearchCore
             Db::getInstance()->execute(
                 'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
-        );
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)',
+                false
+            );
         }
         $queryArray3 = array();
     }
 
-    public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false,
-            $useCookie = true, Context $context = null)
-    {
+    public static function searchTag(
+        $id_lang,
+        $tag,
+        $count = false,
+        $pageNumber = 0,
+        $pageSize = 10,
+        $orderBy = false,
+        $orderWay = false,
+        $useCookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -804,20 +821,21 @@ class SearchCore
 
         if ($count) {
             return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT COUNT(DISTINCT pt.`id_product`) nb
-			FROM
-			`'._DB_PREFIX_.'tag` t
-			STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-			STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
-			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
-			WHERE product_shop.`active` = 1
-			AND p.visibility IN (\'both\', \'search\')
-			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
-			'.$sql_groups.'
-			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
+                'SELECT COUNT(DISTINCT pt.`id_product`) nb
+			    FROM
+			    `'._DB_PREFIX_.'tag` t
+			    STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+			    STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
+			    '.Shop::addSqlAssociation('product', 'p').'
+			    LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+			    LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			    '.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+			    WHERE product_shop.`active` = 1
+			    AND p.visibility IN (\'both\', \'search\')
+			    AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
+			    '.$sql_groups.'
+			    AND t.`name` LIKE \'%'.pSQL($tag).'%\''
+            );
         }
 
         $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,

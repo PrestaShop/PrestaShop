@@ -159,10 +159,18 @@ abstract class PaymentModuleCore extends Module
      * @return bool
      * @throws PrestaShopException
      */
-    public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
-        $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
-        $secure_key = false, Shop $shop = null)
-    {
+    public function validateOrder(
+        $id_cart,
+        $id_order_state,
+        $amount_paid,
+        $payment_method = 'Unknown',
+        $message = null,
+        $extra_vars = array(),
+        $currency_special = null,
+        $dont_touch_amount = false,
+        $secure_key = false,
+        Shop $shop = null
+    ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
         }
@@ -589,7 +597,13 @@ abstract class PaymentModuleCore extends Module
                                     $params,
                                     $this->context->customer->email,
                                     $this->context->customer->firstname.' '.$this->context->customer->lastname,
-                                    null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    _PS_MAIL_DIR_,
+                                    false,
+                                    (int)$order->id_shop
                                 );
                             }
 
@@ -785,7 +799,10 @@ abstract class PaymentModuleCore extends Module
                                 null,
                                 null,
                                 $file_attachement,
-                                null, _PS_MAIL_DIR_, false, (int)$order->id_shop
+                                null,
+                                _PS_MAIL_DIR_,
+                                false,
+                                (int)$order->id_shop
                             );
                         }
                     }

@@ -575,14 +575,16 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        if ($id_country = Tools::getValue('id_country')); elseif (isset($address) && isset($address->id_country) && $address->id_country) {
-     $id_country = $address->id_country;
- } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-     preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-     if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = (int)Country::getByIso($array[0], true);
-     }
- }
+        if ($id_country = Tools::getValue('id_country')) {
+            // Use $id_country
+        } elseif (isset($address) && isset($address->id_country) && $address->id_country) {
+            $id_country = $address->id_country;
+        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
+                $id_country = (int)Country::getByIso($array[0], true);
+            }
+        }
         if (!isset($id_country) || !$id_country) {
             $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
         }
@@ -644,9 +646,9 @@ class ToolsCore
         }
         if ($currency === null) {
             $currency = $context->currency;
-        }
-        // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-        elseif (is_int($currency)) {
+        } elseif (is_int($currency)) {
+            // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
@@ -1264,8 +1266,13 @@ class ToolsCore
     * @param bool $linkOntheLastItem Put or not a link on the current category
     * @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
     */
-    public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
-    {
+    public static function getPath(
+        $id_category,
+        $path = '',
+        $link_on_the_item = false,
+        $category_type = 'products',
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -2370,8 +2377,7 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (
-            !$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
@@ -2898,7 +2904,7 @@ exit;
     public static function getProductsOrder($type, $value = null, $prefix = false)
     {
         switch ($type) {
-            case 'by' :
+            case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
@@ -2919,7 +2925,7 @@ exit;
                 return $order_by_prefix.$value;
             break;
 
-            case 'way' :
+            case 'way':
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
                 return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
@@ -3058,8 +3064,11 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, 'product-list-colors.tpl',
-            ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+        Tools::clearCache(
+            null,
+            'product-list-colors.tpl',
+            ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors')
+        );
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
@@ -3636,8 +3645,8 @@ exit;
                     ));
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', array(
-                        'type' => 'Text',
-                    ));
+                            'type' => 'Text',
+                        ));
                     }
                 }
 

@@ -208,8 +208,8 @@ class TabCore extends ObjectModel
         $cache_id = 'Tab::getTab_'.(int)$id_lang.'-'.(int)$id_tab;
         if (!Cache::isStored($cache_id)) {
             /* Tabs selection */
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT *
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+                'SELECT *
 				FROM `'._DB_PREFIX_.'tab` t
 				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
 					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
@@ -249,13 +249,14 @@ class TabCore extends ObjectModel
      * @return array tabs
      */
     protected static $_cache_tabs = array();
+
     public static function getTabs($id_lang, $id_parent = null)
     {
         if (!isset(self::$_cache_tabs[$id_lang])) {
             self::$_cache_tabs[$id_lang] = array();
             // Keep t.*, tl.name instead of only * because if translations are missing, the join on tab_lang will overwrite the id_tab in the results
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT t.*, tl.name
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                'SELECT t.*, tl.name
 				FROM `'._DB_PREFIX_.'tab` t
 				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 				WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
@@ -379,8 +380,8 @@ class TabCore extends ObjectModel
 
     public static function getNbTabs($id_parent = null)
     {
-        return (int)Db::getInstance()->getValue('
-			SELECT COUNT(*)
+        return (int)Db::getInstance()->getValue(
+            'SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'tab` t
 			'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : '')
         );
@@ -394,8 +395,8 @@ class TabCore extends ObjectModel
      */
     public static function getNewLastPosition($id_parent)
     {
-        return (Db::getInstance()->getValue('
-			SELECT IFNULL(MAX(position),0)+1
+        return (Db::getInstance()->getValue(
+            'SELECT IFNULL(MAX(position),0)+1
 			FROM `'._DB_PREFIX_.'tab`
 			WHERE `id_parent` = '.(int)$id_parent
         ));
@@ -418,8 +419,8 @@ class TabCore extends ObjectModel
         }
 
         $new_position = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
-        Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'tab` t
+        Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'tab` t
 			SET position = '.(int)$this->position.'
 			WHERE id_parent = '.(int)$this->id_parent.'
 				AND position = '.(int)$new_position
@@ -438,8 +439,8 @@ class TabCore extends ObjectModel
 		');
         $sizeof = count($result);
         for ($i = 0; $i < $sizeof; ++$i) {
-            Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'tab`
+            Db::getInstance()->execute(
+                'UPDATE `'._DB_PREFIX_.'tab`
 				SET `position` = '.($i + 1).'
 				WHERE `id_tab` = '.(int)$result[$i]['id_tab']
             );
@@ -449,8 +450,8 @@ class TabCore extends ObjectModel
 
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT t.`id_tab`, t.`position`, t.`id_parent`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT t.`id_tab`, t.`position`, t.`id_parent`
 			FROM `'._DB_PREFIX_.'tab` t
 			WHERE t.`id_parent` = '.(int)$this->id_parent.'
 			ORDER BY t.`position` ASC'

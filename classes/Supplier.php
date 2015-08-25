@@ -135,24 +135,24 @@ class SupplierCore extends ObjectModel
                 $sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
-					FROM `'._DB_PREFIX_.'product_supplier` ps
-					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
-					WHERE ps.id_product_attribute = 0'.
-                    ($active ? ' AND product_shop.`active` = 1' : '').
-                    ' AND product_shop.`visibility` NOT IN ("none")'.
-                    ($all_groups ? '' :'
-					AND ps.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
-					)').'
-					GROUP BY ps.`id_supplier`'
-                );
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                'SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
+				FROM `'._DB_PREFIX_.'product_supplier` ps
+				JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
+				WHERE ps.id_product_attribute = 0'.
+                ($active ? ' AND product_shop.`active` = 1' : '').
+                ' AND product_shop.`visibility` NOT IN ("none")'.
+                ($all_groups ? '' :'
+				AND ps.`id_product` IN (
+					SELECT cp.`id_product`
+					FROM `'._DB_PREFIX_.'category_group` cg
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					WHERE cg.`id_group` '.$sql_groups.'
+				)').'
+				GROUP BY ps.`id_supplier`'
+            );
 
             $counts = array();
             foreach ($results as $result) {
@@ -208,9 +208,17 @@ class SupplierCore extends ObjectModel
         return false;
     }
 
-    public static function getProducts($id_supplier, $id_lang, $p, $n,
-        $order_by = null, $order_way = null, $get_total = false, $active = true, $active_category = true)
-    {
+    public static function getProducts(
+        $id_supplier,
+        $id_lang,
+        $p,
+        $n,
+        $order_by = null,
+        $order_way = null,
+        $get_total = false,
+        $active = true,
+        $active_category = true
+    ) {
         $context = Context::getContext();
         $front = true;
         if (!in_array($context->controller->controller_type, array('front', 'modulefront'))) {

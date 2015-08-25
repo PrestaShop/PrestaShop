@@ -115,7 +115,8 @@ class TreeToolbarCore implements ITreeToolbarCore
     {
         if (!isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(
-                self::DEFAULT_TEMPLATE_DIRECTORY);
+                self::DEFAULT_TEMPLATE_DIRECTORY
+            );
         }
 
         return $this->_template_directory;
@@ -127,8 +128,9 @@ class TreeToolbarCore implements ITreeToolbarCore
             $controllerName = strtolower($matches[0][1]);
         }
 
-        if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+        if ($this->getContext()->controller instanceof ModuleAdminController
+            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
+                .$this->getTemplateDirectory().$template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 .$this->getTemplateDirectory().$template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)

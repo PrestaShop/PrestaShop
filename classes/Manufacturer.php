@@ -161,8 +161,15 @@ class ManufacturerCore extends ObjectModel
      * @param bool $all_group
      * @return array Manufacturers
      */
-    public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
-    {
+    public static function getManufacturers(
+        $get_nb_products = false,
+        $id_lang = 0,
+        $active = true,
+        $p = false,
+        $n = false,
+        $all_group = false,
+        $group_by = false
+    ) {
         if (!$id_lang) {
             $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         }
@@ -190,21 +197,21 @@ class ManufacturerCore extends ObjectModel
                 $sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
-					FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
-					WHERE p.`id_manufacturer` != 0 AND product_shop.`visibility` NOT IN ("none")
-					'.($active ? ' AND product_shop.`active` = 1 ' : '').'
-					'.(Group::isFeatureActive() && $all_group ? '' : ' AND EXISTS (
-						SELECT 1
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
-					)').'
-					GROUP BY p.`id_manufacturer`'
-                );
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                'SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
+				FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
+				'.Shop::addSqlAssociation('product', 'p').'
+				LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
+				WHERE p.`id_manufacturer` != 0 AND product_shop.`visibility` NOT IN ("none")
+				'.($active ? ' AND product_shop.`active` = 1 ' : '').'
+				'.(Group::isFeatureActive() && $all_group ? '' : ' AND EXISTS (
+					SELECT 1
+					FROM `'._DB_PREFIX_.'category_group` cg
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+					WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
+				)').'
+				GROUP BY p.`id_manufacturer`'
+            );
 
             $counts = array();
             foreach ($results as $result) {
@@ -240,8 +247,8 @@ class ManufacturerCore extends ObjectModel
     public static function getNameById($id_manufacturer)
     {
         if (!isset(self::$cacheName[$id_manufacturer])) {
-            self::$cacheName[$id_manufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `name`
+            self::$cacheName[$id_manufacturer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `name`
 				FROM `'._DB_PREFIX_.'manufacturer`
 				WHERE `id_manufacturer` = '.(int)$id_manufacturer.'
 				AND `active` = 1'
@@ -253,8 +260,8 @@ class ManufacturerCore extends ObjectModel
 
     public static function getIdByName($name)
     {
-        $result = Db::getInstance()->getRow('
-			SELECT `id_manufacturer`
+        $result = Db::getInstance()->getRow(
+            'SELECT `id_manufacturer`
 			FROM `'._DB_PREFIX_.'manufacturer`
 			WHERE `name` = \''.pSQL($name).'\''
         );
@@ -271,9 +278,18 @@ class ManufacturerCore extends ObjectModel
         return Tools::link_rewrite($this->name);
     }
 
-    public static function getProducts($id_manufacturer, $id_lang, $p, $n, $order_by = null, $order_way = null,
-        $get_total = false, $active = true, $active_category = true, Context $context = null)
-    {
+    public static function getProducts(
+        $id_manufacturer,
+        $id_lang,
+        $p,
+        $n,
+        $order_by = null,
+        $order_way = null,
+        $get_total = false,
+        $active = true,
+        $active_category = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -424,8 +440,8 @@ class ManufacturerCore extends ObjectModel
     */
     public static function manufacturerExists($id_manufacturer)
     {
-        $row = Db::getInstance()->getRow('
-			SELECT `id_manufacturer`
+        $row = Db::getInstance()->getRow(
+            'SELECT `id_manufacturer`
 			FROM '._DB_PREFIX_.'manufacturer m
 			WHERE m.`id_manufacturer` = '.(int)$id_manufacturer
         );
@@ -435,8 +451,8 @@ class ManufacturerCore extends ObjectModel
 
     public function getAddresses($id_lang)
     {
-        return Db::getInstance()->executeS('
-			SELECT a.*, cl.name AS `country`, s.name AS `state`
+        return Db::getInstance()->executeS(
+            'SELECT a.*, cl.name AS `country`, s.name AS `state`
 			FROM `'._DB_PREFIX_.'address` AS a
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` AS cl ON (
 				cl.`id_country` = a.`id_country`
@@ -450,8 +466,8 @@ class ManufacturerCore extends ObjectModel
 
     public function getWsAddresses()
     {
-        return Db::getInstance()->executeS('
-			SELECT a.id_address as id
+        return Db::getInstance()->executeS(
+            'SELECT a.id_address as id
 			FROM `'._DB_PREFIX_.'address` AS a
 			'.Shop::addSqlAssociation('manufacturer', 'a').'
 			WHERE a.`id_manufacturer` = '.(int)$this->id.'

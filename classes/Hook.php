@@ -97,8 +97,8 @@ class HookCore extends ObjectModel
      */
     public static function getHooks($position = false)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT * FROM `'._DB_PREFIX_.'hook` h
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT * FROM `'._DB_PREFIX_.'hook` h
 			'.($position ? 'WHERE h.`position` = 1' : '').'
 			ORDER BY `name`'
         );
@@ -323,9 +323,9 @@ class HookCore extends ObjectModel
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
             if ($hook_name != 'displayPayment') {
                 $sql->where('h.name != "displayPayment"');
-            }
-            // For payment modules, we check that they are available in the contextual country
-            elseif ($frontend) {
+            } elseif ($frontend) {
+                // For payment modules, we check that they are available in the contextual country
+
                 if (Validate::isLoadedObject($context->country)) {
                     $sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 }
@@ -418,9 +418,15 @@ class HookCore extends ObjectModel
      *
      * @return string/array modules output
      */
-    public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
-                                $use_push = false, $id_shop = null)
-    {
+    public static function exec(
+        $hook_name,
+        $hook_args = array(),
+        $id_module = null,
+        $array_return = false,
+        $check_exceptions = true,
+        $use_push = false,
+        $id_shop = null
+    ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }

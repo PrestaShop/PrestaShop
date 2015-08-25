@@ -269,13 +269,12 @@ class ImageCore extends ObjectModel
             unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
         }
 
-        return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image`
+        return (Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = NULL
 			WHERE `id_product` = '.(int)$id_product
-        ) &&
-        Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
+        ) && Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'image_shop` image_shop
 			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.`id_product` = '.(int)$id_product
         ));
@@ -336,11 +335,15 @@ class ImageCore extends ObjectModel
                         if (!Configuration::get('PS_LEGACY_IMAGES')) {
                             $image_new->createImgFolder();
                         }
-                        copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
-                        $new_path.'-'.$image_type['name'].'.jpg');
+                        copy(
+                            _PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
+                            $new_path.'-'.$image_type['name'].'.jpg'
+                        );
                         if (Configuration::get('WATERMARK_HASH')) {
-                            copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg',
-                            $new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
+                            copy(
+                                _PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg',
+                                $new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg'
+                            );
                         }
                     }
                 }
@@ -500,9 +503,8 @@ class ImageCore extends ObjectModel
      */
     public function deleteProductAttributeImage()
     {
-        return Db::getInstance()->execute('
-			DELETE
-			FROM `'._DB_PREFIX_.'product_attribute_image`
+        return Db::getInstance()->execute(
+            'DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
 			WHERE `id_image` = '.(int)$this->id
         );
     }
@@ -745,9 +747,9 @@ class ImageCore extends ObjectModel
                         }
                     }
                     // move the image
-                if (!@rename(_PS_PROD_IMG_DIR_.$file, $new_path) || !file_exists($new_path)) {
-                    return false;
-                }
+                    if (!@rename(_PS_PROD_IMG_DIR_.$file, $new_path) || !file_exists($new_path)) {
+                        return false;
+                    }
                 }
             }
             if ((int)$max_execution_time != 0 && (time() - $start_time > (int)$max_execution_time - 4)) {

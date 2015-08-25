@@ -349,8 +349,8 @@ class CartRuleCore extends ObjectModel
 
         foreach ($result as $key => $cart_rule) {
             if ($cart_rule['country_restriction']) {
-                $countries = Db::getInstance()->ExecuteS('
-					SELECT `id_country`
+                $countries = Db::getInstance()->ExecuteS(
+                    'SELECT `id_country`
 					FROM `'._DB_PREFIX_.'address`
 					WHERE `id_customer` = '.(int)$id_customer.'
 					AND `deleted` = 0'
@@ -656,9 +656,9 @@ class CartRuleCore extends ObjectModel
                         // The cart rules are not combinable and the cart rule currently in the cart has priority over the one tested
                         if ($cart_rule->priority <= $this->priority) {
                             return (!$display_error) ? false : Tools::displayError('This voucher is not combinable with an other voucher already in your cart:').' '.$cart_rule->name;
-                        }
-                        // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
-                        else {
+                        } else {
+                            // But if the cart rule that is tested has priority over the one in the cart, we remove the one in the cart and keep this new one
+
                             $context->cart->removeCartRule($cart_rule->id);
                         }
                     }
@@ -1044,9 +1044,9 @@ class CartRuleCore extends ObjectModel
                                 }
                             }
                         }
-                    }
-                    // Discount (¤) on the whole order
-                    elseif ($this->reduction_product == 0) {
+                    } elseif ($this->reduction_product == 0) {
+                        // Discount (¤) on the whole order
+
                         $cart_amount_te = null;
                         $cart_amount_ti = null;
                         $cart_average_vat_rate = $context->cart->getAverageProductsTaxRate($cart_amount_te, $cart_amount_ti);
@@ -1234,18 +1234,19 @@ class CartRuleCore extends ObjectModel
             if ($type == 'cart_rule') {
                 $array = $this->getCartRuleCombinations($offset, $limit, $search_cart_rule_name);
             } else {
-                $resource = Db::getInstance()->query('
-				SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
-				FROM `'._DB_PREFIX_.$type.'` t
-				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
-				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.($type == 'carrier' ? 'reference' : $type).' = crt.id_'.$type.'
-				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
-                $shop_list
-                .(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
-                (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '').
-                (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '').
-                $sql_limit,
-                false);
+                $resource = Db::getInstance()->query(
+                    'SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
+				    FROM `'._DB_PREFIX_.$type.'` t
+				    '.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
+				    LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.($type == 'carrier' ? 'reference' : $type).' = crt.id_'.$type.'
+				    WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
+                    $shop_list
+                    .(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
+                    (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '').
+                    (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '').
+                    $sql_limit,
+                    false
+                );
                 while ($row = Db::getInstance()->nextRow($resource)) {
                     $array[($row['selected'] || $this->{$type.'_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;
                 }

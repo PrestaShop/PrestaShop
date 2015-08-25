@@ -44,9 +44,9 @@ class RangeWeightCore extends ObjectModel
     );
 
     protected $webserviceParameters = array(
-            'objectNodeName' => 'weight_range',
-            'objectsNodeName' => 'weight_ranges',
-            'fields' => array(
+        'objectNodeName' => 'weight_range',
+        'objectsNodeName' => 'weight_ranges',
+        'fields' => array(
             'id_carrier' => array('xlink_resource' => 'carriers'),
         )
     );

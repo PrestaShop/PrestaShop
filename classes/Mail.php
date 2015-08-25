@@ -84,10 +84,23 @@ class MailCore extends ObjectModel
      * @param bool $die
      * @param string $bcc Bcc recipient
      */
-    public static function Send($id_lang, $template, $subject, $template_vars, $to,
-        $to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
-        $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null)
-    {
+    public static function Send(
+        $id_lang,
+        $template,
+        $subject,
+        $template_vars,
+        $to,
+        $to_name = null,
+        $from = null,
+        $from_name = null,
+        $file_attachment = null,
+        $mode_smtp = null,
+        $template_path = _PS_MAIL_DIR_,
+        $die = false,
+        $id_shop = null,
+        $bcc = null,
+        $reply_to = null
+    ) {
         if (!$id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
@@ -409,8 +422,19 @@ class MailCore extends ObjectModel
         return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'mail');
     }
 
-    public static function sendMailTest($smtpChecked, $smtpServer, $content, $subject, $type, $to, $from, $smtpLogin, $smtpPassword, $smtpPort = 25, $smtpEncryption)
-    {
+    public static function sendMailTest(
+        $smtpChecked,
+        $smtpServer,
+        $content,
+        $subject,
+        $type,
+        $to,
+        $from,
+        $smtpLogin,
+        $smtpPassword,
+        $smtpPort = 25,
+        $smtpEncryption
+    ) {
         $result = false;
         try {
             if ($smtpChecked) {

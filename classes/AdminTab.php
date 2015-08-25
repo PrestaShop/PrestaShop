@@ -279,10 +279,10 @@ abstract class AdminTabCore
     {
         // Include other tab in current tab
         if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))) {
-        }
+            //
+        } elseif ((Tools::getValue('submitAdd'.$this->table) && count($this->_errors)) || isset($_GET['add'.$this->table])) {
+            // Include current tab
 
-        // Include current tab
-        elseif ((Tools::getValue('submitAdd'.$this->table) && count($this->_errors)) || isset($_GET['add'.$this->table])) {
             if ($this->tabAccess['add'] === '1') {
                 $this->displayForm();
                 if ($this->tabAccess['view']) {
@@ -394,7 +394,6 @@ abstract class AdminTabCore
             /* Actions management */
             foreach ($actions as $action) {
                 switch ($action) {
-
                     case 'submitAdd1':
                         if (Tools::getValue('submitAdd'.$adminTab->table)) {
                             $ok_inc = true;
@@ -414,10 +413,12 @@ abstract class AdminTabCore
                         if (Tools::isSubmit('submitFilter'.$adminTab->table)) {
                             $ok_inc = true;
                         }
+                        // no break
                     case 'submitReset':
                         if (Tools::isSubmit('submitReset'.$adminTab->table)) {
                             $ok_inc = true;
                         }
+                        // no break
                     default:
                         if (isset($_GET[$action.$adminTab->table])) {
                             $ok_inc = true;
@@ -616,10 +617,9 @@ abstract class AdminTabCore
                 }
             }
             $this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
-        }
+        } elseif (isset($_GET['delete'.$this->table])) {
+            /* Delete object */
 
-        /* Delete object */
-        elseif (isset($_GET['delete'.$this->table])) {
             if ($this->tabAccess['delete'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
                     /** @var ObjectModel $object */
@@ -650,10 +650,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to delete here.');
             }
-        }
+        } elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
+            /* Change object statuts (active, inactive) */
 
-        /* Change object statuts (active, inactive) */
-        elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
             if ($this->tabAccess['edit'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ObjectModel $object */
@@ -668,9 +667,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
             }
-        }
-        /* Move an object */
-        elseif (isset($_GET['position'])) {
+        } elseif (isset($_GET['position'])) {
+            /* Move an object */
+
             /** @var ObjectModel $object */
             if ($this->tabAccess['edit'] !== '1') {
                 $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -681,9 +680,9 @@ abstract class AdminTabCore
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_identifier = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_identifier) : '').'&token='.$token);
             }
-        }
-        /* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table)) {
+            /* Delete multiple objects */
+
             if ($this->tabAccess['delete'] === '1') {
                 if (isset($_POST[$this->table.'Box'])) {
                     /** @var ObjectModel $object */
@@ -718,10 +717,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to delete here.');
             }
-        }
+        } elseif (Tools::getValue('submitAdd'.$this->table)) {
+            /* Create or update an object */
 
-        /* Create or update an object */
-        elseif (Tools::getValue('submitAdd'.$this->table)) {
             /* Checking fields validity */
             $this->validateRules();
             if (!count($this->_errors)) {
@@ -794,10 +792,9 @@ abstract class AdminTabCore
                     } else {
                         $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
                     }
-                }
+                } else {
+                    /* Object creation */
 
-                /* Object creation */
-                else {
                     if ($this->tabAccess['add'] === '1') {
                         /** @var ObjectModel $object */
                         $object = new $this->className();
@@ -840,10 +837,9 @@ abstract class AdminTabCore
                 }
             }
             $this->_errors = array_unique($this->_errors);
-        }
+        } elseif (isset($_POST['submitReset'.$this->table])) {
+            /* Cancel all filters for this tab */
 
-        /* Cancel all filters for this tab */
-        elseif (isset($_POST['submitReset'.$this->table])) {
             $filters = $this->context->cookie->getFamily($this->table.'Filter_');
             foreach ($filters as $cookieKey => $filter) {
                 if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0) {
@@ -866,15 +862,13 @@ abstract class AdminTabCore
                 unset($this->context->cookie->{$this->table.'Orderway'});
             }
             unset($_POST);
-        }
+        } elseif (Tools::getValue('submitOptions'.$this->table)) {
+            /* Submit options list */
 
-        /* Submit options list */
-        elseif (Tools::getValue('submitOptions'.$this->table)) {
             $this->updateOptions($token);
-        }
+        } elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
+            /* Manage list filtering */
 
-        /* Manage list filtering */
-        elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
             $_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
             foreach ($_POST as $key => $value) {
                 /* Extracting filters from $_POST on key filter_ */
@@ -1585,7 +1579,6 @@ abstract class AdminTabCore
                     break;
 
                 case 'select':
-
                     if (isset($params['filter_key'])) {
                         echo '<select onchange="$(\'#submitFilter'.$this->table.'\').focus();$(\'#submitFilter'.$this->table.'\').click();" name="'.$this->table.'Filter_'.$params['filter_key'].'" '.(isset($params['width']) ? 'style="width: '.$params['width'].'px"' : '').'>
 								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>-</option>';
@@ -1597,7 +1590,7 @@ abstract class AdminTabCore
                         echo '</select>';
                         break;
                     }
-
+                    // no break
                 case 'text':
                 default:
                     if (!Validate::isCleanHtml($value)) {
@@ -1947,8 +1940,9 @@ abstract class AdminTabCore
                 $method = 'displayOptionType'.Tools::toCamelCase($field['type'], true);
                 if (!method_exists($this, $method)) {
                     $this->displayOptionTypeText($key, $field, $value);
-                }//default behavior
-                else {
+                } else {
+                    //default behavior
+
                     $this->$method($key, $field, $value);
                 }
 
