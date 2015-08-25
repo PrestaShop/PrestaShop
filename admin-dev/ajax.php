@@ -96,7 +96,8 @@ if (Tools::isSubmit('searchCategory')) {
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category
 		ORDER BY c.`position`
-		LIMIT '.(int)$limit);
+		LIMIT '.(int)$limit
+    );
     if ($results) {
         foreach ($results as $result) {
             echo trim($result['name']).'|'.(int)$result['id_category']."\n";
