@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
-    ITreeToolbarButtonCore
+class TreeToolbarSearchCore extends TreeToolbarButtonCore implements ITreeToolbarButtonCore
 {
     protected $_template = 'tree_toolbar_search.tpl';
 
@@ -41,11 +40,9 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
     public function render()
     {
         if ($this->hasAttribute('data_search')) {
-            $this->setAttribute('typeahead_source',
-                $this->_renderData($this->getAttribute('data_search')));
+            $this->setAttribute('typeahead_source', $this->_renderData($this->getAttribute('data_search')));
         } elseif ($this->hasAttribute('data')) {
-            $this->setAttribute('typeahead_source',
-                $this->_renderData($this->getAttribute('data')));
+            $this->setAttribute('typeahead_source', $this->_renderData($this->getAttribute('data')));
         }
 
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
