@@ -39,6 +39,8 @@ abstract class BaseController
     const RESPONSE_JSON = 'none/json'; // no layout, transform response from array to json format
     const RESPONSE_NONE = 'none/none'; // no auto response output: case when action want to dump a file for example
 
+    protected $warnings = array();
+
     /**
      * This function will transform the resulting controller action content into various formats.
      * If you need a new one, you can override this function in your extended class. Don't forget to call
@@ -148,32 +150,18 @@ abstract class BaseController
     abstract protected function encapsulateLayout(Response &$response);
 
     /**
-     * This will call all methods added by TRAITS on the Controller, with the function
-     * name matching the $startingWith parameter.
-     * The TRAIT function is triggered if:
-     * - its name start with the $startWith parameter
-     * - is public
-     * - accepts a unique argument: the RequestContext instance
+     * Add major warning(s) to the controller, to be displayed in the screen.
+     * This warnings are generally important malfunction of the software that must
+     * be fixed. But these warnings will not throw an error and stop execution to let the user
+     * fix settings in the admin interface.
      *
-     * This is triggered by Router before calling action ('beforeAction' parameter)
-     * and after calling action ('afterAction' parameter).
-     *
-     * @param RequestContext $requestContext
-     * @param string $startingWith
-     * @return boolean True if all traits methods returned true too.
+     * @param array|WarningException $warnings An array of WarningException to add
      */
-    public final function callTraits(Request &$request, Response &$response, $startingWith = 'beforeAction')
+    public function addWarnings($warnings)
     {
-        // TODO : comment les ordonnancer?
-        $res = true;
-        foreach(class_uses($this) as $trait) {
-            $methods = (new \ReflectionClass($trait))->getMethods(\ReflectionMethod::IS_PUBLIC);
-            foreach($methods as $m) {
-                if (strpos($m->name, $startingWith) === 0) {
-                    $res = $res & $this->{$m->name}($request, $response);
-                }
-            }
+        if (!is_array($warnings)) {
+            $warnings = array($warnings);
         }
-        return $res;
+        $this->warnings = array_merge($this->warnings, $warnings);
     }
 }

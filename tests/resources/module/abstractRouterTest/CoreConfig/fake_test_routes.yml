@@ -1,0 +1,8 @@
+# routes.yml
+fake_test_route_module1:
+    path:     /a
+    defaults: { _controller: 'Test\TestController::aModuleAction' }
+
+fake_test_route_module2:
+    path:     /b/1
+    defaults: { _controller: 'Test\TestController::bModuleAction' }

@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Business\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -39,18 +38,34 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\ModuleRouterOverrideException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 abstract class Router extends AbstractRouter
 {
 
+    /**
+     * Check and filter trait methods. The result will be put in cache.
+     *
+     * @param array:\ReflectioClass $allTraits The traits used in the controller
+     * @param string $startsWith Filter methods names that starts with this parameter.
+     * @throws \ErrorException If a method is not compliant (parameters)
+     * @return array:string Methods names that matches the filter and belongs to the controller.
+     */
     private final function filterTraits($allTraits, $startsWith)
     {
         $traitFunctions = array();
         foreach($allTraits as $trait) {
             $methods = $trait->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach($methods as $method) {
-                if ($method->getNumberOfParameters() != 2) {
-                    continue; // TODO : more secure, and throw a log/warning/ErrorException ?
+                $parameters = $method->getParameters();
+                if (count($parameters) != 2) {
+                    throw new \ErrorException('A trait method should aways accept only 2 parameters (&$request, &$response). The Trait method '
+                        .$method->name.' wants '.$method->getNumberOfParameters());
+                }
+                if (!$parameters[0]->isPassedByReference() || !$parameters[1]->isPassedByReference()) {
+                    throw new \ErrorException('A trait method should aways accept both parameters by reference only (&$request, &$response).');
                 }
                 if (strpos($method->name, $startsWith) === 0) {
                     $traitFunctions[] = $method->name;
@@ -64,6 +79,7 @@ abstract class Router extends AbstractRouter
      * Will scan modules to find an override of the Core controller.
      * If not, use the Core controller (most of the cases).
      * If more than one controller found, the conflict is rejected, and the default Core controller is used.
+     * The result of this function is used to generate a cache.
      *
      * @param string $controllerName
      * @throws \ErrorException If no default controller found in the Core. The routes YML file is incorrect.
@@ -87,23 +103,30 @@ abstract class Router extends AbstractRouter
             return $controller;
         }
 
-        // More overrides found: problem! do not use it but Warn!
-        if (count($foundOverrides) > 1) {
-            // TODO : faire Warning/log, avec le detail: On a plus de 2 overrides qui se battent, donc on fallback sur le controller du Core avec le warning.
-            // Pire que ca : ce warning doit être poussé dans la génération du cache :)
-        }
-
         // fallback on default Core controller (most of the time).
         $className = '\\PrestaShop\\PrestaShop\\Core\\Business\\Controller\\'.$controllerName;
         if (!class_exists($className)) {
             throw new \ErrorException('Default Controller is not found for: '.$className);
         }
+
+        // More overrides found: problem! do not use it but Warn!
+        if (count($foundOverrides) > 1) {
+            throw new \WarningException(
+                'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundOverrides),
+                $className,
+                $foundOverrides
+            );
+        }
+
         return $className;
     }
 
     /**
-     * TODO : php doc here !
+     * This method should be overriden to check if Controller is allowed to be executed in this Router instance.
+     *
      * @param \ReflectionClass $class
+     * @throws \ErrorException if the given controller violates the Router policy. This will stops execution.
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException to raise a major exception without stopping execution.
      */
     abstract protected function checkControllerAuthority(\ReflectionClass $class);
 
@@ -111,27 +134,41 @@ abstract class Router extends AbstractRouter
      * This function will call controller and the corresponding action. In this function, all security layers,
      * pre-actions and post-actions, must be called. The function will generate a cache function to be executed quickly.
      *
-     * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
+     * @param string $controllerName The name of the Controller (partial namespace given, to complete)
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
      * @param Request $request
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return boolean True for success, false if the router should pass through for the next Router (legacy Dispatcher).
      */
-    protected function doDispatch($controllerName, $controllerMethod, Request &$request)
+    protected final function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
+        $warnings = array(); // will contains major exceptions that must be solved by the user (module setting, etc...)
+        
         // Find right Controller and check security on it
-        $controllerClass = $this->getControllerClass($controllerName);
+        try {
+            $controllerClass = $this->getControllerClass($controllerName);
+        } catch (WarningException $we) {
+            // degraded mode, many module overrides canceled.
+            $warnings[] = $we;
+            $controllerClass = $we->alternative;
+        }
         $class = new \ReflectionClass($controllerClass);
-        $this->checkControllerAuthority($class);
+        try {
+            $this->checkControllerAuthority($class);
+        } catch (WarningException $we) {
+            $warnings[] = $we;
+        }
         $method = $class->getMethod($controllerMethod);
+        
         // backup _controller value for PS Router way of work, and override original value by sf way of work.
         $request->attributes->set('_controller_short', $request->attributes->get('_controller'));
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
-        $cache = $this->getConfigCacheFactory()->cache(
+        $routingDispatcher = $this->routingDispatcher;
+        $cache = $this->getConfigCacheFactory((count($warnings) > 0))->cache( // force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.'.php',
             function (ConfigCacheInterface $cache)
-            use($class, $controllerClass, $controllerMethod) {
+            use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request) {
 
                 // find traits, classify them
                 $traits = $class->getTraits();
@@ -156,13 +193,16 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
-function doDispatchCached(\ReflectionMethod $method, Request &$request)
+function doDispatchCached(\ReflectionMethod $method, Request &$request, $warnings)
 {
     $response = new Response();
     $response->setResponseFormat(BaseController::RESPONSE_LAYOUT_HTML);
     $actionAllowed = true;
 
     $controllerInstance = new '.$controllerClass.'();
+    if (count($warnings)) {
+        $controllerInstance->addWarnings($warnings);
+    }
 ';
                 foreach($initTraits as $initTrait) {
                     $phpCode .= '
@@ -227,11 +267,13 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
 }
 '; // Raw php code inside a string, do not indent please.
                 $cache->write($phpCode);
+                $null = null;
+                $routingDispatcher->dispatch('cache_generation', new BaseEvent($request, $null)); // TODO : améliorer en ajoutant le nom du fichier par exemple
             }
         );
 
         include $cache->getPath();
-        return doDispatchCached($method, $request);
+        return doDispatchCached($method, $request, $warnings);
     }
 
 }

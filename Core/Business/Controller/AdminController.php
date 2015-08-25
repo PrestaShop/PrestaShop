@@ -47,7 +47,8 @@ class AdminController extends BaseController
     protected function encapsulateLayout(Response &$response)
     {
         // TODO
-        $response->setContent('[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
+        $warnings = count($this->warnings)? 'Some major warnings occurred: '.implode('; ', $this->warnings).'<br/>' : '';
+        $response->setContent($warnings.'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
     }
 
     /**

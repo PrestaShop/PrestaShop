@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +37,10 @@ use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\Event;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
@@ -86,6 +89,12 @@ abstract class AbstractRouter
      */
     private $routingFilePattern;
     
+    /**
+     * @var EventDispatcher
+     */
+    protected $routingDispatcher;
+
+    private $triggerCacheGenerationFlag = false;
 
     /**
      * Instanciate a Router with a set of routes YML files.
@@ -105,6 +114,14 @@ abstract class AbstractRouter
         // Register routing/settings extensions (modules)
         $this->routingFilePattern = $routingFilePattern;
         $this->registerSettingFiles();
+        
+        // EventDispatcher init
+        EventDispatcher::initDispatchers();
+        $this->routingDispatcher = EventDispatcher::getInstance('routing');
+        if ($this->triggerCacheGenerationFlag) {
+            $null = null;
+            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent($null, $null)); // TODO : améliorer en ajoutant le nom du fichier par exemple
+        }
     }
 
     /**
@@ -124,7 +141,7 @@ abstract class AbstractRouter
         // Instantiate Sf Router
         $this->sfRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles['/'],
+            $this->routingFiles[array_keys($this->routingFiles)[0]],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -174,35 +191,65 @@ abstract class AbstractRouter
 
     private final function registerSettingFiles()
     {
+        $triggerCacheGenerationFlag = &$this->triggerCacheGenerationFlag;
         $cache = $this->getConfigCacheFactory()->cache(
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_setting_list.php',
-            function (ConfigCacheInterface $cache) {
-                // search for routes.yml files
+            function (ConfigCacheInterface $cache) use(&$triggerCacheGenerationFlag) {
+                $moduleCoreConfigExists = (count(glob($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
+                $routingFiles = $routingFilePaths = array();
+
+                // search for Core routes.yml files (base routes.yml is the first, then Core's others)
                 $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
-                    ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/') // modules routes first (but will be prefixed)
-                    ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
+                        ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/');
                 foreach($routingFilesFinder as $file) {
-                    // TODO : ajouter un check des route_id en doublon (pour empecher un module de remplacer une route existante / doublons écrasants)
                     $path = $file->getRealpath();
                     $matches = array();
-                    if (1 === preg_match('&modules/([^/]+)/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) && isset($matches[1])) {
-                        $prefix = '/'.$matches[1];
-                        $suffix = isset($matches[2]) ? $matches[2] : '';
-                    } else {
-                        $matches = array();
-                        $prefix = '/';
-                        $suffix = '';
-                        if (1 === preg_match('&/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) && isset($matches[2])) {
-                            $suffix = $matches[2];
-                        }
+                    $prefix = '/';
+                    $suffix = '';
+                    if (1 === preg_match('&/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) && isset($matches[2])) {
+                        $suffix = $matches[2];
                     }
                     $routingFiles[] = '\''.addslashes($prefix.$suffix).'\' => \''.addslashes($path).'\'';
+                    $routingFilePaths[$prefix.$suffix] = $path;
                 }
-                
+
+                // test if at least one module will brings a setup file before to include path into search.
+                if($moduleCoreConfigExists) {
+                    $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
+                            ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/');
+                    foreach($routingFilesFinder as $file) {
+                        $path = $file->getRealpath();
+                        $matches = array();
+                        if (1 === preg_match('&'.$this->configuration->get('_PS_MODULE_DIR_').'([^/]+)/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) &&
+                            isset($matches[1])) {
+                            $prefix = '/'.$matches[1];
+                            $suffix = isset($matches[2]) ? $matches[2] : '';
+                            $routingFiles[] = '\''.addslashes($prefix.$suffix).'\' => \''.addslashes($path).'\'';
+                            $routingFilePaths[$prefix.$suffix] = $path;
+                        }
+                    }
+                }
+
                 // search for controller override namespaces
-                $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks()
-                    ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/') // first Modules (for override)
-                    ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then Core default
+                $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks();
+                if($moduleCoreConfigExists) {
+                    $settingsFilesFinder->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/'); // first Modules (for override priority)
+                }
+                $settingsFilesFinder->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
+                $namespaces = array();
+
+                // Check for error cases
+                $routeIds = array();
+                foreach($routingFilePaths as $prefix => $path) {
+                    $content = Yaml::parse(file_get_contents($path));
+                    $ids = array_keys($content);
+                    foreach($ids as $id) {
+                        if (in_array($id, $routeIds)) {
+                            throw new \ErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (route ID: '.$id.', prefix: '.$prefix.')');
+                        }
+                        $routeIds[] = $id;
+                    }
+                }
                 foreach($settingsFilesFinder as $file) {
                     try {
                         $settings = Yaml::parse(file_get_contents($file->getRealpath()));
@@ -211,26 +258,27 @@ abstract class AbstractRouter
                             $namespaces[] = '\''.addslashes($namespace).'\'';
                         }
                     } catch (\Exception $e) {
-                        // TODO : log, parse error
+                        throw new \ErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
                     }
                 }
 
                 // generate cache
                 $phpCode = '<'.'?php
-$this->routingFiles = array('.implode(', ', $routingFiles).');
+$this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
 $this->controllerNamespaces = array('.implode(', ', $namespaces).');
 '; // Raw php code inside a string, do not indent please.
                 $cache->write($phpCode);
+                $triggerCacheGenerationFlag = true;
             }
         );
 
         include $cache->getPath();
     }
 
-    protected final function getConfigCacheFactory()
+    protected final function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
-            $this->configCacheFactory = new ConfigCacheFactory($this->configuration->get('_PS_MODE_DEV_'));
+            $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));
         }
 
         return $this->configCacheFactory;
@@ -239,16 +287,11 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
     private final function aggregateRoutingExtensions()
     {
         foreach($this->routingFiles as $prefix => $routingFile) {
-            if ($prefix == '/') {
-                continue;
-            }
             $collection = $this->routeLoader->load($routingFile);
             $collection->addPrefix($prefix);
             $this->sfRouter->getRouteCollection()->addCollection($collection);
         }
     }
 
-    
-    
 
 }
