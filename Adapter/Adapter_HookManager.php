@@ -41,14 +41,15 @@ class Adapter_HookManager
      *
      * @return string/array modules output
      */
-    public function exec($hook_name,
+    public function exec(
+        $hook_name,
         $hook_args = array(),
         $id_module = null,
         $array_return = false,
         $check_exceptions = true,
         $use_push = false,
-        $id_shop = null)
-    {
+        $id_shop = null
+    ) {
         return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
     }
 }
