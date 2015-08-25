@@ -748,8 +748,8 @@ abstract class ModuleCore
 
     public function enableDevice($device)
     {
-        Db::getInstance()->execute('
-            UPDATE '._DB_PREFIX_.'module_shop
+        Db::getInstance()->execute(
+            'UPDATE '._DB_PREFIX_.'module_shop
             SET enable_device = enable_device + '.(int)$device.'
             WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
@@ -760,8 +760,8 @@ abstract class ModuleCore
 
     public function disableDevice($device)
     {
-        Db::getInstance()->execute('
-            UPDATE '._DB_PREFIX_.'module_shop
+        Db::getInstance()->execute(
+            'UPDATE '._DB_PREFIX_.'module_shop
             SET enable_device = enable_device - '.(int)$device.'
             WHERE enable_device & '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
@@ -2213,8 +2213,8 @@ abstract class ModuleCore
 
     public function isEnabledForShopContext()
     {
-        return (bool)Db::getInstance()->getValue('
-            SELECT COUNT(*) n
+        return (bool)Db::getInstance()->getValue(
+            'SELECT COUNT(*) n
             FROM `'._DB_PREFIX_.'module_shop`
             WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
             GROUP BY id_module
@@ -2249,9 +2249,9 @@ abstract class ModuleCore
         return Db::getInstance()->getValue($sql);
     }
 
-    /*
-    ** Template management (display, overload, cache)
-    */
+    /**
+     * Template management (display, overload, cache)
+     */
     protected static function _isTemplateOverloadedStatic($module_name, $template)
     {
         if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/'.$template)) {
@@ -2399,7 +2399,7 @@ abstract class ModuleCore
     }
 
 
-    /*
+    /**
      * Clear template cache
      *
      * @param string $template Template name
@@ -2444,7 +2444,7 @@ abstract class ModuleCore
         }
     }
 
-        /*
+    /**
      * Clear defered template cache
      *
      * @param string $template_path Template path
@@ -2475,7 +2475,7 @@ abstract class ModuleCore
     <version><![CDATA['.$this->version.']]></version>
     <description><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->description)).']]></description>
     <author><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)).']]></author>'
-    .$author_uri.'
+        .$author_uri.'
     <tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
     <is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
     <need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
