@@ -75,11 +75,17 @@ class AdminStockConfigurationControllerCore extends AdminController
         );
 
         // loads labels (incremenation)
-        $reasons_inc = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
-                                                                    array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')), 1);
+        $reasons_inc = StockMvtReason::getStockMvtReasonsWithFilter(
+            $this->context->language->id,
+            array(Configuration::get('PS_STOCK_MVT_TRANSFER_TO')),
+            1
+        );
         // loads labaels (decremenation)
-        $reasons_dec = StockMvtReason::getStockMvtReasonsWithFilter($this->context->language->id,
-                                                                    array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')), -1);
+        $reasons_dec = StockMvtReason::getStockMvtReasonsWithFilter(
+            $this->context->language->id,
+            array(Configuration::get('PS_STOCK_MVT_TRANSFER_FROM')),
+            -1
+        );
 
         // defines options for StockMvt
         $this->fields_options = array(
@@ -193,12 +199,13 @@ class AdminStockConfigurationControllerCore extends AdminController
                     'title' => $this->l('Save')
                 )
             );
-        }
-        // else, if we are managing Supply Order Status
-        elseif (Tools::isSubmit('addsupply_order_state') ||
-                 Tools::isSubmit('updatesupply_order_state') ||
-                 Tools::isSubmit('submitAddsupply_order_state') ||
-                 Tools::isSubmit('submitUpdatesupply_order_state')) {
+        } elseif (Tools::isSubmit('addsupply_order_state')
+            || Tools::isSubmit('updatesupply_order_state')
+            || Tools::isSubmit('submitAddsupply_order_state')
+            || Tools::isSubmit('submitUpdatesupply_order_state')
+        ) {
+            // else, if we are managing Supply Order Status
+
             $this->fields_form = array(
                     'legend' => array(
                         'title' => $this->l('Supply Order Status'),
@@ -311,33 +318,33 @@ class AdminStockConfigurationControllerCore extends AdminController
 
                 $id_supply_order_state = Tools::getValue('id_supply_order_state', 0);
 
-                    // only some fields are editable for initial states
-                    if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6))) {
-                        $this->fields_form = array(
-                            'legend' => array(
-                                'title' => $this->l('Supply order status'),
-                                'icon' => 'icon-pencil'
+                // only some fields are editable for initial states
+                if (in_array($id_supply_order_state, array(1, 2, 3, 4, 5, 6))) {
+                    $this->fields_form = array(
+                        'legend' => array(
+                            'title' => $this->l('Supply order status'),
+                            'icon' => 'icon-pencil'
+                        ),
+                        'input' => array(
+                            array(
+                                'type' => 'text',
+                                'lang' => true,
+                                'label' => $this->l('Status'),
+                                'name' => 'name',
+                                'required' => true
                             ),
-                            'input' => array(
-                                array(
-                                    'type' => 'text',
-                                    'lang' => true,
-                                    'label' => $this->l('Status'),
-                                    'name' => 'name',
-                                    'required' => true
-                                ),
-                                array(
-                                    'type' => 'color',
-                                    'label' => $this->l('Color'),
-                                    'name' => 'color',
-                                    'desc' => $this->l('Status will be highlighted in this color. HTML colors only.'),
-                                ),
+                            array(
+                                'type' => 'color',
+                                'label' => $this->l('Color'),
+                                'name' => 'color',
+                                'desc' => $this->l('Status will be highlighted in this color. HTML colors only.'),
                             ),
-                            'submit' => array(
-                                'title' => $this->l('Save')
-                            )
-                        );
-                    }
+                        ),
+                        'submit' => array(
+                            'title' => $this->l('Save')
+                        )
+                    );
+                }
 
                 if (!($obj = new SupplyOrderState((int)$id_supply_order_state))) {
                     return;
@@ -505,9 +512,9 @@ class AdminStockConfigurationControllerCore extends AdminController
             $this->className = 'SupplyOrderState';
             $this->identifier = 'id_supply_order_state';
             $this->_defaultOrderBy = 'id_supply_order_state';
-        }
-        // StockMvtReason
-        elseif (Tools::isSubmit('delete'.$this->table)) {
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
+            // StockMvtReason
+
             $this->deleted = true;
         }
 

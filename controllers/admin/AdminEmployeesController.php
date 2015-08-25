@@ -113,9 +113,10 @@ class AdminEmployeesControllerCore extends AdminController
                         'identifier' => 'value',
                         'list' => array(
                             '0' => array('value' => 0, 'name' => $this->l('No')),
-                            '1' => array('value' => 1, 'name' => $this->l('Yes')
-                        )
-                    ), 'visibility' => Shop::CONTEXT_ALL)
+                            '1' => array('value' => 1, 'name' => $this->l('Yes'))
+                        ),
+                        'visibility' => Shop::CONTEXT_ALL
+                    )
                 ),
                 'submit' => array('title' => $this->l('Save'))
             )
@@ -191,8 +192,10 @@ class AdminEmployeesControllerCore extends AdminController
                 /** @var Employee $obj */
                 array_pop($this->toolbar_title);
                 $this->toolbar_title[] = sprintf($this->l('Edit: %1$s %2$s'), $obj->lastname, $obj->firstname);
-                $this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
-                    $this->toolbar_title);
+                $this->page_header_toolbar_title = implode(
+                    ' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
+                    $this->toolbar_title
+                );
             }
         }
     }
@@ -605,8 +608,10 @@ class AdminEmployeesControllerCore extends AdminController
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
         if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
-            return !($this->errors[] = sprintf(Tools::displayError('The password must be at least %s characters long.'),
-                Validate::ADMIN_PASSWORD_LENGTH));
+            return !($this->errors[] = sprintf(
+                Tools::displayError('The password must be at least %s characters long.'),
+                Validate::ADMIN_PASSWORD_LENGTH
+            ));
         }
 
         return parent::validateRules($class_name);

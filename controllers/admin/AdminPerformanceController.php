@@ -688,9 +688,11 @@ class AdminPerformanceControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('The Memcached weight is missing.');
                 }
                 if (!count($this->errors)) {
-                    if (CacheMemcache::addServer(pSQL(Tools::getValue('memcachedIp')),
+                    if (CacheMemcache::addServer(
+                        pSQL(Tools::getValue('memcachedIp')),
                         (int)Tools::getValue('memcachedPort'),
-                        (int)Tools::getValue('memcachedWeight'))) {
+                        (int)Tools::getValue('memcachedWeight')
+                    )) {
                         Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
                     } else {
                         $this->errors[] = Tools::displayError('The Memcached server cannot be added.');

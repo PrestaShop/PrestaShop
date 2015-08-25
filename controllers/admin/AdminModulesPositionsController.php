@@ -66,10 +66,9 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
+        } elseif (Tools::isSubmit('submitAddToHook')) {
+            // Add new module in hook
 
-        // Add new module in hook
-        elseif (Tools::isSubmit('submitAddToHook')) {
             if ($this->tabAccess['add'] === '1') {
                 // Getting vars...
                 $id_module = (int)Tools::getValue('id_module');
@@ -85,9 +84,9 @@ class AdminModulesPositionsControllerCore extends AdminController
                     $this->errors[] = Tools::displayError('This module has already been transplanted to this hook.');
                 } elseif (!$module->isHookableOn($hook->name)) {
                     $this->errors[] = Tools::displayError('This module cannot be transplanted to this hook.');
-                }
-                // Adding vars...
-                else {
+                } else {
+                    // Adding vars...
+
                     if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
                         $this->errors[] = Tools::displayError('An error occurred while transplanting the module to its hook.');
                     } else {
@@ -114,10 +113,9 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
-        }
+        } elseif (Tools::isSubmit('submitEditGraft')) {
+            // Edit module from hook
 
-        // Edit module from hook
-        elseif (Tools::isSubmit('submitEditGraft')) {
             if ($this->tabAccess['add'] === '1') {
                 // Getting vars...
                 $id_module = (int)Tools::getValue('id_module');
@@ -175,10 +173,9 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
-        }
+        } elseif (array_key_exists('deleteGraft', $_GET)) {
+            // Delete module from hook
 
-        // Delete module from hook
-        elseif (array_key_exists('deleteGraft', $_GET)) {
             if ($this->tabAccess['delete'] === '1') {
                 $id_module = (int)Tools::getValue('id_module');
                 $module = Module::getInstanceById($id_module);

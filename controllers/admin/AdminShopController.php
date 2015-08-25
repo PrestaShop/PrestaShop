@@ -168,12 +168,14 @@ class AdminShopControllerCore extends AdminController
                     'Collapse All',
                     '#',
                     '$(\'#'.$shops_tree->getId().'\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#'.$shops_tree->getId().'\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt')
+                    'icon-expand-alt'
+                )
             ))
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
@@ -665,9 +667,9 @@ class AdminShopControllerCore extends AdminController
             if (!$object->add()) {
                 $this->errors[] = Tools::displayError('An error occurred while creating an object.').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-            }
-            /* voluntary do affectation here */
-            elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect) {
+            } elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect) {
+                /* voluntary do affectation here */
+
                 $parent_id = (int)Tools::getValue('id_parent', 1);
                 $this->afterAdd($object);
                 $this->updateAssoShop($object->id);

@@ -492,9 +492,21 @@ class AdminOrdersControllerCore extends AdminController
                             '{shipping_number}' => $order->shipping_number,
                             '{order_name}' => $order->getUniqReference()
                         );
-                        if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
-                            $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
-                            _PS_MAIL_DIR_, true, (int)$order->id_shop)) {
+                        if (@Mail::Send(
+                            (int)$order->id_lang,
+                            'in_transit',
+                            Mail::l('Package in transit', (int)$order->id_lang),
+                            $templateVars,
+                            $customer->email,
+                            $customer->firstname.' '.$customer->lastname,
+                            null,
+                            null,
+                            null,
+                            null,
+                            _PS_MAIL_DIR_,
+                            true,
+                            (int)$order->id_shop
+                        )) {
                             Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier), null, false, true, false, $order->id_shop);
                             Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
                         } else {
@@ -507,10 +519,9 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
+        } elseif (Tools::isSubmit('submitState') && isset($order)) {
+            /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
 
-        /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
-        elseif (Tools::isSubmit('submitState') && isset($order)) {
             if ($this->tabAccess['edit'] === '1') {
                 $order_state = new OrderState(Tools::getValue('id_order_state'));
 
@@ -557,10 +568,9 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
+        } elseif (Tools::isSubmit('submitMessage') && isset($order)) {
+            /* Add a new message for the current order and send an e-mail to the customer if needed */
 
-        /* Add a new message for the current order and send an e-mail to the customer if needed */
-        elseif (Tools::isSubmit('submitMessage') && isset($order)) {
             if ($this->tabAccess['edit'] === '1') {
                 $customer = new Customer(Tools::getValue('id_customer'));
                 if (!Validate::isLoadedObject($customer)) {
@@ -631,9 +641,21 @@ class AdminOrdersControllerCore extends AdminController
                                 '{order_name}' => $order->getUniqReference(),
                                 '{message}' => $message
                             );
-                            if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
-                                Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
-                                $customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop)) {
+                            if (@Mail::Send(
+                                (int)$order->id_lang,
+                                'order_merchant_comment',
+                                Mail::l('New message regarding your order', (int)$order->id_lang),
+                                $varsTpl,
+                                $customer->email,
+                                $customer->firstname.' '.$customer->lastname,
+                                null,
+                                null,
+                                null,
+                                null,
+                                _PS_MAIL_DIR_,
+                                true,
+                                (int)$order->id_shop
+                            )) {
                                 Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
                             }
                         }
@@ -643,10 +665,9 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
             }
-        }
+        } elseif (Tools::isSubmit('partialRefund') && isset($order)) {
+            /* Partial refund from order */
 
-        /* Partial refund from order */
-        elseif (Tools::isSubmit('partialRefund') && isset($order)) {
             if ($this->tabAccess['edit'] == '1') {
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
@@ -720,8 +741,14 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     if ($amount >= 0) {
-                        if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
-                            (Tools::getValue('TaxMethod') ? false : true))) {
+                        if (!OrderSlip::create(
+                            $order,
+                            $order_detail_list,
+                            $shipping_cost_amount,
+                            $voucher,
+                            $choosen,
+                            (Tools::getValue('TaxMethod') ? false : true)
+                        )) {
                             $this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
                         } else {
                             Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $order_detail_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
@@ -802,9 +829,24 @@ class AdminOrdersControllerCore extends AdminController
                                     $params['{order_name}'] = $order->getUniqReference();
                                     $params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
                                     $params['{voucher_num}'] = $cart_rule->code;
-                                    @Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
-                                        $params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-                                        null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+                                    @Mail::Send(
+                                        (int)$order->id_lang,
+                                        'voucher',
+                                        sprintf(
+                                            Mail::l('New voucher for your order #%s', (int)$order->id_lang),
+                                            $order->reference
+                                        ),
+                                        $params,
+                                        $customer->email,
+                                        $customer->firstname.' '.$customer->lastname,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        _PS_MAIL_DIR_,
+                                        true,
+                                        (int)$order->id_shop
+                                    );
                                 }
                             }
                         }
@@ -826,10 +868,9 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
             }
-        }
+        } elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
+            /* Cancel product from order */
 
-        /* Cancel product from order */
-        elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
             if ($this->tabAccess['delete'] === '1') {
                 if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization')) {
                     $this->errors[] = Tools::displayError('You must select a product.');
@@ -1057,9 +1098,24 @@ class AdminOrdersControllerCore extends AdminController
                                     $currency = $this->context->currency;
                                     $params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
                                     $params['{voucher_num}'] = $cartrule->code;
-                                    @Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
-                                    $params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-                                    null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+                                    @Mail::Send(
+                                        (int)$order->id_lang,
+                                        'voucher',
+                                        sprintf(
+                                            Mail::l('New voucher for your order #%s', (int)$order->id_lang),
+                                            $order->reference
+                                        ),
+                                        $params,
+                                        $customer->email,
+                                        $customer->firstname.' '.$customer->lastname,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        _PS_MAIL_DIR_,
+                                        true,
+                                        (int)$order->id_shop
+                                    );
                                 }
                             }
                         }
@@ -1154,9 +1210,15 @@ class AdminOrdersControllerCore extends AdminController
                 } else {
                     $employee = new Employee((int)Context::getContext()->cookie->id_employee);
                     $payment_module->validateOrder(
-                        (int)$cart->id, (int)$id_order_state,
-                        $cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
-                        substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
+                        (int)$cart->id,
+                        (int)$id_order_state,
+                        $cart->getOrderTotal(true, Cart::BOTH),
+                        $payment_module->displayName,
+                        $this->l('Manual order -- Employee:').' '.substr($employee->firstname, 0, 1).'. '.$employee->lastname,
+                        array(),
+                        null,
+                        false,
+                        $cart->secure_key
                     );
                     if ($payment_module->currentOrder) {
                         Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
@@ -1767,23 +1829,23 @@ class AdminOrdersControllerCore extends AdminController
             'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
                 'order' => $order,
                 'products' => $products,
-                'customer' => $customer)
-            ),
+                'customer' => $customer
+            )),
             'HOOK_CONTENT_SHIP' => Hook::exec('displayAdminOrderContentShip', array(
                 'order' => $order,
                 'products' => $products,
-                'customer' => $customer)
-            ),
+                'customer' => $customer
+            )),
             'HOOK_TAB_ORDER' => Hook::exec('displayAdminOrderTabOrder', array(
                 'order' => $order,
                 'products' => $products,
-                'customer' => $customer)
-            ),
+                'customer' => $customer
+            )),
             'HOOK_TAB_SHIP' => Hook::exec('displayAdminOrderTabShip', array(
                 'order' => $order,
                 'products' => $products,
-                'customer' => $customer)
-            ),
+                'customer' => $customer
+            )),
         );
 
         return parent::renderView();
@@ -1880,8 +1942,21 @@ class AdminOrdersControllerCore extends AdminController
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname
                     );
-                    if (Mail::Send((int)$cart->id_lang, 'backoffice_order', Mail::l('Process the payment of your order', (int)$cart->id_lang), $mailVars, $customer->email,
-                            $customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, $cart->id_shop)) {
+                    if (Mail::Send(
+                        (int)$cart->id_lang,
+                        'backoffice_order',
+                        Mail::l('Process the payment of your order', (int)$cart->id_lang),
+                        $mailVars,
+                        $customer->email,
+                        $customer->firstname.' '.$customer->lastname,
+                        null,
+                        null,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true,
+                        $cart->id_shop
+                    )) {
                         die(Tools::jsonEncode(array('errors' => false, 'result' => $this->l('The email was sent to your customer.'))));
                     }
                 }
@@ -1928,9 +2003,9 @@ class AdminOrdersControllerCore extends AdminController
             $combination = new Combination($product_informations['product_attribute_id']);
             if (!Validate::isLoadedObject($combination)) {
                 die(Tools::jsonEncode(array(
-                'result' => false,
-                'error' => Tools::displayError('The combination object cannot be loaded.')
-            )));
+                    'result' => false,
+                    'error' => Tools::displayError('The combination object cannot be loaded.')
+                )));
             }
         }
 
@@ -1959,8 +2034,20 @@ class AdminOrdersControllerCore extends AdminController
         // always add taxes even if there are not displayed to the customer
         $use_taxes = true;
 
-        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-            false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $initial_product_price_tax_incl = Product::getPriceStatic(
+            $product->id,
+            $use_taxes,
+            isset($combination) ? $combination->id : null,
+            2,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer,
+            $cart->id,
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+        );
 
         // Creating specific price if needed
         if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl) {
@@ -1988,8 +2075,15 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         // Add product to cart
-        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
-            isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+        $update_quantity = $cart->updateQty(
+            $product_informations['product_quantity'],
+            $product->id,
+            isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
+            isset($combination) ? $combination->id : null,
+            'up',
+            0,
+            new Shop($cart->id_shop)
+        );
 
         if ($update_quantity < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -2074,9 +2168,9 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
-            }
-            // Update current invoice
-            else {
+            } else {
+                // Update current invoice
+
                 $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
                 $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
                 $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -2688,11 +2782,11 @@ class AdminOrdersControllerCore extends AdminController
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && $order_detail->id_warehouse != 0) {
             $manager = StockManagerFactory::getManager();
             $movements = StockMvt::getNegativeStockMvts(
-                                $order_detail->id_order,
-                                $order_detail->product_id,
-                                $order_detail->product_attribute_id,
-                                $quantity_to_reinject
-                            );
+                $order_detail->id_order,
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject
+            );
             $left_to_reinject = $quantity_to_reinject;
             foreach ($movements as $movement) {
                 if ($left_to_reinject > $movement['physical_quantity']) {
@@ -2702,37 +2796,27 @@ class AdminOrdersControllerCore extends AdminController
                 $left_to_reinject -= $quantity_to_reinject;
                 if (Pack::isPack((int)$product->id)) {
                     // Gets items
-                        if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
-                            $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
-                            // Foreach item
-                            foreach ($products_pack as $product_pack) {
-                                if ($product_pack->advanced_stock_management == 1) {
-                                    $manager->addProduct(
-                                        $product_pack->id,
-                                        $product_pack->id_pack_product_attribute,
-                                        new Warehouse($movement['id_warehouse']),
-                                        $product_pack->pack_quantity * $quantity_to_reinject,
-                                        null,
-                                        $movement['price_te'],
-                                        true
-                                    );
-                                }
+                    if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                        $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
+                        // Foreach item
+                        foreach ($products_pack as $product_pack) {
+                            if ($product_pack->advanced_stock_management == 1) {
+                                $manager->addProduct(
+                                    $product_pack->id,
+                                    $product_pack->id_pack_product_attribute,
+                                    new Warehouse($movement['id_warehouse']),
+                                    $product_pack->pack_quantity * $quantity_to_reinject,
+                                    null,
+                                    $movement['price_te'],
+                                    true
+                                );
                             }
                         }
+                    }
+
                     if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
                             ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
                         $manager->addProduct(
-                                $order_detail->product_id,
-                                $order_detail->product_attribute_id,
-                                new Warehouse($movement['id_warehouse']),
-                                $quantity_to_reinject,
-                                null,
-                                $movement['price_te'],
-                                true
-                            );
-                    }
-                } else {
-                    $manager->addProduct(
                             $order_detail->product_id,
                             $order_detail->product_attribute_id,
                             new Warehouse($movement['id_warehouse']),
@@ -2741,6 +2825,17 @@ class AdminOrdersControllerCore extends AdminController
                             $movement['price_te'],
                             true
                         );
+                    }
+                } else {
+                    $manager->addProduct(
+                        $order_detail->product_id,
+                        $order_detail->product_attribute_id,
+                        new Warehouse($movement['id_warehouse']),
+                        $quantity_to_reinject,
+                        null,
+                        $movement['price_te'],
+                        true
+                    );
                 }
             }
 
@@ -2751,11 +2846,11 @@ class AdminOrdersControllerCore extends AdminController
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
             StockAvailable::updateQuantity(
-                    $order_detail->product_id,
-                    $order_detail->product_attribute_id,
-                    $quantity_to_reinject,
-                    $order_detail->id_shop
-                );
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject,
+                $order_detail->id_shop
+            );
 
             if ($delete) {
                 $order_detail->delete();

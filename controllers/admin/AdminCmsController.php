@@ -70,8 +70,10 @@ class AdminCmsControllerCore extends AdminController
 
         $this->_category = AdminCmsContentController::getCurrentCMSCategory();
         $this->tpl_list_vars['icon'] = 'icon-folder-close';
-        $this->tpl_list_vars['title'] = sprintf($this->l('Pages in category "%s"'),
-            $this->_category->name[Context::getContext()->employee->id_lang]);
+        $this->tpl_list_vars['title'] = sprintf(
+            $this->l('Pages in category "%s"'),
+            $this->_category->name[Context::getContext()->employee->id_lang]
+        );
         $this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
@@ -297,8 +299,9 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=1&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
-        }/* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table)) {
+            /* Delete multiple objects */
+
             if ($this->tabAccess['delete'] === '1') {
                 if (Tools::isSubmit($this->table.'Box')) {
                     $cms = new CMS();
@@ -357,9 +360,9 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=4&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             }
-        }
-        /* Change object statuts (active, inactive) */
-        elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier)) {
+        } elseif (Tools::isSubmit('statuscms') && Tools::isSubmit($this->identifier)) {
+            /* Change object statuts (active, inactive) */
+
             if ($this->tabAccess['edit'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var CMS $object */
@@ -375,9 +378,9 @@ class AdminCmsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        /* Delete multiple CMS content */
-        elseif (Tools::isSubmit('submitBulkdeletecms')) {
+        } elseif (Tools::isSubmit('submitBulkdeletecms')) {
+            /* Delete multiple CMS content */
+
             if ($this->tabAccess['delete'] === '1') {
                 $this->action = 'bulkdelete';
                 $this->boxes = Tools::getValue($this->table.'Box');
@@ -405,8 +408,7 @@ class AdminCmsControllerCore extends AdminController
                 'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
                 'ad' => basename(_PS_ADMIN_DIR_),
                 'id_employee' => (int)$this->context->employee->id
-                )
-            );
+            ));
             $preview_url .= (strpos($preview_url, '?') === false ? '?' : '&').$params;
         }
 

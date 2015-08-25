@@ -765,25 +765,25 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('NETPROFIT_VISIT_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
                 break;
 
-                case 'products_per_category':
-                    $products = AdminStatsController::getTotalProducts();
-                    $categories = AdminStatsController::getTotalCategories();
-                    $value = round($products / $categories);
-                    ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY', $value);
-                    ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
-                    break;
+            case 'products_per_category':
+                $products = AdminStatsController::getTotalProducts();
+                $categories = AdminStatsController::getTotalCategories();
+                $value = round($products / $categories);
+                ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY', $value);
+                ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
+                break;
 
-                case 'top_category':
-                    if (!($id_category = AdminStatsController::getBestCategory(date('Y-m-d', strtotime('-1 month')), date('Y-m-d')))) {
-                        $value = $this->l('No category', null, null, false);
-                    } else {
-                        $category = new Category($id_category, $this->context->language->id);
-                        $value = $category->name;
-                    }
+            case 'top_category':
+                if (!($id_category = AdminStatsController::getBestCategory(date('Y-m-d', strtotime('-1 month')), date('Y-m-d')))) {
+                    $value = $this->l('No category', null, null, false);
+                } else {
+                    $category = new Category($id_category, $this->context->language->id);
+                    $value = $category->name;
+                }
 
-                    ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));
-                    ConfigurationKPI::updateValue('TOP_CATEGORY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
-                    break;
+                ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));
+                ConfigurationKPI::updateValue('TOP_CATEGORY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
+                break;
 
             default:
                 $value = false;

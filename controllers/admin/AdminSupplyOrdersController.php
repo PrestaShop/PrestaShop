@@ -537,11 +537,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $this->addRowAction('createsupplyorder');
         $this->addRowAction('delete');
         // unsets some fields
-        unset($this->fields_list['state'],
-              $this->fields_list['date_upd'],
-              $this->fields_list['id_pdf'],
-              $this->fields_list['date_delivery_expected'],
-              $this->fields_list['id_export']);
+        unset(
+            $this->fields_list['state'],
+            $this->fields_list['date_upd'],
+            $this->fields_list['id_pdf'],
+            $this->fields_list['date_delivery_expected'],
+            $this->fields_list['id_export']
+        );
 
         // $this->fields_list['date_add']['align'] = 'left';
 
@@ -1315,9 +1317,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
             $orders->getAll();
             $csv = new CSV($orders, $this->l('supply_orders'));
             $csv->export();
-        }
-        // exports details for all orders
-        elseif (Tools::isSubmit('csv_orders_details')) {
+        } elseif (Tools::isSubmit('csv_orders_details')) {
+            // exports details for all orders
+
             // header
             header('Content-type: text/csv');
             header('Content-Type: application/force-download; charset=UTF-8');
@@ -1366,9 +1368,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row)));
                 }
             }
-        }
-        // exports details for the given order
-        elseif (Tools::isSubmit('csv_order_details') && Tools::getValue('id_supply_order')) {
+        } elseif (Tools::isSubmit('csv_order_details') && Tools::getValue('id_supply_order')) {
+            // exports details for the given order
+
             $supply_order = new SupplyOrder((int)Tools::getValue('id_supply_order'));
             if (Validate::isLoadedObject($supply_order)) {
                 $details = $supply_order->getEntriesCollection();
@@ -1417,8 +1419,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
                 // checks if quantity is valid
                 // It's possible to receive more quantity than expected in case of a shipping error from the supplier
                 if (!Validate::isInt($quantity) || $quantity <= 0) {
-                    $this->errors[] = sprintf(Tools::displayError('Quantity (%d) for product #%d is not valid'),
-                        (int)$quantity, (int)$id_supply_order_detail);
+                    $this->errors[] = sprintf(
+                        Tools::displayError('Quantity (%d) for product #%d is not valid'),
+                        (int)$quantity,
+                        (int)$id_supply_order_detail
+                    );
                 } else {
                     // everything is valid :  updates
 
@@ -1450,24 +1455,44 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     // converts the unit price to the warehouse currency if needed
                     if ($supply_order->id_currency != $warehouse->id_currency) {
                         // first, converts the price to the default currency
-                        $price_converted_to_default_currency = Tools::convertPrice($supply_order_detail->unit_price_te,
-                            $supply_order->id_currency, false);
+                        $price_converted_to_default_currency = Tools::convertPrice(
+                            $supply_order_detail->unit_price_te,
+                            $supply_order->id_currency,
+                            false
+                        );
 
                         // then, converts the newly calculated pri-ce from the default currency to the needed currency
-                        $price = Tools::ps_round(Tools::convertPrice($price_converted_to_default_currency,
-                            $warehouse->id_currency, true), 6);
+                        $price = Tools::ps_round(Tools::convertPrice(
+                            $price_converted_to_default_currency,
+                            $warehouse->id_currency,
+                            true
+                        ), 6);
                     }
 
                     $manager = StockManagerFactory::getManager();
-                    $res = $manager->addProduct($supply_order_detail->id_product,
-                        $supply_order_detail->id_product_attribute,    $warehouse, (int)$quantity,
-                        Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'), $price, true, $supply_order->id);
+                    $res = $manager->addProduct(
+                        $supply_order_detail->id_product,
+                        $supply_order_detail->id_product_attribute,
+                        $warehouse,
+                        (int)$quantity,
+                        Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'),
+                        $price,
+                        true,
+                        $supply_order->id
+                    );
 
-                    $location = Warehouse::getProductLocation($supply_order_detail->id_product,
-                        $supply_order_detail->id_product_attribute, $warehouse->id);
+                    $location = Warehouse::getProductLocation(
+                        $supply_order_detail->id_product,
+                        $supply_order_detail->id_product_attribute,
+                        $warehouse->id
+                    );
 
-                    $res = Warehouse::setProductlocation($supply_order_detail->id_product,
-                        $supply_order_detail->id_product_attribute, $warehouse->id, $location ? $location : '');
+                    $res = Warehouse::setProductlocation(
+                        $supply_order_detail->id_product,
+                        $supply_order_detail->id_product_attribute,
+                        $warehouse->id,
+                        $location ? $location : ''
+                    );
 
                     if ($res) {
                         $supplier_receipt_history->add();
@@ -1715,7 +1740,9 @@ class AdminSupplyOrdersControllerCore extends AdminController
             $ids = explode('_', $item['id']);
             $prices = ProductSupplier::getProductSupplierPrice($ids[0], $ids[1], $id_supplier, true);
             if (count($prices)) {
-                $item['unit_price_te'] = Tools::convertPriceFull($prices['product_supplier_price_te'], new Currency((int)$prices['id_currency']),
+                $item['unit_price_te'] = Tools::convertPriceFull(
+                    $prices['product_supplier_price_te'],
+                    new Currency((int)$prices['id_currency']),
                     new Currency($id_currency)
                 );
             }
@@ -1985,7 +2012,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     'href' => '#',
                     'desc' => $this->l('Save')
                 );
-
+                // no break
             case 'update_receipt':
                 // Default cancel button - like old back link
                 if (!isset($this->no_back) || $this->no_back == false) {
@@ -1999,7 +2026,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                         'desc' => $this->l('Cancel')
                     );
                 }
-            break;
+                break;
 
             case 'add':
             case 'edit':
@@ -2007,6 +2034,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
                     'href' => '#',
                     'desc' => $this->l('Save and stay')
                 );
+                // no break
             default:
                 parent::initToolbar();
         }
@@ -2089,8 +2117,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
             $diff = (int)$threshold;
 
             if ($supply_order->is_template != 1) {
-                $real_quantity = (int)$manager->getProductRealQuantities($item['id_product'], $item['id_product_attribute'],
-                    $supply_order->id_warehouse, true);
+                $real_quantity = (int)$manager->getProductRealQuantities(
+                    $item['id_product'],
+                    $item['id_product_attribute'],
+                    $supply_order->id_warehouse,
+                    true
+                );
                 $diff = (int)$threshold - (int)$real_quantity;
             }
 

@@ -421,9 +421,24 @@ class AdminProductsControllerCore extends AdminController
 
                 // convert price with the currency from context
                 $this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-                $this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null,
-                    (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1, true, null, null, null, $nothing, true, true,
-                    $context);
+                $this->_list[$i]['price_tmp'] = Product::getPriceStatic(
+                    $this->_list[$i]['id_product'],
+                    true,
+                    null,
+                    (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                    null,
+                    false,
+                    true,
+                    1,
+                    true,
+                    null,
+                    null,
+                    null,
+                    $nothing,
+                    true,
+                    true,
+                    $context
+                );
             }
         }
 
@@ -500,8 +515,7 @@ class AdminProductsControllerCore extends AdminController
             'option_list' => $res,
             'key_id' => 'id_country',
             'key_value' => 'name'
-            )
-        );
+        ));
 
         $this->content = $tpl->fetch();
     }
@@ -517,8 +531,7 @@ class AdminProductsControllerCore extends AdminController
             'option_list' => $res,
             'key_id' => 'id_currency',
             'key_value' => 'name'
-            )
-        );
+        ));
 
         $this->content = $tpl->fetch();
     }
@@ -534,8 +547,7 @@ class AdminProductsControllerCore extends AdminController
             'option_list' => $res,
             'key_id' => 'id_group',
             'key_value' => 'name'
-            )
-        );
+        ));
 
         $this->content = $tpl->fetch();
     }
@@ -950,7 +962,8 @@ class AdminProductsControllerCore extends AdminController
                         if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' &&!Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = Tools::displayError('Invalid date format.');
                         } else {
-                            $product->updateAttribute((int)$id_product_attribute,
+                            $product->updateAttribute(
+                                (int)$id_product_attribute,
                                 $this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
                                 $this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
                                 $this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
@@ -963,16 +976,18 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 $this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null, false);
+                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+                                false
+                            );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
                         }
                     } else {
                         $this->errors[] = Tools::displayError('You do not have permission to add this.');
                     }
-                }
-                // Add new
-                else {
+                } else {
+                    // Add new
+
                     if ($this->tabAccess['add'] === '1') {
                         if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'))) {
                             $this->errors[] = Tools::displayError('This combination already exists.');
@@ -1308,9 +1323,9 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to delete this.');
             }
-        }
-        // Product preview
-        elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+        } elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+            // Product preview
+
             $this->display = 'edit';
             $this->action = 'save';
             if (Tools::getValue('id_product')) {
@@ -1324,41 +1339,41 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product duplication
-        elseif (Tools::getIsset('duplicate'.$this->table)) {
+        } elseif (Tools::getIsset('duplicate'.$this->table)) {
+            // Product duplication
+
             if ($this->tabAccess['add'] === '1') {
                 $this->action = 'duplicate';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to add this.');
             }
-        }
-        // Product images management
-        elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+        } elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+            // Product images management
+
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'image';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product attributes management
-        elseif (Tools::isSubmit('submitProductAttribute')) {
+        } elseif (Tools::isSubmit('submitProductAttribute')) {
+            // Product attributes management
+
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'productAttribute';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product features management
-        elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+        } elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+            // Product features management
+
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'features';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Product specific prices management NEVER USED
-        elseif (Tools::isSubmit('submitPricesModification')) {
+        } elseif (Tools::isSubmit('submitPricesModification')) {
+            // Product specific prices management NEVER USED
+
             if ($this->tabAccess['add'] === '1') {
                 $this->action = 'pricesModification';
             } else {
@@ -1377,9 +1392,9 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-        // Customization management
-        elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+        } elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+            // Customization management
+
             if ($this->tabAccess['edit'] === '1') {
                 $this->action = 'customizationConfiguration';
                 $this->tab_display = 'customization';
@@ -2099,9 +2114,9 @@ class AdminProductsControllerCore extends AdminController
                                 $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4'.($page > 1 ? '&submitFilterproduct='.(int)$page : '').'&token='.$this->token;
                             }
                         }
-                    }
-                    // if errors : stay on edit page
-                    else {
+                    } else {
+                        // if errors : stay on edit page
+
                         $this->display = 'edit';
                     }
                 } else {
@@ -2719,10 +2734,10 @@ class AdminProductsControllerCore extends AdminController
                 // adding button for preview this product statistics
                 if (file_exists(_PS_MODULE_DIR_.'statsproduct/statsproduct.php')) {
                     $this->page_header_toolbar_btn['stats'] = array(
-                    'short' => $this->l('Statistics', null, null, false),
-                    'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
-                    'desc' => $this->l('Product sales', null, null, false),
-                );
+                        'short' => $this->l('Statistics', null, null, false),
+                        'href' => $this->context->link->getAdminLink('AdminStats').'&module=statsproduct&id_product='.(int)$product->id,
+                        'desc' => $this->l('Product sales', null, null, false),
+                    );
                 }
 
                 // adding button for delete this product
@@ -3227,13 +3242,13 @@ class AdminProductsControllerCore extends AdminController
             ->setSelectedCategories($categories);
 
         $data->assign(array('default_category' => $default_category,
-                    'selected_cat_ids' => implode(',', array_keys($selected_cat)),
-                    'selected_cat' => $selected_cat,
-                    'id_category_default' => $product->getDefaultCategory(),
-                    'category_tree' => $tree->render(),
-                    'product' => $product,
-                    'link' => $this->context->link,
-                    'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
+            'selected_cat_ids' => implode(',', array_keys($selected_cat)),
+            'selected_cat' => $selected_cat,
+            'id_category_default' => $product->getDefaultCategory(),
+            'category_tree' => $tree->render(),
+            'product' => $product,
+            'link' => $this->context->link,
+            'is_shop_context' => Shop::getContext() == Shop::CONTEXT_SHOP
         ));
 
         $this->tpl_form_vars['custom_form'] = $data->fetch();
@@ -3266,15 +3281,20 @@ class AdminProductsControllerCore extends AdminController
                     Tools::convertPrice(
                         Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
                         $this->context->currency
-                    ), $this->context->currency
+                    ),
+                    $this->context->currency
                 );
             }
             foreach ($combinations as &$combination) {
                 $combination['attributes'] = rtrim($combination['attributes'], ' - ');
             }
             $data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
-                $this->context->currency, $shops, $currencies, $countries, $groups)
-            );
+                $this->context->currency,
+                $shops,
+                $currencies,
+                $countries,
+                $groups
+            ));
 
             $data->assign('ecotax_tax_excl', (float)$obj->ecotax);
             $this->_applyTaxToEcotax($obj);
@@ -3497,16 +3517,19 @@ class AdminProductsControllerCore extends AdminController
         if (!file_exists($exists_file)
             && !empty($product->productDownload->display_filename)
             && empty($product->cache_default_attribute)) {
-            $msg = sprintf(Tools::displayError('File "%s" is missing'),
-                $product->productDownload->display_filename);
+            $msg = sprintf(
+                Tools::displayError('File "%s" is missing'),
+                $product->productDownload->display_filename
+            );
         } else {
             $msg = '';
         }
 
         $virtual_product_file_uploader = new HelperUploader('virtual_product_file_uploader');
         $virtual_product_file_uploader->setMultiple(false)->setUrl(
-            Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$product->id
-            .'&action=AddVirtualProductFile')->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+            Context::getContext()->link->getAdminLink('AdminProducts')
+            .'&ajax=1&id_product='.(int)$product->id.'&action=AddVirtualProductFile'
+        )->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
             ->setTemplate('virtual_product.tpl');
 
         $data->assign(array(
@@ -3791,8 +3814,10 @@ class AdminProductsControllerCore extends AdminController
 
         $required = (isset($label[(int)($language['id_lang'])])) ? $label[(int)($language['id_lang'])]['required'] : false;
 
-        $template = $this->context->smarty->createTemplate('controllers/products/input_text_lang.tpl',
-            $this->context->smarty);
+        $template = $this->context->smarty->createTemplate(
+            'controllers/products/input_text_lang.tpl',
+            $this->context->smarty
+        );
         return '<div class="form-group">'
             .'<div class="col-lg-6">'
             .$template->assign(array(
@@ -3887,8 +3912,9 @@ class AdminProductsControllerCore extends AdminController
 
                 $attachment_uploader = new HelperUploader('attachment_file');
                 $attachment_uploader->setMultiple(false)->setUseAjax(true)->setUrl(
-                    Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
-                    .'&action=AddAttachment')->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
+                    Context::getContext()->link->getAdminLink('AdminProducts')
+                    .'&ajax=1&id_product='.(int)$obj->id.'&action=AddAttachment'
+                )->setPostMaxSize((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
                     ->setTemplate('attachment_ajax.tpl');
 
                 $data->assign(array(
@@ -3950,25 +3976,46 @@ class AdminProductsControllerCore extends AdminController
 
         $product_props = array();
         // global informations
-        array_push($product_props, 'reference', 'ean13', 'upc',
-        'available_for_order', 'show_price', 'online_only',
-        'id_manufacturer'
+        array_push(
+            $product_props,
+            'reference',
+            'ean13',
+            'upc',
+            'available_for_order',
+            'show_price',
+            'online_only',
+            'id_manufacturer'
         );
 
         // specific / detailled information
-        array_push($product_props,
-        // physical product
-        'width', 'height', 'weight', 'active',
-        // virtual product
-        'is_virtual', 'cache_default_attribute',
-        // customization
-        'uploadable_files', 'text_fields'
+        array_push(
+            $product_props,
+            // physical product
+            'width',
+            'height',
+            'weight',
+            'active',
+            // virtual product
+            'is_virtual',
+            'cache_default_attribute',
+            // customization
+            'uploadable_files',
+            'text_fields'
         );
         // prices
-        array_push($product_props,
-            'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
-            'unity', 'minimum_quantity', 'additional_shipping_cost',
-            'available_now', 'available_later', 'available_date'
+        array_push(
+            $product_props,
+            'price',
+            'wholesale_price',
+            'id_tax_rules_group',
+            'unit_price_ratio',
+            'on_sale',
+            'unity',
+            'minimum_quantity',
+            'additional_shipping_cost',
+            'available_now',
+            'available_later',
+            'available_date'
         );
 
         if (Configuration::get('PS_USE_ECOTAX')) {
@@ -4130,15 +4177,15 @@ class AdminProductsControllerCore extends AdminController
 
                 if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
-                        case ImageManager::ERROR_FILE_NOT_EXIST :
+                        case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
                             break;
 
-                        case ImageManager::ERROR_FILE_WIDTH :
+                        case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
                             break;
 
-                        case ImageManager::ERROR_MEMORY_LIMIT :
+                        case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
                             break;
 
@@ -4250,9 +4297,10 @@ class AdminProductsControllerCore extends AdminController
                 $languages = Language::getLanguages(true);
                 $image_uploader = new HelperImageUploader('file');
                 $image_uploader->setMultiple(!(Tools::getUserBrowser() == 'Apple Safari' && Tools::getUserPlatform() == 'Windows'))
-                    ->setUseAjax(true)->setUrl(
+                ->setUseAjax(true)->setUrl(
                     Context::getContext()->link->getAdminLink('AdminProducts').'&ajax=1&id_product='.(int)$obj->id
-                    .'&action=addProductImage');
+                    .'&action=addProductImage'
+                );
 
                 $data->assign(array(
                         'countImages' => $count_images,
@@ -4515,16 +4563,16 @@ class AdminProductsControllerCore extends AdminController
                 // if we are in all shops context, it's not possible to manage quantities at this level
                 if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL) {
                     $show_quantities = false;
-                }
-                // if we are in group shop context
-                elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP) {
+                } elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP) {
+                    // if we are in group shop context
+
                     // if quantities are not shared between shops of the group, it's not possible to manage them at group level
                     if (!$shop_group->share_stock) {
                         $show_quantities = false;
                     }
-                }
-                // if we are in shop context
-                elseif (Shop::isFeatureActive()) {
+                } elseif (Shop::isFeatureActive()) {
+                    // if we are in shop context
+
                     // if quantities are shared between shops of the group, it's not possible to manage them for a given shop
                     if ($shop_group->share_stock) {
                         $show_quantities = false;
@@ -4904,7 +4952,7 @@ class AdminProductsControllerCore extends AdminController
                     die(Tools::jsonEncode(array('error' => $error)));
                 }
                 break;
-            case 'advanced_stock_management' :
+            case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
                     die(Tools::jsonEncode(array('error' =>  $this->l('Undefined value'))));
                 }

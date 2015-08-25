@@ -175,7 +175,7 @@ class AdminImportControllerCore extends AdminController
                     'depends_on_stock' => 0,
                     'available_date' => date('Y-m-d')
                 );
-            break;
+                break;
 
             case $this->entities[$this->l('Categories')]:
                 $this->available_fields = array(
@@ -205,7 +205,7 @@ class AdminImportControllerCore extends AdminController
                     'parent' => Configuration::get('PS_HOME_CATEGORY'),
                     'link_rewrite' => ''
                 );
-            break;
+                break;
 
             case $this->entities[$this->l('Products')]:
                 self::$validators['image'] = array(
@@ -315,7 +315,7 @@ class AdminImportControllerCore extends AdminController
                     'advanced_stock_management' => 0,
                     'depends_on_stock' => 0,
                 );
-            break;
+                break;
 
             case $this->entities[$this->l('Customers')]:
                 //Overwrite required_fields AS only email is required whereas other entities
@@ -345,7 +345,7 @@ class AdminImportControllerCore extends AdminController
                     'active' => '1',
                     'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
                 );
-            break;
+                break;
 
             case $this->entities[$this->l('Addresses')]:
                 //Overwrite required_fields
@@ -389,7 +389,7 @@ class AdminImportControllerCore extends AdminController
                     'alias' => 'Alias',
                     'postcode' => 'X'
                 );
-            break;
+                break;
             case $this->entities[$this->l('Manufacturers')]:
             case $this->entities[$this->l('Suppliers')]:
                 //Overwrite validators AS name is not MultiLangField
@@ -421,7 +421,7 @@ class AdminImportControllerCore extends AdminController
                 self::$default_values = array(
                     'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
                 );
-            break;
+                break;
             case $this->entities[$this->l('Alias')]:
                 //Overwrite required_fields
                 $this->required_fields = array(
@@ -438,7 +438,7 @@ class AdminImportControllerCore extends AdminController
                 self::$default_values = array(
                     'active' => '1',
                 );
-            break;
+                break;
         }
 
         // @since 1.5.0
@@ -472,7 +472,7 @@ class AdminImportControllerCore extends AdminController
                         'discount_rate' => '0',
                         'is_template' => '0',
                     );
-                break;
+                    break;
                 case $this->entities[$this->l('Supply Order Details')]:
                     // required fields
                     $this->required_fields = array(
@@ -497,7 +497,7 @@ class AdminImportControllerCore extends AdminController
                         'discount_rate' => '0',
                         'tax_rate' => '0',
                     );
-                break;
+                    break;
 
             }
         }
@@ -572,8 +572,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         $csv_selected = '';
-        if (isset($this->context->cookie->csv_selected) && @filemtime(AdminImportController::getPath(
-            urldecode($this->context->cookie->csv_selected)))) {
+        if (isset($this->context->cookie->csv_selected)
+            && @filemtime(AdminImportController::getPath(urldecode($this->context->cookie->csv_selected)))
+        ) {
             $csv_selected = urldecode($this->context->cookie->csv_selected);
         } else {
             $this->context->cookie->csv_selected = $csv_selected;
@@ -600,9 +601,15 @@ class AdminImportControllerCore extends AdminController
         $last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
 
         switch ($last) {
-            case 'g': $bytes *= 1024;
-            case 'm': $bytes *= 1024;
-            case 'k': $bytes *= 1024;
+            case 'g':
+                $bytes *= 1024;
+                // no break
+            case 'm':
+                $bytes *= 1024;
+                // no break
+            case 'k':
+                $bytes *= 1024;
+                // no break
         }
 
         if (!isset($bytes) || $bytes == '') {
@@ -1032,16 +1039,16 @@ class AdminImportControllerCore extends AdminController
             case 'products':
                 $image_obj = new Image($id_image);
                 $path = $image_obj->getPathForCreation();
-            break;
+                break;
             case 'categories':
                 $path = _PS_CAT_IMG_DIR_.(int)$id_entity;
-            break;
+                break;
             case 'manufacturers':
                 $path = _PS_MANU_IMG_DIR_.(int)$id_entity;
-            break;
+                break;
             case 'suppliers':
                 $path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
-            break;
+                break;
         }
 
         $url = urldecode(trim($url));
@@ -1081,8 +1088,20 @@ class AdminImportControllerCore extends AdminController
             $tgt_width = $tgt_height = 0;
             $src_width = $src_height = 0;
             $error = 0;
-            ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5,
-                                 $src_width, $src_height);
+            ImageManager::resize(
+                $tmpfile,
+                $path.'.jpg',
+                null,
+                null,
+                'jpg',
+                false,
+                $error,
+                $tgt_width,
+                $tgt_height,
+                5,
+                $src_width,
+                $src_height
+            );
             $images_types = ImageType::getImagesTypes($entity, true);
 
             if ($regenerate) {
@@ -1092,9 +1111,20 @@ class AdminImportControllerCore extends AdminController
                 foreach ($images_types as $image_type) {
                     $tmpfile = self::get_best_path($image_type['width'], $image_type['height'], $path_infos);
 
-                    if (ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'],
-                                         $image_type['height'], 'jpg', false, $error, $tgt_width, $tgt_height, 5,
-                                         $src_width, $src_height)) {
+                    if (ImageManager::resize(
+                        $tmpfile,
+                        $path.'-'.stripslashes($image_type['name']).'.jpg',
+                        $image_type['width'],
+                        $image_type['height'],
+                        'jpg',
+                        false,
+                        $error,
+                        $tgt_width,
+                        $tgt_height,
+                        5,
+                        $src_width,
+                        $src_height
+                    )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {
                             $path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
@@ -1291,8 +1321,8 @@ class AdminImportControllerCore extends AdminController
             } else {
                 // Associate category to shop
                 if ($shop_is_feature_active) {
-                    Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'category_shop
+                    Db::getInstance()->execute(
+                        'DELETE FROM '._DB_PREFIX_.'category_shop
 						WHERE id_category = '.(int)$category->id
                     );
 
@@ -2415,9 +2445,9 @@ class AdminImportControllerCore extends AdminController
                             }
                         }
                     }
-                }
-                // if not depends_on_stock set, use normal qty
-                else {
+                } else {
+                    // if not depends_on_stock set, use normal qty
+
                     if ($shop_is_feature_active) {
                         foreach ($id_shop_list as $shop) {
                             StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
@@ -2889,8 +2919,8 @@ class AdminImportControllerCore extends AdminController
                 if ($res) {
                     // Associate supplier to group shop
                     if ($shop_is_feature_active && $manufacturer->shop) {
-                        Db::getInstance()->execute('
-							DELETE FROM '._DB_PREFIX_.'manufacturer_shop
+                        Db::getInstance()->execute(
+                            'DELETE FROM '._DB_PREFIX_.'manufacturer_shop
 							WHERE id_manufacturer = '.(int)$manufacturer->id
                         );
                         $manufacturer->shop = explode($this->multiple_value_separator, $manufacturer->shop);
@@ -2980,8 +3010,8 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     // Associate supplier to group shop
                     if ($shop_is_feature_active && $supplier->shop) {
-                        Db::getInstance()->execute('
-							DELETE FROM '._DB_PREFIX_.'supplier_shop
+                        Db::getInstance()->execute(
+                            'DELETE FROM '._DB_PREFIX_.'supplier_shop
 							WHERE id_supplier = '.(int)$supplier->id
                         );
                         $supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
@@ -3089,9 +3119,9 @@ class AdminImportControllerCore extends AdminController
             // if an id is set, instanciates a supply order with this id if possible
             if (array_key_exists('id', $info) && (int)$info['id'] && SupplyOrder::exists((int)$info['id'])) {
                 $supply_order = new SupplyOrder((int)$info['id']);
-            }
-            // if a reference is set, instanciates a supply order with this reference if possible
-            elseif (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference']))) {
+            } elseif (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference']))) {
+                // if a reference is set, instanciates a supply order with this reference if possible
+
                 $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
             } else { // new supply order
                 $supply_order = new SupplyOrder();
@@ -3223,16 +3253,24 @@ class AdminImportControllerCore extends AdminController
 
                 // checks if one product/attribute is there only once
                 if (isset($products[$id_product][$id_product_attribute])) {
-                    $this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product,
-                        $id_product_attribute, $current_line + 1);
+                    $this->errors[] = sprintf(
+                        $this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'),
+                        $id_product,
+                        $id_product_attribute,
+                        $current_line + 1
+                    );
                 } else {
                     $products[$id_product][$id_product_attribute] = $quantity_expected;
                 }
 
                 // checks parameters
                 if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier))) {
-                    $this->errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
-                        $id_product_attribute, $current_line + 1);
+                    $this->errors[] = sprintf(
+                        $this->l('Product (%d/%d) is not available for this order (at line %d).'),
+                        $id_product,
+                        $id_product_attribute,
+                        $current_line + 1
+                    );
                 }
                 if ($unit_price_te < 0) {
                     $this->errors[] = sprintf($this->l('Unit Price (tax excl.) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
@@ -3241,12 +3279,20 @@ class AdminImportControllerCore extends AdminController
                     $this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
                 }
                 if ($discount_rate < 0 || $discount_rate > 100) {
-                    $this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-                        $current_line + 1, $this->l('Format: Between 0 and 100'));
+                    $this->errors[] = sprintf(
+                        $this->l('Discount rate (%d) is not valid (at line %d). %s.'),
+                        $discount_rate,
+                        $current_line + 1,
+                        $this->l('Format: Between 0 and 100')
+                    );
                 }
                 if ($tax_rate < 0 || $tax_rate > 100) {
-                    $this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $tax_rate,
-                        $current_line + 1, $this->l('Format: Between 0 and 100'));
+                    $this->errors[] = sprintf(
+                        $this->l('Quantity Expected (%d) is not valid (at line %d).'),
+                        $tax_rate,
+                        $current_line + 1,
+                        $this->l('Format: Between 0 and 100')
+                    );
                 }
 
                 // if no errors, sets supply order details

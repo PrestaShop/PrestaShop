@@ -90,13 +90,15 @@ class AdminScenesControllerCore extends AdminController
                         $base_thumb_path,
                         _PS_SCENE_THUMB_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
                         (int)$image_type['width'],
-                        (int)$image_type['height']);
+                        (int)$image_type['height']
+                    );
                 } elseif (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !$_FILES['image']['error']) {
                     ImageManager::resize(
                         $base_img_path,
                         _PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
                         (int)$image_type['width'],
-                        (int)$image_type['height']);
+                        (int)$image_type['height']
+                    );
                 }
             }
         }
@@ -213,8 +215,11 @@ class AdminScenesControllerCore extends AdminController
         $image_to_map_desc = '';
         $image_to_map_desc .= '<div class="help-block">'.$this->l('Format:').' JPG, GIF, PNG. '.$this->l('File size:').' '
                 .(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
-                .sprintf($this->l('If an image is too large, it will be reduced to %1$d x %2$dpx (width x height).'),
-                $large_scene_image_type['width'], $large_scene_image_type['height'])
+                .sprintf(
+                    $this->l('If an image is too large, it will be reduced to %1$d x %2$dpx (width x height).'),
+                    $large_scene_image_type['width'],
+                    $large_scene_image_type['height']
+                )
                 .$this->l('If an image is deemed too small, a white background will be added in order to achieve the correct image size.').'<br />'.
                 $this->l('Note: To change image dimensions, please change the \'large_scene\' image type settings to the desired size (in Back Office > Preferences > Images).')
                 .'</div>';
@@ -252,8 +257,11 @@ class AdminScenesControllerCore extends AdminController
             $img_alt_desc .= $this->l('If you want to use a thumbnail other than one generated from simply reducing the mapped image, please upload it here.')
                 .'<br />'.$this->l('Format:').' JPG, GIF, PNG. '
                 .$this->l('File size:').' '.(Tools::getMaxUploadSize() / 1024).''.$this->l('Kb max.').' '
-                .sprintf($this->l('Automatically resized to %1$d x %2$dpx (width x height).'),
-                $thumb_scene_image_type['width'], $thumb_scene_image_type['height']).'.<br />'
+                .sprintf(
+                    $this->l('Automatically resized to %1$d x %2$dpx (width x height).'),
+                    $thumb_scene_image_type['width'],
+                    $thumb_scene_image_type['height']
+                ).'.<br />'
                 .$this->l('Note: To change image dimensions, please change the \'m_scene_default\' image type settings to the desired size (in Back Office > Preferences > Images).');
 
             $input_img_alt = array(

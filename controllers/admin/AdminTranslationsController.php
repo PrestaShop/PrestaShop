@@ -1221,14 +1221,14 @@ class AdminTranslationsControllerCore extends AdminController
                 break;
 
             case 'back':
-                    // Parsing file in Back office
-                    if ($type_file == 'php') {
-                        $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
-                    } elseif ($type_file == 'specific') {
-                        $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
-                    } else {
-                        $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
-                    }
+                // Parsing file in Back office
+                if ($type_file == 'php') {
+                    $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+                } elseif ($type_file == 'specific') {
+                    $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
+                } else {
+                    $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
+                }
                 break;
 
             case 'errors':
@@ -1237,25 +1237,25 @@ class AdminTranslationsControllerCore extends AdminController
                 break;
 
             case 'modules':
-                    // Parsing modules file
-                    if ($type_file == 'php') {
-                        $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
-                    } else {
-                        // In tpl file look for something that should contain mod='module_name' according to the documentation
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
-                    }
+                // Parsing modules file
+                if ($type_file == 'php') {
+                    $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+                } else {
+                    // In tpl file look for something that should contain mod='module_name' according to the documentation
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
+                }
                 break;
 
             case 'pdf':
-                    // Parsing PDF file
-                    if ($type_file == 'php') {
-                        $regex = array(
-                            '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
-                            '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
-                        );
-                    } else {
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
-                    }
+                // Parsing PDF file
+                if ($type_file == 'php') {
+                    $regex = array(
+                        '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
+                        '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
+                    );
+                } else {
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
+                }
                 break;
         }
 
@@ -2274,8 +2274,14 @@ class AdminTranslationsControllerCore extends AdminController
                 }
             }
         } else {
-            $this->warnings[] = sprintf(Tools::displayError('A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s'),
-                $this->lang_selected->iso_code, str_replace(_PS_ROOT_DIR_, '', dirname($dir)), $default_language);
+            $this->warnings[] = sprintf(
+                Tools::displayError(
+                    'A mail directory exists for the "%1$s" language, but not for the default language (%3$s) in %2$s'
+                ),
+                $this->lang_selected->iso_code,
+                str_replace(_PS_ROOT_DIR_, '', dirname($dir)),
+                $default_language
+            );
         }
         return $arr_return;
     }
@@ -2748,9 +2754,9 @@ class AdminTranslationsControllerCore extends AdminController
                     }
                 }
             }
-        }
-        // Or if is folder, we scan folder for check if found in folder and subfolder
-        elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+        } elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+            // Or if is folder, we scan folder for check if found in folder and subfolder
+
             foreach (scandir($dir.'/'.$file) as $temp) {
                 if ($temp[0] != '.') {
                     $subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);

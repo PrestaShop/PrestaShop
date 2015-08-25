@@ -82,7 +82,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                     'title' => $this->l('Summary'),
                 ),
 
-            ));
+            )
+        );
 
         if (Shop::isFeatureActive()) {
             $multistore_step = array(
@@ -125,8 +126,13 @@ class AdminCarrierWizardControllerCore extends AdminController
                     1 => $this->renderStepThree($carrier),
                     2 => $this->renderStepFour($carrier),
                     3 => $this->renderStepFive($carrier),
-                )),
-            'labels' => array('next' => $this->l('Next'), 'previous' => $this->l('Previous'), 'finish' => $this->l('Finish'))
+                )
+            ),
+            'labels' => array(
+                'next' => $this->l('Next'),
+                'previous' => $this->l('Previous'),
+                'finish' => $this->l('Finish')
+            )
         );
 
 
@@ -348,8 +354,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'name' => 'zones'
                     )
                 ),
-
-            ));
+            )
+        );
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
             unset($this->fields_form['form']['input']['id_tax_rules_group']);
@@ -415,7 +421,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'hint' => $this->l('Mark the groups that are allowed access to this carrier.')
                     )
                 )
-            ));
+            )
+        );
 
         $fields_value = $this->getStepFourFieldsValues($carrier);
 
@@ -463,7 +470,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'hint' => $this->l('Enable the carrier in the front office.')
                     )
                 )
-            ));
+            )
+        );
 
         $template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
 

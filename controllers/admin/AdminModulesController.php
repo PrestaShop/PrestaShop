@@ -574,16 +574,16 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = sprintf($this->l('File too large (limit of %s bytes).'), Tools::getMaxUploadSize());
-                    break;
+                        break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->l('File upload was not completed.');
-                    break;
+                        break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->l('No file was uploaded.');
-                    break;
+                        break;
                     default:
                         $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
-                    break;
+                        break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
                 $this->errors[] = $this->l('No file has been selected');
@@ -1498,10 +1498,10 @@ class AdminModulesControllerCore extends AdminController
                     }
                     unset($object);
                 }
-            }
-            // Module can't be upgraded if not file exist but can change the database version...
-            // User has to be prevented
-            elseif (Module::getUpgradeStatus($module->name)) {
+            } elseif (Module::getUpgradeStatus($module->name)) {
+                // Module can't be upgraded if not file exist but can change the database version...
+                // User has to be prevented
+
                 // When the XML cache file is up-to-date, the module may not be loaded yet
                 if (!class_exists($module->name)) {
                     if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
