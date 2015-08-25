@@ -133,8 +133,8 @@ class ShopGroupCore extends ObjectModel
         }
 
         if ($check == 'all' || $check == 'customer') {
-            $total_customer = (int)Db::getInstance()->getValue('
-                SELECT count(*)
+            $total_customer = (int)Db::getInstance()->getValue(
+                'SELECT count(*)
                 FROM `'._DB_PREFIX_.'customer`
                 WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
@@ -144,8 +144,8 @@ class ShopGroupCore extends ObjectModel
         }
 
         if ($check == 'all' || $check == 'order') {
-            $total_order = (int)Db::getInstance()->getValue('
-                SELECT count(*)
+            $total_order = (int)Db::getInstance()->getValue(
+                'SELECT count(*)
                 FROM `'._DB_PREFIX_.'orders`
                 WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
@@ -159,8 +159,8 @@ class ShopGroupCore extends ObjectModel
 
     public function shopNameExists($name, $id_shop = false)
     {
-        return Db::getInstance()->getValue('
-            SELECT id_shop
+        return Db::getInstance()->getValue(
+            'SELECT id_shop
             FROM '._DB_PREFIX_.'shop
             WHERE name = "'.pSQL($name).'"
             AND id_shop_group = '.(int)$this->id.'
