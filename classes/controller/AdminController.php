@@ -2050,11 +2050,11 @@ class AdminControllerCore extends Controller
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
 
-        $modules = Module::getModulesOnDisk();
+        $modules = Module::getModulesInstalled();
 
         $tmp = array();
         foreach ($modules as $module) {
-            $tmp[] = $module->name;
+            $tmp[] = $module['name'];
         }
 
         foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
