@@ -286,19 +286,19 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT *
-		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
-		WHERE od.`download_hash` = \''.pSQL(strval($hash)).'\'
-		AND pd.`active` = 1';
+        FROM `'._DB_PREFIX_.'order_detail` od
+        LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
+        WHERE od.`download_hash` = \''.pSQL(strval($hash)).'\'
+        AND pd.`active` = 1';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
     }
 
     public static function incrementDownload($id_order_detail, $increment = 1)
     {
         $sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
-			SET `download_nb` = `download_nb` + '.(int)$increment.'
-			WHERE `id_order_detail`= '.(int)$id_order_detail.'
-			LIMIT 1';
+            SET `download_nb` = `download_nb` + '.(int)$increment.'
+            WHERE `id_order_detail`= '.(int)$id_order_detail.'
+            LIMIT 1';
         return Db::getInstance()->execute($sql);
     }
 
@@ -321,9 +321,9 @@ class OrderDetailCore extends ObjectModel
     public static function getTaxCalculatorStatic($id_order_detail)
     {
         $sql = 'SELECT t.*, d.`tax_computation_method`
-				FROM `'._DB_PREFIX_.'order_detail_tax` t
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
-				WHERE d.`id_order_detail` = '.(int)$id_order_detail;
+                FROM `'._DB_PREFIX_.'order_detail_tax` t
+                LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
+                WHERE d.`id_order_detail` = '.(int)$id_order_detail;
 
         $computation_method = 1;
         $taxes = array();
@@ -404,7 +404,7 @@ class OrderDetailCore extends ObjectModel
 
         $values = rtrim($values, ',');
         $sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
-				VALUES '.$values;
+                VALUES '.$values;
 
         return Db::getInstance()->execute($sql);
     }
@@ -437,7 +437,7 @@ class OrderDetailCore extends ObjectModel
     public static function getTaxListStatic($id_order_detail)
     {
         $sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
-					WHERE `id_order_detail` = '.(int)$id_order_detail;
+                    WHERE `id_order_detail` = '.(int)$id_order_detail;
         return Db::getInstance()->executeS($sql);
     }
 
@@ -734,10 +734,10 @@ class OrderDetailCore extends ObjectModel
         }
 
         $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT o.id_order
-		FROM '._DB_PREFIX_.'orders o
-		LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
-		WHERE o.valid = 1 AND od.product_id = '.(int)$id_product);
+        SELECT o.id_order
+        FROM '._DB_PREFIX_.'orders o
+        LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
+        WHERE o.valid = 1 AND od.product_id = '.(int)$id_product);
 
         if (count($orders)) {
             $list = '';
@@ -747,26 +747,26 @@ class OrderDetailCore extends ObjectModel
             $list = rtrim($list, ',');
 
             $order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-				cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
-				FROM '._DB_PREFIX_.'order_detail od
-				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-				'.Shop::addSqlAssociation('product', 'p').
+                SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
+                cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
+                FROM '._DB_PREFIX_.'order_detail od
+                LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
+                '.Shop::addSqlAssociation('product', 'p').
                 (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)Context::getContext()->shop->id.')':'').'
-				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
-				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
-				'.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE od.id_order IN ('.$list.')
-					AND pl.id_lang = '.(int)$id_lang.'
-					AND cl.id_lang = '.(int)$id_lang.'
-					AND od.product_id != '.(int)$id_product.'
-					AND product_shop.active = 1'
+                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)Context::getContext()->shop->id.')':'').'
+                LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
+                LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
+                LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+                '.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
+                WHERE od.id_order IN ('.$list.')
+                    AND pl.id_lang = '.(int)$id_lang.'
+                    AND cl.id_lang = '.(int)$id_lang.'
+                    AND od.product_id != '.(int)$id_product.'
+                    AND product_shop.active = 1'
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				ORDER BY RAND()
-				LIMIT '.(int)$limit.'
-			', true, false);
+                ORDER BY RAND()
+                LIMIT '.(int)$limit.'
+            ', true, false);
 
             $tax_calc = Product::getTaxCalculationMethod();
             if (is_array($order_products)) {
