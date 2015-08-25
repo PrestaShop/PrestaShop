@@ -170,10 +170,10 @@ class PrestaShopExceptionCore extends Exception
         }
 
         return sprintf(
-                    $format,
-                    $this->getMessage(),
-                    $this->getLine(),
-                    ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
-                );
+            $format,
+            $this->getMessage(),
+            $this->getLine(),
+            ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
+        );
     }
 }
