@@ -92,6 +92,13 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'floatval',
 						'type' => 'price'
 					),
+                    'PS_ORDER_RECALCULATE_SHIPPING' => array(
+                        'title' => $this->l('On update, recalculate shipping cos'),
+                        'hint' => $this->l('Allow shipping cost recalculation when an order is updated.'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                    ),
 					'PS_ALLOW_MULTISHIPPING' => array(
 						'title' => $this->l('Allow multishipping'),
 						'hint' => $this->l('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.'),
@@ -185,13 +192,4 @@ class AdminOrderPreferencesControllerCore extends AdminController
 		if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql)))
 			$this->errors[] = Tools::displayError('Assign a valid CMS page if you want it to be read.');
 	}
-
-    /*
-     * Change configuration PS_ORDER_RECALCULATE_SHIPPING
-     */
-    public function ajaxProcessChangeRecalculteShippingOption()
-    {
-        Configuration::updateValue('PS_ORDER_RECALCULATE_SHIPPING', (int)Tools::getValue('recalculate_shipping_cost'));
-        die();
-    }
 }
