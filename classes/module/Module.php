@@ -267,14 +267,14 @@ abstract class ModuleCore
                 self::$modules_cache = array();
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
-				SELECT m.`id_module`, m.`name`, (
-					SELECT id_module
-					FROM `'._DB_PREFIX_.'module_shop` ms
-					WHERE m.`id_module` = ms.`id_module`
-					AND ms.`id_shop` = '.(int)$id_shop.'
-					LIMIT 1
-				) as mshop
-				FROM `'._DB_PREFIX_.'module` m');
+                SELECT m.`id_module`, m.`name`, (
+                    SELECT id_module
+                    FROM `'._DB_PREFIX_.'module_shop` ms
+                    WHERE m.`id_module` = ms.`id_module`
+                    AND ms.`id_shop` = '.(int)$id_shop.'
+                    LIMIT 1
+                ) as mshop
+                FROM `'._DB_PREFIX_.'module` m');
                 foreach ($result as $row) {
                     self::$modules_cache[$row['name']] = $row;
                     self::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
@@ -367,22 +367,22 @@ abstract class ModuleCore
 
         // Permissions management
         Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 1, 1
-				FROM '._DB_PREFIX_.'access a
-				WHERE id_tab = (
-					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
-					WHERE class_name = \'AdminModules\' LIMIT 1)
-				AND a.`view` = 1)');
+            INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+                SELECT id_profile, '.(int)$this->id.', 1, 1, 1
+                FROM '._DB_PREFIX_.'access a
+                WHERE id_tab = (
+                    SELECT `id_tab` FROM '._DB_PREFIX_.'tab
+                    WHERE class_name = \'AdminModules\' LIMIT 1)
+                AND a.`view` = 1)');
 
         Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 0, 0
-				FROM '._DB_PREFIX_.'access a
-				WHERE id_tab = (
-					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
-					WHERE class_name = \'AdminModules\' LIMIT 1)
-				AND a.`view` = 0)');
+            INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+                SELECT id_profile, '.(int)$this->id.', 1, 0, 0
+                FROM '._DB_PREFIX_.'access a
+                WHERE id_tab = (
+                    SELECT `id_tab` FROM '._DB_PREFIX_.'tab
+                    WHERE class_name = \'AdminModules\' LIMIT 1)
+                AND a.`view` = 0)');
 
         // Adding Restrictions for client groups
         Group::addRestrictionsForModule($this->id, Shop::getShops(true, null, true));
@@ -535,9 +535,9 @@ abstract class ModuleCore
     public static function upgradeModuleVersion($name, $version)
     {
         return Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'module` m
-			SET m.version = \''.pSQL($version).'\'
-			WHERE m.name = \''.pSQL($name).'\'');
+            UPDATE `'._DB_PREFIX_.'module` m
+            SET m.version = \''.pSQL($version).'\'
+            WHERE m.name = \''.pSQL($name).'\'');
     }
 
     /**
@@ -722,7 +722,7 @@ abstract class ModuleCore
             return false;
         }
         $sql = 'SELECT `id_shop` FROM `'._DB_PREFIX_.'module_shop`
-				WHERE `id_module` = '.(int)$this->id.
+                WHERE `id_module` = '.(int)$this->id.
                 ((!$force_all) ? ' AND `id_shop` IN('.implode(', ', $list).')' : '');
 
         // Store the results in an array
@@ -749,9 +749,9 @@ abstract class ModuleCore
     public function enableDevice($device)
     {
         Db::getInstance()->execute('
-			UPDATE '._DB_PREFIX_.'module_shop
-			SET enable_device = enable_device + '.(int)$device.'
-			WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
+            UPDATE '._DB_PREFIX_.'module_shop
+            SET enable_device = enable_device + '.(int)$device.'
+            WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
         );
 
@@ -761,9 +761,9 @@ abstract class ModuleCore
     public function disableDevice($device)
     {
         Db::getInstance()->execute('
-			UPDATE '._DB_PREFIX_.'module_shop
-			SET enable_device = enable_device - '.(int)$device.'
-			WHERE enable_device & '.(int)$device.' AND id_module='.(int)$this->id.
+            UPDATE '._DB_PREFIX_.'module_shop
+            SET enable_device = enable_device - '.(int)$device.'
+            WHERE enable_device & '.(int)$device.' AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
         );
 
@@ -824,11 +824,11 @@ abstract class ModuleCore
         }
 
         $output = '
-		<div class="displayed_flag">
-			<img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
-		</div>
-		<div id="languages_'.$id.'" class="language_flags">
-			'.$this->l('Choose language:').'<br /><br />';
+        <div class="displayed_flag">
+            <img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
+        </div>
+        <div id="languages_'.$id.'" class="language_flags">
+            '.$this->l('Choose language:').'<br /><br />';
         foreach ($languages as $language) {
             if ($use_vars_instead_of_ids) {
                 $output .= '<img src="../img/l/'.(int)$language['id_lang'].'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
@@ -904,17 +904,17 @@ abstract class ModuleCore
             foreach ($shop_list as $shop_id) {
                 // Check if already register
                 $sql = 'SELECT hm.`id_module`
-					FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
-					WHERE hm.`id_module` = '.(int)$this->id.' AND h.`id_hook` = '.$id_hook.'
-					AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
+                    FROM `'._DB_PREFIX_.'hook_module` hm, `'._DB_PREFIX_.'hook` h
+                    WHERE hm.`id_module` = '.(int)$this->id.' AND h.`id_hook` = '.$id_hook.'
+                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = '.(int)$shop_id;
                 if (Db::getInstance()->getRow($sql)) {
                     continue;
                 }
 
                 // Get module position in hook
                 $sql = 'SELECT MAX(`position`) AS position
-					FROM `'._DB_PREFIX_.'hook_module`
-					WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
+                    FROM `'._DB_PREFIX_.'hook_module`
+                    WHERE `id_hook` = '.(int)$id_hook.' AND `id_shop` = '.(int)$shop_id;
                 if (!$position = Db::getInstance()->getValue($sql)) {
                     $position = 0;
                 }
@@ -963,7 +963,7 @@ abstract class ModuleCore
 
         // Unregister module on hook by id
         $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
+            WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
             .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
         $result = Db::getInstance()->execute($sql);
 
@@ -985,7 +985,7 @@ abstract class ModuleCore
     public function unregisterExceptions($hook_id, $shop_list = null)
     {
         $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions`
-			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
+            WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
             .(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
         return Db::getInstance()->execute($sql);
     }
@@ -1148,8 +1148,8 @@ abstract class ModuleCore
             $memory_end = memory_get_usage(true);
 
             Db::getInstance()->execute('
-			INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-			VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+            INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+            VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
         }
 
         return $r;
@@ -1686,9 +1686,9 @@ abstract class ModuleCore
         $sql = 'SELECT m.* FROM `'._DB_PREFIX_.'module` m ';
         if ($position) {
             $sql .= 'LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON m.`id_module` = hm.`id_module`
-				 LEFT JOIN `'._DB_PREFIX_.'hook` k ON hm.`id_hook` = k.`id_hook`
-				 WHERE k.`position` = 1
-				 GROUP BY m.id_module';
+                 LEFT JOIN `'._DB_PREFIX_.'hook` k ON hm.`id_hook` = k.`id_hook`
+                 WHERE k.`position` = 1
+                 GROUP BY m.id_module';
         }
         return Db::getInstance()->executeS($sql);
     }
@@ -1946,19 +1946,19 @@ abstract class ModuleCore
         $list = Shop::getContextListShopID();
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-		FROM `'._DB_PREFIX_.'module` m
-		'.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'
-		'.($frontend && $use_groups ? 'INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module` AND mg.id_shop = '.(int)$context->shop->id.')' : '').'
-		'.($frontend && isset($context->customer) && $use_groups ? 'INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group`AND cg.`id_customer` = '.(int)$context->customer->id.')' : '').'
-		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-		WHERE h.`name` = \''.pSQL($hook_payment).'\'
-		'.(isset($billing) && $frontend ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
-		AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
-		AND hm.id_shop IN('.implode(', ', $list).')
-		'.((count($groups) && $frontend && $use_groups) ? 'AND (mg.`id_group` IN ('.implode(', ', $groups).'))' : '').'
-		GROUP BY hm.id_hook, hm.id_module
-		ORDER BY hm.`position`, m.`name` DESC');
+        FROM `'._DB_PREFIX_.'module` m
+        '.($frontend ? 'LEFT JOIN `'._DB_PREFIX_.'module_country` mc ON (m.`id_module` = mc.`id_module` AND mc.id_shop = '.(int)$context->shop->id.')' : '').'
+        '.($frontend && $use_groups ? 'INNER JOIN `'._DB_PREFIX_.'module_group` mg ON (m.`id_module` = mg.`id_module` AND mg.id_shop = '.(int)$context->shop->id.')' : '').'
+        '.($frontend && isset($context->customer) && $use_groups ? 'INNER JOIN `'._DB_PREFIX_.'customer_group` cg on (cg.`id_group` = mg.`id_group`AND cg.`id_customer` = '.(int)$context->customer->id.')' : '').'
+        LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+        LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+        WHERE h.`name` = \''.pSQL($hook_payment).'\'
+        '.(isset($billing) && $frontend ? 'AND mc.id_country = '.(int)$billing->id_country : '').'
+        AND (SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE ms.id_module = m.id_module AND ms.id_shop IN('.implode(', ', $list).')) = '.count($list).'
+        AND hm.id_shop IN('.implode(', ', $list).')
+        '.((count($groups) && $frontend && $use_groups) ? 'AND (mg.`id_group` IN ('.implode(', ', $groups).'))' : '').'
+        GROUP BY hm.id_hook, hm.id_module
+        ORDER BY hm.`position`, m.`name` DESC');
     }
 
     /**
@@ -1992,9 +1992,9 @@ abstract class ModuleCore
     {
         foreach (Shop::getContextListShopID() as $shop_id) {
             $sql = 'SELECT hm.`id_module`, hm.`position`, hm.`id_hook`
-					FROM `'._DB_PREFIX_.'hook_module` hm
-					WHERE hm.`id_hook` = '.(int)$id_hook.' AND hm.`id_shop` = '.$shop_id.'
-					ORDER BY hm.`position` '.($way ? 'ASC' : 'DESC');
+                    FROM `'._DB_PREFIX_.'hook_module` hm
+                    WHERE hm.`id_hook` = '.(int)$id_hook.' AND hm.`id_shop` = '.$shop_id.'
+                    ORDER BY hm.`position` '.($way ? 'ASC' : 'DESC');
             if (!$res = Db::getInstance()->executeS($sql)) {
                 continue;
             }
@@ -2017,17 +2017,17 @@ abstract class ModuleCore
             }
 
             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-				SET `position`= position '.($way ? '-1' : '+1').'
-				WHERE position between '.(int)(min(array($from['position'], $to['position']))).' AND '.max(array($from['position'], $to['position'])).'
-				AND `id_hook` = '.(int)$from['id_hook'].' AND `id_shop` = '.$shop_id;
+                SET `position`= position '.($way ? '-1' : '+1').'
+                WHERE position between '.(int)(min(array($from['position'], $to['position']))).' AND '.max(array($from['position'], $to['position'])).'
+                AND `id_hook` = '.(int)$from['id_hook'].' AND `id_shop` = '.$shop_id;
             if (!Db::getInstance()->execute($sql)) {
                 return false;
             }
 
             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-				SET `position`='.(int)$to['position'].'
-				WHERE `'.pSQL($this->identifier).'` = '.(int)$from[$this->identifier].'
-				AND `id_hook` = '.(int)$to['id_hook'].' AND `id_shop` = '.$shop_id;
+                SET `position`='.(int)$to['position'].'
+                WHERE `'.pSQL($this->identifier).'` = '.(int)$from[$this->identifier].'
+                AND `id_hook` = '.(int)$to['id_hook'].' AND `id_shop` = '.$shop_id;
             if (!Db::getInstance()->execute($sql)) {
                 return false;
             }
@@ -2044,10 +2044,10 @@ abstract class ModuleCore
     public function cleanPositions($id_hook, $shop_list = null)
     {
         $sql = 'SELECT `id_module`, `id_shop`
-			FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_hook` = '.(int)$id_hook.'
-			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
-			ORDER BY `position`';
+            FROM `'._DB_PREFIX_.'hook_module`
+            WHERE `id_hook` = '.(int)$id_hook.'
+            '.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
+            ORDER BY `position`';
         $results = Db::getInstance()->executeS($sql);
         $position = array();
         foreach ($results as $row) {
@@ -2056,9 +2056,9 @@ abstract class ModuleCore
             }
 
             $sql = 'UPDATE `'._DB_PREFIX_.'hook_module`
-				SET `position` = '.$position[$row['id_shop']].'
-				WHERE `id_hook` = '.(int)$id_hook.'
-				AND `id_module` = '.$row['id_module'].' AND `id_shop` = '.$row['id_shop'];
+                SET `position` = '.$position[$row['id_shop']].'
+                WHERE `id_hook` = '.(int)$id_hook.'
+                AND `id_module` = '.$row['id_module'].' AND `id_shop` = '.$row['id_shop'];
             Db::getInstance()->execute($sql);
             $position[$row['id_shop']]++;
         }
@@ -2074,9 +2074,9 @@ abstract class ModuleCore
     public function displayError($error)
     {
         $output = '
-		<div class="bootstrap">
-		<div class="module_error alert alert-danger" >
-			<button type="button" class="close" data-dismiss="alert">&times;</button>';
+        <div class="bootstrap">
+        <div class="module_error alert alert-danger" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>';
 
         if (is_array($error)) {
             $output .= '<ul>';
@@ -2103,9 +2103,9 @@ abstract class ModuleCore
     public function displayWarning($warning)
     {
         $output = '
-		<div class="bootstrap">
-		<div class="module_warning alert alert-warning" >
-			<button type="button" class="close" data-dismiss="alert">&times;</button>';
+        <div class="bootstrap">
+        <div class="module_warning alert alert-warning" >
+            <button type="button" class="close" data-dismiss="alert">&times;</button>';
 
         if (is_array($warning)) {
             $output .= '<ul>';
@@ -2126,12 +2126,12 @@ abstract class ModuleCore
     public function displayConfirmation($string)
     {
         $output = '
-		<div class="bootstrap">
-		<div class="module_confirmation conf confirm alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			'.$string.'
-		</div>
-		</div>';
+        <div class="bootstrap">
+        <div class="module_confirmation conf confirm alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            '.$string.'
+        </div>
+        </div>';
         return $output;
     }
 
@@ -2148,7 +2148,7 @@ abstract class ModuleCore
         if (!Cache::isStored($cache_id)) {
             $exceptions_cache = array();
             $sql = 'SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`
-				WHERE `id_shop` IN ('.implode(', ', Shop::getContextListShopID()).')';
+                WHERE `id_shop` IN ('.implode(', ', Shop::getContextListShopID()).')';
             $db = Db::getInstance();
             $result = $db->executeS($sql, false);
             while ($row = $db->nextRow($result)) {
@@ -2214,11 +2214,11 @@ abstract class ModuleCore
     public function isEnabledForShopContext()
     {
         return (bool)Db::getInstance()->getValue('
-			SELECT COUNT(*) n
-			FROM `'._DB_PREFIX_.'module_shop`
-			WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
-			GROUP BY id_module
-			HAVING n='.(int)count(Shop::getContextListShopID())
+            SELECT COUNT(*) n
+            FROM `'._DB_PREFIX_.'module_shop`
+            WHERE id_module='.(int)$this->id.' AND id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).')
+            GROUP BY id_module
+            HAVING n='.(int)count(Shop::getContextListShopID())
         );
     }
 
@@ -2243,9 +2243,9 @@ abstract class ModuleCore
         }
 
         $sql = 'SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'hook_module` hm
-			LEFT JOIN `'._DB_PREFIX_.'hook` h ON (h.`id_hook` = hm.`id_hook`)
-			WHERE h.`name` = \''.pSQL($hook).'\' AND hm.`id_module` = '.(int)$this->id;
+            FROM `'._DB_PREFIX_.'hook_module` hm
+            LEFT JOIN `'._DB_PREFIX_.'hook` h ON (h.`id_hook` = hm.`id_hook`)
+            WHERE h.`name` = \''.pSQL($hook).'\' AND hm.`id_module` = '.(int)$this->id;
         return Db::getInstance()->getValue($sql);
     }
 
@@ -2470,15 +2470,15 @@ abstract class ModuleCore
 
         $xml = '<?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>'.$this->name.'</name>
-	<displayName><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->displayName)).']]></displayName>
-	<version><![CDATA['.$this->version.']]></version>
-	<description><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->description)).']]></description>
-	<author><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)).']]></author>'
+    <name>'.$this->name.'</name>
+    <displayName><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->displayName)).']]></displayName>
+    <version><![CDATA['.$this->version.']]></version>
+    <description><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->description)).']]></description>
+    <author><![CDATA['.str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)).']]></author>'
     .$author_uri.'
-	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
-	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
-	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
+    <tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
+    <is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
+    <need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
 </module>';
         if (is_writable(_PS_MODULE_DIR_.$this->name.'/')) {
             $iso = substr(Context::getContext()->language->iso_code, 0, 2);
@@ -2562,9 +2562,9 @@ abstract class ModuleCore
     public static function getAuthorizedModules($group_id)
     {
         return Db::getInstance()->executeS('
-		SELECT m.`id_module`, m.`name` FROM `'._DB_PREFIX_.'module_group` mg
-		LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
-		WHERE mg.`id_group` = '.(int)$group_id);
+        SELECT m.`id_module`, m.`name` FROM `'._DB_PREFIX_.'module_group` mg
+        LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
+        WHERE mg.`id_group` = '.(int)$group_id);
     }
 
     /**
@@ -2646,11 +2646,11 @@ abstract class ModuleCore
             }
         }
         $result = Db::getInstance()->getRow('
-			SELECT `position`
-			FROM `'._DB_PREFIX_.'hook_module`
-			WHERE `id_hook` = '.(int)$id_hook.'
-			AND `id_module` = '.(int)$this->id.'
-			AND `id_shop` = '.(int)Context::getContext()->shop->id);
+            SELECT `position`
+            FROM `'._DB_PREFIX_.'hook_module`
+            WHERE `id_hook` = '.(int)$id_hook.'
+            AND `id_module` = '.(int)$this->id.'
+            AND `id_shop` = '.(int)Context::getContext()->shop->id);
 
         return $result['position'];
     }
