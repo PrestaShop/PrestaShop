@@ -93,7 +93,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'price'
 					),
                     'PS_ORDER_RECALCULATE_SHIPPING' => array(
-                        'title' => $this->l('On update, recalculate shipping cos'),
+                        'title' => $this->l('On update, recalculate shipping cost'),
                         'hint' => $this->l('Allow shipping cost recalculation when an order is updated.'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
