@@ -98,9 +98,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
-						SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
-						WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
-						AND `id_order_detail` = '.(int)$product['id_order_detail']);
+                        SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
+                        WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
+                        AND `id_order_detail` = '.(int)$product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
