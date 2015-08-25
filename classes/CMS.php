@@ -93,15 +93,15 @@ class CMSCore extends ObjectModel
             $link = Context::getContext()->link;
         }
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.id_cms, cl.link_rewrite, cl.meta_title
-		FROM '._DB_PREFIX_.'cms c
-		LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = '.(int)$id_lang.')
-		'.Shop::addSqlAssociation('cms', 'c').'
-		WHERE 1
-		'.(($selection !== null) ? ' AND c.id_cms IN ('.implode(',', array_map('intval', $selection)).')' : '').
+        SELECT c.id_cms, cl.link_rewrite, cl.meta_title
+        FROM '._DB_PREFIX_.'cms c
+        LEFT JOIN '._DB_PREFIX_.'cms_lang cl ON (c.id_cms = cl.id_cms AND cl.id_lang = '.(int)$id_lang.')
+        '.Shop::addSqlAssociation('cms', 'c').'
+        WHERE 1
+        '.(($selection !== null) ? ' AND c.id_cms IN ('.implode(',', array_map('intval', $selection)).')' : '').
         ($active ? ' AND c.`active` = 1 ' : '').
         'GROUP BY c.id_cms
-		ORDER BY c.`position`');
+        ORDER BY c.`position`');
 
         $links = array();
         if ($result) {
@@ -120,23 +120,23 @@ class CMSCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.id_cms, l.meta_title
-		FROM  '._DB_PREFIX_.'cms c
-		JOIN '._DB_PREFIX_.'cms_lang l ON (c.id_cms = l.id_cms)
-		'.Shop::addSqlAssociation('cms', 'c').'
-		'.(($id_block) ? 'JOIN '._DB_PREFIX_.'block_cms b ON (c.id_cms = b.id_cms)' : '').'
-		WHERE l.id_lang = '.(int)$id_lang.(($id_block) ? ' AND b.id_block = '.(int)$id_block : '').($active ? ' AND c.`active` = 1 ' : '').'
-		GROUP BY c.id_cms
-		ORDER BY c.`position`');
+        SELECT c.id_cms, l.meta_title
+        FROM  '._DB_PREFIX_.'cms c
+        JOIN '._DB_PREFIX_.'cms_lang l ON (c.id_cms = l.id_cms)
+        '.Shop::addSqlAssociation('cms', 'c').'
+        '.(($id_block) ? 'JOIN '._DB_PREFIX_.'block_cms b ON (c.id_cms = b.id_cms)' : '').'
+        WHERE l.id_lang = '.(int)$id_lang.(($id_block) ? ' AND b.id_block = '.(int)$id_block : '').($active ? ' AND c.`active` = 1 ' : '').'
+        GROUP BY c.id_cms
+        ORDER BY c.`position`');
     }
 
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
-			FROM `'._DB_PREFIX_.'cms` cp
-			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
-			ORDER BY cp.`position` ASC'
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
+            FROM `'._DB_PREFIX_.'cms` cp
+            WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
+            ORDER BY cp.`position` ASC'
         )) {
             return false;
         }
@@ -154,35 +154,35 @@ class CMSCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'cms`
-			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position`
-			'.($way
+            UPDATE `'._DB_PREFIX_.'cms`
+            SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+            WHERE `position`
+            '.($way
                 ? '> '.(int)$moved_cms['position'].' AND `position` <= '.(int)$position
                 : '< '.(int)$moved_cms['position'].' AND `position` >= '.(int)$position).'
-			AND `id_cms_category`='.(int)$moved_cms['id_cms_category'])
+            AND `id_cms_category`='.(int)$moved_cms['id_cms_category'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'cms`
-			SET `position` = '.(int)$position.'
-			WHERE `id_cms` = '.(int)$moved_cms['id_cms'].'
-			AND `id_cms_category`='.(int)$moved_cms['id_cms_category']));
+            UPDATE `'._DB_PREFIX_.'cms`
+            SET `position` = '.(int)$position.'
+            WHERE `id_cms` = '.(int)$moved_cms['id_cms'].'
+            AND `id_cms_category`='.(int)$moved_cms['id_cms_category']));
     }
 
     public static function cleanPositions($id_category)
     {
         $sql = '
-		SELECT `id_cms`
-		FROM `'._DB_PREFIX_.'cms`
-		WHERE `id_cms_category` = '.(int)$id_category.'
-		ORDER BY `position`';
+        SELECT `id_cms`
+        FROM `'._DB_PREFIX_.'cms`
+        WHERE `id_cms_category` = '.(int)$id_category.'
+        ORDER BY `position`';
 
         $result = Db::getInstance()->executeS($sql);
 
         for ($i = 0, $total = count($result); $i < $total; ++$i) {
             $sql = 'UPDATE `'._DB_PREFIX_.'cms`
-					SET `position` = '.(int)$i.'
-					WHERE `id_cms_category` = '.(int)$id_category.'
-						AND `id_cms` = '.(int)$result[$i]['id_cms'];
+                    SET `position` = '.(int)$i.'
+                    WHERE `id_cms_category` = '.(int)$id_category.'
+                        AND `id_cms` = '.(int)$result[$i]['id_cms'];
             Db::getInstance()->execute($sql);
         }
         return true;
@@ -191,9 +191,9 @@ class CMSCore extends ObjectModel
     public static function getLastPosition($id_category)
     {
         $sql = '
-		SELECT MAX(position) + 1
-		FROM `'._DB_PREFIX_.'cms`
-		WHERE `id_cms_category` = '.(int)$id_category;
+        SELECT MAX(position) + 1
+        FROM `'._DB_PREFIX_.'cms`
+        WHERE `id_cms_category` = '.(int)$id_category;
 
         return (Db::getInstance()->getValue($sql));
     }
@@ -232,10 +232,10 @@ class CMSCore extends ObjectModel
     public static function getUrlRewriteInformations($id_cms)
     {
         $sql = 'SELECT l.`id_lang`, c.`link_rewrite`
-				FROM `'._DB_PREFIX_.'cms_lang` AS c
-				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
-				WHERE c.`id_cms` = '.(int)$id_cms.'
-				AND l.`active` = 1';
+                FROM `'._DB_PREFIX_.'cms_lang` AS c
+                LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
+                WHERE c.`id_cms` = '.(int)$id_cms.'
+                AND l.`active` = 1';
 
         return Db::getInstance()->executeS($sql);
     }
@@ -250,9 +250,9 @@ class CMSCore extends ObjectModel
         }
 
         $sql = '
-			SELECT `content`
-			FROM `'._DB_PREFIX_.'cms_lang`
-			WHERE `id_cms` = '.(int)$id_cms.' AND `id_lang` = '.(int)$id_lang.' AND `id_shop` = '.(int)$id_shop;
+            SELECT `content`
+            FROM `'._DB_PREFIX_.'cms_lang`
+            WHERE `id_cms` = '.(int)$id_cms.' AND `id_lang` = '.(int)$id_lang.' AND `id_shop` = '.(int)$id_shop;
 
         return Db::getInstance()->getRow($sql);
     }
