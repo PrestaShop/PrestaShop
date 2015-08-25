@@ -279,10 +279,10 @@ abstract class AdminTabCore
     {
         // Include other tab in current tab
         if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))) {
-        }
+            //
+        } elseif ((Tools::getValue('submitAdd'.$this->table) && count($this->_errors)) || isset($_GET['add'.$this->table])) {
+            // Include current tab
 
-        // Include current tab
-        elseif ((Tools::getValue('submitAdd'.$this->table) && count($this->_errors)) || isset($_GET['add'.$this->table])) {
             if ($this->tabAccess['add'] === '1') {
                 $this->displayForm();
                 if ($this->tabAccess['view']) {
@@ -324,16 +324,16 @@ abstract class AdminTabCore
         }
 
         echo '<br />
-		<p><a href="#" onclick="if ($(\'.requiredFieldsParameters:visible\').length == 0) $(\'.requiredFieldsParameters\').slideDown(\'slow\'); else $(\'.requiredFieldsParameters\').slideUp(\'slow\'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> '.$this->l('Set required fields for this section').'</a></p>
-		<fieldset style="display:none" class="width1 requiredFieldsParameters">
-		<legend>'.$this->l('Required Fields').'</legend>
-		<form name="updateFields" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
-		<p><b>'.$this->l('Select the fields you would like to be required for this section.').'<br />
-		<table cellspacing="0" cellpadding="0" class="table width1 clear">
-		<tr>
-			<th><input type="checkbox" onclick="checkDelBoxes(this.form, \'fieldsBox[]\', this.checked)" class="noborder" name="checkme"></th>
-			<th>'.$this->l('Field Name').'</th>
-		</tr>';
+        <p><a href="#" onclick="if ($(\'.requiredFieldsParameters:visible\').length == 0) $(\'.requiredFieldsParameters\').slideDown(\'slow\'); else $(\'.requiredFieldsParameters\').slideUp(\'slow\'); return false;"><img src="../img/admin/duplicate.gif" alt="" /> '.$this->l('Set required fields for this section').'</a></p>
+        <fieldset style="display:none" class="width1 requiredFieldsParameters">
+        <legend>'.$this->l('Required Fields').'</legend>
+        <form name="updateFields" action="'.self::$currentIndex.'&submitFields'.$this->table.'=1&token='.$this->token.'" method="post">
+        <p><b>'.$this->l('Select the fields you would like to be required for this section.').'<br />
+        <table cellspacing="0" cellpadding="0" class="table width1 clear">
+        <tr>
+            <th><input type="checkbox" onclick="checkDelBoxes(this.form, \'fieldsBox[]\', this.checked)" class="noborder" name="checkme"></th>
+            <th>'.$this->l('Field Name').'</th>
+        </tr>';
 
         /** @var ObjectModel $object */
         $object = new $this->className();
@@ -352,13 +352,13 @@ abstract class AdminTabCore
                 continue;
             }
             echo '<tr class="'.($irow++ % 2 ? 'alt_row' : '').'">
-						<td class="noborder"><input type="checkbox" name="fieldsBox[]" value="'.$field['Field'].'" '.(in_array($field['Field'], $required_fields) ? 'checked="checked"' : '').' /></td>
-						<td>'.$field['Field'].'</td>
-					</tr>';
+                        <td class="noborder"><input type="checkbox" name="fieldsBox[]" value="'.$field['Field'].'" '.(in_array($field['Field'], $required_fields) ? 'checked="checked"' : '').' /></td>
+                        <td>'.$field['Field'].'</td>
+                    </tr>';
         }
         echo '</table><br />
-				<center><input style="margin-left:15px;" class="button" type="submit" value="'.$this->l('   Save   ').'" name="submitFields" /></center>
-		</fieldset>';
+                <center><input style="margin-left:15px;" class="button" type="submit" value="'.$this->l('   Save   ').'" name="submitFields" /></center>
+        </fieldset>';
     }
 
     public function includeSubTab($methodname, $actions = array())
@@ -394,7 +394,6 @@ abstract class AdminTabCore
             /* Actions management */
             foreach ($actions as $action) {
                 switch ($action) {
-
                     case 'submitAdd1':
                         if (Tools::getValue('submitAdd'.$adminTab->table)) {
                             $ok_inc = true;
@@ -414,10 +413,12 @@ abstract class AdminTabCore
                         if (Tools::isSubmit('submitFilter'.$adminTab->table)) {
                             $ok_inc = true;
                         }
+                        // no break
                     case 'submitReset':
                         if (Tools::isSubmit('submitReset'.$adminTab->table)) {
                             $ok_inc = true;
                         }
+                        // no break
                     default:
                         if (isset($_GET[$action.$adminTab->table])) {
                             $ok_inc = true;
@@ -616,10 +617,9 @@ abstract class AdminTabCore
                 }
             }
             $this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
-        }
+        } elseif (isset($_GET['delete'.$this->table])) {
+            /* Delete object */
 
-        /* Delete object */
-        elseif (isset($_GET['delete'.$this->table])) {
             if ($this->tabAccess['delete'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
                     /** @var ObjectModel $object */
@@ -650,10 +650,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to delete here.');
             }
-        }
+        } elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
+            /* Change object statuts (active, inactive) */
 
-        /* Change object statuts (active, inactive) */
-        elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier)) {
             if ($this->tabAccess['edit'] === '1') {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     /** @var ObjectModel $object */
@@ -668,9 +667,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
             }
-        }
-        /* Move an object */
-        elseif (isset($_GET['position'])) {
+        } elseif (isset($_GET['position'])) {
+            /* Move an object */
+
             /** @var ObjectModel $object */
             if ($this->tabAccess['edit'] !== '1') {
                 $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
@@ -681,9 +680,9 @@ abstract class AdminTabCore
             } else {
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_identifier = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_identifier) : '').'&token='.$token);
             }
-        }
-        /* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table)) {
+            /* Delete multiple objects */
+
             if ($this->tabAccess['delete'] === '1') {
                 if (isset($_POST[$this->table.'Box'])) {
                     /** @var ObjectModel $object */
@@ -718,10 +717,9 @@ abstract class AdminTabCore
             } else {
                 $this->_errors[] = Tools::displayError('You do not have permission to delete here.');
             }
-        }
+        } elseif (Tools::getValue('submitAdd'.$this->table)) {
+            /* Create or update an object */
 
-        /* Create or update an object */
-        elseif (Tools::getValue('submitAdd'.$this->table)) {
             /* Checking fields validity */
             $this->validateRules();
             if (!count($this->_errors)) {
@@ -794,10 +792,9 @@ abstract class AdminTabCore
                     } else {
                         $this->_errors[] = Tools::displayError('You do not have permission to edit here.');
                     }
-                }
+                } else {
+                    /* Object creation */
 
-                /* Object creation */
-                else {
                     if ($this->tabAccess['add'] === '1') {
                         /** @var ObjectModel $object */
                         $object = new $this->className();
@@ -840,10 +837,9 @@ abstract class AdminTabCore
                 }
             }
             $this->_errors = array_unique($this->_errors);
-        }
+        } elseif (isset($_POST['submitReset'.$this->table])) {
+            /* Cancel all filters for this tab */
 
-        /* Cancel all filters for this tab */
-        elseif (isset($_POST['submitReset'.$this->table])) {
             $filters = $this->context->cookie->getFamily($this->table.'Filter_');
             foreach ($filters as $cookieKey => $filter) {
                 if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0) {
@@ -866,15 +862,13 @@ abstract class AdminTabCore
                 unset($this->context->cookie->{$this->table.'Orderway'});
             }
             unset($_POST);
-        }
+        } elseif (Tools::getValue('submitOptions'.$this->table)) {
+            /* Submit options list */
 
-        /* Submit options list */
-        elseif (Tools::getValue('submitOptions'.$this->table)) {
             $this->updateOptions($token);
-        }
+        } elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
+            /* Manage list filtering */
 
-        /* Manage list filtering */
-        elseif (Tools::isSubmit('submitFilter'.$this->table) || $this->context->cookie->{'submitFilter'.$this->table} !== false) {
             $_POST = array_merge($this->context->cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
             foreach ($_POST as $key => $value) {
                 /* Extracting filters from $_POST on key filter_ */
@@ -957,7 +951,7 @@ abstract class AdminTabCore
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.$this->table.'_'.$assos[1].($id_object ? ' WHERE `'.$this->identifier.'`='.(int)$id_object : ''));
         foreach ($assos[0] as $asso) {
             Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.$this->table.'_'.$assos[1].' (`'.pSQL($this->identifier).'`, id_'.$assos[1].')
-											VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$assos[1]].')');
+                                            VALUES('.(int)$asso['id_object'].', '.(int)$asso['id_'.$assos[1]].')');
         }
     }
 
@@ -1205,16 +1199,16 @@ abstract class AdminTabCore
     {
         if ($nbErrors = count($this->_errors) && $this->_includeContainer) {
             echo '<script type="text/javascript">
-				$(document).ready(function() {
-					$(\'#hideError\').unbind(\'click\').click(function(){
-						$(\'.error\').hide(\'slow\', function (){
-							$(\'.error\').remove();
-						});
-						return false;
-					});
-				});
-			  </script>
-			<div class="error"><span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/error2.png" />';
+                $(document).ready(function() {
+                    $(\'#hideError\').unbind(\'click\').click(function(){
+                        $(\'.error\').hide(\'slow\', function (){
+                            $(\'.error\').remove();
+                        });
+                        return false;
+                    });
+                });
+              </script>
+            <div class="error"><span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/error2.png" />';
             if (count($this->_errors) == 1) {
                 echo $this->_errors[0];
             } else {
@@ -1239,36 +1233,36 @@ abstract class AdminTabCore
         $str_output = '';
         if (!empty($warn)) {
             $str_output .= '<script type="text/javascript">
-					$(document).ready(function() {
-						$(\'#linkSeeMore\').unbind(\'click\').click(function(){
-							$(\'#seeMore\').show(\'slow\');
-							$(this).hide();
-							$(\'#linkHide\').show();
-							return false;
-						});
-						$(\'#linkHide\').unbind(\'click\').click(function(){
-							$(\'#seeMore\').hide(\'slow\');
-							$(this).hide();
-							$(\'#linkSeeMore\').show();
-							return false;
-						});
-						$(\'#hideWarn\').unbind(\'click\').click(function(){
-							$(\'.warn\').hide(\'slow\', function (){
-								$(\'.warn\').remove();
-							});
-							return false;
-						});
-					});
-				  </script>
-			<div class="warn">';
+                    $(document).ready(function() {
+                        $(\'#linkSeeMore\').unbind(\'click\').click(function(){
+                            $(\'#seeMore\').show(\'slow\');
+                            $(this).hide();
+                            $(\'#linkHide\').show();
+                            return false;
+                        });
+                        $(\'#linkHide\').unbind(\'click\').click(function(){
+                            $(\'#seeMore\').hide(\'slow\');
+                            $(this).hide();
+                            $(\'#linkSeeMore\').show();
+                            return false;
+                        });
+                        $(\'#hideWarn\').unbind(\'click\').click(function(){
+                            $(\'.warn\').hide(\'slow\', function (){
+                                $(\'.warn\').remove();
+                            });
+                            return false;
+                        });
+                    });
+                  </script>
+            <div class="warn">';
             if (!is_array($warn)) {
                 $str_output .= '<img src="../img/admin/warn2.png" />'.$warn;
             } else {
                 $str_output .= '<span style="float:right"><a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/warn2.png" />'.
                 (count($warn) > 1 ? sprintf($this->l('There are %s warnings'), count($warn)) : $this->l('There is 1 warning'))
                 .'<span style="margin-left:20px;" id="labelSeeMore">
-				<a id="linkSeeMore" href="#" style="text-decoration:underline">'.$this->l('Click here to see more').'</a>
-				<a id="linkHide" href="#" style="text-decoration:underline;display:none">'.$this->l('Hide warning').'</a></span><ul style="display:none;" id="seeMore">';
+                <a id="linkSeeMore" href="#" style="text-decoration:underline">'.$this->l('Click here to see more').'</a>
+                <a id="linkHide" href="#" style="text-decoration:underline;display:none">'.$this->l('Hide warning').'</a></span><ul style="display:none;" id="seeMore">';
                 foreach ($warn as $val) {
                     $str_output .= '<li>'.$val.'</li>';
                 }
@@ -1286,9 +1280,9 @@ abstract class AdminTabCore
     {
         if ($conf = Tools::getValue('conf')) {
             echo '
-			<div class="conf">
-				'.$this->_conf[(int)($conf)].'
-			</div>';
+            <div class="conf">
+                '.$this->_conf[(int)($conf)].'
+            </div>';
         }
     }
 
@@ -1351,7 +1345,7 @@ abstract class AdminTabCore
         if ($this->shopLinkType) {
             $selectShop = ', shop.name as shop_name ';
             $joinShop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
-							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
+                            ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
             $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
         }
 
@@ -1376,19 +1370,19 @@ abstract class AdminTabCore
         ///////////////////////
         /* Query in order to get results with all fields */
         $sql = 'SELECT SQL_CALC_FOUND_ROWS
-			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
-			'.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$selectShop.'
-			FROM `'._DB_PREFIX_.$sqlTable.'` a
-			'.$filterShop.'
-			'.($this->lang ? 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'` AND b.`id_lang` = '.(int)$id_lang.($id_lang_shop ? ' AND b.`id_shop`='.(int)$id_lang_shop : '').')' : '').'
-			'.(isset($this->_join) ? $this->_join.' ' : '').'
-			'.$joinShop.'
-			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').(isset($this->_filter) ? $this->_filter : '').$whereShop.'
-			'.(isset($this->_group) ? $this->_group.' ' : '').'
-			'.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').(isset($this->_having) ? $this->_having.' ' : '').'
-			ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
+            '.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').'
+            '.($this->lang ? 'b.*, ' : '').'a.*'.(isset($this->_select) ? ', '.$this->_select.' ' : '').$selectShop.'
+            FROM `'._DB_PREFIX_.$sqlTable.'` a
+            '.$filterShop.'
+            '.($this->lang ? 'LEFT JOIN `'._DB_PREFIX_.$this->table.'_lang` b ON (b.`'.$this->identifier.'` = a.`'.$this->identifier.'` AND b.`id_lang` = '.(int)$id_lang.($id_lang_shop ? ' AND b.`id_shop`='.(int)$id_lang_shop : '').')' : '').'
+            '.(isset($this->_join) ? $this->_join.' ' : '').'
+            '.$joinShop.'
+            WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').(isset($this->_filter) ? $this->_filter : '').$whereShop.'
+            '.(isset($this->_group) ? $this->_group.' ' : '').'
+            '.((isset($this->_filterHaving) || isset($this->_having)) ? 'HAVING ' : '').(isset($this->_filterHaving) ? ltrim($this->_filterHaving, ' AND ') : '').(isset($this->_having) ? $this->_having.' ' : '').'
+            ORDER BY '.(($orderBy == $this->identifier) ? 'a.' : '').'`'.pSQL($orderBy).'` '.pSQL($orderWay).
             ($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').'
-			LIMIT '.(int)$start.','.(int)$limit;
+            LIMIT '.(int)$start.','.(int)$limit;
         $this->_list = Db::getInstance()->executeS($sql);
         $this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() as `'._DB_PREFIX_.$this->table.'`');
     }
@@ -1410,12 +1404,12 @@ abstract class AdminTabCore
         }
         if ($id && file_exists($image)) {
             echo '
-			<div id="image" >
-				'.ImageManager::thumbnail($image, $this->table.'_'.(int)($id).'.'.$this->imageType, $size, $this->imageType, $disableCache).'
-				<p align="center">'.$this->l('File size').' '.(filesize($image) / 1000).'kb</p>
-				<a href="'.self::$currentIndex.'&'.$this->identifier.'='.(int)($id).'&token='.$token.($id_image ? '&id_image='.(int)($id_image) : '').'&deleteImage=1">
-				<img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /> '.$this->l('Delete').'</a>
-			</div>';
+            <div id="image" >
+                '.ImageManager::thumbnail($image, $this->table.'_'.(int)($id).'.'.$this->imageType, $size, $this->imageType, $disableCache).'
+                <p align="center">'.$this->l('File size').' '.(filesize($image) / 1000).'kb</p>
+                <a href="'.self::$currentIndex.'&'.$this->identifier.'='.(int)($id).'&token='.$token.($id_image ? '&id_image='.(int)($id_image) : '').'&deleteImage=1">
+                <img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /> '.$this->l('Delete').'</a>
+            </div>';
         }
     }
 
@@ -1450,11 +1444,11 @@ abstract class AdminTabCore
             echo '&'.$this->table.'Orderby='.urlencode($this->_orderBy).'&'.$this->table.'Orderway='.urlencode(strtolower($this->_orderWay));
         }
         echo '#'.$this->table.'" class="form">
-		<input type="hidden" id="submitFilter'.$this->table.'" name="submitFilter'.$this->table.'" value="0">
-		<table>
-			<tr>
-				<td style="vertical-align: bottom;">
-					<span style="float: left;">';
+        <input type="hidden" id="submitFilter'.$this->table.'" name="submitFilter'.$this->table.'" value="0">
+        <table>
+            <tr>
+                <td style="vertical-align: bottom;">
+                    <span style="float: left;">';
 
         /* Determine current page number */
         $page = (int)(Tools::getValue('submitFilter'.$this->table));
@@ -1463,52 +1457,52 @@ abstract class AdminTabCore
         }
         if ($page > 1) {
             echo '
-						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE(\'submitFilter'.$this->table.'\').value=1"/>
-						&nbsp; <input type="image" src="../img/admin/list-prev.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.($page - 1).'"/> ';
+                        <input type="image" src="../img/admin/list-prev2.gif" onclick="getE(\'submitFilter'.$this->table.'\').value=1"/>
+                        &nbsp; <input type="image" src="../img/admin/list-prev.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.($page - 1).'"/> ';
         }
         echo $this->l('Page').' <b>'.$page.'</b> / '.$totalPages;
         if ($page < $totalPages) {
             echo '
-						<input type="image" src="../img/admin/list-next.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.($page + 1).'"/>
-						 &nbsp;<input type="image" src="../img/admin/list-next2.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.$totalPages.'"/>';
+                        <input type="image" src="../img/admin/list-next.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.($page + 1).'"/>
+                         &nbsp;<input type="image" src="../img/admin/list-next2.gif" onclick="getE(\'submitFilter'.$this->table.'\').value='.$totalPages.'"/>';
         }
         echo '			| '.$this->l('Display').'
-						<select name="pagination">';
+                        <select name="pagination">';
         /* Choose number of results per page */
         $selectedPagination = Tools::getValue('pagination', (isset($this->context->cookie->{$this->table.'_pagination'}) ? $this->context->cookie->{$this->table.'_pagination'} : null));
         foreach ($this->_pagination as $value) {
             echo '<option value="'.(int)($value).'"'.($selectedPagination == $value ? ' selected="selected"' : (($selectedPagination == null && $value == $this->_pagination[1]) ? ' selected="selected2"' : '')).'>'.(int)($value).'</option>';
         }
         echo '
-						</select>
-						/ '.(int)($this->_listTotal).' '.$this->l('result(s)').'
-					</span>
-					<span style="float: right;">
-						<input type="submit" name="submitReset'.$this->table.'" value="'.$this->l('Reset').'" class="button" />
-						<input type="submit" id="submitFilterButton_'.$this->table.'" name="submitFilter" value="'.$this->l('Filter').'" class="button" />
-					</span>
-					<span class="clear"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>';
+                        </select>
+                        / '.(int)($this->_listTotal).' '.$this->l('result(s)').'
+                    </span>
+                    <span style="float: right;">
+                        <input type="submit" name="submitReset'.$this->table.'" value="'.$this->l('Reset').'" class="button" />
+                        <input type="submit" id="submitFilterButton_'.$this->table.'" name="submitFilter" value="'.$this->l('Filter').'" class="button" />
+                    </span>
+                    <span class="clear"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>';
 
         /* Display column names and arrows for ordering (ASC, DESC) */
         if (array_key_exists($this->identifier, $this->identifiersDnd) && $this->_orderBy == 'position') {
             echo '
-			<script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
-			<script type="text/javascript">
-				var token = \''.($token != null ? $token : $this->token).'\';
-				var come_from = \''.$this->table.'\';
-				var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0').'\';
-			</script>
-			<script type="text/javascript" src="../js/admin/dnd.js"></script>
-			';
+            <script type="text/javascript" src="../js/jquery/jquery.tablednd_0_5.js"></script>
+            <script type="text/javascript">
+                var token = \''.($token != null ? $token : $this->token).'\';
+                var come_from = \''.$this->table.'\';
+                var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0').'\';
+            </script>
+            <script type="text/javascript" src="../js/admin/dnd.js"></script>
+            ';
         }
         echo '<table'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? Tools::substr($this->identifier, 3, Tools::strlen($this->identifier)) : '').'"' : '').' class="table'.((array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC')) ? ' tableDnD'  : '').'" cellpadding="0" cellspacing="0">
-			<thead>
-				<tr class="nodrag nodrop">
-					<th>';
+            <thead>
+                <tr class="nodrag nodrop">
+                    <th>';
         if ($this->delete) {
             echo '		<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, \''.$this->table.'Box[]\', this.checked)" />';
         }
@@ -1521,8 +1515,8 @@ abstract class AdminTabCore
                     self::$currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', self::$currentIndex);
                 }
                 echo '	<br />
-						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=desc&token='.$token.'"><img border="0" src="../img/admin/down'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'DESC')) ? '_d' : '').'.gif" /></a>
-						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=asc&token='.$token.'"><img border="0" src="../img/admin/up'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'ASC')) ? '_d' : '').'.gif" /></a>';
+                        <a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=desc&token='.$token.'"><img border="0" src="../img/admin/down'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'DESC')) ? '_d' : '').'.gif" /></a>
+                        <a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=asc&token='.$token.'"><img border="0" src="../img/admin/up'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'ASC')) ? '_d' : '').'.gif" /></a>';
             }
             echo '	</th>';
         }
@@ -1536,8 +1530,8 @@ abstract class AdminTabCore
             echo '	<th style="width: 52px">'.$this->l('Actions').'</th>';
         }
         echo '	</tr>
-				<tr class="nodrag nodrop" style="height: 35px;">
-					<td class="center">';
+                <tr class="nodrag nodrop" style="height: 35px;">
+                    <td class="center">';
         if ($this->delete) {
             echo '		--';
         }
@@ -1562,11 +1556,11 @@ abstract class AdminTabCore
             switch ($params['type']) {
                 case 'bool':
                     echo '
-					<select name="'.$this->table.'Filter_'.$key.'">
-						<option value="">-</option>
-						<option value="1"'.($value == 1 ? ' selected="selected"' : '').'>'.$this->l('Yes').'</option>
-						<option value="0"'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>'.$this->l('No').'</option>
-					</select>';
+                    <select name="'.$this->table.'Filter_'.$key.'">
+                        <option value="">-</option>
+                        <option value="1"'.($value == 1 ? ' selected="selected"' : '').'>'.$this->l('Yes').'</option>
+                        <option value="0"'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>'.$this->l('No').'</option>
+                    </select>';
                     break;
 
                 case 'date':
@@ -1581,14 +1575,13 @@ abstract class AdminTabCore
                     $nameId = str_replace('!', '__', $name);
                     includeDatepicker(array($nameId.'_0', $nameId.'_1'));
                     echo $this->l('From').' <input type="text" id="'.$nameId.'_0" name="'.$name.'[0]" value="'.(isset($value[0]) ? $value[0] : '').'"'.$width.' '.$keyPress.' /><br />
-					'.$this->l('To').' <input type="text" id="'.$nameId.'_1" name="'.$name.'[1]" value="'.(isset($value[1]) ? $value[1] : '').'"'.$width.' '.$keyPress.' />';
+                    '.$this->l('To').' <input type="text" id="'.$nameId.'_1" name="'.$name.'[1]" value="'.(isset($value[1]) ? $value[1] : '').'"'.$width.' '.$keyPress.' />';
                     break;
 
                 case 'select':
-
                     if (isset($params['filter_key'])) {
                         echo '<select onchange="$(\'#submitFilter'.$this->table.'\').focus();$(\'#submitFilter'.$this->table.'\').click();" name="'.$this->table.'Filter_'.$params['filter_key'].'" '.(isset($params['width']) ? 'style="width: '.$params['width'].'px"' : '').'>
-								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>-</option>';
+                                <option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>-</option>';
                         if (isset($params['select']) && is_array($params['select'])) {
                             foreach ($params['select'] as $optionValue => $optionDisplay) {
                                 echo '<option value="'.$optionValue.'"'.((isset($_POST[$this->table.'Filter_'.$params['filter_key']]) && Tools::getValue($this->table.'Filter_'.$params['filter_key']) == $optionValue && Tools::getValue($this->table.'Filter_'.$params['filter_key']) != '') ? ' selected="selected"' : '').'>'.$optionDisplay.'</option>';
@@ -1597,7 +1590,7 @@ abstract class AdminTabCore
                         echo '</select>';
                         break;
                     }
-
+                    // no break
                 case 'text':
                 default:
                     if (!Validate::isCleanHtml($value)) {
@@ -1617,7 +1610,7 @@ abstract class AdminTabCore
         }
 
         echo '</tr>
-			</thead>';
+            </thead>';
     }
 
     public function displayTop()
@@ -1681,7 +1674,7 @@ abstract class AdminTabCore
             foreach ($this->_list as $tr) {
                 $id = $tr[$this->identifier];
                 echo '<tr'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="tr_'.(($id_category = (int)(Tools::getValue('id_'.($isCms ? 'cms_' : '').'category', '1'))) ? $id_category : '').'_'.$id.'_'.$tr['position'].'"' : '').($irow++ % 2 ? ' class="alt_row"' : '').' '.((isset($tr['color']) && $this->colorOnBackground) ? 'style="background-color: '.$tr['color'].'"' : '').'>
-							<td class="center">';
+                            <td class="center">';
                 if ($this->delete && (!isset($this->_listSkipDelete) || !in_array($id, $this->_listSkipDelete))) {
                     echo '<input type="checkbox" name="'.$this->table.'Box[]" value="'.$id.'" class="noborder" />';
                 }
@@ -1690,7 +1683,7 @@ abstract class AdminTabCore
                     $tmp = explode('!', $key);
                     $key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
                     echo '
-					<td '.(isset($params['position']) ? ' id="td_'.(isset($id_category) && $id_category ? $id_category : 0).'_'.$id.'"' : '').' class="'.((!isset($this->noLink) || !$this->noLink) ? 'pointer' : '').((isset($params['position']) && $this->_orderBy == 'position')? ' dragHandle' : ''). (isset($params['align']) ? ' '.$params['align'] : '').'" ';
+                    <td '.(isset($params['position']) ? ' id="td_'.(isset($id_category) && $id_category ? $id_category : 0).'_'.$id.'"' : '').' class="'.((!isset($this->noLink) || !$this->noLink) ? 'pointer' : '').((isset($params['position']) && $this->_orderBy == 'position')? ' dragHandle' : ''). (isset($params['align']) ? ' '.$params['align'] : '').'" ';
                     if (!isset($params['position']) && (!isset($this->noLink) || !$this->noLink)) {
                         echo ' onclick="document.location = \''.self::$currentIndex.'&'.$this->identifier.'='.$id.($this->view? '&view' : '&update').$this->table.'&token='.($token != null ? $token : $this->token).'\'">'.(isset($params['prefix']) ? $params['prefix'] : '');
                     } else {
@@ -1700,20 +1693,20 @@ abstract class AdminTabCore
                         $this->_displayEnableLink($token, $id, $tr[$key], $params['active'], Tools::getValue('id_category'), Tools::getValue('id_product'));
                     } elseif (isset($params['activeVisu']) && isset($tr[$key])) {
                         echo '<img src="../img/admin/'.($tr[$key] ? 'enabled.gif' : 'disabled.gif').'"
-						alt="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" />';
+                        alt="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')).'" />';
                     } elseif (isset($params['position'])) {
                         if ($this->_orderBy == 'position' && $this->_orderWay != 'DESC') {
                             echo '<a'.(!($tr[$key] != $positions[count($positions) - 1]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
                                     '&'.$keyToGet.'='.(int)($id_category).'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
-									&way=1&position='.(int)($tr['position'] + 1).'&token='.($token != null ? $token : $this->token).'">
-									<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'down' : 'up').'.gif"
-									alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
+                                    &way=1&position='.(int)($tr['position'] + 1).'&token='.($token != null ? $token : $this->token).'">
+                                    <img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'down' : 'up').'.gif"
+                                    alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
 
                             echo '<a'.(!($tr[$key] != $positions[0]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
                                     '&'.$keyToGet.'='.(int)($id_category).'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
-									&way=0&position='.(int)($tr['position'] - 1).'&token='.($token != null ? $token : $this->token).'">
-									<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
-									alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
+                                    &way=0&position='.(int)($tr['position'] - 1).'&token='.($token != null ? $token : $this->token).'">
+                                    <img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
+                                    alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
                         } else {
                             echo (int)($tr[$key] + 1);
                         }
@@ -1794,8 +1787,8 @@ abstract class AdminTabCore
             ((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token));
 
         echo '<a href="'.$href.'">
-	        <img src="../img/admin/'.((bool)$value ? 'enabled.gif' : 'disabled.gif').'"
-	        alt="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
+            <img src="../img/admin/'.((bool)$value ? 'enabled.gif' : 'disabled.gif').'"
+            alt="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
     }
 
     protected function _displayDuplicate($token = null, $id)
@@ -1805,7 +1798,7 @@ abstract class AdminTabCore
         $duplicate = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table.'&token='.($token != null ? $token : $this->token));
 
         echo '<a class="pointer" onclick="if (confirm(\''.$_cacheLang['Copy images too?'].'\')) document.location = \''.$duplicate.'\'; else document.location = \''.$duplicate.'&noimage=1\';">
-    		<img src="../img/admin/duplicate.png" alt="'.$_cacheLang['Duplicate'].'" title="'.$_cacheLang['Duplicate'].'" /></a>';
+            <img src="../img/admin/duplicate.png" alt="'.$_cacheLang['Duplicate'].'" title="'.$_cacheLang['Duplicate'].'" /></a>';
     }
 
     protected function _displayViewLink($token = null, $id)
@@ -1814,7 +1807,7 @@ abstract class AdminTabCore
         $href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token));
 
         echo '<a href="'.$href.'">
-			<img src="../img/admin/details.gif" alt="'.$_cacheLang['View'].'" title="'.$_cacheLang['View'].'" /></a>';
+            <img src="../img/admin/details.gif" alt="'.$_cacheLang['View'].'" title="'.$_cacheLang['View'].'" /></a>';
     }
 
     protected function _displayEditLink($token = null, $id)
@@ -1823,7 +1816,7 @@ abstract class AdminTabCore
         $href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token));
 
         echo '<a href="'.$href.'">
-    		<img src="../img/admin/edit.gif" alt="" title="'.$_cacheLang['Edit'].'" /></a>';
+            <img src="../img/admin/edit.gif" alt="" title="'.$_cacheLang['Edit'].'" /></a>';
     }
 
     protected function _displayDeleteLink($token = null, $id)
@@ -1834,7 +1827,7 @@ abstract class AdminTabCore
 
         echo '<a href="'.$href.'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].(int)$id.' ?'.
                     (!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : '').'\');">
-			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
+            <img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
     }
 
     /**
@@ -1847,11 +1840,11 @@ abstract class AdminTabCore
             echo '<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>';
         }
         echo '
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="token" value="'.($token ? $token : $this->token).'" />
-		</form>';
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="token" value="'.($token ? $token : $this->token).'" />
+        </form>';
         if (isset($this->_includeTab) && count($this->_includeTab)) {
             echo '<br /><br />';
         }
@@ -1880,8 +1873,8 @@ abstract class AdminTabCore
 
         echo '<br />';
         echo '<script type="text/javascript">
-			id_language = Number('.$this->context->language->id.');
-		</script>';
+            id_language = Number('.$this->context->language->id.');
+        </script>';
 
         $action = Tools::safeOutput(self::$currentIndex.'&submitOptions'.$this->table.'=1&token='.$this->token);
 
@@ -1947,18 +1940,19 @@ abstract class AdminTabCore
                 $method = 'displayOptionType'.Tools::toCamelCase($field['type'], true);
                 if (!method_exists($this, $method)) {
                     $this->displayOptionTypeText($key, $field, $value);
-                }//default behavior
-                else {
+                } else {
+                    //default behavior
+
                     $this->$method($key, $field, $value);
                 }
 
                 // Multishop default value
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible) {
                     echo '<div class="preference_default_multishop">
-							<label>
-								<input type="checkbox" name="multishopOverrideOption['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
-							</label>
-						</div>';
+                            <label>
+                                <input type="checkbox" name="multishopOverrideOption['.$key.']" value="1" '.(($isDisabled) ? 'checked="checked"' : '').' onclick="checkMultishopDefaultValue(this, \''.$key.'\')" /> '.$this->l('Use default value').'
+                            </label>
+                        </div>';
                 }
 
                 // Field description
@@ -2258,22 +2252,22 @@ abstract class AdminTabCore
         // Only if it is the first call to displayForm, otherwise it has already been defined
         if ($firstCall) {
             echo '
-			<script type="text/javascript">
-				$(document).ready(function() {
-					id_language = '.$this->_defaultFormLanguage.';
-					languages = new Array();';
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    id_language = '.$this->_defaultFormLanguage.';
+                    languages = new Array();';
             foreach ($this->_languages as $k => $language) {
                 echo '
-					languages['.$k.'] = {
-						id_lang: '.(int)$language['id_lang'].',
-						iso_code: \''.$language['iso_code'].'\',
-						name: \''.htmlentities($language['name'], ENT_COMPAT, 'UTF-8').'\'
-					};';
+                    languages['.$k.'] = {
+                        id_lang: '.(int)$language['id_lang'].',
+                        iso_code: \''.$language['iso_code'].'\',
+                        name: \''.htmlentities($language['name'], ENT_COMPAT, 'UTF-8').'\'
+                    };';
             }
             echo '
-					displayFlags(languages, id_language, '.$allowEmployeeFormLang.');
-				});
-			</script>';
+                    displayFlags(languages, id_language, '.$allowEmployeeFormLang.');
+                });
+            </script>';
         }
     }
 
@@ -2372,11 +2366,11 @@ abstract class AdminTabCore
             return false;
         }
         $output = '
-		<div class="displayed_flag">
-			<img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
-		</div>
-		<div id="languages_'.$id.'" class="language_flags">
-			'.$this->l('Choose language:').'<br /><br />';
+        <div class="displayed_flag">
+            <img src="../img/l/'.$default_language.'.jpg" class="pointer" id="language_current_'.$id.'" onclick="toggleLanguageFlags(this);" alt="" />
+        </div>
+        <div id="languages_'.$id.'" class="language_flags">
+            '.$this->l('Choose language:').'<br /><br />';
         foreach ($languages as $language) {
             if ($use_vars_instead_of_ids) {
                 $output .= '<img src="../img/l/'.(int)($language['id_lang']).'.jpg" class="pointer" alt="'.$language['name'].'" title="'.$language['name'].'" onclick="changeLanguage(\''.$id.'\', '.$ids.', '.$language['id_lang'].', \''.$language['iso_code'].'\');" /> ';
@@ -2415,7 +2409,7 @@ abstract class AdminTabCore
         if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL') && !defined('_PS_HOST_MODE_')) {
             $this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
             $this->l('This one is different from the main shop\'s domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
-			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
+            <a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
             $this->l('Click here if you want to modify the main shop\'s domain name').'</a>');
         }
     }
@@ -2428,72 +2422,72 @@ abstract class AdminTabCore
 
         $assos = array();
         $sql = 'SELECT id_shop, `'.bqSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`';
+                FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`';
         foreach (Db::getInstance()->executeS($sql) as $row) {
             $assos[$row['id_shop']][] = $row[$this->identifier];
         }
 
         $html = <<<EOF
-			<script type="text/javascript">
-			$().ready(function()
-			{
-				// Click on "all shop"
-				$('.input_all_shop').click(function()
-				{
-					var checked = $(this).prop('checked');
-					$('.input_shop_group').attr('checked', checked);
-					$('.input_shop').attr('checked', checked);
-				});
+            <script type="text/javascript">
+            $().ready(function()
+            {
+                // Click on "all shop"
+                $('.input_all_shop').click(function()
+                {
+                    var checked = $(this).prop('checked');
+                    $('.input_shop_group').attr('checked', checked);
+                    $('.input_shop').attr('checked', checked);
+                });
 
-				// Click on a group shop
-				$('.input_shop_group').click(function()
-				{
-					$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).prop('checked'));
-					check_all_shop();
-				});
+                // Click on a group shop
+                $('.input_shop_group').click(function()
+                {
+                    $('.input_shop[value='+$(this).val()+']').attr('checked', $(this).prop('checked'));
+                    check_all_shop();
+                });
 
-				// Click on a shop
-				$('.input_shop').click(function()
-				{
-					check_shop_group_status($(this).val());
-					check_all_shop();
-				});
+                // Click on a shop
+                $('.input_shop').click(function()
+                {
+                    check_shop_group_status($(this).val());
+                    check_all_shop();
+                });
 
-				// Initialize checkbox
-				$('.input_shop').each(function(k, v)
-				{
-					check_shop_group_status($(v).val());
-					check_all_shop();
-				});
-			});
+                // Initialize checkbox
+                $('.input_shop').each(function(k, v)
+                {
+                    check_shop_group_status($(v).val());
+                    check_all_shop();
+                });
+            });
 
-			function check_shop_group_status(id_group)
-			{
-				var groupChecked = true;
-				$('.input_shop[value='+id_group+']').each(function(k, v)
-				{
-					if (!$(v).prop('checked'))
-						groupChecked = false;
-				});
-				$('.input_shop_group[value='+id_group+']').attr('checked', groupChecked);
-			}
+            function check_shop_group_status(id_group)
+            {
+                var groupChecked = true;
+                $('.input_shop[value='+id_group+']').each(function(k, v)
+                {
+                    if (!$(v).prop('checked'))
+                        groupChecked = false;
+                });
+                $('.input_shop_group[value='+id_group+']').attr('checked', groupChecked);
+            }
 
-			function check_all_shop()
-			{
-				var allChecked = true;
-				$('.input_shop_group').each(function(k, v)
-				{
-					if (!$(v).prop('checked'))
-						allChecked = false;
-				});
-				$('.input_all_shop').attr('checked', allChecked);
-			}
-			</script>
+            function check_all_shop()
+            {
+                var allChecked = true;
+                $('.input_shop_group').each(function(k, v)
+                {
+                    if (!$(v).prop('checked'))
+                        allChecked = false;
+                });
+                $('.input_all_shop').attr('checked', allChecked);
+            }
+            </script>
 EOF;
 
         $html .= '<div class="assoShop">';
         $html .= '<table class="table" cellpadding="0" cellspacing="0" width="100%">
-					<tr><th>'.$this->l('Shop').'</th></tr>';
+                    <tr><th>'.$this->l('Shop').'</th></tr>';
         $html .= '<tr><td><label class="t"><input class="input_all_shop" type="checkbox" /> '.$this->l('All shops').'</label></td></tr>';
         foreach (Shop::getTree() as $groupID => $groupData) {
             $html .= '<tr class="alt_row">';
