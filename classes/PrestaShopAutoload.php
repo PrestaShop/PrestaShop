@@ -190,7 +190,10 @@ class PrestaShopAutoload
                     $pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
                                 .'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
 
+<<<<<<< Upstream, based on 1cc6fc2376c6daf12f6a4c36925fd6a77bfa55d4
                     //DONT LOAD CLASS WITH NAMESPACE - PSR4 autoloaded from composer
+=======
+>>>>>>> 9e0b110 //poc form SF2
                     if (false === strpos($content, 'namespace ') && preg_match($pattern, $content, $m)) {
                         $classes[$m['classname']] = array(
                             'path' => $path.$file,

@@ -24,13 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once(_PS_CONFIG_DIR_.'alias.php');
-require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
-<<<<<<< Upstream, based on 1cc6fc2376c6daf12f6a4c36925fd6a77bfa55d4
-=======
-require_once(_PS_ROOT_DIR_.'/vendor/autoload.php');
+namespace PrestaShop\PrestaShop\Form\Validator;
 
->>>>>>> 9e0b110 //poc form SF2
-spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
-require(_PS_VENDOR_DIR_.'autoload.php');
+class ContainsAlphanumericValidator extends ConstraintValidator
+{
+    public function validate($value, Constraint $constraint)
+    {
+        if (!preg_match('/^[a-zA-Za0-9]+$/', $value, $matches)) {
+            $this->context->addViolation($constraint->message, array('{{ string }}' => $value));
+        }
+    }
+}

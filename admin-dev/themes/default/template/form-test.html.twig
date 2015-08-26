@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+
+	{{ form_errors(form) }}
+
+    <div class="test">
+	    {{ form_row(form.firstName) }}
+    </div>
+	<div>
+		{{ form_label(form.firstName, 'Nom') }}
+		{{ form_errors(form.lastName) }}
+		{{ form_widget(form.lastName) }}
+	</div>
+	<div>
+		{{ form_label(form.gender) }}
+		{{ form_errors(form.gender) }}
+		{{ form_widget(form.gender) }}
+	</div>
+
+	<input type="submit" />
+
+{{ form_end(form) }}

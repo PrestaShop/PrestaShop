@@ -24,6 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Form\FormFactory;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
+
 /**
  * @property Customer $object
  */
@@ -330,8 +337,53 @@ class AdminCustomersControllerCore extends AdminController
         return parent::renderList();
     }
 
+    public function renderFormTwig()
+    {
+        $request = Request::createFromGlobals();
+        $formFactory = new FormFactory();
+
+        $defaultData = array('firstName' => 'tata', 'lastName' => 'toto');
+        $form = $formFactory->create()
+            ->setAction('')
+            ->add('firstName', 'text', array(
+                'constraints' => array(
+                    new NotBlank(),
+                    new Length(array('min' => 4)),
+                    new ContainsAlphanumeric(),
+                ),
+            ))
+            ->add('lastName', 'text', array(
+                'constraints' => array(
+                    new NotBlank(),
+                    new Email(),
+                    new Length(array('min' => 4)),
+                ),
+            ))
+            ->add('gender', 'choice', array(
+                'choices' => array('m' => 'Male', 'f' => 'Female'),
+            ))
+            ->add('newsletter', 'checkbox', array(
+                'required' => false,
+            ))
+            ->setData($defaultData)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            //do what you want, redirect...
+        }
+
+        return $formFactory->render('form-test-simple.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
     public function renderForm()
     {
+        return $this->renderFormTwig();
+
         /** @var Customer $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
