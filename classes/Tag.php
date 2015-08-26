@@ -140,33 +140,33 @@ class TagCore extends ObjectModel
         if (!Module::getBatchMode()) {
             $context = Context::getContext();
             $id_lang = $context->language->id;
-        
+
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 				FROM `'._DB_PREFIX_.'product_tag` pt
-				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag AND t.id_lang = pt.id_lang)
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
 				INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
 					ON (product_shop.id_product = p.id_product)
 				JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
 				JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
-				WHERE pt.`id_lang` = '.(int)$id_lang.' AND product_shop.`active` = 1
+				WHERE product_shop.`active` = 1
 				AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
 								LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
 								WHERE cgo.`id_group` = cg.id_group AND p.`id_product` = cp.`id_product`)
 				AND product_shop.id_shop = ps.id_shop
-				GROUP BY pt.id_tag, cg.id_group');
+				GROUP BY pt.id_tag, pt.id_lang, cg.id_group, ps.id_shop');
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 				FROM `'._DB_PREFIX_.'product_tag` pt
-				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag AND t.id_lang = pt.id_lang)
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
 				INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
 					ON (product_shop.id_product = p.id_product)
 				JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
-				WHERE pt.`id_lang` = '.(int)$id_lang.' AND product_shop.`active` = 1
+				WHERE product_shop.`active` = 1
 				AND product_shop.id_shop = ps.id_shop
-				GROUP BY pt.id_tag');
+				GROUP BY pt.id_tag, pt.id_lang, ps.id_shop');
         }
     }
 
