@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 
 abstract class BaseController
 {
@@ -38,8 +39,6 @@ abstract class BaseController
     const RESPONSE_XML = 'none/xml'; // no layout, no templating, transform response from array to XML
     const RESPONSE_JSON = 'none/json'; // no layout, transform response from array to json format
     const RESPONSE_NONE = 'none/none'; // no auto response output: case when action want to dump a file for example
-
-    protected $warnings = array();
 
     /**
      * This function will transform the resulting controller action content into various formats.
@@ -150,18 +149,49 @@ abstract class BaseController
     abstract protected function encapsulateLayout(Response &$response);
 
     /**
-     * Add major warning(s) to the controller, to be displayed in the screen.
+     * Get error(s) to the controller, to be displayed in the screen.
+     * This is a wrapper method for MessageStackManager::getInstance()->getErrorIterator()
+     *
+     * @return SplQueue The Error queue to dequeue messages.
+     */
+    public final function getErrorIterator()
+    {
+        MessageStackManager::getInstance()->getErrorIterator();
+    }
+
+    /**
+     * get warning(s) to the controller, to be displayed in the screen.
      * This warnings are generally important malfunction of the software that must
      * be fixed. But these warnings will not throw an error and stop execution to let the user
      * fix settings in the admin interface.
+     * This is a wrapper method for MessageStackManager::getInstance()->getWarningIterator()
      *
-     * @param array|WarningException $warnings An array of WarningException to add
+     * @return SplQueue The Warning queue to dequeue messages.
      */
-    public function addWarnings($warnings)
+    public final function getWarningIterator()
     {
-        if (!is_array($warnings)) {
-            $warnings = array($warnings);
-        }
-        $this->warnings = array_merge($this->warnings, $warnings);
+        MessageStackManager::getInstance()->getWarningIterator();
+    }
+
+    /**
+     * Get info(s) to the controller, to be displayed in the screen.
+     * This is a wrapper method for MessageStackManager::getInstance()->getInfoIterator()
+     *
+     * @return SplQueue The Info queue to dequeue messages.
+     */
+    public final function getInfoIterator()
+    {
+        MessageStackManager::getInstance()->getInfoIterator();
+    }
+
+    /**
+     * Get success(es) to the controller, to be displayed in the screen.
+     * This is a wrapper method for MessageStackManager::getInstance()->getSuccessIterator()
+     *
+     * @return SplQueue The Success queue to dequeue messages.
+     */
+    public final function getSuccessIterator()
+    {
+        MessageStackManager::getInstance()->getSuccessIterator();
     }
 }

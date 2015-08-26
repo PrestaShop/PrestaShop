@@ -33,20 +33,56 @@ class BaseEvent extends Event
 {
     private $request = null;
     private $response = null;
+    private $filePath = null;
+    private $message = null;
+    private $exception = null;
 
-    public function __construct(&$response, &$request)
+    public function __construct($message = null, $exception = null)
     {
-        $this->response = $response;
-        $this->request = $request;
+        $this->message = $message;
+        $this->exception = $exception;
     }
     
+    public function setResponse(Response &$response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+
     public function getResponse()
     {
         return $this->response;
     }
 
+    public function setRequest(Request &$request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function setFilePath($filePath)
+    {
+        $this->filePath = $filePath;
+        return $this;
+    }
+
+    public function getFilePath()
+    {
+        return $this->filePath;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    public function getException()
+    {
+        return $this->exception;
     }
 }

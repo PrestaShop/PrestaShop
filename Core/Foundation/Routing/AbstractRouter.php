@@ -119,8 +119,7 @@ abstract class AbstractRouter
         EventDispatcher::initDispatchers();
         $this->routingDispatcher = EventDispatcher::getInstance('routing');
         if ($this->triggerCacheGenerationFlag) {
-            $null = null;
-            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent($null, $null)); // TODO : améliorer en ajoutant le nom du fichier par exemple
+            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent()); // TODO : améliorer en ajoutant le nom du fichier par exemple
         }
     }
 
@@ -133,10 +132,14 @@ abstract class AbstractRouter
      */
     public final function dispatch($noRoutePassThrough = false)
     {
-        // Request & void response
+        // Request
         $request = Request::createFromGlobals();
         $requestContext = new RequestContext();
         $requestContext->fromRequest($request);
+
+        // shutdown registration, to ensure event dispatching
+        $that =& $this; // pass by ref!
+        register_shutdown_function(array($that, 'registerShutdownFunctionCallback'), $request);
 
         // Instantiate Sf Router
         $this->sfRouter = new \Symfony\Component\Routing\Router(
@@ -293,5 +296,9 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         }
     }
 
-
+    public final function registerShutdownFunctionCallback(Request &$request)
+    {
+        $null = null;
+        EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
+    }
 }

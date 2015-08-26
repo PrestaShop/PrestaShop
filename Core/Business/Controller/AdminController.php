@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 /**
  * Base class for all Admin controllers. Others won't be accepted by AdminRouter.
@@ -37,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
  */
 class AdminController extends BaseController
 {
+    use AdminAuthenticationTrait;
+    
     /**
      * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...)
      * Implements it and use $response->getContent() to retrieve the main content.
@@ -47,8 +50,15 @@ class AdminController extends BaseController
     protected function encapsulateLayout(Response &$response)
     {
         // TODO
-        $warnings = count($this->warnings)? 'Some major warnings occurred: '.implode('; ', $this->warnings).'<br/>' : '';
-        $response->setContent($warnings.'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
+        $warnings = array();
+        foreach($this->getWarningIterator() as $w) {
+            if ($w instanceof WarningException) {
+                $warnings[] = $w->getMessage();
+            } else {
+                $warnings[] = $w;
+            }
+        }
+        $response->setContent(implode(', ', $warnings).'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
     }
 
     /**

@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Log;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
-class RoutingLogger
+class MessageStackManager
 {
     private static $instance = null;
 
@@ -39,9 +39,56 @@ class RoutingLogger
         return self::$instance;
     }
 
-    public function onCacheGeneration(BaseEvent $event)
+    private $errorQueue;
+    private $warningQueue;
+    private $infoQueue;
+    private $successQueue;
+
+    public final function __construct()
     {
-        // TODO: logger avec un LogManager, level debug/info, (qui adaptera sur legacy ?) $event->getFilePath() doit fournir le nom de fichier generé
-        echo 'Cache generated';
+        $this->errorQueue = new \SplQueue();
+        $this->warningQueue = new \SplQueue();
+        $this->infoQueue = new \SplQueue();
+        $this->successQueue = new \SplQueue();
+    }
+
+    public final function onError(BaseEvent $event)
+    {
+        $this->errorQueue->enqueue($event->getException());
+    }
+
+    public final function onWarning(BaseEvent $event)
+    {
+        $this->warningQueue->enqueue($event->getException());
+    }
+
+    public final function onInfo(BaseEvent $event)
+    {
+        $this->infoQueue->enqueue($event->getMessage());
+    }
+
+    public final function onSuccess(BaseEvent $event)
+    {
+        $this->successQueue->enqueue($event->getMessage());
+    }
+
+    public final function getErrorIterator()
+    {
+        return $this->errorQueue;
+    }
+
+    public final function getWarningIterator()
+    {
+        return $this->warningQueue;
+    }
+
+    public final function getInfoIterator()
+    {
+        return $this->infoQueue;
+    }
+
+    public final function getSuccessIterator()
+    {
+        return $this->successQueue;
     }
 }

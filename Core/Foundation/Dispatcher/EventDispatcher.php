@@ -44,17 +44,16 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 
     private static $baseDispatcherRegistry = array(
         'routing' => array(
-            array('cache_generation', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\RoutingLogger', 'onCacheGeneration', -255, false),
-        ), // all event triggered during Routing (before action call, and after action result)
+            array('cache_generation', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\RoutingLogger', 'onCacheGeneration', -255, false, 'getInstance'),
+        ), // all events triggered during Routing (before action call, and after action result), and during shutdown
         'log' => array(
-            
-        ), // all event triggered when a log is dumped into the logger. WARNING: this could become slow if you listen to each log event!
-        'error' => array(
-            
-        ), // all event triggered when a system wide error is thrown(triggered in Exception subclasses)
+        ), // all events triggered when a log is dumped into the logger. WARNING: this could become slow if you listen to each log event!
         'message' => array(
-            
-        ) // all event triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
+            array('error_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onError', -127, false, 'getInstance'),
+            array('warning_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onWarning', -127, false, 'getInstance'),
+            array('info_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onInfo', -127, false, 'getInstance'),
+            array('success_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onSuccess', -127, false, 'getInstance'),
+        ) // all events triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
     );
 
     public final static function initDispatchers($forceDebug = false)
@@ -82,9 +81,10 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                                 foreach($dispatchersEvents as $dispatchersEventName => $listeners) {
                                     foreach($listeners as $listener) {
                                         $lazy = ($listener['lazy'] == 1)? 'true' : 'false';
+                                        $staticInstantiator = (isset($listener['singletonMethod']))? ', '.$listener['singletonMethod'] : '';
                                         
                                         $phpCode .= 'self::$baseDispatcherRegistry[\''.$dispatcherName.'\'][] = array(\''.$dispatchersEventName
-                                            .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', '.$lazy.');';
+                                            .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', '.$lazy.$staticInstantiator.');';
                                     }
                                 }
                             }
@@ -104,14 +104,14 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
             foreach($listeners as $listener) {
                 if ($listener[4] === true) { // lazy instantiation, use one-shot auto-destructive closure
                     $closure = function(ResponseEvent $event) use($dispatcher, $listener, &$closure) {
-                        $listenerInstance = new $listener[1]();
+                        $listenerInstance = (isset($listener[5]))? $listener[1]::$listener[5]() : new $listener[1]();
                         $listenerInstance->$listener[2]($event); // trigger event listener manually the first time
                         $dispatcher->addListener($listener[0], array($listenerInstance, $listener[2]), $listener[3]); // for next event, use lazy instance
                         $dispatcher->removeListener($listener[0], $closure);
                     };
                     $dispatcher->addListener($listener[0], $closure, $listener[3]);
                 } else { // no lazy, so direct instantiation.
-                    $dispatcher->addListener($listener[0], array(new $listener[1](), $listener[2]), $listener[3]);
+                    $dispatcher->addListener($listener[0], array((isset($listener[5]))? $listener[1]::$listener[5]() : new $listener[1](), $listener[2]), $listener[3]);
                 }
             }
             self::$instances[$dispatcherName] = $dispatcher;

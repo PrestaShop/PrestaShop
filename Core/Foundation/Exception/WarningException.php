@@ -25,9 +25,12 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Exception;
 
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 /**
  * This exception is thrown when a major error occurs, but we must allow process to continue
  * in degraded mode (with an alternative way) to allow user fix a setting problem for example.
+ * Constructor will trigger an event in the 'message' EventDispatcher, with 'warning_message' label.
  *
  * Example of use: In the Router, when a module causes a forbidden override action, we must
  * warn, shut down the module, and ask the user to uninstall the module (or fix it).
@@ -44,10 +47,13 @@ class WarningException extends \Core_Foundation_Exception_Exception
      * @param number $code
      * @param Exception $previous Trace of the problem. Can be added in the report.
      */
-    public function __construct($message, $alternative, $reportData = null, $code = 0, Exception $previous = null)
+    public final function __construct($message, $alternative, $reportData = null, $code = 0, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->alternative = $alternative;
         $this->reportData = $reportData;
+        
+        EventDispatcher::getInstance('message')->dispatch('warning_message', new BaseEvent($message, $this));
+        EventDispatcher::getInstance('error')->dispatch('warning_message', new BaseEvent($message, $this));
     }
 }

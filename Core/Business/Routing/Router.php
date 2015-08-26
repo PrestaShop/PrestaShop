@@ -142,21 +142,22 @@ abstract class Router extends AbstractRouter
      */
     protected final function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
-        $warnings = array(); // will contains major exceptions that must be solved by the user (module setting, etc...)
+        $warnings = 0;
         
         // Find right Controller and check security on it
         try {
             $controllerClass = $this->getControllerClass($controllerName);
         } catch (WarningException $we) {
             // degraded mode, many module overrides canceled.
-            $warnings[] = $we;
             $controllerClass = $we->alternative;
+            $warnings++;
         }
         $class = new \ReflectionClass($controllerClass);
         try {
             $this->checkControllerAuthority($class);
         } catch (WarningException $we) {
-            $warnings[] = $we;
+            $warnings++;
+            /* Even dispatcher 'message' has already been triggered with event 'warning_message'. */
         }
         $method = $class->getMethod($controllerMethod);
         
@@ -165,7 +166,7 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
-        $cache = $this->getConfigCacheFactory((count($warnings) > 0))->cache( // force debug mode if warnings (to avoid keeping cache file)
+        $cache = $this->getConfigCacheFactory($warnings > 0)->cache( // force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.'.php',
             function (ConfigCacheInterface $cache)
             use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request) {
@@ -193,16 +194,13 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
-function doDispatchCached(\ReflectionMethod $method, Request &$request, $warnings)
+function doDispatchCached(\ReflectionMethod $method, Request &$request)
 {
     $response = new Response();
     $response->setResponseFormat(BaseController::RESPONSE_LAYOUT_HTML);
     $actionAllowed = true;
 
     $controllerInstance = new '.$controllerClass.'();
-    if (count($warnings)) {
-        $controllerInstance->addWarnings($warnings);
-    }
 ';
                 foreach($initTraits as $initTrait) {
                     $phpCode .= '
@@ -215,14 +213,16 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request, $warning
                 if ($controllerResolverTrait) {
                     $phpCode .= '
 
-    $controllerResolver = $controllerInstance->'.$controllerResolverTrait.'($request, $response);
-    if ($controllerResolver && $actionAllowed) {
-        $responseFormat = $controllerResolver($controllerInstance, $method);
-        if ($responseFormat) {
-            $response->setResponseFormat($responseFormat);
+    if ($actionAllowed) {
+        $controllerResolver = $controllerInstance->'.$controllerResolverTrait.'($request, $response);
+        if ($controllerResolver) {
+            $responseFormat = $controllerResolver($controllerInstance, $method);
+            if ($responseFormat) {
+                $response->setResponseFormat($responseFormat);
+            }
+        } else {
+            throw new \ErrorException(\'The controller uses a Trait controllerResolver that failed to return a controllerResolver!\');
         }
-    } else {
-        throw new \ErrorException(\'The controller uses a Trait controllerResolver that failed to return a controllerResolver!\');
     }
 ';
                 } else {
@@ -267,13 +267,12 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request, $warning
 }
 '; // Raw php code inside a string, do not indent please.
                 $cache->write($phpCode);
-                $null = null;
-                $routingDispatcher->dispatch('cache_generation', new BaseEvent($request, $null)); // TODO : améliorer en ajoutant le nom du fichier par exemple
+                $routingDispatcher->dispatch('cache_generation', (new BaseEvent())->setRequest($request)); // TODO : améliorer en ajoutant le nom du fichier par exemple
             }
         );
 
         include $cache->getPath();
-        return doDispatchCached($method, $request, $warnings);
+        return doDispatchCached($method, $request);
     }
 
 }
