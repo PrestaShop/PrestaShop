@@ -4421,12 +4421,15 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$validateOnly && (bool)$results['isFinished'] && !isset($results['oneMoreStep']) && (bool)Tools::getValue('sendemail')) {
+            unset($this->context->cookie->csv_selected); // remove CSV selection file if finished with no error.
+
             $templateVars = array(
                             '{firstname}' => $this->context->employee->firstname,
                             '{lastname}' => $this->context->employee->lastname,
                             '{filename}' => Tools::getValue('csv')
                         );
-            @Mail::Send(
+            // Mail send in last step because in case of failure, does NOT throw an error, just die(msg); instead :(
+            $mailSuccess = @Mail::Send(
                 (int)$this->context->employee->id_lang,
                 'import',
                 Mail::l('Import complete', (int)$this->context->employee->id_lang),
@@ -4438,10 +4441,12 @@ class AdminImportControllerCore extends AdminController
                 null,
                 null,
                 _PS_MAIL_DIR_,
-                true,
+                false, // do not die in failed! Warn only, it's not an import error, because import finished in fact.
                 (int)$this->context->shop->id
             );
-            unset($this->context->cookie->csv_selected); // remove CSV selection file if finished with no error.
+            if (!$mailSuccess) {
+                $results['warnings'][] = $this->l('The confirmation mail failed to be sent but the import finished succefully.');
+            }
         }
 
         die(json_encode($results));

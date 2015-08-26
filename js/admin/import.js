@@ -113,7 +113,7 @@ $(document).ready(function(){
 		if (importContinueRequest) {
 			$('#importProgress').modal('hide');
 			importContinueRequest = false;
-			window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
+			window.location.href = window.location.href.split('#')[0]; // reload same URL but do not POST again (so in GET without param)
 		} else {
 			importCancelRequest = true;
 			$('#import_details_progressing').hide();
@@ -233,7 +233,7 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
 	    	   if (importCancelRequest == true) {
 	    		   $('#importProgress').modal('hide');
 	    		   importCancelRequest = false;
-	    		   window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
+	    		   window.location.href = window.location.href.split('#')[0]; // reload same URL but do not POST again (so in GET without param)
 	    		   return; // stops execution
 	    	   }
 	    	   
@@ -274,6 +274,9 @@ function importNow(offset, limit, total, validateOnly, crossStepsVariables, more
        },
        error: function(XMLHttpRequest, textStatus, errorThrown)
        {
+    	   if (textStatus == 'parsererror') {
+    		   textStatus = 'Technical error: Unexpected response returned by server. Import stopped.';
+    	   }
     	   if (validateOnly) {
     		   updateValidationError(textStatus, false);
     	   } else {
@@ -287,7 +290,7 @@ function updateProgressionInit() {
 	$('#importProgress').modal({backdrop: 'static', keyboard: false, closable: false});
 	$('#importProgress').modal('show');
 	$('#importProgress').on('hidden.bs.modal', function () {
-		window.location.href = window.location.href; // reload same URL but do not POST again (so in GET without param)
+		window.location.href = window.location.href.split('#')[0]; // reload same URL but do not POST again (so in GET without param)
 	})
 	
 	$('#import_details_progressing').show();
