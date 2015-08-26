@@ -77,4 +77,15 @@ class AdminController extends BaseController
             // TODO
         }
     }
+    
+    /**
+     * Override this in your controller if you want to allow anonymous users to call it.
+     * For example, for Login controllers, should be overriden to return false.
+     *
+     * @return boolean True if authenticated user is needed. False if the controller can be called by anonymous users.
+     */
+    protected function isAuthenticationNeeded()
+    {
+        return true;
+    }
 }

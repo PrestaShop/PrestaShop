@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 /**
  * This override of the Symfony Content resolver will add some elements to inject in the controller during routing.
@@ -48,6 +49,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
     {
         $attributes = $request->attributes->all();
         $contentData = $this->response->getContentData();
+        $context = Context::getInstance();
         $arguments = array();
         foreach ($parameters as $param) {
             if (array_key_exists($param->name, $attributes)) {
@@ -62,6 +64,8 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
                 $arguments[] = &$this->response; // by ref
             } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
                 $arguments[] = &$request; // by ref
+            } elseif ($param->getClass() && $param->getClass()->isInstance($context)) {
+                $arguments[] = &$context; // by ref
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
             } else {

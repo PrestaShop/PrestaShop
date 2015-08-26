@@ -191,6 +191,25 @@ abstract class AbstractRouter
     {
         // TODO
     }
+    
+    /**
+     * The redirect call take several values in parameter:
+     * - Integer value to return a specific HTTP return code and its default page (500, 404, etc...),
+     * - String to indicate the URL to redirect to,
+     * - ???
+     *
+     * @param mixed $to Integer, String or else. See description
+     */
+    public final function redirect($to)
+    {
+        if (is_string($to)) {
+            header('Location: '.$to);
+            exit;
+        }
+        if (is_int($to)) {
+            // TODO: default error page for this code. Howto ?
+        }
+    }
 
     private final function registerSettingFiles()
     {

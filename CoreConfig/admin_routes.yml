@@ -12,5 +12,8 @@ admin_route3:
     defaults: { _controller: 'Admin\TestController::cAction', id_order: 1 }
 
 admin_route4:
-    path:     /d
-    defaults: { _controller: 'Admin\TestController::dAction' }
+    path:     /d/{_locale}/{_format}
+    defaults: { _controller: 'Admin\TestController::dAction', _format: html }
+    requirements:
+        _locale:  en|fr
+        _format:  html|rss

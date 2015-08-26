@@ -42,6 +42,6 @@ class RoutingLogger
     public function onCacheGeneration(BaseEvent $event)
     {
         // TODO: logger avec un LogManager, level debug/info, (qui adaptera sur legacy ?) $event->getFilePath() doit fournir le nom de fichier generé
-        echo 'Cache generated';
+        //echo 'Cache generated';
     }
 }

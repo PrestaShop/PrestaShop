@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 
 /**
  * This Trait will add middleware functions to check authentication state.
@@ -43,13 +44,12 @@ trait AdminAuthenticationTrait
      */
     public function initActionCheckAuthenticated(Request &$request, Response &$response)
     {
-        // TODO. Si on est sur une page de login (exception), on laisse passer. Sinon, on verifie.
-        return true;
+        $authManager = \Adapter_ServiceLocator::get('Adapter_AuthenticationManager');
+        return (!$this->isAuthenticationNeeded() || $authManager->isAdminAuthenticated());
     }
 
     /**
-     * This trait helper will try to identify needed output format (HTML, w/o layout, xml, json, ...) via
-     * HTTP request. If $response->getTemplateEngine() has already been set, then the helper do nothing.
+     * This trait will prepare redirection to the login page.
      *
      * @param Request $request
      * @param Response $response
@@ -57,7 +57,13 @@ trait AdminAuthenticationTrait
      */
     public function closeActionCheckAuthenticated(Request &$request, Response &$response)
     {
-        // TODO
-        return true; // non blocking fail
+        $authManager = \Adapter_ServiceLocator::get('Adapter_AuthenticationManager');
+        AdminRouter::getInstance()->setForbiddenRedirection($authManager->getAdminLoginUrl());
+        return true;
     }
+    
+    /**
+     * Defined in AdminController class. Allow trait methods to call it directly.
+     */
+    abstract protected function isAuthenticationNeeded();
 }

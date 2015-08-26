@@ -46,6 +46,36 @@ abstract class Router extends AbstractRouter
 {
 
     /**
+     * An URL, or an array of elements to generate an URL for HTTP 500 code.
+     * @var array|string
+     */
+    private $forbiddenRedirection = null;
+
+    /**
+     * Because getTraits() from ReflectionClass does not return traits from ancestors classes, we must use recursive scan.
+     *
+     * @param \ReflectionClass $class The class to scan
+     * @return array:ReflectionClass All traits from the givben class, even from the ancestors classes.
+     */
+    private final function getAllTraits(\ReflectionClass $class)
+    {
+        $traits = array();
+        
+        $classes = array($class);
+        $parent = $class;
+        while ($parent = $parent->getParentClass()) {
+            $classes[] = $parent;
+        }
+
+        foreach(array_reverse($classes) as $c) {
+            foreach($c->getTraits() as $trait) {
+                $traits[$trait->name] = $trait; // unicity check :) Children prior
+            }
+        }
+        return array_values($traits);
+    }
+
+    /**
      * Check and filter trait methods. The result will be put in cache.
      *
      * @param array:\ReflectioClass $allTraits The traits used in the controller
@@ -172,7 +202,7 @@ abstract class Router extends AbstractRouter
             use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request) {
 
                 // find traits, classify them
-                $traits = $class->getTraits();
+                $traits = $this->getAllTraits($class);
                 $initTraits = $this->filterTraits($traits, 'initAction');
                 $beforeActionTraits = $this->filterTraits($traits, 'beforeAction');
                 $controllerResolverTrait = $this->filterTraits($traits, 'controllerResolver'); // only 1 allowed!
@@ -261,7 +291,8 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
     }
 
     if (!$actionAllowed) {
-        // TODO : forbiden forward !
+        $router = '.get_class($this).'::getInstance();
+        $router->redirectToForbidden();
     }
     return true;
 }
@@ -275,4 +306,16 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
         return doDispatchCached($method, $request);
     }
 
+    public function setForbiddenRedirection($redirection)
+    {
+        $this->forbiddenRedirection = $redirection;
+    }
+
+    public function redirectToForbidden()
+    {
+        if ($this->forbiddenRedirection === null) {
+            $this->redirect(500);
+        }
+        $this->redirect($this->forbiddenRedirection); // HTTP code 200 (Login page for example)
+    }
 }
