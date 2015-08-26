@@ -306,6 +306,11 @@
 							<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} >
 							{l s='Online only (not sold in your retail store)'}</label>
 					</div>
+                    <div class="checkbox">
+                        <label for="show_condition">
+                            <input type="checkbox" name="show_condition" id="show_condition" value="1" {if $product->show_condition}checked="checked"{/if} >
+                            {l s='Display condition'}</label>
+                    </div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -314,7 +319,7 @@
 					{l s='Condition'}
 				</label>
 				<div class="col-lg-3">
-					<select name="condition" id="condition">
+					<select name="condition" id="condition" {if !$product->show_condition}disabled="disabled"{/if}>
 						<option value="new" {if $product->condition == 'new'}selected="selected"{/if} >{l s='New'}</option>
 						<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
 						<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>

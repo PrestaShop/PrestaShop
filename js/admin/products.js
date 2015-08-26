@@ -1833,6 +1833,7 @@ var ProductMultishop = new function()
 		ProductMultishop.checkField($('input[name=\'multishop_check[show_price]\']').prop('checked'), 'show_price', 'show_price');
 		ProductMultishop.checkField($('input[name=\'multishop_check[online_only]\']').prop('checked'), 'online_only');
 		ProductMultishop.checkField($('input[name=\'multishop_check[condition]\']').prop('checked'), 'condition');
+        ProductMultishop.checkField($('input[name=\'multishop_check[show_condition]\']').prop('checked'), 'show_condition');
 		$.each(languages, function(k, v)
 		{
 			ProductMultishop.checkField($('input[name=\'multishop_check[name]['+v.id_lang+']\']').prop('checked'), 'name_'+v.id_lang);
@@ -1927,4 +1928,9 @@ $(document).ready(function() {
 		$('#selectAttachment1 option').attr('selected', 'selected');
 		return true;
 	});
+
+    // Product condition display management
+    $('#show_condition').change(function(){
+        $('#condition').prop('disabled', !$(this).is(':checked'));
+    });
 });
