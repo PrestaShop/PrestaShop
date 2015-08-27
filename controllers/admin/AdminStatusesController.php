@@ -497,7 +497,7 @@ class AdminStatusesControllerCore extends AdminController
         $theme_path = '../themes/'.$theme->directory.'/mails/'; // Mail templates can also be found in the theme folder
 
         $array = array();
-        foreach (Language::getLanguages(true) as $language) {
+        foreach (Language::getLanguages(false) as $language) {
             $iso_code = $language['iso_code'];
 
             // If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language

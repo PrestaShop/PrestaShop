@@ -239,7 +239,7 @@ class StockAvailableCore extends ObjectModel
                                     'id_product_attribute' => (int)$id_product_attribute,
                                 )
                             );
-                            StockAvailable::addSqlShopParams($query['data']);
+                            StockAvailable::addSqlShopParams($query['data'], $id_shop);
                             Db::getInstance()->insert($query['table'], $query['data']);
                         }
 
