@@ -28,3 +28,5 @@ REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 				WHERE product_shop.`active` = 1
 				AND product_shop.id_shop = ps.id_shop
 				GROUP BY pt.id_tag, pt.id_lang, ps.id_shop;
+
+TRUNCATE TABLE `PREFIX_smarty_last_flush`;
