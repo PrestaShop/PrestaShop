@@ -1,0 +1,2 @@
+# StarterTheme
+PrestaShop Starter Theme
