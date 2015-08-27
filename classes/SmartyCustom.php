@@ -44,7 +44,7 @@ class SmartyCustomCore extends Smarty
     public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
     {
         if ($resource_name == null) {
-            Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', \''.date('Y-m-d H:i:s').'\')');
+            Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', FROM_UNIXTIME('.time().'))');
             return 0;
         } else {
             return parent::clearCompiledTemplate($resource_name, $compile_id, $exp_time);
@@ -61,7 +61,7 @@ class SmartyCustomCore extends Smarty
     */
     public function clearAllCache($exp_time = null, $type = null)
     {
-        Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', \''.date('Y-m-d H:i:s').'\')');
+        Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME('.time().'))');
         return $this->delete_from_lazy_cache(null, null, null);
     }
 
