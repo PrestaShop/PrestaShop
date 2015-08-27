@@ -3075,7 +3075,7 @@ class CartCore extends ObjectModel
 			WHERE (cp.`id_product_attribute` IS NULL OR cp.`id_product_attribute` = 0)
 			AND cp.`id_cart` = '.(int)$this->id);
 
-            self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 3);
+            self::$_totalWeight[$this->id] = round((float)$weight_product_with_attribute + (float)$weight_product_without_attribute, 6);
         }
 
         return self::$_totalWeight[$this->id];
