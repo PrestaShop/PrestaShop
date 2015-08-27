@@ -88,14 +88,14 @@ class SmartyCustomCore extends Smarty
     {
         static $last_flush = null;
         if (!file_exists($this->getCompileDir().'last_flush')) {
-            @touch($this->getCompileDir().'last_flush');
+            @touch($this->getCompileDir().'last_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
                 $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
             }
             if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush) {
-                @touch($this->getCompileDir().'last_flush');
+                @touch($this->getCompileDir().'last_flush', time());
                 parent::clearCompiledTemplate();
             }
         }
@@ -135,7 +135,7 @@ class SmartyCustomCore extends Smarty
     {
         static $last_flush = null;
         if (!file_exists($this->getCacheDir().'last_template_flush')) {
-            @touch($this->getCacheDir().'last_template_flush');
+            @touch($this->getCacheDir().'last_template_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
                 $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
@@ -143,7 +143,7 @@ class SmartyCustomCore extends Smarty
             }
 
             if ((int)$last_flush && @filemtime($this->getCacheDir().'last_template_flush') < $last_flush) {
-                @touch($this->getCacheDir().'last_template_flush');
+                @touch($this->getCacheDir().'last_template_flush', time());
                 parent::clearAllCache();
             } else {
                 if ($cache_id !== null && (is_object($cache_id) || is_array($cache_id))) {
