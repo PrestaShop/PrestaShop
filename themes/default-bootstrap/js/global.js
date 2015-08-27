@@ -426,5 +426,5 @@ function accordion(status)
 function bindUniform()
 {
 	if (!!$.prototype.uniform)
-		$("select.form-control,input[type='radio'],input[type='checkbox']").not(".not_unifrom").uniform();
+		$("select.form-control,input[type='radio'],input[type='checkbox']").not(".not_uniform").uniform();
 }
