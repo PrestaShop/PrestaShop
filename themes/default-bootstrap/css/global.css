@@ -5709,7 +5709,9 @@ body {
   font-size: 13px;
   color: #777; }
   body.content_only {
-    background: none; }
+    background: none;
+    min-width: 0px;
+  }
 
 textarea {
   resize: none; }

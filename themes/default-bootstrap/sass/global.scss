@@ -27,6 +27,7 @@ body {
 	color: $base-body-color;
 	&.content_only {
 		background: none;
+		min-width: 0px;
 	}
 }
 
