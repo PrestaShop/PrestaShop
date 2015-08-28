@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3a10f53924c4b2208ae3994b7475eef",
+    "hash": "6e1fdb240d9a473798afeb97fe3a236f",
     "packages": [
         {
             "name": "PrestaShop/bankwire",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/bankwire.git",
-                "reference": "9a6a2440630430ea1ed195ad781be79852e22865"
+                "reference": "f2458cfa8a70e7bc19e029f5b875caebc3d132a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/bankwire/zipball/9a6a2440630430ea1ed195ad781be79852e22865",
-                "reference": "9a6a2440630430ea1ed195ad781be79852e22865",
+                "url": "https://api.github.com/repos/PrestaShop/bankwire/zipball/f2458cfa8a70e7bc19e029f5b875caebc3d132a6",
+                "reference": "f2458cfa8a70e7bc19e029f5b875caebc3d132a6",
                 "shasum": ""
             },
             "require": {
@@ -38,7 +38,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/bankwire/tree/dev"
             },
-            "time": "2015-08-21 14:53:13"
+            "time": "2015-08-27 14:25:11"
         },
         {
             "name": "PrestaShop/blockadvertising",
@@ -658,12 +658,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blocknewsletter.git",
-                "reference": "3da26bfd6aaca4d0b147c152fbf9c7c75af83585"
+                "reference": "6a297a34967559b3bcff7dd75e93ff53e58fab0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blocknewsletter/zipball/3da26bfd6aaca4d0b147c152fbf9c7c75af83585",
-                "reference": "3da26bfd6aaca4d0b147c152fbf9c7c75af83585",
+                "url": "https://api.github.com/repos/PrestaShop/blocknewsletter/zipball/6a297a34967559b3bcff7dd75e93ff53e58fab0c",
+                "reference": "6a297a34967559b3bcff7dd75e93ff53e58fab0c",
                 "shasum": ""
             },
             "require": {
@@ -684,7 +684,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blocknewsletter/tree/dev"
             },
-            "time": "2015-07-27 08:57:31"
+            "time": "2015-08-28 07:36:24"
         },
         {
             "name": "PrestaShop/blockpaymentlogo",
@@ -1168,12 +1168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/cheque.git",
-                "reference": "3059e093c830f38cafe67844021c2998a118e08c"
+                "reference": "ccbe85499bd0bcda00959ce4dfc92dcf418bc66d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/cheque/zipball/3059e093c830f38cafe67844021c2998a118e08c",
-                "reference": "3059e093c830f38cafe67844021c2998a118e08c",
+                "url": "https://api.github.com/repos/PrestaShop/cheque/zipball/ccbe85499bd0bcda00959ce4dfc92dcf418bc66d",
+                "reference": "ccbe85499bd0bcda00959ce4dfc92dcf418bc66d",
                 "shasum": ""
             },
             "require": {
@@ -1194,7 +1194,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/cheque/tree/dev"
             },
-            "time": "2015-07-20 12:10:53"
+            "time": "2015-08-27 14:26:02"
         },
         {
             "name": "PrestaShop/crossselling",
@@ -1270,12 +1270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashgoals.git",
-                "reference": "e5d394541f8613f454b9a15ee7ce7b72bb22323d"
+                "reference": "8a864998e719fa0a13608a925988607d5a03e871"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/e5d394541f8613f454b9a15ee7ce7b72bb22323d",
-                "reference": "e5d394541f8613f454b9a15ee7ce7b72bb22323d",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/8a864998e719fa0a13608a925988607d5a03e871",
+                "reference": "8a864998e719fa0a13608a925988607d5a03e871",
                 "shasum": ""
             },
             "require": {
@@ -1296,7 +1296,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/dashgoals/tree/dev"
             },
-            "time": "2015-07-20 12:11:00"
+            "time": "2015-08-27 14:26:19"
         },
         {
             "name": "PrestaShop/dashproducts",
@@ -1304,12 +1304,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "708bf7b2ac0244d9021b51bcfffefca879f1e1d3"
+                "reference": "79b282c9476b6f1d210ab598d6914fb8fd352af5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/708bf7b2ac0244d9021b51bcfffefca879f1e1d3",
-                "reference": "708bf7b2ac0244d9021b51bcfffefca879f1e1d3",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/79b282c9476b6f1d210ab598d6914fb8fd352af5",
+                "reference": "79b282c9476b6f1d210ab598d6914fb8fd352af5",
                 "shasum": ""
             },
             "require": {
@@ -1330,7 +1330,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/dashproducts/tree/dev"
             },
-            "time": "2015-08-21 09:40:02"
+            "time": "2015-08-27 14:26:35"
         },
         {
             "name": "PrestaShop/graphnvd3",
@@ -1338,12 +1338,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/graphnvd3.git",
-                "reference": "7e7a834467bf02b78bb6f32c609180fb9b150062"
+                "reference": "0730046bec2508be7f484bcc5acc6fbd305fdcaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/7e7a834467bf02b78bb6f32c609180fb9b150062",
-                "reference": "7e7a834467bf02b78bb6f32c609180fb9b150062",
+                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/0730046bec2508be7f484bcc5acc6fbd305fdcaa",
+                "reference": "0730046bec2508be7f484bcc5acc6fbd305fdcaa",
                 "shasum": ""
             },
             "require": {
@@ -1364,7 +1364,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/graphnvd3/tree/dev"
             },
-            "time": "2015-07-20 12:11:15"
+            "time": "2015-08-27 14:32:34"
         },
         {
             "name": "PrestaShop/gridhtml",
@@ -1406,12 +1406,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/homefeatured.git",
-                "reference": "0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a"
+                "reference": "c57e231bc27f1593db8cd5c92c86318f9741d9b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/homefeatured/zipball/0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a",
-                "reference": "0ed3bdb5f5d86c0ccbccdb6fee8aa177420d5c6a",
+                "url": "https://api.github.com/repos/PrestaShop/homefeatured/zipball/c57e231bc27f1593db8cd5c92c86318f9741d9b1",
+                "reference": "c57e231bc27f1593db8cd5c92c86318f9741d9b1",
                 "shasum": ""
             },
             "require": {
@@ -1432,7 +1432,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/homefeatured/tree/dev"
             },
-            "time": "2015-07-20 12:11:19"
+            "time": "2015-08-27 14:34:45"
         },
         {
             "name": "PrestaShop/homeslider",
@@ -1440,12 +1440,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/homeslider.git",
-                "reference": "92693a22d879729d756d2a26fc42ff1f0e1bf66f"
+                "reference": "365f839767980ac434e00eda03aaa3900f968ad5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/homeslider/zipball/92693a22d879729d756d2a26fc42ff1f0e1bf66f",
-                "reference": "92693a22d879729d756d2a26fc42ff1f0e1bf66f",
+                "url": "https://api.github.com/repos/PrestaShop/homeslider/zipball/365f839767980ac434e00eda03aaa3900f968ad5",
+                "reference": "365f839767980ac434e00eda03aaa3900f968ad5",
                 "shasum": ""
             },
             "require": {
@@ -1466,7 +1466,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/homeslider/tree/dev"
             },
-            "time": "2015-07-20 12:11:21"
+            "time": "2015-08-27 14:35:16"
         },
         {
             "name": "PrestaShop/pagesnotfound",
@@ -1474,12 +1474,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/pagesnotfound.git",
-                "reference": "4e03646bbbea4ba34753b8199ad1f54c670fc727"
+                "reference": "72a2d87a76847ea735bb1c3e87d1daf6d6ccffb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/4e03646bbbea4ba34753b8199ad1f54c670fc727",
-                "reference": "4e03646bbbea4ba34753b8199ad1f54c670fc727",
+                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/72a2d87a76847ea735bb1c3e87d1daf6d6ccffb0",
+                "reference": "72a2d87a76847ea735bb1c3e87d1daf6d6ccffb0",
                 "shasum": ""
             },
             "require": {
@@ -1500,7 +1500,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/pagesnotfound/tree/dev"
             },
-            "time": "2015-07-20 12:11:24"
+            "time": "2015-08-27 14:42:45"
         },
         {
             "name": "PrestaShop/productpaymentlogos",
@@ -1508,12 +1508,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productpaymentlogos.git",
-                "reference": "e55e5323bace5be081749dbef3e7f3da64d92481"
+                "reference": "6bded68f8bd8abf1b59e6d8930e94806db7b3794"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productpaymentlogos/zipball/e55e5323bace5be081749dbef3e7f3da64d92481",
-                "reference": "e55e5323bace5be081749dbef3e7f3da64d92481",
+                "url": "https://api.github.com/repos/PrestaShop/productpaymentlogos/zipball/6bded68f8bd8abf1b59e6d8930e94806db7b3794",
+                "reference": "6bded68f8bd8abf1b59e6d8930e94806db7b3794",
                 "shasum": ""
             },
             "require": {
@@ -1534,7 +1534,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/productpaymentlogos/tree/dev"
             },
-            "time": "2015-07-20 12:11:27"
+            "time": "2015-08-27 14:46:12"
         },
         {
             "name": "PrestaShop/productscategory",
@@ -1542,12 +1542,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productscategory.git",
-                "reference": "cb5134030da4a1b6c4336ded6d2637cc6a9f74d6"
+                "reference": "ff006cf15ad94166a1a51a356f0f7e379124dae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productscategory/zipball/cb5134030da4a1b6c4336ded6d2637cc6a9f74d6",
-                "reference": "cb5134030da4a1b6c4336ded6d2637cc6a9f74d6",
+                "url": "https://api.github.com/repos/PrestaShop/productscategory/zipball/ff006cf15ad94166a1a51a356f0f7e379124dae7",
+                "reference": "ff006cf15ad94166a1a51a356f0f7e379124dae7",
                 "shasum": ""
             },
             "require": {
@@ -1568,7 +1568,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/productscategory/tree/dev"
             },
-            "time": "2015-07-20 12:11:29"
+            "time": "2015-08-27 14:46:30"
         },
         {
             "name": "PrestaShop/producttooltip",
@@ -1576,12 +1576,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/producttooltip.git",
-                "reference": "8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5"
+                "reference": "6705a0947fd48cc869b4a85380f8412b8997135a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/producttooltip/zipball/8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5",
-                "reference": "8cdd3dfd89d28b8aa11bd6475741b2c4d7117eb5",
+                "url": "https://api.github.com/repos/PrestaShop/producttooltip/zipball/6705a0947fd48cc869b4a85380f8412b8997135a",
+                "reference": "6705a0947fd48cc869b4a85380f8412b8997135a",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1602,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/producttooltip/tree/dev"
             },
-            "time": "2015-07-20 12:11:31"
+            "time": "2015-08-27 14:49:37"
         },
         {
             "name": "PrestaShop/sekeywords",
@@ -1610,12 +1610,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/sekeywords.git",
-                "reference": "fc3d998d5894b0be154752c25b15696bf48906b2"
+                "reference": "0f3f2b87406c97000ee86f505be3b6471062dcca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/sekeywords/zipball/fc3d998d5894b0be154752c25b15696bf48906b2",
-                "reference": "fc3d998d5894b0be154752c25b15696bf48906b2",
+                "url": "https://api.github.com/repos/PrestaShop/sekeywords/zipball/0f3f2b87406c97000ee86f505be3b6471062dcca",
+                "reference": "0f3f2b87406c97000ee86f505be3b6471062dcca",
                 "shasum": ""
             },
             "require": {
@@ -1636,7 +1636,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/sekeywords/tree/dev"
             },
-            "time": "2015-07-20 12:11:37"
+            "time": "2015-08-27 14:50:33"
         },
         {
             "name": "PrestaShop/sendtoafriend",
@@ -1644,12 +1644,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/sendtoafriend.git",
-                "reference": "226ad3f34b1b6d2c79fdac73b4547458532d28dc"
+                "reference": "40056b7c374bbe113ba069e0b72886600ffeb52a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/sendtoafriend/zipball/226ad3f34b1b6d2c79fdac73b4547458532d28dc",
-                "reference": "226ad3f34b1b6d2c79fdac73b4547458532d28dc",
+                "url": "https://api.github.com/repos/PrestaShop/sendtoafriend/zipball/40056b7c374bbe113ba069e0b72886600ffeb52a",
+                "reference": "40056b7c374bbe113ba069e0b72886600ffeb52a",
                 "shasum": ""
             },
             "require": {
@@ -1670,7 +1670,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/sendtoafriend/tree/dev"
             },
-            "time": "2015-07-20 12:11:38"
+            "time": "2015-08-27 14:50:53"
         },
         {
             "name": "PrestaShop/socialsharing",
@@ -1746,12 +1746,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestcustomers.git",
-                "reference": "21bd9f4ee72a5b30461fef0b44d44b57ef99764c"
+                "reference": "3c9182a4a071d3cb106c5e7a725b1a8d243ed05f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/21bd9f4ee72a5b30461fef0b44d44b57ef99764c",
-                "reference": "21bd9f4ee72a5b30461fef0b44d44b57ef99764c",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/3c9182a4a071d3cb106c5e7a725b1a8d243ed05f",
+                "reference": "3c9182a4a071d3cb106c5e7a725b1a8d243ed05f",
                 "shasum": ""
             },
             "require": {
@@ -1772,7 +1772,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsbestcustomers/tree/dev"
             },
-            "time": "2015-07-20 12:11:44"
+            "time": "2015-08-27 14:51:10"
         },
         {
             "name": "PrestaShop/statsbestmanufacturers",
@@ -1780,12 +1780,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestmanufacturers.git",
-                "reference": "8a7983fc07e3eb95313436ec94adc7ca3071728b"
+                "reference": "14a09b11639ab39c480a1afda0549875dde6340a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestmanufacturers/zipball/8a7983fc07e3eb95313436ec94adc7ca3071728b",
-                "reference": "8a7983fc07e3eb95313436ec94adc7ca3071728b",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestmanufacturers/zipball/14a09b11639ab39c480a1afda0549875dde6340a",
+                "reference": "14a09b11639ab39c480a1afda0549875dde6340a",
                 "shasum": ""
             },
             "require": {
@@ -1806,7 +1806,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsbestmanufacturers/tree/dev"
             },
-            "time": "2015-07-20 12:11:45"
+            "time": "2015-08-27 14:51:49"
         },
         {
             "name": "PrestaShop/statsbestproducts",
@@ -1814,12 +1814,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestproducts.git",
-                "reference": "9e95c920822c1a693f55620c4e63f2a35bc087ab"
+                "reference": "582bad11b9d74d5beff59afc24af5fcb1637c2f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestproducts/zipball/9e95c920822c1a693f55620c4e63f2a35bc087ab",
-                "reference": "9e95c920822c1a693f55620c4e63f2a35bc087ab",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestproducts/zipball/582bad11b9d74d5beff59afc24af5fcb1637c2f0",
+                "reference": "582bad11b9d74d5beff59afc24af5fcb1637c2f0",
                 "shasum": ""
             },
             "require": {
@@ -1840,7 +1840,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsbestproducts/tree/dev"
             },
-            "time": "2015-07-20 12:11:47"
+            "time": "2015-08-27 14:52:05"
         },
         {
             "name": "PrestaShop/statsbestsuppliers",
@@ -1848,12 +1848,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestsuppliers.git",
-                "reference": "79886e7a38806d230cc7fbeb2780c4a0d5a40e0d"
+                "reference": "be5b420abbf003e2b97ff6cb982ec7adcecae3d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestsuppliers/zipball/79886e7a38806d230cc7fbeb2780c4a0d5a40e0d",
-                "reference": "79886e7a38806d230cc7fbeb2780c4a0d5a40e0d",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestsuppliers/zipball/be5b420abbf003e2b97ff6cb982ec7adcecae3d5",
+                "reference": "be5b420abbf003e2b97ff6cb982ec7adcecae3d5",
                 "shasum": ""
             },
             "require": {
@@ -1874,7 +1874,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsbestsuppliers/tree/dev"
             },
-            "time": "2015-07-20 12:11:49"
+            "time": "2015-08-27 14:52:50"
         },
         {
             "name": "PrestaShop/statsbestvouchers",
@@ -1882,12 +1882,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestvouchers.git",
-                "reference": "15bce93cb089f94657567991ff20594c0eca74a9"
+                "reference": "5d840ffe90def3ce7e6411d688fb7f05aa547169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestvouchers/zipball/15bce93cb089f94657567991ff20594c0eca74a9",
-                "reference": "15bce93cb089f94657567991ff20594c0eca74a9",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestvouchers/zipball/5d840ffe90def3ce7e6411d688fb7f05aa547169",
+                "reference": "5d840ffe90def3ce7e6411d688fb7f05aa547169",
                 "shasum": ""
             },
             "require": {
@@ -1908,7 +1908,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsbestvouchers/tree/dev"
             },
-            "time": "2015-07-20 12:11:50"
+            "time": "2015-08-27 14:53:05"
         },
         {
             "name": "PrestaShop/statscarrier",
@@ -1916,12 +1916,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscarrier.git",
-                "reference": "7258468dcb2e67c114e6ecd2731b4e40317dd344"
+                "reference": "0fd46795dce938ada7602b026648f3c923d9057a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscarrier/zipball/7258468dcb2e67c114e6ecd2731b4e40317dd344",
-                "reference": "7258468dcb2e67c114e6ecd2731b4e40317dd344",
+                "url": "https://api.github.com/repos/PrestaShop/statscarrier/zipball/0fd46795dce938ada7602b026648f3c923d9057a",
+                "reference": "0fd46795dce938ada7602b026648f3c923d9057a",
                 "shasum": ""
             },
             "require": {
@@ -1942,7 +1942,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statscarrier/tree/dev"
             },
-            "time": "2015-07-20 12:11:52"
+            "time": "2015-08-27 14:53:23"
         },
         {
             "name": "PrestaShop/statscatalog",
@@ -1950,12 +1950,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscatalog.git",
-                "reference": "aa99dea79bacf6a917d6a2168ee07d6beae4c6e1"
+                "reference": "cce63c2cd452d03d842ac7ba3fe7ae0f2b814159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscatalog/zipball/aa99dea79bacf6a917d6a2168ee07d6beae4c6e1",
-                "reference": "aa99dea79bacf6a917d6a2168ee07d6beae4c6e1",
+                "url": "https://api.github.com/repos/PrestaShop/statscatalog/zipball/cce63c2cd452d03d842ac7ba3fe7ae0f2b814159",
+                "reference": "cce63c2cd452d03d842ac7ba3fe7ae0f2b814159",
                 "shasum": ""
             },
             "require": {
@@ -1976,7 +1976,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statscatalog/tree/dev"
             },
-            "time": "2015-07-20 12:11:53"
+            "time": "2015-08-27 14:53:59"
         },
         {
             "name": "PrestaShop/statscheckup",
@@ -1984,12 +1984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscheckup.git",
-                "reference": "4b17427a4e4223c0114735adcec23ebca4a6aac1"
+                "reference": "887823f0f68f4c1db66a6b8aad657801d2d39071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/4b17427a4e4223c0114735adcec23ebca4a6aac1",
-                "reference": "4b17427a4e4223c0114735adcec23ebca4a6aac1",
+                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/887823f0f68f4c1db66a6b8aad657801d2d39071",
+                "reference": "887823f0f68f4c1db66a6b8aad657801d2d39071",
                 "shasum": ""
             },
             "require": {
@@ -2010,7 +2010,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statscheckup/tree/dev"
             },
-            "time": "2015-07-20 12:11:55"
+            "time": "2015-08-27 14:56:59"
         },
         {
             "name": "PrestaShop/statsdata",
@@ -2018,12 +2018,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsdata.git",
-                "reference": "f773be8e21aa473b38f2e8c568584f019258f9ea"
+                "reference": "db254d86675503467226eea90fea1f4f09ca14cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsdata/zipball/f773be8e21aa473b38f2e8c568584f019258f9ea",
-                "reference": "f773be8e21aa473b38f2e8c568584f019258f9ea",
+                "url": "https://api.github.com/repos/PrestaShop/statsdata/zipball/db254d86675503467226eea90fea1f4f09ca14cf",
+                "reference": "db254d86675503467226eea90fea1f4f09ca14cf",
                 "shasum": ""
             },
             "require": {
@@ -2044,7 +2044,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsdata/tree/dev"
             },
-            "time": "2015-07-20 12:11:57"
+            "time": "2015-08-27 14:57:15"
         },
         {
             "name": "PrestaShop/statsequipment",
@@ -2052,12 +2052,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsequipment.git",
-                "reference": "cd165ecd0836b313c7e98f1de04efbec32c4b315"
+                "reference": "17bfacee5fa05746a14b82bd622b844e7e8bd22b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsequipment/zipball/cd165ecd0836b313c7e98f1de04efbec32c4b315",
-                "reference": "cd165ecd0836b313c7e98f1de04efbec32c4b315",
+                "url": "https://api.github.com/repos/PrestaShop/statsequipment/zipball/17bfacee5fa05746a14b82bd622b844e7e8bd22b",
+                "reference": "17bfacee5fa05746a14b82bd622b844e7e8bd22b",
                 "shasum": ""
             },
             "require": {
@@ -2078,7 +2078,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsequipment/tree/dev"
             },
-            "time": "2015-07-20 12:11:58"
+            "time": "2015-08-27 14:57:28"
         },
         {
             "name": "PrestaShop/statsforecast",
@@ -2086,12 +2086,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsforecast.git",
-                "reference": "e7c198f1e47a9e1bca0c3532c559e4a8f451065c"
+                "reference": "753765bb5505b7d42561230b481c597c651cac3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/e7c198f1e47a9e1bca0c3532c559e4a8f451065c",
-                "reference": "e7c198f1e47a9e1bca0c3532c559e4a8f451065c",
+                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/753765bb5505b7d42561230b481c597c651cac3f",
+                "reference": "753765bb5505b7d42561230b481c597c651cac3f",
                 "shasum": ""
             },
             "require": {
@@ -2112,7 +2112,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/statsforecast/tree/dev"
             },
-            "time": "2015-07-20 12:12:00"
+            "time": "2015-08-27 14:57:44"
         },
         {
             "name": "PrestaShop/statslive",
@@ -2460,12 +2460,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/themeconfigurator.git",
-                "reference": "722c4c04bf290e5b65f0a72d48d114841d9b2251"
+                "reference": "baeb61e7dfd19a0f62c81e7d4f8464f905c1095c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/themeconfigurator/zipball/722c4c04bf290e5b65f0a72d48d114841d9b2251",
-                "reference": "722c4c04bf290e5b65f0a72d48d114841d9b2251",
+                "url": "https://api.github.com/repos/PrestaShop/themeconfigurator/zipball/baeb61e7dfd19a0f62c81e7d4f8464f905c1095c",
+                "reference": "baeb61e7dfd19a0f62c81e7d4f8464f905c1095c",
                 "shasum": ""
             },
             "require": {
@@ -2486,7 +2486,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/themeconfigurator/tree/dev"
             },
-            "time": "2015-07-20 12:12:18"
+            "time": "2015-08-27 14:58:35"
         },
         {
             "name": "PrestaShop/trackingfront",
@@ -2962,54 +2962,6 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
-        },
-        {
-            "name": "kriswallsmith/buzz",
-            "version": "v0.15",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/d4041666c3ffb379af02a92dabe81c904b35fab8",
-                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "suggest": {
-                "ext-curl": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Buzz": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kris Wallsmith",
-                    "email": "kris.wallsmith@gmail.com",
-                    "homepage": "http://kriswallsmith.net/"
-                }
-            ],
-            "description": "Lightweight HTTP client",
-            "homepage": "https://github.com/kriswallsmith/Buzz",
-            "keywords": [
-                "curl",
-                "http client"
-            ],
-            "time": "2015-06-25 17:26:56"
         },
         {
             "name": "phake/phake",
