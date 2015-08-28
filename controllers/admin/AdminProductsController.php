@@ -2289,6 +2289,11 @@ class AdminProductsControllerCore extends AdminController
             return true;
         }
 
+        $def = ObjectModel::getDefinition($this->object);
+        if (!$this->object->isMultiShopField($field) && is_null($id_lang) && isset($def['fields'][$field])) {
+            return true;
+        }
+
         if (is_null($id_lang)) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
