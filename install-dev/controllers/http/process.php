@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+
 class InstallControllerHttpProcess extends InstallControllerHttp
 {
     const SETTINGS_FILE = 'config/settings.inc.php';
@@ -261,7 +263,26 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
+
+        $this->installCldrDatas();
+
         $this->ajaxJsonAnswer(true);
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+
+        //get each defined languages and fetch cldr datas
+        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $language_code = explode('-', $lang['language_code']);
+            $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+        }
     }
 
     /**

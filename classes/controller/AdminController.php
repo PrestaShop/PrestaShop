@@ -2586,18 +2586,38 @@ class AdminControllerCore extends Controller
     {
         //Bootstrap
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
 
         $this->addJquery();
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
         $this->addjQueryPlugin('growl', null, false);
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
-
+        
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+        Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
 
+        Media::addJsDef(array('currency' => array(
+            'iso_code' => Context::getContext()->currency->iso_code,
+            'sign' => Context::getContext()->currency->sign,
+            'name' => Context::getContext()->currency->name,
+            'format' => Context::getContext()->currency->format
+        )));
+        
         $this->addJS(array(
             _PS_JS_DIR_.'admin.js',
+            _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js',
-            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
+            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
         ));
 
         //loads specific javascripts for the admin theme

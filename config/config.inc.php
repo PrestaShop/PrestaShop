@@ -45,6 +45,12 @@ if (!headers_sent()) {
     header('Content-Type: text/html; charset=utf-8');
 }
 
+/* in dev mode - check if composer was executed */
+if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
+        !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+    die('Error : please install <a href="https://getcomposer.org/">composer</a> or execute "./getcomposer.sh"<br/>Then run "composer install"');
+}
+
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
     if (file_exists($currentDir.'/../install')) {

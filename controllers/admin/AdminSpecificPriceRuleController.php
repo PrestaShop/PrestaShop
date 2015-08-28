@@ -27,6 +27,9 @@
 /**
  * @property SpecificPriceRule $object
  */
+
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
     public $list_reduction_type;
@@ -38,6 +41,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->className = 'SpecificPriceRule';
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
+        $this->cldr = new Repository(Context::getContext()->language);
 
         /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
         if ($this->id_shop = (int)Tools::getValue('shop_id')) {
@@ -55,7 +59,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         $this->context = Context::getContext();
 
-        $this->_select = 's.name shop_name, cu.name currency_name, cl.name country_name, gl.name group_name';
+        $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = a.id_shop)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int)$this->context->language->id.')
@@ -151,6 +155,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
+            $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
+            $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+
             if ($list['reduction_type'] == 'amount') {
                 $this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
             } elseif ($list['reduction_type'] == 'percentage') {

@@ -41,6 +41,8 @@ config/xml/*
 # Themes, modules and overrides
 
 modules/*
+!modules/.htaccess
+!modules/index.php
 override/*
 
 admin-dev/themes/default/sass/ie.sass
@@ -49,6 +51,12 @@ admin-dev/themes/default/sass/screen.sass
 admin-dev/themes/default/css/ie.css
 admin-dev/themes/default/css/print.css
 admin-dev/themes/default/css/screen.css
+vendor/*
+/composer.phar
+php-cs-fixer
+js/vendor/node_modules/*
+tests/js/node_modules/*
+tests/js/.grunt/*
 
 # Translations and emails templates
 

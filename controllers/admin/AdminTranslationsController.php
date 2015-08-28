@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+
 class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
@@ -721,6 +723,7 @@ class AdminTranslationsControllerCore extends AdminController
             $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
+
             if (Validate::isLangIsoCode($iso_code)) {
                 $themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
                 $files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
@@ -790,6 +793,13 @@ class AdminTranslationsControllerCore extends AdminController
                                 }
                             }
                         }
+
+                        //fetch cldr datas for the new imported locale
+                        $languageCode = explode('-', Language::getLanguageCodeByIso($iso_code));
+                        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                        $cldrUpdate->fetchLocale($languageCode[0].'-'.strtoupper($languageCode[1]));
+
+
                         $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
                 }
@@ -885,6 +895,11 @@ class AdminTranslationsControllerCore extends AdminController
                             if (!unlink($file)) {
                                 $this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
                             }
+
+                            //fetch cldr datas for the new imported locale
+                            $languageCode = explode('-', Language::getLanguageCodeByIso($arr_import_lang[0]));
+                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                            $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
 
                             $this->redirect(false, (isset($conf) ? $conf : '15'));
                         }
