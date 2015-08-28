@@ -2289,6 +2289,11 @@ class AdminProductsControllerCore extends AdminController
             return true;
         }
 
+        $def = ObjectModel::getDefinition($this->object);
+        if (!$this->object->isMultiShopField($field) && is_null($id_lang) && isset($def['fields']['field'])) {
+            return true;
+        }
+
         if (is_null($id_lang)) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
@@ -2843,7 +2848,7 @@ class AdminProductsControllerCore extends AdminController
 
         $page = (int)Tools::getValue('page');
 
-        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
+        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'updateproduct&id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
         $this->tpl_form_vars['id_product'] = $id_product;
 
         // Transform configuration option 'upload_max_filesize' in octets
