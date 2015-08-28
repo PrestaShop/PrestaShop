@@ -1,11 +1,5 @@
 #!/bin/sh
 
-#REMOVE PHP-CS-FIXER
-if [ -f php-cs-fixer ]
-  then
-    rm php-cs-fixer
-fi
-
 #REMOVE GIT PRE-COMMIT
 if [ -f .git/hooks/pre-commit ]
   then

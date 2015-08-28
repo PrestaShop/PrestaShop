@@ -1,11 +1,5 @@
 #!/bin/sh
 
-#DOWNLOAD PHP CS FIXER LOCALLY
-if [ ! -f php-cs-fixer ]
-  then
-    wget http://get.sensiolabs.org/php-cs-fixer.phar -O php-cs-fixer
-fi
-
 #INSTALL GIT PRE-COMMIT
 if [ -f .git/hooks/pre-commit ]
   then
