@@ -1611,7 +1611,7 @@ class ProductCore extends ObjectModel
      * @return mixed $id_product_attribute or false
      */
     public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-                                 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
+                                 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null, $quantity = 0)
     {
         if (!$this->id) {
             return;
@@ -1624,7 +1624,7 @@ class ProductCore extends ObjectModel
         $combination->id_product = (int)$this->id;
         $combination->price = (float)$price;
         $combination->ecotax = (float)$ecotax;
-        $combination->quantity = 0;
+        $combination->quantity = (int)$quantity;
         $combination->weight = (float)$weight;
         $combination->unit_price_impact = (float)$unit_impact;
         $combination->reference = pSQL($reference);
