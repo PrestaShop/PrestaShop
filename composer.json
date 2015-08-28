@@ -82,7 +82,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~4.5",
-    "phake/phake": "@stable"
+    "phake/phake": "@stable",
+    "fabpot/php-cs-fixer": "^1.10"
   },
   "autoload-dev": {
     "psr-4": {
