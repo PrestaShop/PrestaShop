@@ -3577,8 +3577,16 @@ class CartCore extends ObjectModel
                     $first = false;
                 }
 
+                $customized_value = $custom['value'];
+
+                if ((int)$custom['type'] == 0) {
+                    $customized_value = md5(uniqid(rand(), true));
+                    Tools::copy(_PS_UPLOAD_DIR_.$custom['value'], _PS_UPLOAD_DIR_.$customized_value);
+                    Tools::copy(_PS_UPLOAD_DIR_.$custom['value'].'_small', _PS_UPLOAD_DIR_.$customized_value.'_small');
+                }
+
                 $sql_custom_data .= '('.(int)$custom_ids[$custom['id_customization']].', '.(int)$custom['type'].', '.
-                    (int)$custom['index'].', \''.pSQL($custom['value']).'\')';
+                    (int)$custom['index'].', \''.pSQL($customized_value).'\')';
             }
             Db::getInstance()->execute($sql_custom_data);
         }
