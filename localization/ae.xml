@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<localizationPack name="AE">
+<localizationPack name="United Arab Emirates">
   <currencies>
     <currency name="United Arab Emirates dirham" iso_code="AED" iso_code_num="784" sign="AED" blank="1" conversion_rate="1.000000" format="1" decimals="0"/>
   </currencies>

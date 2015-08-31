@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,35 +31,34 @@
  */
 class ControllerFactoryCore
 {
-	/**
-	 * @deprecated since 1.5.0
-	 */
-	public static function includeController($className)
-	{
-		Tools::displayAsDeprecated();
+    /**
+     * @deprecated since 1.5.0
+     */
+    public static function includeController($className)
+    {
+        Tools::displayAsDeprecated();
 
-		if (!class_exists($className, false))
-		{
-			require_once(_PS_ROOT_DIR_.'/controllers/'.$className.'.php');
-			if (file_exists(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php'))
-				require_once(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php');
-			else
-			{
-				$coreClass = new ReflectionClass($className.'Core');
-				if ($coreClass->isAbstract())
-					eval('abstract class '.$className.' extends '.$className.'Core {}');
-				else
-					eval('class '.$className.' extends '.$className.'Core {}');
-			}
-		}
-	}
+        if (!class_exists($className, false)) {
+            require_once(_PS_CORE_DIR_.'/controllers/'.$className.'.php');
+            if (file_exists(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php')) {
+                require_once(_PS_ROOT_DIR_.'/override/controllers/'.$className.'.php');
+            } else {
+                $coreClass = new ReflectionClass($className.'Core');
+                if ($coreClass->isAbstract()) {
+                    eval('abstract class '.$className.' extends '.$className.'Core {}');
+                } else {
+                    eval('class '.$className.' extends '.$className.'Core {}');
+                }
+            }
+        }
+    }
 
-	/**
-	 * @deprecated since 1.5.0
-	 */
-	public static function getController($className, $auth = false, $ssl = false)
-	{
-		ControllerFactory::includeController($className);
-		return new $className($auth, $ssl);
-	}
+    /**
+     * @deprecated since 1.5.0
+     */
+    public static function getController($className, $auth = false, $ssl = false)
+    {
+        ControllerFactory::includeController($className);
+        return new $className($auth, $ssl);
+    }
 }

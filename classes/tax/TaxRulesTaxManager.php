@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,87 +29,108 @@
  */
 class TaxRulesTaxManagerCore implements TaxManagerInterface
 {
-	public $address;
-	public $type;
-	public $tax_calculator;
+    public $address;
+    public $type;
+    public $tax_calculator;
 
-	/**
-	 * 
-	 * @param Address $address
-	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
-	 */
-	public function __construct(Address $address, $type)
-	{
-		$this->address = $address;
-		$this->type = $type;
-	}
+    /**
+     * @var Core_Business_ConfigurationInterface
+     */
+    private $configurationManager;
 
-	/**
-	* Returns true if this tax manager is available for this address
-	*
-	* @return boolean
-	*/
-	public static function isAvailableForThisAddress(Address $address)
-	{
-		return true; // default manager, available for all addresses
-	}
+    /**
+     *
+     * @param Address $address
+     * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+     */
+    public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
+    {
+        if ($configurationManager === null) {
+            $this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        } else {
+            $this->configurationManager = $configurationManager;
+        }
 
-	/**
-	* Return the tax calculator associated to this address
-	*
-	* @return TaxCalculator
-	*/
-	public function getTaxCalculator()
-	{
-		static $tax_enabled = null;
+        $this->address = $address;
+        $this->type = $type;
+    }
 
-		if (isset($this->tax_calculator))
-			return $this->tax_calculator;
+    /**
+    * Returns true if this tax manager is available for this address
+    *
+    * @return bool
+    */
+    public static function isAvailableForThisAddress(Address $address)
+    {
+        return true; // default manager, available for all addresses
+    }
 
-		if ($tax_enabled === null)
-			$tax_enabled = Configuration::get('PS_TAX');
-		
-		if (!$tax_enabled)
-			return new TaxCalculator(array());
-	
-		$taxes = array();
-		$postcode = 0;
-		if (!empty($this->address->postcode))
-			$postcode = $this->address->postcode;
+    /**
+    * Return the tax calculator associated to this address
+    *
+    * @return TaxCalculator
+    */
+    public function getTaxCalculator()
+    {
+        static $tax_enabled = null;
 
-		$cache_id = (int)$this->address->id_country.'-'.(int)$this->address->id_state.'-'.$postcode.'-'.(int)$this->type;
-		if (!Cache::isStored($cache_id))
-		{
-			$rows = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_country` = '.(int)$this->address->id_country.'
-			AND `id_tax_rules_group` = '.(int)$this->type.'
-			AND `id_state` IN (0, '.(int)$this->address->id_state.')
-			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR (`zipcode_to` = 0 AND `zipcode_from` IN(0, \''.pSQL($postcode).'\')))
-			ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
+        if (isset($this->tax_calculator)) {
+            return $this->tax_calculator;
+        }
 
-			$behavior = 0;
-			$first_row = true;
+        if ($tax_enabled === null) {
+            $tax_enabled = $this->configurationManager->get('PS_TAX');
+        }
 
-			foreach ($rows as $row)
-			{
-				$tax = new Tax((int)$row['id_tax']);
+        if (!$tax_enabled) {
+            return new TaxCalculator(array());
+        }
 
-				$taxes[] = $tax;
+        $taxes = array();
+        $postcode = 0;
 
-				// the applied behavior correspond to the most specific rules
-				if ($first_row)
-				{
-					$behavior = $row['behavior'];
-					$first_row = false;
-				}
+        if (!empty($this->address->postcode)) {
+            $postcode = $this->address->postcode;
+        }
 
-				if ($row['behavior'] == 0)
-					 break;
-			}
-			Cache::store($cache_id, new TaxCalculator($taxes, $behavior));
-		}
-		return Cache::retrieve($cache_id);
-	}
+        $cache_id = (int)$this->address->id_country.'-'.(int)$this->address->id_state.'-'.$postcode.'-'.(int)$this->type;
+
+        if (!Cache::isStored($cache_id)) {
+            $rows = Db::getInstance()->executeS('
+				SELECT tr.*
+				FROM `'._DB_PREFIX_.'tax_rule` tr
+				JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
+				WHERE trg.`active` = 1
+				AND tr.`id_country` = '.(int)$this->address->id_country.'
+				AND tr.`id_tax_rules_group` = '.(int)$this->type.'
+				AND tr.`id_state` IN (0, '.(int)$this->address->id_state.')
+				AND (\''.pSQL($postcode).'\' BETWEEN tr.`zipcode_from` AND tr.`zipcode_to`
+					OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \''.pSQL($postcode).'\')))
+				ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC');
+
+            $behavior = 0;
+            $first_row = true;
+
+            foreach ($rows as $row) {
+                $tax = new Tax((int)$row['id_tax']);
+
+                $taxes[] = $tax;
+
+                // the applied behavior correspond to the most specific rules
+                if ($first_row) {
+                    $behavior = $row['behavior'];
+                    $first_row = false;
+                }
+
+                if ($row['behavior'] == 0) {
+                    break;
+                }
+            }
+            $result = new TaxCalculator($taxes, $behavior);
+            Cache::store($cache_id, $result);
+            return $result;
+        }
+
+        return Cache::retrieve($cache_id);
+    }
 }

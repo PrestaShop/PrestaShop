@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,10 +18,44 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+$(document).ready(function(){
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: new google.maps.LatLng(defaultLat, defaultLong),
+		zoom: 10,
+		mapTypeId: 'roadmap',
+		mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+	});
+	infoWindow = new google.maps.InfoWindow();
+
+	locationSelect = document.getElementById('locationSelect');
+		locationSelect.onchange = function() {
+		var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
+		if (markerNum !== 'none')
+		google.maps.event.trigger(markers[markerNum], 'click');
+	};
+
+	$('#addressInput').keypress(function(e) {
+		code = e.keyCode ? e.keyCode : e.which;
+		if(code.toString() === 13)
+			searchLocations();
+	});
+
+	$(document).on('click', 'input[name=location]', function(e){
+		e.preventDefault();
+		$(this).val('');
+	});
+
+	$(document).on('click', 'button[name=search_locations]', function(e){
+		e.preventDefault();
+		searchLocations();
+	});
+
+	initMarkers();
+});
 
 function initMarkers()
 {
@@ -46,9 +80,8 @@ function initMarkers()
 		}
 		map.fitBounds(bounds);
 		var zoomOverride = map.getZoom();
-        if(zoomOverride > 10) {
-        zoomOverride = 10;
-        }
+        if(zoomOverride > 10)
+        	zoomOverride = 10;
 		map.setZoom(zoomOverride);
 	});
 }
@@ -62,7 +95,21 @@ function searchLocations()
 		if (status === google.maps.GeocoderStatus.OK)
 			searchLocationsNear(results[0].geometry.location);
 		else
-			alert(address+' '+translation_6);
+		{
+			if (!!$.prototype.fancybox && isCleanHtml(address))
+			    $.fancybox.open([
+			        {
+			            type: 'inline',
+			            autoScale: true,
+			            minHeight: 30,
+			            content: '<p class="fancybox-error">' + address + ' ' + translation_6 + '</p>'
+			        }
+			    ], {
+			        padding: 0
+			    });
+			else
+			    alert(address + ' ' + translation_6);
+		}
 		$('#stores_loader').hide();
 	});
 }
@@ -72,7 +119,7 @@ function clearLocations(n)
 	infoWindow.close();
 	for (var i = 0; i < markers.length; i++)
 		markers[i].setMap(null);
-		
+
 	markers.length = 0;
 
 	locationSelect.innerHTML = '';
@@ -86,9 +133,12 @@ function clearLocations(n)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
-	} 
+	}
 	locationSelect.appendChild(option);
-	$("select#locationSelect").uniform();
+
+	if (!!$.prototype.uniform)
+		$("select#locationSelect").uniform();
+
 	$('#stores-table tr.node').remove();
 }
 
@@ -120,6 +170,8 @@ function searchLocationsNear(center)
 			createOption(name, distance, i);
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
+			address = address.replace(phone, '');
+
 			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}
@@ -127,9 +179,9 @@ function searchLocationsNear(center)
 		if (markerNodes.length)
 		{
 			map.fitBounds(bounds);
-			var listener = google.maps.event.addListener(map, "idle", function() { 
+			var listener = google.maps.event.addListener(map, "idle", function() {
 				if (map.getZoom() > 13) map.setZoom(13);
-				google.maps.event.removeListener(listener); 
+				google.maps.event.removeListener(listener);
 			});
 		}
 		locationSelect.style.visibility = 'visible';
@@ -185,41 +237,16 @@ function downloadUrl(url, callback)
 
 function parseXml(str)
 {
-	if (window.ActiveXObject) {
+	if (window.ActiveXObject)
+	{
 		var doc = new ActiveXObject('Microsoft.XMLDOM');
 		doc.loadXML(str);
 		return doc;
 	}
-	else if (window.DOMParser) {
+	else if (window.DOMParser)
 		return (new DOMParser()).parseFromString(str, 'text/xml');
-	}
 }
 
-function doNothing() {}
-
-$(document).ready(function()
+function doNothing()
 {
-	map = new google.maps.Map(document.getElementById('map'), {
-		center: new google.maps.LatLng(defaultLat, defaultLong),
-		zoom: 10,
-		mapTypeId: 'roadmap',
-		mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
-	});
-	infoWindow = new google.maps.InfoWindow();
-
-	locationSelect = document.getElementById('locationSelect');
-		locationSelect.onchange = function() {
-		var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
-		if (markerNum !== 'none')
-		google.maps.event.trigger(markers[markerNum], 'click');
-	};
-	
-	$('#addressInput').keypress(function(e) {
-		code = e.keyCode ? e.keyCode : e.which;
-		if(code.toString() === 13)
-			searchLocations();
-	});
-
-
-	initMarkers();
-});
+}

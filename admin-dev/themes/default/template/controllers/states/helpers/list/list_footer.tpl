@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-			</table>
+				</table>
+			</div>
 			<div class="row">
 				<div class="col-lg-8">
 				{if $bulk_actions}
@@ -32,7 +33,11 @@
 						<div class="col-lg-6">
 							<select id="select_submitBulk" name="select_submitBulk" >
 								{foreach $bulk_actions as $key => $params}
-									<option value="{$key}">{$params.text}</option>
+									{if $params.text == 'divider'}
+										<option value="" disabled="disabled" class="{$params.text|escape:'html':'UTF-8'}">--</option>
+									{else}
+										<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text|escape:'html':'UTF-8'}</option>
+									{/if}
 								{/foreach}
 							</select>
 						</div>
@@ -63,8 +68,8 @@
 				{if !$simple_header && $list_total > 20}
 				<div class="col-lg-4">
 					{* Choose number of results per page *}
-					<span class="pagination">
-						{l s='Display'}: 
+					<div class="pagination">
+						{l s='Display'} 
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							{$selected_pagination}
 							<i class="icon-caret-down"></i>
@@ -78,7 +83,7 @@
 						</ul>
 						/ {$list_total} {l s='result(s)'}
 						<input type="hidden" id="pagination-items-page" name="{$table}_pagination" value="{$selected_pagination|intval}" />
-					</span>
+					</div>
 					<script type="text/javascript">
 						$('.pagination-items-page').on('click',function(e){
 							e.preventDefault();
@@ -103,7 +108,7 @@
 									<a href="javascript:void(0);">&hellip;</a>
 								</li>
 								{assign p $page-3}
-							{else if $p > $page+2}
+							{elseif $p > $page+2}
 								<li class="disabled">
 									<a href="javascript:void(0);">&hellip;</a>
 								</li>
@@ -134,26 +139,17 @@
 				</div>
 				{/if}
 			</div>
-		</td>
-	</tr>
-</table>
 </div>
-<input type="hidden" name="token" value="{$token}" />
+
+<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 </form>
 
 <script type="text/javascript">
-	var confirmation = new Array();
-	{foreach $bulk_actions as $key => $params}
-		{if isset($params.confirm)}
-			confirmation['{$key}{$table}'] = "{$params.confirm}";
-		{/if}
-	{/foreach}
-
 	$(document).ready(function(){
 		{if $bulk_actions|count > 1}
 			$('#submitBulk').click(function(){
-				if (confirmation[$(this).val()])
-					return confirm(confirmation[$(this).val()]);
+				if ($('#select_submitBulk option:selected').data('confirm') !== undefined)
+					return confirm($('#select_submitBulk option:selected').data('confirm'));
 				else
 					return true;
 			});
@@ -173,12 +169,12 @@
 			$.ajax({
 				type: 'POST',
 				url: 'ajax.php',
-				data: 'getZones=true&token={$token}',
+				data: 'getZones=true&token={$token|escape:'html':'UTF-8'}',
 				async : true,
 				cache: false,
 				dataType: 'json',
 				success: function(data) {
-					var html = $(data);
+					var html = $(data.data);
 					html.hide();
 					$('#select_submitBulk').after(html);
 					html.fadeIn('slow');

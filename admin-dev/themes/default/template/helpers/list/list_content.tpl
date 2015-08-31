@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,49 +18,47 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{capture name='tr_count'}{counter name='tr_count'}{/capture}
 <tbody>
 {if count($list)}
 {foreach $list AS $index => $tr}
-	<tr
-	{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
-	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-
-	>
-		<td class="text-center">
-			{if $bulk_actions && $has_bulk_actions}
+	<tr{if $position_identifier} id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if} class="{if isset($tr.class)}{$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"{if isset($tr.color) && $color_on_bg} style="background-color: {$tr.color}"{/if} >
+		{if $bulk_actions && $has_bulk_actions}
+			<td class="row-selector text-center">
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
-						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+						<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 					{/if}
 				{else}
-					<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
+					<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 				{/if}
-			{/if}
-
-		</td>
+			</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}
 				<td
 					{if isset($params.position)}
-						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}"
+						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
-					class="{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.class)} {$params.class}{/if}
-					{if isset($params.align)} {$params.align}{/if}"
+					{if isset($params.align)} {$params.align}{/if}{/strip}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
-						onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
+						onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table|escape:'html':'UTF-8'}{if $page > 1}&amp;page={$page|intval}{/if}&amp;token={$token|escape:'html':'UTF-8'}'">
 					{else}
 					>
 				{/if}
 			{/block}
 			{block name="td_content"}
 				{if isset($params.prefix)}{$params.prefix}{/if}
+				{if isset($params.badge_success) && $params.badge_success && isset($tr.badge_success) && $tr.badge_success == $params.badge_success}<span class="badge badge-success">{/if}
+				{if isset($params.badge_warning) && $params.badge_warning && isset($tr.badge_warning) && $tr.badge_warning == $params.badge_warning}<span class="badge badge-warning">{/if}
+				{if isset($params.badge_danger) && $params.badge_danger && isset($tr.badge_danger) && $tr.badge_danger == $params.badge_danger}<span class="badge badge-danger">{/if}
 				{if isset($params.color) && isset($tr[$params.color])}
 					<span class="label color_field" style="background-color:{$tr[$params.color]};color:{if Tools::getBrightness($tr[$params.color]) < 128}white{else}#383838{/if}">
 				{/if}
@@ -69,20 +67,18 @@
 						{$tr.$key}
 					{elseif isset($params.activeVisu)}
 						{if $tr.$key}
-							<span class="label label-success"><i class="icon-check-sign"></i> {l s='Enabled'}</span>
+							<i class="icon-check-ok"></i> {l s='Enabled'}
 						{else}
-							<span class="label label-warning"><i class="icon-ban-circle"></i> {l s='Disabled'}</span>
+							<i class="icon-remove"></i> {l s='Disabled'}
 						{/if}
 
 					{elseif isset($params.position)}
 						{if $order_by == 'position' && $order_way != 'DESC'}
-							<a href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}style="display: none;"{/if}>
-								<img src="../img/admin/{if $order_way == 'ASC'}down{else}up{/if}.gif" alt="{l s='Down'}" title="{l s='Down'}" />
-							</a>
-
-							<a href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}style="display: none;"{/if}>
-								<img src="../img/admin/{if $order_way == 'ASC'}up{else}down{/if}.gif" alt="{l s='Up'}" title="{l s='Up'}" />
-							</a>
+							<div class="dragGroup">
+								<div class="positions">
+									{$tr.$key.position + 1}
+								</div>
+							</div>
 						{else}
 							{$tr.$key.position + 1}
 						{/if}
@@ -96,14 +92,14 @@
 								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
 							{/if}
 						{/if}
-					{elseif isset($params.price)}
-						{$tr.$key}
+					{elseif isset($params.type) && $params.type == 'price'}
+						{displayPrice price=$tr.$key}
 					{elseif isset($params.float)}
 						{$tr.$key}
 					{elseif isset($params.type) && $params.type == 'date'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=0}
 					{elseif isset($params.type) && $params.type == 'datetime'}
-						{$tr.$key}
+						{dateFormat date=$tr.$key full=1}
 					{elseif isset($params.type) && $params.type == 'decimal'}
 						{$tr.$key|string_format:"%.2f"}
 					{elseif isset($params.type) && $params.type == 'percent'}
@@ -135,6 +131,9 @@
 				{if isset($params.color) && isset($tr.color)}
 					</span>
 				{/if}
+				{if isset($params.badge_danger) && $params.badge_danger && isset($tr.badge_danger) && $tr.badge_danger == $params.badge_danger}</span>{/if}
+				{if isset($params.badge_warning) && $params.badge_warning && isset($tr.badge_warning) && $tr.badge_warning == $params.badge_warning}</span>{/if}
+				{if isset($params.badge_success) && $params.badge_success && isset($tr.badge_success) && $tr.badge_success == $params.badge_success}</span>{/if}
 			{/block}
 			{block name="close_td"}
 				</td>
@@ -158,22 +157,25 @@
 					{if $key == 0}
 						{assign var='action' value=$action}
 					{/if}
+					{if $action == 'delete' && $actions|@count > 2}
+						{$compiled_actions[] = 'divider'}
+					{/if}
 					{$compiled_actions[] = $tr.$action}
 				{/if}
 			{/foreach}
 			{if $compiled_actions|count > 0}
 				{if $compiled_actions|count > 1}<div class="btn-group-action">{/if}
 				<div class="btn-group pull-right">
-					{$compiled_actions[0]|regex_replace:'/class\s*=\s*"(\w*)"/':'class="$1 btn btn-default"'}
+					{$compiled_actions[0]}
 					{if $compiled_actions|count > 1}
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<span class="caret"></span>&nbsp;
+						<i class="icon-caret-down"></i>&nbsp;
 					</button>
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li>
-								{$action}
+							<li {if $action == 'divider'}class="divider"{/if}>
+								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}
 						{/foreach}
@@ -187,6 +189,13 @@
 	</tr>
 {/foreach}
 {else}
-	<tr><td class="center text-muted" colspan="{count($fields_display) + 2}"><i class="icon-warning-sign"></i> {l s='No records found'}</td></tr>
+	<tr>
+		<td class="list-empty" colspan="{count($fields_display)+1}">
+			<div class="list-empty-msg">
+				<i class="icon-warning-sign list-empty-icon"></i>
+				{l s='No records found'}
+			</div>
+		</td>
+	</tr>
 {/if}
 </tbody>

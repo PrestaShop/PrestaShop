@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,iBAAkB;EACjB,KAAK,EAAE,KAAK;EACZ,WAAW,EAAE,iBAAiB;EAC9B,YAAY,EAAE,iBAAiB;EAC/B,mBAAE;IACD,KAAK,EC2CiB,IAAiB;ID1CvC,WAAW,EAAE,IAAI;IACjB,OAAO,EAAE,KAAK;IACd,OAAO,EAAE,gBAAgB;IACzB,MAAM,EAAE,OAAO;IACf,WAAW,EAAC,IAAI;IAChB,yBAAmC;MAPpC,mBAAE;QAQA,SAAS,EAAE,IAAI;IAEhB,qDAAkB;MACjB,UAAU,EAAE,OAAO",
+"sources": ["../../../sass/modules/blockuserinfo/blockuserinfo.scss","../../../sass/_theme_variables.scss"],
+"names": [],
+"file": "blockuserinfo.css"
+}

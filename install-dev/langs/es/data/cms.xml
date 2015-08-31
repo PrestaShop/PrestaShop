@@ -1,53 +1,81 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_cms>
-  <cms id="Delivery">
-    <meta_title>Entrega</meta_title>
-    <meta_description>Nuestras condiciones de entrega</meta_description>
-    <meta_keywords>condiciones, plazos de entrega, transporte, paqueter&#xED;a</meta_keywords>
-    <content>&lt;h2&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Livraisons et retours"&gt;shipping &amp; Returns&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Le transport de votre colis"&gt;El transporte de su paquete&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Les colis sont g&#xE9;n&#xE9;ralement exp&#xE9;di&#xE9;s en 48h apr&#xE8;s r&#xE9;ception de votre paiement."&gt;Los paquetes son generalmente enviados en 48 horas despu&#xE9;s de la recepci&#xF3;n de su pago. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Le mode d'exp&#xE9;dition standard est le Colissimo suivi, remis sans signature."&gt;La moda es el est&#xE1;ndar exp&#xE9;dition Colissimo seguido, entrega sin firma. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Si vous souhaitez une remise avec signature, un co&#xFB;t suppl&#xE9;mentaire s'applique, merci de nous contacter."&gt;Si desea una entrega con la firma, un cargo adicional, gracias al contacto con nosotros. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Quel que soit le mode d'exp&#xE9;dition choisi, nous vous fournirons d&#xE8;s que possible un lien qui vous permettra de suivre en ligne la livraison de votre colis."&gt;Sea cual sea el m&#xE9;todo de env&#xED;o seleccionado, vamos a presentar lo antes posible, un v&#xED;nculo que le permite rastrear el env&#xED;o en l&#xED;nea de su paquete.&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Les frais d'exp&#xE9;dition comprennent l'emballage, la manutention et les frais postaux."&gt;Gastos de env&#xED;o incluyen el embalaje, la manipulaci&#xF3;n y env&#xED;o. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Ils peuvent contenir une partie fixe et une partie variable en fonction du prix ou du poids de votre commande."&gt;Pueden contener un fijo y una parte variable basado en el precio o el peso de su solicitud. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Nous vous conseillons de regrouper vos achats en une unique commande."&gt;Le recomendamos que para consolidar sus compras en un solo comando. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Nous ne pouvons pas grouper deux commandes distinctes et vous devrez vous acquitter des frais de port pour chacune d'entre elles."&gt;No podemos grupo de dos &#xF3;rdenes distintos y hay que pagar gastos de env&#xED;o para cada uno. &lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Votre colis est exp&#xE9;di&#xE9; &#xE0; vos propres risques, un soin particulier est apport&#xE9; au colis contenant des produits fragiles.."&gt;Su paquete es enviado a su propio riesgo, se presta especial atenci&#xF3;n a las parcelas que contienen objetos fr&#xE1;giles ..&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Les colis sont surdimensionn&#xE9;s et prot&#xE9;g&#xE9;s."&gt;Los paquetes son de gran tama&#xF1;o y protegidas.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</content>
+  <cms id='Delivery'>
+    <meta_title>Envío</meta_title>
+    <meta_description>Nuestros términos y condiciones de envío</meta_description>
+    <meta_keywords>condiciones, entrega, plazo, envío, paquete</meta_keywords>
+    <content>&lt;h2&gt;Envíos y devoluciones&lt;/h2&gt;&lt;h3&gt;Envío del paquete&lt;/h3&gt;&lt;p&gt;Como norma general, los paquetes se envían dentro de las 48 horas siguientes a la recepción del pago, través de UPS con número de seguimiento y entrega sin firma. Si prefieres el envío certificado mediante UPS Extra, se aplicará un cargo adicional. Ponte en contacto con nosotros antes de solicitar esta opción. Sea cual sea la forma de envío que elijas, te proporcionaremos un enlace para que puedas seguir tu pedido en línea.&lt;/p&gt;&lt;p&gt;Los gastos de envío incluyen los gastos de manipulación y empaquetado, así como los gastos postales. Los gastos de manipulación tienen un precio fijo, mientras que los gastos de transporte pueden variar según el peso total del paquete. Te aconsejamos que agrupes todos tus artículos en un mismo pedido. No podemos combinar dos pedidos diferentes, y los gastos de envío se aplicarán para cada uno de manera individual. No nos hacemos responsables de los daños que pueda sufrir tu paquete tras el envío, pero hacemos todo lo posible para proteger todos los artículos frágiles.&lt;br /&gt;&lt;br /&gt;Las cajas son grandes y tus artículos estarán bien protegidos.&lt;/p&gt;</content>
     <link_rewrite>entrega</link_rewrite>
   </cms>
-  <cms id="Legal_Notice">
+  <cms id='Legal_Notice'>
     <meta_title>Aviso legal</meta_title>
     <meta_description>Aviso legal</meta_description>
-    <meta_keywords>t&#xE9;rminos, condiciones y cr&#xE9;ditos fotogr&#xE1;ficos</meta_keywords>
-    <content>&lt;h2&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Mentions l&#xE9;gales"&gt;Pie de imprenta&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;&#xD;
-&lt;h2&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Mentions l&#xE9;gales"&gt; &lt;/span&gt;&lt;/span&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Cr&#xE9;dits"&gt;Cr&#xE9;ditos&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;/span&gt;&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Cr&#xE9;dits"&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Concept et production :"&gt;Concepto y producci&#xF3;n:&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style="background-color: #ffffff;" title="Ce site internet a &#xE9;t&#xE9; r&#xE9;alis&#xE9; en utilisant la solution open-source PrestaShop&#x2122; ."&gt;Este sitio web fue creado utilizando la soluci&#xF3;n de c&#xF3;digo abierto &lt;a href="http://www.prestashop.com" target="_blank"&gt;PrestaShop&lt;/a&gt;&#x2122;.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</content>
+    <meta_keywords>aviso, legal, créditos</meta_keywords>
+    <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Créditos&lt;/h3&gt;&lt;p&gt;Concepto y producción:&lt;/p&gt;&lt;p&gt;Esta tienda online fue creada utilizando el &lt;a href=&quot;http://www.prestashop.com&quot;&gt;Software Prestashop Shopping Cart&lt;/a&gt;. No olvides echarle un vistazo al &lt;a href=&quot;http://www.prestashop.com/blog/en/&quot;&gt;blog de comercio electrónico&lt;/a&gt; de PrestaShop para estar al día y leer todos los consejos sobre la venta online y sobre cómo gestionar tu web de comercio electrónico.&lt;/p&gt;</content>
     <link_rewrite>aviso-legal</link_rewrite>
   </cms>
-  <cms id="Terms_and_conditions_of_use">
-    <meta_title>Condiciones de uso</meta_title>
-    <meta_description>Condiciones de uso</meta_description>
-    <meta_keywords>condiciones, el consumo, las ventas generales</meta_keywords>
-    <content>&lt;h2&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Vos conditions de ventes"&gt;Sus condiciones de venta&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;&#xD;
-&lt;h3&gt;Regla N &#xBA; 1&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Contenu de la r&#xE8;gle num&#xE9;ro 1"&gt;Contenido de la Regla N&#xFA;mero 1&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;/span&gt;Regla N &#xBA; 2&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Contenu de la r&#xE8;gle num&#xE9;ro 2"&gt;Contenido de la Regla N &#xBA; 2&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;/span&gt;Regla N &#xBA; 3&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Contenu de la r&#xE8;gle num&#xE9;ro 3"&gt;Contenido de la Regla N&#xFA;mero 3&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</content>
-    <link_rewrite>condiciones-de-uso</link_rewrite>
+  <cms id='Terms_and_conditions_of_use'>
+    <meta_title>Términos y condiciones</meta_title>
+    <meta_description>Nuestros términos y condiciones</meta_description>
+    <meta_keywords>condiciones, términos, uso, venta</meta_keywords>
+    <content>&lt;h1 class=&quot;page-heading&quot;&gt;Términos y condiciones&lt;/h1&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Norma 1&lt;/h3&gt;
+&lt;p class=&quot;bottom-indent&quot;&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Norma 2&lt;/h3&gt;
+&lt;p class=&quot;bottom-indent&quot;&gt;Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam&amp;#1102;&lt;/p&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Norma 3&lt;/h3&gt;
+&lt;p class=&quot;bottom-indent&quot;&gt;Tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam&amp;#1102;&lt;/p&gt;</content>
+    <link_rewrite>terminos-y-condiciones-de-uso</link_rewrite>
   </cms>
-  <cms id="About_us">
-    <meta_title>Sobre</meta_title>
-    <meta_description>Conozca m&#xE1;s sobre nosotros</meta_description>
-    <meta_keywords>sobre, informaci&#xF3;n</meta_keywords>
-    <content>&lt;h2&gt;Sobre&lt;/h2&gt;</content>
-    <link_rewrite>sobre</link_rewrite>
+  <cms id='About_us'>
+    <meta_title>Sobre nosotros</meta_title>
+    <meta_description>Averigüe más sobre nosotros</meta_description>
+    <meta_keywords>sobre nosotros, información</meta_keywords>
+    <content>&lt;h1 class=&quot;page-heading bottom-indent&quot;&gt;Sobre nosotros&lt;/h1&gt;
+&lt;div class=&quot;row&quot;&gt;
+&lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
+&lt;div class=&quot;cms-block&quot;&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Nuestra empresa&lt;/h3&gt;
+&lt;p&gt;&lt;strong class=&quot;dark&quot;&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididun.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Lorem ipsum dolor sit amet conse ctetur adipisicing elit.&lt;/p&gt;
+&lt;ul class=&quot;list-1&quot;&gt;
+&lt;li&gt;&lt;em class=&quot;icon-ok&quot;&gt;&lt;/em&gt;Productos de alta calidad&lt;/li&gt;
+&lt;li&gt;&lt;em class=&quot;icon-ok&quot;&gt;&lt;/em&gt;El mejor servicio de atención al cliente&lt;/li&gt;
+&lt;li&gt;&lt;em class=&quot;icon-ok&quot;&gt;&lt;/em&gt;Garantía de devolución en 30 días&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
+&lt;div class=&quot;cms-box&quot;&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Nuestro equipo&lt;/h3&gt;
+&lt;img title=&quot;cms-img&quot; src=&quot;../img/cms/cms-img.jpg&quot; alt=&quot;cms-img&quot; width=&quot;370&quot; height=&quot;192&quot; /&gt;
+&lt;p&gt;&lt;strong class=&quot;dark&quot;&gt;Lorem set sint occaecat cupidatat non &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
+&lt;div class=&quot;cms-box&quot;&gt;
+&lt;h3 class=&quot;page-subheading&quot;&gt;Opiniones&lt;/h3&gt;
+&lt;div class=&quot;testimonials&quot;&gt;
+&lt;div class=&quot;inner&quot;&gt;&lt;span class=&quot;before&quot;&gt;“&lt;/span&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.&lt;span class=&quot;after&quot;&gt;”&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong class=&quot;dark&quot;&gt;Lorem ipsum dolor sit&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;testimonials&quot;&gt;
+&lt;div class=&quot;inner&quot;&gt;&lt;span class=&quot;before&quot;&gt;“&lt;/span&gt;Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet conse ctetur adipisicing elit. Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod.&lt;span class=&quot;after&quot;&gt;”&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong class=&quot;dark&quot;&gt;Ipsum dolor sit&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</content>
+    <link_rewrite>sobre-nosotros</link_rewrite>
   </cms>
-  <cms id="Secure_payment">
+  <cms id='Secure_payment'>
     <meta_title>Pago seguro</meta_title>
-    <meta_description>Ofrecemos pago seguro</meta_description>
+    <meta_description>Nuestra forma de pago segura</meta_description>
     <meta_keywords>pago seguro, ssl, visa, mastercard, paypal</meta_keywords>
-    <content>&lt;h2&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Paiement s&#xE9;curis&#xE9;"&gt;Pago seguro&lt;/span&gt;&lt;/span&gt;&lt;/h2&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Notre offre de paiement s&#xE9;curis&#xE9;"&gt;Ofrecemos pago seguro&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Avec SSL"&gt;SSL&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&#xD;
-&lt;h3&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="Utilisation de Visa/Mastercard/Paypal"&gt;Utilice Visa / Mastercard / Paypal&lt;/span&gt;&lt;/span&gt;&lt;/h3&gt;&#xD;
-&lt;p&gt;&lt;span id="result_box"&gt;&lt;span style="background-color: #ffffff;" title="A propos de ces services"&gt;Acerca de estos servicios&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</content>
+    <content>&lt;h2&gt;Pago seguro&lt;/h2&gt;
+&lt;h3&gt;Nuestro pago seguro&lt;/h3&gt;&lt;p&gt;Con SSL&lt;/p&gt;
+&lt;h3&gt;Utilizando Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;Sobre este servicio&lt;/p&gt;</content>
     <link_rewrite>pago-seguro</link_rewrite>
   </cms>
 </entity_cms>

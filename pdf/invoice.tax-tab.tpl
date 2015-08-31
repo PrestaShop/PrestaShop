@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,86 +18,84 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $tax_exempt || ((isset($product_tax_breakdown) && $product_tax_breakdown|@count > 0) || (isset($ecotax_tax_breakdown) && $ecotax_tax_breakdown|@count > 0))}
 <!--  TAX DETAILS -->
-<table style="width: 100%">
-	<tr>
-		<td style="width: 20%"></td>
-		<td style="width: 80%">
-			{if $tax_exempt}
-				{l s='Exempt of VAT according section 259B of the General Tax Code.' pdf='true'}
-			{else}
-			<table style="width: 70%" >
-				<tr style="line-height:5px;">
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 30%">{l s='Tax Detail' pdf='true'}</td>
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Tax Rate' pdf='true'}</td>
-					{if !$use_one_after_another_method}
-						<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax Excl' pdf='true'}</td>
-					{/if}
-					<td style="text-align: right; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 20%">{l s='Total Tax' pdf='true'}</td>
-				</tr>
+{if $tax_exempt}
 
-				{if isset($product_tax_breakdown)}
-					{foreach $product_tax_breakdown as $rate => $product_tax_infos}
-					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-					 <td style="width: 30%">
-						{if !isset($pdf_product_tax_written)}
-							{l s='Products' pdf='true'}
-							{assign var=pdf_product_tax_written value=1}
+	{l s='Exempt of VAT according to section 259B of the General Tax Code.' pdf='true'}
+
+{elseif (isset($tax_breakdowns) && $tax_breakdowns)}
+	<table id="tax-tab" width="100%">
+		<thead>
+			<tr>
+				<th class="header small">{l s='Tax Detail' pdf='true'}</th>
+				<th class="header small">{l s='Tax Rate' pdf='true'}</th>
+				{if $display_tax_bases_in_breakdowns}
+					<th class="header small">{l s='Base price' pdf='true'}</th>
+				{/if}
+				<th class="header-right small">{l s='Total Tax' pdf='true'}</th>
+			</tr>
+		</thead>
+		<tbody>
+		{assign var=has_line value=false}
+
+		{foreach $tax_breakdowns as $label => $bd}
+			{assign var=label_printed value=false}
+
+			{foreach $bd as $line}
+				{if $line.rate == 0}
+					{continue}
+				{/if}
+				{assign var=has_line value=true}
+				<tr>
+					<td class="white">
+						{if !$label_printed}
+							{if $label == 'product_tax'}
+								{l s='Products' pdf='true'}
+							{elseif $label == 'shipping_tax'}
+								{l s='Shipping' pdf='true'}
+							{elseif $label == 'ecotax_tax'}
+								{l s='Ecotax' pdf='true'}
+							{elseif $label == 'wrapping_tax'}
+								{l s='Wrapping' pdf='true'}
+							{/if}
+							{assign var=label_printed value=true}
 						{/if}
 					</td>
-					 <td style="width: 20%; text-align: right;">{$rate} %</td>
-					{if !$use_one_after_another_method}
-					 <td style="width: 20%; text-align: right;">
-						 {if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_price_tax_excl}
-					 </td>
-					{/if}
-					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
-					</tr>
-					{/foreach}
+
+					<td class="center white">
+						{$line.rate} %
+					</td>
+
+					{if $display_tax_bases_in_breakdowns}
+						<td class="right white">
+							{if isset($is_order_slip) && $is_order_slip}- {/if}
+							{displayPrice currency=$order->id_currency price=$line.total_tax_excl}
+						</td>
 					{/if}
 
-					{if isset($shipping_tax_breakdown)}
-					{foreach $shipping_tax_breakdown as $shipping_tax_infos}
-					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-					 <td style="width: 30%">
-						{if !isset($pdf_shipping_tax_written)}
-							{l s='Shipping' pdf='true'}
-							{assign var=pdf_shipping_tax_written value=1}
-						{/if}
-					 </td>
-					 <td style="width: 20%; text-align: right;">{$shipping_tax_infos.rate} %</td>
-					{if !$use_one_after_another_method}
-						 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_tax_excl}</td>
-					{/if}
-					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$shipping_tax_infos.total_amount}</td>
-					</tr>
-					{/foreach}
-				{/if}
+					<td class="right white">
+						{if isset($is_order_slip) && $is_order_slip}- {/if}
+						{displayPrice currency=$order->id_currency price=$line.total_amount}
+					</td>
+				</tr>
+			{/foreach}
+		{/foreach}
 
-				{if isset($ecotax_tax_breakdown)}
-					{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
-						{if $ecotax_tax_infos.ecotax_tax_excl > 0}
-						<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
-							<td style="width: 30%">{l s='Ecotax' pdf='true'}</td>
-							<td style="width: 20%; text-align: right;">{$ecotax_tax_infos.rate  } %</td>
-							{if !$use_one_after_another_method}
-								<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$ecotax_tax_infos.ecotax_tax_excl}</td>
-							{/if}
-							<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=($ecotax_tax_infos.ecotax_tax_incl - $ecotax_tax_infos.ecotax_tax_excl)}</td>
-						</tr>
-						{/if}
-					{/foreach}
-				{/if}
-			</table>
-			{/if}
-		</td>
-	</tr>
-</table>
-<!--  / TAX DETAILS -->
+		{if !$has_line}
+		<tr>
+			<td class="white center" colspan="{if $display_tax_bases_in_breakdowns}4{else}3{/if}">
+				{l s='No taxes' pdf='true'}
+			</td>
+		</tr>
+		{/if}
+
+		</tbody>
+	</table>
+
 {/if}
+<!--  / TAX DETAILS -->

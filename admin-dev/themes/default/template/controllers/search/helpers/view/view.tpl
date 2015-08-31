@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,16 +29,19 @@ $(function() {
 });
 </script>
 
-{if !isset($nb_results) || !$nb_results}
-	<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
-{else}
+{if $query}
 	<h2>
-	{if $nb_results == 1}
+	{if isset($nb_results) && $nb_results == 0}
+		<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
+	{elseif isset($nb_results) && $nb_results == 1}
 		{l s='1 result matches your query "%s".' sprintf=$query}
-	{else}
+	{elseif isset($nb_results)}
 		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
 	{/if}
 	</h2>
+{/if}
+
+{if $query && isset($nb_results) && $nb_results}
 
 	{if isset($features)}
 	<div class="panel">
@@ -95,7 +98,7 @@ $(function() {
 				{l s='%d categories' sprintf=$categories|@count}
 			{/if}
 		</h3>
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table class="table" style="border-spacing : 0; border-collapse : collapse;">
 			{foreach $categories key=key item=category}
 				<tr>
 					<td>{$category}</td>
@@ -157,14 +160,14 @@ $(function() {
 			<tbody>
 			{foreach $addons key=key item=addon}
 				<tr>
-					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
-					<td><a href="{$addon.href|escape:'html':'UTF-8'}" target="_blank">{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}</a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{if is_string($addon.description)}{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}{/if}</a></td>
 				</tr>
 			{/foreach}
 		</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
+					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank"><strong>{l s='Show more results...'}</strong></a></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -172,3 +175,27 @@ $(function() {
 	{/if}
 
 {/if}
+<div class="row">
+	<div class="col-lg-4">
+		<div class="panel">
+			<h3>{l s='Search doc.prestashop.com'}</h3>
+			<a href="http://doc.prestashop.com/dosearchsite.action?spaceSearch=true&amp;queryString={$query}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="btn btn-default _blank">{l s='Go to the documentation'}</a>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="panel">
+			<h3>{l s='Search addons.prestashop.com'}</h3>
+			<a href="http://addons.prestashop.com/search.php?search_query={$query}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="btn btn-default _blank">{l s='Go to Addons'}</a>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="panel">
+			<h3>{l s='Search prestashop.com forum'}</h3>
+			<a href="https://www.google.fr/search?q=site%3Aprestashop.com%2Fforums%2F+{$query}" class="btn btn-default _blank">{l s='Go to the Forum'}</a>
+		</div>
+	</div>
+</div>
+
+
+
+

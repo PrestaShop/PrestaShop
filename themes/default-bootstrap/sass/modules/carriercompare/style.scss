@@ -1,57 +1,57 @@
 @import '../../_theme_variables';
 #compare_shipping {
-	
+
 	.form-group {
 		line-height:normal;
 		margin-bottom:10px;
-		
+
 		label {margin-bottom:6px;}
-		
+
 		.form-control {
-			width:263px;	
+			width:263px;
 		}
-		
+
 		&.last {
 			margin-bottom:20px;
-			input {margin-bottom:3px;}	
+			input {margin-bottom:3px;}
 		}
 	}
-	
+
 	.table {
 		background:$light-background;
-		
+
 		thead {
-			
+
 			tr {
-				
+
 				th {
 					background:$light-background;
-					padding:4px 10px 3px 10px;	
+					padding:4px 10px 3px 10px;
 				}
 			}
 		}
 		tbody {
-			
+
 			td {
 				margin:0;
-				
+
 				&.carrier_action {
 					width:54px;
 					padding-left:0;
 					padding-right:0;
 					text-align:center;
-					
+
 					input {
-						margin:0;	
+						margin:0;
 					}
 				}
-			}	
+			}
 		}
 	}
 }
 #availableCarriers {
-	
-	.table { 
+
+	.table {
 		margin-bottom:20px;
 	}
 }
@@ -76,13 +76,13 @@
 	width: 15px;
 }
 .SE_SubmitRefreshCard {
-	
+
 	button {
 		float:left;
-		
+
 		&#carriercompare_submit {
 			margin-right:10px;
-		}	
-	}	
+		}
+	}
 }
 #carriercompare_errors {display:none;}

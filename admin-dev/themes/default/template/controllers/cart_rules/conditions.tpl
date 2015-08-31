@@ -5,11 +5,13 @@
 			{l s='Limit to a single customer'}
 		</span>
 	</label>
-	<div class="input-group col-lg-9">
-		<span class="input-group-addon"><i class="icon-user"></i></i></span>
-		<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
-		<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
-		<span class="input-group-addon"><i class="icon-search"></i></span>
+	<div class="col-lg-9">
+		<div class="input-group col-lg-12">		
+			<span class="input-group-addon"><i class="icon-user"></i></span>
+			<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
+			<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
+			<span class="input-group-addon"><i class="icon-search"></i></span>
+		</div>
 	</div>
 </div>
 
@@ -22,17 +24,21 @@
 	</label>
 	<div class="col-lg-9">
 		<div class="row">
-			<div class="input-group col-lg-6">
-				<span class="input-group-addon">{l s='From'}</span>
-				<input type="text" class="datepicker input-medium" name="date_from"
-				value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')|escape}{else}{$defaultDateFrom}{/if}" />
-				<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+			<div class="col-lg-6">
+				<div class="input-group">
+					<span class="input-group-addon">{l s='From'}</span>
+					<input type="text" class="datepicker input-medium" name="date_from"
+					value="{if $currentTab->getFieldValue($currentObject, 'date_from')}{$currentTab->getFieldValue($currentObject, 'date_from')|escape}{else}{$defaultDateFrom}{/if}" />
+					<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+				</div>
 			</div>
-			<div class="input-group col-lg-6">
-				<span class="input-group-addon">{l s='To'}</span>
-				<input type="text" class="datepicker input-medium" name="date_to"
-				value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')|escape}{else}{$defaultDateTo}{/if}" />
-				<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+			<div class="col-lg-6">
+				<div class="input-group">
+					<span class="input-group-addon">{l s='To'}</span>
+					<input type="text" class="datepicker input-medium" name="date_to"
+					value="{if $currentTab->getFieldValue($currentObject, 'date_to')}{$currentTab->getFieldValue($currentObject, 'date_to')|escape}{else}{$defaultDateTo}{/if}" />
+					<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -96,7 +102,7 @@
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
 			title="{l s='A customer will only be able to use the cart rule "X" time(s).'}">
-			{l s='Total available for each user.'}
+			{l s='Total available for each user'}
 		</span>
 	</label>
 	<div class="col-lg-9">
@@ -120,6 +126,7 @@
 			</p>
 			<span class="help-block">{l s='This restriction applies to the country of delivery.'}</span>
 			<div id="country_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -129,7 +136,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_add" class="btn btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="country_select_add" class="btn  btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected countries'}</p>
@@ -138,7 +145,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_remove" class="btn btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
+							<a id="country_select_remove" class="btn btn-default btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
 						</td>
 					</tr>
 				</table>
@@ -153,6 +160,7 @@
 				</label>
 			</p>
 			<div id="carrier_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -186,6 +194,7 @@
 				</label>
 			</p>
 			<div id="group_restriction_div">
+				<br />
 				<table class="table">
 					<tr>
 						<td>
@@ -218,25 +227,24 @@
 					{l s='Compatibility with other cart rules'}
 				</label>
 			</p>
-			<div id="cart_rule_restriction_div" >
+			<div id="cart_rule_restriction_div">
+				<br />
 				<table  class="table">
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
-							<select id="cart_rule_select_1" multiple="">
-								{foreach from=$cart_rules.unselected item='cart_rule'}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-								{/foreach}
+							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search'}" value="">
+							<select id="cart_rule_select_1" class="jscroll" multiple="">
 							</select>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Combinable cart rules'}</p>
-							<select name="cart_rule_select[]" id="cart_rule_select_2" multiple>
-								{foreach from=$cart_rules.selected item='cart_rule'}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-								{/foreach}
+							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search'}" value="">
+							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 							</select>
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
@@ -251,6 +259,7 @@
 				</label>
 			</p>
 			<div id="product_restriction_div">
+				<br />
 				<table id="product_rule_group_table" class="table">
 					{foreach from=$product_rule_groups item='product_rule_group'}
 						{$product_rule_group}
@@ -279,8 +288,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<br/>
-							<a id="shop_select_add" class="btn btn-default" >{l s='Add'} &gt;&gt; </a>
+							<a id="shop_select_add" class="btn btn-default btn-block clearfix" >{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected shops'}</p>
@@ -289,8 +297,7 @@
 									<option value="{$shop.id_shop|intval}">&nbsp;{$shop.name|escape}</option>
 								{/foreach}
 							</select>
-							<br/>
-							<a id="shop_select_remove" class="btn btn-default" > &lt;&lt; {l s='Remove'} </a>
+							<a id="shop_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				</table>

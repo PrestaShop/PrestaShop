@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,6 +27,8 @@
 var Customer = new Object();
 var product_url = '{$link->getAdminLink('AdminProducts', true)|addslashes}';
 var ecotax_tax_excl = parseFloat({$ecotax_tax_excl});
+var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
+
 $(document).ready(function () {
 	Customer = {
 		"hiddenField": jQuery('#id_customer'),
@@ -72,11 +74,11 @@ $(document).ready(function () {
 		"success": function(result)
 		{
 			if(result.found) {
-				var html = '<ul class="clearfix">';
+				var html = '<ul class="list-unstyled">';
 				jQuery.each(result.customers, function() {
-					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'')+'<br/>';
-					html += '<a href="mailto:'+this.email+'">'+this.email+'</a><br />';
-					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="button">{l s='Choose'}</a></li>';
+					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'');
+					html += ' - '+this.email;
+					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="btn btn-default">{l s='Choose'}</a></li>';
 				});
 				html += '</ul>';
 			}
@@ -103,67 +105,57 @@ $(document).ready(function () {
 	Customer.init();
 });
 </script>
+{capture assign=priceDisplayPrecisionFormat}{'%.'|cat:$smarty.const._PS_PRICE_DISPLAY_PRECISION_|cat:'f'}{/capture}
 <div id="product-prices" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
-
-	<div class="alert alert-info">
+	<div class="alert alert-info" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if}>
 		{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 	</div>
-
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="wholesale_price">
-			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Wholesale price'}">
-				{l s='Pre-tax wholesale price:'}
-			</span>
-
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="wholesale_price">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The wholesale price is the price you paid for the product. Do not include the tax.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Wholesale price'}{else}{l s='Pre-tax wholesale price'}{/if}</span>
 		</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:'%.2f'}" onchange="this.value = this.value.replace(/,/g, '.');" />
+		<div class="col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input maxlength="27" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:$priceDisplayPrecisionFormat}" onchange="this.value = this.value.replace(/,/g, '.');" />
+			</div>
+			{if isset($pack) && $pack->isPack($product->id)}<p class="help-block">{l s='The sum of wholesale prices of the products in the pack is %s%s%s' sprintf=[$currency->prefix,{toolsConvertPrice price=$pack->noPackWholesalePrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->suffix]}</p>{/if}
 		</div>
 	</div>
-
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="priceTE">
-			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='The pre-tax retail price to sell this product'}">
-				{l s='Pre-tax retail price:'}
-			</span>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}</span></div>
+		<label class="control-label col-lg-2" for="priceTE">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The pre-tax retail price is the price for which you intend sell this product to your customers. It should be higher than the pre-tax wholesale price: the difference between the two will be your margin.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Retail price'}{else}{l s='Pre-tax retail price'}{/if}</span>
 		</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input type="hidden"  id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}" />
-			<input size="11" maxlength="14" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.2f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
+		<div class="col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input type="hidden" id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}"/>
+				<input size="11" maxlength="27" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
+			</div>
 		</div>
 	</div>
-
-	<div class="form-group">		
-		<label class="control-label col-lg-3" for="id_tax_rules_group">
-			{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="id_tax_rules_group">
 			{l s='Tax rule:'}
 		</label>
 		<div class="col-lg-8">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
-				taxesArray = new Array ();
-				taxesArray[0] = 0;
-				{foreach $tax_rules_groups as $tax_rules_group}
-					{if isset($taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']])}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = {$taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']]};
-						{else}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = 0;
-					{/if}
+				taxesArray = new Array();
+				{foreach $taxesRatesByGroup as $tax_by_group}
+					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode};
 				{/foreach}
 				ecotaxTaxRate = {$ecotaxTaxRate / 100};
 			</script>
 			<div class="row">
 				<div class="col-lg-6">
-					<select onChange="javascript:calcPrice(); unitPriceWithTax('unit');" name="id_tax_rules_group" id="id_tax_rules_group" {if $tax_exclude_taxe_option}disabled="disabled"{/if} >
+					<select onchange="javascript:calcPrice(); unitPriceWithTax('unit');" name="id_tax_rules_group" id="id_tax_rules_group" {if $tax_exclude_taxe_option}disabled="disabled"{/if} >
 						<option value="0">{l s='No Tax'}</option>
 					{foreach from=$tax_rules_groups item=tax_rules_group}
 						<option value="{$tax_rules_group.id_tax_rules_group}" {if $product->getIdTaxRulesGroup() == $tax_rules_group.id_tax_rules_group}selected="selected"{/if} >
@@ -173,82 +165,73 @@ $(document).ready(function () {
 					</select>
 				</div>
 				<div class="col-lg-2">
-					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&addtax_rules_group&id_product={$product->id}" {if $tax_exclude_taxe_option}disabled="disabled"{/if}>
-						<i class="icon-plus-sign"></i>  {l s='Create new tax'} <i class="icon-external-link-sign"></i>
+					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&amp;addtax_rules_group&amp;id_product={$product->id}"{if $tax_exclude_taxe_option} disabled="disabled"{/if}>
+						<i class="icon-plus-sign"></i> {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	{if $tax_exclude_taxe_option}
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert">
-				{l s='Taxes are currently disabled'} :
-				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Tax options'}</a>
+				{l s='Taxes are currently disabled:'}
+				<a href="{$link->getAdminLink('AdminTaxes')|escape:'html':'UTF-8'}">{l s='Click here to open the Taxes configuration page.'}</a>
 				<input type="hidden" value="{$product->getIdTaxRulesGroup()}" name="id_tax_rules_group" />
 			</div>
 		</div>
 	</div>
 	{/if}
-
 	<div class="form-group" {if !$ps_use_ecotax} style="display:none;"{/if}>
-		<label class="control-label col-lg-3" for="ecotax">
-			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='already included in price'}">
-				{l s='Eco-tax (tax incl.):'}
-			</span>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="ecotax">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The ecotax is a local set of taxes intended to "promote ecologically sustainable activities via economic incentives". It is already included in retail price: the higher this ecotax is, the lower your margin will be.'}">{l s='Ecotax (tax incl.)'}</span>
 		</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:'%.2f'}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />
+			<input maxlength="27" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:$priceDisplayPrecisionFormat}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />
 		</div>
 	</div>
-
 	<div class="form-group" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
-		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax:'}</label>
+		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 			<input id="priceType" name="priceType" type="hidden" value="TE" />
-			<input maxlength="14" id="priceTI" type="text" value="" onchange="noComma('priceTI');" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
+			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="27" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
 		</div>
+		{if isset($pack) && $pack->isPack($product->id)}<p class="col-lg-9 col-lg-offset-3 help-block">{l s='The sum of prices of the products in the pack is %s%s%s' sprintf=[$currency->prefix,{toolsConvertPrice price=$pack->noPackPrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->suffix]}</p>{/if}
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="unit_price">
-			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='e.g. per lb.'}">
-				{l s='Unit price:'}
-			</span>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}</span></div>
+		<label class="control-label col-lg-2" for="unit_price">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price (tax excl.)'}</span>
 		</label>
-		<div class="input-group col-lg-4">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
-			<span class="input-group-addon">{l s='per'}</span>
-			<input maxlength="10" id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+		<div class="col-lg-4">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.6f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
+				<span class="input-group-addon">{l s='per'}</span>
+				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="255" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+			</div>
 		</div>
 	</div>
-
-	{if $ps_tax && $country_display_tax_label}
+	{if isset($product->unity) && $product->unity}
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-warning">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-					{l s='per'} <span id="unity_second">{$product->unity}</span> {l s='with tax'}
+					{l s='per'} <span id="unity_second">{$product->unity}</span>{if $ps_tax && $country_display_tax_label} {l s='(tax incl.)'}{/if}
 				</span>
 			</div>
 		</div>
 	</div>
 	{/if}
-
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="on_sale">
-		{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
-		</label>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="on_sale">&nbsp;</label>
 		<div class="col-lg-9">
 			<div class="checkbox">
 				<label class="control-label" for="on_sale" >
@@ -258,18 +241,17 @@ $(document).ready(function () {
 			</div>
 		</div>
 	</div>
-
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
-			<div class="alert alert-success">
+			<div class="alert alert-warning">
 				<strong>{l s='Final retail price:'}</strong>
 				<span>
 					{$currency->prefix}
 					<span id="finalPrice" >0.00</span>
 					{$currency->suffix}
-					<span {if $ps_tax}style="display:none;"{/if}> ({l s='tax incl.'})</span>
+					<span{if !$ps_tax} style="display:none;"{/if}> ({l s='tax incl.'})</span>
 				</span>
-				<span {if $ps_tax}style="display:none;"{/if} >
+				<span{if !$ps_tax} style="display:none;"{/if} >
 				{if $country_display_tax_label}
 					/
 				{/if}
@@ -281,16 +263,18 @@ $(document).ready(function () {
 			</div>
 		</div>
 	</div>
+	<div class="panel-footer">
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
+	</div>
 </div>
-
 {if isset($specificPriceModificationForm)}
 <div class="panel">
 	<h3>{l s='Specific prices'}</h3>
-
 	<div class="alert alert-info">
-		{l s='You can set specific prices for clients belonging to different groups, different countries, etc...'}
+		{l s='You can set specific prices for clients belonging to different groups, different countries, etc.'}
 	</div>
-
 	<div class="form-group">
 		<div class="col-lg-12">
 			<a class="btn btn-default" href="#" id="show_specific_price">
@@ -301,14 +285,12 @@ $(document).ready(function () {
 			</a>
 		</div>
 	</div>
-
 	<script type="text/javascript">
 		var product_prices = new Array();
 		{foreach from=$combinations item='combination'}
 			product_prices['{$combination.id_product_attribute}'] = '{$combination.price|@addcslashes:'\''}';
 		{/foreach}
 	</script>
-
 	<div id="add_specific_price" class="well clearfix" style="display: none;">
 		<div class="col-lg-12">
 			<div class="form-group">
@@ -354,21 +336,21 @@ $(document).ready(function () {
 					</div>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="customer">{l s='Customer'}</label>
 				<div class="col-lg-4">
 					<input type="hidden" name="sp_id_customer" id="id_customer" value="0" />
 					<div class="input-group">
 						<input type="text" name="customer" value="{l s='All customers'}" id="customer" autocomplete="off" />
-						<span class="input-group-addon"><i class="icon-search"></i></span>
+						<span class="input-group-addon"><i id="customerLoader" class="icon-refresh icon-spin" style="display: none;"></i> <i class="icon-search"></i></span>
 					</div>
-					
 				</div>
-				<img src="../img/admin/field-loader.gif" id="customerLoader" alt="{l s='Loading...'}" style="display: none;" />
-				<div id="customers"></div>
 			</div>
-
+			<div class="form-group">
+				<div class="col-lg-10 col-lg-offset-2">
+					<div id="customers"></div>
+				</div>
+			</div>
 			{if $combinations|@count != 0}
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_id_product_attribute">{l s='Combination:'}</label>
@@ -382,7 +364,6 @@ $(document).ready(function () {
 				</div>
 			</div>
 			{/if}
-
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_from">{l s='Available'}</label>
 				<div class="col-lg-9">
@@ -390,72 +371,76 @@ $(document).ready(function () {
 						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='from'}</span>
-								<input class="datepicker" type="text" name="sp_from" value="" style="text-align: center" id="sp_from" />
+								<input type="text" name="sp_from" class="datepicker" value="" style="text-align: center" id="sp_from" />
 								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
 							</div>
 						</div>
 						<div class="col-lg-4">
 							<div class="input-group">
 								<span class="input-group-addon">{l s='to'}</span>
-								<input class="datepicker" type="text" name="sp_to" value="" style="text-align: center" id="sp_to" />
+								<input type="text" name="sp_to" class="datepicker" value="" style="text-align: center" id="sp_to" />
 								<span class="input-group-addon"><i class="icon-calendar-empty"></i></span>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_from_quantity">{l s='Starting at'}</label>
-				<div class="input-group col-lg-4">
-					<span class="input-group-addon">{l s='unit'}</span>
-					<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+				<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon">{l s='unit'}</span>
+						<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+					</div>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_price">{l s='Product price'}
 					{if $country_display_tax_label}
-						{l s='(tax excl.):'}
+						{l s='(tax excl.)'}
 					{/if}
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="input-group col-lg-4">
-							<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-							<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:'%.2f'}" />
-						</div>
-						<div class="col-lg-8">
+						<div class="col-lg-4">
+							<div class="input-group">
+								<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
+							</div>
 							<p class="checkbox">
 								<label for="leave_bprice">{l s='Leave base price:'}</label>
-								<input id="leave_bprice" type="checkbox" value="1" checked="checked" name="leave_bprice" />
+								<input type="checkbox" id="leave_bprice" name="leave_bprice"  value="1" checked="checked"  />
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="form-group">
-				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of:'}</label>
+				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of'}</label>
 				<div class="col-lg-4">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-3">
 							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
-								<option selected="selected">-</option>
-								<option value="amount">{l s='Amount'}</option>
-								<option value="percentage">{l s='Percentage'}</option>
+								<option value="amount" selected="selected">{$currency->name|escape:'html':'UTF-8'}</option>
+								<option value="percentage">{l s='%'}</option>
+							</select>
+						</div>
+						<div class="col-lg-3">
+							<select name="sp_reduction_tax" id="sp_reduction_tax">
+								<option value="0">{l s='Tax excluded'}</option>
+								<option value="1" selected="selected">{l s='Tax included'}</option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
+		var currencyName = '{$currency->name|escape:'html':'UTF-8'|@addcslashes:'\''}';
 		$(document).ready(function(){
 			product_prices['0'] = $('#sp_current_ht_price').html();
 			$('#id_product_attribute').change(function() {
@@ -472,21 +457,27 @@ $(document).ready(function () {
 				nextText: '',
 				dateFormat: 'yy-mm-dd',
 				// Define a custom regional settings in order to use PrestaShop translation tools
-				currentText: '{l s='Now'}',
-				closeText: '{l s='Done'}',
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
 				ampm: false,
 				amNames: ['AM', 'A'],
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time'}',
-				timeText: '{l s='Time'}',
-				hourText: '{l s='Hour'}',
-				minuteText: '{l s='Minute'}',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}',
+			});
+			$('#sp_reduction_type').on('change', function() {
+				if (this.value == 'percentage')
+					$('#sp_reduction_tax').hide();
+				else
+					$('#sp_reduction_tax').show();
 			});
 		});
 	</script>
-
+	<div class="table-responsive">
 	<table id="specific_prices_list" class="table table-bordered">
 		<thead>
 			<tr>
@@ -497,7 +488,11 @@ $(document).ready(function () {
 				<th>{l s='Country'}</th>
 				<th>{l s='Group'}</th>
 				<th>{l s='Customer'}</th>
-				<th>{l s='Fixed price'}</th>
+				{if $country_display_tax_label}
+					<th>{l s='Fixed price (tax excl.)'}</th>
+				{else}
+					<th>{l s='Fixed price'}</th>
+				{/if}
 				<th>{l s='Impact'}</th>
 				<th>{l s='Period'}</th>
 				<th>{l s='From (quantity)'}</th>

@@ -17,17 +17,30 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 $(document).ready(function()
 {
+	// Check rewrite engine availability
+	$.ajax({
+		url: 'sandbox/anything.php',
+		success: function(value) {
+			$('#rewrite_engine').val(1);
+		}
+	});
+
 	// Check database configuration
 	$('#btTestDB').click(function()
 	{
-		$("#dbResultCheck").slideUp('slow');
+		$("#dbResultCheck")
+			.removeClass('errorBlock')
+			.removeClass('okBlock')
+			.addClass('waitBlock')
+			.html('&nbsp;')
+			.slideDown('slow');
 		$.ajax({
 			url: 'index.php',
 			data: {
@@ -46,17 +59,29 @@ $(document).ready(function()
 			{
 				$("#dbResultCheck")
 					.addClass((json.success) ? 'okBlock' : 'errorBlock')
+					.removeClass('waitBlock')
 					.removeClass((json.success) ? 'errorBlock' : 'okBlock')
 					.html(json.message)
-					.slideDown('slow');
 			},
             error: function(xhr)
             {
+            	var re = /<([a-z]+)(.*?>.*?<\/\1>|.*?\/>)/img;
+            	var str = xhr.responseText;
+            	var m;
+
+            	while ((m = re.exec(str)) != null) {
+				    if (m.index === re.lastIndex) {
+				        re.lastIndex++;
+				    }
+				    if (m)
+				    	var html = true;
+				}
+
                 $("#dbResultCheck")
                     .addClass('errorBlock')
+					.removeClass('waitBlock')
                     .removeClass('okBlock')
-                    .html('An error occurred:<br /><br />' + xhr.responseText)
-                    .slideDown('slow');
+                    .html('An error occurred:<br /><br />' + (html ? 'Can you please reload the page' : xhr.responseText))
             }
 		});
 	});

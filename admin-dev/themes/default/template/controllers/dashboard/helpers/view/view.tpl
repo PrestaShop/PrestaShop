@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,10 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
@@ -39,110 +38,95 @@
 {/if}
 			<div id="calendar" class="panel">
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
-
 					<div class="btn-group">
-						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay">
+						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
 							{l s='Day'}
 						</button>
-						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth">
+						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if (!isset($preselect_date_range) || !$preselect_date_range) || (isset($preselect_date_range) && $preselect_date_range == 'month')} active{/if}">
 							{l s='Month'}
 						</button>
-						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear">
+						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear{if isset($preselect_date_range) && $preselect_date_range == 'year'} active{/if}">
 							{l s='Year'}
 						</button>
-						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev">
+						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-day'} active{/if}">
 							{l s='Day'}-1
 						</button>
-						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev">
+						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-month'} active{/if}">
 							{l s='Month'}-1
 						</button>
-						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev">
+						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-year'} active{/if}">
 							{l s='Year'}-1
 						</button>
+						<!--
+						<button type="submit" name="submitDateRealTime" class="hide btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
+							{l s='Real Time'}
+						</button> -->
 					</div>
-
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
-
+					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
-							{l s='From'}
-							<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
-							{l s='To'}
-							<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
-							<strong class="text-info" id="datepicker-diff-info"></strong>
+							<span class="hidden-xs">
+								{l s='From'}
+								<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
+								{l s='To'}
+								<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
+								<strong class="text-info" id="datepicker-diff-info"></strong>
+							</span>
 							<i class="icon-caret-down"></i>
 						</button>
 					</div>
 					{$calendar}
-				</form>	
+				</form>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-3" id="hookDashboardZoneOne">
+		<div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
 			{$hookDashboardZoneOne}
 		</div>
-		<div class="col-lg-7" id="hookDashboardZoneTwo">
+		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="http://addons.prestashop.com/208-dashboards?utm_source=backoffice_dashboard" target="_blank">
-					<i class="icon-plus"></i> {l s='Add more graph and data'}
+				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
+					<i class="icon-plus"></i> {l s='Add more dashboard modules'}
 				</a>
 			</div>
 		</div>
-		<div class="col-lg-2">
-
+		<div class="col-md-12 col-lg-2">
 			<section class="dash_news panel">
-				<h3><i class="icon-rss"></i> PrestaShop News</h3>
+				<h3><i class="icon-rss"></i> {l s='PrestaShop News'}</h3>
 				<div class="dash_news_content"></div>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
 			</section>
-
 			<section id="dash_version" class="visible-lg">
-				<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url}"></iframe>
+				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
-
 			<section class="dash_links panel">
-				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
+				<h3><i class="icon-link"></i> {l s="Useful links"}</h3>
 					<dl>
-						<dt>{l s="Discover the official documentation"}</dt>
-						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>
+						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Official Documentation"}</a></dt>
+						<dd>{l s="User, Developer and Designer Guides"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Use the forum & discover a great community"}</dt>
-						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Forum"}</a></dt>
+						<dd>{l s="Connect with the PrestaShop community"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Enhance your Shop with new templates & modules"}</dt>
-						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
+						<dt><a href="http://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons"}</a></dt>
+						<dd>{l s="Enhance your store with templates & modules"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Report issues in the Bug Tracker"}</dt>
-						<dd><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forge.prestashop.com"}</a></dd>
+						<dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="The Forge"}</a></dt>
+						<dd>{l s="Report issues in the Bug Tracker"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Contact Us"}</dt>
-						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Contact Us!"}</a></dt>
+						<dd></dd>
 					</dl>
 			</section>
-
-			<section class="dash_simulation panel">
-				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
-				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='Yes'}
-					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='No'}
-					</label>
-					<a class="slide-button btn"></a>
-				</span>
-				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
-			</section>
-
 		</div>
 	</div>
 </div>

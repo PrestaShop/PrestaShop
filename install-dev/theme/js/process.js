@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -96,8 +96,7 @@ function process_install(step)
 			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});
@@ -146,15 +145,11 @@ function process_install_subtask(step, current_subtask)
 				else
 					process_install_subtask(step, current_subtask);
 			}
-			// An error occured during this step
-			else
-			{
+			else 
 				install_error(step, (json) ? json.message : '');
-			}
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
-		error: function()
-		{
+		error: function() {
 			install_error(step);
 		}
 	});
@@ -175,14 +170,20 @@ function install_error(step, errors)
 	{
 		var list_errors = errors;
 		if ($.type(list_errors) == 'string')
-			list_errors = [list_errors];
+		{
+			list_errors = [];
+			list_errors[0] = errors;
+		}
+		else if ($.type(list_errors) == 'array')
+			list_errors = list_errors[0];
 
 		var display = '<ol>';
+
 		$.each(list_errors, function(k, v)
 		{
 			if (typeof psuser_assistance != 'undefined')
 				psuser_assistance.setStep('install_process_error', {'error':v});
-			display += '<li>'+v+'</li>';
+			display += '<li>' + v + '</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();

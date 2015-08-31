@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,22 +19,23 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function add_id_shop_to_shipper_lang_index()
 {
-	$res = true;
-	
-	$key_exists = Db::getInstance()->executeS('
+    $res = true;
+    
+    $key_exists = Db::getInstance()->executeS('
 	SHOW INDEX
 	FROM `'._DB_PREFIX_.'carrier_lang`
 	WHERE Key_name = "shipper_lang_index"');
-	if ($key_exists)
-		$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'carrier_lang` DROP KEY `shipper_lang_index`');
-	$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'carrier_lang` ADD PRIMARY KEY (`id_carrier`, `id_shop`, `id_lang`)');
+    if ($key_exists) {
+        $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'carrier_lang` DROP KEY `shipper_lang_index`');
+    }
+    $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'carrier_lang` ADD PRIMARY KEY (`id_carrier`, `id_shop`, `id_lang`)');
 
-	return $res;
+    return $res;
 }

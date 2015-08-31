@@ -1,5 +1,5 @@
 /* unicode_hack.js
-*    Copyright (C) 2010-2012  Marcelo Gibson de Castro Gonçalves. All rights reserved.
+*    Copyright (C) 2010-2012  Marcelo Gibson de Castro GonÃ§alves. All rights reserved.
 *
 *    Copying and distribution of this file, with or without modification,
 *    are permitted in any medium without royalty provided the copyright
@@ -76,7 +76,7 @@ var unicode_hack = (function() {
 
 })();
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -95,13 +95,13 @@ var unicode_hack = (function() {
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 function validate_isName(s)
 {
-	var reg = /^[^0-9!<>,;?=+()@#"�{}_$%:]+$/;
+	var reg = /^[^0-9!<>,;?=+()@#"°{}_$%:]+$/;
 	return reg.test(s);
 }
 
@@ -117,15 +117,32 @@ function validate_isAddress(s)
 	return reg.test(s);
 }
 
-function validate_isPostCode(s)
+function validate_isPostCode(s, pattern, iso_code)
 {
-	var reg = /^[a-z 0-9-]+$/i;
+	if (typeof iso_code === 'undefined' || iso_code == '')
+		iso_code = '[A-Z]{2}';
+	if (typeof(pattern) == 'undefined' || pattern.length == 0)
+		pattern = '[a-z 0-9-]+';
+	else
+	{
+		var replacements = {
+			' ': '(?:\ |)',
+			'-': '(?:-|)',
+			'N': '[0-9]',
+			'L': '[a-zA-Z]',
+			'C': iso_code
+		};
+
+		for (var new_value in replacements)
+			pattern = pattern.split(new_value).join(replacements[new_value]);
+	}
+	var reg = new RegExp('^' + pattern + '$');
 	return reg.test(s);
 }
 
 function validate_isCityName(s)
 {
-	var reg = /^[^!<>;?=+@#"�{}_$%]+$/;
+	var reg = /^[^!<>;?=+@#"°{}_$%]+$/;
 	return reg.test(s);
 }
 
@@ -157,3 +174,32 @@ function validate_isPasswd(s)
 {
 	return (s.length >= 5 && s.length < 255);
 }
+
+function validate_field(that)
+{
+	if ($(that).hasClass('is_required') || $(that).val().length)
+	{
+		if ($(that).attr('data-validate') == 'isPostCode')
+		{
+			var selector = '#id_country';
+			if ($(that).attr('name') == 'postcode_invoice')
+				selector += '_invoice';
+
+			var id_country = $(selector + ' option:selected').val();
+
+			if (typeof(countriesNeedZipCode[id_country]) != 'undefined' && typeof(countries[id_country]['iso_code']) != 'undefined')
+				var result = window['validate_'+$(that).attr('data-validate')]($(that).val(), countriesNeedZipCode[id_country], countries[id_country]['iso_code']);
+		}
+		else if($(that).attr('data-validate'))
+			var result = window['validate_' + $(that).attr('data-validate')]($(that).val());
+
+		if (result)
+			$(that).parent().removeClass('form-error').addClass('form-ok');
+		else
+			$(that).parent().addClass('form-error').removeClass('form-ok');
+	}
+}
+
+$(document).on('focusout', 'input.validate, textarea.validate', function() {
+	validate_field(this);
+});

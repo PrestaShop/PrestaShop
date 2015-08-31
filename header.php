@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,18 +19,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (isset(Context::getContext()->controller))
-	$controller = Context::getContext()->controller;
-else
-{
-	$controller = new FrontController();
-	$controller->init();
-	$controller->setMedia();	
+if (isset(Context::getContext()->controller)) {
+    $controller = Context::getContext()->controller;
+} else {
+    $controller = new FrontController();
+    $controller->init();
+    $controller->setMedia();
 }
 Tools::displayFileAsDeprecated();
 $controller->displayHeader();

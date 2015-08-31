@@ -1,12 +1,12 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_profile>
-  <profile id="Logistician">
-    <name>Logistician</name>
+  <profile id='Logistician'>
+    <name>Especialista en logística</name>
   </profile>
-  <profile id="Translator">
-    <name>Translator</name>
+  <profile id='Translator'>
+    <name>Traductor</name>
   </profile>
-  <profile id="Salesman">
-    <name>Salesman</name>
+  <profile id='Salesman'>
+    <name>Vendedor</name>
   </profile>
 </entity_profile>

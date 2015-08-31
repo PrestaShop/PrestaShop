@@ -1,12 +1,12 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_order_message>
-  <order_message id="Delay">
-    <name>Delay</name>
-    <message>Hi,
+  <order_message id='Delay'>
+    <name>Atraso</name>
+    <message>Olá,
 
-Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
-Please accept our apologies and rest assured that we are working hard to rectify this.
+Infelizmente uma peça do seu pedido está indisponível no momento. Isso pode ocasionar um leve atraso na entrega.
+Queira aceitar nossas desculpas e tenha a certeza de que estamos fazendo o possível para remediar esta situação.
 
-Best regards,</message>
+Atenciosamente,</message>
   </order_message>
 </entity_order_message>

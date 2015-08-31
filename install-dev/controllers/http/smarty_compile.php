@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,26 +19,27 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
-if (Tools::getValue('bo'))
-{
-	if (!is_dir(_PS_ROOT_DIR_.'/admin/'))
-		exit;
-	define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
-	$directory = _PS_ADMIN_DIR_.'themes/default/';	
+if (Tools::getValue('bo')) {
+    if (!is_dir(_PS_ROOT_DIR_.'/admin/')) {
+        exit;
+    }
+    define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
+    $directory = _PS_ADMIN_DIR_.'themes/default/';
+} else {
+    $directory = _PS_THEME_DIR_;
 }
-else
-	$directory = _PS_THEME_DIR_;
 
 require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
 
 $smarty->setTemplateDir($directory);
 ob_start();
 $smarty->compileAllTemplates('.tpl', false);
-if (ob_get_level() && ob_get_length() > 0)
-	ob_end_clean();
+if (ob_get_level() && ob_get_length() > 0) {
+    ob_end_clean();
+}

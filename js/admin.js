@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +36,7 @@ function str2url(str, encoding, ucfirst)
 	else
 	{
 		/* Lowercase */
-		str = str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u0101\u0103\u0105\u0430]/g, 'a');
+		str = str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E5\u0101\u0103\u0105\u0430]/g, 'a');
         str = str.replace(/[\u0431]/g, 'b');
 		str = str.replace(/[\u00E7\u0107\u0109\u010D\u0446]/g, 'c');
 		str = str.replace(/[\u010F\u0111\u0434]/g, 'd');
@@ -50,21 +50,22 @@ function str2url(str, encoding, ucfirst)
 		str = str.replace(/[\u013A\u013C\u013E\u0140\u0142\u043B]/g, 'l');
         str = str.replace(/[\u043C]/g, 'm');
 		str = str.replace(/[\u00F1\u0144\u0146\u0148\u0149\u014B\u043D]/g, 'n');
-		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6\u00F8\u014D\u014F\u0151\u043E]/g, 'o');
+		str = str.replace(/[\u00F2\u00F3\u00F4\u00F5\u00F8\u014D\u014F\u0151\u043E]/g, 'o');
         str = str.replace(/[\u043F]/g, 'p');
 		str = str.replace(/[\u0155\u0157\u0159\u0440]/g, 'r');
 		str = str.replace(/[\u015B\u015D\u015F\u0161\u0441]/g, 's');
 		str = str.replace(/[\u00DF]/g, 'ss');
 		str = str.replace(/[\u0163\u0165\u0167\u0442]/g, 't');
-		str = str.replace(/[\u00F9\u00FA\u00FB\u00FC\u0169\u016B\u016D\u016F\u0171\u0173\u0443]/g, 'u');
+		str = str.replace(/[\u00F9\u00FA\u00FB\u0169\u016B\u016D\u016F\u0171\u0173\u0443]/g, 'u');
         str = str.replace(/[\u0432]/g, 'v');
 		str = str.replace(/[\u0175]/g, 'w');
 		str = str.replace(/[\u00FF\u0177\u00FD\u044B]/g, 'y');
 		str = str.replace(/[\u017A\u017C\u017E\u0437]/g, 'z');
-		str = str.replace(/[\u00E6]/g, 'ae');
+		str = str.replace(/[\u00E4\u00E6]/g, 'ae');
         str = str.replace(/[\u0447]/g, 'ch');
         str = str.replace(/[\u0445]/g, 'kh');
-		str = str.replace(/[\u0153]/g, 'oe');
+		str = str.replace(/[\u0153\u00F6]/g, 'oe');
+		str = str.replace(/[\u00FC]/g, 'ue');
         str = str.replace(/[\u0448]/g, 'sh');
         str = str.replace(/[\u0449]/g, 'ssh');
         str = str.replace(/[\u044F]/g, 'ya');
@@ -94,15 +95,16 @@ function str2url(str, encoding, ucfirst)
 		str = str.replace(/[\u0154\u0156\u0158\u0420]/g, 'R');
 		str = str.replace(/[\u015A\u015C\u015E\u0160\u0421]/g, 'S');
 		str = str.replace(/[\u0162\u0164\u0166\u0422]/g, 'T');
-		str = str.replace(/[\u00D9\u00DA\u00DB\u00DC\u0168\u016A\u016C\u016E\u0170\u0172\u0423]/g, 'U');
+		str = str.replace(/[\u00D9\u00DA\u00DB\u0168\u016A\u016C\u016E\u0170\u0172\u0423]/g, 'U');
         str = str.replace(/[\u0412]/g, 'V');
 		str = str.replace(/[\u0174]/g, 'W');
 		str = str.replace(/[\u0176\u042B]/g, 'Y');
 		str = str.replace(/[\u0179\u017B\u017D\u0417]/g, 'Z');
-		str = str.replace(/[\u00C6]/g, 'AE');
+		str = str.replace(/[\u00C4\u00C6]/g, 'AE');
         str = str.replace(/[\u0427]/g, 'CH');
         str = str.replace(/[\u0425]/g, 'KH');
-		str = str.replace(/[\u0152]/g, 'OE');
+		str = str.replace(/[\u0152\u00D6]/g, 'OE');
+		str = str.replace(/[\u00DC]/g, 'UE');
         str = str.replace(/[\u0428]/g, 'SH');
         str = str.replace(/[\u0429]/g, 'SHH');
         str = str.replace(/[\u042F]/g, 'YA');
@@ -135,14 +137,14 @@ function copy2friendlyURL()
 {
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
-	
+
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
-		$('#link_rewrite_' + id_language).change(); 
+		$('#link_rewrite_' + id_language).change();
 	}
 	return;
 }
@@ -203,28 +205,20 @@ function changeLanguage(field, fieldsString, id_language_new, iso_code)
 	id_language = id_language_new;
 }
 
+// kept for retrocompatibility - you should use hideOtherLanguage(id) since 1.6
 function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 {
 	$('.translatable').each(function() {
 		$(this).find('.lang_' + id_language_new)
 			.show()
 			.siblings('div:not(.displayed_flag):not(.clear)').hide();
-		$('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
+		$(this).find('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
 	});
 
 	// For multishop checkboxes
 	$('.multishop_lang_'+id_language_new).show().siblings('div[class^=\'multishop_lang_\']').hide();
-	$('.language_flags').hide();
-	if (employee_cookie)
-		$.post("index.php", {
-			action: 'formLanguage', 
-			tab: 'AdminEmployees',
-			ajax: 1,
-			token: employee_token,
-			form_language_id: id_language_new 
-		});
 	id_language = id_language_new;
-
+	changeEmployeeLanguage();
 	updateCurrentText();
 }
 
@@ -348,6 +342,7 @@ function formSubmit(e, button)
 	{
 		getE(button).focus();
 		getE(button).click();
+		e.preventDefault();
 	}
 }
 function noComma(elem)
@@ -355,160 +350,28 @@ function noComma(elem)
  	getE(elem).value = getE(elem).value.replace(new RegExp(',', 'g'), '.');
 }
 
-/* Help boxes */
-if (typeof helpboxes != 'undefined' && helpboxes)
-{
-	$(function()
-	{
-		if ($('input'))
-		{
-			//Display by rollover
-			$('input').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('input').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('input').keydown(function(e){
-				if (e.keyCode === 9)
-				{
-					$('input').focus(function() {$(this).parent().find('.hint:first').css('display', 'block');});
-					$('input').blur(function() {$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('select'))
-		{
-			//Display by rollover
-			$('select').focusin(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-			$('select').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-
-			//display when you press the tab key
-			$('select').keydown(function (e){
-				if (e.keyCode === 9)
-				{
-					$('select').focus(function(){$(this).parent().find('.hint:first').css('display', 'block');});
-					$('select').blur(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-				}
-			});
-		}
-		if ($('span.title_box'))
-		{
-			//Display by rollover
-			$('span.title_box').focusin(function() {
-				//get reference to the hint box
-				var parent = $(this).parent();
-				var box = parent.find('.hint:first');
-
-				if (box.length > 0)
-				{
-					//gets parent position
-					var left_position = parent.offset().left;
-
-					//gets width of the box
-					var box_width = box.width();
-
-					//gets width of the screen
-					var document_width = $(document).width();
-
-					//changes position of the box if needed
-					if (document_width < (left_position + box_width))
-						box.css('margin-left', '-' + box_width + 'px');
-
-					//shows the box
-					box.css('display', 'block');
-				}
-			});
-			$('span.title_box').focusout(function(){$(this).parent().find('.hint:first').css('display', 'none');});
-		}
-	});
-}
-
-/* Code generator for Affiliation and vourchers */
+/* Code generator for Affiliation and vouchers */
 function gencode(size)
 {
 	getE('code').value = '';
-	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	/* There are no O/0 in the codes in order to avoid confusion */
+	var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
 	for (var i = 1; i <= size; ++i)
 		getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
 }
 
-function free_shipping()
-{
-	if (getE('id_discount_type').value == 3 && getE('discount_value').value == '')
-		getE('discount_value').value = '0';
-}
-
-var newWin = null;
-
-function closeWin ()
-{
-	if (newWin != null)
-		if (!newWin.closed)
-			newWin.close();
-}
-
-function openWin(url, title, width, height, top, left)
-{
-	var options;
-	var sizes;
-
-	closeWin();
-	options = 'toolbar=0, location=0, directories=0, statfr=no, menubar=0, scrollbars=yes, resizable=yes';
-	sizes = 'width='+width+', height='+height+', top='+top+', left='+left+'';
-	newWin = window.open(url, title, options+', '+sizes);
-	newWin.focus();
-}
-
-function viewTemplates(id_select, prefix, ext)
+var tpl_viewing_window = null;
+function viewTemplates(id_select, lang, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
-		openWin (prefix+loc+ext, 'tpl_viewing', '520', '400', '50', '300');
-	return ;
-}
-
-function validateImportation(mandatory)
-{
-    var type_value = [];
-	var seted_value = [];
-	var elem;
-	var col = 'unknow';
-
-	toggle(getE('error_duplicate_type'), false);
-	toggle(getE('required_column'), false);
-    for (i = 0; elem = getE('type_value['+i+']'); i++)
-    {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
-			scroll(0,0);
-			toggle(getE('error_duplicate_type'), true);
-			return false;
-		}
-		else if (elem.options[elem.selectedIndex].value != 'no')
-			seted_value[elem.options[elem.selectedIndex].value] = true;
+	{
+		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
+			tpl_viewing_window.close();
+		var url_preview = $("option[value="+loc+"]", id_select).data('preview');
+		tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		tpl_viewing_window.focus();
 	}
-	for (needed in mandatory)
-		if (!seted_value[mandatory[needed]])
-		{
-			scroll(0,0);
-			toggle(getE('required_column'), true);
-			getE('missing_column').innerHTML = mandatory[needed];
-			elem = getE('type_value[0]');
-			for (i = 0; i < elem.length; ++i)
-			{
-				if (elem.options[i].value == mandatory[needed])
-				{
-					getE('missing_column').innerHTML = elem.options[i].innerHTML;
-					break ;
-				}
-			}
-			return false
-		}
-}
-
-function chooseTypeTranslation(id_lang)
-{
-	getE('translation_lang').value = id_lang;
-	document.getElementById('typeTranslationForm').submit();
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
@@ -537,17 +400,17 @@ function selectCheckbox(obj)
 	$(obj).parent().parent().find('td.cancelCheck input[type=checkbox]').attr("checked", true);
 }
 
-function toggleShippingCost(obj)
+function toggleShippingCost()
 {
-	generateDiscount = $(obj).parent().find('#generateDiscount').attr("checked");
-	generateCreditSlip = $(obj).parent().find('#generateCreditSlip').attr("checked");
+	generateDiscount = $('#generateDiscount').attr("checked");
+	generateCreditSlip = $('#generateCreditSlip').attr("checked");
 	if (generateDiscount != 'checked' && generateCreditSlip != 'checked')
 	{
-		$(obj).parent().find('#spanShippingBack input[type=checkbox]').attr("checked", false);
-		$(obj).parent().find('#spanShippingBack').css('display', 'none');
+		$('#spanShippingBack input[type=checkbox]').attr("checked", false);
+		$('#spanShippingBack').css('display', 'none');
 	}
 	else
-		$(obj).parent().find('#spanShippingBack').css('display', 'block');
+		$('#spanShippingBack').css('display', 'block');
 }
 
 function orderOverwriteMessage(sl, text)
@@ -561,6 +424,8 @@ function orderOverwriteMessage(sl, text)
 			return ;
 		$zone.val(sl_value);
 	}
+
+	$zone.trigger('autosize.resize');
 }
 
 function setCancelQuantity(itself, id_order_detail, quantity)
@@ -590,6 +455,27 @@ function stockManagementActivationAuthorization()
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').checked = true;
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_on').disabled = 'disabled';
 		getE('PS_ADVANCED_STOCK_MANAGEMENT_off').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').checked = true;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = 'disabled';
+		getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = 'disabled';
+	}
+}
+
+function advancedStockManagementActivationAuthorization()
+{
+	if (getE('PS_ADVANCED_STOCK_MANAGEMENT_on').checked)
+	{
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = false;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = false;
+		getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = false;
+	}
+	else
+	{
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').checked = true;
+		getE('PS_FORCE_ASM_NEW_PRODUCT_on').disabled = 'disabled';
+		getE('PS_FORCE_ASM_NEW_PRODUCT_off').disabled = 'disabled';
+		getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = 'disabled';
 	}
 }
 
@@ -658,7 +544,7 @@ function showRedirectProductOptions(show)
 		$('.redirect_product_options').fadeIn();
 	else
 		$('.redirect_product_options').fadeOut();
-	
+
 	redirectSelectChange();
 }
 
@@ -697,7 +583,7 @@ function showRedirectProductSelectOptions(show)
 		$('.redirect_product_options_product_choise').hide();
 		removeRelatedProduct();
 	}
-		
+
 }
 
 function showOptions(show)
@@ -734,16 +620,16 @@ function checkMultishopDefaultValue(obj, key)
 {
 	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
-		$(obj).attr('disabled', false);
+		$(obj).prop('disabled', false);
 	}
 	else
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
 	}
-	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
+	$('#conf_id_'+key+' .preference_default_multishop input').prop('disabled', false);
 }
 
 function toggleAllMultishopDefaultValue($container, value)
@@ -783,7 +669,7 @@ function doAdminAjax(data, success_func, error_func)
 				return success_func(data);
 
 			data = $.parseJSON(data);
-			if(data.confirmations.length != 0)
+			if (data.confirmations.length != 0)
 				showSuccessMessage(data.confirmations);
 			else
 				showErrorMessage(data.error);
@@ -812,12 +698,39 @@ function showNoticeMessage(msg) {
 
 $(document).ready(function()
 {
+	if (typeof helper_tabs != 'undefined' && typeof unique_field_id != 'undefined')
+	{
+		$.each(helper_tabs, function(index) {
+			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<div class="tab-content panel" />');
+			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<ul class="nav nav-tabs" />');
+			$.each(helper_tabs[index], function(key, value) {
+				// Move every form-group into the correct .tab-content > .tab-pane
+				$('#'+unique_field_id+'fieldset_'+index+' .tab-content').append('<div id="'+key+'" class="tab-pane" />');
+				var elemts = $('#'+unique_field_id+'fieldset_'+index).find("[data-tab-id='" + key + "']");
+				$(elemts).appendTo('#'+key);
+				// Add the item to the .nav-tabs
+				if (elemts.length != 0)
+					$('#'+unique_field_id+'fieldset_'+index+' .nav-tabs').append('<li><a href="#'+key+'" data-toggle="tab">'+value+'</a></li>');
+			});
+			// Activate the first tab
+			$('#'+unique_field_id+'fieldset_'+index+' .tab-content div').first().addClass('active');
+			$('#'+unique_field_id+'fieldset_'+index+' .nav-tabs li').first().addClass('active');
+		});
+	}
+
+	if (typeof formToMove != 'undefined' && typeof formDestination != 'undefined' )
+	{
+		$('<hr style="margin 24px 0;" />').appendTo('#'+formDestination)
+		$('#theme_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
+	}
+
 	$('select.chosen').each(function(k, item){
-		//$(item).val($(this).find('option[selected=selected]').val());
 		$(item).chosen({disable_search_threshold: 10});
-		//if ($(item).hasClass('no-search'))
-		//	$(item).next().find('.chzn-search').hide();
 	});
+	// Apply chosen() when modal is loaded
+	$(document).on('shown.bs.modal', function (e) {
+		$('select.chosen-modal').chosen();
+	})
 
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');
@@ -838,13 +751,13 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copy2friendlyUrl', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copy2friendlyURL();
 	});
 
 	// on live will make this binded for dynamic content
 	$(document).on('keyup change', '.updateCurrentText', function(e){
-		if(typeof e == KeyboardEvent)
+		if (typeof e == KeyboardEvent)
 			if(isArrowKey(e))
 				return;
 
@@ -852,28 +765,8 @@ $(document).ready(function()
 	});
 
 	$(document).on('keyup change', '.copyMeta2friendlyURL', function(e){
-		if(!isArrowKey(e))
+		if (!isArrowKey(e))
 			return copyMeta2friendlyURL()
-	});
-
-	// Adding a button to top
-	var scroll = $('#scrollTop a');
-	var view = $(window);
-
-	scroll.click(function(){
-		$.scrollTo('#top_container', 1200, { offset: -100 });
-	});
-
-	view.bind("scroll", function(e) {
-		var heightView = view.height();
-		if (scroll.offset())
-			var btnPlace = scroll.offset().top;
-		else
-			var btnPlace = 0;
-		if (heightView < btnPlace)
-			scroll.show();
-		else
-			scroll.hide();
 	});
 
 	$('#ajax_running').ajaxStart(function() {
@@ -882,17 +775,19 @@ $(document).ready(function()
 
 	$('#ajax_running').ajaxStop(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp(150)}, 1000);
+		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
 
 	$('#ajax_running').ajaxError(function() {
 		var element = $(this)
-		setTimeout(function(){element.slideUp(150)}, 1000);
+		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
-	
+
 	bindTabModuleListAction();
+
+	bindAddonsButtons();
 
 	//Check filters value on submit filter
 	$("[name='submitFilter']").click(function(event) {
@@ -944,7 +839,7 @@ $(document).ready(function()
 				{
 					$(this).css('width', $(this).width());
 					// fixing parent height will prevent that annoying "pagequake" thing
-					// the order is important : this has to be set before adding class fix-toolbar 
+					// the order is important : this has to be set before adding class fix-toolbar
 					$(this).parent().css('height', $(this).parent().height());
 					$(this).addClass("fix-toolbar");
 				}
@@ -957,6 +852,40 @@ $(document).ready(function()
 			}
 		});
 	}); // end bind
+
+	$(document).on('click', '.untrustedaddon', function(e){
+		e.preventDefault();
+		var moduleName = $(this).data('module-name');
+		var moduleDisplayName = $(this).data('module-display-name');
+		var moduleImage = $(this).data('module-image');
+		var authorName = $(this).data('author-name');
+		var moduleLink = $(this).data('link');
+		var authorUri = $(this).data('author-uri');
+		var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
+
+		$('.modal #untrusted-module-logo').attr('src', moduleImage);
+		$('.modal .module-display-name-placeholder').text(moduleDisplayName);
+		$('.modal .author-name-placeholder').text(authorName);
+
+		if (isValidUri.test(authorUri))
+			$('.modal .author-name-placeholder').wrap('<a href="'+authorUri+'" onclick="window.open(this.href);return false;"></a>');
+
+		$('.modal #proceed-install-anyway').attr('href', moduleLink);
+		$('.modal .catalog-link').attr('href', addonsSearchLink);
+		$('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
+	});
+
+	$(document).on('click', '#untrusted-show-risk', function(e){
+		e.preventDefault();
+		$('.untrusted-content-action').hide();
+		$('.untrusted-content-more-info').show();
+	});
+	$(document).on('click', '#untrusted-show-action', function(e){
+		e.preventDefault();
+		$('.untrusted-content-more-info').hide();
+		$('.untrusted-content-action').show();
+	});
 
 	// if count errors
 	$('#hideError').on('click', function(e)
@@ -990,8 +919,58 @@ $(document).ready(function()
 		});
 		return false;
 	});
+
+	/** make sure that all the swap id is present in the dom to prevent mistake **/
+	if (typeof $('#addSwap') !== undefined && typeof $("#removeSwap") !== undefined &&
+		typeof $('#selectedSwap') !== undefined && typeof $('#availableSwap') !== undefined)
+	{
+		bindSwapButton('add', 'available', 'selected');
+		bindSwapButton('remove', 'selected', 'available');
+
+		$('button:submit').click(bindSwapSave);
+	}
+
+	if (typeof host_mode !== 'undefined' && host_mode)
+	{
+        // http://status.prestashop.com/
+        var status_map = {
+            operational: status_operational,
+            degraded_performance: status_degraded_performance,
+            partial_outage: status_partial_outage,
+            major_outage: status_major_outage,
+        };
+
+        var components_map = {'ca1': 0, 'fr1': 1};
+
+        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
+        sp.components({
+            success: function (data) {
+                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
+                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
+            }
+        });
+    }
 });
 
+function bindSwapSave()
+{
+	if ($('#selectedSwap option').length !== 0)
+		$('#selectedSwap option').attr('selected', 'selected');
+	else
+		$('#availableSwap option').attr('selected', 'selected');
+}
+
+function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add)
+{
+	$('#'+prefix_button+'Swap').on('click', function(e) {
+		e.preventDefault();
+		$('#' + prefix_select_remove + 'Swap option:selected').each(function() {
+			$('#' + prefix_select_add + 'Swap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+}
 
 function bindTabModuleListAction()
 {
@@ -1000,7 +979,6 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-				
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');
@@ -1008,7 +986,7 @@ function bindTabModuleListAction()
 			else
 				window.location.href = $(option).data('href');
 			return false;
-		});			
+		});
 	});
 }
 
@@ -1043,7 +1021,7 @@ function stripHTML(oldString)
  */
 function showAjaxOverlay()
 {
-	$('#ajax_running').slideDown('fast');
+	$('#ajax_running').show('fast');
 	clearTimeout(ajax_running_timeout);
 }
 
@@ -1060,8 +1038,7 @@ function display_action_details(row_id, controller, token, action, params)
 			'ajax': true
 		};
 
-		$.each(params, function(k, v)
-		{
+		$.each(params, function(k, v) {
 			ajax_params[k] = v;
 		});
 
@@ -1134,9 +1111,9 @@ function display_action_details(row_id, controller, token, action, params)
 					current_element.parent().parent().after(content);
 					current_element.parent().parent().parent().find('.details_'+id).hide();
 				}
-				current_element.data('dataMaped',true);
+				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
-				
+
 				if (typeof(initTableDnD) != 'undefined')
 					initTableDnD('.details_'+id+' table.tableDnD');
 			}
@@ -1168,14 +1145,30 @@ function quickSelect(elt)
 		location.href = eltVal;
 }
 
-
-//New Admin fonctions
+function changeEmployeeLanguage()
+{
+	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
+		$.post("index.php", {
+			action: 'formLanguage',
+			tab: 'AdminEmployees',
+			ajax: 1,
+			token: employee_token,
+			form_language_id: id_language
+		});
+}
 
 function hideOtherLanguage(id)
 {
 	$('.translatable-field').hide();
 	$('.lang-' + id).show();
+
+	var id_old_language = id_language;
 	id_language = id;
+
+	if (id_old_language != id)
+		changeEmployeeLanguage();
+
+	updateCurrentText();
 }
 
 function sendBulkAction(form, action)
@@ -1197,7 +1190,8 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
-function openModulesList() {
+function openModulesList()
+{
 	if (!modules_list_loaded)
 	{
 		$.ajax({
@@ -1213,26 +1207,101 @@ function openModulesList() {
 			},
 			success : function(data)
 			{
-				$('#modules_list_container_tab').html(data).slideDown();
+				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
 				modules_list_loaded = true;
+				$('.help-tooltip').tooltip();
 			}
 		});
 	}
 	else
 	{
-		$('#modules_list_container_tab').slideDown();
+		$('#modules_list_container_tab_modal').slideDown();
 		$('#modules_list_loader').hide();
 	}
 	return false;
 }
 
-function ajaxStates (id_state_selected)
+function bindAddonsButtons()
+{
+	// Method to log on PrestaShop Addons WebServices
+	$('#addons_login_button').click(function()
+	{
+		var username_addons = $("#username_addons").val();
+		var password_addons = $("#password_addons").val();
+		try
+		{
+			resAjax = $.ajax({
+				type:"POST",
+				url : admin_modules_link,
+				async: true,
+				data : {
+					ajax : "1",
+					controller : "AdminModules",
+					action : "logOnAddonsWebservices",
+					username_addons : username_addons,
+					password_addons : password_addons
+				},
+				beforeSend: function(xhr){
+					$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+				},
+				success : function(data){
+					if (data == 'OK')
+					{
+						$('#addons_loading').html('');
+						$('#addons_login_div').fadeOut();
+						window.location.href = currentIndex + '&token=' + token + '&conf=32';
+					}
+					else
+						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
+				}
+			});
+		}
+		catch(e){}
+		return false;
+	});
+
+	// Method to log out PrestaShop Addons WebServices
+	$('#addons_logout_button').click(function()
+	{
+		try
+		{
+			resAjax = $.ajax({
+				type:"POST",
+				url : admin_modules_link,
+				async: true,
+				data : {
+					ajax : "1",
+					controller : "AdminModules",
+					action : "logOutAddonsWebservices"
+				},
+				beforeSend: function(xhr){
+					$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
+				},
+				success: function(data) {
+					if (data == 'OK')
+					{
+						$('#addons_loading').html('');
+						$('#addons_login_div').fadeOut();
+						window.location.reload();
+					}
+					else
+						$('#addons_loading').html(errorLogin);
+				}
+			});
+		}
+		catch(e){}
+		return false;
+	});
+
+}
+
+function ajaxStates(id_state_selected)
 {
 	$.ajax({
 		url: "index.php",
 		cache: false,
-		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=1&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
+		data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=0&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
 		success: function(html)
 		{
 			if (html == 'false')
@@ -1253,7 +1322,7 @@ function ajaxStates (id_state_selected)
 	{
 		$.ajax({
 			type: "GET",
-			url: module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
+			url: window.location.origin + module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
 			success: function(isApplicable)
 			{
 				if(isApplicable == 1)
@@ -1265,41 +1334,12 @@ function ajaxStates (id_state_selected)
 	}
 }
 
-var query;
-var lang = Array();
-
-function setLang(array_lang) { lang = array_lang; }
-
-function getQuery() {
- 	var result;
- 	
- 	result = query;
- 	if (result == null) {
- 		if (window.XMLHttpRequest)
- 			result = new XMLHttpRequest();
- 		else if (window.ActiveXObject)
-		 	result = new ActiveXObject('Microsoft.XMLHTTP');
- 	}
- 	return result;
-}
-
-function onQueryChange() {
- 	if (query.readyState == 4 && query.status == 200)
- 		document.getElementById('ajax_confirmation').innerHTML = '<span class="green bold">'+lang[0]+'</span>';
-}
-
-function request_failed() { alert(lang[1]); }
-
-function showActivity() {
- 	document.getElementById('ajax_confirmation').innerHTML = '<span class="bold">'+lang[2]+'</span>';
-}
-
 function check_for_all_accesses(tabsize, tabnumber)
 {
 	var i = 0;
 	var res = 0;
 	var right = 0;
-	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
+	var rights = new Array('view', 'add', 'edit', 'delete', 'all');
 
 	while (i != parseInt(tabsize) + 1)
 	{
@@ -1345,24 +1385,191 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
-function ajax_power(src, action, id_tab, id_profile, token, tabsize, tabnumber)
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$/;
+function verifyMail(testMsg, testSubject)
 {
-	query = getQuery();
-	perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber);
-	if (query != null) {
-	 	try {
-		 	query.open('POST', 'index.php?tab=AdminAccess', true);
-		 	query.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		 	query.onreadystatechange = onQueryChange;
-		 	query.send('submitAddaccess=1&action='+action+'&perm='+parseInt(src.checked ? '1' : status = '0')+'&id_tab='+parseInt(id_tab)+'&id_profile='+parseInt(id_profile)+'&token='+token);
-		 	showActivity();
-		}
-		catch(exc) {
-			request_failed();
-		}
+	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');
+	$("#mailResultCheck").slideDown("slow");
+
+	//local verifications
+	if (!($("#testEmail").val().length > 0))
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
+	}
+	else if (!verifMailREGEX.test( $("#testEmail").val() ))
+	{
+		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
+		return false;
 	}
 	else
-		alert(lang[3]);
+	{
+		//external verifications and sets
+		$.ajax(
+		{
+		   url: "index.php",
+		   cache: false,
+		   type : "POST",
+		   data:
+			{
+				"mailMethod"	: (($("input[name=PS_MAIL_METHOD]:checked").val() == 2) ? "smtp" : "native"),
+				"smtpSrv"		: $("input[name=PS_MAIL_SERVER]").val(),
+				"testEmail"		: $("#testEmail").val(),
+				"smtpLogin"		: $("input[name=PS_MAIL_USER]").val(),
+				"smtpPassword"	: $("input[name=PS_MAIL_PASSWD]").val(),
+				"smtpPort"		: $("input[name=PS_MAIL_SMTP_PORT]").val(),
+				"smtpEnc"		: $("select[name=PS_MAIL_SMTP_ENCRYPTION]").val(),
+				"testMsg"		: textMsg,
+				"testSubject"	: textSubject,
+				"token"			: token_mail,
+				"ajax"			: 1,
+				"tab"				: 'AdminEmails',
+				"action"			: 'sendMailTest'
+			},
+		   success: function(ret)
+		   {
+				if (ret == "ok")
+				{
+					$("#mailResultCheck").addClass("alert-success").removeClass("alert-danger").removeClass('userInfos').html(textSendOk);
+					mailIsOk = true;
+				}
+				else
+				{
+					mailIsOk = false;
+					$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(textSendError + '<br />' + ret);
+				}
+		   }
+		 }
+		 );
+	}
+}
+
+function checkLangPack(token){
+	if ($('#iso_code').val().length == 2)
+	{
+		$('#lang_pack_loading').show();
+		$('#lang_pack_msg').hide();
+		doAdminAjax(
+			{
+				controller:'AdminLanguages',
+				action:'checkLangPack',
+				token:token,
+				ajax:1,
+				iso_lang:($('#iso_code').val()).toLowerCase(),
+				ps_version:$('#ps_version').val()
+			},
+			function(ret)
+			{
+				$('#lang_pack_loading').hide();
+				ret = $.parseJSON(ret);
+				if( ret.status == 'ok')
+				{
+					content = $.parseJSON(ret.content);
+					message = langPackOk + ' <b>'+content['name'] + '</b>) :'
+						+'<br />' + langPackVersion + ' ' + content['version']
+						+ ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+						+ ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
+					$('#lang_pack_msg').html(message);
+					$('#lang_pack_msg').show();
+				}
+				else
+					showErrorMessage(ret.error);
+			}
+		 );
+	 }
 }
 
 function redirect(new_page) { window.location = new_page; }
+
+function saveCustomerNote(customerId){
+	var noteContent = $('#noteContent').val();
+	var data = 'token=' + token_admin_customers + '&tab=AdminCustomers&ajax=1&action=updateCustomerNote&id_customer=' + customerId + '&note=' + encodeURIComponent(noteContent);
+	$.ajax({
+		type: "POST",
+		url: "index.php",
+		data: data,
+		async : true,
+		success: function(r) {
+
+			if (r == 'ok') {
+				$('#submitCustomerNote').attr('disabled', true);
+			}
+			showSuccessMessage(update_success_msg);
+		}
+	});
+}
+
+function isCleanHtml(content)
+{
+	var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
+	events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
+	events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
+	events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
+	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
+	events += '|onselectstart|onstart|onstop';
+
+	var script1 = /<[\s]*script/im;
+	var script2 = new RegExp('('+events+')[\s]*=', 'im');
+	var script3 = /.*script\:/im;
+	var script4 = /<[\s]*(i?frame|embed|object)/im;
+
+	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+		return false;
+
+	return true;
+}
+
+function parseDate(date){
+	return $.datepicker.parseDate("yy-mm-dd", date);
+}
+
+function refresh_kpis()
+{
+	$('.box-stats').each(function(){
+		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	});
+}
+
+function createSqlQueryName()
+{
+	var container = false;
+	if ($('.breadcrumb-container'))
+		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
+	var current = false;
+	if ($('.breadcrumb-current'))
+		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
+	var title = false;
+	if ($('.page-title'))
+		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+
+	var name = false;
+	if (container && current && container != current)
+		name = container + ' > ' + current;
+	else if (container)
+		name = container;
+	else if (current)
+		name = current;
+
+	if (title && title != current && title != container)
+	{
+		if (name)
+			name = name + ' > ' + title;
+		else
+			name = title;
+	}
+
+	return name.trim();
+}
+
+function confirm_link(head_text, display_text, confirm_text, cancel_text, confirm_link, cancel_link)
+{
+	$.alerts.okButton = confirm_text;
+	$.alerts.cancelButton = cancel_text;
+	jConfirm(display_text, head_text, function(confirm){
+		if (confirm === true)
+			document.location = confirm_link;
+		else
+			document.location = cancel_link;
+	});
+}

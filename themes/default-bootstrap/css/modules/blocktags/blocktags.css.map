@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAGC,0BAAe;EACd,QAAQ,EAAC,MAAM;EAEf,4BAAE;IACD,OAAO,EAAC,YAAY;IACpB,SAAS,EAAC,IAAI;IACd,WAAW,EAAC,IAAI;IAChB,WAAW,EAAC,IAAI;IAChB,OAAO,EAAC,eAAe;IACvB,MAAM,EAAC,iBAA4B;IACnC,KAAK,EAAC,IAAI;IACV,MAAM,EAAC,WAAW;IAElB,kCAAQ;MACP,KAAK,ECkEyB,IAAgB;MDjE9C,UAAU,EAAC,OAAO",
+"sources": ["../../../sass/modules/blocktags/blocktags.scss","../../../sass/_theme_variables.scss"],
+"names": [],
+"file": "blocktags.css"
+}

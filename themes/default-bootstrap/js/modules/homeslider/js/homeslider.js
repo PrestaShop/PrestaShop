@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -32,19 +32,31 @@ $(document).ready(function(){
 		homeslider_pause = 3000;
 	if (typeof(homeslider_loop) == 'undefined')
 		homeslider_loop = true;
-    if (typeof(homeslider_loop) == 'undefined')
-        homeslider_width = 779;
+	if (typeof(homeslider_width) == 'undefined')
+		homeslider_width = 779;
 
-	$('#homeslider').bxSlider({
-        maxSlides: 1,
-        slideWidth: homeslider_width,
-		infiniteLoop: homeslider_loop,
-		hideControlOnEnd: true,
-		pager: false,
-		autoHover: true,
-		auto: homeslider_loop,
-		speed: homeslider_speed,
-		pause: homeslider_pause,
-		controls: true
+
+	$('.homeslider-description').click(function () {
+		window.location.href = $(this).prev('a').prop('href');
 	});
+
+	if ($('#htmlcontent_top').length > 0)
+		$('#homepage-slider').addClass('col-xs-8');
+	else
+		$('#homepage-slider').addClass('col-xs-12');
+
+	if (!!$.prototype.bxSlider)
+		$('#homeslider').bxSlider({
+			useCSS: false,
+			maxSlides: 1,
+			slideWidth: homeslider_width,
+			infiniteLoop: homeslider_loop,
+			hideControlOnEnd: true,
+			pager: false,
+			autoHover: true,
+			auto: homeslider_loop,
+			speed: parseInt(homeslider_speed),
+			pause: homeslider_pause,
+			controls: true
+		});
 });

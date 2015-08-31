@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,10 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<script type="text/javascript">
-// <![CDATA[
-	ThickboxI18nClose = "{l s='Close' mod='referralprogram'}";
-	ThickboxI18nOrEscKey = "{l s='or Esc key' mod='referralprogram'}";
-	tb_pathToImage = "{$img_ps_dir}loadingAnimation.gif";
-	//]]>
-</script>
-
 {capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" title="{l s='Manage my account' mod='referralprogram'}" rel="nofollow">{l s='My account' mod='referralprogram'}</a><span class="navigation-pipe">{$navigationPipe}</span><span class="navigation_page">{l s='Referral Program' mod='referralprogram'}</span>{/capture}
 
 <h1 class="page-heading">{l s='Referral program' mod='referralprogram'}</h1>
@@ -72,12 +63,6 @@
 	{/if}
 	</p>
 {/if}
-<script>
-	$('#idTabs a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	})
-</script>
 <ul class="nav nav-tabs" id="idTabs">
 	<li class="active"><a data-toggle="tab" href="#idTab1" class="tab-pane {if $activeTab eq 'sponsor'} active{/if}" title="{l s='Sponsor my friends' mod='referralprogram'}" rel="nofollow">{l s='Sponsor my friends' mod='referralprogram'}</a></li>
 	<li><a data-toggle="tab" href="#idTab2"  class="tab-pane {if $activeTab eq 'pending'} selected{/if}" title="{l s='List of pending friends' mod='referralprogram'}" rel="nofollow">{l s='Pending friends' mod='referralprogram'}</a></li>
@@ -87,17 +72,17 @@
 
 	<div id="idTab1" class="tab-pane active">
 		<p class="bold">
-			<strong>{l s='Get a discount of %1$d %2$s for you and your friends by recommending this Website.' sprintf=[$discount,$currencySign] mod='referralprogram'}</strong>
+			<strong>{l s='Get a discount of %1$s for you and your friends by recommending this Website.' sprintf=[$discount] mod='referralprogram'}</strong>
 		</p>
 		{if $canSendInvitations}
 			<p>
 				{l s='It\'s quick and it\'s easy. Just fill in the first name, last name, and e-mail address(es) of your friend(s) in the fields below.' mod='referralprogram'}
 				{if $orderQuantity > 1}
-					{l s='When one of them makes at least %d orders' sprintf=$orderQuantity mod='referralprogram'}
+					{l s='When one of them makes at least %d orders, ' sprintf=$orderQuantity mod='referralprogram'}
 				{else}
-					{l s='When one of them makes at least %d order' sprintf=$orderQuantity mod='referralprogram'}
+					{l s='When one of them makes at least %d order, ' sprintf=$orderQuantity mod='referralprogram'}
 				{/if},
-				{l s='he or she will receive a %1$d %2$s voucher and you will receive your own voucher worth %3$d %4$s.' sprintf=[$discount,$currencySign,$discount,$currencySign] mod='referralprogram'}
+				{l s='he or she will receive a %1$s voucher and you will receive your own voucher worth %1$s.' sprintf=[$discount] mod='referralprogram'}
 			</p>
 			<form method="post" action="{$link->getModuleLink('referralprogram', 'program', [], true)|escape:'html':'UTF-8'}" class="std">
 				<table class="table table-bordered">
@@ -129,7 +114,7 @@
 					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
 				</p>
 				<p class="see_email">
-					{l s='Preview' mod='referralprogram'} 
+					{l s='Preview' mod='referralprogram'}
 					{assign var="file" value="{$lang_iso}/referralprogram-invitation.html"}
 					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
 				</p>
@@ -181,7 +166,13 @@
 			</p>
 		</form>
 		{else}
-			<p class="alert alert-warning">{l s='You have not sponsored any friends.' mod='referralprogram'}</p>
+			<p class="alert alert-warning">
+				{if $subscribeFriends AND $subscribeFriends|@count > 0}
+					{l s='You have no pending invitations.' mod='referralprogram'}
+				{else}
+					{l s='You have not sponsored any friends yet.' mod='referralprogram'}
+				{/if}
+			</p>
 		{/if}
 	</div>
 
@@ -227,3 +218,6 @@
 	</li>
 	<li><a class="btn btn-default button button-small" href="{$base_dir}" title="{l s='Home' mod='referralprogram'}"><span><i class="icon-chevron-left"></i>{l s='Home' mod='referralprogram'}</span></a></li>
 </ul>
+{addJsDefL name=ThickboxI18nClose}{l s='Close' mod='referralprogram' js=1}{/addJsDefL}
+{addJsDefL name=ThickboxI18nOrEscKey}{l s='or Esc key' mod='referralprogram' js=1}{/addJsDefL}
+{addJsDef tb_pathToImage=$img_ps_dir|cat:'loadingAnimation.gif'}

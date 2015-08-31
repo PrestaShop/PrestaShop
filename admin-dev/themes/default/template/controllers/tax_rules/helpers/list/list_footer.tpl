@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -59,8 +59,8 @@
 	{if !$simple_header && $list_total > $pagination[0]}
 	<div class="col-lg-4">
 		{* Choose number of results per page *}
-		<span class="pagination">
-			{l s='Display'}: 
+		<div class="pagination">
+			{l s='Display'}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{$selected_pagination}
 				<i class="icon-caret-down"></i>
@@ -74,7 +74,7 @@
 			</ul>
 			/ {$list_total} {l s='result(s)'}
 			<input type="hidden" id="{$list_id}-pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
-		</span>
+		</div>
 		<script type="text/javascript">
 			$('.pagination-items-page').on('click',function(e){
 				e.preventDefault();
@@ -99,7 +99,7 @@
 						<a href="javascript:void(0);">&hellip;</a>
 					</li>
 					{assign p $page-3}
-				{else if $p > $page+2}
+				{elseif $p > $page+2}
 					<li class="disabled">
 						<a href="javascript:void(0);">&hellip;</a>
 					</li>
@@ -133,12 +133,11 @@
 	{/if}
 </div>
 {if !$simple_header}
-		<input type="hidden" name="token" value="{$token}" />
+		<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 	</div>
+	{hook h='displayAdminListAfter'}
 </form>
 {/if}
-
-{hook h='displayAdminListAfter'}
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListAfter{/capture}
 	{hook h=$hookName}

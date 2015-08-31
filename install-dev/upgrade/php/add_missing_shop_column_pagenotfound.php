@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,28 +19,30 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function add_missing_shop_column_pagenotfound()
 {
-	$res = true;
-	$exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'pagenotfound"');
-	if (count($exists))
-	{
-		$fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'pagenotfound`');
-		foreach ($fields as $k => $field)
-			$fields[$k] = $field['Field'];
+    $res = true;
+    $exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'pagenotfound"');
+    if (count($exists)) {
+        $fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'pagenotfound`');
+        foreach ($fields as $k => $field) {
+            $fields[$k] = $field['Field'];
+        }
 
-		if (!in_array('id_shop_group', $fields))
-			$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound` 
+        if (!in_array('id_shop_group', $fields)) {
+            $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
 				ADD `id_shop_group` INT(10) AFTER `id_pagenotfound`');
+        }
 
-		if (!in_array('id_shop', $fields))
-			$res &= DB::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound` 
+        if (!in_array('id_shop', $fields)) {
+            $res &= DB::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'pagenotfound`
 				ADD `id_shop` INT(10) AFTER `id_pagenotfound`');
-	}
-	return $res;
+        }
+    }
+    return $res;
 }

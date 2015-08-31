@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,38 +19,39 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 abstract class InstallAbstractModel
 {
-	/**
-	 * @var InstallLanguages
-	 */
-	public $language;
+    /**
+     * @var InstallLanguages
+     */
+    public $language;
 
-	/**
-	 * @var array List of errors
-	 */
-	protected $errors = array();
+    /**
+     * @var array List of errors
+     */
+    protected $errors = array();
 
-	public function __construct()
-	{
-		$this->language = InstallLanguages::getInstance();
-	}
+    public function __construct()
+    {
+        $this->language = InstallLanguages::getInstance();
+    }
 
-	public function setError($errors)
-	{
-		if (!is_array($errors))
-			$errors = array($errors);
+    public function setError($errors)
+    {
+        if (!is_array($errors)) {
+            $errors = array($errors);
+        }
 
-		$this->errors[] = $errors;
-	}
+        $this->errors[] = $errors;
+    }
 
-	public function getErrors()
-	{
-		return $this->errors;
-	}
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 }

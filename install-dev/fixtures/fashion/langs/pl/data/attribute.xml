@@ -69,4 +69,7 @@
   <attribute id="40">
     <name>40</name>
   </attribute>
+  <attribute id="Pink">
+    <name>Pink</name>
+  </attribute>
 </entity_attribute>

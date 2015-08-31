@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,41 +26,43 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-
+	{if $mod_security_warning}
+	<div class="alert alert-warning">
+		{l s='Apache mod_security is activated on your server. This could result in some Bad Request errors'}
+	</div>
+	{/if}
 	{if !empty($limit_warning)}
 	<div class="alert alert-warning">
 		{if $limit_warning['error_type'] == 'suhosin'}
-			{l s='Warning: Your hosting provider is using the suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
+			{l s='Warning! Your hosting provider is using the Suhosin patch for PHP, which limits the maximum number of fields allowed in a form:'}
 
 			<b>{$limit_warning['post.max_vars']}</b> {l s='for suhosin.post.max_vars.'}<br/>
 			<b>{$limit_warning['request.max_vars']}</b> {l s='for suhosin.request.max_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the suhosin limit to'}
+			{l s='Please ask your hosting provider to increase the Suhosin limit to'}
 		{else}
 			{l s='Warning! Your PHP configuration limits the maximum number of fields allowed in a form:'}
 			<b>{$limit_warning['max_input_vars']}</b> {l s='for max_input_vars.'}<br/>
-			{l s='Please ask your hosting provider to increase the this limit to'}
+			{l s='Please ask your hosting provider to increase this limit to'}
 		{/if}
-		{l s='%s at least or edit the translation file manually.' sprintf=$limit_warning['needed_limit']}
+		{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
 	</div>
 	{else}
 
 		<div class="alert alert-info">
-			<ul class="nav">
-				<li>{l s='Click on titles to open fieldsets'}.</li>
-				<li>{l s='Some sentences to translate use this syntax: %s... These are variables, and PrestaShop take care of replacing them before displaying your translation. You must leave these in your translations, and place them appropriately in your sentence.' sprintf='%d, %s, %1$s, %2$d'}</li>
-			</ul>
+			<p>
+				{l s='Click on the title of a section to open its fieldsets.'}
+			</p>
 		</div>
 		<div class="panel">
 			<p>{l s='Expressions to translate:'} <span class="badge">{l s='%d' sprintf=$count}</span></p>
-			<p>{l s='Total missing expresssions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
+			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=$missing_translations|array_sum}</p>
 		</div>
 
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
 			<div class="panel">
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />
 				<input type="hidden" name="theme" value="{$theme}" />
-				
 
 				<script type="text/javascript">
 					$(document).ready(function(){
@@ -68,24 +70,30 @@
 							var syntax = $(this).find('img').attr('alt');
 							$('#BoxUseSpecialSyntax .syntax span').html(syntax+".");
 						});
+
+						$("a.sidetoggle").click(function(){
+							$('#'+$(this).attr('data-slidetoggle')).slideToggle();
+							return false;
+						});
 					});
 				</script>
 
 				<div id="BoxUseSpecialSyntax">
 					<div class="alert alert-warning">
 						<p>
-							{l s='This expression uses this special syntax:'} <strong>%d.</strong>
-							{l s='You must use this syntax in your translations. Here are several examples:'}
+							{l s='Some of these expressions use this special syntax: %s.' sprintf='%d'}
+							<br />
+							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
-						<ul class="nav">
-							<li><em>There are <strong>%d</strong> products</em> ("<strong>%d</strong>" {l s='will be replaced by a number'}).</li>
-							<li><em>List of pages in <strong>%s</strong>:</em> ("<strong>%s</strong>" {l s='will be replaced by a string'}).</li>
-							<li><em>Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)</em> ("<strong>n$</strong>" {l s='is used for the order of the arguments'}).</li>
+						<ul>
+							<li>"{l s='There are [1]%d[/1] products' tags=['<strong>']}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+							<li>"{l s='List of pages in [1]%s[/1]' tags=['<strong>']}": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"{l s='Feature: [1]%1$s[/1] ([1]%2$d[/1] values)' tags=['<strong>']}": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
 				</div>
 				<div class="panel-footer">
-					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 					{$toggle_button}
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
@@ -94,8 +102,12 @@
 			{foreach $tabsArray as $k => $newLang}
 				{if !empty($newLang)}
 					<div class="panel">
-						<h3 onclick="$('#{$k}-tpl').slideToggle();">
-							{$k} - <span class="badge">{$newLang|count}</span> {l s='expressions'}
+						<h3>
+							<a href="#" class="sidetoggle" data-slidetoggle="{$k}-tpl">
+								<i class="icon-caret-down"></i>
+								{$k}
+							</a>
+							- {$newLang|count} {l s='expressions'}
 							{if isset($missing_translations[$k])} <span class="label label-danger">{$missing_translations[$k]} {l s='missing'}</span>{/if}
 						</h3>
 						<div name="{$type}_div" id="{$k}-tpl" style="display:{if isset($missing_translations[$k])}block{else}none{/if}">
@@ -108,7 +120,7 @@
 										<td width="40%"> {*todo : md5 is already calculated in AdminTranslationsController*}
 											{if $key|strlen < $textarea_sized}
 												<input type="text" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
-													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}" 
+													name="{if in_array($type, array('front', 'fields'))}{$k}_{$key|md5}{else}{$k}{$key|md5}{/if}"
 													value="{$value.trad|regex_replace:'/"/':'&quot;'|stripslashes}"' />
 											{else}
 												<textarea rows="{($key|strlen / $textarea_sized)|intval}" style="width: 450px{if empty($value.trad)};background:#FBB{/if}"
@@ -126,15 +138,16 @@
 									</tr>
 								{/foreach}
 							</table>
-						</div>
-						<div class="panel-footer">
-							<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+							<div class="panel-footer">
+							<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 							<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 						</div>
+						</div>
+
 					</div>
 				{/if}
-			{/foreach}			
+			{/foreach}
 		</form>
 	{/if}
 

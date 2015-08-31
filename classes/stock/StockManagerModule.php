@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,29 +29,32 @@
  */
 abstract class StockManagerModuleCore extends Module
 {
-	public $stock_manager_class;
+    public $stock_manager_class;
 
-	public function install()
-	{
-		return (parent::install() && $this->registerHook('stockManager') );
-	}
+    public function install()
+    {
+        return (parent::install() && $this->registerHook('stockManager'));
+    }
 
-	public function hookStockManager()
-	{
-		$class_file = _PS_MODULE_DIR_.'/'.$this->name.'/'.$this->stock_manager_class.'.php';
+    public function hookStockManager()
+    {
+        $class_file = _PS_MODULE_DIR_.'/'.$this->name.'/'.$this->stock_manager_class.'.php';
 
-		if (!isset($this->stock_manager_class) || !file_exists($class_file))
-			die(sprintf(Tools::displayError('Incorrect Stock Manager class [%s]'), $this->stock_manager_class));
+        if (!isset($this->stock_manager_class) || !file_exists($class_file)) {
+            die(sprintf(Tools::displayError('Incorrect Stock Manager class [%s]'), $this->stock_manager_class));
+        }
 
-		require_once($class_file);
+        require_once($class_file);
 
-		if (!class_exists($this->stock_manager_class))
-			die(sprintf(Tools::displayError('Stock Manager class not found [%s]'), $this->stock_manager_class));
+        if (!class_exists($this->stock_manager_class)) {
+            die(sprintf(Tools::displayError('Stock Manager class not found [%s]'), $this->stock_manager_class));
+        }
 
-		$class = $this->stock_manager_class;
-		if (call_user_func(array($class, 'isAvailable')))
-			return new $class();
+        $class = $this->stock_manager_class;
+        if (call_user_func(array($class, 'isAvailable'))) {
+            return new $class();
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

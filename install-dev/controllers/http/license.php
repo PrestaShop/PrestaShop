@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,37 +29,36 @@
  */
 class InstallControllerHttpLicense extends InstallControllerHttp
 {
-	/**
-	 * Process license form
-	 *
-	 * @see InstallAbstractModel::process()
-	 */
-	public function processNextStep()
-	{
-		$this->session->licence_agrement = Tools::getValue('licence_agrement');
-		$this->session->configuration_agrement = Tools::getValue('configuration_agrement');
-	}
+    /**
+     * Process license form
+     *
+     * @see InstallAbstractModel::process()
+     */
+    public function processNextStep()
+    {
+        $this->session->licence_agrement = Tools::getValue('licence_agrement');
+        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
+    }
 
-	/**
-	 * Licence agrement must be checked to validate this step
-	 *
-	 * @see InstallAbstractModel::validate()
-	 */
-	public function validate()
-	{
-		return $this->session->licence_agrement;
-	}
+    /**
+     * Licence agrement must be checked to validate this step
+     *
+     * @see InstallAbstractModel::validate()
+     */
+    public function validate()
+    {
+        return $this->session->licence_agrement;
+    }
 
-	public function process()
-	{
-	
-	}
-	
-	/**
-	 * Display license step
-	 */
-	public function display()
-	{
-		$this->displayTemplate('license');
-	}
+    public function process()
+    {
+    }
+    
+    /**
+     * Display license step
+     */
+    public function display()
+    {
+        $this->displayTemplate('license');
+    }
 }

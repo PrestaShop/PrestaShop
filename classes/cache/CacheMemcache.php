@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -43,45 +43,6 @@ class CacheMemcacheCore extends Cache
 	public function __construct()
 	{
 		$this->connect();
-
-        $this->keys = array();
-        $servers = self::getMemcachedServers();
-       
-		if(is_array($servers) && count($servers) > 0)
-		{
-		    $this->keys = @$this->memcache->get(_COOKIE_IV_);
-		    if (!is_array($this->keys))
-		        $this->keys = array();		
-		}
-
-        /*
-		// Get keys (this code comes from Doctrine 2 project)
-		if(is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
-        	$all_slabs = $this->memcache->getStats('slabs');
-	    	        	
-		if(isset($all_slabs) && is_array($all_slabs))
-			foreach ($all_slabs as $server => $slabs)
-			{
-			    if (is_array($slabs))
-			    {
-					foreach (array_keys($slabs) as $i => $slab_id) // $slab_id is not an int but a string, using the key instead ?
-					{
-						if(is_int($i))
-						{		
-					        $dump = $this->memcache->getStats('cachedump', (int)$i);
-					        if ($dump)
-					        {
-					           foreach ($dump as $entries)
-					           {
-									if($entries)
-										foreach ($entries as $key => $data)
-											$this->keys[$key] = $data[1];
-					           }
-					        }
-					    }
-					}
-			    }
-			}*/
 	}
 
 	public function __destruct()
@@ -97,13 +58,13 @@ class CacheMemcacheCore extends Cache
 		if (class_exists('Memcache') && extension_loaded('memcache'))
 			$this->memcache = new Memcache();
 		else
-			return false;
-		
+			return;
+
 		$servers = self::getMemcachedServers();
 		if (!$servers)
-			return false;
+			return;
 		foreach ($servers as $server)
-			$this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
+			$this->memcache->addServer($server['ip'], $server['port'], true, (int)$server['weight']);
 
 		$this->is_connected = true;
 	}
@@ -135,7 +96,7 @@ class CacheMemcacheCore extends Cache
 	{
 		if (!$this->is_connected)
 			return false;
-		return isset($this->keys[$key]);
+		return ($this->memcache->get($key) !== false);
 	}
 
 	/**
@@ -155,7 +116,7 @@ class CacheMemcacheCore extends Cache
 	{
 		if (!$this->is_connected)
 			return false;
-		$this->memcache->set(_COOKIE_IV_, $this->keys);
+		return true;
 	}
 
 	/**
@@ -166,6 +127,96 @@ class CacheMemcacheCore extends Cache
 		if (!$this->is_connected)
 			return false;
 		return $this->memcache->flush();
+	}
+
+	/**
+	 * Store a data in cache
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
+	 */
+	public function set($key, $value, $ttl = 0)
+	{
+		return $this->_set($key, $value, $ttl);
+	}
+
+	/**
+	 * Retrieve a data from cache
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return $this->_get($key);
+	}
+
+	/**
+	 * Check if a data is cached
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function exists($key)
+	{
+		return $this->_exists($key);
+	}
+
+	/**
+	 * Delete one or several data from cache (* joker can be used, but avoid it !)
+	 * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function delete($key)
+	{
+		if ($key == '*')
+			$this->flush();
+		elseif (strpos($key, '*') === false)
+			$this->_delete($key);
+		else
+		{
+			// Get keys (this code comes from Doctrine 2 project)
+			$pattern = str_replace('\\*', '.*', preg_quote($key));
+			$servers = $this->getMemcachedServers();
+			if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
+				$all_slabs = $this->memcache->getStats('slabs');
+
+			if (isset($all_slabs) && is_array($all_slabs))
+			{
+				foreach ($all_slabs as $server => $slabs)
+				{
+					if (is_array($slabs))
+					{
+						foreach (array_keys($slabs) as $i => $slab_id) // $slab_id is not an int but a string, using the key instead ?
+						{
+							if (is_int($i))
+							{
+								$dump = $this->memcache->getStats('cachedump', (int)$i);
+								if ($dump)
+								{
+									foreach ($dump as $entries)
+									{
+										if ($entries)
+										{
+											foreach ($entries as $key => $data)
+											{
+												if (preg_match('#^'.$pattern.'$#', $key))
+													$this->_delete($key);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	/**

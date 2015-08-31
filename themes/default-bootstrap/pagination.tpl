@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -44,16 +44,17 @@
 		{assign var='requestPage' value=$link->getPaginationLink('supplier', $supplier, false, false, true, false)}
 		{assign var='requestNb' value=$link->getPaginationLink('supplier', $supplier, true, false, false, true)}
 	{else}
-		{assign var='requestPage' value=$link->getPaginationLink(false, false, false, false, true, false)}
+		{if !isset($current_url)}
+			{assign var='requestPage' value=$link->getPaginationLink(false, false, false, false, true, false)}
+		{else}
+			{assign var='requestPage' value=$current_url}
+		{/if}
 		{assign var='requestNb' value=$link->getPaginationLink(false, false, true, false, false, true)}
 	{/if}
 	<!-- Pagination -->
 	<div id="pagination{if isset($paginationId)}_{$paginationId}{/if}" class="pagination clearfix">
 	    {if $nb_products > $products_per_page && $start!=$stop}
-			<form
-			class="showall" 
-			action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" 
-			method="get">
+			<form class="showall" action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get">
 				<div>
 					{if isset($search_query) AND $search_query}
 						<input type="hidden" name="search_query" value="{$search_query|escape:'html':'UTF-8'}" />
@@ -66,7 +67,7 @@
 	                </button>
 					{if is_array($requestNb)}
 						{foreach from=$requestNb item=requestValue key=requestKey}
-							{if $requestKey != 'requestUrl'}
+							{if $requestKey != 'requestUrl' && $requestKey != 'p'}
 								<input type="hidden" name="{$requestKey|escape:'html':'UTF-8'}" value="{$requestValue|escape:'html':'UTF-8'}" />
 							{/if}
 						{/foreach}
@@ -80,7 +81,7 @@
 				{if $p != 1}
 					{assign var='p_previous' value=$p-1}
 					<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous">
-						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}">
+						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}" rel="prev">
 							<i class="icon-chevron-left"></i> <b>{l s='Previous'}</b>
 						</a>
 					</li>
@@ -171,7 +172,7 @@
 				{if $pages_nb > 1 AND $p != $pages_nb}
 					{assign var='p_next' value=$p+1}
 					<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next">
-						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}">
+						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}" rel="next">
 							<b>{l s='Next'}</b> <i class="icon-chevron-right"></i>
 						</a>
 					</li>

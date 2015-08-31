@@ -5,6 +5,8 @@ $font-family:				  		Arial, Helvetica, sans-serif;
 $font:						  		normal 13px/18px $font-family;
 $font-custom:                 		'Open Sans', sans-serif;
 $font-icon:                   		"FontAwesome";
+$fa-css-prefix:       				icon !default;
+
 
 //-------- BORDERS
 $base-border-color:					#d6d4d4;
@@ -51,24 +53,24 @@ $button-text-color:					$light-text-color;
 		//------ Buttons +/- ---
 		$button-pm-color:			#c0c0c0;
 		$button-pm-hover-color:		$base-text-color;
-		
+
 		//------ Button Small --
 		$button-small-bg:			#6f6f6f;
 		$button-small-hover-bg:		#575757;
-		
+
 		//-------Button exclusive-medium
 		$button-em-color:			$base-text-color;
 
 //---------- Product Listing
 $base-listing-border-color:					$base-border-color;
 $base-listing-grid-padding:					$base-box-padding;
-		
+
 		//-------------- Grid/List vars
 		$GL-text-color:								#808080;
 		$GL-title-color:							$base-text-color;
 		$GL-icon-color:								#e1e0e0;
 		$GL-icon-color-hover:						$base-text-color;
-		
+
 		//-------------- Pagination vars
 		$pagination-prevnext-color:					#777676;
 		$pagination-bgcolor:	               		$base-box-bg;

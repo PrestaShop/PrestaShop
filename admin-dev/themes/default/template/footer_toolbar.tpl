@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,22 +18,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $show_toolbar}
 <div class="panel-footer" id="toolbar-footer">
 	{foreach from=$toolbar_btn item=btn key=k}
 		{if $k != 'modules-list'}
-			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}" href="{if isset($btn.href)}{$btn.href}{else}#{/if}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i> <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
+			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}{if isset($btn.target) && $btn.target} _blank{/if}" href="{if isset($btn.href)}{$btn.href|escape:'html':'UTF-8'}{else}#{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
+				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i> <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
 			</a>
 		{/if}
 	{/foreach}
 
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	//<![CDATA[
 		var submited = false
 
@@ -106,6 +105,6 @@
 			{/block}
 		}
 	//]]>
-	</script>			
+	</script>
 </div>
 {/if}

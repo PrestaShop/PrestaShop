@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,19 +19,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function blocknewsletter1530()
 {
-	include_once(_PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php');
-	
-	$column_to_add = array(
-		'id_shop' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id`',
-		'id_shop_group' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id_shop`',
-		'active' => 'TINYINT(1) NOT NULL DEFAULT \'0\' after http_referer');
+    include_once(_PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php');
+    
+    $column_to_add = array(
+        'id_shop' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id`',
+        'id_shop_group' => 'INTEGER UNSIGNED NOT NULL DEFAULT \'1\' after `id_shop`',
+        'active' => 'TINYINT(1) NOT NULL DEFAULT \'0\' after http_referer');
 
-	return generic_add_missing_column('newsletter', $column_to_add);
+    return generic_add_missing_column('newsletter', $column_to_add);
 }

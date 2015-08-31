@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,43 +19,47 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class HelperKpiCore extends Helper
 {
-	public $base_folder = 'helpers/kpi/';
-	public $base_tpl = 'kpi.tpl';
-	
-	public $id;
-	public $icon;
-	public $chart;
-	public $color;
-	public $title;
-	public $subtitle;
-	public $value;
-	public $data;
-	public $source;
-	public $href;
+    public $base_folder = 'helpers/kpi/';
+    public $base_tpl = 'kpi.tpl';
 
-	public function generate()
-	{
-		$this->tpl = $this->createTemplate($this->base_tpl);
+    public $id;
+    public $icon;
+    public $chart;
+    public $color;
+    public $title;
+    public $subtitle;
+    public $value;
+    public $data;
+    public $source;
+    public $refresh = true;
+    public $href;
+    public $tooltip;
 
-		$this->tpl->assign(array(
-			'id' => $this->id,
-			'icon' => $this->icon,
-			'chart' => (bool)$this->chart,
-			'color' => $this->color,
-			'title' => $this->title,
-			'subtitle' => $this->subtitle,
-			'value' => $this->value,
-			'data' => $this->data,
-			'source' => $this->source,
-			'href' => $this->href
-		));
-		return $this->tpl->fetch();
-	}
+    public function generate()
+    {
+        $this->tpl = $this->createTemplate($this->base_tpl);
+
+        $this->tpl->assign(array(
+            'id' => $this->id,
+            'icon' => $this->icon,
+            'chart' => (bool)$this->chart,
+            'color' => $this->color,
+            'title' => $this->title,
+            'subtitle' => $this->subtitle,
+            'value' => $this->value,
+            'data' => $this->data,
+            'source' => $this->source,
+            'refresh' => $this->refresh,
+            'href' => $this->href,
+            'tooltip' => $this->tooltip
+        ));
+        return $this->tpl->fetch();
+    }
 }

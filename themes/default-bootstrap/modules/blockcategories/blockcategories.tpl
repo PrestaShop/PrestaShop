@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -42,17 +42,6 @@
 				{/if}
 			{/foreach}
 		</ul>
-		{* Javascript moved here to fix bug #PSCFI-151 *}
-		<script type="text/javascript">
-		// <![CDATA[
-			{literal}
-			$('document').ready( function() {
-				// we hide the tree only if JavaScript is activated
-				$('div#categories_block_left ul.dhtml').hide();
-			});
-			{/literal}
-		// ]]>
-		</script>
 	</div>
 </div>
 <!-- /Block categories module -->

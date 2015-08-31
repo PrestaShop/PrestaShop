@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,44 +31,44 @@
 	{/if}
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Width (package):'}</label>
+		<label class="control-label col-lg-3" for="width">{$bullet_common_field} {l s='Package width'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />			
+			<input maxlength="14" id="width" name="width" type="text" value="{$product->width}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Height (package):'}</label>
+		<label class="control-label col-lg-3" for="height">{$bullet_common_field} {l s='Package height'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Depth (package):'}</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$ps_dimension_unit}</span>
-			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="height" name="height" type="text" value="{$product->height}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Weight (package):'}</label>
+		<label class="control-label col-lg-3" for="depth">{$bullet_common_field} {l s='Package depth'}</label>
+		<div class="input-group col-lg-2">
+			<span class="input-group-addon">{$ps_dimension_unit}</span>
+			<input maxlength="14" id="depth" name="depth" type="text" value="{$product->depth}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-lg-3" for="weight">{$bullet_common_field} {l s='Package weight'}</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$ps_weight_unit}</span>
-			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="14" id="weight" name="weight" type="text" value="{$product->weight}" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="additional_shipping_cost">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='A carrier tax will be applied.'}">
-				{l s='Additional shipping cost (per quantity):'}
+				title="{l s='If a carrier has a tax, it will be added to the shipping fees.'}">
+				{l s='Additional shipping fees (for a single item)'}
 			</span>
-			
+
 		</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix} {if $country_display_tax_label}({l s='tax excl.'}){/if}</span>
@@ -77,12 +77,12 @@
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="availableCarriers">{l s='Carriers:'}</label>
+		<label class="control-label col-lg-3" for="availableCarriers">{l s='Carriers'}</label>
 		<div class="col-lg-9">
 			<div class="form-control-static row">
 				<div class="col-xs-6">
 					<p>{l s='Available carriers'}</p>
-					<select multiple id="availableCarriers" name="availableCarriers">
+					<select id="availableCarriers" name="availableCarriers" multiple="multiple">
 						{foreach $carrier_list as $carrier}
 							{if !isset($carrier.selected) || !$carrier.selected}
 								<option value="{$carrier.id_reference}">{$carrier.name}</option>
@@ -93,7 +93,7 @@
 				</div>
 				<div class="col-xs-6">
 					<p>{l s='Selected carriers'}</p>
-					<select multiple id="selectedCarriers" name="selectedCarriers[]">
+					<select id="selectedCarriers" name="selectedCarriers[]" multiple="multiple">
 						{foreach $carrier_list as $carrier}
 							{if isset($carrier.selected) && $carrier.selected}
 								<option value="{$carrier.id_reference}">{$carrier.name}</option>
@@ -104,5 +104,15 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="form-group" id="no-selected-carries-alert">
+		<div class="col-lg-offset-3">
+			<div class="alert alert-warning">{l s='If no carrier is selected then all the carriers will be available for customers orders.'}</div>
+		</div>
+	</div>
+	<div class="panel-footer">
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>

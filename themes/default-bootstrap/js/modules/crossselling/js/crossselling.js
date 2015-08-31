@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,21 +18,27 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function() {	
-	$('#crossselling_list_car').bxSlider({
-		minSlides: 2,
-		maxSlides: 6,
-		slideWidth: 178,
-		slideMargin: 20,
-		pager: false,
-		nextText: '',
-		prevText: '',
-		moveSlides:1,
-		infiniteLoop:false,
-		hideControlOnEnd: true
-	});
+$(document).ready(function() {
+	initCrossSellingbxSlider();
 });
+
+function initCrossSellingbxSlider()
+{
+	if (!!$.prototype.bxSlider)
+		$('#crossselling_list_car').bxSlider({
+			minSlides: 2,
+			maxSlides: 6,
+			slideWidth: 178,
+			slideMargin: 20,
+			pager: false,
+			nextText: '',
+			prevText: '',
+			moveSlides:1,
+			infiniteLoop:false,
+			hideControlOnEnd: true
+		});
+}

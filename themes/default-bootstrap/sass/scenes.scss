@@ -12,8 +12,9 @@
 	&:before {
 		content: "\f0fe";
 		font-family: $font-icon;
-		display: block;	
+		display: block;
 		vertical-align: 5px;
+		color: grey;
 	}
 }
 
@@ -57,7 +58,7 @@
 				padding-top: 35px;
 				padding-left: 5px;
 			}
-		}	
+		}
 	}
 }
 
@@ -86,12 +87,12 @@
 		@include border-radius(0);
 		border-color: $base-border-color;
 	}
-	.product-image-container, 
+	.product-image-container,
 	.product-name {
-		margin-bottom: 15px;	
+		margin-bottom: 15px;
 	}
 	div.description {
-		margin-bottom: 15px;	
+		margin-bottom: 15px;
 	}
 	.button-container {
 		margin-bottom: 15px;
@@ -100,9 +101,9 @@
 		}
 	}
 	.price {
-		margin-bottom: 10px;	
+		margin-bottom: 10px;
 	}
-	@media  (max-width: $screen-md-max) { // max 1199px 
-		display: none;	
+	@media  (max-width: $screen-md-max) { // max 1199px
+		display: none;
 	}
 }

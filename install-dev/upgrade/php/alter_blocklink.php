@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,17 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function alter_blocklink()
 {
-	// No one will know if the table does not exist :] Thanks Damien for your solution ;)
-	DB::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'blocklink_lang` CHANGE  `id_link`  `id_blocklink` INT( 10 ) UNSIGNED NOT NULL');
-	
-	DB::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'blocklink` CHANGE  `id_link`  `id_blocklink` INT( 10 ) UNSIGNED NOT NULL');
-			
+    // No one will know if the table does not exist :] Thanks Damien for your solution ;)
+    DB::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'blocklink_lang` CHANGE  `id_link`  `id_blocklink` INT( 10 ) UNSIGNED NOT NULL');
+    
+    DB::getInstance()->execute('ALTER TABLE  `'._DB_PREFIX_.'blocklink` CHANGE  `id_link`  `id_blocklink` INT( 10 ) UNSIGNED NOT NULL');
 }
-

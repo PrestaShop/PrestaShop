@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <entity_tab>
+  <tab id="Dashboard" name="Dashboard"/>
+  <tab id="CarrierWizard" name="Carrier"/>
   <tab id="Home" name="首頁"/>
   <tab id="CMS_Pages" name="靜態網頁"/>
   <tab id="CMS_Categories" name="網頁分類"/>
@@ -27,7 +29,6 @@
   <tab id="Features" name="功能"/>
   <tab id="Manufacturers" name="製造商"/>
   <tab id="Suppliers" name="供應商"/>
-  <tab id="Image_Mapping" name="引導圖片"/>
   <tab id="Tags" name="標籤"/>
   <tab id="Attachments" name="附加檔案"/>
   <tab id="Orders_1" name="訂單"/>

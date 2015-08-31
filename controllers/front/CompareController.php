@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,141 +19,133 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class CompareControllerCore extends FrontController
 {
-	public $php_self = 'products-comparison';
+    public $php_self = 'products-comparison';
 
-	public function setMedia()
-	{
-		parent::setMedia();
-		$this->addCSS(_THEME_CSS_DIR_.'comparator.css');
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addCSS(_THEME_CSS_DIR_.'comparator.css');
+    }
 
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
-	}
+    /**
+     * Display ajax content (this function is called instead of classic display, in ajax mode)
+     */
+    public function displayAjax()
+    {
+        // Add or remove product with Ajax
+        if (Tools::getValue('ajax') && Tools::getValue('id_product') && Tools::getValue('action')) {
+            if (Tools::getValue('action') == 'add') {
+                $id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: false;
+                if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM')) {
+                    CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
+                } else {
+                    $this->ajaxDie('0');
+                }
+            } elseif (Tools::getValue('action') == 'remove') {
+                if (isset($this->context->cookie->id_compare)) {
+                    CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
+                } else {
+                    $this->ajaxDie('0');
+                }
+            } else {
+                $this->ajaxDie('0');
+            }
+            $this->ajaxDie('1');
+        }
+        $this->ajaxDie('0');
+    }
 
-	/**
-	 * Display ajax content (this function is called instead of classic display, in ajax mode)
-	 */
-	public function displayAjax()
-	{
-		// Add or remove product with Ajax
-		if (Tools::getValue('ajax') && Tools::getValue('id_product') && Tools::getValue('action'))
-		{
-			if (Tools::getValue('action') == 'add')
-			{
-				$id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: false;
-				if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-					CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
-				else
-					die('0');
-			}
-			else if (Tools::getValue('action') == 'remove')
-			{
-				if (isset($this->context->cookie->id_compare))
-					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
-				else
-					die('0');
-			}
-			else
-				die('0');
+    /**
+     * Assign template vars related to page content
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        if (Tools::getValue('ajax')) {
+            return;
+        }
+        parent::initContent();
 
-			die('1');
-		}
-		die('0');
-	}
+        //Clean compare product table
+        CompareProduct::cleanCompareProducts('week');
 
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::initContent()
-	 */
-	public function initContent()
-	{
-		if (Tools::getValue('ajax'))
-			return;
-		parent::initContent();
+        $hasProduct = false;
 
-		//Clean compare product table
-		CompareProduct::cleanCompareProducts('week');
+        if (!Configuration::get('PS_COMPARATOR_MAX_ITEM')) {
+            return Tools::redirect('index.php?controller=404');
+        }
 
-		$hasProduct = false;
+        $ids = null;
+        if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : ''))) {
+            $ids = array_unique(explode('|', $postProducts));
+        } elseif (isset($this->context->cookie->id_compare)) {
+            $ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
+            if (count($ids)) {
+                Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
+            }
+        }
 
-		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			return Tools::redirect('index.php?controller=404');
+        if ($ids) {
+            if (count($ids) > 0) {
+                if (count($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM')) {
+                    $ids = array_slice($ids, 0, Configuration::get('PS_COMPARATOR_MAX_ITEM'));
+                }
 
-		$ids = null;
-		if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
-			$ids = array_unique(explode('|', $postProducts));
-		elseif (isset($this->context->cookie->id_compare))
-		{
-			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
-			if (count($ids))
-				Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
-		}
+                $listProducts = array();
+                $listFeatures = array();
 
-		if ($ids)
-		{
-			if (count($ids) > 0)
-			{
-				if (count($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-					$ids = array_slice($ids, 0, Configuration::get('PS_COMPARATOR_MAX_ITEM'));
+                foreach ($ids as $k => &$id) {
+                    $curProduct = new Product((int)$id, true, $this->context->language->id);
+                    if (!Validate::isLoadedObject($curProduct) || !$curProduct->active || !$curProduct->isAssociatedToShop()) {
+                        if (isset($this->context->cookie->id_compare)) {
+                            CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
+                        }
+                        unset($ids[$k]);
+                        continue;
+                    }
 
-				$listProducts = array();
-				$listFeatures = array();
+                    foreach ($curProduct->getFrontFeatures($this->context->language->id) as $feature) {
+                        $listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
+                    }
 
-				foreach ($ids as $k => &$id)
-				{
-					$curProduct = new Product((int)$id, true, $this->context->language->id);
-					if (!Validate::isLoadedObject($curProduct) || !$curProduct->active || !$curProduct->isAssociatedToShop())
-					{
-						if (isset($this->context->cookie->id_compare))
-							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
-						unset($ids[$k]);
-						continue;
-					}
+                    $cover = Product::getCover((int)$id);
 
-					foreach ($curProduct->getFrontFeatures($this->context->language->id) as $feature)
-						$listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
+                    $curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
+                    $curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
+                    $listProducts[] = $curProduct;
+                }
 
-					$cover = Product::getCover((int)$id);
+                if (count($listProducts) > 0) {
+                    $width = 80 / count($listProducts);
 
-					$curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
-					$curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
-					$listProducts[] = $curProduct;
-				}
+                    $hasProduct = true;
+                    $ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
+                    $this->context->smarty->assign(array(
+                        'ordered_features' => $ordered_features,
+                        'product_features' => $listFeatures,
+                        'products' => $listProducts,
+                        'width' => $width,
+                        'HOOK_COMPARE_EXTRA_INFORMATION' => Hook::exec('displayCompareExtraInformation', array('list_ids_product' => $ids)),
+                        'HOOK_EXTRA_PRODUCT_COMPARISON' => Hook::exec('displayProductComparison', array('list_ids_product' => $ids)),
+                        'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
+                    ));
+                } elseif (isset($this->context->cookie->id_compare)) {
+                    $object = new CompareProduct((int)$this->context->cookie->id_compare);
+                    if (Validate::isLoadedObject($object)) {
+                        $object->delete();
+                    }
+                }
+            }
+        }
+        $this->context->smarty->assign('hasProduct', $hasProduct);
 
-				if (count($listProducts) > 0)
-				{
-					$width = 80 / count($listProducts);
-
-					$hasProduct = true;
-					$ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
-					$this->context->smarty->assign(array(
-						'ordered_features' => $ordered_features,
-						'product_features' => $listFeatures,
-						'products' => $listProducts,
-						'width' => $width,
-						'HOOK_COMPARE_EXTRA_INFORMATION' => Hook::exec('displayCompareExtraInformation', array('list_ids_product' => $ids)),
-						'HOOK_EXTRA_PRODUCT_COMPARISON' => Hook::exec('displayProductComparison', array('list_ids_product' => $ids)),
-						'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
-					));
-				}
-				elseif (isset($this->context->cookie->id_compare))
-				{
-					$object = new CompareProduct((int)$this->context->cookie->id_compare);
-					if (Validate::isLoadedObject($object))
-					  $object->delete();
-				}
-			}
-		}
-		$this->context->smarty->assign('hasProduct', $hasProduct);
-
-		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
-	}
-	
+        $this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
+    }
 }

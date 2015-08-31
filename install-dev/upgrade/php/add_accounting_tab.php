@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,27 +19,27 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function add_accounting_tab()
 {
-	include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
-	$id_parent = add_new_tab(
-		'AdminAccounting', 
-		'en:Accounting|fr:Comptabilité|es:Accounting|de:Accounting|it:Accounting', 
-		0, 
-		true);
+    include_once(_PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php');
+    $id_parent = add_new_tab(
+        'AdminAccounting',
+        'en:Accounting|fr:Comptabilité|es:Accounting|de:Accounting|it:Accounting',
+        0,
+        true);
 
-	add_new_tab(
-		'AdminAccountingManagement',
-		'en:Account Number Management|fr:Gestion des numéros de comptes|es:Account Number Management|de:Account Number Management|it:Account Number Management',
-		$id_parent);
+    add_new_tab(
+        'AdminAccountingManagement',
+        'en:Account Number Management|fr:Gestion des numéros de comptes|es:Account Number Management|de:Account Number Management|it:Account Number Management',
+        $id_parent);
 
-	add_new_tab(
-		'AdminAccountingExport',
-		'en:Export|fr:Export|es:Export|de:Export|it:Export',
-		$id_parent);
+    add_new_tab(
+        'AdminAccountingExport',
+        'en:Export|fr:Export|es:Export|de:Export|it:Export',
+        $id_parent);
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,23 +19,24 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function outstanding_allow_amount1530()
 {
-	$column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
-	$column_formated = array();
-	$res = true;
-	if ($column_exist)
-	{
-		foreach($column_exist as $c)
-			$column_formated[] = $c['Field'] ;
-		
-		if (in_array('outstanding_allow_amount' , $column_formated))
-			Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
-	}
-	return $res;
+    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
+    $column_formated = array();
+    $res = true;
+    if ($column_exist) {
+        foreach ($column_exist as $c) {
+            $column_formated[] = $c['Field'] ;
+        }
+        
+        if (in_array('outstanding_allow_amount', $column_formated)) {
+            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
+        }
+    }
+    return $res;
 }

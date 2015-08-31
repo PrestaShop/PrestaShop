@@ -21,7 +21,7 @@
     display: inline-block;
     font-family: "FontAwesome";
     font-size: 20px;
-    color: #333333; }
+    color: #333; }
   #listpage_content div.tree_top a:hover:before {
     color: #515151; }
 
@@ -39,3 +39,5 @@ ul.tree {
   ul.tree li.last {
     border: medium none;
     background: url(../img/sitemap-last.png) no-repeat 0px -4px transparent; }
+
+/*# sourceMappingURL=sitemap.css.map */

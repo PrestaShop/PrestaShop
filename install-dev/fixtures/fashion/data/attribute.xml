@@ -28,5 +28,6 @@
     <attribute id="38" id_attribute_group="Shoes_Size" color=""/>
     <attribute id="39" id_attribute_group="Shoes_Size" color=""/>
     <attribute id="40" id_attribute_group="Shoes_Size" color=""/>
+    <attribute id="Pink" id_attribute_group="Color" color="#FCCACD"/>
   </entities>
 </entity_attribute>

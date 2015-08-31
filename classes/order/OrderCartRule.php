@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,58 +19,57 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class OrderCartRuleCore extends ObjectModel
 {
-	/** @var integer */
-	public $id_order_cart_rule;
+    /** @var int */
+    public $id_order_cart_rule;
 
-	/** @var integer */
-	public $id_order;
+    /** @var int */
+    public $id_order;
 
-	/** @var integer */
-	public $id_cart_rule;
+    /** @var int */
+    public $id_cart_rule;
 
-	/** @var integer */
-	public $id_order_invoice;
+    /** @var int */
+    public $id_order_invoice;
 
-	/** @var string */
-	public $name;
+    /** @var string */
+    public $name;
 
-	/** @var float value (tax incl.) of voucher */
-	public $value;
+    /** @var float value (tax incl.) of voucher */
+    public $value;
 
-	/** @var float value (tax excl.) of voucher */
-	public $value_tax_excl;
-	
-	/** @var boolean value : voucher gives free shipping or not */
-	public $free_shipping;
+    /** @var float value (tax excl.) of voucher */
+    public $value_tax_excl;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'order_cart_rule',
-		'primary' => 'id_order_cart_rule',
-		'fields' => array(
-			'id_order' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_cart_rule' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_order_invoice' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
-			'value' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-			'value_tax_excl' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-			'free_shipping' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
-		)
-	);
+    /** @var bool value : voucher gives free shipping or not */
+    public $free_shipping;
 
-	protected $webserviceParameters = array(
-		'fields' => array(
-			'id_order' => array('xlink_resource' => 'orders'),
-		),
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'order_cart_rule',
+        'primary' => 'id_order_cart_rule',
+        'fields' => array(
+            'id_order' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_cart_rule' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_order_invoice' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'name' =>                array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
+            'value' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'value_tax_excl' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+            'free_shipping' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
+        )
+    );
+
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_order' => array('xlink_resource' => 'orders'),
+        ),
+    );
 }
-

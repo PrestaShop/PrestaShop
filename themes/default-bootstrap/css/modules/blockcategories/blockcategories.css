@@ -48,7 +48,7 @@
   position: relative; }
   #categories_block_left li a {
     font-weight: bold;
-    color: #333333;
+    color: #333;
     display: block;
     font-size: 13px;
     line-height: 30px;
@@ -69,7 +69,7 @@
       vertical-align: middle;
       width: 30px;
       height: 30px;
-      color: #333333;
+      color: #333;
       line-height: 30px;
       text-align: center; }
     #categories_block_left li span.grower.CLOSE:before {
@@ -87,3 +87,5 @@
       font-family: "FontAwesome";
       line-height: 29px;
       padding-right: 8px; }
+
+/*# sourceMappingURL=blockcategories.css.map */

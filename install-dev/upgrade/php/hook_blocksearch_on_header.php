@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,30 +19,29 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function hook_blocksearch_on_header()
 {
-	if ($id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \'blocksearch\''))
-	{
-		$id_hook = Db::getInstance()->getValue('
+    if ($id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \'blocksearch\'')) {
+        $id_hook = Db::getInstance()->getValue('
 			SELECT `id_hook`
 			FROM `'._DB_PREFIX_.'hook`
 			WHERE `name` = \'header\'
 		');
-		
-		$position = Db::getInstance()->getValue('
+        
+        $position = Db::getInstance()->getValue('
 			SELECT MAX(`position`)
 			FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_hook` = '.(int)$id_hook.'
 		');
-		
-		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`) 
+        
+        Db::getInstance()->execute('
+			INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 			VALUES ('.(int)$id_module.', '.(int)$id_hook.', '.($position+1).')
 		');
-	}
+    }
 }

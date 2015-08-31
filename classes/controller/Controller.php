@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,404 +19,623 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
+ * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
  * @since 1.5.0
  */
 abstract class ControllerCore
 {
-	/**
-	 * @var Context
-	 */
-	protected $context;
+    /** @var Context */
+    protected $context;
 
-	/**
-	 * @var array list of css files
-	 */
-	public $css_files = array();
+    /** @var array List of CSS files */
+    public $css_files = array();
 
-	/**
-	 * @var array list of javascript files
-	 */
-	public $js_files = array();
+    /** @var array List of JavaScript files */
+    public $js_files = array();
 
-	/**
-	 * @var array list of php error
-	 */
-	public static $php_errors = array();
+    /** @var array List of PHP errors */
+    public static $php_errors = array();
 
-	/**
-	 * @var bool check if header will be displayed
-	 */
-	protected $display_header;
+    /** @var bool Set to true to display page header */
+    protected $display_header;
 
-	/**
-	 * @var string template name for page content
-	 */
-	protected $template;
+    /** @var bool Set to true to display page header javascript */
+    protected $display_header_javascript;
 
-	/**
-	 * @var string check if footer will be displayed
-	 */
-	protected $display_footer;
+    /** @var string Template filename for the page content */
+    protected $template;
 
-	/**
-	 * @var string check if only content will be displayed
-	 */
-	protected $content_only = false;
+    /** @var string Set to true to display page footer */
+    protected $display_footer;
 
-	/**
-	 * @var bool If ajax parameter is detected in request, set this flag to true
-	 */
-	public $ajax = false;
-	protected $json = false;
-	protected $status = '';
+    /** @var bool Set to true to only render page content (used to get iframe content) */
+    protected $content_only = false;
 
-	protected $redirect_after = null;
-	
-	public $controller_type;
-	public $php_self;	
-	/**
-	 * check that the controller is available for the current user/visitor
-	 */
-	abstract public function checkAccess();
+    /** @var bool If AJAX parameter is detected in request, set this flag to true */
+    public $ajax = false;
 
-	/**
-	 * check that the current user/visitor has valid view permissions
-	 */
-	abstract public function viewAccess();
+    /** @var bool If set to true, page content and messages will be encoded to JSON before responding to AJAX request */
+    protected $json = false;
 
-	/**
-	 * Initialize the page
-	 */
-	public function init()
-	{
-		$old_error_handler = set_error_handler(array(__CLASS__, 'myErrorHandler'));
-		if (!defined('_PS_BASE_URL_'))
-			define('_PS_BASE_URL_', Tools::getShopDomain(true));
-		if (!defined('_PS_BASE_URL_SSL_'))
-			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
-	}
+    /** @var string JSON response status string */
+    protected $status = '';
 
-	/**
-	 * Do the page treatment : post process, ajax process, etc.
-	 */
-	abstract public function postProcess();
+    /**
+     * @see Controller::run()
+     * @var string|null Redirect link. If not empty, the user will be redirected after initializing and processing input.
+     */
+    protected $redirect_after = null;
 
-	/**
-	 * Display page view
-	 */
-	abstract public function display();
+    /** @var string Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin' */
+    public $controller_type;
 
-	/**
-	 * Redirect after process if no error
-	 */
-	abstract protected function redirect();
+    /** @var string Controller name */
+    public $php_self;
 
-	/**
-	 * Set default media list for controller
-	 */
-	abstract public function setMedia();
+    /**
+     * Check if the controller is available for the current user/visitor
+     */
+    abstract public function checkAccess();
 
-	/**
-	 * Get an instance of a controller
-	 *
-	 * @param string $class_name
-	 * @param bool $auth
-	 * @param bool $ssl
-	 */
-	public static function getController($class_name, $auth = false, $ssl = false)
-	{
-		return new $class_name($auth, $ssl);
-	}
+    /**
+     * Check if the current user/visitor has valid view permissions
+     */
+    abstract public function viewAccess();
 
-	public function __construct()
-	{
-		if (is_null($this->display_header))
-			$this->display_header = true;
+    /**
+     * Initialize the page
+     */
+    public function init()
+    {
+        if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
+            set_error_handler(array(__CLASS__, 'myErrorHandler'));
+        }
 
-		if (is_null($this->display_footer))
-			$this->display_footer = true;
+        if (!defined('_PS_BASE_URL_')) {
+            define('_PS_BASE_URL_', Tools::getShopDomain(true));
+        }
 
-		$this->context = Context::getContext();
-		$this->context->controller = $this;
-		// Usage of ajax parameter is deprecated
-		$this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
-	}
+        if (!defined('_PS_BASE_URL_SSL_')) {
+            define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
+        }
+    }
 
-	/**
-	 * Start controller process (this method shouldn't be overriden !)
-	 */
-	public function run()
-	{
-		$this->init();
-		if ($this->checkAccess())
-		{
-			// setMedia MUST be called before postProcess
-			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
-				$this->setMedia();
+    /**
+     * Do the page treatment: process input, process AJAX, etc.
+     */
+    abstract public function postProcess();
 
-			// postProcess handles ajaxProcess
-			$this->postProcess();
+    /**
+     * Displays page view
+     */
+    abstract public function display();
 
-			if (!empty($this->redirect_after))
-				$this->redirect();
+    /**
+     * Sets default media list for this controller
+     */
+    abstract public function setMedia();
 
-			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
-				$this->initHeader();
+    /**
+     * returns a new instance of this controller
+     *
+     * @param string $class_name
+     * @param bool $auth
+     * @param bool $ssl
+     * @return Controller
+     */
+    public static function getController($class_name, $auth = false, $ssl = false)
+    {
+        return new $class_name($auth, $ssl);
+    }
 
-			if ($this->viewAccess())
-				$this->initContent();
-			else
-				$this->errors[] = Tools::displayError('Access denied.');
+    public function __construct()
+    {
+        if (is_null($this->display_header)) {
+            $this->display_header = true;
+        }
 
-			if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className)))
-				$this->initFooter();
+        if (is_null($this->display_header_javascript)) {
+            $this->display_header_javascript = true;
+        }
 
-			// default behavior for ajax process is to use $_POST[action] or $_GET[action]
-			// then using displayAjax[action]
-			if ($this->ajax)
-			{
-				$action = Tools::toCamelCase(Tools::getValue('action'), true);
-				if (!empty($action) && method_exists($this, 'displayAjax'.$action)) 
-					$this->{'displayAjax'.$action}();
-				elseif (method_exists($this, 'displayAjax'))
-					$this->displayAjax();
-			}
-			else
-				$this->display();
-		}
-		else
-		{
-			$this->initCursedPage();
-			$this->smartyOutputContent($this->layout);
-		}
-	}
+        if (is_null($this->display_footer)) {
+            $this->display_footer = true;
+        }
 
-	public function displayHeader($display = true)
-	{
-		$this->display_header = $display;
-	}
+        $this->context = Context::getContext();
+        $this->context->controller = $this;
 
-	public function displayFooter($display = true)
-	{
-		$this->display_footer = $display;
-	}
+        // Usage of ajax parameter is deprecated
+        $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 
-	public function setTemplate($template)
-	{
-		$this->template = $template;
-	}
+        if (!headers_sent()
+            && isset($_SERVER['HTTP_USER_AGENT'])
+            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
+            header('X-UA-Compatible: IE=edge,chrome=1');
+        }
+    }
 
-	/**
-	 * Assign smarty variables for the page header
-	 */
-	abstract public function initHeader();
+    /**
+     * Starts the controller process (this method should not be overridden!)
+     */
+    public function run()
+    {
+        $this->init();
+        if ($this->checkAccess()) {
+            // setMedia MUST be called before postProcess
+            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
+                $this->setMedia();
+            }
 
-	/**
-	 * Assign smarty variables for the page main content
-	 */
-	abstract public function initContent();
+            // postProcess handles ajaxProcess
+            $this->postProcess();
 
-	/**
-	 * Assign smarty variables when access is forbidden
-	 */
-	abstract public function initCursedPage();
+            if (!empty($this->redirect_after)) {
+                $this->redirect();
+            }
 
-	/**
-	 * Assign smarty variables for the page footer
-	 */
-	abstract public function initFooter();
+            if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className))) {
+                $this->initHeader();
+            }
 
-	/**
-	 * Add a new stylesheet in page header.
-	 *
-	 * @param mixed $css_uri Path to css file, or list of css files like this : array(array(uri => media_type), ...)
-	 * @param string $css_media_type
-	 * @return true
-	 */
-	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
-	{
-		if (!is_array($css_uri))
-			$css_uri = array($css_uri);
+            if ($this->viewAccess()) {
+                $this->initContent();
+            } else {
+                $this->errors[] = Tools::displayError('Access denied.');
+            }
 
-		foreach ($css_uri as $css_file => $media)
-		{
-			if (is_string($css_file) && strlen($css_file) > 1)
-				$css_path = Media::getCSSPath($css_file, $media);
-			else
-				$css_path = Media::getCSSPath($media, $css_media_type);
+            if (!$this->content_only && ($this->display_footer || (isset($this->className) && $this->className))) {
+                $this->initFooter();
+            }
 
-			if ($css_path && !in_array($css_path, $this->css_files))
-			{
-				$size = count($this->css_files);
-				if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset))
-					$offset = $size;
+            // Default behavior for ajax process is to use $_POST[action] or $_GET[action]
+            // then using displayAjax[action]
+            if ($this->ajax) {
+                $action = Tools::toCamelCase(Tools::getValue('action'), true);
 
-				$this->css_files = array_merge(array_slice($this->css_files, 0, $offset), $css_path, array_slice($this->css_files, $offset));
-			}
-		}
-	}
+                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
+                    $this->{'displayAjax'.$action}();
+                } elseif (method_exists($this, 'displayAjax')) {
+                    $this->displayAjax();
+                }
+            } else {
+                $this->display();
+            }
+        } else {
+            $this->initCursedPage();
+            $this->smartyOutputContent($this->layout);
+        }
+    }
 
-	/**
-	 * Add a new javascript file in page header.
-	 *
-	 * @param mixed $js_uri
-	 * @return void
-	 */
-	public function addJS($js_uri)
-	{
-		if (is_array($js_uri))
-			foreach ($js_uri as $js_file)
-			{
-				$js_path = Media::getJSPath($js_file);
-				if ($js_path && !in_array($js_path, $this->js_files))
-					$this->js_files[] = $js_path;
-			}
-		else
-		{
-			$js_path = Media::getJSPath($js_uri);
-			if ($js_path)
-				$this->js_files[] = $js_path;
-		}
-	}
+    /**
+     * Sets page header display
+     *
+     * @param bool $display
+     */
+    public function displayHeader($display = true)
+    {
+        $this->display_header = $display;
+    }
 
-	/**
-	 * Add a new javascript file in page header.
-	 *
-	 * @param mixed $js_uri
-	 * @return void
-	 */
-	public function addJquery($version = null, $folder = null, $minifier = true)
-	{
-		$this->addJS(Media::getJqueryPath($version, $folder, $minifier));
-	}
+    /**
+     * Sets page header javascript display
+     *
+     * @param bool $display
+     */
+    public function displayHeaderJavaScript($display = true)
+    {
+        $this->display_header_javascript = $display;
+    }
 
-	/**
-	 * Add a new javascript file in page header.
-	 *
-	 * @param mixed $js_uri
-	 * @return void
-	 */
-	public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
-	{
-		$ui_path = array();
-		if (!is_array($component))
-			$component = array($component);
+    /**
+     * Sets page header display
+     *
+     * @param bool $display
+     */
+    public function displayFooter($display = true)
+    {
+        $this->display_footer = $display;
+    }
 
-		foreach ($component as $ui)
-		{
-			$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-			$this->addCSS($ui_path['css']);
-			$this->addJS($ui_path['js']);
-		}
-	}
+    /**
+     * Sets template file for page content output
+     *
+     * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
 
-	/**
-	 * Add a new javascript file in page header.
-	 *
-	 * @param mixed $name
-	 * @param mixed $folder
-	 * @return void
-	 */
-	public function addJqueryPlugin($name, $folder = null)
-	{
-		if (is_array($name))
-		{
-			foreach ($name as $plugin)
-			{
-				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
-				if(!empty($plugin_path['js']))
-					$this->addJS($plugin_path['js']);
-				if(!empty($plugin_path['css']))		
-					$this->addCSS($plugin_path['css']);
-			}
-		}
-		else
-		{
-			$plugin_path = Media::getJqueryPluginPath($name, $folder);
+    /**
+     * Assigns Smarty variables for the page header
+     */
+    abstract public function initHeader();
 
-			if(!empty($plugin_path['css']))
-				$this->addCSS($plugin_path['css']);
-			if(!empty($plugin_path['js']))
-				$this->addJS($plugin_path['js']);
-		}
-	}
+    /**
+     * Assigns Smarty variables for the page main content
+     */
+    abstract public function initContent();
 
-	/**
-	 * @since 1.5
-	 * @return bool return true if Controller is called from XmlHttpRequest
-	 */
-	public function isXmlHttpRequest()
-	{
-		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-	}
-	
-	protected function smartyOutputContent($content)
-	{
-		$this->context->cookie->write();
-		if (is_array($content))
-			foreach ($content as $tpl)
-				$html = $this->context->smarty->fetch($tpl);
-		else
-			$html = $this->context->smarty->fetch($content);
+    /**
+     * Assigns Smarty variables when access is forbidden
+     */
+    abstract public function initCursedPage();
 
-		if ($this->controller_type == 'front')
-		{
-			$html = Media::deferInlineScripts($html);
-			$html = str_replace(array('</body>', '</html>'), '', $html);
-			$this->context->smarty->assign('js_def', Media::getJsDef());
-			$javascript = $this->context->smarty->fetch(_PS_THEME_DIR_.'javascript.tpl');
-			$javascript = substr_replace(trim($javascript), '', -(strlen('</script>')));
-			foreach (Media::getInlineScript() as $script)
-				$javascript .= $script."\n";
-			echo $html.$javascript."</script>\n\t</body>\n</html>";
-		}
-		else
-			echo $html;
-	}
-	
-	protected function isCached($template, $cacheId = null, $compileId = null)
-	{
-		Tools::enableCache();
-		$res = $this->context->smarty->isCached($template, $cacheId, $compileId);
-		Tools::restoreCacheSettings();
-		return $res;
-	}
+    /**
+     * Assigns Smarty variables for the page footer
+     */
+    abstract public function initFooter();
 
-	public static function myErrorHandler($errno, $errstr, $errfile, $errline)
-	{
-	    if (!_PS_MODE_DEV_ || !(error_reporting() & $errno))
-			return;
-	    switch ($errno)
-		{
-		    case E_USER_ERROR || E_ERROR:
-				$type = 'Fatal error';
-				break;
-		    case E_USER_WARNING || E_WARNING:
-				$type = 'Warning';
-		        break;
-		    case E_USER_NOTICE || E_NOTICE:
-				$type = 'Notice';
-		        break;
-		    default:
-				$type = 'Unknow error';
-		        break;
-	    }
+    /**
+     * Redirects to $this->redirect_after after the process if there is no error
+     */
+    abstract protected function redirect();
 
-		Controller::$php_errors[] = array(
-			'type' => $type,
-			'errline' => (int)$errline,
-			'errfile' => str_replace('\\', '\\\\', $errfile), // Hack for Windows paths
-			'errno' => (int)$errno,
-			'errstr' => $errstr
-		);
-		Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
-	    return true;
-	}
+    /**
+     * Set $this->redirect_after that will be used by redirect() after the process
+     */
+    public function setRedirectAfter($url)
+    {
+        $this->redirect_after = $url;
+    }
+
+    /**
+     * Adds a new stylesheet(s) to the page header.
+     *
+     * @param string|array $css_uri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
+     * @param string $css_media_type
+     * @param int|null $offset
+     * @param bool $check_path
+     * @return true
+     */
+    public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
+    {
+        if (!is_array($css_uri)) {
+            $css_uri = array($css_uri);
+        }
+
+        foreach ($css_uri as $css_file => $media) {
+            if (is_string($css_file) && strlen($css_file) > 1) {
+                if ($check_path) {
+                    $css_path = Media::getCSSPath($css_file, $media);
+                } else {
+                    $css_path = array($css_file => $media);
+                }
+            } else {
+                if ($check_path) {
+                    $css_path = Media::getCSSPath($media, $css_media_type);
+                } else {
+                    $css_path = array($media => $css_media_type);
+                }
+            }
+
+            $key = is_array($css_path) ? key($css_path) : $css_path;
+            if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path)))) {
+                $size = count($this->css_files);
+                if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset)) {
+                    $offset = $size;
+                }
+
+                $this->css_files = array_merge(array_slice($this->css_files, 0, $offset), $css_path, array_slice($this->css_files, $offset));
+            }
+        }
+    }
+
+    /**
+     * Removes CSS stylesheet(s) from the queued stylesheet list
+     *
+     * @param string|array $css_uri Path to CSS file or an array like: array(array(uri => media_type), ...)
+     * @param string $css_media_type
+     * @param bool $check_path
+     */
+    public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
+    {
+        if (!is_array($css_uri)) {
+            $css_uri = array($css_uri);
+        }
+
+        foreach ($css_uri as $css_file => $media) {
+            if (is_string($css_file) && strlen($css_file) > 1) {
+                if ($check_path) {
+                    $css_path = Media::getCSSPath($css_file, $media);
+                } else {
+                    $css_path = array($css_file => $media);
+                }
+            } else {
+                if ($check_path) {
+                    $css_path = Media::getCSSPath($media, $css_media_type);
+                } else {
+                    $css_path = array($media => $css_media_type);
+                }
+            }
+
+            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path))) {
+                unset($this->css_files[key($css_path)]);
+            }
+        }
+    }
+
+    /**
+     * Adds a new JavaScript file(s) to the page header.
+     *
+     * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param bool $check_path
+     * @return void
+     */
+    public function addJS($js_uri, $check_path = true)
+    {
+        if (is_array($js_uri)) {
+            foreach ($js_uri as $js_file) {
+                $js_path = $js_file;
+                if ($check_path) {
+                    $js_path = Media::getJSPath($js_file);
+                }
+
+                // $key = is_array($js_path) ? key($js_path) : $js_path;
+                if ($js_path && !in_array($js_path, $this->js_files)) {
+                    $this->js_files[] = $js_path;
+                }
+            }
+        } else {
+            $js_path = $js_uri;
+            if ($check_path) {
+                $js_path = Media::getJSPath($js_uri);
+            }
+
+            if ($js_path && !in_array($js_path, $this->js_files)) {
+                $this->js_files[] = $js_path;
+            }
+        }
+    }
+
+    /**
+     * Removes JS file(s) from the queued JS file list
+     *
+     * @param string|array $js_uri Path to JS file or an array like: array(uri, ...)
+     * @param bool $check_path
+     */
+    public function removeJS($js_uri, $check_path = true)
+    {
+        if (is_array($js_uri)) {
+            foreach ($js_uri as $js_file) {
+                $js_path = $js_file;
+                if ($check_path) {
+                    $js_path = Media::getJSPath($js_file);
+                }
+
+                if ($js_path && in_array($js_path, $this->js_files)) {
+                    unset($this->js_files[array_search($js_path, $this->js_files)]);
+                }
+            }
+        } else {
+            $js_path = $js_uri;
+            if ($check_path) {
+                $js_path = Media::getJSPath($js_uri);
+            }
+
+            if ($js_path) {
+                unset($this->js_files[array_search($js_path, $this->js_files)]);
+            }
+        }
+    }
+
+    /**
+     * Adds jQuery library file to queued JS file list
+     *
+     * @param string|null $version jQuery library version
+     * @param string|null $folder jQuery file folder
+     * @param bool $minifier If set tot true, a minified version will be included.
+     */
+    public function addJquery($version = null, $folder = null, $minifier = true)
+    {
+        $this->addJS(Media::getJqueryPath($version, $folder, $minifier), false);
+    }
+
+    /**
+     * Adds jQuery UI component(s) to queued JS file list
+     *
+     * @param string|array $component
+     * @param string $theme
+     * @param bool $check_dependencies
+     */
+    public function addJqueryUI($component, $theme = 'base', $check_dependencies = true)
+    {
+        if (!is_array($component)) {
+            $component = array($component);
+        }
+
+        foreach ($component as $ui) {
+            $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
+            $this->addCSS($ui_path['css'], 'all', false);
+            $this->addJS($ui_path['js'], false);
+        }
+    }
+
+    /**
+     * Adds jQuery plugin(s) to queued JS file list
+     *
+     * @param string|array $name
+     * @param string null $folder
+     * @param bool $css
+     */
+    public function addJqueryPlugin($name, $folder = null, $css = true)
+    {
+        if (!is_array($name)) {
+            $name = array($name);
+        }
+        if (is_array($name)) {
+            foreach ($name as $plugin) {
+                $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+
+                if (!empty($plugin_path['js'])) {
+                    $this->addJS($plugin_path['js'], false);
+                }
+                if ($css && !empty($plugin_path['css'])) {
+                    $this->addCSS(key($plugin_path['css']), 'all', null, false);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the controller has been called from XmlHttpRequest (AJAX)
+     *
+     * @since 1.5
+     * @return bool
+     */
+    public function isXmlHttpRequest()
+    {
+        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+    }
+
+    /**
+     * Renders controller templates and generates page content
+     *
+     * @param array|string $content Template file(s) to be rendered
+     * @throws Exception
+     * @throws SmartyException
+     */
+    protected function smartyOutputContent($content)
+    {
+        $this->context->cookie->write();
+
+        $html = '';
+        $js_tag = 'js_def';
+        $this->context->smarty->assign($js_tag, $js_tag);
+
+        if (is_array($content)) {
+            foreach ($content as $tpl) {
+                $html .= $this->context->smarty->fetch($tpl);
+            }
+        } else {
+            $html = $this->context->smarty->fetch($content);
+        }
+
+        $html = trim($html);
+
+        if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
+            $live_edit_content = '';
+            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
+                $live_edit_content = $this->getLiveEditFooter();
+            }
+
+            $dom_available = extension_loaded('dom') ? true : false;
+            $defer = (bool)Configuration::get('PS_JS_DEFER');
+
+            if ($defer && $dom_available) {
+                $html = Media::deferInlineScripts($html);
+            }
+            $html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
+
+            $this->context->smarty->assign(array(
+                $js_tag => Media::getJsDef(),
+                'js_files' =>  $defer ? array_unique($this->js_files) : array(),
+                'js_inline' => ($defer && $dom_available) ? Media::getInlineScript() : array()
+            ));
+
+            $javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
+
+            if ($defer) {
+                echo $html.$javascript;
+            } else {
+                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+            }
+        } else {
+            echo $html;
+        }
+    }
+
+    /**
+     * Checks if a template is cached
+     *
+     * @param string $template
+     * @param string|null $cache_id Cache item ID
+     * @param string|null $compile_id
+     * @return bool
+     */
+    protected function isCached($template, $cache_id = null, $compile_id = null)
+    {
+        Tools::enableCache();
+        $res = $this->context->smarty->isCached($template, $cache_id, $compile_id);
+        Tools::restoreCacheSettings();
+
+        return $res;
+    }
+
+    /**
+     * Custom error handler
+     *
+     * @param string $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param int $errline
+     * @return bool
+     */
+    public static function myErrorHandler($errno, $errstr, $errfile, $errline)
+    {
+        if (error_reporting() === 0) {
+            return false;
+        }
+
+        switch ($errno) {
+            case E_USER_ERROR:
+            case E_ERROR:
+                die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
+            break;
+            case E_USER_WARNING:
+            case E_WARNING:
+                $type = 'Warning';
+            break;
+            case E_USER_NOTICE:
+            case E_NOTICE:
+                $type = 'Notice';
+            break;
+            default:
+                $type = 'Unknown error';
+            break;
+        }
+
+        Controller::$php_errors[] = array(
+            'type'    => $type,
+            'errline' => (int)$errline,
+            'errfile' => str_replace('\\', '\\\\', $errfile), // Hack for Windows paths
+            'errno'   => (int)$errno,
+            'errstr'  => $errstr
+        );
+        Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
+
+        return true;
+    }
+
+    /**
+     * Dies and echoes output value
+     *
+     * @param string|null $value
+     * @param string|null $controller
+     * @param string|null $method
+     */
+    protected function ajaxDie($value = null, $controller = null, $method = null)
+    {
+        if ($controller === null) {
+            $controller = get_class($this);
+        }
+
+        if ($method === null) {
+            $bt = debug_backtrace();
+            $method = $bt[1]['function'];
+        }
+
+        Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
+        Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
+
+        die($value);
+    }
 }
-?>

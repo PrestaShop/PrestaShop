@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,38 +18,42 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/form/form.tpl"}
 
+{block name="field"}
+	{if $input.type == 'prestashop_addons'}
+		<div class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
+			{if isset($logged_on_addons) && $logged_on_addons}
+				<p><i class="icon-user"></i>{l s='You are currently connected as %s' sprintf=$username_addons}</p>
+				<a class="btn btn-default" href="#" id="addons_logout_button">
+					<i class="icon-signout"></i> {l s='Sign out from PrestaShop Addons'}
+				</a>
+			{else}
+				<a class="btn btn-default" data-toggle="modal" href="#" data-target="#modal_addons_connect">
+					<i class="icon-signout"></i> {l s='Sign in'}
+				</a>
+			{/if}
+		</div>
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
+
 {block name="input"}
-	{if $input.type == 'select_theme'}
-		<select name="{$input.name}" id="{$input.name}" {if isset($input.multiple)}multiple="multiple" {/if}{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
-			{foreach $input.options.query AS $option}
-				<option value="{$option}"
-					{if isset($input.multiple)}
-						{foreach $fields_value[$input.name] as $field_value}
-							{$field_value}
-							{if $field_value == $option}selected="selected"{/if}
-						{/foreach}
-					{else}
-						{if $fields_value[$input.name] == $option}selected="selected"{/if}
-					{/if}
-				>{$option|escape:'html':'UTF-8'}</option>
-			{/foreach}
-		</select>
-	{elseif $input.type == 'default_tab'}
-	<select name="{$input.name}" id="{$input.name}">
+	{if $input.type == 'default_tab'}
+	<select id="{$input.name}" name="{$input.name}" class="chosen fixed-width-xxl">
 		{foreach $input.options AS $option}
 			{if isset($option.children) && $option.children|@count}
 				<optgroup label="{$option.name|escape:'html':'UTF-8'}"></optgroup>
 				{foreach $option.children AS $children}
-					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$children.name|escape:'html':'UTF-8'}</option>
+					<option value="{$children.id_tab}" {if $fields_value[$input.name] == $children.id_tab}selected="selected"{/if}>{$children.name|escape:'html':'UTF-8'}</option>
 				{/foreach}
 			{else}
-				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>&nbsp;&nbsp;{$option.name|escape:'html':'UTF-8'}</option>
+				<option value="{$option.id_tab}" {if $fields_value[$input.name] == $option.id_tab}selected="selected"{/if}>{$option.name|escape:'html':'UTF-8'}</option>
 			{/if}
 		{/foreach}
 	</select>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<localizationPack name="BY">
+<localizationPack name="Belarus">
   <currencies>
     <currency name="Belarusian ruble" iso_code="BYR" iso_code_num="974" sign="&#x440;." blank="0" conversion_rate="1.000000" format="2" decimals="0"/>
   </currencies>

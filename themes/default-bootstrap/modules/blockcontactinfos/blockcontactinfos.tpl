@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -36,7 +36,7 @@
             {/if}
             {if $blockcontactinfos_phone != ''}
             	<li>
-            		<i class="icon-phone"></i>{l s='Call us now toll free:' mod='blockcontactinfos'} 
+            		<i class="icon-phone"></i>{l s='Call us now:' mod='blockcontactinfos'} 
             		<span>{$blockcontactinfos_phone|escape:'html':'UTF-8'}</span>
             	</li>
             {/if}

@@ -1,209 +1,407 @@
-	- (d)oekia
-	- Adrien
-	- Agence CINS
-	- Aleksander Palyan
-	- Alexander Grosul
-	- Alexander Otchenashev
-	- Alexey Svistunov
-	- Andrew
-	- AntonLejon
-	- Arnaud Lemercier
-	- Axome
-	- Benjamin PONGY
-	- BigZ
-	- Burhan
-	- CINS
-	- Caleydon Media
-	- Captain FLAM
-	- Captain-FLAM
-	- Chris
-	- ChristopheBoucaut
-	- Corentin Delcourt
-	- Cosmin Hutanu
-	- Cédric Mouleyre
-	- Damien Metzger
-	- DamienMetzger
-	- Damon Skelhorn
-	- Daniel
-	- Daniele Giachino
-	- David Gasperoni
-	- Davy Rolink
-	- Dh42
-	- Dinis Lage
-	- Dragan Skrbic
-	- DrySs
-	- DrÿSs
-	- DrÿSs'
-	- Edouard Gaulué
-	- Eric Le Lay
-	- Fabio Chelly
-	- Felipe Uribe
-	- Francois Gaillard
-	- François Gaillard
-	- Fran�ois Gaillard
-	- Gabriel Schwardy
-	- Gaelle ITZKOVITZ
-	- Gamesh
-	- Gregory Roussac
-	- Grégoire Bélorgey
-	- Guillaume DELOINCE
-	- Guillaume Lafarge
-	- Ha!*!*y
-	- J. Danse
-	- Javsmile
-	- Jerome Nadaud
-	- Jonathan Danse
-	- Julien
-	- Jáchym Toušek
-	- Jérôme Nadaud
-	- Kevin Granger
-	- Krystian Podemski
-	- LOIC ROSSET ltd
-	- Lucas CERDAN
-	- Lucas Cerdan
-	- LucasC
-	- Madef
-	- Madman
-	- Mainmich
-	- Marco Cervellin
-	- Mats Rynge
-	- MatthieuB
-	- Maxence
-	- Michel Courtade
-	- Mickael Desgranges
-	- Mikael Blotin
-	- Mikko Hellsing
-	- Milow
-	- MustangZhong
-	- Nicolas Sorosac
-	- Nils-Helge Garli Hegvik
-	- Nino Uzelac
-	- Otto Nascarella
-	- Patanock
-	- Peter Schaeffer
-	- PhpMadman
-	- Pierre
-	- Piotr Kaczor
-	- Piotr Moćko
-	- PrestaEdit
-	- PrestaLab
-	- PrestanceDesign
-	- Prestaspirit
-	- Priyank Bolia
-	- Quentin Montant
-	- Raphaël Malié
-	- Rhys
-	- Rimas Kudelis
-	- Rémi Gaillard
-	- Samy Rabih
-	- Sarah Lorenzini
-	- Seb
-	- Seynaeve
-	- Shagshag
-	- Staging
-	- Stanislav Yordanov
-	- Sylvain Gougouzian
-	- Sylvain WITMEYER
-	- Sébastien
-	- Sébastien Bocahu
-	- TMMeilleur
-	- Tom Panier
-	- Tomasz Slominski
-	- Vincent Augagneur
-	- Vincent Schoener
-	- Vincent Terenti
-	- Xavier
-	- Xavier POITAU
-	- Yoozio
-	- Zollner Robert
-	- aFolletete
-	- aKorczak
-	- aNiassy
-	- adonis karavokyros
-	- alexey-svistunov
-	- anat
-	- antoniofr
-	- bLeveque
-	- bMancone
-	- bumbu
-	- cam.lafit
-	- ccauw
-	- cedricfontaine
-	- cippest
-	- cmouleyre
-	- dMetzger
-	- dSevere
-	- djfm
-	- dlage
-	- dreammeup
-	- emilien-puget
-	- emily-d
-	- fBrignoli
-	- fSerny
-	- fchellypresta
-	- fram
-	- gBrunier
-	- gCharmes
-	- gPoulain
-	- gRoussac
-	- gr4devel
-	- hAitmansour
-	- ha99y
-	- indesign47
-	- inem0o
-	- ivancasasempere
-	- jBreux
-	- jObregon
-	- jeanbe
-	- jeckyl
-	- jeromenadaud
-	- jessylenne
-	- jmCollin
-	- joseantgv
-	- kiropowered
-	- kpodemski
-	- lBrieu
-	- lCherifi
-	- lLefevre
-	- ldecoker
-	- lesley paone
-	- mBertholino
-	- mDeflotte
-	- mMarinetti
-	- makk1ntosh
-	- marcinsz101
-	- matiasiglesias
-	- minic studio
-	- misthero
-	- montes
-	- nPellicari
-	- nezenmoins
-	- nturato
-	- oleacorner
-	- prestarocket
-	- pxls
-	- rGaillard
-	- rMalie
-	- rMontagne
-	- raulgundin
-	- romainberger
-	- root
-	- runningz
-	- sLorenzini
-	- sThiebaut
-	- sagaradonis
-	- sjousse
-	- smartdatasoft
-	- soufyan
-	- soware
-	- tDidierjean
-	- thoma202
-	- tucoinfo
-	- unknown
-	- vAugagneur
-	- vChabot
-	- vKham
-	- vSchoener
-	- vinvin27
-	- zimmi1
+GitHub contributors:
+--------------------------------
+- (d)oekia
+- 123monsite-regis
+- 1RV34
+- Adonis Karavokyros
+- Adrien
+- Adrien Astier
+- Agence CINS
+- Aleksander Palyan
+- Alessandro Corbelli
+- Alex Even
+- Alexander Grosul
+- Alexander Otchenashev
+- Alexandra Even
+- AlexEven
+- Alexey Svistunov
+- alexey-svistunov
+- alexsimple
+- Alfakom-MK
+- Alfonso Jimenez
+- Alphacom IT Solutions - Macedonia
+- amatosg
+- anat
+- Anatole
+- Andrew
+- Antonino Di Bella
+- antoniofr
+- AntonLejon
+- Arnaud Lemercier
+- axi
+- Axome
+- Balestrino
+- bellini13
+- Benjamin PONGY
+- bercik999
+- Bersam Karbasion
+- BigZ
+- BluTiGeS
+- Bruno Desprez
+- Bruno Leveque
+- bumbu
+- Burhan
+- Caleydon Media
+- cam.lafit
+- Captain FLAM
+- Captain-FLAM
+- ccauw
+- cedricfontaine
+- cedricgeffroy
+- Chen.Zhidong
+- Chris
+- Chris Gurk
+- ChristopheBoucaut
+- CINS
+- cippest
+- cmouleyre
+- codvir
+- Comkwatt
+- Corentin Delcourt
+- Cosmin Hutanu
+- Cedric Mouleyre
+- damien
+- Damien Metzger
+- Damien PIQUET
+- DamienMetzger
+- Damon Skelhorn
+- Dan Hlavenka
+- danidomen
+- Daniel
+- Daniele Giachino
+- danoosh
+- Danoosh Mir
+- David Gasperoni
+- David Sivocha
+- David-Julian BUCH
+- Davy Rolink
+- Denver Prophit Jr.
+- Desbouche Christophe
+- DevNet
+- Dh42
+- Dimitrios Karvounaris
+- Dinis Lage
+- djbuch
+- djfm
+- dlage
+- doekia
+- DOEO
+- Dragan Skrbic
+- Dream me up
+- dreammeup
+- DrySs
+- DrySs'
+- dSevere
+- Dustin
+- Dvir Julius
+- Dvir-Julius
+- edamart
+- Edouard Gaulue
+- el-tenkova
+- elationbase
+- eleazar
+- Elitius
+- Emilien Puget
+- emilien-puget
+- emily-d
+- Eric Le Lay
+- Eric Rouvier
+- erickturcios
+- Etienne Samson
+- Fabio Chelly
+- fchellypresta
+- Felipe Uribe
+- fetis
+- fird
+- flashmaestro
+- Florian Kwakkenbos
+- fram
+- Francois Gaillard
+- Francois-Marie de Jouvencel
+- Fran�ois Gaillard
+- Frederic BENOIST
+- Gabriel Schwardy
+- Gaelle ITZKOVITZ
+- Gamesh
+- ggedamed
+- Giant Leap Lab
+- Gordon Coubrough
+- gr4devel
+- Granger Kevin
+- Gregory Roussac
+- gRoussac
+- Gregoire Belorgey
+- gskema
+- Guillaume DELOINCE
+- Guillaume Lafarge
+- Guillaume Leseur
+- Gytis
+- Gytis Skėma
+- Ha!*!*y
+- ha99y
+- harelguy
+- hiousi
+- htrex
+- indesign47
+- iNem0o
+- ironwo0d
+- ITBpro.com
+- Ivan
+- ivancasasempere
+- J. Danse
+- janisVincent
+- Javsmile
+- JEAN
+- jeanbe
+- jeckyl
+- Jeroen Dewaele
+- Jerome Nadaud
+- jeromenadaud
+- jessylenne
+- Joan
+- Joan Juvanteny
+- joce
+- Joe Siwiak
+- joemartin247
+- Joep Hendrix
+- Jonadabe
+- Jonathan Danse
+- Jonathan SAHM
+- Jorge Vargas
+- joseantgv
+- jtogrul
+- Julien
+- Julien Bouchez
+- Julien Bourdeau
+- Julien Deniau
+- Julien Martin
+- julienbourdeau
+- Jachym Tousek
+- Kamil Szymański
+- Kelly Karnetsky
+- kermes
+- Kevin Granger
+- kiropowered
+- kpodemski
+- Krystian Podemski
+- Kevin Dunglas
+- Ladel
+- ldecoker
+- Lesley Paone
+- LOIC ROSSET ltd
+- luc
+- Luc Vandesype
+- Luca T.
+- Lucas CERDAN
+- LucasC
+- Lyo Nick
+- LyoNick
+- Leo
+- M-Mommsen
+- Madef
+- Madman
+- Mainmich
+- makk1ntosh
+- marcinsz101
+- Marco Cervellin
+- Marcos
+- matiasiglesias
+- Mats Rynge
+- Matteo
+- MatthieuB
+- MaX3315
+- Maxence
+- Maxime
+- Maxime Biloe
+- Maxime Vasse
+- mchelh
+- mchojnacki
+- mdomenjoud
+- Michael Hjulskov
+- Michel Courtade
+- Mickael Desgranges
+- Mikael Blotin
+- Mikko Hellsing
+- Milow
+- Mingsong Hu
+- minic studio
+- misthero
+- moncef102
+- montes
+- mplh
+- MustangZhong
+- natrim
+- neemzy
+- nezenmoins
+- Nicolas Sorosac
+- Niklas Ekman
+- Niko Wicaksono
+- Nils-Helge Garli Hegvik
+- NinjaOfWeb
+- Nino Uzelac
+- nodexpl
+- nturato
+- oleacorner
+- Otto Nascarella
+- Pan P.
+- Panagiotis Tigas
+- panesarsandeep
+- Patanock
+- Patrick Mettraux
+- Pavel Novitsky
+- pbirnzain
+- Pedro J. Parra
+- Per Lejontand
+- Peter Schaeffer
+- peterept
+- Petyuska
+- PhpMadman
+- Pierre
+- Piotr Kaczor
+- Piotr Moćko
+- PrestaEdit
+- PrestaLab
+- prestamodule
+- PrestanceDesign
+- prestarocket
+- Prestaspirit
+- Priyank Bolia
+- Profileo
+- Pronux
+- proydsl
+- pxls
+- quadrateam
+- Quentin Leonetti
+- Quentin Montant
+- Quetzacoalt91
+- Racochejl
+- Rafael Cunha
+- Raphael Malie
+- raulgundin
+- rGaillard
+- Rhys
+- Richard LT
+- Rimas Kudelis
+- robert
+- Roland Schütz
+- romainberger
+- runningz
+- Remi Gaillard
+- s-duval
+- Sacha
+- Sacha FROMENT
+- sadlyblue
+- sagaradonis
+- Sam Sanchez
+- Samir Shah
+- Samy Rabih
+- Sarah Lorenzini
+- Seb
+- SebSept
+- Seynaeve
+- sfroment42
+- shaffe-fr
+- Shagshag
+- Shipow
+- Shudrum
+- sidhujag
+- sjousse
+- sLorenzini
+- smartdatasoft
+- snamor
+- soufyan
+- soware
+- Staging
+- Stanislav Yordanov
+- Stefano Kowalke
+- Stephan Obadia
+- Steven "SDF" Sulley
+- Steven Sulley
+- Studio Kiwik
+- Sumh
+- svensson_david
+- Sylvain Gougouzian
+- Sylvain WITMEYER
+- Sebastien
+- Sebastien Bareyre
+- Sebastien Bocahu
+- Sebastien Monterisi
+- Tanguy JACQUET
+- tchauviere
+- Thibaud Chauviere
+- thoma202
+- Thomas
+- Thomas Blanc
+- Thomas N
+- Thomas Nabord
+- thomas-aw
+- Threef
+- timsit
+- tmackay
+- TMMeilleur
+- Tom Panier
+- Tomasz Slominski
+- Tomas Votruba
+- tucoinfo
+- Tung Dao
+- unlocomqx
+- Valerii Savchenko
+- vAugagneur
+- Vincent Augagneur
+- Vincent Schoener
+- Vincent Terenti
+- vinvin27
+- vinzter
+- vitekj
+- Wayann
+- web-plus
+- webbax
+- Wojciech Grzebieniowski
+- Xavier
+- Xavier Borderie
+- Xavier Gouley
+- Xavier POITAU
+- xitromedia
+- xKnut
+- yanngarras
+- Yoozio
+- zimmi1
+- ZiZuu.com
+- Zollner Robert
 
+SVN contributors:
+--------------------------------
+- aFolletete
+- aKorczak
+- aNiassy
+- bLeveque
+- bMancone
+- dMetzger
+- dSevere
+- fBrignoli
+- Francois Gaillard
+- fSerny
+- gBrunier
+- gCharmes
+- gPoulain
+- hAitmansour
+- jBreux
+- jmCollin
+- jObregon
+- lBrieu
+- lCherifi
+- lLefevre
+- mBertholino
+- mDeflotte
+- mMarinetti
+- nPellicari
+- rGaillard
+- rMalie
+- rMontagne
+- sLorenzini
+- sThiebaut
+- tDidierjean
+- vAugagneur
+- vChabot
+- vKham
+- vSchoener

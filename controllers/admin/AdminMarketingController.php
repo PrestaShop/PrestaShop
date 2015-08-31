@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,47 +19,46 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminMarketingControllerCore extends AdminController
 {
+    public function __construct()
+    {
+        $this->bootstrap = true;
+        parent::__construct();
+    }
 
-	public function __construct()
-	{
-		$this->bootstrap = true;
-		parent::__construct();
-	}
+    public function initContent()
+    {
+        $this->display = 'view';
+        return parent::initContent();
+    }
+    
+    public function initToolbarTitle()
+    {
+        $this->toolbar_title = array_unique($this->breadcrumbs);
+    }
 
-	public function initContent()
-	{
-		$this->display = 'view';
-		return parent::initContent();
-	}
-	
-	public function initToolbarTitle()
-	{
-		$this->toolbar_title = array_unique($this->breadcrumbs);
-	}
-
-	public function initPageHeaderToolbar()
-	{
-		parent::initPageHeaderToolbar();
-		$this->page_header_toolbar_btn = array();
-	}
-	
-	public function initToolbar()
-	{
-		return false;
-	}
-	
-	public function renderView()
-	{
-		$this->tpl_view_vars = array(
-			'modules_list' => $this->renderModulesList(),
-		);
-		return parent::renderView();
-	}
+    public function initPageHeaderToolbar()
+    {
+        parent::initPageHeaderToolbar();
+        $this->page_header_toolbar_btn = array();
+    }
+    
+    public function initToolbar()
+    {
+        return false;
+    }
+    
+    public function renderView()
+    {
+        $this->tpl_view_vars = array(
+            'modules_list' => $this->renderModulesList(),
+        );
+        return parent::renderView();
+    }
 }

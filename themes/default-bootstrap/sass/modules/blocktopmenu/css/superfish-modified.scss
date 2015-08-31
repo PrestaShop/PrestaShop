@@ -49,14 +49,18 @@
 			position: absolute;
 			right: 6px;
 			top: 20px;
-			display: none;
 			width: 30px;
 			height: 30px;
 			z-index: 2;
 			&:after {
 				font-family: $font-icon;
-				content: "\f068";
+				content: "\f067";
 				font-size: 26px;
+			}
+			&.active {
+				&:after {
+					content: "\f068";
+				}
 			}
 		}
 	}
@@ -67,19 +71,6 @@
 		display: block;
 		padding: 17px 20px;
 		border-bottom: 3px solid #e9e9e9;
-		@media (max-width: $screen-xs-max) { // max 767px
-			&.sf-with-ul {
-				&:after {
-					position: absolute;
-					right: 15px;
-					top: 18px;
-					font-family: $font-icon;
-					content: "\f067";
-					font-size: 26px;
-					z-index: 1;
-				}
-			}
-		}
 	}
 	&.sfHover > a,
 	> a:hover,
@@ -172,6 +163,7 @@ ul.sf-menu li li li.sfHover ul {
 	}
 	@media (max-width: $screen-xs - 1) { // max 479px
 		width: 100%;
+		padding-bottom: 20px;
 	}
 	@media (min-width: $screen-sm) { // min 768px
 		&.first-in-line-lg {
@@ -184,7 +176,7 @@ ul.sf-menu li li li.sfHover ul {
 		}
 	}
 }
-.sf-menu > li > ul > li#category-thumbnail {
+.sf-menu > li > ul > li.category-thumbnail {
 	width: 100% !important;
 	float: none;
 	clear: both;
@@ -205,7 +197,6 @@ ul.sf-menu li li li.sfHover ul {
 		}
 		img {
 			max-width: 100%;
-			width: 100%;
 			display: block;
 		}
 	}
@@ -241,13 +232,38 @@ ul.sf-menu li li li.sfHover ul {
 		}
 	}
 }
-@media (max-width: $screen-xs-max) { // max 767px
-	.sf-menu > li.sfHover > a.sf-with-ul:after,
-	.sf-menu > li.sfHoverForce > a.sf-with-ul:after { 
-		display: none;
+
+.sf-menu {
+	li.sf-search{
+		border: none;
+		input{
+			display: inline;
+			padding: 0 13px;
+			height: 30px;
+			line-height: 30px;
+			background: $input-bg;
+			margin: 13px 10px 0 0;
+			font-size: 13px;
+			color: $input-color;
+			border: 1px solid $input-border;
+		}
 	}
-	.sf-menu > li.sfHover > span,
-	.sf-menu > li.sfHoverForce > span {
-		display: block;
+}
+
+#block_top_menu {
+	.category-thumbnail {
+		clear: both;
+		width:100%;
+		float:none;
+		div {
+			float: left;
+			width: 100 / 3 * 1%;
+			img {
+				max-width: 100%;
+			}
+		}
+	}
+	li.category-thumbnail {
+		padding-right: 0;
 	}
 }

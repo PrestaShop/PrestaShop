@@ -188,7 +188,8 @@ company
 vat_number
 address1
 address2
-postcode city
+city
+postcode
 Country:name
 phone
 phone_mobile</format>

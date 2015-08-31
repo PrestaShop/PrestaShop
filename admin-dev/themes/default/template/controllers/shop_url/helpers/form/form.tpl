@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,9 +34,7 @@
 		$('#domain').keydown(function()
 		{
 			if (!$('#domain_ssl').val() || $('#domain_ssl').val() == $('#domain').val())
-			{
 				change_domain_value = true;
-			}
 		});
 
 		$('#domain_ssl').keydown(function()
@@ -44,20 +42,18 @@
 			change_domain_value = false;
 		});
 
-		$('#domain').keyup(function()
+		$('#domain').blur(function()
 		{
 			if (change_domain_value)
 			{
 				change_domain_value = false;
-				$('#domain_ssl').val($('#domain').val());
+				$('#domain_ssl').val($(this).val().replace(/ /g, '-'));
 			}
 		});
 
-		$('#virtual_uri').keyup(function()
+		$('#domain, #domain_ssl, #physical_uri, #virtual_uri').blur(function()
 		{
-			txt = $('#virtual_uri').val()
-			txt = txt.replace(' ', '-');
-			$('#virtual_uri').val(txt);
+			$(this).val($.trim($(this).val().replace(/ /g, '-')));
 		});
 
 	});
@@ -75,13 +71,16 @@
 		if (virtual)
 			url += '/'+virtual+'/';
 		url = url.replace(/\/+/g, "/");
-		$('#final_url').val('http://'+url);
+		$('#final_url').val('http://' + url.replace(/ /g, '-'));
 	};
 
 	function checkMainUrlInfo(shopID)
 	{
 		if (!shopID)
-			shopID = $('#id_shop').val();
+			if ($('#shop_id').length)
+				shopID = $('#shop_id').val();
+			else	
+				shopID = $('#id_shop').val();
 
 		if (!shopUrl[shopID])
 		{

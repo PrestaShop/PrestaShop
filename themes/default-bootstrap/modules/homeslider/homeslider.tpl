@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,54 +18,31 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if $page_name =='index'}
-    <!-- Module HomeSlider -->
+<!-- Module HomeSlider -->
     {if isset($homeslider_slides)}
-        <div id="homepage-slider">
-            <ul id="homeslider">
-                {foreach from=$homeslider_slides item=slide}
-                    {if $slide.active}
-                        <li class="homeslider-container">
-                            <a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
-                                <img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image|escape:'htmlall':'UTF-8'`")}"
-                                     alt="{$slide.legend|escape:'htmlall':'UTF-8'}"/>
-                            </a>
-                            {if isset($slide.description) && trim($slide.description) != ''}
-                                <div class="homeslider-description">{$slide.description}</div>
-                            {/if}
-                        </li>
-                    {/if}
-                {/foreach}
-            </ul>
-        </div>
-        {if isset($homeslider)}
-            <script type="text/javascript">
-                {if $homeslider_slides|@count > 1}
-                    {if $homeslider.loop == 1}
-                        var homeslider_loop = true;
-                    {else}
-                        var homeslider_loop = false;
-                    {/if}
-                {else}
-                    var homeslider_loop = false;
-                {/if}
-                var homeslider_width = {$homeslider.width};
-                var homeslider_speed = {$homeslider.speed};
-                var homeslider_pause = {$homeslider.pause};
-                {literal}
-                $('document').ready(function () {
-                    $('.homeslider-description').click(function () {
-                        window.location.href = $(this).prev('a').prop('href');
-                    });
-                });
-                {/literal}
-            </script>
-        {/if}
-    {/if}
-    <!-- /Module HomeSlider -->
+		<div id="homepage-slider">
+			{if isset($homeslider_slides.0) && isset($homeslider_slides.0.sizes.1)}{capture name='height'}{$homeslider_slides.0.sizes.1}{/capture}{/if}
+			<ul id="homeslider"{if isset($smarty.capture.height) && $smarty.capture.height} style="max-height:{$smarty.capture.height}px;"{/if}>
+				{foreach from=$homeslider_slides item=slide}
+					{if $slide.active}
+						<li class="homeslider-container">
+							<a href="{$slide.url|escape:'html':'UTF-8'}" title="{$slide.legend|escape:'html':'UTF-8'}">
+								<img src="{$link->getMediaLink("`$smarty.const._MODULE_DIR_`homeslider/images/`$slide.image|escape:'htmlall':'UTF-8'`")}"{if isset($slide.size) && $slide.size} {$slide.size}{else} width="100%" height="100%"{/if} alt="{$slide.legend|escape:'htmlall':'UTF-8'}" />
+							</a>
+							{if isset($slide.description) && trim($slide.description) != ''}
+								<div class="homeslider-description">{$slide.description}</div>
+							{/if}
+						</li>
+					{/if}
+				{/foreach}
+			</ul>
+		</div>
+	{/if}
+<!-- /Module HomeSlider -->
 {/if}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function drop_image_type_non_unique_index()
 {
-	$index = Db::getInstance()->getValue('SHOW index FROM `'._DB_PREFIX_.'image_type` where column_name = "name" and non_unique=1');
-	Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'image_type` DROP INDEX "'.pSQL($index).'"');
+    $index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'image_type` WHERE column_name="name" AND non_unique=1');
+    if (is_array($index) && count($index)) {
+        foreach ($index as $ind) {
+            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'image_type` DROP INDEX `'.pSQL($ind['Key_name']).'`');
+        }
+    }
 }
-

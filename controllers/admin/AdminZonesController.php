@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,120 +19,125 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Zone $object
+ */
 class AdminZonesControllerCore extends AdminController
 {
-	public $asso_type = 'shop';
+    public $asso_type = 'shop';
 
-	public function __construct()
-	{
-		$this->bootstrap = true;
-	 	$this->table = 'zone';
-		$this->className = 'Zone';
-	 	$this->lang = false;
-		
-		$this->fields_list = array(
-			'id_zone' => array(
-				'title' => $this->l('ID'),
-				'align' => 'center',
-				'class' => 'fixed-width-xs'
-			),
-			'name' => array(
-				'title' => $this->l('Zone'),
-			),
-			'active' => array(
-				'title' => $this->l('Enabled'),
-				'align' => 'center',
-				'active' => 'status',
-				'type' => 'bool',
-				'orderby' => false,
-				'class' => 'fixed-width-sm'
-			)
-		);
-		$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
-			
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        $this->bootstrap = true;
+        $this->table = 'zone';
+        $this->className = 'Zone';
+        $this->lang = false;
 
-	public function initPageHeaderToolbar()
-	{
-		if (empty($this->display))
-			$this->page_header_toolbar_btn['new_zone'] = array(
-				'href' => self::$currentIndex.'&amp;addzone&amp;token='.$this->token,
-				'desc' => $this->l('Add new zone'),
-				'icon' => 'process-icon-new'
-			);
+        $this->fields_list = array(
+            'id_zone' => array(
+                'title' => $this->l('ID'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs'
+            ),
+            'name' => array(
+                'title' => $this->l('Zone'),
+            ),
+            'active' => array(
+                'title' => $this->l('Enabled'),
+                'align' => 'center',
+                'active' => 'status',
+                'type' => 'bool',
+                'orderby' => false,
+                'class' => 'fixed-width-sm'
+            )
+        );
+        $this->bulk_actions = array(
+            'delete' => array(
+                'text' => $this->l('Delete selected'),
+                'confirm' => $this->l('Delete selected items?'),
+                'icon' => 'icon-trash'
+            )
+        );
 
-		parent::initPageHeaderToolbar();
-	}
+        parent::__construct();
+    }
 
-	public function renderList()
-	{
-		$this->addRowAction('edit');
-		$this->addRowAction('delete');
+    public function initPageHeaderToolbar()
+    {
+        if (empty($this->display)) {
+            $this->page_header_toolbar_btn['new_zone'] = array(
+                'href' => self::$currentIndex.'&addzone&token='.$this->token,
+                'desc' => $this->l('Add new zone', null, null, false),
+                'icon' => 'process-icon-new'
+            );
+        }
 
-		return parent::renderList();
-	}
+        parent::initPageHeaderToolbar();
+    }
 
-	public function renderForm()
-	{
-		$this->fields_form = array(
-			'legend' => array(
-				'title' => $this->l('Zones'),
-				'icon' => 'icon-globe'
-			),
-			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Name:'),
-					'name' => 'name',
-					'required' => true,
-					'hint' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries)'),
-				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Active:'),
-					'name' => 'active',
-					'required' => false,
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'active_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'active_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
-						)
-					),
-					'hint' => $this->l('Allow or disallow shipping to this zone')
-				)
-			)
-		);
+    public function renderList()
+    {
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
 
-		if (Shop::isFeatureActive())
-		{
-			$this->fields_form['input'][] = array(
-				'type' => 'shop',
-				'label' => $this->l('Group shop association:'),
-				'name' => 'checkBoxShopAsso',
-			);
-		}
+        return parent::renderList();
+    }
 
-		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save'),
-		);
+    public function renderForm()
+    {
+        $this->fields_form = array(
+            'legend' => array(
+                'title' => $this->l('Zones'),
+                'icon' => 'icon-globe'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'text',
+                    'label' => $this->l('Name'),
+                    'name' => 'name',
+                    'required' => true,
+                    'hint' => $this->l('Zone name (e.g. Africa, West Coast, Neighboring Countries).'),
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->l('Active'),
+                    'name' => 'active',
+                    'required' => false,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => $this->l('Enabled')
+                        ),
+                        array(
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => $this->l('Disabled')
+                        )
+                    ),
+                    'hint' => $this->l('Allow or disallow shipping to this zone.')
+                )
+            )
+        );
 
-		return parent::renderForm();
-	}
+        if (Shop::isFeatureActive()) {
+            $this->fields_form['input'][] = array(
+                'type' => 'shop',
+                'label' => $this->l('Shop association'),
+                'name' => 'checkBoxShopAsso',
+            );
+        }
+
+        $this->fields_form['submit'] = array(
+            'title' => $this->l('Save'),
+        );
+
+        return parent::renderForm();
+    }
 }

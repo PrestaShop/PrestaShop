@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,16 +61,14 @@ class Tools extends ToolsCore
 				header($header);
 		}
 
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectLink($url)
 	{
 		if (!preg_match('@^https?://@i', $url))
 		{
-			if (strpos($url, __PS_BASE_URI__) !== FALSE && strpos($url, __PS_BASE_URI__) == 0)
+			if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0)
 				$url = substr($url, strlen(__PS_BASE_URI__));
 			$explode = explode('?', $url);
 			$url = Context::getContext()->link->getPageLink($explode[0]);
@@ -78,15 +76,13 @@ class Tools extends ToolsCore
 				$url .= '?'.$explode[1];
 		}
 
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectAdmin($url)
 	{
-		header('Refresh: 5; url='.$url);
-		echo '<h1>Redirection automatique dans 5 secondes</h1><a href='.$url.'>'.$url.'</a>';
-		exit;
+		if (!is_object(Context::getContext()->controller))
+			Context::getContext()->controller = new StdClass();
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 }

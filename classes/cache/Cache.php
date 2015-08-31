@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -135,6 +135,23 @@ abstract class CacheCore
 	}
 
 	/**
+	 * Unit testing purpose only
+	 * @param $test_instance Cache
+	 */
+	public static function setInstanceForTesting($test_instance)
+	{
+		self::$instance = $test_instance;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
 	 * Store a data in cache
 	 *
 	 * @param string $key
@@ -197,7 +214,7 @@ abstract class CacheCore
 		$keys = array();
 		if ($key == '*')
 			$keys = $this->keys;
-		else if (strpos($key, '*') === false)
+		elseif (strpos($key, '*') === false)
 			$keys = array($key);
 		else
 		{
@@ -232,35 +249,69 @@ abstract class CacheCore
 		if ($this->isBlacklist($query))
 			return true;
 
+		if (empty($result) || $result === false)
+			$result = array();
+
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
 
-		// Store query results in cache if this query is not already cached
-		$key = md5(_COOKIE_IV_.$query);
-		if ($this->exists($key))
-			return true;
+		// Store query results in cache
+		$key = Tools::encryptIV($query);
+		// no need to check the key existence before the set : if the query is already
+		// in the cache, setQuery is not invoked
 		$this->set($key, $result);
 
 		// Get all table from the query and save them in cache
 		if ($tables = $this->getTables($query))
 			foreach ($tables as $table)
+			{
 				if (!isset($this->sql_tables_cached[$table][$key]))
+				{
+					$this->adjustTableCacheSize($table);
 					$this->sql_tables_cached[$table][$key] = true;
-		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
+				}
+			}
+		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+	}
+
+	/**
+	 * Autoadjust the table cache size to avoid storing too big elements in the cache
+	 *
+	 * @param $table
+	 */
+	protected function adjustTableCacheSize($table)
+	{
+		if (isset($this->sql_tables_cached[$table])
+			&& count($this->sql_tables_cached[$table]) > 5000)
+		{
+			// make sure the cache doesn't contains too many elements : delete the first 1000
+			$table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
+			foreach($table_buffer as $fs_key => $value)
+			{
+				$this->delete($fs_key);
+				$this->delete($fs_key.'_nrows');
+				unset($this->sql_tables_cached[$table][$fs_key]);
+			}
+		}
 	}
 
 	protected function getTables($string)
 	{
-		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[a-z_-]+)`?(?:,\s{0,}`?('._DB_PREFIX_.'[a-z_-]+)`?)?\s.*/Umsi', $string, $res))
-			return array_merge($res[1], $res[2]);
+		if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res))
+		{
+			foreach ($res[2] as $table)
+				if ($table != '')
+					$res[1][] = $table;
+			return array_unique($res[1]);
+		}
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Delete a query from cache
 	 *
@@ -270,7 +321,7 @@ abstract class CacheCore
 	{
 		if (is_null($this->sql_tables_cached))
 		{
-			$this->sql_tables_cached = $this->get(_COOKIE_IV_.self::SQL_TABLES_NAME);
+			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))
 				$this->sql_tables_cached = array();
 		}
@@ -286,7 +337,7 @@ abstract class CacheCore
 					}
 					unset($this->sql_tables_cached[$table]);
 				}
-		$this->set(_COOKIE_IV_.self::SQL_TABLES_NAME, $this->sql_tables_cached);
+		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
 	}
 
 	/**
@@ -298,13 +349,19 @@ abstract class CacheCore
 	protected function isBlacklist($query)
 	{
 		foreach ($this->blacklist as $find)
-			if (strpos($query, $find))
+			if (false !== strpos($query, _DB_PREFIX_.$find))
 				return true;
 		return false;
 	}
 
 	public static function store($key, $value)
 	{
+		// PHP is not efficient at storing array
+		// Better delete the whole cache if there are
+		// more than 1000 elements in the array
+		if (count(Cache::$local) > 1000) {
+			Cache::$local = array();
+		}
 		Cache::$local[$key] = $value;
 	}
 

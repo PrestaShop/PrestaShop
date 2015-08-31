@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="{$url_submit}" id="{$table}_form" method="post" class="form-horizontal">
+<form action="{$url_submit|escape:'html':'UTF-8'}" id="{$table}_form" method="post" class="form-horizontal">
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
@@ -35,32 +35,40 @@
 			{l s='Transplant a module'}
 		</h3>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Module:'}</label>
+			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
 			<div class="col-lg-9">
 				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
+					{if !$hooks}
+						<option value="0">{l s='Please select a module'}</option>
+					{/if}
 					{foreach $modules as $module}
-						<option value="{$module->id}" {if $id_module == $module->id || (!$id_module && $show_modules == $module->id)}selected="selected"{/if}>{$module->displayName|stripslashes}</option>
+						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
 					{/foreach}
 				</select>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3 required"> {l s='Hook into'} :</label>
+			<label class="control-label col-lg-3 required"> {l s='Transplant to'}</label>
 			<div class="col-lg-9">
-				<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
-					{foreach $hooks as $hook}
-						<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
-					{/foreach}
+				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
+					{if !$hooks}
+						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
+					{else}
+						{foreach $hooks as $hook}
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
+						{/foreach}
+					{/if}
 				</select>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3">{l s='Exceptions'} :</label>
+			<label class="control-label col-lg-3">{l s='Exceptions'}</label>
 			<div class="col-lg-9">
 				<div class="well">
-					<p>
+					<div>
 						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
-						{l s='Please input each filename, separated by a comma.'}<br />
+						{l s='Please input each filename, separated by a comma (",").'}<br />
+						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.'}<br />
 						{if !$except_diff}
 							{$exception_list}
 						{else}
@@ -68,7 +76,7 @@
 								{$value}
 							{/foreach}
 						{/if}
-					</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -90,7 +98,7 @@
 		var list = obj.closest('form').find('#em_list_' + shopID);
 		var values = obj.val().split(',');
 		var len = values.length;
-		
+
 		list.find('option').prop('selected', false);
 		for (var i = 0; i < len; i++)
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
@@ -98,7 +106,10 @@
 	function position_exception_listchange() {
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
-		var str = obj.val().join(', ');
+		var val = obj.val();
+		var str = '';
+		if (val)
+			str = val.join(', ');
 		obj.closest('form').find('#em_text_' + shopID).val(str);
 	}
 	$(document).ready(function(){

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,46 +18,27 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{if scenes}
-
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.scrollTo.js"></script>
-<script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/plugins/jquery.serialScroll.js"></script>
-<script type="text/javascript">// <![CDATA[
-i18n_scene_close = '{l s='Close' js=1}';
-$(function () {ldelim}
-	li_width = parseInt({$thumbSceneImageType.width} + 10);
-{rdelim});
-//]]></script>
-<script type="text/javascript" src="{$js_dir}scenes.js"></script>
+{if $scenes}
 <div id="scenes">
 	<div>
 		{foreach $scenes as $scene_key=>$scene}
-		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px; {if !$scene@first} display:none;{/if}">
+		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px;{if !$scene@first} display:none;{/if}">
 			{foreach $scene->products as $product_key=>$product}
-			{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
-				<a href="{$product.link|escape:'html':'UTF-8'}" rel="#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;">
+			{if isset($product.id_image)}
+				{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
+			{/if}
+				<a href="{$product.link|escape:'html':'UTF-8'}" class="popover-button" style="width:{$product.zone_width}px; height:{$product.zone_height}px; margin-left:{$product.x_axis}px ;margin-top:{$product.y_axis}px;" data-id_product_scene="{$scene_key|intval}_{$product_key|intval}_{$product.id_product|intval}">
 					<span style="margin-top:{math equation='a/2 -10' a=$product.zone_height}px; margin-left:{math equation='a/2 -10' a=$product.zone_width}px;"></span>
 				</a>
-                <script type="text/javascript">
-					$(document).ready(function() {
-						var htmlContent = $('#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}').html();
-						$("[rel=#scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}]").popover({
-							placement : 'bottom', //placement of the popover. also can use top, bottom, left or right
-							trigger:'hover',
-							title : false, //this is the top title bar of the popover. add some basic css
-							html: 'true', //needed to show html of course
-							content : htmlContent  //this is the content of the html box. add the image here or anything you want really.
-						});
-					});
-				</script>
 				<div id="scene_products_cluetip_{$scene_key}_{$product_key}_{$product.id_product}" style="display:none;">
                 	<div class="product-image-container">
-						<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
+						{if isset($imageIds)}
+							<img class="img-responsive replace-2x" src="{$link->getImageLink($product.id_product, $imageIds, 'home_default')|escape:'html':'UTF-8'}" alt="" />
+						{/if}
                     </div>
 					<p class="product-name"><span class="product_name">{$product.details->name}</span></p>
 					<div class="description">{$product.details->description_short|strip_tags|truncate:170:'...'}</div>
@@ -80,13 +61,13 @@ $(function () {ldelim}
 	{if isset($scenes.1)}
 	<div class="thumbs_banner" style="height:{$thumbSceneImageType.height}px;">
 		<span class="space-keeper">
-			<a class="prev" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;" onclick="{ldelim}next_scene_is_at_right = false; $(this).parent().next().trigger('stop').trigger('prev'); return false;{rdelim}">&nbsp;</a>
+			<a class="prev" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
 		</span>
 		<div id="scenes_list">
 			<ul style="width:{math equation='(a*b + (a-1)*10)' a=$scenes|@count b=$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px;">
 			{foreach $scenes as $scene}
 				<li id="scene_thumb_{$scene->id}" style="{if !$scene@last} padding-right:10px;{/if}">
-					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="#" rel="{$scene->id}" onclick="{ldelim}loadScene({$scene->id});return false;{rdelim}">
+					<a style="width:{$thumbSceneImageType.width}px; height:{$thumbSceneImageType.height}px" title="{$scene->name|escape:'html':'UTF-8'}" href="{$base_dir}" data-id_scene="{$scene->id|intval}" class="scene_thumb">
 						<img alt="{$scene->name|escape:'html':'UTF-8'}" src="{$content_dir}img/scenes/thumbs/{$scene->id}-m_scene_default.jpg" width="{$thumbSceneSize.width}" height="{$thumbSceneSize.height}" />
 					</a>
 				</li>
@@ -94,9 +75,13 @@ $(function () {ldelim}
 		 	</ul>
 		</div>
 		<span class="space-keeper">
-			<a class="next" href="#" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;" onclick="{ldelim}next_scene_is_at_right = true; $(this).parent().prev().trigger('stop').trigger('next'); return false;{rdelim}">&nbsp;</a>
+			<a class="next" href="{$base_dir}" style="height:{math equation='a+2' a=$thumbSceneImageType.height}px;">&nbsp;</a>
 		</span>
 	</div>
 	{/if}
 </div>
+{strip}
+{addJsDefL name=i18n_scene_close}{l s='Close' js=1}{/addJsDefL}
+{addJsDef li_width=($thumbSceneImageType.width|intval+10)}
+{/strip}
 {/if}

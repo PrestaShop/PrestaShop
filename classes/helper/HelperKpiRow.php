@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,23 +19,23 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class HelperKpiRowCore extends Helper
 {
-	public $base_folder = 'helpers/kpi/';
-	public $base_tpl = 'row.tpl';
-	
-	public $kpis = array();
+    public $base_folder = 'helpers/kpi/';
+    public $base_tpl = 'row.tpl';
 
-	public function generate()
-	{
-		$this->tpl = $this->createTemplate($this->base_tpl);
+    public $kpis = array();
 
-		$this->tpl->assign('kpis', $this->kpis);
-		return $this->tpl->fetch();
-	}
+    public function generate()
+    {
+        $this->tpl = $this->createTemplate($this->base_tpl);
+
+        $this->tpl->assign('kpis', $this->kpis);
+        return $this->tpl->fetch();
+    }
 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,39 +18,28 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if !$content_only}
+{if !isset($content_only) || !$content_only}
 					</div><!-- #center_column -->
 					{if isset($right_column_size) && !empty($right_column_size)}
-						<div id="right_column" class="col-xs-12 col-sm-3 column">
-							{$HOOK_RIGHT_COLUMN}
-						</div>
+						<div id="right_column" class="col-xs-12 col-sm-{$right_column_size|intval} column">{$HOOK_RIGHT_COLUMN}</div>
 					{/if}
 					</div><!-- .row -->
 				</div><!-- #columns -->
 			</div><!-- .columns-container -->
-			<!-- Footer -->
-			<div class="footer-container">
-				<footer id="footer"  class="container">
-					<div class="row">
-						{$HOOK_FOOTER}
-					</div>
-				</footer>
-			</div><!-- #footer -->
+			{if isset($HOOK_FOOTER)}
+				<!-- Footer -->
+				<div class="footer-container">
+					<footer id="footer"  class="container">
+						<div class="row">{$HOOK_FOOTER}</div>
+					</footer>
+				</div><!-- #footer -->
+			{/if}
 		</div><!-- #page -->
 {/if}
+{include file="$tpl_dir./global.tpl"}
 	</body>
 </html>
-{strip}
-{addJsDef baseDir=$content_dir}
-{addJsDef baseUri=$base_uri}
-{addJsDef static_token=$static_token}
-{addJsDef token=$token}
-{addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
-{addJsDef priceDisplayMethod=$priceDisplay}
-{addJsDef roundMode=$roundMode}
-{addJsDef logged=$logged}
-{/strip}

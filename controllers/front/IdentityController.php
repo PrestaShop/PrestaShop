@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,131 +19,149 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class IdentityControllerCore extends FrontController
 {
-	public $auth = true;
-	public $php_self = 'identity';
-	public $authRedirection = 'identity';
-	public $ssl = true;
+    public $auth = true;
+    public $php_self = 'identity';
+    public $authRedirection = 'identity';
+    public $ssl = true;
 
-	public function init()
-	{
-		parent::init();
-		$this->customer = $this->context->customer;
-	}
+    /** @var Customer */
+    protected $customer;
 
-	/**
-	 * Start forms process
-	 * @see FrontController::postProcess()
-	 */
-	public function postProcess()
-	{
-		$origin_newsletter = (bool)$this->customer->newsletter;
+    public function init()
+    {
+        parent::init();
+        $this->customer = $this->context->customer;
+    }
 
-		if (isset($_POST['years']) && isset($_POST['months']) && isset($_POST['days']))
-			$this->customer->birthday = (int)($_POST['years']).'-'.(int)($_POST['months']).'-'.(int)($_POST['days']);
+    /**
+     * Start forms process
+     * @see FrontController::postProcess()
+     */
+    public function postProcess()
+    {
+        $origin_newsletter = (bool)$this->customer->newsletter;
 
-		if (Tools::isSubmit('submitIdentity'))
-		{
-			if (!@checkdate(Tools::getValue('months'), Tools::getValue('days'), Tools::getValue('years')) &&
-				!(Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == ''))
-				$this->errors[] = Tools::displayError('Invalid date of birth.');
-			else
-			{
-				$email = trim(Tools::getValue('email'));
-				$this->customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
-				if (isset($_POST['old_passwd']))
-					$_POST['old_passwd'] = trim($_POST['old_passwd']);
-				
-				if (!Validate::isEmail($email))
-					$this->errors[] = Tools::displayError('This email address is not valid');
-				elseif ($this->customer->email != $email && Customer::customerExists($email, true))
-					$this->errors[] = Tools::displayError('An account using this email address has already been registered.');
-				elseif ((!isset($_POST['old_passwd']) || empty($_POST['old_passwd'])) || (Tools::encrypt($_POST['old_passwd']) != $this->context->cookie->passwd))
-					$this->errors[] = Tools::displayError('The password you entered is incorrect.');
-				elseif ($_POST['passwd'] != $_POST['confirmation'])
-					$this->errors[] = Tools::displayError('The password and confirmation do not match.');
-				else
-				{
-					$prev_id_default_group = $this->customer->id_default_group;
+        if (Tools::isSubmit('submitIdentity')) {
+            $email = trim(Tools::getValue('email'));
 
-					// Merge all errors of this file and of the Object Model
-					$this->errors = array_merge($this->errors, $this->customer->validateController());
-				}
+            if (Tools::getValue('months') != '' && Tools::getValue('days') != '' && Tools::getValue('years') != '') {
+                $this->customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
+            } elseif (Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == '') {
+                $this->customer->birthday = null;
+            } else {
+                $this->errors[] = Tools::displayError('Invalid date of birth.');
+            }
 
-				if (!count($this->errors))
-				{
-					$this->customer->id_default_group = (int)$prev_id_default_group;
-					$this->customer->firstname = Tools::ucwords($this->customer->firstname);
+            if (Tools::getIsset('old_passwd')) {
+                $old_passwd = trim(Tools::getValue('old_passwd'));
+            }
 
-					if (!isset($_POST['newsletter']))
-						$this->customer->newsletter = 0;
-					elseif (!$origin_newsletter && isset($_POST['newsletter']))
-						if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
-							if ($module_newsletter->active)
-								$module_newsletter->confirmSubscription($this->customer->email);
+            if (!Validate::isEmail($email)) {
+                $this->errors[] = Tools::displayError('This email address is not valid');
+            } elseif ($this->customer->email != $email && Customer::customerExists($email, true)) {
+                $this->errors[] = Tools::displayError('An account using this email address has already been registered.');
+            } elseif (!Tools::getIsset('old_passwd') || (Tools::encrypt($old_passwd) != $this->context->cookie->passwd)) {
+                $this->errors[] = Tools::displayError('The password you entered is incorrect.');
+            } elseif (Tools::getValue('passwd') != Tools::getValue('confirmation')) {
+                $this->errors[] = Tools::displayError('The password and confirmation do not match.');
+            } else {
+                $prev_id_default_group = $this->customer->id_default_group;
 
-					if (!isset($_POST['optin']))
-						$this->customer->optin = 0;
-					if (Tools::getValue('passwd'))
-						$this->context->cookie->passwd = $this->customer->passwd;
-					if ($this->customer->update())
-					{
-						$this->context->cookie->customer_lastname = $this->customer->lastname;
-						$this->context->cookie->customer_firstname = $this->customer->firstname;
-						$this->context->smarty->assign('confirmation', 1);
-					}
-					else
-						$this->errors[] = Tools::displayError('The information cannot be updated.');
-				}
-			}
-		}
-		else
-			$_POST = array_map('stripslashes', $this->customer->getFields());
+                // Merge all errors of this file and of the Object Model
+                $this->errors = array_merge($this->errors, $this->customer->validateController());
+            }
 
-		return $this->customer;
-	}
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::initContent()
-	 */
-	public function initContent()
-	{
-		parent::initContent();
+            if (!count($this->errors)) {
+                $this->customer->id_default_group = (int)$prev_id_default_group;
+                $this->customer->firstname = Tools::ucwords($this->customer->firstname);
 
-		if ($this->customer->birthday)
-			$birthday = explode('-', $this->customer->birthday);
-		else
-			$birthday = array('-', '-', '-');
+                if (Configuration::get('PS_B2B_ENABLE')) {
+                    $this->customer->website = Tools::getValue('website'); // force update of website, even if box is empty, this allows user to remove the website
+                    $this->customer->company = Tools::getValue('company');
+                }
 
-		/* Generate years, months and days */
-		$this->context->smarty->assign(array(
-				'years' => Tools::dateYears(),
-				'sl_year' => $birthday[0],
-				'months' => Tools::dateMonths(),
-				'sl_month' => $birthday[1],
-				'days' => Tools::dateDays(),
-				'sl_day' => $birthday[2],
-				'errors' => $this->errors,
-				'genders' => Gender::getGenders(),
-			));
+                if (!Tools::getIsset('newsletter')) {
+                    $this->customer->newsletter = 0;
+                } elseif (!$origin_newsletter && Tools::getIsset('newsletter')) {
+                    if ($module_newsletter = Module::getInstanceByName('blocknewsletter')) {
+                        /** @var Blocknewsletter $module_newsletter */
+                        if ($module_newsletter->active) {
+                            $module_newsletter->confirmSubscription($this->customer->email);
+                        }
+                    }
+                }
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+                if (!Tools::getIsset('optin')) {
+                    $this->customer->optin = 0;
+                }
+                if (Tools::getValue('passwd')) {
+                    $this->context->cookie->passwd = $this->customer->passwd;
+                }
+                if ($this->customer->update()) {
+                    $this->context->cookie->customer_lastname = $this->customer->lastname;
+                    $this->context->cookie->customer_firstname = $this->customer->firstname;
+                    $this->context->smarty->assign('confirmation', 1);
+                } else {
+                    $this->errors[] = Tools::displayError('The information cannot be updated.');
+                }
+            }
+        } else {
+            $_POST = array_map('stripslashes', $this->customer->getFields());
+        }
 
-		$this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
-	}
+        return $this->customer;
+    }
+    /**
+     * Assign template vars related to page content
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        parent::initContent();
 
-	public function setMedia()
-	{
-		parent::setMedia();
-		$this->addCSS(_THEME_CSS_DIR_.'identity.css');
-		$this->addJS(_PS_JS_DIR_.'validate.js');
-		$this->addJS(_THEME_JS_DIR_.'validate_fields.js');
-	}
+        if ($this->customer->birthday) {
+            $birthday = explode('-', $this->customer->birthday);
+        } else {
+            $birthday = array('-', '-', '-');
+        }
 
+        /* Generate years, months and days */
+        $this->context->smarty->assign(array(
+                'years' => Tools::dateYears(),
+                'sl_year' => $birthday[0],
+                'months' => Tools::dateMonths(),
+                'sl_month' => $birthday[1],
+                'days' => Tools::dateDays(),
+                'sl_day' => $birthday[2],
+                'errors' => $this->errors,
+                'genders' => Gender::getGenders(),
+            ));
+
+        // Call a hook to display more information
+        $this->context->smarty->assign(array(
+            'HOOK_CUSTOMER_IDENTITY_FORM' => Hook::exec('displayCustomerIdentityForm'),
+        ));
+
+        $newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
+        $this->context->smarty->assign('newsletter', $newsletter);
+        $this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
+
+        $this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
+
+        $this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
+    }
+
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addCSS(_THEME_CSS_DIR_.'identity.css');
+        $this->addJS(_PS_JS_DIR_.'validate.js');
+    }
 }

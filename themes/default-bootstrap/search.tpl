@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {capture name=path}{l s='Search'}{/capture}
 
-<h1 
-{if isset($instant_search) && $instant_search}id="instant_search_results"{/if} 
+<h1
+{if isset($instant_search) && $instant_search}id="instant_search_results"{/if}
 class="page-heading {if !isset($instant_search) || (isset($instant_search) && !$instant_search)} product-listing{/if}">
     {l s='Search'}&nbsp;
     {if $nbProducts > 0}
@@ -72,7 +72,7 @@ class="page-heading {if !isset($instant_search) || (isset($instant_search) && !$
     	<div class="top-pagination-content clearfix">
             {include file="./product-compare.tpl"}
             {if !isset($instant_search) || (isset($instant_search) && !$instant_search)}
-                {include file="$tpl_dir./pagination.tpl"}
+                {include file="$tpl_dir./pagination.tpl" no_follow=1}
             {/if}
         </div>
 	</div>
@@ -81,7 +81,7 @@ class="page-heading {if !isset($instant_search) || (isset($instant_search) && !$
     	<div class="bottom-pagination-content clearfix">
         	{include file="./product-compare.tpl"}
         	{if !isset($instant_search) || (isset($instant_search) && !$instant_search)}
-                {include file="$tpl_dir./pagination.tpl" paginationId='bottom'}
+                {include file="$tpl_dir./pagination.tpl" paginationId='bottom' no_follow=1}
             {/if}
         </div>
     </div>

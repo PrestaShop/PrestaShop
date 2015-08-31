@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,30 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if !$opc}
-<script type="text/javascript">
-// <![CDATA[
-var taxEnabled = "{$use_taxes}";
-var displayPrice = "{$priceDisplay}";
-var currencySign = '{$currencySign|html_entity_decode:2:"UTF-8"}';
-var currencyRate = '{$currencyRate|floatval}';
-var currencyFormat = '{$currencyFormat|intval}';
-var currencyBlank = '{$currencyBlank|intval}';
-var id_carrier = '{$id_carrier|intval}';
-var id_state = '{$id_state|intval}';
-var SE_RedirectTS = "{l s='Refreshing the page and updating your cart...' mod='carriercompare'}";
-var SE_RefreshStateTS = "{l s='Checking available states...' mod='carriercompare'}";
-var SE_RetrievingInfoTS = "{l s='Retrieving information...' mod='carriercompare'}";
-var SE_RefreshMethod = {$refresh_method};
-var txtFree = "{l s='Free!' mod='carriercompare'}";
-PS_SE_HandleEvent();
-//]]>
-</script>
 <form class="box" id="compare_shipping_form" method="post" action="#" >
 	<fieldset id="compare_shipping">
 		<h1 class="page-heading bottom-indent">{l s='Estimate the cost of shipping & taxes.' mod='carriercompare'}</h1>
@@ -60,7 +41,7 @@ PS_SE_HandleEvent();
 			</select>
 		</div>
 		<div class="form-group last">
-			<label for="zipcode">{l s='Zip Code' mod='carriercompare'}</label>
+			<label for="zipcode">{l s='Zip/postal code' mod='carriercompare'}</label>
 			<input class="form-control" type="text" name="zipcode" id="zipcode" value="{$zipcode|escape:'html':'UTF-8'}"/> ({l s='Needed for certain carriers.' mod='carriercompare'})
 		</div>
 		<div id="carriercompare_errors" style="display: none;">
@@ -89,7 +70,7 @@ PS_SE_HandleEvent();
 			{l s='No carrier has been made available for this selection.' mod='carriercompare'}
 		</p>
 		<p class="SE_SubmitRefreshCard">
-            <button class="btn btn-default button button-small" id="carriercompare_submit" type="submit" name="carriercompare_submit">
+            <button class="btn btn-default button button-small" id="carriercompare_submit" type="button" name="carriercompare_submit">
             	<span>{l s='Update cart' mod='carriercompare'}<i class="icon-chevron-right right"></i></span>
             </button>
             <button id="update_carriers_list" type="button" class="btn btn-default button button-small">
@@ -98,4 +79,14 @@ PS_SE_HandleEvent();
 		</p>
 	</fieldset>
 </form>
+{addJsDef taxEnabled=$use_taxes}
+{addJsDef displayPrice=$priceDisplay}
+{addJsDef id_carrier=$id_carrier|intval}
+{addJsDef id_state=$id_state|intval}
+{addJsDef SE_RefreshMethod=$refresh_method|intval}
+
+{addJsDefL name=SE_RedirectTS}{l s='Refreshing the page and updating your cart...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=SE_RefreshStateTS}{l s='Checking available states...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=SE_RetrievingInfoTS}{l s='Retrieving information...' mod='carriercompare' js=1}{/addJsDefL}
+{addJsDefL name=txtFree}{l s='Free!' mod='carriercompare' js=1}{/addJsDefL}
 {/if}

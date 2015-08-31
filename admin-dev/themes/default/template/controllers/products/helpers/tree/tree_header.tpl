@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -41,9 +41,9 @@
 	<div id="category-tree-toolbar" {if !$is_category_filter}style="display:none;"{/if}>
 		{if isset($toolbar)}{$toolbar}{/if}
 	</div>
-	<label class="pull-left">
-		<input type="checkbox" id="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
+	<label class="tree-panel-label-title">
+		<input type="checkbox" id="filter-by-category" name="filter-by-category" {if $is_category_filter}checked="checked"{/if} />
 		<i class="icon-tags"></i>
-		{l s=$title}
+		{$title}
 	</label>
 </div>

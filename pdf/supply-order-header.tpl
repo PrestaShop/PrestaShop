@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -30,23 +30,23 @@
 <table style="width: 100%">
 <tr>
 	<td style="width: 50%">
-        {if $logo_path}
-            <img src="{$logo_path}" />
-        {/if}
+		{if $logo_path}
+			<img src="{$logo_path}" />
+		{/if}
 	</td>
 	<td style="width: 50%; text-align: right;">
 		<table style="width: 100%">
 			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{$shop_name|escape:'html':'UTF-8'}</td>
+				<td style="font-weight: bold; font-size: 13pt; color: #444; width: 100%">{$shop_name|escape:'html':'UTF-8'}</td>
 			</tr>
 			<tr>
-				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$date|escape:'html':'UTF-8'}</td>
+				<td style="font-size: 13pt; color: #444; font-weight: bold;">{$date|escape:'html':'UTF-8'}</td>
 			</tr>
 			<tr>
-				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$title|escape:'html':'UTF-8'}</td>
+				<td style="font-size: 13pt; color: #444; font-weight: bold;">{$title|escape:'html':'UTF-8'}</td>
 			</tr>
 			<tr>
-				<td style="font-size: 14pt; color: #444; font-weight: bold;">{$reference|escape:'html':'UTF-8'}</td>
+				<td style="font-size: 13pt; color: #444; font-weight: bold;">{$reference|escape:'html':'UTF-8'}</td>
 			</tr>
 		</table>
 	</td>

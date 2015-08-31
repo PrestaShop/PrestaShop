@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,8 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' id='homefeatured'}
+{if isset($products) && $products}
+	{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' id='homefeatured'}
+{else}
+<ul id="homefeatured" class="homefeatured tab-pane">
+	<li class="alert alert-info">{l s='No featured products at this time.' mod='homefeatured'}</li>
+</ul>
+{/if}

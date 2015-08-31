@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,39 +19,38 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class OrderSlipControllerCore extends FrontController
 {
-	public $auth = true;
-	public $php_self = 'order-slip';
-	public $authRedirection = 'order-slip';
-	public $ssl = true;
+    public $auth = true;
+    public $php_self = 'order-slip';
+    public $authRedirection = 'order-slip';
+    public $ssl = true;
 
-	public function setMedia()
-	{
-		parent::setMedia();
-		$this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
-		$this->addJqueryPlugin('scrollTo');
-		$this->addJS(array(
-			_THEME_JS_DIR_.'history.js', 
-			_THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
-		);
-	}
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
+        $this->addJqueryPlugin(array('scrollTo', 'footable', 'footable-sort'));
+        $this->addJS(array(
+            _THEME_JS_DIR_.'history.js',
+            _THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
+        );
+    }
 
-	/**
-	 * Assign template vars related to page content
-	 * @see FrontController::initContent()
-	 */
-	public function initContent()
-	{
-		parent::initContent();
+    /**
+     * Assign template vars related to page content
+     * @see FrontController::initContent()
+     */
+    public function initContent()
+    {
+        parent::initContent();
 
-		$this->context->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)$this->context->cookie->id_customer));
-		$this->setTemplate(_PS_THEME_DIR_.'order-slip.tpl');
-	}
+        $this->context->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)$this->context->cookie->id_customer));
+        $this->setTemplate(_PS_THEME_DIR_.'order-slip.tpl');
+    }
 }
-

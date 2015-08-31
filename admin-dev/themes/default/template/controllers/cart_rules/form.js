@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -88,7 +88,7 @@ function updateProductRuleShortDescription(item)
 	/******* For IE: put a product in condition on cart rules *******/
 	if(typeof String.prototype.trim !== 'function') {
 	  String.prototype.trim = function() {
-		return this.replace(/^\s+|\s+$/g, ''); 
+		return this.replace(/^\s+|\s+$/g, '');
 	  }
 	}
 
@@ -109,8 +109,29 @@ for (i in restrictions)
 	$('#' + restrictions[i] + '_select_remove').click(function() {removeCartRuleOption(this);});
 	$('#' + restrictions[i] + '_select_add').click(function() {addCartRuleOption(this);});
 }
+
 toggleCartRuleFilter($('#product_restriction'));
-$('#product_restriction').click(function() {toggleCartRuleFilter(this);});
+
+$('#product_restriction').click(function() {
+	toggleCartRuleFilter(this);
+
+	if ($(this).prop('checked'))
+	{
+		$('#apply_discount_to_selection').prop('disabled', false);
+		$('#apply_discount_to_selection_warning').hide();
+	}
+	else
+	{
+		$('#apply_discount_to_selection').prop('disabled', true);
+		$('#apply_discount_to_selection_warning').show();
+	}
+});
+
+$('#apply_discount_to_selection_shortcut').click(function(e) {
+	displayCartRuleTab('conditions');
+	$('#product_restriction').focus();
+	e.preventDefault();
+});
 
 function toggleApplyDiscount(percent, amount, apply_to)
 {
@@ -129,7 +150,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('#apply_discount_percent_div').hide(200);
 		$('#reduction_percent').val('0');
 	}
-	
+
 	if (amount)
 	{
 		$('#apply_discount_amount_div').show(400);
@@ -137,17 +158,23 @@ function toggleApplyDiscount(percent, amount, apply_to)
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').hide();
 		$('*[for=apply_discount_to_cheapest]').hide();
-		$('#apply_discount_to_cheapest').removeAttr('checked');
+		$('#apply_discount_to_cheapest').prop('checked', false);
 		$('#apply_discount_to_selection').hide();
 		$('*[for=apply_discount_to_selection]').hide();
-		$('#apply_discount_to_selection').removeAttr('checked');
+		$('#apply_discount_to_selection').prop('checked', false);
 	}
 	else
 	{
 		$('#apply_discount_amount_div').hide(200);
 		$('#reduction_amount').val('0');
+
+		if ($('#apply_discount_off').prop('checked'))
+		{
+			$('#apply_discount_to_product').prop('checked', false)
+			toggleApplyDiscountTo();
+		}
 	}
-		
+
 	if (apply_to)
 		$('#apply_discount_to_div').show(400);
 	else
@@ -186,36 +213,54 @@ function toggleGiftProduct()
 	}
 }
 
-$('#apply_discount_percent').click(function() {toggleApplyDiscount(true, false, true);});
+$('#apply_discount_percent').click(function(){
+	toggleApplyDiscount(true, false, true);
+});
 if ($('#apply_discount_percent').prop('checked'))
 	toggleApplyDiscount(true, false, true);
 
-$('#apply_discount_amount').click(function() {toggleApplyDiscount(false, true, true);});
+$('#apply_discount_amount').click(function(){
+	toggleApplyDiscount(false, true, true);
+});
 if ($('#apply_discount_amount').prop('checked'))
 	toggleApplyDiscount(false, true, true);
 
-$('#apply_discount_off').click(function() {toggleApplyDiscount(false, false, false);});
+$('#apply_discount_off').click(function(){
+	toggleApplyDiscount(false, false, false);
+});
 if ($('#apply_discount_off').prop('checked'))
 	toggleApplyDiscount(false, false, false);
 
-$('#apply_discount_to_order').click(function() {toggleApplyDiscountTo();});
+$('#apply_discount_to_order').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_order').prop('checked'))
 	toggleApplyDiscountTo();
-	
-$('#apply_discount_to_product').click(function() {toggleApplyDiscountTo();});
+
+$('#apply_discount_to_product').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_product').prop('checked'))
 	toggleApplyDiscountTo();
-	
-$('#apply_discount_to_cheapest').click(function() {toggleApplyDiscountTo();});
+
+$('#apply_discount_to_cheapest').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_cheapest').prop('checked'))
 	toggleApplyDiscountTo();
-	
-$('#apply_discount_to_selection').click(function() {toggleApplyDiscountTo();});
+
+$('#apply_discount_to_selection').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_selection').prop('checked'))
 	toggleApplyDiscountTo();
-	
-$('#free_gift_on').click(function() {toggleGiftProduct();});
-$('#free_gift_off').click(function() {toggleGiftProduct();});
+
+$('#free_gift_on').click(function(){
+	toggleGiftProduct();}
+);
+$('#free_gift_off').click(function(){
+	toggleGiftProduct();}
+);
 toggleGiftProduct();
 
 // Main form submit
@@ -226,20 +271,20 @@ $('#cart_rule_form').submit(function() {
 	for (i in restrictions)
 	{
 		if ($('#' + restrictions[i] + '_select_1 option').length == 0)
-			$('#' + restrictions[i] + '_restriction').removeAttr('checked');
+			$('#' + restrictions[i] + '_restriction').prop('checked', false);
 		else
 		{
 			$('#' + restrictions[i] + '_select_2 option').each(function(i) {
-				$(this).attr('selected', true);
+				$(this).prop('selected', true);
 			});
 		}
 	}
-	
+
 	$('.product_rule_toselect option').each(function(i) {
-		$(this).attr('selected', true);
+		$(this).prop('selected', true);
 	});
 });
-	
+
 $('#reductionProductFilter')
 	.autocomplete(
 			'ajax-tab.php', {
@@ -269,7 +314,7 @@ $('#reductionProductFilter')
 		$('#reduction_product').val(data.id_product);
 		$('#reductionProductFilter').val((data.reference + ' ' + data.name).trim());
 	});
-	
+
 $('#customerFilter')
 	.autocomplete(
 			'ajax-tab.php', {
@@ -324,10 +369,23 @@ if (mins < 10)
 var secs = date.getSeconds();
 if (secs < 10)
 	secs = "0" + secs;
-$('.datepicker').datepicker({
+
+$('.datepicker').datetimepicker({
 	prevText: '',
 	nextText: '',
-	dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+	dateFormat: 'yy-mm-dd',
+	// Define a custom regional settings in order to use PrestaShop translation tools
+	currentText: currentText,
+	closeText:closeText,
+	ampm: false,
+	amNames: ['AM', 'A'],
+	pmNames: ['PM', 'P'],
+	timeFormat: 'hh:mm:ss tt',
+	timeSuffix: '',
+	timeOnlyTitle: timeOnlyTitle,
+	timeText: timeText,
+	hourText: hourText,
+	minuteText: minuteText,
 });
 
 $('#giftProductFilter').typeWatch({
@@ -343,10 +401,10 @@ function searchProducts()
 	if ($('#giftProductFilter').val() == gift_product_search)
 		return;
 	gift_product_search = $('#giftProductFilter').val();
-	
+
 	$.ajax({
 		type: 'POST',
-		headers: { "cache-control": "no-cache" }, 		
+		headers: { "cache-control": "no-cache" },
 		url: 'ajax-tab.php' + '?rand=' + new Date().getTime(),
 		async: true,
 		dataType: 'json',
@@ -361,21 +419,21 @@ function searchProducts()
 			var products_found = '';
 			var attributes_html = '';
 			stock = {};
-			
+
 			if (res.found)
 			{
 				$('#gift_products_err').hide();
 				$('#gift_products_found').show();
 				$.each(res.products, function() {
 					products_found += '<option value="' + this.id_product + '">' + this.name + (this.combinations.length == 0 ? ' - ' + this.formatted_price : '') + '</option>';
-					
+
 					attributes_html += '<select class="id_product_attribute" id="ipa_' + this.id_product + '" name="ipa_' + this.id_product + '" style="display:none">';
 					$.each(this.combinations, function() {
 						attributes_html += '<option ' + (this.default_on == 1 ? 'selected="selected"' : '') + ' value="' + this.id_product_attribute + '">' + this.attributes + ' - ' + this.formatted_price + '</option>';
 					});
 					attributes_html += '</select>';
 				});
-								
+
 				$('#gift_product_list #gift_product').html(products_found);
 				$('#gift_attributes_list #gift_attributes_list_select').html(attributes_html);
 				displayProductAttributes();
@@ -400,4 +458,41 @@ function displayProductAttributes()
 		$('.id_product_attribute').hide();
 		$('#ipa_' + $('#gift_product option:selected').val()).show();
 	}
+}
+
+
+$(document).ready(function() {
+	$(window).keydown(function(event){
+		if(event.keyCode == 13) {
+	  		event.preventDefault();
+	  		return false;
+		}
+	});
+
+	if ($('#cart_rule_select_1').length > 0 && $('#cart_rule_select_2').length > 0) {
+		$('#cart_rule_select_1').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=unselected&search=');
+		$('#cart_rule_select_2').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=selected&search=');
+
+		$('.uncombinable_search_filter').typeWatch({
+			captureLength: -1,
+			highlight: true,
+			wait: 500,
+			callback: function(text) { combinable_filter('#cart_rule_select_1', text, 'unselected'); }
+		});
+
+
+		$('.combinable_search_filter').typeWatch({
+			captureLength: -1,
+			highlight: true,
+			wait: 500,
+			callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
+		});
+	}
+});
+
+
+function combinable_filter(id_rule, search, type)
+{
+	var href = baseHref+'&type='+encodeURIComponent(type)+'&search='+encodeURIComponent(search);
+	$(id_rule).jscroll().data('jscrollapi').load_scroll(href);
 }

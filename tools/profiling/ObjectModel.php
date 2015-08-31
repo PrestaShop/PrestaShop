@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,10 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-//
-// IMPORTANT : don't forget to delete the underscore _ in the file name if you want to use it !
-//
 
 abstract class ObjectModel extends ObjectModelCore
 {
@@ -48,9 +44,8 @@ abstract class ObjectModel extends ObjectModelCore
 		$trace_id--;
 
 		self::$debug_list[$classname][] = array(
-			'file' =>		@$backtrace[$trace_id]['file'],
-			'line' =>		@$backtrace[$trace_id]['line'],
+			'file' => @$backtrace[$trace_id]['file'],
+			'line' => @$backtrace[$trace_id]['line'],
 		);
 	}
 }
-

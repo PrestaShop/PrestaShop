@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -31,28 +31,27 @@
 		tinySetup({
 			editor_selector :"autoload_rte",
 			setup : function(ed) {
-				ed.onInit.add(function(ed)
+				ed.on('init', function(ed)
 				{
-					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
+					if (typeof ProductMultishop.load_tinymce[ed.target.id] != 'undefined')
 					{
-						if (typeof ProductMultishop.load_tinymce[ed.id])
-							ed.hide();
+						if (typeof ProductMultishop.load_tinymce[ed.target.id])
+							tinyMCE.get(ed.target.id).hide();
 						else
-							ed.show();
+							tinyMCE.get(ed.target.id).show();
 					}
 				});
 
-				ed.onKeyUp.add(function(ed, e) {
+				ed.on('keydown', function(ed, e) {
 					tinyMCE.triggerSave();
-					textarea = $('#'+ed.id);
-					max = textarea.parent('div').find('span.counter').attr('max');
+					textarea = $('#'+tinymce.activeEditor.id);
+					var max = textarea.parent('div').find('span.counter').data('max');
 					if (max != 'none')
 					{
-						textarea_value = textarea.val();
-						count = stripHTML(textarea_value).length;
+						count = tinyMCE.activeEditor.getBody().textContent.length;
 						rest = max - count;
 						if (rest < 0)
-							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
+							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+ max +' {l s='characters'} : '+rest+'</span>');
 						else
 							textarea.parent('div').find('span.counter').html(' ');
 					}
@@ -64,10 +63,12 @@
 
 {block name="defaultForm"}
 	<div class="row">
-		<div class="productTabs col-lg-2">
+		<div class="productTabs col-lg-2 col-md-3">
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
-				<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>
+				{if $tab.name != "Pack"}
+					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:'html':'UTF-8'}&amp;updateproduct">{$tab.name}</a>
+				{/if}
 			{/foreach}
 			</div>
 		</div>
@@ -81,15 +82,17 @@
 			var has_combinations = {$has_combinations};
 
 			var toload = new Array();
-			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' slashes=1}';
-			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' slashes=1}';
+			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' js=1}';
+			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
-			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
+			var reload_tab_description = '{l s='A server error occurred while loading the tabs: some tabs could not be loaded.' js=1}'+'\n'+'{l s='Please try again by refreshing the page.' js=1}'+'\n'+'{l s='If you are still encountering this problem, please check your server logs or contact your hosting provider for assistance.' js=1}';
 
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
 			var save_error = {if $save_error}true{else}false{/if};
+			var error_heading_msg = '{l s='Error' js=1}';
+			var error_continue_msg = '{l s='Continue' js=1}';
 
 			var product_type = {$product_type};
 			{*var mce_maximum = '{l s='Maximum'}';*}
@@ -99,18 +102,23 @@
 				var display_multishop_checkboxes = false;
 			{/if}
 
+			var tabs_preloaded = new Array();
+			var tabs_to_preload = new Array();
+			var mod_evasive = {if isset($mod_evasive) && $mod_evasive}true{else}false{/if};
+			var mod_security = {if isset($mod_security) && $mod_security}true{else}false{/if};
+
 			$(document).ready(function()
 			{
-				hideOtherLanguage(default_language);
-
 				if (product_type == product_type_pack)
 				{
 					$('a[id*="VirtualProduct"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else if (product_type == product_type_virtual)
 				{
 					$('a[id*="Pack"]').hide();
 					$('a[id*="Shipping"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else
 				{
@@ -124,13 +132,22 @@
 				$(".productTabs a").click(function(e){
 					e.preventDefault();
 					// currentId is the current product tab id
-					currentId = $(".productTabs a.active").attr('id').substr(5);
+					currentId = false;
+					if ($(".productTabs a.active").length)
+						currentId = $(".productTabs a.active").attr('id').substr(5);
 					// id is the wanted producttab id
 					id = $(this).attr('id').substr(5);
 
 					// Update submit button value
 					var split_position = id.indexOf('-') + 1;
 					var btn_name = id.substr(split_position);
+
+					if ((btn_name == 'VirtualProduct' || btn_name == 'Pack') && $('#name_' + id_lang_default).val() == '')
+					{
+						alert(missing_product_name);
+						$('#name_' + id_lang_default).focus();
+						return false;
+					}
 
 					$('#key_tab').val(btn_name);
 
@@ -146,7 +163,6 @@
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
 							$(this).trigger('displayed');
-							//console.log('show tab'+id);
 						});
 						$("#link-"+id).addClass('active');
 					});
@@ -169,7 +185,7 @@
 						if ($("input[name='id_product']").val() != 0 || btn_name != 'Informations')
 							handleSaveButtons();
 					}
-					hideOtherLanguage(default_language);
+
 					$('.label-tooltip').tooltip();
 				});
 
@@ -186,7 +202,7 @@
 
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
-					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
+					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you want to proceed?' js=1}");
 				});
 
 				$('#toolbar-footer').appendTo($('#product-tab-content-Informations').children('.product-tab'));
@@ -196,8 +212,6 @@
 				});
 
 			});
-
-			var tabs_preloaded = new Array();
 
 			// Listen to the load event that is fired each time an ajax call to load a tab has completed
 			$(window).bind("load", function() {
@@ -214,8 +228,50 @@
 				// Recursively load tabs starting with the first element of stack
 				tabs_manager.displayBulk(tabs_to_preload);
 				$('.productTabs').show();
-				$('#product_form').show();
 				$('#product-tab-content-wait').hide();
+
+				function checkIfProductTypeIsPack() {
+					var typeIsPack = $('#pack_product').is(':checked');
+					if (typeIsPack && $('#inputPackItems').val()=='' ) {
+						$('.pack-empty-warning').removeClass('alert-warning').addClass('alert-danger');
+						$('#curPackItemName').select2('open');
+					}
+					return typeIsPack;
+				}
+				$("#product_form").validate({
+					ignore: '.updateCurrentText',
+					rules: {
+						inputPackItems: {
+							required: {
+								depends: checkIfProductTypeIsPack
+							},
+						}
+					},
+					messages: {
+						inputPackItems: {
+							required: ""
+						}
+					},
+					submitHandler: function(form) {
+						form.submit();
+					},
+					// override jquery validate plugin defaults for bootstrap 3
+					highlight: function(element) {
+						$(element).closest('.form-group').addClass('has-error');
+					},
+					unhighlight: function(element) {
+						$(element).closest('.form-group').removeClass('has-error');
+					},
+					errorElement: 'span',
+					errorClass: 'help-block',
+					errorPlacement: function(error, element) {
+						if(element.parent('.input-group').length) {
+							error.insertAfter(element.parent());
+						} else {
+							error.insertAfter(element);
+						}
+					}
+				});
 			});
 		</script>
 
@@ -235,10 +291,12 @@
 			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
-		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
+		<form id="product_form" class="form-horizontal col-lg-10 col-md-9" action="{$form_action|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
-			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
-
+			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:'html':'UTF-8'}" />
+			{if isset($smarty.request.page) && $smarty.request.page > 1}
+				<input type="hidden" id="page" name="page" value="{$smarty.request.page|intval}" />
+			{/if}
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
 				{l s='Your product will be saved as a draft.'}
@@ -246,19 +304,20 @@
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}
-
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
+				{if $tab.id != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
 					{/if}
 				</div>
+				{/if}
 			{/foreach}
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
-			<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default">{l s='Save'}</button>
-			{include file="footer_toolbar.tpl"}
 		</form>
 	</div>
+
 {/block}
+

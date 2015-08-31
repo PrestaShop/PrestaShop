@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,14 +26,14 @@
 	{if !$cms->active}
 		<br />
 		<div id="admin-action-cms">
-			<p>{l s='This CMS page is not visible to your customers.'}
-			<input type="hidden" id="admin-action-cms-id" value="{$cms->id}" />
-			<input type="submit" value="{l s='Publish'}" class="exclusive btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 0, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
-			<input type="submit" value="{l s='Back'}" class="exclusive btn btn-default" onclick="submitPublishCMS('{$base_dir}{$smarty.get.ad|escape:'html':'UTF-8'}', 1, '{$smarty.get.adtoken|escape:'html':'UTF-8'}')"/>
+			<p>
+				<span>{l s='This CMS page is not visible to your customers.'}</span>
+				<input type="hidden" id="admin-action-cms-id" value="{$cms->id}" />
+				<input type="submit" value="{l s='Publish'}" name="publish_button" class="button btn btn-default"/>
+				<input type="submit" value="{l s='Back'}" name="lnk_view" class="button btn btn-default"/>
 			</p>
 			<div class="clear" ></div>
 			<p id="admin-action-result"></p>
-			</p>
 		</div>
 	{/if}
 	<div class="rte{if $content_only} content_only{/if}">
@@ -42,22 +42,25 @@
 {elseif isset($cms_category)}
 	<div class="block-cms">
 		<h1><a href="{if $cms_category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'html':'UTF-8'}</a></h1>
+		{if $cms_category->description}
+			<p>{$cms_category->description|escape:'html':'UTF-8'}</p>
+		{/if}
 		{if isset($sub_category) && !empty($sub_category)}	
 			<p class="title_block">{l s='List of sub categories in %s:' sprintf=$cms_category->name}</p>
-			<ul class="bullet">
+			<ul class="bullet list-group">
 				{foreach from=$sub_category item=subcategory}
 					<li>
-						<a href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}">{$subcategory.name|escape:'html':'UTF-8'}</a>
+						<a class="list-group-item" href="{$link->getCMSCategoryLink($subcategory.id_cms_category, $subcategory.link_rewrite)|escape:'html':'UTF-8'}">{$subcategory.name|escape:'html':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>
 		{/if}
 		{if isset($cms_pages) && !empty($cms_pages)}
 		<p class="title_block">{l s='List of pages in %s:' sprintf=$cms_category->name}</p>
-			<ul class="bullet">
+			<ul class="bullet list-group">
 				{foreach from=$cms_pages item=cmspages}
 					<li>
-						<a href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'html':'UTF-8'}">{$cmspages.meta_title|escape:'html':'UTF-8'}</a>
+						<a class="list-group-item" href="{$link->getCMSLink($cmspages.id_cms, $cmspages.link_rewrite)|escape:'html':'UTF-8'}">{$cmspages.meta_title|escape:'html':'UTF-8'}</a>
 					</li>
 				{/foreach}
 			</ul>
@@ -69,3 +72,11 @@
 	</div>
 {/if}
 <br />
+{strip}
+{if isset($smarty.get.ad) && $smarty.get.ad}
+{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
+{/if}
+{if isset($smarty.get.adtoken) && $smarty.get.adtoken}
+{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
+{/if}
+{/strip}

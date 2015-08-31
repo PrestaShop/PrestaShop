@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,8 +33,8 @@
 			<p>{l s='This interface allows you to specify the warehouse in which the product is stocked.'}</p>
 			<p>{l s='You can also specify product/product combinations as it relates to warehouse location. '}</p>
 		</div>
-		<p>{l s='Please choose the warehouses associated with this product. You must also select a default warehouse. '}</p>
-	</div>	
+		<p>{l s='Please choose the warehouses associated with this product.'}</p>
+	</div>
 	<div class="row">
 		<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminWarehouses')|escape:'html':'UTF-8'}&addwarehouse">{l s='Create a new warehouse'} <i class="icon-external-link-sign"></i></a>
 	</div>
@@ -45,7 +45,7 @@
 					<div class="panel-heading">
 							<a class="accordion-toggle" data-toggle="collapse" data-parent="#warehouse-accordion" href="#warehouse-{$warehouse['id_warehouse']}">{$warehouse['name']}</a>
 					</div>
-					<div id="warehouse-{$warehouse['id_warehouse']}" class="panel-collapse collapse{if $smarty.foreach.data.first} in{/if}">
+					<div id="warehouse-{$warehouse['id_warehouse']}">
 							<table class="table">
 								<thead>
 									<tr>
@@ -77,10 +77,10 @@
 											size="20" />
 										</td>
 									</tr>
-								{/foreach}								
+								{/foreach}
 							</table>
 							{if $attributes|@count gt 1}
-							<button type="button" class="btn btn-default check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}"><i class="icon-check-sign"></i> {l s='Mark / Unmark all products as stored in this warehouse.'}</button>
+							<button type="button" class="btn btn-default check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}"><i class="icon-check-sign"></i> {l s='Mark / Unmark all product combinations as stored in this warehouse'}</button>
 							<!--<tr>
 								<td><input type="checkbox" class="check_all_warehouse" value="check_warehouse_{$warehouse['id_warehouse']}" /></td>
 								<td colspan="2"><i></i></td>
@@ -90,6 +90,11 @@
 				</div>
 			{/foreach}
 		</div>
+	</div>
+	<div class="panel-footer">
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
 {/if}

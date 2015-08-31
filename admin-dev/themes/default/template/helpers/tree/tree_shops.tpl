@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}
@@ -54,8 +54,8 @@
 	}
 
 	$(document).ready(function () {
-		$("#{$id}").tree("expandAll");
-		$("#{$id}").find(":input[type=checkbox]").click(
+		$("#{$id|escape:'html':'UTF-8'}").tree("expandAll");
+		$("#{$id|escape:'html':'UTF-8'}").find(":input[type=checkbox]").click(
 			function()
 			{
 				if($(this).is(':checked'))
@@ -87,7 +87,7 @@
 			{assign var=imploded_selected_shops value='","'|implode:$selected_shops}
 			var selected_shops = new Array("{$imploded_selected_shops}");
 
-			$("#{$id}").find(".tree-item :input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(".tree-item :input").each(
 				function()
 				{
 					if ($.inArray($(this).val(), selected_shops) != -1)

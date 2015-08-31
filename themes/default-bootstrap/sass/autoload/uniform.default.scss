@@ -68,11 +68,11 @@ div#{$class-wrapper}#{$class-button} {
 #compare_shipping .form-group label{display:block}
 div#{$class-wrapper}#{$class-select} {
 	font-size: 12px;
-	
+
 	span {
 		color: #666;
 		text-shadow: 0 1px 0 #fff;
-	
+
 	}
 
 	select {
@@ -97,18 +97,18 @@ div#{$class-wrapper}#{$class-select} {
 div#{$class-wrapper}#{$class-checkbox} {
 	cursor:pointer;
 	margin-right: 5px;
-		span{position:relative;top:-2px;}	
+		span{position:relative;top:-2px;}
 }
 
 #layered_form div#{$class-checkbox}{
 	display:inline
-	
+
 }
 
 /* Radio */
 div#{$class-wrapper}#{$class-radio} {
-	margin-right: 3px;	
-    span{position:relative;top:-2px;}	
+	margin-right: 3px;
+    span{position:relative;top:-2px;}
 }
 /* Uploader */
 div#{$class-wrapper}#{$class-upload} {

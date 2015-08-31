@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,18 +19,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function ps1600_add_missing_index()
 {
-	$key_exists = Db::getInstance()->executeS('
+    $key_exists = Db::getInstance()->executeS('
 	SHOW INDEX
 	FROM `'._DB_PREFIX_.'connections`
 	WHERE Key_name = "id_guest"');
-	if (!$key_exists)
-		Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'connections` ADD INDEX (`id_guest`)');
-	return true;
+    if (!$key_exists) {
+        Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'connections` ADD INDEX (`id_guest`)');
+    }
+    return true;
 }

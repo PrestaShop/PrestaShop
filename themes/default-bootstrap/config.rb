@@ -6,7 +6,7 @@ css_dir = "css"
 sass_dir = "sass"
 images_dir = "img"
 javascripts_dir = "js"
-fonts_dir = "font"
+fonts_dir = "fonts"
 
 output_style = :nested
 environment = :development
@@ -17,6 +17,8 @@ environment = :development
 # To disable debugging comments that display the original location of your selectors. Uncomment:
 line_comments = false
 color_output = false
+
+sourcemap = true
 
 # If you prefer the indented syntax, you might want to regenerate this
 # project again passing --syntax sass, or you can uncomment this:

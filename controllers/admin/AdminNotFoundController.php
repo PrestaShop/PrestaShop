@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,36 +19,34 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminNotFoundControllerCore extends AdminController
 {
+    public function __construct()
+    {
+        $this->bootstrap = true;
+        parent::__construct();
+    }
 
-	public function __construct()
-	{
-		$this->bootstrap = true;
-		parent::__construct();
-	}
+    public function checkAccess()
+    {
+        return true;
+    }
 
-	public function checkAccess()
-	{
-		return true;
-	}
+    public function viewAccess()
+    {
+        return true;
+    }
 
-	public function viewAccess()
-	{
-		return true;
-	}
-
-	public function initContent()
-	{
-		
-		$this->errors[] = Tools::displayError('Controller not found');
-		$tpl_vars['controller'] = Tools::getvalue('controllerUri', Tools::getvalue('controller'));
-		$this->context->smarty->assign($tpl_vars);
-		parent::initContent();
-	}
+    public function initContent()
+    {
+        $this->errors[] = Tools::displayError('Controller not found');
+        $tpl_vars['controller'] = Tools::getvalue('controllerUri', Tools::getvalue('controller'));
+        $this->context->smarty->assign($tpl_vars);
+        parent::initContent();
+    }
 }

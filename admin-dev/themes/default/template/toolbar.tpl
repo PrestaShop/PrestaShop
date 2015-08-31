@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,9 +29,9 @@
 			<ul>
 				{foreach from=$toolbar_btn item=btn key=k}
 					<li>
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></span>
-							<div {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</div>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn{if isset($btn.target) && $btn.target} _blank{/if}"{if isset($btn.href)} href="{$btn.href}"{/if} title="{$btn.desc}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
+							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></span>
+							<div{if isset($btn.force_desc) && $btn.force_desc == true } class="locked"{/if}>{$btn.desc}</div>
 						</a>
 						{if $k == 'modules-list'}
 							<div id="modules_list_container" style="display:none">
@@ -39,7 +39,7 @@
 								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png" /></a>
 							</div>
 							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0" /></div>
-							<div id="modules_list_container_tab" style="display:none;"></div>
+							<div id="modules_list_container_tab_modal" style="display:none;"></div>
 							</div>
 						{/if}
 					</li>
@@ -96,7 +96,7 @@
 								if (submited)
 									return false;
 								submited = true;
-								
+
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 

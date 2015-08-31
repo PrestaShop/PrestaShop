@@ -9,9 +9,9 @@
     <image id="image_2" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
     <image id="image_3" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
     <image id="image_4" id_product="Faded_Short_Sleeve_T-shirts" cover="0"/>
-    <image id="image_5" id_product="Blouse" cover="1"/>
+    <image id="image_5" id_product="Blouse" cover="0"/>
     <image id="image_6" id_product="Blouse" cover="0"/>
-    <image id="image_7" id_product="Blouse" cover="0"/>
+    <image id="image_7" id_product="Blouse" cover="1"/>
     <image id="image_8" id_product="Printed_Dress" cover="1"/>
     <image id="image_9" id_product="Printed_Dress" cover="0"/>
     <image id="image_10" id_product="Printed_Dress_1" cover="1"/>

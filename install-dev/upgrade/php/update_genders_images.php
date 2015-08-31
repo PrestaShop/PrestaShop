@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,19 +19,23 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function update_genders_images()
 {
-	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Mr.jpg'))
-		@rename(_PS_ROOT_DIR_.'/img/genders/Mr.jpg', _PS_ROOT_DIR_.'/img/genders/1.jpg');
-	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Ms.jpg'))
-		@rename(_PS_ROOT_DIR_.'/img/genders/Ms.jpg', _PS_ROOT_DIR_.'/img/genders/2.jpg');
-	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Miss.jpg'))
-		@rename(_PS_ROOT_DIR_.'/img/genders/Miss.jpg', _PS_ROOT_DIR_.'/img/genders/3.jpg');
-	if (@file_exists(_PS_ROOT_DIR_.'/img/genders/unknown.jpg'))
-		@rename(_PS_ROOT_DIR_.'/img/genders/unknown.jpg', _PS_ROOT_DIR_.'/img/genders/Unknown.jpg');	
+    if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Mr.jpg')) {
+        @rename(_PS_ROOT_DIR_.'/img/genders/Mr.jpg', _PS_ROOT_DIR_.'/img/genders/1.jpg');
+    }
+    if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Ms.jpg')) {
+        @rename(_PS_ROOT_DIR_.'/img/genders/Ms.jpg', _PS_ROOT_DIR_.'/img/genders/2.jpg');
+    }
+    if (@file_exists(_PS_ROOT_DIR_.'/img/genders/Miss.jpg')) {
+        @rename(_PS_ROOT_DIR_.'/img/genders/Miss.jpg', _PS_ROOT_DIR_.'/img/genders/3.jpg');
+    }
+    if (@file_exists(_PS_ROOT_DIR_.'/img/genders/unknown.jpg')) {
+        @rename(_PS_ROOT_DIR_.'/img/genders/unknown.jpg', _PS_ROOT_DIR_.'/img/genders/Unknown.jpg');
+    }
 }

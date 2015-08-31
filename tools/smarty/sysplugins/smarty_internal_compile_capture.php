@@ -1,22 +1,21 @@
 <?php
 /**
  * Smarty Internal Plugin Compile Capture
- *
  * Compiles the {capture} tag
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
- * @author Uwe Tews
+ * @author     Uwe Tews
  */
 
 /**
  * Smarty Internal Plugin Compile Capture Class
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase
+{
     /**
      * Attribute definition: Overwrites base class.
      *
@@ -35,8 +34,9 @@ class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase {
     /**
      * Compiles code for the {capture} tag
      *
-     * @param array  $args     array with attributes from parser
-     * @param object $compiler compiler object
+     * @param  array  $args     array with attributes from parser
+     * @param  object $compiler compiler object
+     *
      * @return string compiled code
      */
     public function compile($args, $compiler)
@@ -55,22 +55,22 @@ class Smarty_Internal_Compile_Capture extends Smarty_Internal_CompileBase {
 
         return $_output;
     }
-
 }
 
 /**
  * Smarty Internal Plugin Compile Captureclose Class
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_CaptureClose extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_CaptureClose extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {/capture} tag
      *
-     * @param array  $args     array with attributes from parser
-     * @param object $compiler compiler object
+     * @param  array  $args     array with attributes from parser
+     * @param  object $compiler compiler object
+     *
      * @return string compiled code
      */
     public function compile($args, $compiler)
@@ -90,9 +90,7 @@ class Smarty_Internal_Compile_CaptureClose extends Smarty_Internal_CompileBase {
         $_output .= " if (isset( \$_capture_append)) \$_smarty_tpl->append( \$_capture_append, ob_get_contents());\n";
         $_output .= " Smarty::\$_smarty_vars['capture'][\$_capture_buffer]=ob_get_clean();\n";
         $_output .= "} else \$_smarty_tpl->capture_error();?>";
+
         return $_output;
     }
-
 }
-
-?>

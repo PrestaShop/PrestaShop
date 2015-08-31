@@ -44,7 +44,7 @@
   margin-bottom: 16px; }
 #stores label {
   font-weight: normal;
-  color: #777777; }
+  color: #777; }
 #stores #stores_loader {
   display: none;
   margin-left: 5px; }
@@ -67,3 +67,5 @@
 .store-image img {
   width: 100%;
   min-width: 100px; }
+
+/*# sourceMappingURL=stores.css.map */

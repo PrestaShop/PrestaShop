@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEE,sCAAY;EACX,aAAa,EAAC,IAAI;EAClB,aAAa,EAAC,CAAC;AAEhB,kDAAsB;EACrB,KAAK,EAAC,IAAI;EACV,YAAY,EAAC,IAAI;AAElB,oCAAQ;EACP,KAAK,EAAC,KAAK;EACX,sCAAE;IACD,MAAM,EAAC,OAAO",
+"sources": ["../../../sass/modules/mailalerts/mailalerts.scss"],
+"names": [],
+"file": "mailalerts.css"
+}

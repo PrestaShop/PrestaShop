@@ -1,7 +1,7 @@
 
 [{shop_url}] 
 
-Hi {firstname} {lastname}, 
+Your message to {shop_name} Customer Service 
 
 Your message has been sent successfully.
 
@@ -11,7 +11,7 @@ ORDER ID: {order_name}
 
 PRODUCT: {product_name}
 
-ATTACHED FILE: {attached_file} 
+ATTACHED FILE: {attached_file} 		 
 
 We will answer as soon as possible. 
 

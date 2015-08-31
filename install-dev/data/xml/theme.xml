@@ -6,7 +6,7 @@
         <field name="responsive"/>
         <field name="default_left_column"/>
         <field name="default_right_column"/>
-        <field name="default_right_column"/>
+        <field name="product_per_page"/>
     </fields>
     <entities>
         <theme id="default">

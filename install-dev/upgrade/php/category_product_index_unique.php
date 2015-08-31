@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,24 +19,25 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function category_product_index_unique()
 {
-	$res = true;
-	$key_exists = Db::getInstance()->executeS('SHOW INDEX
+    $res = true;
+    $key_exists = Db::getInstance()->executeS('SHOW INDEX
 		FROM `'._DB_PREFIX_.'category_product`
 		WHERE Key_name = "category_product_index"');
-	if ($key_exists)
-		$res &= Db::getInstance()->execute('ALTER TABLE 
-		`'._DB_PREFIX_.'category_product` 
+    if ($key_exists) {
+        $res &= Db::getInstance()->execute('ALTER TABLE
+		`'._DB_PREFIX_.'category_product`
 		DROP INDEX `category_product_index`');
-	$res &= Db::getInstance()->execute('ALTER TABLE 
-	`'._DB_PREFIX_.'category_product` 
+    }
+    $res &= Db::getInstance()->execute('ALTER TABLE
+	`'._DB_PREFIX_.'category_product`
 	ADD UNIQUE `category_product_index` (`id_category`, `id_product`)');
 
-	return $res;
+    return $res;
 }

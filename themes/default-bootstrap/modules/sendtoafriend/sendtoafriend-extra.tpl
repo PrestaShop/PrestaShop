@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,45 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-{literal}
-$('document').ready(function(){
-	$('#send_friend_button').fancybox({
-		'hideOnContentClick': false
-	});
-
-	$('#sendEmail').click(function(){
-		
-		var name = $('#friend_name').val();
-		var email = $('#friend_email').val();
-		var id_product = $('#id_product_comment_send').val();
-		if (name && email && !isNaN(id_product))
-		{
-			$.ajax({
-				{/literal}url: "{$module_dir}sendtoafriend_ajax.php",{literal}
-				type: "POST",
-				headers: {"cache-control": "no-cache"},
-				data: {action: 'sendToMyFriend', secure_key: '{/literal}{$stf_secure_key}{literal}', name: name, email: email, id_product: id_product},{/literal}{literal}
-				dataType: "json",
-				success: function(result) {
-					$.fancybox.close();
-					var msg = result ? "{/literal}{l s='Your e-mail has been sent successfully' mod='sendtoafriend'}{literal}" : "{/literal}{l s='Your e-mail could not be sent. Please check the e-mail address and try again.' mod='sendtoafriend'}{literal}";
-					var title = "{/literal}{l s='Send to a friend' mod='sendtoafriend'}{literal}";
-					fancyMsgBox(msg, title);
-				}
-			});
-		}
-		else
-			$('#send_friend_form_error').text("{/literal}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{literal}");
-	});
-});
-{/literal}
-</script>
 <li class="sendtofriend">
 	<a id="send_friend_button" href="#send_friend_form">
 		{l s='Send to a friend' mod='sendtoafriend'}
@@ -68,11 +34,7 @@ $('document').ready(function(){
 			</h2>
 			<div class="row">
 				<div class="product clearfix col-xs-12 col-sm-6">
-					<img 
-					src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html':'UTF-8'}" 
-					height="{$homeSize.height}" 
-					width="{$homeSize.width}" 
-					alt="{$stf_product->name|escape:'html':'UTF-8'}" />
+					<img src="{$link->getImageLink($stf_product->link_rewrite, $stf_product_cover, 'home_default')|escape:'html':'UTF-8'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$stf_product->name|escape:'html':'UTF-8'}" />
 					<div class="product_desc">
 						<p class="product_name">
 							<strong>{$stf_product->name}</strong>
@@ -104,21 +66,21 @@ $('document').ready(function(){
 						</p>
 					</div>
 					<p class="submit">
-						<input id="id_product_comment_send" name="id_product" type="hidden" value="{$stf_product->id}" />
-						<a href="#" onclick="$.fancybox.close();">
+						<button id="sendEmail" class="btn button button-small" name="sendEmail" type="submit">
+							<span>{l s='Send' mod='sendtoafriend'}</span>
+						</button>&nbsp;
+						{l s='or' mod='sendtoafriend'}&nbsp;
+						<a class="closefb" href="#">
 							{l s='Cancel' mod='sendtoafriend'}
 						</a>
-						&nbsp;{l s='or' mod='sendtoafriend'}&nbsp;					
-						<button 
-						id="sendEmail" 
-						class="btn button button-small" 
-						name="sendEmail" 
-						type="submit">
-							<span>{l s='Send' mod='sendtoafriend'}</span>
-						</button>
 					</p>
 				</div> <!-- .send_friend_form_content -->
 			</div>
 		</div>
 	</div>
 </li>
+{addJsDef stf_secure_key=$stf_secure_key}
+{addJsDefL name=stf_msg_success}{l s='Your e-mail has been sent successfully' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_error}{l s='Your e-mail could not be sent. Please check the e-mail address and try again.' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_title}{l s='Send to a friend' mod='sendtoafriend' js=1}{/addJsDefL}
+{addJsDefL name=stf_msg_required}{l s='You did not fill required fields' mod='sendtoafriend' js=1}{/addJsDefL}

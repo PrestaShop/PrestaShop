@@ -1,80 +1,80 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_product>
-  <product id="Faded_Short_Sleeve_T-shirts" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Faded short sleeve t-shirt with high neckline. Soft and stretchy material for a comfortable fit. Accessorize with a straw hat and you're ready for summer!&lt;/p&gt;</description_short>
-    <link_rewrite>faded-short-sleeve-tshirts</link_rewrite>
+  <product id='Faded_Short_Sleeve_T-shirts' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Gebleekt T-shirt met korte mouwen en hoge halslijn. Zacht en elastisch materiaal zorgt voor een comfortabele pasvorm. Maak het af met een strooien hoed en u bent klaar voor de zomer!&lt;/p&gt;</description_short>
+    <link_rewrite>gebleekte-T-shirts-met-korte-mouwen</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Faded Short Sleeve T-shirts</name>
-    <available_now>In stock</available_now>
+    <name>Gebleekte T-shirts met Korte Mouwen</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Blouse" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Short sleeved blouse with feminine draped sleeve detail.&lt;/p&gt;</description_short>
+  <product id='Blouse' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Blouse met korte mouwen en gedrapeerd detail.&lt;/p&gt;</description_short>
     <link_rewrite>blouse</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
     <name>Blouse</name>
-    <available_now>In stock</available_now>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Printed_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.&lt;/p&gt;</description_short>
-    <link_rewrite>printed-dress</link_rewrite>
+  <product id='Printed_Dress' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;100% katoen dubbel bedrukte jurk. Zwart-wit gestreepte top en oranje rok met hoge taille.&lt;/p&gt;</description_short>
+    <link_rewrite>bedrukte-jurk</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Dress</name>
-    <available_now>In stock</available_now>
+    <name>Bedrukte Jurk</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Printed_Dress_1" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Printed evening dress with straight sleeves with black thin waist belt and ruffled linings.&lt;/p&gt;</description_short>
-    <link_rewrite>printed-dress</link_rewrite>
+  <product id='Printed_Dress_1' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Bedrukte avondjurk met rechte mouwen, dunne zwarte riem en gelaagde rok.&lt;/p&gt;</description_short>
+    <link_rewrite>bedrukte-jurk</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Dress</name>
-    <available_now>In stock</available_now>
+    <name>Bedrukte Jurk</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Printed_Summer_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Long printed dress with thin adjustable straps. V-neckline and wiring under the bust with ruffles at the bottom of the dress.&lt;/p&gt;</description_short>
-    <link_rewrite>printed-summer-dress</link_rewrite>
+  <product id='Printed_Summer_Dress' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Lange bedrukte jurk met smalle verstelbare bandjes. V-hals en gesmokte bies onder de buste. Ruches aan de onderkant.&lt;/p&gt;</description_short>
+    <link_rewrite>bedrukte-zomer-jurk</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Summer Dress</name>
-    <available_now>In stock</available_now>
+    <name>Bedrukte Zomerjurk</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Printed_Summer_Dress_1" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Sleeveless knee-length chiffon dress. V-neckline with elastic under the bust lining.&lt;/p&gt;</description_short>
-    <link_rewrite>printed-summer-dress</link_rewrite>
+  <product id='Printed_Summer_Dress_1' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Mouwloos jurkje van chiffon tot op de knie. V-hals en elastische inzet onder de buste.&lt;/p&gt;</description_short>
+    <link_rewrite>bedrukte-zomer-jurk</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Summer Dress</name>
-    <available_now>In stock</available_now>
+    <name>Bedrukte Zomerjurk</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
-  <product id="Printed_Chiffon_Dress" id_shop="1">
-    <description>&lt;p&gt;Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which has since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!&lt;/p&gt;</description>
-    <description_short>&lt;p&gt;Printed chiffon knee length dress with tank straps. Deep v-neckline.&lt;/p&gt;</description_short>
-    <link_rewrite>printed-chiffon-dress</link_rewrite>
+  <product id='Printed_Chiffon_Dress' id_shop='1'>
+    <description>&lt;p&gt;Fashion maakt goed ontworpen collecties sinds 2010. Het merk biedt vrouwelijke combineerbare kleding en statement dresses en heeft een prêt-à-porter collectie ontwikkeld met kledingstukken die niet in een garderobe mogen ontbreken. Het resultaat? Cool, gemakkelijk, easy, chique met jeugdige elegantie en een duidelijk herkenbare stijl. Alle prachtige kledingstukken worden met de grootste zorg gemaakt in Italië. Fashion breidt zijn aanbod uit met accessoires zoals schoenen, hoeden, riemen!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Jurkje van chiffon tot op de knie met smalle schouderbandjes. Diepe V-hals.&lt;/p&gt;</description_short>
+    <link_rewrite>bedrukt-jurkje-chiffon</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>Printed Chiffon Dress</name>
-    <available_now>In stock</available_now>
+    <name>Bedrukt jurkje van chiffon</name>
+    <available_now>Op voorraad</available_now>
     <available_later/>
   </product>
 </entity_product>
