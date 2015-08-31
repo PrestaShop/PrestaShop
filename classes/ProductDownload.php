@@ -92,6 +92,7 @@ class ProductDownloadCore extends ObjectModel
     public function getFields()
     {
         $fields = parent::getFields();
+
         if (!$fields['date_expiration']) {
             $fields['date_expiration'] = '0000-00-00 00:00:00';
         }
@@ -109,17 +110,21 @@ class ProductDownloadCore extends ObjectModel
         if (parent::update($null_values)) {
             // Refresh cache of feature detachable because the row can be deactive
             Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
+
             return true;
         }
+
         return false;
     }
 
     public function delete($delete_file = false)
     {
         $result = parent::delete();
+
         if ($result && $delete_file) {
             return $this->deleteFile();
         }
+
         return $result;
     }
 
@@ -135,8 +140,9 @@ class ProductDownloadCore extends ObjectModel
             return false;
         }
 
-        return unlink(_PS_DOWNLOAD_DIR_.$this->filename)
-            && Db::getInstance()->delete('product_download', 'id_product_download = '.(int)$id_product_download);
+        $delete = Db::getInstance()->delete('product_download', 'id_product_download = '.(int)$id_product_download);
+
+        return unlink(_PS_DOWNLOAD_DIR_.$this->filename) && $delete;
     }
 
     /**
@@ -146,10 +152,7 @@ class ProductDownloadCore extends ObjectModel
      */
     public function checkFile()
     {
-        if (!$this->filename) {
-            return false;
-        }
-        return file_exists(_PS_DOWNLOAD_DIR_.$this->filename);
+        return $this->filename ? file_exists(_PS_DOWNLOAD_DIR_.$this->filename) : false;
     }
 
     /**
@@ -173,15 +176,17 @@ class ProductDownloadCore extends ObjectModel
         if (!ProductDownload::isFeatureActive()) {
             return false;
         }
+
         if (array_key_exists((int)$id_product, self::$_productIds)) {
             return self::$_productIds[$id_product];
         }
+
         self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
-		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.'
-		AND `active` = 1
-		ORDER BY `id_product_download` DESC');
+            SELECT `id_product_download`
+            FROM `'._DB_PREFIX_.'product_download`
+            WHERE `id_product` = '.(int)$id_product.'
+                AND `active` = 1
+            ORDER BY `id_product_download` DESC');
 
         return self::$_productIds[$id_product];
     }
@@ -198,9 +203,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getIdFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+            SELECT `id_product_download`
+            FROM `'._DB_PREFIX_.'product_download`
+            WHERE `filename` = \''.pSQL($filename).'\'');
     }
 
     /**
@@ -212,11 +217,10 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromIdProduct($id_product)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `filename`
-			FROM `'._DB_PREFIX_.'product_download`
-			WHERE `id_product` = '.(int)$id_product.'
-				AND `active` = 1
-		');
+            SELECT `filename`
+            FROM `'._DB_PREFIX_.'product_download`
+            WHERE `id_product` = '.(int)$id_product.'
+                AND `active` = 1');
     }
 
     /**
@@ -228,9 +232,9 @@ class ProductDownloadCore extends ObjectModel
     public static function getFilenameFromFilename($filename)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `display_filename`
-		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `filename` = \''.pSQL($filename).'\'');
+            SELECT `display_filename`
+            FROM `'._DB_PREFIX_.'product_download`
+            WHERE `filename` = \''.pSQL($filename).'\'');
     }
 
     /**
@@ -246,6 +250,7 @@ class ProductDownloadCore extends ObjectModel
         $key = $this->filename.'-'.($hash ? $hash : 'orderdetail');
         $link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_.__PS_BASE_URI__.'index.php?controller=get-file&';
         $link .= ($admin) ? 'file='.$this->filename : 'key='.$key;
+
         return $link;
     }
 
@@ -261,10 +266,13 @@ class ProductDownloadCore extends ObjectModel
     {
         $link = $this->getTextLink($admin, $hash);
         $html = '<a href="'.$link.'" title=""';
+
         if ($class) {
             $html .= ' class="'.$class.'"';
         }
+
         $html .= '>'.$this->display_filename.'</a>';
+
         return $html;
     }
 
@@ -278,7 +286,9 @@ class ProductDownloadCore extends ObjectModel
         if (!(int)$this->nb_days_accessible) {
             return '0000-00-00 00:00:00';
         }
+
         $timestamp = strtotime('+'.(int)$this->nb_days_accessible.' day');
+
         return date('Y-m-d H:i:s', $timestamp);
     }
 
@@ -303,6 +313,7 @@ class ProductDownloadCore extends ObjectModel
         do {
             $filename = sha1(microtime());
         } while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+
         return $filename;
     }
 

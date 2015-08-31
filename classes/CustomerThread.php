@@ -88,9 +88,9 @@ class CustomerThreadCore extends ObjectModel
     public function getWsCustomerMessages()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_customer_message` id
-		FROM `'._DB_PREFIX_.'customer_message`
-		WHERE `id_customer_thread` = '.(int)$this->id);
+    		SELECT `id_customer_message` id
+    		FROM `'._DB_PREFIX_.'customer_message`
+    		WHERE `id_customer_thread` = '.(int)$this->id);
     }
 
     public function delete()
@@ -99,16 +99,18 @@ class CustomerThreadCore extends ObjectModel
             return false;
         }
 
-        $return = true;
         $result = Db::getInstance()->executeS('
 			SELECT `id_customer_message`
 			FROM `'._DB_PREFIX_.'customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
         );
 
-        if (count($result)) {
+        $return = true;
+
+        if (!empty($result)) {
             foreach ($result as $res) {
                 $message = new CustomerMessage((int)$res['id_customer_message']);
+
                 if (!Validate::isLoadedObject($message)) {
                     $return = false;
                 } else {
@@ -116,7 +118,9 @@ class CustomerThreadCore extends ObjectModel
                 }
             }
         }
+
         $return &= parent::delete();
+
         return $return;
     }
 
@@ -131,6 +135,7 @@ class CustomerThreadCore extends ObjectModel
         if ($read !== null) {
             $sql .= ' AND cm.`read` = '.(int)$read;
         }
+
         if ($id_order !== null) {
             $sql .= ' AND ct.`id_order` = '.(int)$id_order;
         }
@@ -179,13 +184,13 @@ class CustomerThreadCore extends ObjectModel
 				FROM '._DB_PREFIX_.'customer_thread
 				WHERE 1 '.Shop::addSqlRestriction()
             );
-        } else {
-            return (int)Db::getInstance()->getValue('
-				SELECT COUNT(*)
-				FROM '._DB_PREFIX_.'customer_thread
-				WHERE '.$where.Shop::addSqlRestriction()
-            );
         }
+
+        return (int)Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM '._DB_PREFIX_.'customer_thread
+			WHERE '.$where.Shop::addSqlRestriction()
+        );
     }
 
     public static function getMessageCustomerThreads($id_customer_thread)
@@ -210,6 +215,7 @@ class CustomerThreadCore extends ObjectModel
     public static function getNextThread($id_customer_thread)
     {
         $context = Context::getContext();
+        
         return Db::getInstance()->getValue('
 			SELECT id_customer_thread
 			FROM '._DB_PREFIX_.'customer_thread ct

@@ -125,8 +125,10 @@ class ContextCore
     {
         if ($this->mobile_detect === null) {
             require_once(_PS_TOOL_DIR_.'mobile_Detect/Mobile_Detect.php');
+
             $this->mobile_detect = new Mobile_Detect();
         }
+
         return $this->mobile_detect;
     }
 
@@ -141,6 +143,7 @@ class ContextCore
             $mobile_detect = $this->getMobileDetect();
             $this->is_mobile = $mobile_detect->isMobile();
         }
+
         return $this->is_mobile;
     }
 
@@ -155,6 +158,7 @@ class ContextCore
             $mobile_detect = $this->getMobileDetect();
             $this->is_tablet = $mobile_detect->isTablet();
         }
+
         return $this->is_tablet;
     }
 
@@ -167,8 +171,9 @@ class ContextCore
     {
         if ($this->mobile_device === null) {
             $this->mobile_device = false;
+
             if ($this->checkMobileContext()) {
-                if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0) {
+                if (isset(Context::getContext()->cookie->no_mobile) && (Context::getContext()->cookie->no_mobile == false) && ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)) {
                     $this->mobile_device = true;
                 } else {
                     switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE')) {
@@ -191,6 +196,7 @@ class ContextCore
                 }
             }
         }
+
         return $this->mobile_device;
     }
 

@@ -670,9 +670,9 @@ class AdminImagesControllerCore extends AdminController
             }
 
             if ($deleteOldImages) {
-                $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
+                $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products'));
             }
-            if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false))) === true) {
+            if (($return = $this->_regenerateNewImages($proc['dir'], $formats, ($proc['type'] == 'products'))) === true) {
                 if (!count($this->errors)) {
                     $this->errors[] = sprintf(Tools::displayError('Cannot write images for this type: %s. Please check the %s folder\'s writing permissions.'), $proc['type'], $proc['dir']);
                 }

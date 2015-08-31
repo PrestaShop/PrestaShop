@@ -56,6 +56,7 @@ class MetaCore extends ObjectModel
     public static function getPages($exclude_filled = false, $add_page = false)
     {
         $selected_pages = array();
+
         if (!$files = Tools::scandir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'front'.DIRECTORY_SEPARATOR, 'php', '', true)) {
             die(Tools::displayError('Cannot scan root directory'));
         }
@@ -77,6 +78,7 @@ class MetaCore extends ObjectModel
                 $class_name = str_replace('.php', '', $file);
                 $reflection = class_exists($class_name) ? new ReflectionClass(str_replace('.php', '', $file)) : false;
                 $properties = $reflection ? $reflection->getDefaultProperties() : array();
+
                 if (isset($properties['php_self'])) {
                     $selected_pages[$properties['php_self']] = $properties['php_self'];
                 } elseif (preg_match('/^[a-z0-9_.-]*\.php$/i', $file)) {
@@ -90,6 +92,7 @@ class MetaCore extends ObjectModel
         // Add modules controllers to list (this function is cool !)
         foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file) {
             $filename = Tools::strtolower(basename($file, '.php'));
+
             if ($filename == 'index') {
                 continue;
             }
@@ -101,6 +104,7 @@ class MetaCore extends ObjectModel
         // Exclude page already filled
         if ($exclude_filled) {
             $metas = Meta::getMetas();
+
             foreach ($metas as $meta) {
                 if (in_array($meta['page'], $selected_pages)) {
                     unset($selected_pages[array_search($meta['page'], $selected_pages)]);
@@ -110,12 +114,16 @@ class MetaCore extends ObjectModel
         // Add selected page
         if ($add_page) {
             $name = $add_page;
+
             if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $add_page, $m)) {
                 $add_page = $m[1].' - '.$m[2];
             }
+
             $selected_pages[$add_page] = $name;
+
             asort($selected_pages);
         }
+
         return $selected_pages;
     }
 
@@ -127,44 +135,37 @@ class MetaCore extends ObjectModel
     public static function getMetasByIdLang($id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'meta` m
-		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml ON m.`id_meta` = ml.`id_meta`
-		WHERE ml.`id_lang` = '.(int)$id_lang
-            .Shop::addSqlRestrictionOnLang('ml').
-        'ORDER BY page ASC');
+    		SELECT *
+    		FROM `'._DB_PREFIX_.'meta` m
+    		LEFT JOIN `'._DB_PREFIX_.'meta_lang` ml
+                ON m.`id_meta` = ml.`id_meta`
+    		WHERE ml.`id_lang` = '.(int)$id_lang
+                .Shop::addSqlRestrictionOnLang('ml').
+            'ORDER BY page ASC');
     }
 
     public static function getMetaByPage($page, $id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT *
-		FROM '._DB_PREFIX_.'meta m
-		LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON m.id_meta = ml.id_meta
-		WHERE (
-			m.page = "'.pSQL($page).'"
-			OR m.page = "'.pSQL(str_replace('-', '', strtolower($page))).'"
-		)
-		AND ml.id_lang = '.(int)$id_lang.'
-		'.Shop::addSqlRestrictionOnLang('ml'));
+    		SELECT *
+    		FROM '._DB_PREFIX_.'meta m
+    		LEFT JOIN '._DB_PREFIX_.'meta_lang ml
+                ON m.id_meta = ml.id_meta
+    		WHERE
+                (m.page = "'.pSQL($page).'"
+                OR m.page = "'.pSQL(str_replace('-', '', strtolower($page))).'")
+    		    AND ml.id_lang = '.(int)$id_lang.'
+    		'.Shop::addSqlRestrictionOnLang('ml'));
     }
 
     public function update($null_values = false)
     {
-        if (!parent::update($null_values)) {
-            return false;
-        }
-
-        return Tools::generateHtaccess();
+        return parent::update($null_values) ? Tools::generateHtaccess() : false;
     }
 
     public function delete()
     {
-        if (!parent::delete()) {
-            return false;
-        }
-
-        return Tools::generateHtaccess();
+        return parent::delete() ? Tools::generateHtaccess() : false;
     }
 
     public function deleteSelection($selection)
@@ -172,13 +173,15 @@ class MetaCore extends ObjectModel
         if (!is_array($selection)) {
             die(Tools::displayError());
         }
+
         $result = true;
+
         foreach ($selection as $id) {
             $this->id = (int)$id;
-            $result = $result && $this->delete();
+            $result &= $this->delete();
         }
 
-        return $result && Tools::generateHtaccess();
+        return ($result && Tools::generateHtaccess());
     }
 
     public static function getEquivalentUrlRewrite($new_id_lang, $id_lang, $url_rewrite)
@@ -189,11 +192,12 @@ class MetaCore extends ObjectModel
 		WHERE id_meta = (
 			SELECT id_meta
 			FROM `'._DB_PREFIX_.'meta_lang`
-			WHERE url_rewrite = \''.pSQL($url_rewrite).'\' AND id_lang = '.(int)$id_lang.'
-			AND id_shop = '.Context::getContext()->shop->id.'
+			WHERE url_rewrite = \''.pSQL($url_rewrite).'\'
+                AND id_lang = '.(int)$id_lang.'
+    			AND id_shop = '.Context::getContext()->shop->id.'
 		)
-		AND id_lang = '.(int)$new_id_lang.'
-		AND id_shop = '.Context::getContext()->shop->id);
+    		AND id_lang = '.(int)$new_id_lang.'
+    		AND id_shop = '.Context::getContext()->shop->id);
     }
 
     /**
@@ -202,6 +206,7 @@ class MetaCore extends ObjectModel
     public static function getMetaTags($id_lang, $page_name, $title = '')
     {
         global $maintenance;
+
         if (!(isset($maintenance) && (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))))) {
             if ($page_name == 'product' && ($id_product = Tools::getValue('id_product'))) {
                 return Meta::getProductMetas($id_product, $id_lang, $page_name);
@@ -232,10 +237,12 @@ class MetaCore extends ObjectModel
     public static function getHomeMetas($id_lang, $page_name)
     {
         $metas = Meta::getMetaByPage($page_name, $id_lang);
-        $ret['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'].' - '.Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
-        $ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
-        $ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] :  '';
-        return $ret;
+
+        $return['meta_title'] = (isset($metas['title']) && $metas['title']) ? $metas['title'].' - '.Configuration::get('PS_SHOP_NAME') : Configuration::get('PS_SHOP_NAME');
+        $return['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
+        $return['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] :  '';
+
+        return $return;
     }
 
     /**
@@ -249,17 +256,20 @@ class MetaCore extends ObjectModel
      */
     public static function getProductMetas($id_product, $id_lang, $page_name)
     {
-        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
-				FROM `'._DB_PREFIX_.'product` p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE pl.id_lang = '.(int)$id_lang.'
-					AND pl.id_product = '.(int)$id_product.'
-					AND product_shop.active = 1';
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description_short`
+			FROM `'._DB_PREFIX_.'product` p
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
+			'.Shop::addSqlAssociation('product', 'p').'
+			WHERE pl.id_lang = '.(int)$id_lang.'
+				AND pl.id_product = '.(int)$id_product.'
+				AND product_shop.active = 1');
+
+        if ($row) {
             if (empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['description_short']);
             }
+
             return Meta::completeMetaTags($row, $row['name']);
         }
 
@@ -280,38 +290,45 @@ class MetaCore extends ObjectModel
         if (!empty($title)) {
             $title = ' - '.$title;
         }
+
         $page_number = (int)Tools::getValue('p');
-        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
-				FROM `'._DB_PREFIX_.'category_lang` cl
-				WHERE cl.`id_lang` = '.(int)$id_lang.'
-					AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl');
 
         $cache_id = 'Meta::getCategoryMetas'.(int)$id_category.'-'.(int)$id_lang;
-        if (!Cache::isStored($cache_id)) {
-            if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
-                if (empty($row['meta_description'])) {
-                    $row['meta_description'] = strip_tags($row['description']);
-                }
 
-                // Paginate title
-                if (!empty($row['meta_title'])) {
-                    $row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-                } else {
-                    $row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-                }
-
-                if (!empty($title)) {
-                    $row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-                }
-
-                $result = Meta::completeMetaTags($row, $row['name']);
-            } else {
-                $result = Meta::getHomeMetas($id_lang, $page_name);
-            }
-            Cache::store($cache_id, $result);
-            return $result;
+        if (Cache::isStored($cache_id)) {
+            return Cache::retrieve($cache_id);
         }
-        return Cache::retrieve($cache_id);
+
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
+			FROM `'._DB_PREFIX_.'category_lang` cl
+			WHERE cl.`id_lang` = '.(int)$id_lang.'
+				AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl'));
+
+        if ($row) {
+            if (empty($row['meta_description'])) {
+                $row['meta_description'] = strip_tags($row['description']);
+            }
+
+            // Paginate title
+            if (!empty($row['meta_title'])) {
+                $row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+            } else {
+                $row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+            }
+
+            if (!empty($title)) {
+                $row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
+            }
+
+            $result = Meta::completeMetaTags($row, $row['name']);
+        } else {
+            $result = Meta::getHomeMetas($id_lang, $page_name);
+        }
+
+        Cache::store($cache_id, $result);
+
+        return $result;
     }
 
     /**
@@ -326,17 +343,22 @@ class MetaCore extends ObjectModel
     public static function getManufacturerMetas($id_manufacturer, $id_lang, $page_name)
     {
         $page_number = (int)Tools::getValue('p');
-        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'manufacturer_lang` ml
-				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (ml.`id_manufacturer` = m.`id_manufacturer`)
-				WHERE ml.id_lang = '.(int)$id_lang.'
-					AND ml.id_manufacturer = '.(int)$id_manufacturer;
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
+			FROM `'._DB_PREFIX_.'manufacturer_lang` ml
+			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (ml.`id_manufacturer` = m.`id_manufacturer`)
+			WHERE ml.id_lang = '.(int)$id_lang.'
+				AND ml.id_manufacturer = '.(int)$id_manufacturer);
+
+        if ($row) {
             if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
             }
+
             $row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
             $row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
+
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
 
@@ -354,18 +376,23 @@ class MetaCore extends ObjectModel
      */
     public static function getSupplierMetas($id_supplier, $id_lang, $page_name)
     {
-        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'supplier_lang` sl
-				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON (sl.`id_supplier` = s.`id_supplier`)
-				WHERE sl.id_lang = '.(int)$id_lang.'
-					AND sl.id_supplier = '.(int)$id_supplier;
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`
+			FROM `'._DB_PREFIX_.'supplier_lang` sl
+			LEFT JOIN `'._DB_PREFIX_.'supplier` s
+                ON (sl.`id_supplier` = s.`id_supplier`)
+			WHERE sl.id_lang = '.(int)$id_lang.'
+				AND sl.id_supplier = '.(int)$id_supplier);
+
+        if ($row) {
             if (!empty($row['meta_description'])) {
                 $row['meta_description'] = strip_tags($row['meta_description']);
             }
+
             if (!empty($row['meta_title'])) {
                 $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
             }
+
             return Meta::completeMetaTags($row, $row['name']);
         }
 
@@ -383,15 +410,17 @@ class MetaCore extends ObjectModel
      */
     public static function getCmsMetas($id_cms, $id_lang, $page_name)
     {
-        $sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'cms_lang`
-				WHERE id_lang = '.(int)$id_lang.'
-					AND id_cms = '.(int)$id_cms.
-                    ((int)Context::getContext()->shop->id ?
-                        ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `meta_title`, `meta_description`, `meta_keywords`
+			FROM `'._DB_PREFIX_.'cms_lang`
+			WHERE id_lang = '.(int)$id_lang.'
+				AND id_cms = '.(int)$id_cms.
+                ((int)Context::getContext()->shop->id ?
+                    ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
 
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+        if ($row) {
             $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
 
@@ -409,14 +438,17 @@ class MetaCore extends ObjectModel
      */
     public static function getCmsCategoryMetas($id_cms_category, $id_lang, $page_name)
     {
-        $sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
-				FROM `'._DB_PREFIX_.'cms_category_lang`
-				WHERE id_lang = '.(int)$id_lang.'
-					AND id_cms_category = '.(int)$id_cms_category.
-                    ((int)Context::getContext()->shop->id ?
-                        ' AND id_shop = '.(int)Context::getContext()->shop->id : '');
-        if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT `meta_title`, `meta_description`, `meta_keywords`
+			FROM `'._DB_PREFIX_.'cms_category_lang`
+			WHERE id_lang = '.(int)$id_lang.'
+				AND id_cms_category = '.(int)$id_cms_category.
+                ((int)Context::getContext()->shop->id ?
+                    ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
+
+        if ($row) {
             $row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
+
             return Meta::completeMetaTags($row, $row['meta_title']);
         }
 
@@ -441,6 +473,7 @@ class MetaCore extends ObjectModel
         if (empty($meta_tags['meta_keywords'])) {
             $meta_tags['meta_keywords'] = Configuration::get('PS_META_KEYWORDS', $context->language->id) ? Configuration::get('PS_META_KEYWORDS', $context->language->id) : '';
         }
+        
         return $meta_tags;
     }
 }

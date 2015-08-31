@@ -217,7 +217,6 @@ class AdminCategoriesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-
         $count_categories_without_parent = count(Category::getCategoriesWithoutParent());
         $categories_tree = $this->_category->getParentsCategories();
 
@@ -226,7 +225,6 @@ class AdminCategoriesControllerCore extends AdminController
             && (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1)) {
             $categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
         }
-
 
         $categories_tree = array_reverse($categories_tree);
 
@@ -254,9 +252,11 @@ class AdminCategoriesControllerCore extends AdminController
         // Check each row to see if there are combinations and get the correct action in consequence
 
         $nb_items = count($this->_list);
+
         for ($i = 0; $i < $nb_items; $i++) {
             $item = &$this->_list[$i];
             $category_tree = Category::getChildren((int)$item['id_category'], $this->context->language->id);
+
             if (!count($category_tree)) {
                 $this->addRowActionSkipList('view', array($item['id_category']));
             }
@@ -336,11 +336,8 @@ class AdminCategoriesControllerCore extends AdminController
             if ($this->tabAccess['add']) {
                 $this->action = 'add'.$this->table.'root';
                 $obj = $this->loadObject(true);
-                if (Validate::isLoadedObject($obj)) {
-                    $this->display = 'edit';
-                } else {
-                    $this->display = 'add';
-                }
+
+                $this->display = (Validate::isLoadedObject($obj)) ? 'edit' : 'add';
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
@@ -409,6 +406,7 @@ class AdminCategoriesControllerCore extends AdminController
         $helper->icon = 'icon-search';
         $helper->color = 'color4';
         $helper->title = $this->l('Average number of products per category', null, null, false);
+
         if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false) {
             $helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
         }
@@ -443,8 +441,7 @@ class AdminCategoriesControllerCore extends AdminController
         }
 
         $image = _PS_CAT_IMG_DIR_.$obj->id.'.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $this->fields_form = array(
@@ -620,13 +617,14 @@ class AdminCategoriesControllerCore extends AdminController
 
         // Added values of object Group
         $category_groups_ids = $obj->getGroups();
-
         $groups = Group::getGroups($this->context->language->id);
+
         // if empty $carrier_groups_ids : object creation : we set the default groups
         if (empty($category_groups_ids)) {
             $preselected = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
             $category_groups_ids = array_merge($category_groups_ids, $preselected);
         }
+
         foreach ($groups as $group) {
             $this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $category_groups_ids)));
         }
@@ -643,6 +641,7 @@ class AdminCategoriesControllerCore extends AdminController
         }
         if (Tools::isSubmit('forcedeleteImage') || (isset($_FILES['image']) && $_FILES['image']['size'] > 0) || Tools::getValue('deleteImage')) {
             $this->processForceDeleteImage();
+
             if (Tools::isSubmit('forcedeleteImage')) {
                 Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=7');
             }
@@ -654,6 +653,7 @@ class AdminCategoriesControllerCore extends AdminController
     public function processForceDeleteImage()
     {
         $category = $this->loadObject(true);
+
         if (Validate::isLoadedObject($category)) {
             $category->deleteImage(true);
         }
@@ -685,6 +685,7 @@ class AdminCategoriesControllerCore extends AdminController
         if ($object && Tools::getValue('is_root_category')) {
             Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)Configuration::get('PS_ROOT_CATEGORY').'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
         }
+
         return $object;
     }
 
@@ -692,6 +693,7 @@ class AdminCategoriesControllerCore extends AdminController
     {
         if ($this->delete_mode == 'link' || $this->delete_mode == 'linkanddisable') {
             $this->remove_products = false;
+
             if ($this->delete_mode == 'linkanddisable') {
                 $this->disable_products = true;
             }
@@ -704,8 +706,10 @@ class AdminCategoriesControllerCore extends AdminController
     {
         if ($this->tabAccess['delete'] === '1') {
             $cats_ids = array();
+
             foreach (Tools::getValue($this->table.'Box') as $id_category) {
                 $category = new Category((int)$id_category);
+
                 if (!$category->isRootCategoryForAShop()) {
                     $cats_ids[$category->id] = $category->id_parent;
                 }
@@ -713,13 +717,15 @@ class AdminCategoriesControllerCore extends AdminController
 
             if (parent::processBulkDelete()) {
                 $this->setDeleteMode();
+
                 foreach ($cats_ids as $id => $id_parent) {
                     $this->processFatherlessProducts((int)$id_parent);
                 }
+
                 return true;
-            } else {
-                return false;
             }
+
+            return false;
         } else {
             $this->errors[] = Tools::displayError('You do not have permission to delete this.');
         }
@@ -730,16 +736,19 @@ class AdminCategoriesControllerCore extends AdminController
         if ($this->tabAccess['delete'] === '1') {
             /** @var Category $category */
             $category = $this->loadObject();
+
             if ($category->isRootCategoryForAShop()) {
                 $this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');
             } elseif (parent::processDelete()) {
                 $this->setDeleteMode();
                 $this->processFatherlessProducts((int)$category->id_parent);
+
                 return true;
             }
         } else {
             $this->errors[] = Tools::displayError('You do not have permission to delete this.');
         }
+
         return false;
     }
 
@@ -753,6 +762,7 @@ class AdminCategoriesControllerCore extends AdminController
 
         foreach ($fatherless_products as $id_poor_product) {
             $poor_product = new Product((int)$id_poor_product['id_product']);
+
             if (Validate::isLoadedObject($poor_product)) {
                 if ($this->remove_products || $id_parent == 0) {
                     $poor_product->delete();
@@ -760,6 +770,7 @@ class AdminCategoriesControllerCore extends AdminController
                     if ($this->disable_products) {
                         $poor_product->active = 0;
                     }
+
                     $poor_product->id_category_default = (int)$id_parent;
                     $poor_product->addToCategories((int)$id_parent);
                     $poor_product->save();
@@ -776,6 +787,7 @@ class AdminCategoriesControllerCore extends AdminController
             $this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
                 $this->table.'</b> '.Tools::displayError('(cannot load object)');
         }
+
         if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position'))) {
             $this->errors[] = Tools::displayError('Failed to update the position.');
         } else {
@@ -825,6 +837,7 @@ class AdminCategoriesControllerCore extends AdminController
         $way = (int)Tools::getValue('way');
         $positions = Tools::getValue('category');
         $found_first = (bool)Tools::getValue('found_first');
+
         if (is_array($positions)) {
             foreach ($positions as $key => $value) {
                 $pos = explode('_', $value);
@@ -846,12 +859,12 @@ class AdminCategoriesControllerCore extends AdminController
                 }
 
                 die(true);
-            } else {
-                die('{"hasError" : true, errors : "Cannot update categories position"}');
             }
-        } else {
-            die('{"hasError" : true, "errors" : "This category cannot be loaded"}');
+
+            die('{"hasError" : true, errors : "Cannot update categories position"}');
         }
+
+        die('{"hasError" : true, "errors" : "This category cannot be loaded"}');
     }
 
     public function ajaxProcessStatusCategory()

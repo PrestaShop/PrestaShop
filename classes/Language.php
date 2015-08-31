@@ -99,6 +99,7 @@ class LanguageCore extends ObjectModel
     public function getFields()
     {
         $this->iso_code = strtolower($this->iso_code);
+
         if (empty($this->language_code)) {
             $this->language_code = $this->iso_code;
         }
@@ -122,6 +123,7 @@ class LanguageCore extends ObjectModel
 
         foreach ($this->translationsFilesAndVars as $file => $var) {
             $path_file = _PS_TRANSLATIONS_DIR_.$iso_code.'/'.$file.'.php';
+
             if (!file_exists($path_file)) {
                 if ($file != 'tabs') {
                     @file_put_contents($path_file, '<?php
@@ -158,6 +160,7 @@ class LanguageCore extends ObjectModel
         }
 
         $modulesList = Module::getModulesDirOnDisk();
+
         foreach ($modulesList as $moduleDir) {
             if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code)) {
                 rename(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code, _PS_MODULE_DIR_.$moduleDir.'/mails/'.$newIso);
@@ -201,11 +204,13 @@ class LanguageCore extends ObjectModel
 
         if (empty($themes)) {
             $installed_themes = Theme::getThemes();
+
             foreach ($installed_themes as $theme) {
                 /** @var Theme $theme */
                 $themes[$theme->directory] = array('name' => $theme->name);
             }
         }
+
         return $themes;
     }
 
@@ -253,7 +258,9 @@ class LanguageCore extends ObjectModel
                 return false;
             }
         }
+
         self::$_checkedLangs[$iso_code] = true;
+
         return true;
     }
 
@@ -263,7 +270,7 @@ class LanguageCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        $copy = ($iso_to && $theme_to) ? true : false;
+        $copy = ($iso_to && $theme_to);
 
         $lPath_from = _PS_TRANSLATIONS_DIR_.(string)$iso_from.'/';
         $tPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/';
@@ -334,39 +341,49 @@ class LanguageCore extends ObjectModel
                     $files_tr[$lPath_from.$file] = ($copy ? $lPath_to.$file : ++$number);
                 }
             }
+
             if ($select == 'tr') {
                 return $files_tr;
             }
+
             $files = array_merge($files, $files_tr);
 
             // Mail files
             if (!$check || ($check && (string)$iso_from != 'en')) {
                 $files_mail[$mPath_from.'lang.php'] = ($copy ? $mPath_to.'lang.php' : ++$number);
             }
+
             foreach ($mFiles as $file) {
                 $files_mail[$mPath_from.$file] = ($copy ? $mPath_to.$file : ++$number);
             }
+
             if ($select == 'mail') {
                 return $files_mail;
             }
+
             $files = array_merge($files, $files_mail);
 
             // Modules
             if ($modules) {
                 $modList = Module::getModulesDirOnDisk();
+
                 foreach ($modList as $mod) {
                     $modDir = _PS_MODULE_DIR_.$mod;
+
                     // Lang file
                     if (file_exists($modDir.'/translations/'.(string)$iso_from.'.php')) {
                         $files_modules[$modDir.'/translations/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/translations/'.(string)$iso_to.'.php' : ++$number);
                     } elseif (file_exists($modDir.'/'.(string)$iso_from.'.php')) {
                         $files_modules[$modDir.'/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/'.(string)$iso_to.'.php' : ++$number);
                     }
+
                     // Mails files
                     $modMailDirFrom = $modDir.'/mails/'.(string)$iso_from;
                     $modMailDirTo = $modDir.'/mails/'.(string)$iso_to;
+
                     if (file_exists($modMailDirFrom)) {
                         $dirFiles = scandir($modMailDirFrom);
+
                         foreach ($dirFiles as $file) {
                             if (file_exists($modMailDirFrom.'/'.$file) && $file != '.' && $file != '..' && $file != '.svn') {
                                 $files_modules[$modMailDirFrom.'/'.$file] = ($copy ? $modMailDirTo.'/'.$file : ++$number);
@@ -374,9 +391,11 @@ class LanguageCore extends ObjectModel
                         }
                     }
                 }
+
                 if ($select == 'modules') {
                     return $files_modules;
                 }
+
                 $files = array_merge($files, $files_modules);
             }
         } elseif ($select == 'mail' || $select == 'tr') {
@@ -393,19 +412,19 @@ class LanguageCore extends ObjectModel
             }
 
             $module_theme_files = (file_exists($tPath_from.'modules/') ? scandir($tPath_from.'modules/') : array());
+
             foreach ($module_theme_files as $module) {
                 if ($module !== '.' && $module != '..' && $module !== '.svn' && file_exists($tPath_from.'modules/'.$module.'/translations/'.(string)$iso_from.'.php')) {
                     $files_theme[$tPath_from.'modules/'.$module.'/translations/'.(string)$iso_from.'.php'] = ($copy ? $tPath_to.'modules/'.$module.'/translations/'.(string)$iso_to.'.php' : ++$number);
                 }
             }
         }
+
         if ($select == 'theme') {
             return $files_theme;
         }
-        $files = array_merge($files, $files_theme);
 
-        // Return
-        return $files;
+        return array_merge($files, $files_theme);
     }
 
     /**
@@ -429,6 +448,7 @@ class LanguageCore extends ObjectModel
         $return = true;
 
         $shops = Shop::getShopsCollection(false);
+
         foreach ($shops as $shop) {
             /** @var Shop $shop */
             $id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
@@ -442,15 +462,19 @@ class LanguageCore extends ObjectModel
                 // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
                 $shop_field_exists = $primary_key_exists = false;
                 $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
+
                 foreach ($columns as $column) {
                     $fields .= $column['Field'].', ';
+
                     if ($column['Field'] == 'id_shop') {
                         $shop_field_exists = true;
                     }
+
                     if ($column['Field'] == $identifier) {
                         $primary_key_exists = true;
                     }
                 }
+
                 $fields = rtrim($fields, ', ');
 
                 if (!$primary_key_exists) {
@@ -461,24 +485,32 @@ class LanguageCore extends ObjectModel
 
                 // For each column, copy data from default language
                 reset($columns);
+
+                $bsql_name = bqSQL($name);
+                $bsql_identifier = bqSQL($identifier);
+                $bsql_replaced_name = bqSQL(str_replace('_lang', '', $name));
+
                 foreach ($columns as $column) {
-                    if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
+                    if (($identifier != $column['Field']) && ($column['Field'] != 'id_lang')) {
                         $sql .= '(
 							SELECT `'.bqSQL($column['Field']).'`
-							FROM `'.bqSQL($name).'` tl
+							FROM `'.$bsql_name.'` tl
 							WHERE tl.`id_lang` = '.(int)$id_lang_default.'
 							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int)$shop->id : '').'
-							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
+							AND tl.`'.$bsql_identifier.'` = `'.$bsql_replaced_name.'`.`'.$bsql_identifier.'`
 						),';
                     } else {
                         $sql .= '`'.bqSQL($column['Field']).'`,';
                     }
                 }
+
                 $sql = rtrim($sql, ', ');
-                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'`)';
+                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.$bsql_replaced_name.'`)';
+
                 $return &= Db::getInstance()->execute($sql);
             }
         }
+
         return $return;
     }
 
@@ -500,6 +532,7 @@ class LanguageCore extends ObjectModel
 
             // Database translations deletion
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
+
             foreach ($result as $row) {
                 if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/'.preg_quote(_DB_PREFIX_).'_lang/', $row['Tables_in_'._DB_NAME_])) {
                     if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id)) {
@@ -507,7 +540,6 @@ class LanguageCore extends ObjectModel
                     }
                 }
             }
-
 
             // Delete tags
             Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
@@ -522,19 +554,22 @@ class LanguageCore extends ObjectModel
                 }
             }
 
-            $modList = scandir(_PS_MODULE_DIR_);
-            foreach ($modList as $mod) {
-                Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/'.$this->iso_code);
-                $files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
+            $modules_list = scandir(_PS_MODULE_DIR_);
+
+            foreach ($modules_list as $module) {
+                Language::recurseDeleteDir(_PS_MODULE_DIR_.$module.'/mails/'.$this->iso_code);
+                $files = @scandir(_PS_MODULE_DIR_.$module.'/mails/');
+
                 if (count($files) <= 2) {
-                    Tools::deleteDirectory(_PS_MODULE_DIR_.$mod.'/mails/');
+                    Language::recurseDeleteDir(_PS_MODULE_DIR_.$module.'/mails/');
                 }
 
-                if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php')) {
-                    unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
-                    $files = @scandir(_PS_MODULE_DIR_.$mod);
+                if (file_exists(_PS_MODULE_DIR_.$module.'/'.$this->iso_code.'.php')) {
+                    unlink(_PS_MODULE_DIR_.$module.'/'.$this->iso_code.'.php');
+                    $files = @scandir(_PS_MODULE_DIR_.$module);
+
                     if (count($files) <= 2) {
-                        Tools::deleteDirectory(_PS_MODULE_DIR_.$mod);
+                        Language::recurseDeleteDir(_PS_MODULE_DIR_.$module);
                     }
                 }
             }
@@ -554,12 +589,15 @@ class LanguageCore extends ObjectModel
                 '-default-'.ImageType::getFormatedName('medium').'.jpg',
                 '-default-'.ImageType::getFormatedName('small').'.jpg'
             );
+
             $images_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
+
             foreach ($images_directories as $image_directory) {
                 foreach ($images as $image) {
                     if (file_exists($image_directory.$this->iso_code.$image)) {
                         unlink($image_directory.$this->iso_code.$image);
                     }
+
                     if (file_exists(_PS_ROOT_DIR_.'/img/l/'.$this->id.'.jpg')) {
                         unlink(_PS_ROOT_DIR_.'/img/l/'.$this->id.'.jpg');
                     }
@@ -567,11 +605,7 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        if (!parent::delete()) {
-            return false;
-        }
-
-        return true;
+        return parent::delete();
     }
 
     public function deleteSelection($selection)
@@ -581,9 +615,10 @@ class LanguageCore extends ObjectModel
         }
 
         $result = true;
+
         foreach ($selection as $id) {
             $language = new Language($id);
-            $result = $result && $language->delete();
+            $result &= $language->delete();
         }
 
         return $result;
@@ -631,10 +666,11 @@ class LanguageCore extends ObjectModel
 
     public static function getLanguage($id_lang)
     {
-        if (!array_key_exists((int)$id_lang, self::$_LANGUAGES)) {
-            return false;
+        if (array_key_exists((int)$id_lang, self::$_LANGUAGES)) {
+            return self::$_LANGUAGES[(int)($id_lang)];
         }
-        return self::$_LANGUAGES[(int)($id_lang)];
+
+        return false;
     }
 
     /**
@@ -648,6 +684,7 @@ class LanguageCore extends ObjectModel
         if (isset(self::$_LANGUAGES[(int)$id_lang]['iso_code'])) {
             return self::$_LANGUAGES[(int)$id_lang]['iso_code'];
         }
+
         return false;
     }
 
@@ -665,13 +702,19 @@ class LanguageCore extends ObjectModel
         }
 
         $key = 'Language::getIdByIso_'.$iso_code;
-        if ($no_cache || !Cache::isStored($key)) {
-            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 
-            Cache::store($key, $id_lang);
-            return $id_lang;
+        if (!$no_cache && Cache::isStored($key)) {
+            return Cache::retrieve($key);
         }
-        return Cache::retrieve($key);
+
+        $id_lang = Db::getInstance()->getValue('
+            SELECT `id_lang`
+            FROM `'._DB_PREFIX_.'lang`
+            WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+
+        Cache::store($key, $id_lang);
+
+        return $id_lang;
     }
 
     public static function getLanguageCodeByIso($iso_code)
@@ -680,7 +723,10 @@ class LanguageCore extends ObjectModel
             die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
         }
 
-        return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+        return Db::getInstance()->getValue('
+            SELECT `language_code`
+            FROM `'._DB_PREFIX_.'lang`
+            WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
     }
 
     public static function getLanguageByIETFCode($code)
@@ -701,18 +747,14 @@ class LanguageCore extends ObjectModel
         // That way using only one query we get either the exact wanted language
         // or a close match.
         $id_lang = Db::getInstance()->getValue(
-            'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
+            'SELECT `id_lang`, IF (language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
 			FROM `'._DB_PREFIX_.'lang`
 			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
 			ORDER BY found ASC'
         );
 
         // Instantiate the Language object if we found it.
-        if ($id_lang) {
-            return new Language($id_lang);
-        } else {
-            return false;
-        }
+        return $id_lang ? new Language($id_lang) : false;
     }
 
     /**
@@ -723,32 +765,48 @@ class LanguageCore extends ObjectModel
      */
     public static function getIsoIds($active = true)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT `id_lang`, `iso_code`
+            FROM `'._DB_PREFIX_.'lang` '.
+            ($active ? 'WHERE active = 1' : ''));
     }
 
     public static function copyLanguageData($from, $to)
     {
-        $result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
+        $result = Db::getInstance()->executeS('
+            SHOW TABLES FROM `'._DB_NAME_.'`');
+
         foreach ($result as $row) {
             if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]) && $row['Tables_in_'._DB_NAME_] != _DB_PREFIX_.'lang') {
-                $result2 = Db::getInstance()->executeS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$from);
-                if (!count($result2)) {
+                $sub_results = Db::getInstance()->executeS('SELECT * FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$from);
+
+                if (empty($sub_results)) {
                     continue;
                 }
-                Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$to);
+
+                Db::getInstance()->execute('
+                    DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'`
+                    WHERE `id_lang` = '.(int)$to);
+
                 $query = 'INSERT INTO `'.$row['Tables_in_'._DB_NAME_].'` VALUES ';
-                foreach ($result2 as $row2) {
+
+                foreach ($sub_results as $sub_row) {
                     $query .= '(';
-                    $row2['id_lang'] = $to;
-                    foreach ($row2 as $field) {
-                        $query .= (!is_string($field) && $field == null) ? 'NULL,' : '\''.pSQL($field, true).'\',';
+                    $sub_row['id_lang'] = $to;
+
+                    foreach ($sub_row as $field) {
+                        $query .= (!is_string($field) && ($field == null)) ? 'NULL,' : '\''.pSQL($field, true).'\',';
                     }
+
                     $query = rtrim($query, ',').'),';
                 }
+
                 $query = rtrim($query, ',');
+
                 Db::getInstance()->execute($query);
             }
         }
+
         return true;
     }
 
@@ -761,13 +819,16 @@ class LanguageCore extends ObjectModel
 
         $sql = 'SELECT l.*, ls.`id_shop`
 				FROM `'._DB_PREFIX_.'lang` l
-				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls
+                    ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+
         foreach ($result as $row) {
             if (!isset(self::$_LANGUAGES[(int)$row['id_lang']])) {
                 self::$_LANGUAGES[(int)$row['id_lang']] = $row;
             }
+
             self::$_LANGUAGES[(int)$row['id_lang']]['shops'][(int)$row['id_shop']] = true;
         }
     }
@@ -820,8 +881,10 @@ class LanguageCore extends ObjectModel
         }
 
         $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
+
         if ($flag != null && !preg_match('/<body>/', $flag)) {
             $file = fopen(_PS_ROOT_DIR_.'/img/l/'.(int)$lang->id.'.jpg', 'w');
+
             if ($file) {
                 fwrite($file, $flag);
                 fclose($file);
@@ -860,11 +923,16 @@ class LanguageCore extends ObjectModel
     {
         if (self::$_cache_language_installation === null) {
             self::$_cache_language_installation = array();
-            $result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`');
+
+            $result = Db::getInstance()->executeS('
+                SELECT `id_lang`, `iso_code`
+                FROM `'._DB_PREFIX_.'lang`');
+
             foreach ($result as $row) {
                 self::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
             }
         }
+
         return (isset(self::$_cache_language_installation[$iso_code]) ? self::$_cache_language_installation[$iso_code] : false);
     }
 
@@ -881,6 +949,7 @@ class LanguageCore extends ObjectModel
 				WHERE l.`active` = 1
 			');
         }
+
         return self::$countActiveLanguages[$id_shop];
     }
 
@@ -926,7 +995,7 @@ class LanguageCore extends ObjectModel
             }
         }
 
-        return ! count($errors);
+        return empty($errors);
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())
@@ -979,7 +1048,7 @@ class LanguageCore extends ObjectModel
             AdminTranslationsController::addNewTabs((string)$iso, $files_list);
         }
 
-        return count($errors) ? $errors : true;
+        return empty($errors) ? true : $errors;
     }
 
     /**
@@ -996,15 +1065,20 @@ class LanguageCore extends ObjectModel
     public static function getLanguagePackListContent($iso, $tar)
     {
         $key = 'Language::getLanguagePackListContent_'.$iso;
-        if (!Cache::isStored($key)) {
-            if (!$tar instanceof Archive_Tar) {
-                return false;
-            }
-            $result = $tar->listContent();
-            Cache::store($key, $result);
-            return $result;
+
+        if (Cache::isStored($key)) {
+            return Cache::retrieve($key);
         }
-        return Cache::retrieve($key);
+
+        if (!$tar instanceof Archive_Tar) {
+            return false;
+        }
+
+        $result = $tar->listContent();
+
+        Cache::store($key, $result);
+
+        return $result;
     }
 
     public static function updateModulesTranslations(Array $modules_list)
@@ -1012,9 +1086,11 @@ class LanguageCore extends ObjectModel
         require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
         $languages = Language::getLanguages(false);
+
         foreach ($languages as $lang) {
             $gz = false;
             $files_listing = array();
+
             foreach ($modules_list as $module_name) {
                 $filegz = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 
@@ -1027,6 +1103,7 @@ class LanguageCore extends ObjectModel
 
                 $gz = new Archive_Tar($filegz, true);
                 $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
+
                 foreach ($files_list as $i => $file) {
                     if (strpos($file['filename'], 'modules/'.$module_name.'/') !== 0) {
                         unset($files_list[$i]);
@@ -1039,6 +1116,7 @@ class LanguageCore extends ObjectModel
                     }
                 }
             }
+
             if ($gz) {
                 $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
             }

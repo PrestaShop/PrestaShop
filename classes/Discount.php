@@ -40,44 +40,34 @@ class DiscountCore extends CartRule
         if ($key == 'id_group') {
             return 0;
         }
+
         if ($key == 'id_discount_type') {
             if ($this->free_shipping) {
                 return Discount::FREE_SHIPPING;
-            }
-            if ($this->reduction_percent > 0) {
+            } elseif ($this->reduction_percent > 0) {
                 return Discount::PERCENT;
-            }
-            if ($this->reduction_amount > 0) {
+            } elseif ($this->reduction_amount > 0) {
                 return Discount::AMOUNT;
             }
-        }
-        if ($key == 'name') {
+        } elseif ($key == 'name') {
             return $this->code;
-        }
-        if ($key == 'value') {
+        } elseif ($key == 'value') {
             if ($this->reduction_percent > 0) {
                 return $this->reduction_percent;
-            }
-            if ($this->reduction_amount > 0) {
+            } elseif ($this->reduction_amount > 0) {
                 return $this->reduction_amount;
             }
-        }
-        if ($key == 'cumulable') {
+        } elseif ($key == 'cumulable') {
             return $this->cart_rule_restriction;
-        }
-        if ($key == 'cumulable_reduction') {
+        } elseif ($key == 'cumulable_reduction') {
             return false;
-        }
-        if ($key == 'minimal') {
+        } elseif ($key == 'minimal') {
             return $this->minimum_amount;
-        }
-        if ($key == 'include_tax') {
+        } elseif ($key == 'include_tax') {
             return $this->reduction_tax;
-        }
-        if ($key == 'behavior_not_exhausted') {
+        } elseif ($key == 'behavior_not_exhausted') {
             return $this->partial_use;
-        }
-        if ($key == 'cart_display') {
+        } elseif ($key == 'cart_display') {
             return true;
         }
 
@@ -93,41 +83,31 @@ class DiscountCore extends CartRule
                 $this->free_shipping = true;
                 $this->reduction_percent = false;
                 $this->reduction_amount = false;
-            }
-            if ($value == Discount::PERCENT) {
+            } elseif ($value == Discount::PERCENT) {
                 $this->free_shipping = false;
                 $this->reduction_percent = true;
                 $this->reduction_amount = false;
-            }
-            if ($value == Discount::AMOUNT) {
+            } elseif ($value == Discount::AMOUNT) {
                 $this->free_shipping = false;
                 $this->reduction_percent = false;
                 $this->reduction_amount = true;
             }
-        }
-
-        if ($key == 'code') {
+        } elseif ($key == 'code') {
             $this->name[Configuration::get('PS_LANG_DEFAULT')] = $value;
-        }
-
-        if ($key == 'value') {
+        } elseif ($key == 'value') {
             if ($this->reduction_percent) {
                 $this->reduction_percent = $value;
             }
             if ($this->reduction_amount) {
                 $this->reduction_amount = $value;
             }
-        }
-        if ($key == 'cumulable') {
+        } elseif ($key == 'cumulable') {
             $this->cart_rule_restriction = 1;
-        }
-        if ($key == 'minimal') {
+        } elseif ($key == 'minimal') {
             $this->minimum_amount = $value;
-        }
-        if ($key == 'include_tax') {
+        } elseif ($key == 'include_tax') {
             $this->reduction_tax = $value;
-        }
-        if ($key == 'behavior_not_exhausted') {
+        } elseif ($key == 'behavior_not_exhausted') {
             $this->partial_use = $value;
         }
 
@@ -137,10 +117,13 @@ class DiscountCore extends CartRule
     public function __call($method, $args)
     {
         Tools::displayAsDeprecated();
+
         $obj = $this->parent;
+
         if (in_array($method, array('add', 'update', 'getIdByName', 'getCustomerDiscounts', 'getValue', 'discountExists', 'createOrderDiscount', 'getVouchersToCartDisplay', 'display'))) {
             $obj = $this;
         }
+
         return call_user_func_array(array($obj, $method), $args);
     }
 
@@ -149,9 +132,7 @@ class DiscountCore extends CartRule
      */
     public function add($autodate = true, $nullValues = false, $categories = null)
     {
-        $r = parent::add($autodate, $nullValues);
-        // Todo : manage categories
-        return $r;
+        return parent::add($autodate, $nullValues);
     }
 
     /**
@@ -159,9 +140,7 @@ class DiscountCore extends CartRule
      */
     public function update($autodate = true, $nullValues = false, $categories = null)
     {
-        $r = parent::update($autodate, $nullValues);
-        // Todo : manage categories
-        return $r;
+        return parent::update($autodate, $nullValues);
     }
 
     /**
@@ -197,12 +176,15 @@ class DiscountCore extends CartRule
         if ((int)$id_cart) {
             $context->cart = new Cart($id_cart);
         }
+
         if (Validate::isLoadedObject($currency)) {
             $context->currency = $currency;
         }
+
         if (Validate::isLoadedObject($shop)) {
             $context->shop = $shop;
         }
+
         return parent::getContextualValue($useTax, $context);
     }
 
@@ -227,6 +209,7 @@ class DiscountCore extends CartRule
         $total = $order->getTotalProductsWithTaxes($products);
         $discounts = $order->getDiscounts(true);
         $total_tmp = $total;
+
         foreach ($discounts as $discount) {
             if ($discount['id_discount_type'] == Discount::PERCENT) {
                 $total -= $total_tmp * ($discount['value'] / 100);
@@ -234,6 +217,7 @@ class DiscountCore extends CartRule
                 $total -= ($discount['value'] * ($total_tmp / $order->total_products_wt));
             }
         }
+
         if ($shipping_cost) {
             $total += $order->total_shipping;
         }
@@ -241,9 +225,11 @@ class DiscountCore extends CartRule
         // create discount
         $voucher = new Discount();
         $voucher->id_discount_type = Discount::AMOUNT;
+
         foreach (Language::getIDs((bool)$order) as $id_lang) {
             $voucher->description[$id_lang] = strval($name).(int)($order->id);
         }
+
         $voucher->value = (float)($total);
         $voucher->name = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
         $voucher->id_customer = (int)($order->id_customer);
@@ -259,16 +245,15 @@ class DiscountCore extends CartRule
         $now = time();
         $voucher->date_from = date('Y-m-d H:i:s', $now);
         $voucher->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+
         if (!$voucher->validateFieldsLang(false) || !$voucher->add()) {
             return false;
         }
-        // set correct name
-        $voucher->name = 'V'.(int)($voucher->id).'C'.(int)($order->id_customer).'O'.$order->id;
-        if (!$voucher->update()) {
-            return false;
-        }
 
-        return $voucher;
+        // set correct name
+        $voucher->name = 'V'.(int)$voucher->id.'C'.(int)$order->id_customer.'O'.$order->id;
+
+        return $voucher->update() ? $voucher : false;
     }
 
     /**
@@ -279,11 +264,13 @@ class DiscountCore extends CartRule
         if ((float)$value && (int)$type) {
             if ($type == 1) {
                 return $value.chr(37);
-            } // ASCII #37 --> % (percent)
-            elseif ($type == 2) {
+            } elseif ($type == 2) {
+                // ASCII #37 --> % (percent)
                 return Tools::displayPrice($value, $currency);
             }
         }
-        return ''; // return a string because it's a display method
+        
+        // return a string because it's a display method
+        return '';
     }
 }

@@ -84,11 +84,8 @@ class UpgraderCore
         }
 
         $destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
-        if (@copy($this->link, $destPath)) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return @copy($this->link, $destPath);
     }
     public function isLastVersion()
     {
@@ -106,15 +103,13 @@ class UpgraderCore
      */
     public function checkPSVersion($force = false)
     {
-        if (class_exists('Configuration')) {
-            $last_check = Configuration::get('PS_LAST_VERSION_CHECK');
-        } else {
-            $last_check = 0;
-        }
+        $last_check = class_exists('Configuration') ? Configuration::get('PS_LAST_VERSION_CHECK') : 0;
+
         // if we use the autoupgrade process, we will never refresh it
         // except if no check has been done before
         if ($force || ($last_check < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) {
             libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+
             if ($feed = @simplexml_load_file($this->rss_version_link)) {
                 $this->version_name = (string)$feed->version->name;
                 $this->version_num = (string)$feed->version->num;
@@ -126,6 +121,7 @@ class UpgraderCore
                 $this->autoupgrade_last_version = (string)$feed->autoupgrade_last_version;
                 $this->autoupgrade_module_link = (string)$feed->autoupgrade_module_link;
                 $this->desc = (string)$feed->desc;
+
                 $config_last_version = array(
                     'name' => $this->version_name,
                     'num' => $this->version_num,
@@ -138,6 +134,7 @@ class UpgraderCore
                     'changelog' => $this->changelog,
                     'desc' => $this->desc
                 );
+
                 if (class_exists('Configuration')) {
                     Configuration::updateValue('PS_LAST_VERSION', serialize($config_last_version));
                     Configuration::updateValue('PS_LAST_VERSION_CHECK', time());
@@ -151,10 +148,11 @@ class UpgraderCore
         // false otherwise
         if (version_compare(_PS_VERSION_, $this->version_num, '<')) {
             $this->need_upgrade = true;
+
             return array('name' => $this->version_name, 'link' => $this->link);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -165,38 +163,49 @@ class UpgraderCore
     public function loadFromConfig()
     {
         $last_version_check = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
+
         if ($last_version_check) {
             if (isset($last_version_check['name'])) {
                 $this->version_name = $last_version_check['name'];
             }
+
             if (isset($last_version_check['num'])) {
                 $this->version_num = $last_version_check['num'];
             }
+
             if (isset($last_version_check['link'])) {
                 $this->link = $last_version_check['link'];
             }
+
             if (isset($last_version_check['autoupgrade'])) {
                 $this->autoupgrade = $last_version_check['autoupgrade'];
             }
+
             if (isset($last_version_check['autoupgrade_module'])) {
                 $this->autoupgrade_module = $last_version_check['autoupgrade_module'];
             }
+
             if (isset($last_version_check['autoupgrade_last_version'])) {
                 $this->autoupgrade_last_version = $last_version_check['autoupgrade_last_version'];
             }
+
             if (isset($last_version_check['autoupgrade_module_link'])) {
                 $this->autoupgrade_module_link = $last_version_check['autoupgrade_module_link'];
             }
+
             if (isset($last_version_check['md5'])) {
                 $this->md5 = $last_version_check['md5'];
             }
+
             if (isset($last_version_check['desc'])) {
                 $this->desc = $last_version_check['desc'];
             }
+
             if (isset($last_version_check['changelog'])) {
                 $this->changelog = $last_version_check['changelog'];
             }
         }
+
         return $this;
     }
 
@@ -210,12 +219,14 @@ class UpgraderCore
         if (is_array($this->changed_files) && count($this->changed_files) == 0) {
             libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
             $checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
+
             if ($checksum == false) {
                 $this->changed_files = false;
             } else {
                 $this->browseXmlAndCompare($checksum->ps_root_dir[0]);
             }
         }
+
         return $this->changed_files;
     }
 
@@ -266,6 +277,7 @@ class UpgraderCore
                 for ($i = 1; $i < $level; $i++) {
                     $relative_path .= $current_path[$i].'/';
                 }
+                
                 $relative_path .= (string)$child['name'];
                 $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relative_path;
 
@@ -273,6 +285,7 @@ class UpgraderCore
 
                     // replace default admin dir by current one
                 $fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
+
                 if (!file_exists($fullpath)) {
                     $this->addMissingFile($relative_path);
                 } elseif (!$this->compareChecksum($fullpath, (string)$child)) {
@@ -285,15 +298,13 @@ class UpgraderCore
 
     protected function compareChecksum($path, $original_sum)
     {
-        if (md5_file($path) == $original_sum) {
-            return true;
-        }
-        return false;
+        return (md5_file($path) == $original_sum);
     }
 
     public function isAuthenticPrestashopVersion()
     {
         $this->getChangedFilesList();
+
         return !$this->version_is_modified;
     }
 }

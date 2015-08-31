@@ -65,13 +65,14 @@ class PrestaShopBackupCore
     public function setCustomBackupPath($dir)
     {
         $custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
+
         if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$custom_dir)) {
             $this->customBackupDir = $custom_dir;
-        } else {
-            return false;
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -83,6 +84,7 @@ class PrestaShopBackupCore
     public function getRealBackupPath($filename = null)
     {
         $backupDir = PrestaShopBackup::getBackupPath($filename);
+
         if (!empty($this->customBackupDir)) {
             $backupDir = str_replace((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).self::$backupDir,
                 (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$this->customBackupDir, $backupDir);
@@ -91,6 +93,7 @@ class PrestaShopBackupCore
                 $backupDir .= DIRECTORY_SEPARATOR;
             }
         }
+
         return $backupDir;
     }
 
@@ -158,8 +161,10 @@ class PrestaShopBackupCore
         if (!$this->id || !unlink($this->id)) {
             $this->error = Tools::displayError('Error deleting').' '.($this->id ? '"'.$this->id.'"' :
                 Tools::displayError('Invalid ID'));
+
             return false;
         }
+
         return true;
     }
 
@@ -172,11 +177,14 @@ class PrestaShopBackupCore
     {
         foreach ($list as $file) {
             $backup = new PrestaShopBackup($file);
+
             if (!$backup->delete()) {
                 $this->error = $backup->error;
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -212,6 +220,7 @@ class PrestaShopBackupCore
 
         if ($fp === false) {
             echo Tools::displayError('Unable to create backup file').' "'.addslashes($backupfile).'"';
+
             return false;
         }
 
@@ -223,6 +232,7 @@ class PrestaShopBackupCore
         // Find all tables
         $tables = Db::getInstance()->executeS('SHOW TABLES');
         $found = 0;
+
         foreach ($tables as $table) {
             $table = current($table);
 
@@ -238,6 +248,7 @@ class PrestaShopBackupCore
                 fclose($fp);
                 $this->delete();
                 echo Tools::displayError('An error occurred while backing up. Unable to obtain the schema of').' "'.$table;
+
                 return false;
             }
 
@@ -258,6 +269,7 @@ class PrestaShopBackupCore
                     // Export the table data
                     fwrite($fp, 'INSERT INTO `'.$schema[0]['Table']."` VALUES\n");
                     $i = 1;
+
                     while ($row = DB::getInstance()->nextRow($data)) {
                         $s = '(';
 
@@ -273,11 +285,13 @@ class PrestaShopBackupCore
                                         } else {
                                             $s .= 'NULL,';
                                         }
+
                                         break;
                                     }
                                 }
                             }
                         }
+
                         $s = rtrim($s, ',');
 
                         if ($i % 200 == 0 && $i < $sizeof) {
@@ -293,13 +307,16 @@ class PrestaShopBackupCore
                     }
                 }
             }
+
             $found++;
         }
 
         fclose($fp);
+
         if ($found == 0) {
             $this->delete();
             echo Tools::displayError('No valid tables were found to backup.');
+
             return false;
         }
 

@@ -51,9 +51,11 @@ class TranslateCore
 
         if ($_LANGADM == null) {
             $iso = Context::getContext()->language->iso_code;
+
             if (empty($iso)) {
                 $iso = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
             }
+
             if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
                 include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
             }
@@ -61,6 +63,7 @@ class TranslateCore
 
         if (isset($modules_tabs[strtolower($class)])) {
             $class_name_controller = $class.'controller';
+
             // if the class is extended by a module, use modules/[module_name]/xx.php lang file
             if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller)) {
                 return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
@@ -69,6 +72,7 @@ class TranslateCore
 
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
+
         if (isset($_LANGADM[$class.$key])) {
             $str = $_LANGADM[$class.$key];
         } else {
@@ -78,6 +82,7 @@ class TranslateCore
         if ($htmlentities) {
             $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
         }
+
         $str = str_replace('"', '&quot;', $str);
 
         if ($sprintf !== null) {
@@ -98,6 +103,7 @@ class TranslateCore
     public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
+
         if (is_null($key)) {
             $key = md5($string);
         }
@@ -147,14 +153,17 @@ class TranslateCore
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
             );
+
             foreach ($files_by_priority as $file) {
                 if (file_exists($file)) {
                     include_once($file);
+
                     $_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
                     $translations_merged[$name] = true;
                 }
             }
         }
+
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
@@ -165,6 +174,7 @@ class TranslateCore
                 if ($sprintf !== null) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
+
                 return str_replace('"', '&quot;', $string);
             }
 
@@ -209,6 +219,7 @@ class TranslateCore
                 return $ret;
             }
         }
+
         return $lang_cache[$cache_key];
     }
 
@@ -230,6 +241,7 @@ class TranslateCore
 
         $override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
         $i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
+
         if (file_exists($override_i18n_file)) {
             $i18n_file = $override_i18n_file;
         }
@@ -245,10 +257,10 @@ class TranslateCore
         $string = preg_replace("/\\\*'/", "\'", $string);
         $key = md5($string);
 
-        $str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+        $str = array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string;
 
         if ($sprintf !== null) {
-            $str = Translate::checkAndReplaceArgs($str, $sprintf);
+            return Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
         return $str;
@@ -270,6 +282,7 @@ class TranslateCore
 
             return vsprintf($string, $args);
         }
+
         return $string;
     }
 
@@ -285,6 +298,7 @@ class TranslateCore
                 $position = $index + 1;
                 // extract tag name
                 $match = array();
+                
                 if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
                     $closer = '</'.$match[1].'>';

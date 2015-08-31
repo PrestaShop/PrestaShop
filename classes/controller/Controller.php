@@ -527,7 +527,7 @@ abstract class ControllerCore
                 $live_edit_content = $this->getLiveEditFooter();
             }
 
-            $dom_available = extension_loaded('dom') ? true : false;
+            $dom_available = extension_loaded('dom');
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
             if ($defer && $dom_available) {

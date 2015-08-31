@@ -159,7 +159,11 @@ class AddressCore extends ObjectModel
 
         /* Get and cache address country name */
         if ($this->id) {
-            $this->country = Country::getNameById($id_lang ? $id_lang : Configuration::get('PS_LANG_DEFAULT'), $this->id_country);
+            if ($id_lang) {
+                $this->country = Country::getNameById($id_lang, $this->id_country);
+            } else {
+                $this->country = Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), $this->id_country);
+            }
         }
     }
 
@@ -175,6 +179,7 @@ class AddressCore extends ObjectModel
         if (Validate::isUnsignedId($this->id_customer)) {
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
+
         return true;
     }
 
@@ -206,10 +211,10 @@ class AddressCore extends ObjectModel
 
         if (!$this->isUsed()) {
             return parent::delete();
-        } else {
-            $this->deleted = true;
-            return $this->update();
         }
+
+        $this->deleted = true;
+        return $this->update();
     }
 
     /**
@@ -234,10 +239,12 @@ class AddressCore extends ObjectModel
         if (!Configuration::get('VATNUMBER_MANAGEMENT') || !Configuration::get('VATNUMBER_CHECKING')) {
             return $errors;
         }
+
         include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
         if (class_exists('VatNumber', false)) {
             return array_merge($errors, VatNumber::WebServiceCheck($this->vat_number));
         }
+
         return $errors;
     }
     /**
@@ -287,15 +294,19 @@ class AddressCore extends ObjectModel
         }
 
         $cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
+
         if (!Cache::isStored($cache_id)) {
             $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
-			SELECT c.`active`
-			FROM `'._DB_PREFIX_.'address` a
-			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
-			WHERE a.`id_address` = '.(int)$id_address);
+    			SELECT c.`active`
+    			FROM `'._DB_PREFIX_.'address` a
+    			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+    			WHERE a.`id_address` = '.(int)$id_address);
+
             Cache::store($cache_id, $result);
+
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
@@ -307,10 +318,10 @@ class AddressCore extends ObjectModel
     public function isUsed()
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT COUNT(`id_order`) AS used
-		FROM `'._DB_PREFIX_.'orders`
-		WHERE `id_address_delivery` = '.(int)$this->id.'
-		OR `id_address_invoice` = '.(int)$this->id);
+    		SELECT COUNT(`id_order`) AS used
+    		FROM `'._DB_PREFIX_.'orders`
+    		WHERE `id_address_delivery` = '.(int)$this->id.'
+    		OR `id_address_invoice` = '.(int)$this->id);
 
         return isset($result['used']) ? $result['used'] : false;
     }
@@ -320,6 +331,7 @@ class AddressCore extends ObjectModel
         if (isset(self::$_idCountries[$id_address])) {
             return self::$_idCountries[$id_address];
         }
+
         if ($id_address) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `'._DB_PREFIX_.'address`
@@ -327,8 +339,8 @@ class AddressCore extends ObjectModel
         } else {
             $result = false;
         }
-        self::$_idCountries[$id_address] = $result;
-        return $result;
+
+        return self::$_idCountries[$id_address] = $result;
     }
 
     /**
@@ -340,11 +352,18 @@ class AddressCore extends ObjectModel
     public static function addressExists($id_address)
     {
         $key = 'address_exists_'.(int)$id_address;
+
         if (!Cache::isStored($key)) {
-            $id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address a WHERE a.`id_address` = '.(int)$id_address);
+            $id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+                SELECT `id_address`
+                FROM '._DB_PREFIX_.'address a
+                WHERE a.`id_address` = '.(int)$id_address);
+
             Cache::store($key, (bool)$id_address);
+
             return (bool)$id_address;
         }
+
         return Cache::retrieve($key);
     }
 
@@ -353,16 +372,21 @@ class AddressCore extends ObjectModel
         if (!$id_customer) {
             return false;
         }
+
         $cache_id = 'Address::getFirstCustomerAddressId_'.(int)$id_customer.'-'.(bool)$active;
+
         if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_address`
 				FROM `'._DB_PREFIX_.'address`
-				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
-            );
+				WHERE `id_customer` = '.(int)$id_customer.'
+                    AND `deleted` = 0'.($active ? ' AND `active` = 1' : ''));
+
             Cache::store($cache_id, $result);
+
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
@@ -412,7 +436,9 @@ class AddressCore extends ObjectModel
                 $address->id_state   = 0;
                 $address->postcode   = 0;
             }
+
             Cache::store($cache_id, $address);
+
             return $address;
         }
 
@@ -435,6 +461,7 @@ class AddressCore extends ObjectModel
         $query->where('id_customer = 0');
         $query->where('id_manufacturer = 0');
         $query->where('id_warehouse = 0');
+
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
@@ -454,9 +481,11 @@ class AddressCore extends ObjectModel
     public function getFieldsRequiredDB()
     {
         $this->cacheFieldsRequiredDatabase(false);
+
         if (isset(self::$fieldsRequiredDatabase['Address'])) {
             return self::$fieldsRequiredDatabase['Address'];
         }
+        
         return array();
     }
 }

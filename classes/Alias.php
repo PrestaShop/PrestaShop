@@ -56,9 +56,9 @@ class AliasCore extends ObjectModel
                 $this->search = trim($search);
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT a.id_alias, a.search, a.alias
-				FROM `'._DB_PREFIX_.'alias` a
-				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
+    				SELECT a.id_alias, a.search, a.alias
+    				FROM `'._DB_PREFIX_.'alias` a
+    				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
                 if ($row) {
                     $this->id = (int)$row['id_alias'];
@@ -72,7 +72,6 @@ class AliasCore extends ObjectModel
         }
     }
 
-
     public function add($autodate = true, $nullValues = false)
     {
         $this->alias = Tools::replaceAccentedChars($this->alias);
@@ -81,8 +80,10 @@ class AliasCore extends ObjectModel
         if (parent::add($autodate, $nullValues)) {
             // Set cache of feature detachable to true
             Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', '1');
+
             return true;
         }
+
         return false;
     }
 
@@ -91,8 +92,10 @@ class AliasCore extends ObjectModel
         if (parent::delete()) {
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_ALIAS_FEATURE_ACTIVE', Alias::isCurrentlyUsed($this->def['table'], true));
+
             return true;
         }
+
         return false;
     }
 
@@ -103,11 +106,23 @@ class AliasCore extends ObjectModel
         }
 
         $aliases = Db::getInstance()->executeS('
-		SELECT a.alias
-		FROM `'._DB_PREFIX_.'alias` a
-		WHERE `search` = \''.pSQL($this->search).'\'');
+    		SELECT a.alias
+    		FROM `'._DB_PREFIX_.'alias` a
+    		WHERE `search` = \''.pSQL($this->search).'\'');
+
+        /*
+            Array(
+                [0] => Array(
+                        [alias] => 'Something'
+                    )
+                [1] => Array(
+                        [alias] => 'Something else'
+                    )
+            )
+        */
 
         $aliases = array_map('implode', $aliases);
+
         return implode(', ', $aliases);
     }
 
@@ -118,7 +133,7 @@ class AliasCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        return Configuration::get('PS_ALIAS_FEATURE_ACTIVE');
+        return (bool)Configuration::get('PS_ALIAS_FEATURE_ACTIVE');
     }
 
     /**

@@ -45,6 +45,7 @@ class UploaderCore
     public function setAcceptTypes($value)
     {
         $this->_accept_types = $value;
+
         return $this;
     }
 
@@ -56,6 +57,7 @@ class UploaderCore
     public function setCheckFileSize($value)
     {
         $this->_check_file_size = $value;
+
         return $this;
     }
 
@@ -80,6 +82,7 @@ class UploaderCore
     public function setMaxSize($value)
     {
         $this->_max_size = intval($value);
+
         return $this;
     }
 
@@ -95,6 +98,7 @@ class UploaderCore
     public function setName($value)
     {
         $this->_name = $value;
+
         return $this;
     }
 
@@ -106,6 +110,7 @@ class UploaderCore
     public function setSavePath($value)
     {
         $this->_save_path = $value;
+
         return $this;
     }
 
@@ -116,14 +121,21 @@ class UploaderCore
         $last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
 
         switch ($last) {
-            case 'g': $bytes *= 1024;
-            case 'm': $bytes *= 1024;
-            case 'k': $bytes *= 1024;
+            case 'g':
+                $bytes *= 1024;
+                break;
+            case 'm':
+                $bytes *= 1024;
+                break;
+            case 'k':
+                $bytes *= 1024;
+                break;
         }
 
         if ($bytes == '') {
-            $bytes = null;
+            return null;
         }
+
         return $bytes;
     }
 
@@ -152,6 +164,7 @@ class UploaderCore
 
         if ($upload && is_array($upload['tmp_name'])) {
             $tmp = array();
+
             foreach ($upload['tmp_name'] as $index => $value) {
                 $tmp[$index] = array(
                     'tmp_name' => $upload['tmp_name'][$index],
@@ -203,6 +216,7 @@ class UploaderCore
     protected function checkUploadError($error_code)
     {
         $error = 0;
+
         switch ($error_code) {
             case 1:
                 $error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('upload_max_filesize'));
@@ -228,6 +242,7 @@ class UploaderCore
             default:
                 break;
         }
+
         return $error;
     }
 
@@ -239,11 +254,13 @@ class UploaderCore
 
         if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size)) {
             $file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+
             return false;
         }
 
         if (preg_match('/\%00/', $file['name'])) {
             $file['error'] = Tools::displayError('Invalid file name');
+
             return false;
         }
 
@@ -252,11 +269,13 @@ class UploaderCore
         //TODO check mime type.
         if (isset($types) && !in_array(pathinfo($file['name'], PATHINFO_EXTENSION), $types)) {
             $file['error'] = Tools::displayError('Filetype not allowed');
+
             return false;
         }
 
         if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
             $file['error'] = sprintf(Tools::displayError('File (size : %1s) is too big (max : %2s)'), $file['size'], $this->getMaxSize());
+
             return false;
         }
 
@@ -283,10 +302,12 @@ class UploaderCore
 
         if (in_array($last, array('/', '\\'))) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+            
             return $directory;
         }
 
         $directory .= DIRECTORY_SEPARATOR;
+        
         return $directory;
     }
 }

@@ -39,10 +39,10 @@ class InstallModelSystem extends InstallAbstractModel
     public function checkTests($list, $type)
     {
         $tests = ConfigurationTest::check($list);
-
         $success = true;
+
         foreach ($tests as $result) {
-            $success &= ($result == 'ok') ? true : false;
+            $success &= ($result == 'ok');
         }
 
         return array(

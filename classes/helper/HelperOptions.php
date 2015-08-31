@@ -52,7 +52,7 @@ class HelperOptionsCore extends Helper
         }
 
         $use_multishop = false;
-        $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
+        $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2);
         foreach ($option_list as $category => $category_data) {
             if (!is_array($category_data)) {
                 continue;

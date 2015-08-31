@@ -82,17 +82,8 @@ class DeliveryCore extends ObjectModel
         $fields = parent::getFields();
 
         // @todo add null management in definitions
-        if ($this->id_shop) {
-            $fields['id_shop'] = (int)$this->id_shop;
-        } else {
-            $fields['id_shop'] = null;
-        }
-
-        if ($this->id_shop_group) {
-            $fields['id_shop_group'] = (int)$this->id_shop_group;
-        } else {
-            $fields['id_shop_group'] = null;
-        }
+        $fields['id_shop'] = $this->id_shop ? (int)$this->id_shop : null;
+        $fields['id_shop_group'] = $this->id_shop_group ? (int)$this->id_shop_group : null;
 
         return $fields;
     }

@@ -58,7 +58,7 @@ class CurrencyCore extends ObjectModel
         'primary' => 'id_currency',
         'multilang_shop' => true,
         'fields' => array(
-            'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'name' =>             array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
             'iso_code' =>       array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
             'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -146,11 +146,7 @@ class CurrencyCore extends ObjectModel
     {
         $id_currency_exists = Currency::getIdByIsoCode($iso_code, (int)$id_shop);
 
-        if ($id_currency_exists) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool)$id_currency_exists;
     }
 
     public function deleteSelection($selection)
@@ -170,19 +166,28 @@ class CurrencyCore extends ObjectModel
                 return false;
             }
         }
+
         return true;
     }
 
     public function delete()
     {
         if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
-            $result = Db::getInstance()->getRow('SELECT `id_currency` FROM '._DB_PREFIX_.'currency WHERE `id_currency` != '.(int)($this->id).' AND `deleted` = 0');
+            $result = Db::getInstance()->getRow('
+                SELECT `id_currency`
+                FROM '._DB_PREFIX_.'currency
+                WHERE `id_currency` != '.(int)($this->id).'
+                    AND `deleted` = 0');
+
             if (!$result['id_currency']) {
                 return false;
             }
+
             Configuration::updateValue('PS_CURRENCY_DEFAULT', $result['id_currency']);
         }
+
         $this->deleted = 1;
+
         return $this->update();
     }
 
@@ -205,11 +210,11 @@ class CurrencyCore extends ObjectModel
     public static function getCurrencies($object = false, $active = true, $group_by = false)
     {
         $tab = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'currency` c
-		'.Shop::addSqlAssociation('currency', 'c').
+            SELECT *
+            FROM `'._DB_PREFIX_.'currency` c
+            '.Shop::addSqlAssociation('currency', 'c').
             ' WHERE `deleted` = 0'.
-            ($active ? ' AND c.`active` = 1' : '').
+                ($active ? ' AND c.`active` = 1' : '').
             ($group_by ? ' GROUP BY c.`id_currency`' : '').
             ' ORDER BY `iso_code` ASC');
 
@@ -219,11 +224,12 @@ class CurrencyCore extends ObjectModel
     public static function getCurrenciesByIdShop($id_shop = 0)
     {
         $currencies = Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'currency` c
-		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
-		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
-		ORDER BY `iso_code` ASC');
+            SELECT *
+            FROM `'._DB_PREFIX_.'currency` c
+            LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs
+                ON (cs.`id_currency` = c.`id_currency`)
+            '.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
+            ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($currencies);
     }
@@ -271,11 +277,11 @@ class CurrencyCore extends ObjectModel
             $id_shop = Context::getContext()->shop->id;
         }
 
-        $sql = 'SELECT *
-				FROM '._DB_PREFIX_.'module_currency
-				WHERE id_module = '.(int)$id_module.'
-					AND id_shop ='.(int)$id_shop;
-        return Db::getInstance()->getRow($sql);
+        return Db::getInstance()->getRow('
+            SELECT *
+            FROM '._DB_PREFIX_.'module_currency
+            WHERE id_module = '.(int)$id_module.'
+                AND id_shop ='.(int)$id_shop);
     }
 
     public static function getPaymentCurrencies($id_module, $id_shop = null)
@@ -284,16 +290,16 @@ class CurrencyCore extends ObjectModel
             $id_shop = Context::getContext()->shop->id;
         }
 
-        $sql = 'SELECT c.*
-				FROM `'._DB_PREFIX_.'module_currency` mc
-				LEFT JOIN `'._DB_PREFIX_.'currency` c ON c.`id_currency` = mc.`id_currency`
-				WHERE c.`deleted` = 0
-					AND mc.`id_module` = '.(int)$id_module.'
-					AND c.`active` = 1
-					AND mc.id_shop = '.(int)$id_shop.'
-				ORDER BY c.`iso_code` ASC';
-
-        return Db::getInstance()->executeS($sql);
+        return Db::getInstance()->executeS('
+            SELECT c.*
+            FROM `'._DB_PREFIX_.'module_currency` mc
+            LEFT JOIN `'._DB_PREFIX_.'currency` c
+                ON c.`id_currency` = mc.`id_currency`
+            WHERE c.`deleted` = 0
+                AND mc.`id_module` = '.(int)$id_module.'
+                AND c.`active` = 1
+                AND mc.id_shop = '.(int)$id_shop.'
+            ORDER BY c.`iso_code` ASC');
     }
 
     public static function checkPaymentCurrencies($id_module, $id_shop = null)
@@ -306,22 +312,20 @@ class CurrencyCore extends ObjectModel
             $id_shop = Context::getContext()->shop->id;
         }
 
-        $sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'module_currency`
-				WHERE `id_module` = '.(int)$id_module.'
-					AND `id_shop` = '.(int)$id_shop;
-
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT *
+            FROM `'._DB_PREFIX_.'module_currency`
+            WHERE `id_module` = '.(int)$id_module.'
+                AND `id_shop` = '.(int)$id_shop);
     }
 
     public static function getCurrency($id_currency)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT *
-		FROM `'._DB_PREFIX_.'currency`
-		WHERE `deleted` = 0
-		AND `id_currency` = '.(int)($id_currency));
+            SELECT *
+            FROM `'._DB_PREFIX_.'currency`
+            WHERE `deleted` = 0
+            AND `id_currency` = '.(int)($id_currency));
     }
 
     /**
@@ -332,15 +336,19 @@ class CurrencyCore extends ObjectModel
     public static function getIdByIsoCode($iso_code, $id_shop = 0)
     {
         $cache_id = 'Currency::getIdByIsoCode_'.pSQL($iso_code).'-'.(int)$id_shop;
-        if (!Cache::isStored($cache_id)) {
-            $query = Currency::getIdByQuery($id_shop);
-            $query->where('iso_code = \''.pSQL($iso_code).'\'');
 
-            $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
-            Cache::store($cache_id, $result);
-            return $result;
+        if (Cache::isStored($cache_id)) {
+            return Cache::retrieve($cache_id);
         }
-        return Cache::retrieve($cache_id);
+
+        $query = Currency::getIdByQuery($id_shop);
+        $query->where('iso_code = \''.pSQL($iso_code).'\'');
+
+        $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        Cache::store($cache_id, $result);
+
+        return $result;
     }
 
     /**
@@ -358,6 +366,7 @@ class CurrencyCore extends ObjectModel
             $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');
             $query->where('id_shop = '.(int)$id_shop);
         }
+
         return $query;
     }
 
@@ -374,6 +383,7 @@ class CurrencyCore extends ObjectModel
         // fetch the exchange rate of the default currency
         $exchange_rate = 1;
         $tmp = $this->conversion_rate;
+
         if ($defaultCurrency->iso_code != $isoCodeSource) {
             foreach ($data->currency as $currency) {
                 if ($currency['iso_code'] == $defaultCurrency->iso_code) {
@@ -410,11 +420,8 @@ class CurrencyCore extends ObjectModel
     public static function getDefaultCurrency()
     {
         $id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-        if ($id_currency == 0) {
-            return false;
-        }
 
-        return new Currency($id_currency);
+        return ($id_currency == 0) ? false : new Currency($id_currency);
     }
 
     public static function refreshCurrencies()
@@ -426,12 +433,14 @@ class CurrencyCore extends ObjectModel
 
         // Default feed currency (EUR)
         $isoCodeSource = strval($feed->source['iso_code']);
+        $default_currency = Currency::getDefaultCurrency();
 
-        if (!$default_currency = Currency::getDefaultCurrency()) {
+        if (!$default_currency) {
             return Tools::displayError('No default currency');
         }
 
         $currencies = Currency::getCurrencies(true, false, true);
+
         foreach ($currencies as $currency) {
             /** @var Currency $currency */
             if ($currency->id != $default_currency->id) {
@@ -449,6 +458,7 @@ class CurrencyCore extends ObjectModel
     public static function getCurrent()
     {
         Tools::displayAsDeprecated();
+
         return Context::getContext()->currency;
     }
 
@@ -457,12 +467,13 @@ class CurrencyCore extends ObjectModel
         if (!isset(self::$currencies[$id])) {
             self::$currencies[(int)($id)] = new Currency($id);
         }
+
         return self::$currencies[(int)($id)];
     }
 
     public function getConversationRate()
     {
-        return $this->id != (int)Configuration::get('PS_CURRENCY_DEFAULT') ? $this->conversion_rate : 1;
+        return ($this->id != (int)Configuration::get('PS_CURRENCY_DEFAULT')) ? $this->conversion_rate : 1;
     }
 
     public static function countActiveCurrencies($id_shop = null)
@@ -473,11 +484,15 @@ class CurrencyCore extends ObjectModel
 
         if (!isset(self::$countActiveCurrencies[$id_shop])) {
             self::$countActiveCurrencies[$id_shop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT c.id_currency) FROM `'._DB_PREFIX_.'currency` c
-				LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = '.(int)$id_shop.')
-				WHERE c.`active` = 1
-			');
+                SELECT COUNT(DISTINCT c.id_currency)
+                FROM `'._DB_PREFIX_.'currency` c
+                LEFT JOIN '._DB_PREFIX_.'currency_shop cs
+                    ON (cs.id_currency = c.id_currency
+                        AND cs.id_shop = '.(int)$id_shop.')
+                WHERE c.`active` = 1
+            ');
         }
+
         return self::$countActiveCurrencies[$id_shop];
     }
 

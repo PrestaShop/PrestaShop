@@ -115,7 +115,9 @@ class StoreCore extends ObjectModel
     public function __construct($id_store = null, $id_lang = null)
     {
         parent::__construct($id_store);
+
         $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int)$this->id.'.jpg')) ? (int)$this->id : false;
+
         $this->image_dir = _PS_STORE_IMG_DIR_;
     }
 
@@ -127,6 +129,7 @@ class StoreCore extends ObjectModel
     public function setWsHours($hours)
     {
         $this->hours = serialize(explode(';', $hours));
+        
         return true;
     }
 }

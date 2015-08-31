@@ -1319,8 +1319,8 @@ class AdminControllerCore extends Controller
         $this->beforeUpdateOptions();
 
         $languages = Language::getLanguages(false);
+        $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2);
 
-        $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
         foreach ($this->fields_options as $category_data) {
             if (!isset($category_data['fields'])) {
                 continue;
@@ -1413,7 +1413,9 @@ class AdminControllerCore extends Controller
                                 }
                             }
                         }
-                        Configuration::updateValue($key, $list, isset($values['validation']) && isset($options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
+
+                        $value = isset($values['validation']) && isset($options['validation']) && ($options['validation'] == 'isCleanHtml');
+                        Configuration::updateValue($key, $list, $value);
                     } else {
                         $val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
                         if ($this->validateField($val, $options)) {
@@ -3687,7 +3689,7 @@ class AdminControllerCore extends Controller
                 }
             }
         }
-        return !count($this->errors) ? true : false;
+        return !count($this->errors);
     }
 
     /**
@@ -4297,7 +4299,7 @@ class AdminControllerCore extends Controller
 
                     $html = '<a class="';
 
-                    $is_install = isset($option['flag_install']) ? true : false;
+                    $is_install = isset($option['flag_install']);
 
                     if (isset($option['class'])) {
                         $html .= $option['class'];

@@ -71,10 +71,10 @@ class ImageManagerCore
             // Size is already ok
             if ($y < $size && $x <= $max_x) {
                 copy($image, _PS_TMP_IMG_DIR_.$cache_image);
-            }
-            // We need to resize */
-            else {
+            } else {
+                // We need to resize */
                 $ratio_x = $x / ($y / $size);
+
                 if ($ratio_x > $max_x) {
                     $ratio_x = $max_x;
                     $size = $y / ($x / $max_x);
@@ -86,9 +86,9 @@ class ImageManagerCore
         // Relative link will always work, whatever the base uri set in the admin
         if (Context::getContext()->controller->controller_type == 'admin') {
             return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
-        } else {
-            return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
         }
+
+        return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
     }
 
     /**
@@ -106,8 +106,9 @@ class ImageManagerCore
         }
 
         $memory_limit = Tools::getMemoryLimit();
+
         // memory_limit == -1 => unlimited memory
-        if (function_exists('memory_get_usage') && (int)$memory_limit != -1) {
+        if (function_exists('memory_get_usage') && ((int)$memory_limit != -1)) {
             $current_memory = memory_get_usage();
             $channel = isset($infos['channels']) ? ($infos['channels'] / 8) : 1;
 
@@ -154,6 +155,7 @@ class ImageManagerCore
 
         list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
         $rotate = 0;
+
         if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
             $exif = @exif_read_data($src_file);
 
@@ -201,9 +203,11 @@ class ImageManagerCore
         if (!$src_width) {
             return !($error = self::ERROR_FILE_WIDTH);
         }
+
         if (!$dst_width) {
             $dst_width = $src_width;
         }
+
         if (!$dst_height) {
             $dst_height = $src_height;
         }
@@ -212,6 +216,7 @@ class ImageManagerCore
         $height_diff = $dst_height / $src_height;
 
         $ps_image_generation_method = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+
         if ($width_diff > 1 && $height_diff > 1) {
             $next_width = $src_width;
             $next_height = $src_height;
@@ -240,14 +245,18 @@ class ImageManagerCore
         if ($file_type == 'png' && $type == IMAGETYPE_PNG) {
             imagealphablending($dest_image, false);
             imagesavealpha($dest_image, true);
+
             $transparent = imagecolorallocatealpha($dest_image, 255, 255, 255, 127);
+
             imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $transparent);
         } else {
             $white = imagecolorallocate($dest_image, 255, 255, 255);
+
             imagefilledrectangle($dest_image, 0, 0, $dst_width, $dst_height, $white);
         }
 
         $src_image = ImageManager::create($type, $src_file);
+
         if ($rotate) {
             $src_image = imagerotate($src_image, $rotate, 0);
         }
@@ -257,8 +266,11 @@ class ImageManagerCore
         } else {
             ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
         }
+
         $write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+
         @imagedestroy($src_image);
+
         return $write_file;
     }
 
@@ -280,6 +292,7 @@ class ImageManagerCore
         if (empty($src_image) || empty($dst_image) || $quality <= 0) {
             return false;
         }
+
         if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h)) {
             $temp = imagecreatetruecolor($dst_w * $quality + 1, $dst_h * $quality + 1);
             imagecopyresized($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
@@ -288,6 +301,7 @@ class ImageManagerCore
         } else {
             imagecopyresampled($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
         }
+
         return true;
     }
 
@@ -303,6 +317,7 @@ class ImageManagerCore
     {
         // Detect mime content type
         $mime_type = false;
+
         if (!$mime_type_list) {
             $mime_type_list = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
         }
@@ -320,14 +335,17 @@ class ImageManagerCore
             $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
             $finfo = finfo_open($const);
             $mime_type = finfo_file($finfo, $filename);
+
             finfo_close($finfo);
         } elseif (function_exists('mime_content_type')) {
             $mime_type = mime_content_type($filename);
         } elseif (function_exists('exec')) {
             $mime_type = trim(exec('file -b --mime-type '.escapeshellarg($filename)));
+
             if (!$mime_type) {
                 $mime_type = trim(exec('file --mime '.escapeshellarg($filename)));
             }
+
             if (!$mime_type) {
                 $mime_type = trim(exec('file -bi '.escapeshellarg($filename)));
             }
@@ -360,9 +378,12 @@ class ImageManagerCore
         if ($authorized_extensions === null) {
             $authorized_extensions = array('gif', 'jpg', 'jpeg', 'jpe', 'png');
         }
+
         $name_explode = explode('.', $filename);
+
         if (count($name_explode) >= 2) {
             $current_extension = strtolower($name_explode[count($name_explode) - 1]);
+
             if (!in_array($current_extension, $authorized_extensions)) {
                 return false;
             }
@@ -384,13 +405,12 @@ class ImageManagerCore
     {
         if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size) {
             return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-        }
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
+        } elseif (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
             return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
-        }
-        if ($file['error']) {
+        } elseif ($file['error']) {
             return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
         }
+
         return false;
     }
 
@@ -403,19 +423,18 @@ class ImageManagerCore
      */
     public static function validateIconUpload($file, $max_file_size = 0)
     {
-        if ((int)$max_file_size > 0 && $file['size'] > $max_file_size) {
+        if (((int)$max_file_size > 0) && ($file['size'] > $max_file_size)) {
             return sprintf(
                 Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'),
                 $file['size'] / 1000,
                 $max_file_size / 1000
             );
-        }
-        if (substr($file['name'], -4) != '.ico') {
+        } elseif (substr($file['name'], -4) != '.ico') {
             return Tools::displayError('Image format not recognized, allowed formats are: .ico');
-        }
-        if ($file['error']) {
+        } elseif ($file['error']) {
             return Tools::displayError('Error while uploading image; please change your server\'s settings.');
         }
+
         return false;
     }
 
@@ -440,6 +459,7 @@ class ImageManagerCore
 
         // Source information
         $src_info = getimagesize($src_file);
+
         $src = array(
             'width' => $src_info[0],
             'height' => $src_info[1],
@@ -455,11 +475,15 @@ class ImageManagerCore
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);
+
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
+
         $return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+
         @imagedestroy($src['ressource']);
-        return    $return;
+
+        return $return;
     }
 
     /**
@@ -472,18 +496,18 @@ class ImageManagerCore
     public static function create($type, $filename)
     {
         switch ($type) {
-            case IMAGETYPE_GIF :
+            case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
-            break;
+                break;
 
-            case IMAGETYPE_PNG :
+            case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
-            break;
+                break;
 
-            case IMAGETYPE_JPEG :
+            // case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
-            break;
+                break;
         }
     }
 
@@ -498,7 +522,9 @@ class ImageManagerCore
     {
         $image = imagecreatetruecolor($width, $height);
         $white = imagecolorallocate($image, 255, 255, 255);
+
         imagefill($image, 0, 0, $white);
+
         return $image;
     }
 
@@ -526,23 +552,25 @@ class ImageManagerCore
         switch ($type) {
             case 'gif':
                 $success = imagegif($resource, $filename);
-            break;
+                break;
 
             case 'png':
                 $quality = ($ps_png_quality === false ? 7 : $ps_png_quality);
                 $success = imagepng($resource, $filename, (int)$quality);
-            break;
+                break;
 
-            case 'jpg':
-            case 'jpeg':
+            // case 'jpg':
+            // case 'jpeg':
             default:
                 $quality = ($ps_jpeg_quality === false ? 90 : $ps_jpeg_quality);
                 imageinterlace($resource, 1); /// make it PROGRESSIVE
                 $success = imagejpeg($resource, $filename, (int)$quality);
-            break;
+                break;
         }
+
         imagedestroy($resource);
         @chmod($filename, 0664);
+
         return $success;
     }
 
@@ -555,24 +583,19 @@ class ImageManagerCore
     public static function getMimeTypeByExtension($file_name)
     {
         $types = array(
-                        'image/gif' => array('gif'),
-                        'image/jpeg' => array('jpg', 'jpeg'),
-                        'image/png' => array('png')
-                    );
+            'image/gif' => array('gif'),
+            'image/jpeg' => array('jpg', 'jpeg'),
+            'image/png' => array('png')
+        );
+
         $extension = substr($file_name, strrpos($file_name, '.') + 1);
 
-        $mime_type = null;
         foreach ($types as $mime => $exts) {
             if (in_array($extension, $exts)) {
-                $mime_type = $mime;
-                break;
+                return $mime;
             }
         }
 
-        if ($mime_type === null) {
-            $mime_type = 'image/jpeg';
-        }
-
-        return $mime_type;
+        return 'image/jpeg';
     }
 }

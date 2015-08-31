@@ -241,7 +241,7 @@ class FrontControllerCore extends Controller
         Tools::setCookieLanguage($this->context->cookie);
 
         $protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
-        $useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
+        $useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode());
         $protocol_content = ($useSSL) ? 'https://' : 'http://';
         $link = new Link($protocol_link, $protocol_content);
         $this->context->link = $link;
@@ -1044,7 +1044,7 @@ class FrontControllerCore extends Controller
         // 'orderwayposition' => Tools::getProductsOrder('way'), // Deprecated: orderwayposition
         // 'orderwaydefault' => Tools::getProductsOrder('way'),
 
-        $stock_management = Configuration::get('PS_STOCK_MANAGEMENT') ? true : false; // no display quantity order if stock management disabled
+        $stock_management = (bool)Configuration::get('PS_STOCK_MANAGEMENT'); // no display quantity order if stock management disabled
         $order_by_values  = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
         $order_way_values = array(0 => 'asc', 1 => 'desc');
 

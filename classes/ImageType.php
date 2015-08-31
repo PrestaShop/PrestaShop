@@ -95,6 +95,7 @@ class ImageTypeCore extends ObjectModel
     {
         if (!isset(self::$images_types_cache[$type])) {
             $where = 'WHERE 1';
+
             if (!empty($type)) {
                 $where .= ' AND `'.bqSQL($type).'` = 1 ';
             }
@@ -107,6 +108,7 @@ class ImageTypeCore extends ObjectModel
 
             self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
         }
+
         return self::$images_types_cache[$type];
     }
 
@@ -156,11 +158,11 @@ class ImageTypeCore extends ObjectModel
             $is_passed = true;
         }
 
-        $return = false;
         if (isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order])) {
-            $return = self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
+            return self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
         }
-        return $return;
+
+        return false;
     }
 
     public static function getFormatedName($name)
@@ -175,8 +177,8 @@ class ImageTypeCore extends ObjectModel
             return $name_without_theme_name.'_'.$theme_name;
         } elseif (self::getByNameNType($theme_name.'_'.$name_without_theme_name)) {
             return $theme_name.'_'.$name_without_theme_name;
-        } else {
-            return $name_without_theme_name.'_default';
         }
+
+        return $name_without_theme_name.'_default';
     }
 }
