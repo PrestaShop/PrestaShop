@@ -636,7 +636,7 @@ class AdminControllerCore extends Controller
         }
 
         if ($filter = $this->addFiltersToBreadcrumbs()) {
-            $this->toolbar_title[] = $filter;
+            $this->toolbar_title[] = Tools::htmlentitiesDecodeUTF8($filter);
         }
     }
 
@@ -647,6 +647,7 @@ class AdminControllerCore extends Controller
     {
         if ($this->filter && is_array($this->fields_list)) {
             $filters = array();
+
             foreach ($this->fields_list as $field => $t) {
                 if (isset($t['filter_key'])) {
                     $field = $t['filter_key'];
@@ -831,7 +832,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $sql_filter .= ' AND ';
                         $check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
-                        $alias = !empty($definition['fields'][$filter]['shop']) ? 'sa' : 'a';
+                        $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {
                             $sql_filter .= (($check_key || $key == '`active`') ?  $alias.'.' : '').pSQL($key).' = '.(int)$value.' ';
@@ -839,10 +840,11 @@ class AdminControllerCore extends Controller
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.(float)$value.' ';
                         } elseif ($type == 'select') {
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+                        } elseif ($type == 'price') {
+                            $value = (float)str_replace(',', '.', $value);
+                            $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-                            if ($type == 'price') {
-                                $value = (float)str_replace(',', '.', $value);
-                            }
+
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -2053,6 +2055,20 @@ class AdminControllerCore extends Controller
         }
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
+
+        $modules = Module::getModulesOnDisk();
+
+        $tmp = array();
+        foreach ($modules as $module) {
+            $tmp[] = $module->name;
+        }
+
+        foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
+            if (!in_array($module, $tmp)) {
+                unset($this->tab_modules_list['slider_list'][$key]);
+            }
+        }
+
 
         if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
             $this->filter_modules_list = $this->tab_modules_list['default_list'];

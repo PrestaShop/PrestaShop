@@ -580,7 +580,7 @@ class ToolsCore
  } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
      preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
      if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = Country::getByIso($array[0], true);
+         $id_country = (int)Country::getByIso($array[0], true);
      }
  }
         if (!isset($id_country) || !$id_country) {
@@ -1492,7 +1492,7 @@ class ToolsCore
 
             /* Uppercase */
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
-            /* B  */ '/[\x{0411}]]/u',
+            /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
             /* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
             /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',

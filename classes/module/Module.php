@@ -262,7 +262,8 @@ abstract class ModuleCore
         if ($this->name != null) {
             // If cache is not generated, we generate it
             if (self::$modules_cache == null && !is_array(self::$modules_cache)) {
-                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : 1);
+                $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
+
                 self::$modules_cache = array();
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
@@ -291,6 +292,9 @@ abstract class ModuleCore
                     }
                 }
                 $this->_path = __PS_BASE_URI__.'modules/'.$this->name.'/';
+            }
+            if (!$this->context->controller instanceof Controller) {
+                self::$modules_cache = null;
             }
             $this->local_path = _PS_MODULE_DIR_.$this->name.'/';
         }
@@ -1131,7 +1135,7 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = new $override;
+                $r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($override);
             }
         }
 
@@ -1441,8 +1445,8 @@ abstract class ModuleCore
         // Get Default Country Modules and customer module
         $files_list = array(
             array('type' => 'addonsNative', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0),
-            array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
             array('type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0),
+            array('type' => 'addonsBought', 'file' => _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1),
         );
         foreach ($files_list as $f) {
             if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $logged_on_addons)) {
@@ -1526,7 +1530,7 @@ abstract class ModuleCore
                                 }
                             }
 
-                            $module_list[] = $item;
+                            $module_list[$modaddons->id.'-'.$item->name] = $item;
                         }
                     }
                 }

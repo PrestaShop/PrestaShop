@@ -155,6 +155,9 @@ class OrderDetailCore extends ObjectModel
     /** @var float */
     public $purchase_supplier_price;
 
+    /** @var float */
+    public $original_wholesale_price;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -200,8 +203,11 @@ class OrderDetailCore extends ObjectModel
             'unit_price_tax_excl' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
             'total_price_tax_incl' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
             'total_price_tax_excl' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'total_shipping_price_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'total_shipping_price_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
             'purchase_supplier_price' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'original_product_price' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice')
+            'original_product_price' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+            'original_wholesale_price' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice')
         ),
     );
 
@@ -751,11 +757,11 @@ class OrderDetailCore extends ObjectModel
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
+				'.Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
 				WHERE od.id_order IN ('.$list.')
 					AND pl.id_lang = '.(int)$id_lang.'
 					AND cl.id_lang = '.(int)$id_lang.'
 					AND od.product_id != '.(int)$id_product.'
-					AND i.cover = 1
 					AND product_shop.active = 1'
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 				ORDER BY RAND()
@@ -790,6 +796,25 @@ class OrderDetailCore extends ObjectModel
                 $this->$field = '';
             }
         }
+
+        $this->original_wholesale_price = $this->getWholeSalePrice();
+
         return parent::add($autodate = true, $null_values = false);
+    }
+
+    //return the product OR product attribute whole sale price
+    public function getWholeSalePrice()
+    {
+        $product = new Product($this->product_id);
+        $wholesale_price = $product->wholesale_price;
+
+        if($this->product_attribute_id){
+            $combination = new Combination((int)$this->product_attribute_id);
+            if ($combination && $combination->wholesale_price != '0.000000') {
+                $wholesale_price = $combination->wholesale_price;
+            }
+        }
+
+        return $wholesale_price;
     }
 }

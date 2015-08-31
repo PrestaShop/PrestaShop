@@ -468,12 +468,14 @@ class AdminProductsControllerCore extends AdminController
         $full_tree = Tools::getValue('fullTree', 0);
         $use_check_box = Tools::getValue('useCheckBox', 1);
         $selected = Tools::getValue('selected', array());
+        $id_tree = Tools::getValue('type');
         $input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
 
         $tree = new HelperTreeCategories('subtree_associated_categories');
         $tree->setTemplate('subtree_associated_categories.tpl')
             ->setUseCheckBox($use_check_box)
             ->setUseSearch(true)
+            ->setIdTree($id_tree)
             ->setSelectedCategories($selected)
             ->setFullTree($full_tree)
             ->setChildrenOnly(true)
@@ -1586,7 +1588,7 @@ class AdminProductsControllerCore extends AdminController
         $id_product = Tools::getValue('id_product');
         if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop'))) {
             if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`, `cover`) VALUES('.(int)$id_image.', '.(int)$id_shop.', \'0\')');
+                $res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES('.(int)$id_product.', '.(int)$id_image.', '.(int)$id_shop.', NULL)');
             } else {
                 $res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
             }
@@ -1596,33 +1598,27 @@ class AdminProductsControllerCore extends AdminController
         $count_cover_image = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM '._DB_PREFIX_.'image i
 			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-			WHERE i.cover = 1 AND `id_product` = '.(int)$id_product);
+			WHERE i.cover = 1 AND i.`id_product` = '.(int)$id_product);
 
-        $id_image = Db::getInstance()->getValue('
-			SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
-			INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
-			WHERE `id_product` = '.(int)$id_product);
+        if (!$id_image) {
+            $id_image = Db::getInstance()->getValue('
+                SELECT i.`id_image` FROM '._DB_PREFIX_.'image i
+                INNER JOIN '._DB_PREFIX_.'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = '.(int)$id_shop.')
+                WHERE i.`id_product` = '.(int)$id_product);
+        }
 
         if ($count_cover_image < 1) {
             Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 1 WHERE i.id_image = '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product.' LIMIT 1');
-        }
-
-        if ($count_cover_image > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image i SET i.cover = 0 WHERE i.id_image <> '.(int)$id_image.' AND i.`id_product` = '.(int)$id_product);
         }
 
         // Clean covers in image_shop table
         $count_cover_image_shop = Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM '._DB_PREFIX_.'image_shop ish
-			INNER JOIN '._DB_PREFIX_.'image i ON (i.id_image = ish.id_image AND i.`id_product` = '.(int)$id_product.')
-			WHERE ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
+			WHERE ish.`id_product` = '.(int)$id_product.' AND ish.id_shop = '.(int)$id_shop.' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
-        }
-        if ($count_cover_image_shop > 1) {
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 0 WHERE ish.id_image <> '.(int)$id_image.' AND ish.cover = 1 AND ish.id_shop = '.(int)$id_shop.' LIMIT '.intval($count_cover_image_shop - 1));
+            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_shop ish SET ish.cover = 1 WHERE ish.id_image = '.(int)$id_image.' AND ish.`id_product` = '.(int)$id_product.' AND ish.id_shop =  '.(int)$id_shop.' LIMIT 1');
         }
 
         if ($res) {
@@ -1670,7 +1666,7 @@ class AdminProductsControllerCore extends AdminController
         if ($img->update()) {
             $this->jsonConfirmation($this->_conf[26]);
         } else {
-            $this->jsonError(Tools::displayError('An error occurred while attempting to move this picture.'));
+            $this->jsonError(Tools::displayError('An error occurred while attempting to update the cover picture.'));
         }
     }
 
@@ -1685,18 +1681,17 @@ class AdminProductsControllerCore extends AdminController
         // if deleted image was the cover, change it to the first one
         if (!Image::getCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image_shop` image_shop, '._DB_PREFIX_.'image i
-			SET image_shop.`cover` = 1,
-			i.cover = 1
-			WHERE image_shop.`id_image` = (SELECT id_image FROM
-														(SELECT image_shop.id_image
-															FROM '._DB_PREFIX_.'image i'.
-                                                            Shop::addSqlAssociation('image', 'i').'
-															WHERE i.id_product ='.(int)$image->id_product.' LIMIT 1
-														) tmpImage)
-			AND id_shop='.(int)$this->context->shop->id.'
-			AND i.id_image = image_shop.id_image
-			');
+			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
+			SET image_shop.`cover` = 1
+			WHERE image_shop.`id_product` = '.(int)$image->id_product.'
+			AND id_shop='.(int)$this->context->shop->id.' LIMIT 1');
+        }
+
+        if (!Image::getGlobalCover($image->id_product)) {
+            $res &= Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'image` i
+			SET i.`cover` = 1
+			WHERE i.`id_product` = '.(int)$image->id_product.' LIMIT 1');
         }
 
         if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$image->id_product.'.jpg')) {
@@ -1875,8 +1870,11 @@ class AdminProductsControllerCore extends AdminController
 
             if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->object->getType() != Product::PTYPE_VIRTUAL) {
                 $this->object->advanced_stock_management = 1;
-                StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
                 $this->object->save();
+                $id_shops = Shop::getContextListShopID();
+                foreach ($id_shops as $id_shop) {
+                    StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$id_shop, 0);
+                }
             }
 
             if (empty($this->errors)) {
@@ -1963,6 +1961,14 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $res = parent::processStatus();
+
+        $query = trim(Tools::getValue('bo_query'));
+        $searchType = (int)Tools::getValue('bo_search_type');
+
+        if ($query) {
+            $this->redirect_after = preg_replace('/[\?|&](bo_query|bo_search_type)=([^&]*)/i', '', $this->redirect_after);
+            $this->redirect_after .= '&bo_query='.$query.'&bo_search_type='.$searchType;
+        }
 
         return $res;
     }
@@ -2531,12 +2537,12 @@ class AdminProductsControllerCore extends AdminController
         $helper->id = 'box-avg-gross-margin';
         $helper->icon = 'icon-tags';
         $helper->color = 'color2';
-        $helper->title = $this->l('Average Gross Margin', null, null, false);
+        $helper->title = $this->l('Average Gross Margin %', null, null, false);
         if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false) {
             $helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
-        $helper->tooltip = $this->l('The gross margin is the difference between the retail price and the wholesale price, on all your products for sale.', null, null, false);
+        $helper->tooltip = $this->l('Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $X to cover profit and expenses.', null, null, false);
         $helper->refresh = (bool)(ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time);
         $kpis[] = $helper->generate();
 

@@ -240,7 +240,6 @@ class OrderCore extends ObjectModel
             'id_carrier' => array('xlink_resource'=> 'carriers'),
             'current_state' => array(
                 'xlink_resource'=> 'order_states',
-                'getter' => 'getWsCurrentState',
                 'setter' => 'setWsCurrentState'
             ),
             'module' => array('required' => true),
@@ -2213,6 +2212,9 @@ class OrderCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @deprecated since 1.6.1
+     */
     public function getWsCurrentState()
     {
         return $this->getCurrentState();
@@ -2226,7 +2228,16 @@ class OrderCore extends ObjectModel
         return true;
     }
 
-    public function getProductTaxesDetails()
+    
+    /**
+     * By default this function was made for invoice, to compute tax amounts and balance delta (because of computation made on round values).
+     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is usefull for order slip for example,
+     * where only sublist of the order is refunded.
+     *
+     * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
+     * @return array A list of tax rows applied to the given OrderDetails (or all OrderDetails linked to the current Order).
+     */
+    public function getProductTaxesDetails($limitToOrderDetails = false)
     {
         $round_type = $this->round_type;
         if ($round_type == 0) {
@@ -2276,7 +2287,7 @@ class OrderCore extends ObjectModel
         $breakdown = array();
 
         // Get order_details
-        $order_details = $this->getOrderDetailList();
+        $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
 
@@ -2292,7 +2303,11 @@ class OrderCore extends ObjectModel
             $unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
             $order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
 
-            $discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+            $discount_ratio = 0;
+
+            if ($this->total_products > 0) {
+                $discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+            }
 
             // share of global discount
             $discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;

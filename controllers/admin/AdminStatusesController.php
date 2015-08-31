@@ -65,17 +65,6 @@ class AdminStatusesControllerCore extends AdminController
      */
     protected function initOrderStatutsList()
     {
-        $this->addRowAction('edit');
-        $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', range(1, 14));
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?'),
-                'icon' => 'icon-trash',
-            )
-        );
-
         $this->fields_list = array(
             'id_order_state' => array(
                 'title' => $this->l('ID'),
@@ -140,9 +129,6 @@ class AdminStatusesControllerCore extends AdminController
         $this->list_id = 'order_return_state';
         $this->deleted = false;
         $this->_orderBy = null;
-
-        $this->addRowAction('editstatus');
-        $this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5));
 
         $this->fields_list = array(
             'id_order_return_state' => array(
@@ -223,18 +209,29 @@ class AdminStatusesControllerCore extends AdminController
     public function renderList()
     {
         //init and render the first list
+        $this->addRowAction('edit');
+        $this->addRowAction('delete');
+        $this->addRowActionSkipList('delete', range(1, 14));
+        $this->bulk_actions = array(
+            'delete' => array(
+                'text' => $this->l('Delete selected'),
+                'confirm' => $this->l('Delete selected items?'),
+                'icon' => 'icon-trash',
+            )
+        );
         $this->initOrderStatutsList();
         $lists = parent::renderList();
 
         //init and render the second list
         $this->list_skip_actions = array();
         $this->_filter = false;
+        $this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5));
         $this->initOrdersReturnsList();
+        $this->checkFilterForOrdersReturnsList();
 
         // call postProcess() to take care of actions and filters
         $this->postProcess();
         $this->toolbar_title = $this->l('Return statuses');
-        $this->checkFilterForOrdersReturnsList();
 
         parent::initToolbar();
         $lists .= parent::renderList();
@@ -500,14 +497,14 @@ class AdminStatusesControllerCore extends AdminController
         $theme_path = '../themes/'.$theme->directory.'/mails/'; // Mail templates can also be found in the theme folder
 
         $array = array();
-        foreach (Language::getLanguages(true) as $language) {
+        foreach (Language::getLanguages(false) as $language) {
             $iso_code = $language['iso_code'];
 
             // If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
             if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code)) {
                 continue;
             }
-            
+
             $theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
             $theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir) : array();
             // We merge all available emails in one array
@@ -622,6 +619,7 @@ class AdminStatusesControllerCore extends AdminController
         } elseif ($this->table == 'order_return_state') {
             $this->initOrdersReturnsList();
         }
+
         return parent::filterToField($key, $filter);
     }
 
