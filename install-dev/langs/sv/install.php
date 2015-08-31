@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'GZIP-komprimering är inte aktiverad',
         'Mcrypt extension is not enabled' => 'Modulen Mcrypt är inte aktiverad',
         'Mbstring extension is not enabled' => 'Modulen Mbstring är inte aktiverad',
-        'PHP magic quotes option is enabled' => 'PHP-inställningen magic quotes är aktiverad',
         'Dom extension is not loaded' => 'Modulen Dom är inte laddad',
         'PDO MySQL extension is not loaded' => 'Modulen PDO MySQL är inte laddad',
         'Server name is not valid' => 'Felaktigt servernamn',

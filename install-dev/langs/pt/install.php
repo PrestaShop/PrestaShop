@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'A compressão GZIP não está activa',
         'Mcrypt extension is not enabled' => 'A extensão Mcrypt não está activa',
         'Mbstring extension is not enabled' => 'A extensão Mbstring não está ativa',
-        'PHP magic quotes option is enabled' => 'A opção "magic quotes" do PHP encontra-se ativa',
         'Dom extension is not loaded' => 'A extensão Dom não está carregada',
         'PDO MySQL extension is not loaded' => 'A extensão PDO do MySQL não está carregada',
         'Server name is not valid' => 'O nome do servidor não é válido',

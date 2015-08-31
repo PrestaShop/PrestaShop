@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'GZIP tömörítés nem aktív',
         'Mcrypt extension is not enabled' => 'Mcrypt kiterjesztés nem bekapcsolt',
         'Mbstring extension is not enabled' => 'Mbstring kiterjesztés nem bekapcsolt',
-        'PHP magic quotes option is enabled' => 'PHP magic quotes opció engedélyezve',
         'Dom extension is not loaded' => 'Dom kiterjesztés nincs betöltve',
         'PDO MySQL extension is not loaded' => 'PDO MySQL kiterjesztés nincs betöltve',
         'Server name is not valid' => 'Érvénytelen szervernév',

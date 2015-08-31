@@ -46,8 +46,8 @@ class InstallModelSystem extends InstallAbstractModel
         }
 
         return array(
-            'checks' =>        $tests,
-            'success' =>    $success,
+            'checks' => $tests,
+            'success' => $success,
         );
     }
 }

@@ -24,9 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-if (!defined('_PS_MAGIC_QUOTES_GPC_')) {
-    define('_PS_MAGIC_QUOTES_GPC_', false);
-}
 if (!defined('_PS_MYSQL_REAL_ESCAPE_STRING_')) {
     define('_PS_MYSQL_REAL_ESCAPE_STRING_', function_exists('mysql_real_escape_string'));
 }

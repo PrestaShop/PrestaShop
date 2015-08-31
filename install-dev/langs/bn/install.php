@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'Gzip কম্প্রেশন সক্রিয় করা নেই',
         'Mcrypt extension is not enabled' => 'Mcrypt এক্সটেনশন সক্রিয় করা নেই',
         'Mbstring extension is not enabled' => 'Mbstring এক্সটেনশন সক্রিয় করা নেই',
-        'PHP magic quotes option is enabled' => 'PHP magic quotes অপশনটি সক্রিয় করা',
         'Dom extension is not loaded' => 'Dom এক্সটেনশন লোড করা হয় নি',
         'PDO MySQL extension is not loaded' => 'PDO MySQLএক্সটেনশন লোড করা হয় নি',
         'Server name is not valid' => 'সার্ভারের নাম সঠিক নয় ',
