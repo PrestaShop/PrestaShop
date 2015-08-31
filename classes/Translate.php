@@ -57,6 +57,9 @@ class TranslateCore
             if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
                 include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
             }
+            if (file_exists(Configuration::get('PS_TRANSLATIONS_OVERRIDE'))) {
+                include_once(Configuration::get('PS_TRANSLATIONS_OVERRIDE'));
+            }
         }
 
         if (isset($modules_tabs[strtolower($class)])) {
@@ -139,6 +142,7 @@ class TranslateCore
 
         if (!isset($translations_merged[$name]) && isset(Context::getContext()->language)) {
             $files_by_priority = array(
+                Configuration::get('PS_TRANSLATIONS_OVERRIDE'),
                 // Translations in theme
                 _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
                 _PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
