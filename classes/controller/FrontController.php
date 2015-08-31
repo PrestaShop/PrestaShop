@@ -655,36 +655,11 @@ class FrontControllerCore extends Controller
             'display_footer' => $this->display_footer,
         ));
 
-        $layout = $this->getLayout();
-        if ($layout) {
-            if ($this->template) {
-                $template = $this->context->smarty->fetch($this->template);
-            } else {
-                // For retrocompatibility with 1.4 controller
-
-                ob_start();
-                $this->displayContent();
-                $template = ob_get_contents();
-                ob_clean();
-            }
-            $this->context->smarty->assign('template', $template);
-            $this->smartyOutputContent($layout);
-        } else {
-            Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
-            if ($this->display_header) {
-                $this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
-            }
-
-            if ($this->template) {
-                $this->smartyOutputContent($this->template);
-            } else { // For retrocompatibility with 1.4 controller
-                $this->displayContent();
-            }
-
-            if ($this->display_footer) {
-                $this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-            }
+        if ($layout = $this->getLayout()) {
+            $this->context->smarty->assign('layout', $layout);
         }
+
+        $this->smartyOutputContent($this->template);
 
         return true;
     }
@@ -1485,14 +1460,14 @@ class FrontControllerCore extends Controller
         $layout = false;
         if ($entity) {
             if ($id_item > 0 && file_exists($layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl')) {
-                $layout = $layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl';
+                $layout = basename($layout_override_dir).'/layout-'.$entity.'-'.$id_item.'.tpl';
             } elseif (file_exists($layout_override_dir.'layout-'.$entity.'.tpl')) {
-                $layout = $layout_override_dir.'layout-'.$entity.'.tpl';
+                $layout = basename($layout_override_dir).'/layout-'.$entity.'.tpl';
             }
         }
 
         if (!$layout && file_exists($layout_dir.'layout.tpl')) {
-            $layout = $layout_dir.'layout.tpl';
+            $layout = 'layout.tpl';
         }
 
         return $layout;
