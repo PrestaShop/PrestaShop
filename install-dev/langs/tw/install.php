@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => '沒有啟用 GZIP 壓縮',
         'Mcrypt extension is not enabled' => '沒有啟用 Mcrypt 外掛',
         'Mbstring extension is not enabled' => '沒有啟用 Mbstring 外掛',
-        'PHP magic quotes option is enabled' => 'PHP magic quotes 選項啟用中',
         'Dom extension is not loaded' => '沒有載入 Dom 外掛',
         'PDO MySQL extension is not loaded' => '沒有載入 PDO MySQL 外掛',
         'Server name is not valid' => '伺服器名稱有誤',

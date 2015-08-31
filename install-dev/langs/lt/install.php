@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'GZIP suspaudimas neaktyvuotas',
         'Mcrypt extension is not enabled' => 'Mcrypt plėtinys neįjungtas',
         'Mbstring extension is not enabled' => 'Mbstring plėtinys neįjungtas',
-        'PHP magic quotes option is enabled' => 'PHP nustatymas "magic quotes" įjungtas',
         'Dom extension is not loaded' => 'Neužkrautas DOM plėtinys',
         'PDO MySQL extension is not loaded' => 'PDO MySQL plėtinys neužkrautas',
         'Server name is not valid' => 'Neteisingas serverio pavadinimas',

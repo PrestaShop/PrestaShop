@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'GZIP komprese není aktivní',
         'Mcrypt extension is not enabled' => 'Mcrypt rozšíření není povoleno',
         'Mbstring extension is not enabled' => 'Mbstrings rozšíření není povoleno',
-        'PHP magic quotes option is enabled' => 'PHP magic quotes není povoleno',
         'Dom extension is not loaded' => 'Dom rozšíření není načteno',
         'PDO MySQL extension is not loaded' => 'PDO MySQL rozšíření není načteno',
         'Server name is not valid' => 'Název serveru je neplatný',

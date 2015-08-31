@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'Reducerea GZIP nu este activată',
         'Mcrypt extension is not enabled' => 'Extensia Mcrypt nu este activă',
         'Mbstring extension is not enabled' => 'Extensia Mbstring nu este activă',
-        'PHP magic quotes option is enabled' => 'Opțiunea PHP cotații magice este activă',
         'Dom extension is not loaded' => 'Extensia Dom nu este încărcată',
         'PDO MySQL extension is not loaded' => 'Extensia PDO MySQL nu este încărcată',
         'Server name is not valid' => 'Numele serverului nu este valid',

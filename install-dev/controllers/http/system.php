@@ -130,7 +130,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'gz' => $this->l('GZIP compression is not activated'),
                         'mcrypt' => $this->l('Mcrypt extension is not enabled'),
                         'mbstring' => $this->l('Mbstring extension is not enabled'),
-                        'magicquotes' => $this->l('PHP magic quotes option is enabled'),
                         'dom' => $this->l('Dom extension is not loaded'),
                         'pdo_mysql' => $this->l('PDO MySQL extension is not loaded')
                     )

@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'فشرده سازی GZIP فعال نیست',
         'Mcrypt extension is not enabled' => 'افزونه Mcrypt فعال نیست',
         'Mbstring extension is not enabled' => 'افزونه Mbstring فعال نیست',
-        'PHP magic quotes option is enabled' => 'گزینه PHP magic quotes فعال است',
         'Dom extension is not loaded' => 'افزونه Dom بارگیری نشده',
         'PDO MySQL extension is not loaded' => 'افزونه PDO MySQL بارگیری نشده',
         'Server name is not valid' => 'نام سرور صحیح نیست',

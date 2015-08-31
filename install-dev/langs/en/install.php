@@ -75,7 +75,6 @@ return array(
         'GZIP compression is not activated' => 'GZIP compression is not activated',
         'Mcrypt extension is not enabled' => 'Mcrypt extension is not enabled',
         'Mbstring extension is not enabled' => 'Mbstring extension is not enabled',
-        'PHP magic quotes option is enabled' => 'PHP magic quotes option is enabled',
         'Dom extension is not loaded' => 'Dom extension is not loaded',
         'PDO MySQL extension is not loaded' => 'PDO MySQL extension is not loaded',
         'Server name is not valid' => 'Server name is not valid',
