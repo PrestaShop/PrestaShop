@@ -381,7 +381,7 @@ class OrderSlipCore extends ObjectModel
 
         $order_slip->{'total_products_tax_'.$inc_or_ex_2} -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
         $order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_1};
-        $order_slip->shipping_cost_amount = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
+        $order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
 
         if ((float)$amount && !$amount_choosen) {
             $order_slip->order_slip_type = 1;
