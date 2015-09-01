@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Cldr;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
 use Curl\Curl;
 
 class Update extends Repository
@@ -113,6 +114,9 @@ class Update extends Repository
             throw new \Exception('Error : the locale is not valid');
         }
 
+        $cldrRepository = new Repository($locale);
+        $locale = $cldrRepository->getCulture();
+
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
 
         $archive = new \ZipArchive();
@@ -168,6 +172,9 @@ class Update extends Repository
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
         $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);
 
+        if (!$files) {
+            return;
+        }
         foreach ($files as $file) {
             if ($file != '.' && $file != '..') {
                 $newFileName = 'main--'.$locale.'--'.pathinfo($file)['filename'];
