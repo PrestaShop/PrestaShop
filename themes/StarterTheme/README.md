@@ -19,9 +19,10 @@ The _Starter Theme_ is made for hacking, not for overriding. Change CSS, add and
 
 The _Starter Theme_ is still in a very (very) early staged. If you want to give it a go and contribute:
 
-1. Clone [PrestaShop/PrestaShop](https://github.com/PrestaShop/PrestaShop)
-2. **Switch to the branch `feat/starter-theme`**
-3. Clone this repository into the PrestaShop `/themes/` folder
+1. Clone [PrestaShop/PrestaShop](https://github.com/PrestaShop/PrestaShop).
+2. **Switch to the branch `feat/starter-theme`**.
+3. Clone this repository into the PrestaShop `/themes/` folder. Note: **it has be in a folder named `StarterTheme`.**
+4. Go to the theme page of your backoffice to use the starter theme.
 
 ## Contributing
 
