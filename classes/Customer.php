@@ -834,7 +834,20 @@ class CustomerCore extends ObjectModel
         Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
 
         if (isset(Context::getContext()->cookie)) {
+            $old_id_cart = Context::getContext()->cookie->id_cart;
             Context::getContext()->cookie->logout();
+            $old_cart = new Cart($old_id_cart);
+            if (Validate::isLoadedObject($old_cart)) {
+                $duplicate = $old_cart->duplicate();
+                if ($duplicate && Validate::isLoadedObject($duplicate['cart'])) {
+                    $cart = $duplicate['cart'];
+                    $cart->id_address_delivery = null;
+                    $cart->id_address_invoice = null;
+                    $cart->id_customer = null;
+                    $cart->update();
+                    Context::getContext()->cookie->id_cart = $cart->id;
+                }
+            }
         }
 
         $this->logged = 0;
@@ -853,7 +866,20 @@ class CustomerCore extends ObjectModel
         Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
 
         if (isset(Context::getContext()->cookie)) {
-            Context::getContext()->cookie->mylogout();
+            $old_id_cart = Context::getContext()->cookie->id_cart;
+            Context::getContext()->cookie->logout();
+            $old_cart = new Cart($old_id_cart);
+            if (Validate::isLoadedObject($old_cart)) {
+                $duplicate = $old_cart->duplicate();
+                if ($duplicate && Validate::isLoadedObject($duplicate['cart'])) {
+                    $cart = $duplicate['cart'];
+                    $cart->id_address_delivery = null;
+                    $cart->id_address_invoice = null;
+                    $cart->id_customer = null;
+                    $cart->update();
+                    Context::getContext()->cookie->id_cart = $cart->id;
+                }
+            }
         }
 
         $this->logged = 0;
