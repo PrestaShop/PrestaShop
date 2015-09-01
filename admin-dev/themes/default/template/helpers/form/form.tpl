@@ -361,7 +361,7 @@
 										{$input.required = false}
 										{$input.desc = null}
 									{else}
-										<select name="{$input.name|escape:'html':'utf-8'}"
+										<select name="{$input.name|escape:'html':'utf-8'}{if isset($input.multiple) && $input.multiple}[]{/if}"
 												class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} fixed-width-xl"
 												id="{if isset($input.id)}{$input.id|escape:'html':'utf-8'}{else}{$input.name|escape:'html':'utf-8'}{/if}"
 												{if isset($input.multiple) && $input.multiple} multiple="multiple"{/if}
