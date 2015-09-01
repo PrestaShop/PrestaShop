@@ -808,9 +808,9 @@ function updatePrice()
 	}
 
 	if (noTaxForThisProduct || customerGroupWithoutTax)
-		updateDiscountTable(priceWithDiscountsWithoutTax);
+		updateDiscountTable(priceWithoutDiscountsWithoutTax);
 	else
-		updateDiscountTable(priceWithDiscountsWithTax);
+		updateDiscountTable(priceWithoutDiscountsWithTax);
 }
 
 //update display of the large image
