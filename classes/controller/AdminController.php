@@ -3177,7 +3177,7 @@ class AdminControllerCore extends Controller
             if ($this->explicitSelect) {
                 foreach ($this->fields_list as $key => $array_value) {
                     // Add it only if it is not already in $this->_select
-                    if (isset($this->_select) && preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select)) {
+                    if (isset($this->_select) && (preg_match('/[\s]`?'.preg_quote($key, '/').'`?\s*,/', $this->_select)  || preg_match('/as[\s]`?'.preg_quote($key, '/').'`?\s*$/', $this->_select))) {
                         continue;
                     }
 
