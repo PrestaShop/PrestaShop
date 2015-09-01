@@ -867,7 +867,7 @@ class CustomerCore extends ObjectModel
 
         if (isset(Context::getContext()->cookie)) {
             $old_id_cart = Context::getContext()->cookie->id_cart;
-            Context::getContext()->cookie->logout();
+            Context::getContext()->cookie->mylogout();
             $old_cart = new Cart($old_id_cart);
             if (Validate::isLoadedObject($old_cart)) {
                 $duplicate = $old_cart->duplicate();
