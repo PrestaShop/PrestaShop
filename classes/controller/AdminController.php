@@ -3185,7 +3185,7 @@ class AdminControllerCore extends Controller
                         $this->_listsql .= str_replace('!', '.`', $array_value['filter_key']).'` AS `'.$key.'`, ';
                     } elseif ($key == 'id_'.$this->table) {
                         $this->_listsql .= 'a.`'.bqSQL($key).'`, ';
-                    } elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select)) {
+                    } elseif ($key != 'image') {
                         $this->_listsql .= '`'.bqSQL($key).'`, ';
                     }
                 }
