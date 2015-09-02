@@ -36,9 +36,6 @@ class CmsControllerCore extends FrontController
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        if (Tools::getValue('live_edit')) {
-            return;
-        }
         if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl))) {
             parent::canonicalRedirection($canonicalURL);
         } elseif (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category))) {
