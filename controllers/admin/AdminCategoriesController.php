@@ -328,6 +328,10 @@ class AdminCategoriesControllerCore extends AdminController
                 );
             }
         }
+        if (!$this->lite_display && isset($this->toolbar_btn['back']['href']) && $this->_category->level_depth > 1
+            && $this->_category->id_parent && $this->_category->id_parent != (int)Configuration::get('PS_ROOT_CATEGORY')) {
+            $this->toolbar_btn['back']['href'] .= '&id_category='.(int)$this->_category->id_parent;
+        }
     }
 
     public function initProcess()
