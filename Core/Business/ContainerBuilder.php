@@ -40,6 +40,7 @@ class ContainerBuilder
         $container->bind('PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing', '\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing', true);
 
         return $container;
     }
