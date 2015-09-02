@@ -29,11 +29,10 @@ use Exception;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing;
 
-// FIXME: Defining this here will break all other Unit tests using UnitTestCase class!
-//define('_COOKIE_KEY_', '2349123849231-4123');
-
 class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 {
+    const _COOKIE_KEY_ = '2349123849231-4123';
+
     public function setup()
     {
         $this->hashing = new Hashing();
@@ -41,8 +40,8 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 
     public function test_simple_check_hash_md5()
     {
-        $this->isTrue($this->hashing->checkHash("123", md5(_COOKIE_KEY_."123"), array('cookie_key' => _COOKIE_KEY_)));
-        $this->isFalse($this->hashing->checkHash("23", md5(_COOKIE_KEY_."123"), array('cookie_key' => _COOKIE_KEY_)));
+        $this->isTrue($this->hashing->checkHash("123", md5(self::_COOKIE_KEY_."123"), array('cookie_key' => self::_COOKIE_KEY_)));
+        $this->isFalse($this->hashing->checkHash("23", md5(self::_COOKIE_KEY_."123"), array('cookie_key' => self::_COOKIE_KEY_)));
     }
 
     public function test_simple_hash()
@@ -52,8 +51,8 @@ class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 
     public function test_upgrades_md5_hash()
     {
-        $old_style_hash = md5(_COOKIE_KEY_."123");
-        $success = $this->hashing->checkHash("123", $old_style_hash, array('cookie_key' => _COOKIE_KEY_));
+        $old_style_hash = md5(self::_COOKIE_KEY_."123");
+        $success = $this->hashing->checkHash("123", $old_style_hash, array('cookie_key' => self::_COOKIE_KEY_));
         $this->isTrue($success);
         $this->assertTrue(is_string($success));
         $this->assertNotEquals($old_style_hash, $success);
