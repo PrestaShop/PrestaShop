@@ -89,10 +89,6 @@ class CmsControllerCore extends FrontController
     {
         parent::initContent();
 
-        $parent_cat = new CMSCategory(1, $this->context->language->id);
-        $this->context->smarty->assign('id_current_lang', $this->context->language->id);
-        $this->context->smarty->assign('home_title', $parent_cat->name);
-        $this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
 
         if ($this->assignCase == 1) {
             if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category) {
@@ -102,8 +98,7 @@ class CmsControllerCore extends FrontController
             }
 
             $this->context->smarty->assign(array(
-                'cms' => $this->cms,
-                'content_only' => (int)Tools::getValue('content_only'),
+                'cms' => (array)$this->cms,
                 'path' => $path,
                 'body_classes' => array($this->php_self.'-'.$this->cms->id, $this->php_self.'-'.$this->cms->link_rewrite)
             ));
@@ -111,18 +106,24 @@ class CmsControllerCore extends FrontController
             if ($this->cms->indexation == 0) {
                 $this->context->smarty->assign('nobots', true);
             }
+
+            if (Tools::getValue('content_only')) {
+                // This is use to create a "fancybox"
+                // StarterTheme: Create template for cms in a fancybox
+            } else {
+                $this->setTemplate('cms/page.tpl');
+            }
         } elseif ($this->assignCase == 2) {
             $this->context->smarty->assign(array(
-                'category' => $this->cms_category, //for backward compatibility
                 'cms_category' => $this->cms_category,
                 'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
                 'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id),
                 'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
                 'body_classes' => array($this->php_self.'-'.$this->cms_category->id, $this->php_self.'-'.$this->cms_category->link_rewrite)
             ));
-        }
 
-        $this->setTemplate(_PS_THEME_DIR_.'cms.tpl');
+            // StarterTheme: Create list template for cms
+        }
     }
 
     /**
