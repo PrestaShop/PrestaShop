@@ -47,6 +47,14 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->calledWithResquest = $request;
         
     }
+    
+    protected function doSubcall($controllerName, $controllerMethod, Request &$request)
+    {
+        $this->calledControllerName = $controllerName;
+        $this->calledControllerMethod = $controllerMethod;
+        $this->calledWithResquest = $request;
+        
+    }
 }
 
 class AbstractRouterTest extends UnitTestCase
@@ -76,7 +84,7 @@ class AbstractRouterTest extends UnitTestCase
         $this->assertArrayHasKey('/abstractRouterTest', $routingFiles);
 
         $controllerNamespaces = $this->getObjectAttribute($router, 'controllerNamespaces');
-        $this->assertCount(2, $controllerNamespaces, '2 configuration files should be scaned.');
+        $this->assertCount(3, $controllerNamespaces, 'Tree configuration files should be scaned.');
 
         $this->assertContains('PrestaShop\\PrestaShop\\Tests\\Unit\\Core\\Business\\ControllerFakeModule', $controllerNamespaces);
         $this->assertContains('PrestaShop\\PrestaShop\\Tests\\Unit\\Core\\Business\\Controller', $controllerNamespaces);
@@ -122,4 +130,20 @@ class AbstractRouterTest extends UnitTestCase
         $this->assertEquals('bModuleAction', $router->calledControllerMethod, 'Bad method resolution');
         $this->assertEquals('fake_test_route_module2', $router->calledWithResquest->attributes->get('_route'));
     }
+
+    public function test_subcall()
+    {
+        // TODO
+    }
+
+    public function test_forward()
+    {
+        // TODO
+    }
+
+    public function test_redirect()
+    {
+        // TODO
+    }
+
 }

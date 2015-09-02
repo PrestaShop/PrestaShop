@@ -69,6 +69,6 @@ class AdminControllerTest extends UnitTestCase
 
         $controller = new FakeAdminController();
         
-        // TODO : le controller et ses traits de base.
+        // TODO : le controller et ses traits de base. + autoObjectInflaterTrait, AutoResponseFormatTrait en traits au FakeAdminController
     }
 }

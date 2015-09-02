@@ -153,7 +153,7 @@ abstract class AbstractRouter
         );
 
         // Add modules' routing files
-        $this->aggregateRoutingExtensions();
+        $this->aggregateRoutingExtensions($this->sfRouter);
 
         // Resolve route, and call Controller
         try {
@@ -191,7 +191,53 @@ abstract class AbstractRouter
     {
         // TODO
     }
-    
+
+    /**
+     * Dispatcher internal entry point. Called by a controller/action to get a content subpart from another controller.
+     *
+     * @param Request $subRequest A request made manually (not from real HTTP request) to match the needed subpart.
+     * @throws ResourceNotFoundException if no route is found for the request.
+     * @return string data/view returned by matching controller (not sent through output buffer)
+     */
+    public final function subcall(Request &$subRequest, $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    {
+        $requestContext = new RequestContext();
+        $requestContext->fromRequest($subRequest);
+        
+        $subRouter = new \Symfony\Component\Routing\Router(
+            $this->routeLoader,
+            $this->routingFiles[array_keys($this->routingFiles)[0]],
+            array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
+                  'debug' => $this->configuration->get('_PS_MODE_DEV_'),
+                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
+            ),
+            $requestContext
+        );
+
+        // Add modules' routing files
+        $this->aggregateRoutingExtensions($subRouter);
+
+        // Resolve route, and call Controller
+        $parameters = $subRouter->match($requestContext->getPathInfo());
+        $subRequest->attributes->add($parameters);
+        $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
+        list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
+
+        return $this->doSubcall($controllerName, $controllerMethod, $request);
+    }
+
+    /**
+     * This function will call controller and the corresponding action. In this function, all security layers,
+     * pre-actions and post-actions, must be called.
+     *
+     * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
+     * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
+     * @param Request $request
+     * @throws ResourceNotFoundException if controller action failed (not found)
+     * @return string Data/view returned by matching controller (not sent through output buffer).
+     */
+    abstract protected function doSubcall($controllerName, $controllerMethod, Request &$request);
+
     /**
      * The redirect call take several values in parameter:
      * - Integer value to return a specific HTTP return code and its default page (500, 404, etc...),
@@ -306,12 +352,12 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         return $this->configCacheFactory;
     }
 
-    private final function aggregateRoutingExtensions()
+    private final function aggregateRoutingExtensions($sfRouter)
     {
         foreach($this->routingFiles as $prefix => $routingFile) {
             $collection = $this->routeLoader->load($routingFile);
             $collection->addPrefix($prefix);
-            $this->sfRouter->getRouteCollection()->addCollection($collection);
+            $sfRouter->getRouteCollection()->addCollection($collection);
         }
     }
 

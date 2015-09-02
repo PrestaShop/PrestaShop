@@ -35,6 +35,7 @@ abstract class BaseController
     const RESPONSE_LAYOUT_HTML = 'layout/html'; // encaspulate with a layout and call templating engine to format response.
     const RESPONSE_NUDE_HTML = 'nude/html'; // same as LAYOUT_HTML but with empty layout (<html>,<head>,<title>,<body>, only).
     const RESPONSE_AJAX_HTML = 'none/html'; // no layout and call templating engine to format response.
+    const RESPONSE_PARTIAL_VIEW = 'none/html'; // no layout and call templating engine to format response.
     const RESPONSE_RAW_TEXT = 'none/raw'; // no layout, no templating, no data transformation, direct controller action output
     const RESPONSE_XML = 'none/xml'; // no layout, no templating, transform response from array to XML
     const RESPONSE_JSON = 'none/json'; // no layout, transform response from array to json format

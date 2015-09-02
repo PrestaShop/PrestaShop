@@ -33,12 +33,29 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 
 class FakeRouter extends Router
 {
+    public $calledcheckControllerAuthority = null;
     
-    // TODO
+    protected function checkControllerAuthority(\ReflectionClass $class)
+    {
+        $this->calledcheckControllerAuthority = $class->name;
+        if ($class->name == 'FakeControllerError') // FIXME: name contient tout le namespace ?
+        {
+            throw new \ErrorException('FakeControllerError stops!');
+        }
+        if ($class->name == 'FakeControllerWarning') // FIXME: name contient tout le namespace ?
+        {
+            throw new WarningException('FakeControllerWarning does not stop!');
+        }
+    }
 }
+
+class FakeControllerError extends FrontController { }
+class FakeControllerWarning extends FrontController { }
 
 class RouterTest extends UnitTestCase
 {
@@ -56,10 +73,35 @@ class RouterTest extends UnitTestCase
         
     }
 
-    public function test_router_instantiation()
+    public function test_router_unknown_route()
     {
         $this->setup_env();
 
-        // TODO
+        $router = new FakeRouter('fake_controllers_routes(_(.*))?\.yml');
+
+        // push request into PHP globals (simulate a request) and resolve through dispatch().
+        $fakeRequest = Request::create('/unknown'); // unknown route, return false!
+        $fakeRequest->overrideGlobals();
+        $found = $router->dispatch(true);
+        $this->assertFalse($found, 'Unknown route should return false through dispatch().');
+        
+        // TODO : verifier la generation des caches: pas de cache pour une route inconnue
+    }
+
+    public function test_router_module_routes()
+    {
+        $this->setup_env();
+
+        $router = new FakeRouter('fake_controllers_routes(_(.*))?\.yml');
+
+        // load from a module!
+        $fakeRequest = Request::create('/routerTest/a'); // route to existing controller in a module, action OK.
+        $fakeRequest->overrideGlobals();
+        //$found = $router->dispatch(true); // FIXME : devrait fonctionner ! Vois pk l'autoload ne le prends pas... voir avec Luke !
+        new \PrestaShop\PrestaShop\Tests\RouterTest\Test\RouterTestController();
+        
+        // TODO : dispatch vers 3 routes : un bon controller, un controller FakeControllerError, et un FakeControllerWarning
+        
+        // TODO : verifier la generation des caches: présence et nom de fichier, non vide.
     }
 }

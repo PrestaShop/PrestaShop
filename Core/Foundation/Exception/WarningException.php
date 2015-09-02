@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
  * This exception is thrown when a major error occurs, but we must allow process to continue
  * in degraded mode (with an alternative way) to allow user fix a setting problem for example.
  * Constructor will trigger an event in the 'message' EventDispatcher, with 'warning_message' label.
+ * Warning: If this exception is triggered and catched by the router, then the cache files won't be kept, and regenerated each time.
  *
  * Example of use: In the Router, when a module causes a forbidden override action, we must
  * warn, shut down the module, and ask the user to uninstall the module (or fix it).

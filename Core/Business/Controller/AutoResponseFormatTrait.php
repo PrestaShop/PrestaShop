@@ -45,6 +45,12 @@ trait AutoResponseFormatTrait
      */
     public function beforeActionSuggestResponseFormat(Request &$request, Response &$response)
     {
+        // layout-mode is prior to accept header. Used by subcall for example, to force response mode
+        if (isset($request->headers) && $request->headers->has('layout-mode')) {
+            $response->setResponseFormat($request->headers->get('layout-mode'));
+            return true;
+        }
+
         if (!isset($request->headers) || !$request->headers->has('accept')) {
             return true; // non blocking fail
         }
@@ -93,7 +99,7 @@ trait AutoResponseFormatTrait
         if ($response->getTemplateEngine()) {
             return true; // already set by controller action.
         }
-        
+
         // no template if no HTML output!
         if (strpos($response->getResponseFormat(), 'html') !== false
             && isset($request->attributes)
@@ -104,21 +110,21 @@ trait AutoResponseFormatTrait
             if (count($path) < 2) {
                 return true; // not enough info to suggest template
             }
-            
+
             $classMethod = array_pop($path); // extract last element (Class::method part)
             list($className, $methodName) = explode('::', $classMethod, 2);
             $matchCount = 0;
-            
+
             $className = preg_replace('/Controller$/', '', $className, 1, $matchCount);
             if ($matchCount !== 1) {
                 return true; // Controller does not follow standard name pattern
             }
-            
+
             $methodName = preg_replace('/Action$/', '', $methodName, 1, $matchCount);
             if ($matchCount !== 1) {
                 return true; // Action method does not follow standard name pattern
             }
-            
+
             // TODO : from here, plug template engine.
             $response->setTemplateEngine(function(array $contentData) use($path, $className, $methodName) {
                 return 'Ici, appeler le template et son moteur, avec çà : '
@@ -126,8 +132,7 @@ trait AutoResponseFormatTrait
                     .'<br/>'.print_r($contentData, true); // FIXME
             });
         }
-        
-        
+
         return true; // non blocking fail
     }
 }

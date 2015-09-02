@@ -172,6 +172,37 @@ abstract class Router extends AbstractRouter
      */
     protected final function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
+        return $this->doCall($controllerName, $controllerMethod, $request, false);
+    }
+
+    /**
+     * This function will call controller and the corresponding action. In this function, all security layers,
+     * pre-actions and post-actions, must be called. The function will generate a cache function to be executed quickly.
+     *
+     * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
+     * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
+     * @param Request $request
+     * @throws ResourceNotFoundException if controller action failed (not found)
+     * @return string Data/view returned by matching controller (not sent through output buffer).
+     */
+    protected final function doSubcall($controllerName, $controllerMethod, Request &$request)
+    {
+        return $this->doCall($controllerName, $controllerMethod, $request, true);
+    }
+
+    /**
+     * This function will call controller and the corresponding action. In this function, all security layers,
+     * pre-actions and post-actions, must be called. The function will generate a cache function to be executed quickly.
+     *
+     * @param string $controllerName The name of the Controller (partial namespace given, to complete)
+     * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
+     * @param Request $request
+     * @param boolean True to return content instead of sending it through output buffer. False by default.
+     * @throws ResourceNotFoundException if controller action failed (not found)
+     * @return string|boolean True for success, false if fail, or the resulting content if $returnView is true.
+     */
+    private final function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false)
+    {
         $warnings = 0;
         
         // Find right Controller and check security on it
@@ -187,7 +218,7 @@ abstract class Router extends AbstractRouter
             $this->checkControllerAuthority($class);
         } catch (WarningException $we) {
             $warnings++;
-            /* Even dispatcher 'message' has already been triggered with event 'warning_message'. */
+            /* Event dispatcher 'message' has already been triggered with event 'warning_message'. */
         }
         $method = $class->getMethod($controllerMethod);
         
@@ -197,9 +228,9 @@ abstract class Router extends AbstractRouter
 
         $routingDispatcher = $this->routingDispatcher;
         $cache = $this->getConfigCacheFactory($warnings > 0)->cache( // force debug mode if warnings (to avoid keeping cache file)
-            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.'.php',
+            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'subcall':'').'.php',
             function (ConfigCacheInterface $cache)
-            use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request) {
+            use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView) {
 
                 // find traits, classify them
                 $traits = $this->getAllTraits($class);
@@ -227,7 +258,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 function doDispatchCached(\ReflectionMethod $method, Request &$request)
 {
     $response = new Response();
-    $response->setResponseFormat(BaseController::RESPONSE_LAYOUT_HTML);
+    $response->setResponseFormat(BaseController::'.($returnView?'RESPONSE_PARTIAL_VIEW':'RESPONSE_LAYOUT_HTML').');
     $actionAllowed = true;
 
     $controllerInstance = new '.$controllerClass.'();
@@ -285,7 +316,20 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
         if ($encapsulation) {
             $controllerInstance->encapsulateResponse($encapsulation, $response);
         }
+';
+                if ($returnView) {
+                    $phpCode .= '
+        // Do not use send (no output buffer tricks)
+        return $response->getContent();
+    }
 
+    if (!$actionAllowed) {
+        throw new \Core_Foundation_Exception_Exception(\'Action forbidden.\');
+    }
+}
+'; // Raw php code inside a string, do not indent please.
+                } else {
+                    $phpCode .= '
         // Send response to output buffer
         $response->send();
     }
@@ -297,6 +341,8 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
     return true;
 }
 '; // Raw php code inside a string, do not indent please.
+                }
+
                 $cache->write($phpCode);
                 $routingDispatcher->dispatch('cache_generation', (new BaseEvent())->setRequest($request)); // TODO : améliorer en ajoutant le nom du fichier par exemple
             }

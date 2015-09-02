@@ -68,10 +68,6 @@ class BaseControllerTest extends UnitTestCase
         $this->setup_env();
 
         $controller = new FakeBaseController();
-        $w = new WarningException('message!', 42);
-        $controller->addWarnings($w);
-        $this->assertAttributeContains($w, 'warnings', $controller, 'Warning not inserted in the controller.');
-        $this->assertAttributeCount(1, 'warnings', $controller, 'Warning array should be void before first insert.');
 
         $response = new Response();
 
