@@ -51,8 +51,7 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 		throw Error('No catalog to load!');
 	}
 	var sync = (typeof callback === 'undefined' || !$.isFunction(callback));
-	var culture = full_language_code.split('-'); // en-us -> [en, us]
-	culture = culture[0] + '-' + culture[1].toUpperCase(); // en-US
+	var culture = full_cldr_language_code;
 	
 	if (sync) {
 		// Warning, Sync behavior will slow down Browser performances!

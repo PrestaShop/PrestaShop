@@ -44,9 +44,31 @@ class Repository
     protected $locale;
     protected $contextLanguage;
     protected $oldUmask;
+    protected $non_iso_relational_language = array(
+        'an-es' => 'en-GB',
+        'az-az' => 'az-Cyrl-AZ',
+        'bs-ba' => 'bs-Cyrl-BA',
+        'en-pt' => 'en-GB',
+        'eo-uy' => 'eo',
+        'fr-qc' => 'fr-CA',
+        'ku-tr' => 'en-GB',
+        'ms-my' => 'ms-Latn-MY',
+        'no-no' => 'nb-NO',
+        'sr-cs' => 'sr-Cyrl-RS',
+        'tlh-aa' => 'en-GB',
+        'tt-ru' => 'en-GB',
+        'ug-cn' => 'ug-Arab-CN',
+        'zh-cn' => 'zh-Hans-CN',
+        'zh-tw' => 'zh-Hant-TW',
+    );
 
     public function __construct($contextLanguage = null)
     {
+        if ($contextLanguage) {
+            $contextLanguage = strtolower(is_object($contextLanguage) ? $contextLanguage->language_code : $contextLanguage);
+            $contextLanguage = isset($this->non_iso_relational_language[$contextLanguage]) ? $this->non_iso_relational_language[$contextLanguage] : $contextLanguage;
+        }
+
         $this->contextLanguage = $contextLanguage;
         $this->cldrCacheFolder = _PS_TRANSLATIONS_DIR_.'cldr';
 
@@ -66,9 +88,7 @@ class Repository
 
         //if contextLanguage is define, set locale/region from it
         if ($contextLanguage) {
-            $locale = explode('-', $contextLanguage->language_code);
-            $this->locale = $locale[0];
-            $this->region = strtoupper($locale[1]);
+            $this->localeConversion($contextLanguage);
         } else {
             $locale = new Localize();
             $this->locale = $locale->getLanguage();
@@ -77,6 +97,18 @@ class Repository
 
         $this->repository = new cldrRepository($provider);
         $this->localeRepository = $this->repository->locales[$this->getCulture()];
+    }
+
+    private function localeConversion($locale)
+    {
+        $locale = explode('-', $locale);
+        if (count($locale) == 3) {
+            $this->locale = $locale[0];
+            $this->region = $locale[1].'-'.strtoupper($locale[2]);
+        } else {
+            $this->locale = $locale[0];
+            $this->region = strtoupper($locale[1]);
+        }
     }
 
     public function __destruct()
