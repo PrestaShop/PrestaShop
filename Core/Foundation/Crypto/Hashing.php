@@ -30,26 +30,15 @@ class Hashing
     /** @var array should contain additional hashing methods */
     private $hash_methods = [];
 
-    /**
-     * Init $hash_methods
-     * @return void
-     */
-    private function initHashMethods()
-    {
-        $this->hash_methods = [
-                'md5' => [
-                    'options' => ['should_rehash' => TRUE],
-                    'hash' => function ($passwd, $options) {
-                        $cookie_key = (isset($options['cookie_key']) ? $options['cookie_key'] : '');
-                        return md5($cookie_key.$passwd);
-                    },
-                    'verify' => function ($passwd, $hash, $options) {
-                        $cookie_key = (isset($options['cookie_key']) ? $options['cookie_key'] : '');
-                        /* FIXME: This should be a constant time string check */
-                        return md5($cookie_key.$passwd) === $hash;
-                    },
-                ],
-            ];
+    function __construct() {
+        $this->registerHashMethod('md5',
+            function ($passwd, $hash, $options) {
+                $cookie_key = (isset($options['cookie_key']) ? $options['cookie_key'] : '');
+                /* FIXME: This should be a constant time string check */
+                return md5($cookie_key.$passwd) === $hash;
+            },
+            ['should_rehash' => TRUE]
+        );
     }
 
     /**
@@ -72,10 +61,6 @@ class Hashing
         $success = password_verify($passwd, $hash);
         if (!$success) {
             // This hash doesn't come from password_hash, check our own hashing methods
-            if (!count($this->hash_methods)) {
-                $this->initHashMethods();
-            }
-
             foreach ($this->hash_methods as $name => $method) {
                 $success = $method['verify']($passwd, $hash, $options);
                 if ($success) {
@@ -117,10 +102,6 @@ class Hashing
      *
      */
     public function registerHashMethod($name, $verifyCallback, $options = array()) {
-        if (!count($this->hash_methods)) {
-            $this->initHashMethods();
-        }
-
         if (isset($this->hash_methods[$name])) {
             // We already have a registered method with that name
             return;
