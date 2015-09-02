@@ -41,6 +41,6 @@ class IndexControllerCore extends FrontController
             'HOOK_HOME_TAB' => Hook::exec('displayHomeTab'),
             'HOOK_HOME_TAB_CONTENT' => Hook::exec('displayHomeTabContent')
         ));
-        $this->setTemplate(_PS_THEME_DIR_.'index.tpl');
+        $this->setTemplate('index.tpl');
     }
 }
