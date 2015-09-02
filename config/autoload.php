@@ -26,11 +26,6 @@
 
 require_once(_PS_CONFIG_DIR_.'alias.php');
 require_once(_PS_CLASS_DIR_.'PrestaShopAutoload.php');
-<<<<<<< Upstream, based on 1cc6fc2376c6daf12f6a4c36925fd6a77bfa55d4
-=======
-require_once(_PS_ROOT_DIR_.'/vendor/autoload.php');
-
->>>>>>> 9e0b110 //poc form SF2
 spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
 
 require(_PS_VENDOR_DIR_.'autoload.php');
