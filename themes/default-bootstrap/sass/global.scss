@@ -1037,7 +1037,8 @@ table.table_block td {
 			.product-content {
 				overflow: hidden;
 				h5 {
-					margin: -3px 0 0 0;
+					position: relative;
+					top: -11px;
 				}
 			}
 		}
