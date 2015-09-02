@@ -119,7 +119,7 @@
 								</div>
 								{/if}
 								<div class="module_col_icon">
-									<img src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" />
+									<img width="57" src="../modules/{$module['instance']->name}/logo.png" alt="{$module['instance']->name|stripslashes}" />
 								</div>
 								<div class="module_col_infos">
 									<span class="module_name">
