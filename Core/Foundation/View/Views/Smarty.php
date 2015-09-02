@@ -69,7 +69,12 @@ class Smarty extends \PrestaShop\PrestaShop\View
                 require_once $this->parserDirectory . '/Smarty.class.php';
             }
 
-            $this->parserInstance = new \Smarty();
+            if (\Configuration::get('PS_SMARTY_LOCAL')) {
+                $this->parserInstance = new \SmartyCustom();
+            } else {
+                $this->parserInstance = new \Smarty();
+            }
+
             $this->parserInstance->template_dir = $this->getTemplatesDirectory();
             if ($this->parserExtensions) {
                 $this->parserInstance->addPluginsDir($this->parserExtensions);
