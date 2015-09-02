@@ -2696,7 +2696,7 @@ class AdminTranslationsControllerCore extends AdminController
                     if (!in_array($file, self::$ignore_folder)) {
                         $files_to_copy_iso[] = array(
                                 "from" => $dir.$file,
-                                "to" => str_replace(_PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$current_theme, $dir).$file
+                                "to" => str_replace((strpos($dir, _PS_CORE_DIR_) !== false) ? _PS_CORE_DIR_ : _PS_ROOT_DIR_, _PS_ROOT_DIR_.'/themes/'.$current_theme, $dir).$file
                             );
                     }
                 }
