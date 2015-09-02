@@ -101,7 +101,7 @@ abstract class AbstractRouter
      *
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    public final function __construct($routingFilePattern)
+    final public function __construct($routingFilePattern)
     {
         $this->configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         $this->cacheFileName = explode('\\', get_class($this));
@@ -130,7 +130,7 @@ abstract class AbstractRouter
      * @throws ResourceNotFoundException if $noRoutePassThrough is set to False and no route is found for the request.
      * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
      */
-    public final function dispatch($noRoutePassThrough = false)
+    final public function dispatch($noRoutePassThrough = false)
     {
         // Request
         $request = Request::createFromGlobals();
@@ -187,7 +187,7 @@ abstract class AbstractRouter
     /**
      * TODO
      */
-    public final function forward()
+    final public function forward()
     {
         // TODO
     }
@@ -199,7 +199,7 @@ abstract class AbstractRouter
      * @throws ResourceNotFoundException if no route is found for the request.
      * @return string data/view returned by matching controller (not sent through output buffer)
      */
-    public final function subcall(Request &$subRequest, $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    final public function subcall(Request &$subRequest, $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
     {
         $requestContext = new RequestContext();
         $requestContext->fromRequest($subRequest);
@@ -240,36 +240,41 @@ abstract class AbstractRouter
 
     /**
      * The redirect call take several values in parameter:
-     * - Integer value to return a specific HTTP return code and its default page (500, 404, etc...),
+     * - Integer value to return a specific HTTP return code and its default message (500, 404, etc...),
      * - String to indicate the URL to redirect to,
      * - ???
      *
      * @param mixed $to Integer, String or else. See description
      */
-    public final function redirect($to)
+    final public function redirect($to)
     {
+        if (headers_sent() !== false) {
+            throw new \Core_Foundation_Exception_Exception('Headers already sent, cannot redirect now.');
+        }
         if (is_string($to)) {
-            header('Location: '.$to);
+            header('Location: '.$to, true);
             exit;
         }
         if (is_int($to)) {
+            http_response_code($to);
+            exit;
             // TODO: default error page for this code. Howto ?
         }
     }
 
-    private final function registerSettingFiles()
+    final private function registerSettingFiles()
     {
         $triggerCacheGenerationFlag = &$this->triggerCacheGenerationFlag;
         $cache = $this->getConfigCacheFactory()->cache(
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_setting_list.php',
-            function (ConfigCacheInterface $cache) use(&$triggerCacheGenerationFlag) {
+            function (ConfigCacheInterface $cache) use (&$triggerCacheGenerationFlag) {
                 $moduleCoreConfigExists = (count(glob($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
                 $routingFiles = $routingFilePaths = array();
 
                 // search for Core routes.yml files (base routes.yml is the first, then Core's others)
                 $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
                         ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/');
-                foreach($routingFilesFinder as $file) {
+                foreach ($routingFilesFinder as $file) {
                     $path = $file->getRealpath();
                     $matches = array();
                     $prefix = '/';
@@ -282,10 +287,10 @@ abstract class AbstractRouter
                 }
 
                 // test if at least one module will brings a setup file before to include path into search.
-                if($moduleCoreConfigExists) {
+                if ($moduleCoreConfigExists) {
                     $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
                             ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/');
-                    foreach($routingFilesFinder as $file) {
+                    foreach ($routingFilesFinder as $file) {
                         $path = $file->getRealpath();
                         $matches = array();
                         if (1 === preg_match('&'.$this->configuration->get('_PS_MODULE_DIR_').'([^/]+)/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) &&
@@ -300,7 +305,7 @@ abstract class AbstractRouter
 
                 // search for controller override namespaces
                 $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks();
-                if($moduleCoreConfigExists) {
+                if ($moduleCoreConfigExists) {
                     $settingsFilesFinder->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/'); // first Modules (for override priority)
                 }
                 $settingsFilesFinder->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
@@ -308,17 +313,17 @@ abstract class AbstractRouter
 
                 // Check for error cases
                 $routeIds = array();
-                foreach($routingFilePaths as $prefix => $path) {
+                foreach ($routingFilePaths as $prefix => $path) {
                     $content = Yaml::parse(file_get_contents($path));
                     $ids = array_keys($content);
-                    foreach($ids as $id) {
+                    foreach ($ids as $id) {
                         if (in_array($id, $routeIds)) {
                             throw new \ErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (route ID: '.$id.', prefix: '.$prefix.')');
                         }
                         $routeIds[] = $id;
                     }
                 }
-                foreach($settingsFilesFinder as $file) {
+                foreach ($settingsFilesFinder as $file) {
                     try {
                         $settings = Yaml::parse(file_get_contents($file->getRealpath()));
                         if (isset($settings['controllers']) && isset($settings['controllers']['override_namespace'])) {
@@ -343,7 +348,7 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         include $cache->getPath();
     }
 
-    protected final function getConfigCacheFactory($forceDebug = false)
+    final protected function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
             $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));
@@ -352,16 +357,16 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         return $this->configCacheFactory;
     }
 
-    private final function aggregateRoutingExtensions($sfRouter)
+    final private function aggregateRoutingExtensions($sfRouter)
     {
-        foreach($this->routingFiles as $prefix => $routingFile) {
+        foreach ($this->routingFiles as $prefix => $routingFile) {
             $collection = $this->routeLoader->load($routingFile);
             $collection->addPrefix($prefix);
             $sfRouter->getRouteCollection()->addCollection($collection);
         }
     }
 
-    public final function registerShutdownFunctionCallback(Request &$request)
+    final public function registerShutdownFunctionCallback(Request &$request)
     {
         $null = null;
         EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));

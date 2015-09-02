@@ -45,7 +45,6 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
-        
     }
     
     protected function doSubcall($controllerName, $controllerMethod, Request &$request)
@@ -53,7 +52,6 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
-        
     }
 }
 
@@ -70,7 +68,6 @@ class AbstractRouterTest extends UnitTestCase
             '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
             '_PS_MODE_DEV_' => true
         ));
-        
     }
 
     public function test_router_instantiation()
@@ -130,20 +127,4 @@ class AbstractRouterTest extends UnitTestCase
         $this->assertEquals('bModuleAction', $router->calledControllerMethod, 'Bad method resolution');
         $this->assertEquals('fake_test_route_module2', $router->calledWithResquest->attributes->get('_route'));
     }
-
-    public function test_subcall()
-    {
-        // TODO
-    }
-
-    public function test_forward()
-    {
-        // TODO
-    }
-
-    public function test_redirect()
-    {
-        // TODO
-    }
-
 }

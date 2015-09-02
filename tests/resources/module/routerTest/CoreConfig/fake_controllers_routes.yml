@@ -10,3 +10,7 @@ fake_controllers_route2:
 fake_controllers_route3:
     path:     /c
     defaults: { _controller: 'Test\RouterTestControllerWarning::cAction' }
+
+fake_controllers_route4:
+    path:     /redirect
+    defaults: { _controller: 'Test\RouterTestController::redirectAction' }

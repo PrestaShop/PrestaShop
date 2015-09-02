@@ -44,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 abstract class Router extends AbstractRouter
 {
-
     /**
      * An URL, or an array of elements to generate an URL for HTTP 500 code.
      * @var array|string
@@ -57,7 +56,7 @@ abstract class Router extends AbstractRouter
      * @param \ReflectionClass $class The class to scan
      * @return array:ReflectionClass All traits from the givben class, even from the ancestors classes.
      */
-    private final function getAllTraits(\ReflectionClass $class)
+    final private function getAllTraits(\ReflectionClass $class)
     {
         $traits = array();
         
@@ -67,8 +66,8 @@ abstract class Router extends AbstractRouter
             $classes[] = $parent;
         }
 
-        foreach(array_reverse($classes) as $c) {
-            foreach($c->getTraits() as $trait) {
+        foreach (array_reverse($classes) as $c) {
+            foreach ($c->getTraits() as $trait) {
                 $traits[$trait->name] = $trait; // unicity check :) Children prior
             }
         }
@@ -83,12 +82,12 @@ abstract class Router extends AbstractRouter
      * @throws \ErrorException If a method is not compliant (parameters)
      * @return array:string Methods names that matches the filter and belongs to the controller.
      */
-    private final function filterTraits($allTraits, $startsWith)
+    final private function filterTraits($allTraits, $startsWith)
     {
         $traitFunctions = array();
-        foreach($allTraits as $trait) {
+        foreach ($allTraits as $trait) {
             $methods = $trait->getMethods(\ReflectionMethod::IS_PUBLIC);
-            foreach($methods as $method) {
+            foreach ($methods as $method) {
                 $parameters = $method->getParameters();
                 if (count($parameters) != 2) {
                     throw new \ErrorException('A trait method should aways accept only 2 parameters (&$request, &$response). The Trait method '
@@ -115,10 +114,10 @@ abstract class Router extends AbstractRouter
      * @throws \ErrorException If no default controller found in the Core. The routes YML file is incorrect.
      * @return string The controller class name (with right namespace)
      */
-    protected final function getControllerClass($controllerName)
+    final protected function getControllerClass($controllerName)
     {
         $foundOverrides = array();
-        foreach($this->controllerNamespaces as $namespace) {
+        foreach ($this->controllerNamespaces as $namespace) {
             $className = '\\'.$namespace.'\\'.$controllerName;
             if (!class_exists($className)) {
                 continue;
@@ -128,9 +127,7 @@ abstract class Router extends AbstractRouter
 
         // One override found, use it.
         if (count($foundOverrides) === 1) {
-            $class = new \ReflectionClass($foundOverrides[0]);
-            $controller = $class->newInstance();
-            return $controller;
+            return $foundOverrides[0];
         }
 
         // fallback on default Core controller (most of the time).
@@ -141,7 +138,7 @@ abstract class Router extends AbstractRouter
 
         // More overrides found: problem! do not use it but Warn!
         if (count($foundOverrides) > 1) {
-            throw new \WarningException(
+            throw new WarningException(
                 'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundOverrides),
                 $className,
                 $foundOverrides
@@ -170,7 +167,7 @@ abstract class Router extends AbstractRouter
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return boolean True for success, false if the router should pass through for the next Router (legacy Dispatcher).
      */
-    protected final function doDispatch($controllerName, $controllerMethod, Request &$request)
+    final protected function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
         return $this->doCall($controllerName, $controllerMethod, $request, false);
     }
@@ -185,7 +182,7 @@ abstract class Router extends AbstractRouter
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return string Data/view returned by matching controller (not sent through output buffer).
      */
-    protected final function doSubcall($controllerName, $controllerMethod, Request &$request)
+    final protected function doSubcall($controllerName, $controllerMethod, Request &$request)
     {
         return $this->doCall($controllerName, $controllerMethod, $request, true);
     }
@@ -201,7 +198,7 @@ abstract class Router extends AbstractRouter
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return string|boolean True for success, false if fail, or the resulting content if $returnView is true.
      */
-    private final function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false)
+    final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false)
     {
         $warnings = 0;
         
@@ -227,10 +224,10 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
-        $cache = $this->getConfigCacheFactory($warnings > 0)->cache( // force debug mode if warnings (to avoid keeping cache file)
-            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'subcall':'').'.php',
-            function (ConfigCacheInterface $cache)
-            use($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView) {
+        $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'subcall':'');
+        $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
+            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
+            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName) {
 
                 // find traits, classify them
                 $traits = $this->getAllTraits($class);
@@ -255,7 +252,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
-function doDispatchCached(\ReflectionMethod $method, Request &$request)
+function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request)
 {
     $response = new Response();
     $response->setResponseFormat(BaseController::'.($returnView?'RESPONSE_PARTIAL_VIEW':'RESPONSE_LAYOUT_HTML').');
@@ -263,11 +260,11 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
 
     $controllerInstance = new '.$controllerClass.'();
 ';
-                foreach($initTraits as $initTrait) {
+                foreach ($initTraits as $initTrait) {
                     $phpCode .= '
     $actionAllowed = $actionAllowed & $controllerInstance->'.$initTrait.'($request, $response);';
                 }
-                foreach($beforeActionTraits as $beforeActionTrait) {
+                foreach ($beforeActionTraits as $beforeActionTrait) {
                     $phpCode .= '
     $actionAllowed = $actionAllowed & $controllerInstance->'.$beforeActionTrait.'($request, $response);';
                 }
@@ -297,11 +294,11 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
     }
 ';
                 }
-                foreach($afterActionTraits as $afterActionTrait) {
+                foreach ($afterActionTraits as $afterActionTrait) {
                     $phpCode .= '
     $actionAllowed = $actionAllowed & $controllerInstance->'.$afterActionTrait.'($request, $response);';
                 }
-                foreach($closeActionTraits as $closeActionTrait) {
+                foreach ($closeActionTraits as $closeActionTrait) {
                     $phpCode .= '
     $actionAllowed = $actionAllowed & $controllerInstance->'.$closeActionTrait.'($request, $response);';
                 }
@@ -349,7 +346,8 @@ function doDispatchCached(\ReflectionMethod $method, Request &$request)
         );
 
         include $cache->getPath();
-        return doDispatchCached($method, $request);
+        $functionName = 'doDispatchCached'.$cacheFullName;
+        return $functionName($method, $request);
     }
 
     public function setForbiddenRedirection($redirection)

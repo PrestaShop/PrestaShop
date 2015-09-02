@@ -26,8 +26,14 @@
 namespace PrestaShop\PrestaShop\Tests\RouterTest\Test;
 
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeControllerWarning;
+use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 
-class RouterTestController extends FakeControllerWarning
+class RouterTestControllerWarning extends FakeControllerWarning
 {
-    // TODO
+    public function cAction(Request &$request, Response &$response)
+    {
+        $response->setContent('');
+        return self::RESPONSE_RAW_TEXT;
+    }
 }

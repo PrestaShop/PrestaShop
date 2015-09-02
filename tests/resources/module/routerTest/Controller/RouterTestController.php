@@ -26,8 +26,21 @@
 namespace PrestaShop\PrestaShop\Tests\RouterTest\Test;
 
 use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
+use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
 
 class RouterTestController extends FrontController
 {
-    // TODO
+    public function aAction(Request &$request, Response &$response)
+    {
+        $response->setContent('');
+        return self::RESPONSE_RAW_TEXT;
+    }
+
+    public function redirectAction(Request &$request, Response &$response)
+    {
+        $router = FakeRouter::getInstance();
+        $router->redirect(500);
+    }
 }

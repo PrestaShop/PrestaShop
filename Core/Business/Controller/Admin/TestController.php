@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 
 class TestController extends AdminController
 {
@@ -35,8 +36,9 @@ class TestController extends AdminController
 
     public function dAction(Request &$request, Response &$response, Context $context)
     {
-        echo 'D pité, on ejecte la sortie direct depuis le controller.';
-        var_dump($context);
+        //echo 'D pité, on ejecte la sortie direct depuis le controller.';
+        //var_dump($context);
+        AdminRouter::getInstance()->redirect('/admin-dev/index.php/a');
         return self::RESPONSE_NONE; // declenche un exit(0) au lieu de send la response
     }
 }

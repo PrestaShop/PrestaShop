@@ -35,27 +35,40 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 class FakeRouter extends Router
 {
+    private static $instance = null;
+    final public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self('fake_controllers_routes(_(.*))?\.yml');
+        }
+        return self::$instance;
+    }
+    
     public $calledcheckControllerAuthority = null;
     
     protected function checkControllerAuthority(\ReflectionClass $class)
     {
         $this->calledcheckControllerAuthority = $class->name;
-        if ($class->name == 'FakeControllerError') // FIXME: name contient tout le namespace ?
-        {
+        if ($class->name == 'PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\RouterTestControllerError') {
             throw new \ErrorException('FakeControllerError stops!');
         }
-        if ($class->name == 'FakeControllerWarning') // FIXME: name contient tout le namespace ?
-        {
-            throw new WarningException('FakeControllerWarning does not stop!');
+        if ($class->name == 'PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\RouterTestControllerWarning') {
+            throw new WarningException('FakeControllerWarning does not stop!', 'alternateText');
         }
     }
 }
 
-class FakeControllerError extends FrontController { }
-class FakeControllerWarning extends FrontController { }
+class FakeControllerError extends FrontController
+{
+}
+class FakeControllerWarning extends FrontController
+{
+}
 
 class RouterTest extends UnitTestCase
 {
@@ -70,38 +83,79 @@ class RouterTest extends UnitTestCase
             '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
             '_PS_MODE_DEV_' => true
         ));
-        
+    }
+
+    private $warningReceived = false;
+
+    public function warningListenerEvent(BaseEvent $e)
+    {
+        $this->warningReceived = ($e->getException()->alternative == 'alternateText');
     }
 
     public function test_router_unknown_route()
     {
         $this->setup_env();
-
-        $router = new FakeRouter('fake_controllers_routes(_(.*))?\.yml');
+        $router = FakeRouter::getInstance();
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/unknown'); // unknown route, return false!
         $fakeRequest->overrideGlobals();
         $found = $router->dispatch(true);
         $this->assertFalse($found, 'Unknown route should return false through dispatch().');
-        
-        // TODO : verifier la generation des caches: pas de cache pour une route inconnue
     }
 
     public function test_router_module_routes()
     {
         $this->setup_env();
+        $router = FakeRouter::getInstance();
 
-        $router = new FakeRouter('fake_controllers_routes(_(.*))?\.yml');
-
-        // load from a module!
+        // load from a module! Controller & Action OK case.
         $fakeRequest = Request::create('/routerTest/a'); // route to existing controller in a module, action OK.
         $fakeRequest->overrideGlobals();
-        //$found = $router->dispatch(true); // FIXME : devrait fonctionner ! Vois pk l'autoload ne le prends pas... voir avec Luke !
-        new \PrestaShop\PrestaShop\Tests\RouterTest\Test\RouterTestController();
-        
-        // TODO : dispatch vers 3 routes : un bon controller, un controller FakeControllerError, et un FakeControllerWarning
-        
-        // TODO : verifier la generation des caches: présence et nom de fichier, non vide.
+        $found = $router->dispatch(true);
+        $this->assertTrue($found, '/routerTest/a should be found.');
+
+        // load from a module! Controller Error case (bad parent class checked)
+        $fakeRequest = Request::create('/routerTest/b');
+        $fakeRequest->overrideGlobals();
+        try {
+            $found = $router->dispatch(true);
+            $this->fail('/routerTest/b should be found but must trigger an error.');
+        } catch (\ErrorException $ee) {
+            $this->assertEquals('FakeControllerError stops!', $ee->getMessage());
+        }
+
+        // load from a module! Controller Warning case (bad parent class checked)
+        $fakeRequest = Request::create('/routerTest/c');
+        $fakeRequest->overrideGlobals();
+        EventDispatcher::getInstance('message')->addListener('warning_message', array($this, 'warningListenerEvent'));
+        try {
+            $found = $router->dispatch(true);
+            $this->assertTrue($found, '/routerTest/c should be found even with a warning exception.');
+            $this->assertAttributeEquals(true, 'warningReceived', $this);
+        } catch (\Exception $e) {
+            $this->fail('/routerTest/c should not trigger another exception.');
+        }
     }
+
+    public function test_subcall()
+    {
+        // TODO
+    }
+
+    public function test_forward()
+    {
+        // TODO
+    }
+
+    // Because redirect will trigger exit;, this test will stops phpunit!
+//     public function test_redirect()
+//     {
+//         $this->setup_env();
+//         $router = FakeRouter::getInstance();
+
+//         $fakeRequest = Request::create('/routerTest/redirect');
+//         $fakeRequest->overrideGlobals();
+//         $router->dispatch();
+//     }
 }
