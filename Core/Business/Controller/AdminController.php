@@ -49,9 +49,9 @@ class AdminController extends BaseController
      */
     protected function encapsulateLayout(Response &$response)
     {
-        // TODO
+        // TODO LUC : faire comme dans formatHtmlResponse() ?
         $warnings = array();
-        foreach($this->getWarningIterator() as $w) {
+        foreach ($this->getWarningIterator() as $w) {
             if ($w instanceof WarningException) {
                 $warnings[] = $w->getMessage();
             } else {
@@ -71,11 +71,15 @@ class AdminController extends BaseController
     protected function formatHtmlResponse(Response &$response)
     {
         $templateEngineCallable = $response->getTemplateEngine();
-        if (is_callable($templateEngineCallable)) {
-            $response->setContent($templateEngineCallable($response->getContentData()));
-        } else {
-            // TODO
+        if (!$templateEngineCallable || !is_callable($templateEngineCallable)) {
+            // TODO LUC : on genere un callable via buildTemplateEngine avec des données par défaut:
+            $response->buildTemplateEngine($templatePath, $engine);
+            $templateEngineCallable = $response->getTemplateEngine();
+            if (!$templateEngineCallable || !is_callable($templateEngineCallable)) {
+                throw new \ErrorException('Method buildTemplateEngine() failed to build a callable.');
+            }
         }
+        $response->setContent($templateEngineCallable($response->getContentData()));
     }
     
     /**

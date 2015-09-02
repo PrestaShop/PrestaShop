@@ -148,6 +148,11 @@ class RouterTest extends UnitTestCase
         // TODO
     }
 
+    public function test_url_generation()
+    {
+        // TODO
+    }
+
     // Because redirect will trigger exit;, this test will stops phpunit!
 //     public function test_redirect()
 //     {

@@ -29,6 +29,9 @@ use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 abstract class BaseController
 {
@@ -41,6 +44,18 @@ abstract class BaseController
     const RESPONSE_JSON = 'none/json'; // no layout, transform response from array to json format
     const RESPONSE_NONE = 'none/none'; // no auto response output: case when action want to dump a file for example
 
+    private $router;
+
+    /**
+     * Instantiate the Controller. Often made from a Router.
+     *
+     * @param AbstractRouter $router The Router instance that instantiated the Controller.
+     */
+    public function __construct(AbstractRouter &$router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * This function will transform the resulting controller action content into various formats.
      * If you need a new one, you can override this function in your extended class. Don't forget to call
@@ -52,7 +67,7 @@ abstract class BaseController
      */
     public function formatResponse($format, Response &$response)
     {
-        switch($format) {
+        switch ($format) {
             case 'html':
                 $this->formatHtmlResponse($response);
                 break;
@@ -84,7 +99,7 @@ abstract class BaseController
      *
      * @param Response $response
      */
-    protected final function formatJsonResponse(Response &$response)
+    final protected function formatJsonResponse(Response &$response)
     {
         $content = $response->getContentData();
         $configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
@@ -102,7 +117,7 @@ abstract class BaseController
      */
     public function encapsulateResponse($encapsulation, Response &$response)
     {
-        switch($encapsulation) {
+        switch ($encapsulation) {
             case 'layout':
                 $this->encapsulateLayout($response);
                 break;
@@ -155,7 +170,7 @@ abstract class BaseController
      *
      * @return SplQueue The Error queue to dequeue messages.
      */
-    public final function getErrorIterator()
+    final public function getErrorIterator()
     {
         MessageStackManager::getInstance()->getErrorIterator();
     }
@@ -169,7 +184,7 @@ abstract class BaseController
      *
      * @return SplQueue The Warning queue to dequeue messages.
      */
-    public final function getWarningIterator()
+    final public function getWarningIterator()
     {
         MessageStackManager::getInstance()->getWarningIterator();
     }
@@ -180,7 +195,7 @@ abstract class BaseController
      *
      * @return SplQueue The Info queue to dequeue messages.
      */
-    public final function getInfoIterator()
+    final public function getInfoIterator()
     {
         MessageStackManager::getInstance()->getInfoIterator();
     }
@@ -191,8 +206,44 @@ abstract class BaseController
      *
      * @return SplQueue The Success queue to dequeue messages.
      */
-    public final function getSuccessIterator()
+    final public function getSuccessIterator()
     {
         MessageStackManager::getInstance()->getSuccessIterator();
+    }
+
+    /**
+     * Gets the Router singleton that has instantiated the Controller.
+     *
+     * @return \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter The router to use to forward/redirect/subcall/...
+     */
+    final public function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
+     * Generates a URL or path for a specific route based on the given parameters.
+     *
+     * This is a Wrapper for the Symfony method:
+     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     *
+     * @param string      $name          The name of the route
+     * @param mixed       $parameters    An array of parameters
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     */
+    final public function generateUrl($name, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        try {
+            return $this->getRouter()->getUrlGenerator()->generate($name, $parameters, $referenceType);
+        } catch (RouteNotFoundException $rnfe) {
+            return false; // FIXME mapping to legacy routing !!! :) Enjoy!
+        }
     }
 }

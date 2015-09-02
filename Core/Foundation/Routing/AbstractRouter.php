@@ -124,6 +124,17 @@ abstract class AbstractRouter
     }
 
     /**
+     * Gets the URL Generator instance, already set with routes.
+     * Use it to generate HTML links from route names or parameters array.
+     *
+     * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface An URL generator with Router routes loaded. NULL if router did never dispatch before.
+     */
+    final public function getUrlGenerator()
+    {
+        return (!isset($this->sfRouter))? null : $this->sfRouter->getGenerator();
+    }
+
+    /**
      * Dispatcher entry point. Called in entry point files (index.php).
      *
      * @param boolean $noRoutePassThrough Use True to allow dispatch function to return false if no route found. Else, an exception is raised.

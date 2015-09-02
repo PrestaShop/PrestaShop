@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 
 /**
  * This override of the Symfony Content resolver will add some elements to inject in the controller during routing.
@@ -37,12 +38,18 @@ use PrestaShop\PrestaShop\Core\Business\Context;
  */
 class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
 {
-
     private $response;
-    
+
     public function setResponse(Response &$response)
     {
         $this->response = $response;
+    }
+
+    private $router;
+
+    public function setRouter(AbstractRouter &$router)
+    {
+        $this->router = $router;
     }
 
     protected function doGetArguments(Request $request, $controller, array $parameters)
@@ -84,4 +91,15 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         return $arguments;
     }
 
+    /**
+     * Returns an instantiated controller
+     *
+     * @param string $class A class name
+     *
+     * @return object
+     */
+    protected function instantiateController($class)
+    {
+        return new $class($this->router);
+    }
 }

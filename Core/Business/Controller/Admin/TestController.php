@@ -36,9 +36,12 @@ class TestController extends AdminController
 
     public function dAction(Request &$request, Response &$response, Context $context)
     {
-        //echo 'D pité, on ejecte la sortie direct depuis le controller.';
-        //var_dump($context);
-        AdminRouter::getInstance()->redirect('/admin-dev/index.php/a');
+        echo 'D pité, on ejecte la sortie direct depuis le controller.';
+        var_dump($this->generateUrl('admin_route2', array(
+            'id_order' => 2,
+            'toto' => 'titi'
+        )));
+        //$this->getRouter()->redirect('/admin-dev/index.php/a');
         return self::RESPONSE_NONE; // declenche un exit(0) au lieu de send la response
     }
 }

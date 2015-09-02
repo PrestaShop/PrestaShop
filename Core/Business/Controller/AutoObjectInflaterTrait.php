@@ -54,7 +54,7 @@ trait AutoObjectInflaterTrait
      */
     public function beforeActionInflateRequestedObjects(Request &$request, Response &$response)
     {
-        foreach($request->attributes->all() as $key => $value) {
+        foreach ($request->attributes->all() as $key => $value) {
 
             // Find parameters that begins with id_ to try to inflate corresponding object
             if (strpos($key, 'id_') === 0) {
@@ -66,12 +66,12 @@ trait AutoObjectInflaterTrait
                 $constructorParameters = $class->getConstructor()->getParameters();
                 $constructorParametersValues = array();
                 
-                foreach($constructorParameters as $p) {
+                foreach ($constructorParameters as $p) {
                     /* @var $p \ReflectionParameter */
                     if ($p->name == 'id') {
                         $constructorParametersValues[] = $value;
                     }
-                    // TODO : search for other default params... (id_lang, id_shop or shop_id, etc...)
+                    // TODO : search for other default params... (id_lang, id_shop or shop_id, limit, offset, list, etc...)
                 }
 
                 $object = $class->newInstanceArgs($constructorParametersValues);

@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 
 /**
  * This Trait will add dependency injection in the controller action methods.
@@ -42,11 +43,12 @@ trait SfControllerResolverTrait
      * @param Response $response
      * @return \Closure The controller resolver closure to be executed by the Router.
      */
-    public function controllerResolverSymfony(Request &$request, Response &$response)
+    public function controllerResolverSymfony(Request &$request, Response &$response, AbstractRouter &$router)
     {
-        return function(BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use(&$request, &$response) {
+        return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$router) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
             $resolver->setResponse($response); // inject content data values to resolve more than sf standard resolver.
+            $resolver->setRouter($router); // inject router for Controller instantiation.
             $callable = $resolver->getController($request);
             $arguments = $resolver->getArguments($request, $callable);
             return $controllerMethod->invokeArgs($controllerInstance, $arguments);

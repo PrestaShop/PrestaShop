@@ -129,6 +129,20 @@ class Response extends sfResponse
     {
         $this->templateEngine = $callable;
     }
+
+    /**
+     * Set template engine (callable finetuned & ready to be executed)
+     *
+     * @param callable $callable
+     */
+    public final function buildTemplateEngine($templatePath, $engine = 'smarty')
+    {
+        // TODO LUC : ici on construit le tpl engine selon les paramètres, et tout doit etre prêt dans un callable.
+        $this->templateEngine = function(array $contentData) use($templatePath) {
+            return 'Ici, appeler le template et son moteur, avec çà : '
+                .$templatePath.'<br/>'.print_r($contentData, true);
+        };
+    }
     
     /**
      * Get template engine (callable finetuned & ready to be executed)

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
 
 class FakeBaseController extends BaseController
 {
@@ -59,6 +60,9 @@ class BaseControllerTest extends UnitTestCase
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
         $this->setConfiguration(array(
+            '_PS_ROOT_DIR_' => $fakeRoot,
+            '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
+            '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
             '_PS_MODE_DEV_' => true
         ));
     }
@@ -67,7 +71,8 @@ class BaseControllerTest extends UnitTestCase
     {
         $this->setup_env();
 
-        $controller = new FakeBaseController();
+        $router = FakeRouter::getInstance();
+        $controller = new FakeBaseController($router);
 
         $response = new Response();
 

@@ -57,8 +57,8 @@ trait AutoResponseFormatTrait
         $accepts = explode(',', $request->headers->get('accept'));
 
         // Order by HTTP accept values first, then by follwing switch cases order
-        foreach($accepts as $accept) {
-            switch($accept) {
+        foreach ($accepts as $accept) {
+            switch ($accept) {
 
                 case 'application/json':
                 case 'text/javascript':
@@ -125,11 +125,11 @@ trait AutoResponseFormatTrait
                 return true; // Action method does not follow standard name pattern
             }
 
-            // TODO : from here, plug template engine.
-            $response->setTemplateEngine(function(array $contentData) use($path, $className, $methodName) {
-                return 'Ici, appeler le template et son moteur, avec çà : '
-                    .implode('/',$path).'/'.$className.'/'.$methodName.'.tpl'
-                    .'<br/>'.print_r($contentData, true); // FIXME
+            // TODO LUC : from here, plug template engine by default (smarty).
+            $response->setTemplateEngine(function (array $contentData) use ($path, $className, $methodName) {
+                return 'Ici, appeler le template et son moteur par défaut, avec çà : '
+                    .implode('/', $path).'/'.$className.'/'.$methodName.'.tpl'
+                    .'<br/>'.print_r($contentData, true);
             });
         }
 
