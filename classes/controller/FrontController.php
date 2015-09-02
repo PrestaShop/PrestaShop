@@ -647,6 +647,7 @@ class FrontControllerCore extends Controller
         }
 
         $this->context->smarty->assign(array(
+            'layout'         => $this->getLayout(),
             'css_files'      => $this->css_files,
             'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
@@ -654,10 +655,6 @@ class FrontControllerCore extends Controller
             'display_header' => $this->display_header,
             'display_footer' => $this->display_footer,
         ));
-
-        if ($layout = $this->getLayout()) {
-            $this->context->smarty->assign('layout', $layout);
-        }
 
         $this->smartyOutputContent($this->template);
 
@@ -1454,7 +1451,6 @@ class FrontControllerCore extends Controller
         $entity = $this->php_self;
         $id_item = (int)Tools::getValue('id_'.$entity);
 
-        $layout_dir = $this->getThemeDir();
         $layout_override_dir  = $this->getOverrideThemeDir();
 
         $layout = false;
@@ -1466,11 +1462,7 @@ class FrontControllerCore extends Controller
             }
         }
 
-        if (!$layout && file_exists($layout_dir.'layout.tpl')) {
-            $layout = 'layout.tpl';
-        }
-
-        return $layout;
+        return ($layout) ?: 'layout.tpl';
     }
 
     /**
