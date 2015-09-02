@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46265445691a78641240626965d7c702",
+    "hash": "238ac75acd7349c5374539196930576b",
     "packages": [
         {
             "name": "composer/installers",
@@ -1913,6 +1913,57 @@
             "time": "2015-08-28 15:10:13"
         },
         {
+            "name": "prestashop/smarty",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/smarty.git",
+                "reference": "226f1acbd269a5a9947ac7ade695217fd8aca5e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/smarty/zipball/226f1acbd269a5a9947ac7ade695217fd8aca5e7",
+                "reference": "226f1acbd269a5a9947ac7ade695217fd8aca5e7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Smarty.class.php",
+                    "SmartyBC.class.php",
+                    "sysplugins/smarty_security.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Monte Ohrt",
+                    "email": "monte@ohrt.com"
+                },
+                {
+                    "name": "Uwe Tews",
+                    "email": "uwe.tews@googlemail.com"
+                },
+                {
+                    "name": "Rodney Rehm",
+                    "email": "rodney.rehm@medialize.de"
+                },
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop Smarty version",
+            "homepage": "https://github.com/PrestaShop/smarty",
+            "time": "2015-09-02 16:24:07"
+        },
+        {
             "name": "prestashop/socialsharing",
             "version": "dev-master",
             "source": {
@@ -2743,61 +2794,6 @@
             "description": "PrestaShop module vatnumber",
             "homepage": "https://github.com/PrestaShop/vatnumber",
             "time": "2015-08-28 15:13:00"
-        },
-        {
-            "name": "smarty/smarty",
-            "version": "v3.1.19",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "be0fd3186ceec57e4da9a44031f517c06ae2418a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/be0fd3186ceec57e4da9a44031f517c06ae2418a",
-                "reference": "be0fd3186ceec57e4da9a44031f517c06ae2418a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.1.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "libs/Smarty.class.php",
-                    "libs/SmartyBC.class.php",
-                    "libs/sysplugins/smarty_security.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Monte Ohrt",
-                    "email": "monte@ohrt.com"
-                },
-                {
-                    "name": "Uwe Tews",
-                    "email": "uwe.tews@googlemail.com"
-                },
-                {
-                    "name": "Rodney Rehm",
-                    "email": "rodney.rehm@medialize.de"
-                }
-            ],
-            "description": "Smarty - the compiling PHP template engine",
-            "homepage": "http://www.smarty.net",
-            "keywords": [
-                "templating"
-            ],
-            "time": "2014-10-31 01:29:14"
         }
     ],
     "packages-dev": [
@@ -4173,6 +4169,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "prestashop/smarty": 20,
         "prestashop/bankwire": 20,
         "prestashop/blockadvertising": 20,
         "prestashop/blockbanner": 20,
