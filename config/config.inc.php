@@ -264,6 +264,6 @@ if (!defined('_MEDIA_SERVER_3_')) {
     define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 }
 
-/* Get smarty */
-require_once($currentDir.'/smarty.config.inc.php');
-$context->smarty = $smarty;
+/* View */
+$engine = new \PrestaShop\PrestaShop\ViewFactory();
+$smarty = $context->smarty = $engine->view->getInstance();

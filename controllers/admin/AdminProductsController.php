@@ -2773,6 +2773,24 @@ class AdminProductsControllerCore extends AdminController
             );
         }
 
+        //***************************************************************
+        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+        $engine->view->set('content', 'toto');
+        $engine->view->display('test.html.twig', array('aa' => 'aa'));
+
+
+        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+        $engine->view->set('content', 'toto');
+        echo $engine->view->fetch('test.html.twig', array('aa' => 'bb'));
+
+
+        $engine = new \PrestaShop\PrestaShop\ViewFactory();
+        $engine->view->set('content', 'toto');
+        $engine->view->display('test.tpl');
+
+        die;
+        //***************************************************************
+
         $this->context->smarty->assign('toolbar_scroll', 1);
         $this->context->smarty->assign('show_toolbar', 1);
         $this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);

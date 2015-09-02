@@ -18,85 +18,50 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2015 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'smarty/smarty/libs/');
+smartyRegisterFunction($this->parserInstance, 'modifier', 'truncate', 'smarty_modifier_truncate');
+smartyRegisterFunction($this->parserInstance, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
+smartyRegisterFunction($this->parserInstance, 'function', 't', 'smartyTruncate'); // unused
+smartyRegisterFunction($this->parserInstance, 'function', 'm', 'smartyMaxWords'); // unused
+smartyRegisterFunction($this->parserInstance, 'function', 'p', 'smartyShowObject'); // Debug only
+smartyRegisterFunction($this->parserInstance, 'function', 'd', 'smartyDieObject'); // Debug only
+smartyRegisterFunction($this->parserInstance, 'function', 'l', 'smartyTranslate', false);
+smartyRegisterFunction($this->parserInstance, 'function', 'hook', 'smartyHook');
+smartyRegisterFunction($this->parserInstance, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
+smartyRegisterFunction($this->parserInstance, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
+smartyRegisterFunction($this->parserInstance, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
+smartyRegisterFunction($this->parserInstance, 'function', 'dateFormat', array('Tools', 'dateFormat'));
+smartyRegisterFunction($this->parserInstance, 'function', 'convertPrice', array('Product', 'convertPrice'));
+smartyRegisterFunction($this->parserInstance, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
+smartyRegisterFunction($this->parserInstance, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
+smartyRegisterFunction($this->parserInstance, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
+smartyRegisterFunction($this->parserInstance, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
+smartyRegisterFunction($this->parserInstance, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
+smartyRegisterFunction($this->parserInstance, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
+smartyRegisterFunction($this->parserInstance, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+smartyRegisterFunction($this->parserInstance, 'function', 'getWidthSize', array('Image', 'getWidth'));
+smartyRegisterFunction($this->parserInstance, 'function', 'getHeightSize', array('Image', 'getHeight'));
+smartyRegisterFunction($this->parserInstance, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($this->parserInstance, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
+smartyRegisterFunction($this->parserInstance, 'modifier', 'boolval', array('Tools', 'boolval'));
+smartyRegisterFunction($this->parserInstance, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 
-global $smarty;
-if (Configuration::get('PS_SMARTY_LOCAL')) {
-    $smarty = new SmartyCustom();
-} else {
-    $smarty = new Smarty();
-}
-$smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
-$smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
-if (!Tools::getSafeModeStatus()) {
-    $smarty->use_sub_dirs = true;
-}
-$smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
-$smarty->caching = false;
-if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
-    include(_PS_CLASS_DIR_.'/SmartyCacheResourceMysql.php');
-    $smarty->caching_type = 'mysql';
-}
-$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
-$smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
-$smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
-
-/* Use this constant if you want to load smarty without all PrestaShop functions */
-if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
-    return;
-}
-
-if (defined('_PS_ADMIN_DIR_')) {
-    require_once(dirname(__FILE__).'/smartyadmin.config.inc.php');
-} else {
-    require_once(dirname(__FILE__).'/smartyfront.config.inc.php');
-}
-
-smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
-smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
-
-smartyRegisterFunction($smarty, 'function', 't', 'smartyTruncate'); // unused
-smartyRegisterFunction($smarty, 'function', 'm', 'smartyMaxWords'); // unused
-smartyRegisterFunction($smarty, 'function', 'p', 'smartyShowObject'); // Debug only
-smartyRegisterFunction($smarty, 'function', 'd', 'smartyDieObject'); // Debug only
-smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
-smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
-smartyRegisterFunction($smarty, 'modifier', 'json_encode', array('Tools', 'jsonEncode'));
-smartyRegisterFunction($smarty, 'modifier', 'json_decode', array('Tools', 'jsonDecode'));
-smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
-smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
-smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
-smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
-smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
-smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
-smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
-smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
-smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
-smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
-smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
-
-function smartyDieObject($params, &$smarty)
+function smartyDieObject($params)
 {
-    return Tools::d($params['var']);
+    return \Tools::d($params['var']);
 }
 
-function smartyShowObject($params, &$smarty)
+function smartyShowObject($params)
 {
-    return Tools::p($params['var']);
+    return \Tools::p($params['var']);
 }
 
-function smartyMaxWords($params, &$smarty)
+function smartyMaxWords($params)
 {
     Tools::displayAsDeprecated();
     $params['s'] = str_replace('...', ' ...', html_entity_decode($params['s'], ENT_QUOTES, 'UTF-8'));
@@ -111,7 +76,7 @@ function smartyMaxWords($params, &$smarty)
     return implode(' ', Tools::htmlentitiesUTF8($words));
 }
 
-function smartyTruncate($params, &$smarty)
+function smartyTruncate($params)
 {
     Tools::displayAsDeprecated();
     $text = isset($params['strip']) ? strip_tags($params['text']) : $params['text'];
@@ -148,7 +113,7 @@ function smarty_modifier_htmlentitiesUTF8($string)
 {
     return Tools::htmlentitiesUTF8($string);
 }
-function smartyMinifyHTML($tpl_output, &$smarty)
+function smartyMinifyHTML($tpl_output)
 {
     $context = Context::getContext();
     if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip'))) {
@@ -158,7 +123,7 @@ function smartyMinifyHTML($tpl_output, &$smarty)
     return $tpl_output;
 }
 
-function smartyPackJSinHTML($tpl_output, &$smarty)
+function smartyPackJSinHTML($tpl_output)
 {
     $context = Context::getContext();
     if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip'))) {
@@ -216,7 +181,7 @@ function smartyCleanHtml($data)
     }
 }
 
-function toolsConvertPrice($params, &$smarty)
+function toolsConvertPrice($params)
 {
     return Tools::convertPrice($params['price'], Context::getContext()->currency);
 }

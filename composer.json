@@ -104,7 +104,10 @@
     "psr-4": {
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/"
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\ViewFactory\\": "Core/Foundation/ViewFactory/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\View\\": "Core/Foundation/View/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Views\\": "Core/Foundation/View/Views/"
     },
     "classmap": ["Core/", "Adapter/"]
   },
