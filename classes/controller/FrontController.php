@@ -690,13 +690,13 @@ class FrontControllerCore extends Controller
      */
     protected function displayRestrictedCountryPage()
     {
-        header('HTTP/1.1 503 temporarily overloaded');
+        header('HTTP/1.1 403 Forbidden');
         $this->context->smarty->assign(array(
             'shop_name'   => $this->context->shop->name,
             'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
             'logo_url'    => $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'))
         ));
-        $this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'restricted-country.tpl'));
+        $this->smartyOutputContent('errors/restricted-country.tpl');
         exit;
     }
 
