@@ -26,20 +26,28 @@
 
 namespace PrestaShop\PrestaShop\Views;
 
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
+use Symfony\Component\Translation\Translator;
+use PrestaShop\PrestaShop\Twig\Extension\TranslationExtension as TwigTranslationExtension;
+use Symfony\Component\Validator\Validation;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+
 class Twig extends \PrestaShop\PrestaShop\View
 {
     public $parserDirectory = null;
-
-    public $twigTemplateDirs = array();
-
-    public $parserOptions = array();
-
-    public $parserExtensions = array();
-
+    public $twigTemplateDirs = [];
+    public $parserOptions = [];
+    public $parserExtensions = [];
     private $parserInstance = null;
 
     /**
-     * Render Twig Template
+     * Render Template
      *
      * @param string $template
      * @param null $data
@@ -56,7 +64,7 @@ class Twig extends \PrestaShop\PrestaShop\View
     }
 
     /**
-     * Creates new TwigEnvironment
+     * Creates new TwigEnv
      *
      * @return \Twig_Environment
      */
@@ -72,12 +80,21 @@ class Twig extends \PrestaShop\PrestaShop\View
                 'cache' => $this->parserCacheDirectory
             );
 
+            // Set up the CSRF provider
+            $this->csrfProvider = new DefaultCsrfProvider(_COOKIE_KEY_);
+
             \Twig_Autoloader::register();
             $loader = new \Twig_Loader_Filesystem($this->getTemplateDirs());
             $this->parserInstance = new \Twig_Environment(
                 $loader,
                 $this->parserOptions
             );
+
+            $formEngine = new TwigRendererEngine(array('bootstrap_3_layout.html.twig'));
+            $formEngine->setEnvironment($this->parserInstance);
+
+            $this->parserInstance->addExtension(new TwigTranslationExtension(new Translator('')));
+            $this->parserInstance->addExtension(new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider)));
 
             foreach ($this->parserExtensions as $ext) {
                 $extension = is_object($ext) ? $ext : new $ext;
@@ -89,14 +106,15 @@ class Twig extends \PrestaShop\PrestaShop\View
     }
 
     /**
-     * Get a list of template directories
-     *
-     * Returns an array of templates
+     * Get template directories
      *
      * @return array
      **/
     private function getTemplateDirs()
     {
-        return _PS_BO_ALL_THEMES_DIR_ . 'default/template';
+        return array(
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template',
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/Form/Twig'
+        );
     }
 }

@@ -29,13 +29,9 @@ namespace PrestaShop\PrestaShop\Views;
 class Smarty extends \PrestaShop\PrestaShop\View
 {
     public $parserDirectory = null;
-
     public $parserCompileDirectory = null;
-
     public $parserCacheDirectory = null;
-
     public $parserExtensions = array();
-
     private $parserInstance = null;
 
     /**
@@ -54,7 +50,7 @@ class Smarty extends \PrestaShop\PrestaShop\View
     }
 
     /**
-     * Creates new Smarty object instance
+     * Create new instance
      *
      * @throws \Exception
      * @return \Smarty Instance
@@ -93,7 +89,7 @@ class Smarty extends \PrestaShop\PrestaShop\View
     }
 
     /**
-     * Set options to smarty
+     * Set options
      */
     private function setDefaultOptions()
     {

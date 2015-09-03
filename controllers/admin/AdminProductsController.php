@@ -2775,14 +2775,18 @@ class AdminProductsControllerCore extends AdminController
 
         //***************************************************************
         $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+
+
+        echo $engine->view->render('test.html.twig', array(
+            'content' => 'toto',
+            'aa' => '11'
+        ));
+
         $engine->view->set('content', 'toto');
-        $engine->view->display('test.html.twig', array('aa' => 'aa'));
+        $engine->view->display('test.html.twig', array('aa' => '22'));
 
-
-        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
         $engine->view->set('content', 'toto');
-        echo $engine->view->fetch('test.html.twig', array('aa' => 'bb'));
-
+        echo $engine->view->fetch('test.html.twig', array('aa' => '33'));
 
         $engine = new \PrestaShop\PrestaShop\ViewFactory();
         $engine->view->set('content', 'toto');

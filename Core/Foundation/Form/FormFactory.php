@@ -27,41 +27,20 @@
 namespace PrestaShop\PrestaShop\Form;
 
 use Symfony\Component\Validator\Validation;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Forms;
-use Symfony\Component\Translation\Translator;
-use PrestaShop\PrestaShop\Twig\Extension\TranslationExtension as TwigTranslationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
-use Symfony\Bridge\Twig\Extension\FormExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 
 class FormFactory
 {
-    public $engine;
     public $builder;
 
     public function __construct()
     {
         // Set up the CSRF provider
         $csrfProvider = new DefaultCsrfProvider(_COOKIE_KEY_);
-
-        // Set up template engine
-        $twig = new \Twig_Environment(
-            new \Twig_Loader_Filesystem(
-                array(_PS_BO_ALL_THEMES_DIR_.'default/template', _PS_BO_ALL_THEMES_DIR_ . 'default/template/Form/Twig')
-            )
-        );
-
-        $formEngine = new TwigRendererEngine(array('bootstrap_3_layout.html.twig'));
-        $formEngine->setEnvironment($twig);
-
-        $twig->addExtension(new TwigTranslationExtension(new Translator('')));
-        $twig->addExtension(new FormExtension(new TwigRenderer($formEngine, $csrfProvider)));
-
-        $this->engine = $twig;
 
         // Set up the Form component
         $this->builder = Forms::createFormFactoryBuilder()
@@ -75,10 +54,5 @@ class FormFactory
     public function create()
     {
         return $this->builder;
-    }
-
-    public function render($template, $params)
-    {
-        return $this->engine->render($template, $params);
     }
 }

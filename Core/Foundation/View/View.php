@@ -28,27 +28,16 @@ namespace PrestaShop\PrestaShop;
 
 class View
 {
-    /**
-     * Data available to the view templates
-     */
     protected $data;
-
-    /**
-     * Path to templates base directory (without trailing slash)
-     * @var string
-     */
     protected $templatesDirectory;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->data = [];
     }
 
     /**
-     * Does view data have value with key?
+     * Has data
      * @param  string  $key
      * @return boolean
      */
@@ -58,7 +47,7 @@ class View
     }
 
     /**
-     * Return view data value with key
+     * Get data
      * @param  string $key
      * @return mixed
      */
@@ -68,7 +57,7 @@ class View
     }
 
     /**
-     * Set view data value with key
+     * Set data
      * @param string $key
      * @param mixed $value
      */
@@ -78,7 +67,7 @@ class View
     }
 
     /**
-     * Return view data
+     * Get all datas
      * @return array
      */
     public function all()
@@ -87,7 +76,7 @@ class View
     }
 
     /**
-     * Replace view data
+     * Replace datas
      * @param  array  $data
      */
     public function replace(array $data)
@@ -96,7 +85,7 @@ class View
     }
 
     /**
-     * Clear view data
+     * Clear datas
      */
     public function clear()
     {
@@ -104,9 +93,8 @@ class View
     }
 
     /**
-     * Set the base directory that contains view templates
+     * Set the base template directory
      * @param   string $directory
-     * @throws  \InvalidArgumentException If directory is not a directory
      */
     public function setTemplatesDirectory($directory)
     {
@@ -114,7 +102,7 @@ class View
     }
 
     /**
-     * Get templates base directory
+     * Get template directory
      * @return string
      */
     public function getTemplatesDirectory()
@@ -123,8 +111,8 @@ class View
     }
 
     /**
-     * Get fully qualified path to template file using templates base directory
-     * @param  string $file The template file pathname relative to templates base directory
+     * Get template directory path
+     * @param  string $file
      * @return string
      */
     public function getTemplatePathname($file)
@@ -132,17 +120,11 @@ class View
         return $this->templatesDirectory . DIRECTORY_SEPARATOR . ltrim($file, DIRECTORY_SEPARATOR);
     }
 
-    /********************************************************************************
-     * Rendering
-     *******************************************************************************/
-
     /**
-     * Display template
+     * Display
      *
-     * This method echoes the rendered template to the current output buffer
-     *
-     * @param  string   $template   Pathname of template file relative to templates directory
-     * @param  array    $data       Any additonal data to be passed to the template.
+     * @param  string $template
+     * @param  array $data
      */
     public function display($template, $data = null)
     {
@@ -150,11 +132,11 @@ class View
     }
 
     /**
-     * Return the contents of a rendered template file
+     * Fetch
      *
-     * @param    string $template   The template pathname, relative to the template base directory
-     * @param    array  $data       Any additonal data to be passed to the template.
-     * @return string               The rendered template
+     * @param  string $template
+     * @param  array  $data
+     * @return string
      */
     public function fetch($template, $data = null)
     {
@@ -162,14 +144,11 @@ class View
     }
 
     /**
-     * Render a template file
-     *
-     * NOTE: This method should be overridden by custom view subclasses
-     *
-     * @param  string $template     The template pathname, relative to the template base directory
-     * @param  array  $data         Any additonal data to be passed to the template.
-     * @return string               The rendered template
-     * @throws \Exception    If resolved template pathname is not a valid file
+     * Render
+     * @param  string $template
+     * @param  array  $data
+     * @return string
+     * @throws \Exception
      */
     protected function render($template, $data = null)
     {
