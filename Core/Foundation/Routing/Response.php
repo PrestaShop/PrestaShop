@@ -54,7 +54,7 @@ class Response extends sfResponse
      *
      * @param mixed $data
      */
-    public final function setContentData($data)
+    final public function setContentData($data)
     {
         $this->contentData = $data;
     }
@@ -67,7 +67,7 @@ class Response extends sfResponse
      * @param mixed $data
      * @return boolean False if key already exists in the dataset. True for success.
      */
-    public final function addContentData($key, $data)
+    final public function addContentData($key, $data)
     {
         if (array_key_exists($key, $this->contentData)) {
             return false;
@@ -84,7 +84,7 @@ class Response extends sfResponse
      * @param mixed $data
      * @return Response $this object, to allow chaining functions.
      */
-    public final function replaceContentData($key, $data)
+    final public function replaceContentData($key, $data)
     {
         $this->contentData[$key] = $data;
         return $this;
@@ -95,7 +95,7 @@ class Response extends sfResponse
      *
      * @return mixed
      */
-    public final function getContentData()
+    final public function getContentData()
     {
         return $this->contentData;
     }
@@ -105,7 +105,7 @@ class Response extends sfResponse
      *
      * @param string $format
      */
-    public final function setResponseFormat($format)
+    final public function setResponseFormat($format)
     {
         $this->responseFormat = $format;
     }
@@ -115,7 +115,7 @@ class Response extends sfResponse
      *
      * @return string
      */
-    public final function getResponseFormat()
+    final public function getResponseFormat()
     {
         return $this->responseFormat;
     }
@@ -125,7 +125,7 @@ class Response extends sfResponse
      *
      * @param callable $callable
      */
-    public final function setTemplateEngine(callable $callable)
+    final public function setTemplateEngine(callable $callable)
     {
         $this->templateEngine = $callable;
     }
@@ -135,10 +135,10 @@ class Response extends sfResponse
      *
      * @param callable $callable
      */
-    public final function buildTemplateEngine($templatePath, $engine = 'smarty')
+    final public function buildTemplateEngine($templatePath, $engine = 'smarty')
     {
         // TODO LUC : ici on construit le tpl engine selon les paramètres, et tout doit etre prêt dans un callable.
-        $this->templateEngine = function(array $contentData) use($templatePath) {
+        $this->templateEngine = function (array $contentData) use ($templatePath) {
             return 'Ici, appeler le template et son moteur, avec çà : '
                 .$templatePath.'<br/>'.print_r($contentData, true);
         };
@@ -149,7 +149,7 @@ class Response extends sfResponse
      *
      * @return callable|false
      */
-    public final function getTemplateEngine()
+    final public function getTemplateEngine()
     {
         return $this->templateEngine;
     }

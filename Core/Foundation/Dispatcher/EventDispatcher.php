@@ -29,11 +29,48 @@ use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Existing dispatchers:
+ *
+ * - routing        All events triggered during Routing (before action call, and after action result),
+ *                  and during shutdown, subcall, redirect, forward...
+ *      - cache_generation      A cache file has been (re)generated from the Router.
+ *      - dispatch_succeed
+ *      - dispatch_failed
+ *      - subcall_succeed
+ *      - subcall_failed
+ *      - redirection_sent      The redirection has been sent into the HTTP Location header. Cannot guarantee that it will succeed.
+ *      - redirection_failed    The redirection failed due to a bad parameter given or headers already sent.
+ *      - forward_succeed
+ *      - forward_failed
+ *
+ * - log            All events triggered when a log is dumped into the logger.
+ *                  WARNING: this could become very slow if you listen to many log event!
+ *
+ * - message        All events triggered when a PHP code wants to post a message to the user (often to Admin interface)
+ *                  (warnings, notices, messages to flash on the screen, etc...).
+ *      - error_message         When an error must be displayed (in RED?).
+ *      - warning_message       When an warning must be displayed (in ORANGE?). Used by: WarningException
+ *      - info_message          When a notice must be displayed (in BLUE/themed?)
+ *      - success_message       When a success must be displayed after an action (in GREEN/themed?)
+ *
+ * - module         All events concerning modules manipulation: install, update, uninstall, etc...
+ *                  FOR NOW, THESE EVENTS ARE NOT TRIGGERED. FOR FUTURE BEHAVIOR.
+ *      - before_install
+ *      - after_install
+ *      - before_update
+ *      - after_update
+ *      - before_uninstall
+ *      - after_uninstall
+ * - error
+ *      - warning_message       Used by: WarningException
+ */
 class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
     private static $instances = array();
 
-    public final static function getInstance($dispatcherName = 'default')
+    final public static function getInstance($dispatcherName = 'default')
     {
         if (!isset(self::$instances[$dispatcherName])) {
             self::$instances[$dispatcherName] = new self($dispatcherName);
@@ -53,33 +90,35 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
             array('warning_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onWarning', -127, false, 'getInstance'),
             array('info_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onInfo', -127, false, 'getInstance'),
             array('success_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onSuccess', -127, false, 'getInstance'),
-        ) // all events triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
+        ), // all events triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
+        'module' => array(
+        ) // all events concerning modules manipulation: install, update, uninstall, etc...
     );
 
-    public final static function initDispatchers($forceDebug = false)
+    final public static function initDispatchers($forceDebug = false)
     {
         $configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         
         $cache = (new ConfigCacheFactory($forceDebug || $configuration->get('_PS_MODE_DEV_')))->cache(
             $configuration->get('_PS_CACHE_DIR_').'dispatcher/init_subscribers.php',
-            function (ConfigCacheInterface $cache) use(&$configuration) {
+            function (ConfigCacheInterface $cache) use (&$configuration) {
                 $moduleCoreConfigExists = (count(glob($configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
                 
                 $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks()
                     ->in($configuration->get('_PS_ROOT_DIR_').'/CoreConfig/');
-                if($moduleCoreConfigExists) {
+                if ($moduleCoreConfigExists) {
                     $settingsFilesFinder->in($configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/');
                 }
                 
                 $phpCode = '<'.'?php
 ';
-                foreach($settingsFilesFinder as $file) {
+                foreach ($settingsFilesFinder as $file) {
                     try {
                         $settings = Yaml::parse(file_get_contents($file->getRealpath()));
                         if (isset($settings['dispatchers']) && is_array($dispatchers = $settings['dispatchers'])) {
-                            foreach($dispatchers as $dispatcherName => $dispatchersEvents) {
-                                foreach($dispatchersEvents as $dispatchersEventName => $listeners) {
-                                    foreach($listeners as $listener) {
+                            foreach ($dispatchers as $dispatcherName => $dispatchersEvents) {
+                                foreach ($dispatchersEvents as $dispatchersEventName => $listeners) {
+                                    foreach ($listeners as $listener) {
                                         $lazy = ($listener['lazy'] == 1)? 'true' : 'false';
                                         $staticInstantiator = (isset($listener['singletonMethod']))? ', '.$listener['singletonMethod'] : '';
                                         
@@ -98,12 +137,12 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         );
         include $cache->getPath();
 
-        foreach(self::$baseDispatcherRegistry as $dispatcherName => $listeners) {
+        foreach (self::$baseDispatcherRegistry as $dispatcherName => $listeners) {
             /* @var $dispatcher EventDispatcher */
             $dispatcher = new self($dispatcherName);
-            foreach($listeners as $listener) {
+            foreach ($listeners as $listener) {
                 if ($listener[4] === true) { // lazy instantiation, use one-shot auto-destructive closure
-                    $closure = function(ResponseEvent $event) use($dispatcher, $listener, &$closure) {
+                    $closure = function (ResponseEvent $event) use ($dispatcher, $listener, &$closure) {
                         $listenerInstance = (isset($listener[5]))? $listener[1]::$listener[5]() : new $listener[1]();
                         $listenerInstance->$listener[2]($event); // trigger event listener manually the first time
                         $dispatcher->addListener($listener[0], array($listenerInstance, $listener[2]), $listener[3]); // for next event, use lazy instance
@@ -126,7 +165,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         $this->name = $dispatcherName;
     }
 
-    protected final function getConfigCacheFactory($forceDebug = false)
+    final protected function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
             $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));

@@ -172,8 +172,11 @@ abstract class AbstractRouter
             $request->attributes->add($parameters);
             list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
 
-            return $this->doDispatch($controllerName, $controllerMethod, $request);
+            $res = $this->doDispatch($controllerName, $controllerMethod, $request);
+            $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
+            return $res;
         } catch (ResourceNotFoundException $e) {
+            $this->routingDispatcher->dispatch('dispatch_failed', new BaseEvent('Failed to resolve route from HTTP request.', $e));
             if ($noRoutePassThrough) {
                 // Allow legacy code to handle request if not found in this dispatcher
                 return false;
@@ -198,9 +201,11 @@ abstract class AbstractRouter
     /**
      * TODO
      */
-    final public function forward()
+    final public function forward(Request &$request, $routeName, $routeParameters = array())
     {
-        // TODO
+        // TODO: redispatch: resolve given route and then doDispatch on it.
+//         $this->routingDispatcher->dispatch('forward_succeed', new BaseEvent());
+//         $this->routingDispatcher->dispatch('forward_failed', new BaseEvent());
     }
 
     /**
@@ -234,7 +239,9 @@ abstract class AbstractRouter
         $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
         list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
 
-        return $this->doSubcall($controllerName, $controllerMethod, $request);
+        $res = $this->doSubcall($controllerName, $controllerMethod, $request);
+        $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
+        return $res;
     }
 
     /**
@@ -253,24 +260,47 @@ abstract class AbstractRouter
      * The redirect call take several values in parameter:
      * - Integer value to return a specific HTTP return code and its default message (500, 404, etc...),
      * - String to indicate the URL to redirect to,
-     * - ???
+     * - Array to indicate a route to generate a URL: [route name; [parameters]]
      *
-     * @param mixed $to Integer, String or else. See description
+     * If the redirect succeed, it does not return because an exit is done after redirection sent.
+     *
+     * If the argument is an array containing a route and its parameters, then the method could
+     * throws exceptions due to URL generation errors (@see PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException::generate())
+     *
+     * @throws \Core_Foundation_Exception_Exception if argument is not properly set.
+     *
+     * @param mixed $to Integer, String or Array. See description for specific array format.
+     * @return false if headers already sent (cannot redirect, it's too late).
      */
     final public function redirect($to)
     {
         if (headers_sent() !== false) {
-            throw new \Core_Foundation_Exception_Exception('Headers already sent, cannot redirect now.');
+            $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent('Too late to redirect: headers already sent.'));
+            return false; // headers already sent
         }
         if (is_string($to)) {
+            $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
             header('Location: '.$to, true);
             exit;
         }
         if (is_int($to)) {
+            $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
             http_response_code($to);
             exit;
             // TODO: default error page for this code. Howto ?
         }
+        if (is_array($to) && count($to) == 2 && is_array($to[1])) {
+            $route = $to[0];
+            $parameters = $to[1];
+            $url = $this->getUrlGenerator()->generate($route, $parameters);
+            $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($url));
+            header('Location: '.$url, true);
+            exit;
+        }
+        
+        $e = new \Core_Foundation_Exception_Exception('Bad parameters format given to redirect().');
+        $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent($to, $e));
+        throw $e;
     }
 
     final private function registerSettingFiles()
