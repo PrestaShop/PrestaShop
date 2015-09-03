@@ -1,13 +1,11 @@
 {extends "page.tpl"}
 
-{block name="content"}
+{block name="page_title"}
+  {$cms.meta_title}
+{/block}
 
-  {block name="page_title"}
-    <h1>{$cms.meta_title}</h1>
-  {/block}
-
-  {block name="page_content"}
+{block name="page_content_container"}
+  <section id="content" class="page-content page-cms page-cms-{$cms.id}">
     {$cms.content}
-  {/block}
-
+  </section>
 {/block}
