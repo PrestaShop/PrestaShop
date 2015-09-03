@@ -44,10 +44,10 @@
 
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
-    {%- for child in form %}
-        {{- form_widget(child) -}}
-        {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
-    {% endfor -%}
+        {%- for child in form %}
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+        {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
 
@@ -180,8 +180,8 @@
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
-                '%name%': name,
-                '%id%': id,
+            '%name%': name,
+            '%id%': id,
             }) %}
         {%- else -%}
             {% set label = name|humanize %}
@@ -205,21 +205,21 @@
 {%- block form_label -%}
     {% if label is not sameas(false) -%}
         {% if not compound -%}
-            {% set label_attr = label_attr|merge({'for': id}) %}
-        {%- endif %}
+    {% set label_attr = label_attr|merge({'for': id}) %}
+{%- endif %}
         {% if required -%}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-        {%- endif %}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+{%- endif %}
         {% if label is empty -%}
-            {%- if label_format is not empty -%}
-                {% set label = label_format|replace({
-                    '%name%': name,
-                    '%id%': id,
-                }) %}
-            {%- else -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-        {%- endif -%}
+    {%- if label_format is not empty -%}
+        {% set label = label_format|replace({
+        '%name%': name,
+        '%id%': id,
+        }) %}
+    {%- else -%}
+        {% set label = name|humanize %}
+    {%- endif -%}
+{%- endif -%}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is sameas(false) ? label : label }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
@@ -258,27 +258,27 @@
 
 {%- block form -%}
     {{ form_start(form) }}
-        {{- form_widget(form) -}}
+    {{- form_widget(form) -}}
     {{ form_end(form) }}
 {%- endblock form -%}
 
 {%- block form_start -%}
     {% set method = method|upper %}
     {%- if method in ["GET", "POST"] -%}
-        {% set form_method = method %}
-    {%- else -%}
-        {% set form_method = "POST" %}
-    {%- endif -%}
+    {% set form_method = method %}
+{%- else -%}
+    {% set form_method = "POST" %}
+{%- endif -%}
     <form name="{{ name }}" method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}
-        <input type="hidden" name="_method" value="{{ method }}" />
-    {%- endif -%}
+    <input type="hidden" name="_method" value="{{ method }}" />
+{%- endif -%}
 {%- endblock form_start -%}
 
 {%- block form_end -%}
     {%- if not render_rest is defined or render_rest -%}
-        {{ form_rest(form) }}
-    {%- endif -%}
+    {{ form_rest(form) }}
+{%- endif -%}
     </form>
 {%- endblock form_end -%}
 
@@ -288,11 +288,11 @@
 
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
-    <ul>
-        {%- for error in errors -%}
-            <li>{{ error.message }}</li>
-        {%- endfor -%}
-    </ul>
+        <ul>
+            {%- for error in errors -%}
+                <li>{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
     {%- endif -%}
 {%- endblock form_errors -%}
 

@@ -61,11 +61,11 @@
         {% if datetime is not defined or not datetime -%}
             <div {{ block('widget_container_attributes') -}}>
         {%- endif %}
-            {{- date_pattern|replace({
-                '{{ year }}': form_widget(form.year),
-                '{{ month }}': form_widget(form.month),
-                '{{ day }}': form_widget(form.day),
-            })|raw -}}
+        {{- date_pattern|replace({
+            '{{ year }}': form_widget(form.year),
+            '{{ month }}': form_widget(form.month),
+            '{{ day }}': form_widget(form.day),
+        })|raw -}}
         {% if datetime is not defined or not datetime -%}
             </div>
         {%- endif -%}
@@ -161,14 +161,14 @@
     {# Do not display the label if widget is not defined in order to prevent double label rendering #}
     {% if widget is defined %}
         {% if required %}
-            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
-        {% endif %}
+    {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
+{% endif %}
         {% if parent_label_class is defined %}
-            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
-        {% endif %}
+    {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+{% endif %}
         {% if label is not sameas(false) and label is empty %}
-            {% set label = name|humanize %}
-        {% endif %}
+    {% set label = name|humanize %}
+{% endif %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
             {{- widget|raw -}}
             {{- label is not sameas(false) ? (translation_domain is sameas(false) ? label : label) -}}
@@ -233,12 +233,12 @@
     {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
     <ul class="list-unstyled">
         {%- for error in errors -%}
-        <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{
+    <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{
         error.messagePluralization is null
         ? error.messageTemplate|trans(error.messageParameters)
         : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters)
         }}
-        </li>
+    </li>
 {%- endfor -%}
     </ul>
     {% if form.parent %}</span>{% else %}</div>{% endif %}
