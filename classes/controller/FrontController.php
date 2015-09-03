@@ -669,7 +669,8 @@ class FrontControllerCore extends Controller
         if ($this->maintenance == true || !(int)Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
             if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
-                header('HTTP/1.1 503 temporarily overloaded');
+                header('HTTP/1.1 503 Service Unavailable');
+                header('Retry-After: 3600');
 
                 $this->context->smarty->assign($this->initLogoAndFavicon());
                 $this->context->smarty->assign(array(
@@ -678,7 +679,7 @@ class FrontControllerCore extends Controller
 
                 // If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
                 $front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
-                $this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+                $this->smartyOutputContent('errors/maintenance.tpl');
                 exit;
             }
         }
