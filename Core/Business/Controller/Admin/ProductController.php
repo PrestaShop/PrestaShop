@@ -38,7 +38,16 @@ class ProductController extends AdminController
     use AutoResponseFormatTrait; // try to auto fill template engine parameters according to the current action.
     use SfControllerResolverTrait; // dependency injection in sf way.
 
-    public function productListAction(Request &$request, Response &$response, $list = null)
+    /**
+     * Get only the list of products to display on the main Admin Product page.
+     * The full page that shows products list will subcall this action.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $products The collection of products requested. Filled by AutoObjectInflaterTrait.
+     * @return void The response format is automatically placed by the Router through _layout_mode attribute
+     */
+    public function productListAction(Request &$request, Response &$response, $products)
     {
     }
 }

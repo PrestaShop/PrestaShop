@@ -347,7 +347,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                 }
 
                 $cache->write($phpCode);
-                $routingDispatcher->dispatch('cache_generation', (new BaseEvent())->setRequest($request)); // TODO : améliorer en ajoutant le nom du fichier par exemple
+                $routingDispatcher->dispatch('cache_generation', (new BaseEvent())->setRequest($request));
             }
         );
 

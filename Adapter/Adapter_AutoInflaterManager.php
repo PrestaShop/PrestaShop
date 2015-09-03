@@ -28,6 +28,15 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 
 class Adapter_AutoInflaterManager
 {
+    /**
+     * Try to retrieve an Object of the Legacy architecture by its class name and its ID.
+     * The instantiation will be equivalent to:
+     * <$className>::_construct(<$id>); or new <$className>(<$id>);
+     *
+     * @param string $className
+     * @param integer $id
+     * @return boolean|object|NULL False if conditions are not satisfied (calssName not found). Null if the ID is not in the DB.
+     */
     public function inflateObject($className, $id)
     {
         $className = ucfirst($className);
@@ -52,6 +61,15 @@ class Adapter_AutoInflaterManager
         }
     }
     
+    /**
+     * Try to retrieve a collection of Objects of the Legacy architecture by its class name, a method and methods parameters.
+     * The instantiation will be equivalent to:
+     * <$className>::<$method>(<$parameters>); or (new <$className>())-><$method>(<$parameters>);
+     *
+     * @param string $className
+     * @param string $method
+     * @return boolean|object|NULL False if conditions are not satisfied (calssName not found, mandatory params mmissing). Null if the ID is not in the DB.
+     */
     public function inflateCollection($className, $method, $parameters)
     {
         $context = Context::getInstance();

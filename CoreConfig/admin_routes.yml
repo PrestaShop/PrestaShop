@@ -1,14 +1,16 @@
 # routes.yml
 admin_product_list:
-    path:     /product/list/{_layout_mode}/{ls_products_start}/{ls_products_limit}/{ls_products_order_by}/{ls_products_order_way}
+    path:     /product/list/{_layout_mode}/{ls_products_offset}/{ls_products_limit}/{ls_products_orderBy}/{ls_products_orderWay}
     defaults: 
         _controller: 'Admin\ProductController::productListAction'
-        ls_products_class: Product
-        ls_products_method: getProducts
-        ls_products_limit: 10
-        ls_products_start: 0
-        ls_products_order_by: 'id'
-        ls_products_order_way: 'ASC'
         _layout_mode: layout_html
+        ls_products_class: PrestaShop\PrestaShop\Adapter\ProductManager
+        ls_products_method: getProductList
+        ls_products_limit: 10
+        ls_products_offset: 0
+        ls_products_orderBy: id
+        ls_products_orderWay: ASC
     requirements:
         _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
+        ls_products_orderBy: id
+        ls_products_orderWay: ASC|DESC|asc|desc
