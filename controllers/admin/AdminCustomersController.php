@@ -26,10 +26,15 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Form\FormFactory;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\File;
 use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
+use PrestaShop\PrestaShop\Form\Type\TestType;
+use PrestaShop\PrestaShop\Form\Type\DropFilesType;
 
 /**
  * @property Customer $object
@@ -341,9 +346,19 @@ class AdminCustomersControllerCore extends AdminController
     {
         $request = Request::createFromGlobals();
         $formFactory = new FormFactory();
+        $builder = $formFactory->create();
 
-        $defaultData = array('firstName' => 'tata', 'lastName' => 'toto');
-        $form = $formFactory->create()
+        $simpleSubForm = $builder->create('author', 'form')
+            ->add('name', 'text')
+            ->add('email', 'text');
+
+        $defaultData = array(
+            'firstName' => 'tata',
+            'lastName' => 'toto'
+        );
+
+
+        $form = $builder
             ->setAction('')
             ->add('firstName', 'text', array(
                 'constraints' => array(
@@ -365,6 +380,40 @@ class AdminCustomersControllerCore extends AdminController
             ->add('newsletter', 'checkbox', array(
                 'required' => false,
             ))
+            ->add('imageAttachment', 'file', array(
+                'required' => false,
+                'constraints' => array(
+                    new Image(array(
+                        'maxSize' => '1024k',
+                        'minWidth' => 100,
+                        'minHeight' => 100,
+                        'mimeTypes' => array(
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                            'image/gif'
+                        )
+                    ))
+                )
+            ))
+            ->add('fileAttachment', 'file', array(
+                'required' => false,
+                'constraints' => array(
+                    new File(array(
+                        'maxSize' => '1024k',
+                        'mimeTypes' => array(
+                            'text/plain'
+                        )
+                    ))
+                )
+            ))
+            ->add('dropAttachment', new DropFilesType())
+            ->add($simpleSubForm)
+            ->add('testSimpleCollection', 'collection', array(
+                'type' => new TestType(),
+                'prototype' => true,
+                'allow_add' => true,
+                'allow_delete' => true))
             ->setData($defaultData)
             ->getForm();
 
@@ -372,10 +421,23 @@ class AdminCustomersControllerCore extends AdminController
 
         if ($form->isValid()) {
             $data = $form->getData();
+
+            if (!empty($data['imageAttachment'])) {
+                $file = $data['imageAttachment'];
+                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '.' . $file->guessExtension());
+            }
+
+            if (!empty($data['fileAttachment'])) {
+                $file = $data['fileAttachment'];
+                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '_' .$file->getClientOriginalName());
+            }
+
+            print_r($data);
+            die;
             //do what you want, redirect...
         }
 
-        return $formFactory->render('form-test-simple.html.twig', array(
+        return $formFactory->render('form-test.html.twig', array(
             'form' => $form->createView()
         ));
     }

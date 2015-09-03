@@ -42,7 +42,6 @@ class FormFactory
 {
     public $engine;
     public $builder;
-    public $form_builder;
 
     public function __construct()
     {

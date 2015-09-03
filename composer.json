@@ -108,7 +108,9 @@
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\ViewFactory\\": "Core/Foundation/ViewFactory/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\View\\": "Core/Foundation/View/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Views\\": "Core/Foundation/View/Views/"
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Views\\": "Core/Foundation/View/Views/",
+      "PrestaShop\\PrestaShop\\Form\\": "Core/Foundation/Form/",
+      "PrestaShop\\PrestaShop\\Twig\\Extension\\": "Core/Foundation/Twig/Extension"
     },
     "classmap": ["Core/", "Adapter/"]
   },
