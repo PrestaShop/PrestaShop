@@ -4,29 +4,29 @@
 
   <section id="main">
 
-    {block name="page_header_before"}{/block}
-    {block name="page_header"}
-      <header class="page_header">
-        <h1>{$page.title}</h1>
+    {block name="page_header_container"}
+      <header class="page-header">
+        {block name="page_header"}
+          <h1>{block name="page_title"}{$page.title}{/block}</h1>
+        {/block}
       </header>
     {/block}
-    {block name="page_header_after"}{/block}
 
-    {block name="page_content_before"}{/block}
-    {block name="page_content"}
-      <section id="content" class="page_content">
-        <!-- Page content -->
+    {block name="page_content_container"}
+      <section id="content" class="page-content">
+        {block name="page_content"}
+          <!-- Page content -->
+        {/block}
       </section>
     {/block}
-    {block name="page_content_after"}{/block}
 
-    {block name="page_content_before"}{/block}
-    {block name="page_content"}
-      <footer class="page_footer">
-        <!-- Footer content -->
+    {block name="page_footer_container"}
+      <footer class="page-footer">
+        {block name="page_footer"}
+          <!-- Footer content -->
+        {/block}
       </footer>
     {/block}
-    {block name="page_content_after"}{/block}
 
   </section>
 
