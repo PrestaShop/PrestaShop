@@ -713,7 +713,7 @@ class ToolsCore
             }
         }
 
-        return self::displayPrice($price, $currency);
+        return $price;
     }
 
     /**
