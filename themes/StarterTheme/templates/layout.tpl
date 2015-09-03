@@ -2,7 +2,9 @@
 <html lang="{$page.language_code}">
 
   <head>
-    {include file="_partials/head.tpl"}
+    {block name="head"}
+      {include file="_partials/head.tpl"}
+    {/block}
   </head>
 
   <body>
