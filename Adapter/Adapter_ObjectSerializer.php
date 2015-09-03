@@ -35,7 +35,7 @@ class Adapter_ObjectSerializer
             foreach ($fields as $field_name => $null) {
                 $arr[$field_name] = $object->{$field_name};
             }
-            $must_have = ['id', 'date_add', 'date_upd'];
+            $must_have = ['id'];
             foreach ($must_have as $field_name) {
                 $arr[$field_name] = $object->{$field_name};
             }
