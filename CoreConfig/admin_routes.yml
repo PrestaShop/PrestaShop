@@ -17,3 +17,14 @@ admin_route4:
     requirements:
         _locale:  en|fr
         _format:  html|rss
+
+admin_route5:
+    path:     /list/{ls_mykey_limit}/{ls_mykey_start}/{ls_mykey_order_by}/{ls_mykey_order_way}
+    defaults: 
+        _controller: 'Admin\TestController::listAction'
+        ls_mykey_class: Product
+        ls_mykey_method: getProducts
+        ls_mykey_limit: 10
+        ls_mykey_start: 0
+        ls_mykey_order_by: 'id'
+        ls_mykey_order_way: 'ASC'

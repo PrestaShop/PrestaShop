@@ -43,7 +43,7 @@ trait SfControllerResolverTrait
      * @param Response $response
      * @return \Closure The controller resolver closure to be executed by the Router.
      */
-    public function controllerResolverSymfony(Request &$request, Response &$response, AbstractRouter &$router)
+    public function controllerResolverSymfony(Request &$request, Response &$response, AbstractRouter &$router = null)
     {
         return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$router) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!

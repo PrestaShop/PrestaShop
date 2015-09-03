@@ -119,7 +119,7 @@ abstract class AbstractRouter
         EventDispatcher::initDispatchers();
         $this->routingDispatcher = EventDispatcher::getInstance('routing');
         if ($this->triggerCacheGenerationFlag) {
-            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent()); // TODO : améliorer en ajoutant le nom du fichier par exemple
+            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
         }
     }
 
@@ -203,7 +203,27 @@ abstract class AbstractRouter
      */
     final public function forward(Request &$request, $routeName, $routeParameters = array())
     {
-        // TODO: redispatch: resolve given route and then doDispatch on it.
+        // TODO: backup $request->attributes-> _controller and others, to _previous_controller and others.
+
+        $requestContext = new RequestContext();
+        $requestContext->fromRequest($request);
+        
+        $subRouter = new \Symfony\Component\Routing\Router(
+            $this->routeLoader,
+            $this->routingFiles[array_keys($this->routingFiles)[0]],
+            array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
+                  'debug' => $this->configuration->get('_PS_MODE_DEV_'),
+                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
+            ),
+            $requestContext
+        );
+
+        // Add modules' routing files
+        $this->aggregateRoutingExtensions($subRouter);
+
+        // Resolve route, and call Controller
+
+        // TODO: redispatch: resolve given route (and not one from requestContext) and then doDispatch on it.
 //         $this->routingDispatcher->dispatch('forward_succeed', new BaseEvent());
 //         $this->routingDispatcher->dispatch('forward_failed', new BaseEvent());
     }

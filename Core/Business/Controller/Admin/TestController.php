@@ -44,4 +44,10 @@ class TestController extends AdminController
         //$this->getRouter()->redirect('/admin-dev/index.php/a');
         return self::RESPONSE_NONE; // declenche un exit(0) au lieu de send la response
     }
+    
+    public function listAction(Request &$request, Response &$response, Context $context, $mykey)
+    {
+        var_dump($mykey);
+        return self::RESPONSE_NUDE_HTML;
+    }
 }

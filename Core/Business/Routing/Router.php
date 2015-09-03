@@ -90,13 +90,17 @@ abstract class Router extends AbstractRouter
             foreach ($methods as $method) {
                 $parameters = $method->getParameters();
                 if (count($parameters) < 2) {
-                    throw new \ErrorException('A trait method should aways accept at least 2 parameters (&$request, &$response). The Trait method '
+                    throw new \ErrorException('A trait method should always accept at least 2 parameters (&$request, &$response). The Trait method '
                         .$method->name.' wants '.$method->getNumberOfParameters());
                 }
                 if (!$parameters[0]->isPassedByReference() || !$parameters[1]->isPassedByReference()) {
-                    throw new \ErrorException('A trait method should aways accept both first parameters by reference only (&$request, &$response).');
+                    throw new \ErrorException('A trait method should always accept both first parameters by reference only (&$request, &$response).');
                 }
-                // TODO: verifier les parametres 3 et plus : valeur optionnalle avec un default!
+                for ($i = 2; $i < count($parameters); $i++) {
+                    if (!$parameters[$i]->isDefaultValueAvailable()) {
+                        throw new \ErrorException('A trait method can accept more than 2 parameters for specific cases, but always optional & with default values.');
+                    }
+                }
                 if (strpos($method->name, $startsWith) === 0) {
                     $traitFunctions[] = $method->name;
                 }
