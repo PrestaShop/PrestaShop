@@ -321,18 +321,19 @@ class AuthControllerCore extends FrontController
                 $this->context->cookie->write();
                 $this->context->cart->autosetProductAddress();
 
-                Hook::exec('actionAuthentication');
+                Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
 
                 // Login information have changed, so we check if the cart rules still apply
                 CartRule::autoRemoveFromCart($this->context);
                 CartRule::autoAddToCart($this->context);
 
-                if (!$this->ajax && $back = Tools::getValue('back')) {
-                    if ($back == Tools::secureReferrer(Tools::getValue('back'))) {
+                if (!$this->ajax) {
+                    $back = Tools::getValue('back','my-account');
+
+                    if ($back == Tools::secureReferrer($back)) {
                         Tools::redirect(html_entity_decode($back));
                     }
 
-                    $back = $back ? $back : 'my-account';
                     Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
                 }
             }

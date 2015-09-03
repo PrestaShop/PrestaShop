@@ -651,11 +651,14 @@ class AdminOrdersControllerCore extends AdminController
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
                     $order_detail_list = array();
+                    $full_quantity_list = array();
                     foreach ($refunds as $id_order_detail => $amount_detail) {
                         $quantity = Tools::getValue('partialRefundProductQuantity');
                         if (!$quantity[$id_order_detail]) {
                             continue;
                         }
+
+                        $full_quantity_list[$id_order_detail] = (int)$quantity[$id_order_detail];
 
                         $order_detail_list[$id_order_detail] = array(
                             'quantity' => (int)$quantity[$id_order_detail],
@@ -667,8 +670,8 @@ class AdminOrdersControllerCore extends AdminController
                             $order_detail_list[$id_order_detail]['unit_price'] = (!Tools::getValue('TaxMethod') ? $order_detail->unit_price_tax_excl : $order_detail->unit_price_tax_incl);
                             $order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
                         } else {
-                            $order_detail_list[$id_order_detail]['unit_price'] = (float)str_replace(',', '.', $amount_detail / $order_detail_list[$id_order_detail]['quantity']);
                             $order_detail_list[$id_order_detail]['amount'] = (float)str_replace(',', '.', $amount_detail);
+                            $order_detail_list[$id_order_detail]['unit_price'] = $order_detail_list[$id_order_detail]['amount'] / $order_detail_list[$id_order_detail]['quantity'];
                         }
                         $amount += $order_detail_list[$id_order_detail]['amount'];
                         if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $order_detail_list[$id_order_detail]['quantity'] > 0) {
@@ -720,6 +723,28 @@ class AdminOrdersControllerCore extends AdminController
                         if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
                             (Tools::getValue('TaxMethod') ? false : true))) {
                             $this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
+                        } else {
+                            Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $order_detail_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
+                            $customer = new Customer((int)($order->id_customer));
+                            $params['{lastname}'] = $customer->lastname;
+                            $params['{firstname}'] = $customer->firstname;
+                            $params['{id_order}'] = $order->id;
+                            $params['{order_name}'] = $order->getUniqReference();
+                            @Mail::Send(
+                                (int)$order->id_lang,
+                                'credit_slip',
+                                Mail::l('New credit slip regarding your order', (int)$order->id_lang),
+                                $params,
+                                $customer->email,
+                                $customer->firstname.' '.$customer->lastname,
+                                null,
+                                null,
+                                null,
+                                null,
+                                _PS_MAIL_DIR_,
+                                true,
+                                (int)$order->id_shop
+                            );
                         }
 
                         foreach ($order_detail_list as &$product) {
@@ -1545,7 +1570,7 @@ class AdminOrdersControllerCore extends AdminController
         $helper->title = $this->l('Average Order Value', null, null, false);
         $helper->subtitle = $this->l('30 days', null, null, false);
         if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
+            $helper->value = sprintf($this->l('%s tax excl.'), ConfigurationKPI::get('AVG_ORDER_VALUE'));
         }
         $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
         $helper->refresh = (bool)(ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);

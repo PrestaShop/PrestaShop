@@ -13,6 +13,8 @@ config.codekit
 *.sublime-project
 *.sublime-workspace
 nbproject
+bower_components
+composer.lock
 
 # Cache, temp and personal files
 
@@ -21,9 +23,11 @@ download/*
 img/*
 log/*
 upload/*
+vendor/*
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
+admin-dev/import/*
 
 themes/*/cache/*
 
@@ -39,6 +43,13 @@ config/xml/*
 modules/*
 override/*
 
+admin-dev/themes/default/sass/ie.sass
+admin-dev/themes/default/sass/print.sass
+admin-dev/themes/default/sass/screen.sass
+admin-dev/themes/default/css/ie.css
+admin-dev/themes/default/css/print.css
+admin-dev/themes/default/css/screen.css
+
 # Translations and emails templates
 
 translations/*
@@ -46,7 +57,10 @@ mails/*
 !mails/en/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
-
+themes/default-bootstrap/mails/*
+!themes/default-bootstrap/mails/en/
+themes/default-bootstrap/modules/*/mails/*
+!themes/default-bootstrap/modules/*/mails/en
 
 # MISC
 

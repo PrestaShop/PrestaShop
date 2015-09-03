@@ -637,7 +637,7 @@ class CarrierCore extends ObjectModel
                 if ($row['range_behavior']) {
                     // Get id zone
                     if (!$id_zone) {
-                        $id_zone = Country::getIdZone(Country::getDefaultCountryId());
+                        $id_zone = (int)Country::getIdZone(Country::getDefaultCountryId());
                     }
 
                     // Get only carriers that have a range compatible with cart
@@ -1293,6 +1293,10 @@ class CarrierCore extends ObjectModel
         }
         if (is_null($cart)) {
             $cart = Context::getContext()->cart;
+        }
+
+        if (is_null($error) || !is_array($error)) {
+            $error = array();
         }
 
         $id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);

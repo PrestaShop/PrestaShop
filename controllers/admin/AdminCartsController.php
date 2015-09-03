@@ -82,14 +82,15 @@ class AdminCartsControllerCore extends AdminController
             ),
             'carrier' => array(
                 'title' => $this->l('Carrier'),
-                'align' => 'text-center',
+                'align' => 'text-left',
                 'callback' => 'replaceZeroByShopName',
                 'filter_key' => 'ca!name'
             ),
             'date_add' => array(
                 'title' => $this->l('Date'),
-                'align' => 'text-right',
+                'align' => 'text-left',
                 'type' => 'datetime',
+                'class' => 'fixed-width-lg',
                 'filter_key' => 'a!date_add'
             ),
             'id_guest' => array(
@@ -97,6 +98,7 @@ class AdminCartsControllerCore extends AdminController
                 'align' => 'text-center',
                 'type' => 'bool',
                 'havingFilter' => true,
+                'class' => 'fixed-width-xs',
                 'icon' => array(0 => 'icon-', 1 => 'icon-user')
             )
         );
@@ -172,7 +174,7 @@ class AdminCartsControllerCore extends AdminController
         $helper->title = $this->l('Average Order Value', null, null, false);
         $helper->subtitle = $this->l('30 days', null, null, false);
         if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
+            $helper->value = sprintf($this->l('%s tax excl.'), ConfigurationKPI::get('AVG_ORDER_VALUE'));
         }
         if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time) {
             $helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
