@@ -144,8 +144,8 @@ class AuthControllerCore extends FrontController
 
         // Call a hook to display more information on form
         $this->context->smarty->assign(array(
-        	'HOOK_AUTHENTICATE_FORM_BOTTOM' => Hook::exec('displayAuthenticateFormBottom'),
-        	'HOOK_CREATE_ACCOUNT_EMAIL_FORM_BOTTOM' => Hook::exec('displayCreateAccountEmailFormBottom'),
+            'HOOK_AUTHENTICATE_FORM_BOTTOM' => Hook::exec('displayAuthenticateFormBottom'),
+            'HOOK_CREATE_ACCOUNT_EMAIL_FORM_BOTTOM' => Hook::exec('displayCreateAccountEmailFormBottom'),
             'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
             'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
         ));
