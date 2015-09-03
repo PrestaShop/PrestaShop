@@ -78,13 +78,13 @@
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
 														{if is_array($hint)}
-															{$hint.text|escape:'html':'UTF-8'}
+															{$hint.text|escape:'quotes'}
 														{else}
-															{$hint|escape:'html':'UTF-8'}
+															{$hint|escape:'quotes'}
 														{/if}
 													{/foreach}
 												{else}
-													{$input.hint|escape:'html':'UTF-8'}
+													{$input.hint|escape:'quotes'}
 												{/if}">
 										{/if}
 										{$input.label}
