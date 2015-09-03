@@ -359,7 +359,12 @@ class MySQLCore extends Db
             return mysql_error($link);
         }
 
-        mysql_query('DROP TABLE `'.$prefix.'test`', $link);
+        $result = mysql_query('DROP TABLE `'.$prefix.'test`', $link);
+
+        if (!$result) {
+            return mysql_error($link);
+        }
+
         return true;
     }
 

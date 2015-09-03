@@ -319,11 +319,19 @@ class DbPDOCore extends Db
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine);
+
         if (!$result) {
             $error = $link->errorInfo();
             return $error[2];
         }
-        $link->query('DROP TABLE `'.$prefix.'test`');
+
+        $result = $link->query('DROP TABLE `'.$prefix.'test`');
+
+        if (!$result) {
+            $error = $link->errorInfo();
+            return $error[2];
+        }
+
         return true;
     }
 

@@ -376,7 +376,11 @@ class DbMySQLiCore extends Db
             return $link->error;
         }
 
-        $link->query('DROP TABLE `'.$prefix.'test`');
+        $result = $link->query('DROP TABLE `'.$prefix.'test`');
+
+        if (!$result) {
+            return $link->error;
+        }
         return true;
     }
 
