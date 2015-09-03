@@ -145,7 +145,7 @@ function process_install_subtask(step, current_subtask)
 				else
 					process_install_subtask(step, current_subtask);
 			}
-			else 
+			else
 				install_error(step, (json) ? json.message : '');
 		},
 		// An error HTTP (page not found, json not valid, etc.) occured during this step
@@ -182,14 +182,14 @@ function install_error(step, errors)
 		$.each(list_errors, function(k, v)
 		{
 			if (typeof psuser_assistance != 'undefined')
-				psuser_assistance.setStep('install_process_error', {'error':v});
+				psuser_assistance.setStep('install_process_error', {'error':v, 'version':ps_version});
 			display += '<li>' + v + '</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();
 	}
 	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_process_error');
+		psuser_assistance.setStep('install_process_error', {'version':ps_version});
 
 	$('#tabs li a').each(function() {
 		 this.href=this.rel;
@@ -205,7 +205,7 @@ function install_success()
 	$('#install_process_success').slideDown();
 	$('.stepList li:last-child').addClass('ok');
 	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_process_success');
+		psuser_assistance.setStep('install_process_success', {'version':ps_version});
 
 	$('#tabs li a').each(function() {
 		 this.href=this.rel;
