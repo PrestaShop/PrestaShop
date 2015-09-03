@@ -87,6 +87,7 @@ class ConfigurationTestCore
                 'config_dir' => 'config',
                 'files' => false,
                 'mails_dir' => 'mails',
+                'disk_space' => false,
             ));
         }
 
@@ -347,6 +348,7 @@ class ConfigurationTestCore
 
         return is_writable($path);
     }
+
     public static function test_dom()
     {
         return extension_loaded('Dom');
@@ -369,5 +371,10 @@ class ConfigurationTestCore
             return $return;
         }
         return true;
+    }
+
+    public static function test_disk_space()
+    {
+        return disk_free_space('.') > 104857600;
     }
 }

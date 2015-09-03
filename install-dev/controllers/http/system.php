@@ -91,7 +91,8 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'upload' => $this->l('Cannot upload files'),
                         'system' => $this->l('Cannot create new files and folders'),
                         'gd' => $this->l('GD library is not installed'),
-                        'mysql_support' => $this->l('MySQL support is not activated')
+                        'mysql_support' => $this->l('MySQL support is not activated'),
+                        'disk_space' => $this->l('Not enough disk space (100 Mo required)'),
                     )
                 ),
                 array(
