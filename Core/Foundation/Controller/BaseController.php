@@ -35,14 +35,14 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 abstract class BaseController
 {
-    const RESPONSE_LAYOUT_HTML = 'layout/html'; // encaspulate with a layout and call templating engine to format response.
-    const RESPONSE_NUDE_HTML = 'nude/html'; // same as LAYOUT_HTML but with empty layout (<html>,<head>,<title>,<body>, only).
-    const RESPONSE_AJAX_HTML = 'none/html'; // no layout and call templating engine to format response.
-    const RESPONSE_PARTIAL_VIEW = 'none/html'; // no layout and call templating engine to format response.
-    const RESPONSE_RAW_TEXT = 'none/raw'; // no layout, no templating, no data transformation, direct controller action output
-    const RESPONSE_XML = 'none/xml'; // no layout, no templating, transform response from array to XML
-    const RESPONSE_JSON = 'none/json'; // no layout, transform response from array to json format
-    const RESPONSE_NONE = 'none/none'; // no auto response output: case when action want to dump a file for example
+    const RESPONSE_LAYOUT_HTML = 'layout_html'; // encaspulate with a layout and call templating engine to format response.
+    const RESPONSE_NUDE_HTML = 'nude_html'; // same as LAYOUT_HTML but with empty layout (<html>,<head>,<title>,<body>, only).
+    const RESPONSE_AJAX_HTML = 'none_html'; // no layout and call templating engine to format response.
+    const RESPONSE_PARTIAL_VIEW = 'none_html'; // no layout and call templating engine to format response.
+    const RESPONSE_RAW_TEXT = 'none_raw'; // no layout, no templating, no data transformation, direct controller action output
+    const RESPONSE_XML = 'none_xml'; // no layout, no templating, transform response from array to XML
+    const RESPONSE_JSON = 'none_json'; // no layout, transform response from array to json format
+    const RESPONSE_NONE = 'none_none'; // no auto response output: case when action want to dump a file for example
 
     private $router;
 

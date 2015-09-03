@@ -62,32 +62,21 @@ trait AutoObjectInflaterTrait
     public function beforeActionInflateRequestedObjects(Request &$request, Response &$response)
     {
         foreach ($request->attributes->all() as $key => $value) {
-
             // Find parameters that begins with id_ to try to inflate corresponding object
             if (strpos($key, 'id_') === 0) {
-                $className = ucfirst(substr($key, 3));
-                if (!class_exists($className)) { // FIXME: when namespaces will be added on the class, should adapt here.
+                $className = substr($key, 3);
+                $autoInflaterManager = new \Adapter_AutoInflaterManager();
+                $object = $autoInflaterManager->inflateObject($className, $value);
+
+                if ($object === false) {
                     continue;
                 }
-                $class = new \ReflectionClass($className);
-                $constructorParameters = $class->getConstructor()->getParameters();
-                $constructorParametersValues = array();
-                
-                foreach ($constructorParameters as $p) {
-                    /* @var $p \ReflectionParameter */
-                    if ($p->name == 'id') {
-                        $constructorParametersValues[] = $value;
-                    }
-                }
-
-                $object = $class->newInstanceArgs($constructorParametersValues);
-                if (\Validate::isLoadedObject($object)) { // FIXME: this test should be in the new Archi, or in an Adapter.
-                    $response->addContentData($className, $object);
-                } else {
-                    // To indicate we tried, but not found.
+                if ($object === null) {
                     EventDispatcher::getInstance('log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object.'));
                     $response->addContentData($className, null);
+                    continue;
                 }
+                $response->addContentData($className, $object);
             }
         }
         return true;
@@ -116,8 +105,6 @@ trait AutoObjectInflaterTrait
      */
     public function beforeActionInflateRequestedCollection(Request &$request, Response &$response)
     {
-        $context = Context::getInstance();
-
         $collectionParameters = array();
         foreach ($request->attributes->all() as $key => $value) {
             $subKeys = explode('_', $key, 3);
@@ -127,14 +114,7 @@ trait AutoObjectInflaterTrait
             if ($subKeys[0] != 'ls') {
                 continue;
             }
-
             $collectionParameters[$subKeys[1]][$subKeys[2]] = $value;
-
-            if ($subKeys[2] == 'class') {
-                if (!class_exists($subKeys[2])) { // FIXME: when namespaces will be added on the class, should adapt here.
-                    continue;
-                }
-            }
         }
 
         foreach ($collectionParameters as $key => $parameters) {
@@ -142,34 +122,16 @@ trait AutoObjectInflaterTrait
                 $method = $parameters['method'];
                 $class = $parameters['class'];
 
-                $class = new \ReflectionClass($class);
-                $method = $class->getMethod($method);
+                $autoInflaterManager = new \Adapter_AutoInflaterManager();
+                $collection = $autoInflaterManager->inflateCollection($class, $method, $parameters);
 
-                $methodParameters = $method->getParameters();
-                $givenParameters = array();
-                foreach ($methodParameters as $mp) {
-                    if (array_key_exists($mp->name, $parameters)) {
-                        $givenParameters[] = $parameters[$mp->name];
-                        continue;
-                    } else {
-                        if ($mp->name == 'id_lang') {
-                            // FIXME : legacy code !
-                            if (isset($context->language) && isset($context->language->id_lang)) {
-                                $givenParameters[] = $context->language->id_lang;
-                            } elseif (isset($context->cookie) && isset($context->cookie->id_lang)) {
-                                $givenParameters[] = $context->cookie->id_lang;
-                            }
-                            continue;
-                        }
-                    }
-                    if (!$mp->isOptional()) {
-                        // mandatory argument missing, cannot fetch Collection at all.
-                        EventDispatcher::getInstance('log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list: mandatory argument missing.'));
-                        continue 2;
-                    }
+                if ($collection === false) {
+                    continue;
                 }
-
-                $collection = $method->invokeArgs(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $givenParameters);
+                if ($collection === null) {
+                    EventDispatcher::getInstance('log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
+                    $response->addContentData($key, null);
+                }
                 $response->addContentData($key, $collection);
             } catch (\Exception $e) {
                 // To indicate we tried, but failed.
@@ -177,7 +139,6 @@ trait AutoObjectInflaterTrait
                 $response->addContentData($key, null);
             }
         }
-
         return true;
     }
 }

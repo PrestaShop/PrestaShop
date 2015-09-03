@@ -51,6 +51,12 @@ trait AutoResponseFormatTrait
             return true;
         }
 
+        // layout-mode is prior to accept header. Used by subcall for example, to force response mode
+        if (isset($request->attributes) && $request->attributes->has('_layout_mode')) {
+            $response->setResponseFormat($request->attributes->get('_layout_mode'));
+            return true;
+        }
+
         if (!isset($request->headers) || !$request->headers->has('accept')) {
             return true; // non blocking fail
         }

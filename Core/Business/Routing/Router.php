@@ -312,7 +312,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                 $phpCode .= '
 
     if ($actionAllowed && ($responseFormat = $response->getResponseFormat())) {
-        list($encapsulation, $format) = explode(\'/\', $responseFormat);
+        list($encapsulation, $format) = explode(\'_\', $responseFormat);
         if ($format) {
             $controllerInstance->formatResponse($format, $response);
         }

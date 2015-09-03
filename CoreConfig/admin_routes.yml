@@ -1,30 +1,14 @@
 # routes.yml
-admin_route1:
-    path:     /a
-    defaults: { _controller: 'Admin\TestController::aAction' }
-
-admin_route2:
-    path:     /b/{id_order}
-    defaults: { _controller: 'Admin\TestController::bAction', id_order: 1 }
-
-admin_route3:
-    path:     /c/{id_order}
-    defaults: { _controller: 'Admin\TestController::cAction', id_order: 1 }
-
-admin_route4:
-    path:     /d/{_locale}/{_format}
-    defaults: { _controller: 'Admin\TestController::dAction', _format: html }
-    requirements:
-        _locale:  en|fr
-        _format:  html|rss
-
-admin_route5:
-    path:     /list/{ls_mykey_limit}/{ls_mykey_start}/{ls_mykey_order_by}/{ls_mykey_order_way}
+admin_product_list:
+    path:     /product/list/{_layout_mode}/{ls_products_start}/{ls_products_limit}/{ls_products_order_by}/{ls_products_order_way}
     defaults: 
-        _controller: 'Admin\TestController::listAction'
-        ls_mykey_class: Product
-        ls_mykey_method: getProducts
-        ls_mykey_limit: 10
-        ls_mykey_start: 0
-        ls_mykey_order_by: 'id'
-        ls_mykey_order_way: 'ASC'
+        _controller: 'Admin\ProductController::productListAction'
+        ls_products_class: Product
+        ls_products_method: getProducts
+        ls_products_limit: 10
+        ls_products_start: 0
+        ls_products_order_by: 'id'
+        ls_products_order_way: 'ASC'
+        _layout_mode: layout_html
+    requirements:
+        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
