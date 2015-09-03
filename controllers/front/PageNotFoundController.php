@@ -100,7 +100,7 @@ class PageNotFoundControllerCore extends FrontController
 
         parent::initContent();
 
-        $this->setTemplate(_PS_THEME_DIR_.'404.tpl');
+        $this->setTemplate('errors/404.tpl');
     }
 
     protected function canonicalRedirection($canonical_url = '')
