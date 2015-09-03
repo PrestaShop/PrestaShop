@@ -393,6 +393,7 @@ class OrderOpcControllerCore extends ParentOrderController
             'isPaymentStep' => isset($_GET['isPaymentStep']) && $_GET['isPaymentStep'],
             'genders' => Gender::getGenders(),
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+        	'HOOK_AUTHENTICATE_FORM_BOTTOM' => Hook::exec('displayAuthenticateFormBottom'),
             'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
             'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
         ));

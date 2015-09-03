@@ -121,6 +121,12 @@
     <hook id="displayShoppingCartFooter" live_edit="0">
       <name>displayShoppingCartFooter</name><title>Shopping cart footer</title><description>This hook displays some specific information on the shopping cart's page</description>
     </hook>
+    <hook id="displayCreateAccountEmailFormBottom" live_edit="0">
+      <name>displayCreateAccountEmailFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the email form</description>
+    </hook>
+    <hook id="displayAuthenticateFormBottom" live_edit="0">
+      <name>displayAuthenticateFormBottom</name><title>Customer authentication form</title><description>This hook displays some information on the bottom of the authentication form</description>
+    </hook>    
     <hook id="displayCustomerAccountForm" live_edit="0">
       <name>displayCustomerAccountForm</name><title>Customer account creation form</title><description>This hook displays some information on the form to create a customer account</description>
     </hook>

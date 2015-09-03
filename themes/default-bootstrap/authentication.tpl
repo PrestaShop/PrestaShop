@@ -70,6 +70,7 @@
 						</button>
 						<input type="hidden" class="hidden" name="SubmitCreate" value="{l s='Create an account'}" />
 					</div>
+					{$HOOK_CREATE_ACCOUNT_EMAIL_FORM_BOTTOM}
 				</div>
 			</form>
 		</div>
@@ -95,6 +96,7 @@
 							</span>
 						</button>
 					</p>
+					{$HOOK_AUTHENTICATE_FORM_BOTTOM}
 				</div>
 			</form>
 		</div>
