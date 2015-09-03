@@ -220,7 +220,7 @@ class ThemeCore extends ObjectModel
             $config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
 
             if ($dir === 'StarterTheme' && !in_array($dir, $installed_theme_directories)) {
-                $sql = "INSERT INTO `ps_theme` (`name`, `directory`, `responsive`, `default_left_column`, `default_right_column`, `product_per_page`)
+                $sql = "INSERT INTO `"._DB_PREFIX_."theme` (`name`, `directory`, `responsive`, `default_left_column`, `default_right_column`, `product_per_page`)
                           VALUES ('Starter Theme', 'StarterTheme', '0', '0', '0', '12')";
                 Db::getInstance()->execute($sql);
                 Tools::redirectAdmin((new Link())->getAdminLink('AdminThemes'));
