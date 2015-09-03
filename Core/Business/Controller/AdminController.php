@@ -49,15 +49,18 @@ class AdminController extends BaseController
      */
     protected function encapsulateLayout(Response &$response)
     {
-        // TODO LUC : faire comme dans formatHtmlResponse() ?
         $warnings = array();
-        foreach ($this->getWarningIterator() as $w) {
-            if ($w instanceof WarningException) {
-                $warnings[] = $w->getMessage();
-            } else {
-                $warnings[] = $w;
+        if ($this->getWarningIterator()) {
+            foreach ($this->getWarningIterator() as $w) {
+                if ($w instanceof WarningException) {
+                    $warnings[] = $w->getMessage();
+                } else {
+                    $warnings[] = $w;
+                }
             }
         }
+
+        //AJOUTER LAYOUT ADMIN
         $response->setContent(implode(', ', $warnings).'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
     }
 
@@ -70,16 +73,8 @@ class AdminController extends BaseController
      */
     protected function formatHtmlResponse(Response &$response)
     {
-        $templateEngineCallable = $response->getTemplateEngine();
-        if (!$templateEngineCallable || !is_callable($templateEngineCallable)) {
-            // TODO LUC : on genere un callable via buildTemplateEngine avec des données par défaut:
-            $response->buildTemplateEngine($templatePath, $engine);
-            $templateEngineCallable = $response->getTemplateEngine();
-            if (!$templateEngineCallable || !is_callable($templateEngineCallable)) {
-                throw new \ErrorException('Method buildTemplateEngine() failed to build a callable.');
-            }
-        }
-        $response->setContent($templateEngineCallable($response->getContentData()));
+        $templateEngine = $response->getTemplateEngine();
+        $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
     }
     
     /**

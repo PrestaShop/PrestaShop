@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use Symfony\Component\HttpFoundation\Response as sfResponse;
+use PrestaShop\PrestaShop\ViewFactory;
 
 /**
  * This is an extension of Symfony's Response class, to add $contentData, and template engine callback attributes.
@@ -48,6 +49,16 @@ class Response extends sfResponse
      * @var callable|false
      */
     protected $templateEngine = false;
+
+    /**
+     * @var string
+     */
+    protected $engineName = 'smarty';
+
+    /**
+     * @var string
+     */
+    protected $template = null;
 
     /**
      * Set data before formatting.
@@ -123,34 +134,64 @@ class Response extends sfResponse
     /**
      * Set template engine (callable finetuned & ready to be executed)
      *
-     * @param callable $callable
+     * @param object $callable
      */
-    final public function setTemplateEngine(callable $callable)
+    final public function setTemplateEngine($callable)
     {
         $this->templateEngine = $callable;
     }
-
-    /**
-     * Set template engine (callable finetuned & ready to be executed)
-     *
-     * @param callable $callable
-     */
-    final public function buildTemplateEngine($templatePath, $engine = 'smarty')
-    {
-        // TODO LUC : ici on construit le tpl engine selon les paramètres, et tout doit etre prêt dans un callable.
-        $this->templateEngine = function (array $contentData) use ($templatePath) {
-            return 'Ici, appeler le template et son moteur, avec çà : '
-                .$templatePath.'<br/>'.print_r($contentData, true);
-        };
-    }
     
     /**
-     * Get template engine (callable finetuned & ready to be executed)
+     * Get template engine
      *
-     * @return callable|false
+     * @return object
      */
     final public function getTemplateEngine()
     {
+        if (!$this->templateEngine) {
+            $this->setTemplateEngine(new ViewFactory($this->getEngineName()));
+        }
+
         return $this->templateEngine;
+    }
+
+    /**
+     * Set engine name
+     *
+     * @param string $engineName
+     */
+    public function setEngineName($engineName)
+    {
+        $this->engineName = $engineName;
+    }
+
+    /**
+     * Get engine name
+     *
+     * @return string
+     */
+    public function getEngineName()
+    {
+        return $this->engineName;
+    }
+
+    /**
+     * Set template
+     *
+     * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
+
+    /**
+     * Get template
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

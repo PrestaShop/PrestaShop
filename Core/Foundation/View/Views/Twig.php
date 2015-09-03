@@ -112,9 +112,15 @@ class Twig extends \PrestaShop\PrestaShop\View
      **/
     private function getTemplateDirs()
     {
-        return array(
-            _PS_BO_ALL_THEMES_DIR_ . 'default/template',
-            _PS_BO_ALL_THEMES_DIR_ . 'default/template/Form/Twig'
-        );
+        if (defined('_PS_ADMIN_DIR_')) {
+            return array(
+                _PS_BO_ALL_THEMES_DIR_ . 'default/template',
+                _PS_BO_ALL_THEMES_DIR_ . 'default/template/Form/Twig'
+            );
+        } else {
+            return array(
+                _PS_THEME_DIR_
+            );
+        }
     }
 }

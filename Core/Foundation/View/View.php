@@ -30,6 +30,7 @@ class View
 {
     protected $data;
     protected $templatesDirectory;
+    public $appPath;
 
     public function __construct()
     {

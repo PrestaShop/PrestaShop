@@ -18,8 +18,29 @@ class TestController extends AdminController
 
     public function aAction(Request &$request, Response &$response)
     {
-        $response->setContentData(array('A que coucou, de la part du Back, en HTML sans Layout!'));
-        return self::RESPONSE_NUDE_HTML;
+
+        /*
+        VIEW EXAMPLE
+
+        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+        echo $engine->view->render('test.html.twig', array(
+            'content' => 'toto',
+            'aa' => '11'
+        ));
+
+        $engine->view->set('content', 'toto');
+        $engine->view->display('test.html.twig', array('aa' => '22'));
+
+        $engine->view->set('content', 'toto');
+        echo $engine->view->fetch('test.html.twig', array('aa' => '33'));
+
+        $engine = new \PrestaShop\PrestaShop\ViewFactory();
+        $engine->view->set('content', 'toto');
+        $engine->view->display('layout.tpl');*/
+
+
+        //$response->setTemplate('test.tpl'); //to override template, if not : lookup by Controller/Action.(tpl|html.twig)
+        $response->setContentData(array('content' => 'toto'));
     }
 
     public function bAction(Request &$request, Response &$response)

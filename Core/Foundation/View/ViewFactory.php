@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop;
 
 class ViewFactory
 {
-    private $engine_name;
     public $view;
 
     public function __construct($engine_name = 'smarty')
@@ -39,11 +38,9 @@ class ViewFactory
         }
 
         $view = new $class_view;
-        $this->engine_name = $engine_name;
-
-        $view->parserDirectory = _PS_VENDOR_DIR_ . $this->engine_name;
-        $view->parserCompileDirectory = _PS_CACHE_DIR_.$this->engine_name.'/compile';
-        $view->parserCacheDirectory = _PS_CACHE_DIR_.$this->engine_name.'/cache';
+        $view->parserDirectory = _PS_VENDOR_DIR_ . $engine_name;
+        $view->parserCompileDirectory = _PS_CACHE_DIR_.$engine_name.'/compile';
+        $view->parserCacheDirectory = _PS_CACHE_DIR_.$engine_name.'/cache';
 
         $this->view = $view;
     }

@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
@@ -102,10 +103,6 @@ trait AutoResponseFormatTrait
      */
     public function afterActionSuggestTemplateFormat(Request &$request, Response &$response)
     {
-        if ($response->getTemplateEngine()) {
-            return true; // already set by controller action.
-        }
-
         // no template if no HTML output!
         if (strpos($response->getResponseFormat(), 'html') !== false
             && isset($request->attributes)
@@ -131,12 +128,20 @@ trait AutoResponseFormatTrait
                 return true; // Action method does not follow standard name pattern
             }
 
-            // TODO LUC : from here, plug template engine by default (smarty).
-            $response->setTemplateEngine(function (array $contentData) use ($path, $className, $methodName) {
-                return 'Ici, appeler le template et son moteur par défaut, avec çà : '
-                    .implode('/', $path).'/'.$className.'/'.$methodName.'.tpl'
-                    .'<br/>'.print_r($contentData, true);
-            });
+            if (!$response->getTemplate()) {
+                $templatePath = 'Core'.DIRECTORY_SEPARATOR.'Controller'.DIRECTORY_SEPARATOR.$className.DIRECTORY_SEPARATOR.$methodName . '.' . ($response->getEngineName() == 'smarty' ? 'tpl' : 'html.twig');
+
+                $rootTemplatePath = _PS_THEME_DIR_;
+                if (defined('_PS_ADMIN_DIR_')) {
+                    $rootTemplatePath = _PS_BO_ALL_THEMES_DIR_ . 'default'.DIRECTORY_SEPARATOR.'template';
+                }
+
+                if (!file_exists($rootTemplatePath.DIRECTORY_SEPARATOR.$templatePath)) {
+                    throw new \Exception('Template "'.$templatePath.'" could not be found');
+                }
+
+                $response->setTemplate($templatePath);
+            }
         }
 
         return true; // non blocking fail
