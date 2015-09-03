@@ -499,40 +499,6 @@ class FrontControllerCore extends Controller
             'customerName'       => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
         ));
 
-        $assign_array = array(
-            'img_ps_dir'    => _PS_IMG_,
-            'img_cat_dir'   => _THEME_CAT_DIR_,
-            'img_lang_dir'  => _THEME_LANG_DIR_,
-            'img_prod_dir'  => _THEME_PROD_DIR_,
-            'img_manu_dir'  => _THEME_MANU_DIR_,
-            'img_sup_dir'   => _THEME_SUP_DIR_,
-            'img_ship_dir'  => _THEME_SHIP_DIR_,
-            'img_store_dir' => _THEME_STORE_DIR_,
-            'img_col_dir'   => _THEME_COL_DIR_,
-            'img_dir'       => _THEME_IMG_DIR_,
-            'css_dir'       => _THEME_CSS_DIR_,
-            'js_dir'        => _THEME_JS_DIR_,
-            'pic_dir'       => _THEME_PROD_PIC_DIR_
-        );
-
-        // Add the images directory for mobile
-        if ($this->useMobileTheme()) {
-            $assign_array['img_mobile_dir'] = _THEME_MOBILE_IMG_DIR_;
-        }
-
-        // Add the CSS directory for mobile
-        if ($this->useMobileTheme()) {
-            $assign_array['css_mobile_dir'] = _THEME_MOBILE_CSS_DIR_;
-        }
-
-        foreach ($assign_array as $assign_key => $assign_value) {
-            if (substr($assign_value, 0, 1) == '/' || $protocol_content == 'https://') {
-                $this->context->smarty->assign($assign_key, $protocol_content.Tools::getMediaServer($assign_value).$assign_value);
-            } else {
-                $this->context->smarty->assign($assign_key, $assign_value);
-            }
-        }
-
         /**
          * These shortcuts are DEPRECATED as of version 1.5.0.1
          * Use the Context to access objects instead.
@@ -557,6 +523,13 @@ class FrontControllerCore extends Controller
         $this->iso               = $iso;
         $this->context->cart     = $cart;
         $this->context->currency = $currency;
+
+        /**
+         * Template vars assignation
+         */
+        $this->context->smarty->assign([
+            'urls' => $this->getTemplateUrls(),
+        ]);
     }
 
     /**
@@ -1620,5 +1593,40 @@ class FrontControllerCore extends Controller
     protected function getColorsListCacheId($id_product)
     {
         return Product::getColorsListCacheId($id_product);
+    }
+
+    public function getTemplateVarUrls()
+    {
+        $http = Tools::getCurrentUrlProtocolPrefix();
+
+        $urls = [
+            'base_url' => $this->context->shop->getBaseURL(true, true),
+        ];
+
+        /* StarterTheme: Are these URLs really useful ? */
+        $assign_array = array(
+            'img_ps_url'    => _PS_IMG_,
+            'img_cat_url'   => _THEME_CAT_DIR_,
+            'img_lang_url'  => _THEME_LANG_DIR_,
+            'img_prod_url'  => _THEME_PROD_DIR_,
+            'img_manu_url'  => _THEME_MANU_DIR_,
+            'img_sup_url'   => _THEME_SUP_DIR_,
+            'img_ship_url'  => _THEME_SHIP_DIR_,
+            'img_store_url' => _THEME_STORE_DIR_,
+            'img_col_url'   => _THEME_COL_DIR_,
+            'img_url'       => _THEME_IMG_DIR_,
+            'css_url'       => _THEME_CSS_DIR_,
+            'js_url'        => _THEME_JS_DIR_,
+            'pic_url'       => _THEME_PROD_PIC_DIR_
+        );
+
+        foreach ($assign_array as $assign_key => $assign_value) {
+            if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
+                $urls[$assign_key] = $http.Tools::getMediaServer($assign_value).$assign_value;
+            } else {
+                $urls[$assign_key] = $assign_value;
+            }
+        }
+        return $urls;
     }
 }
