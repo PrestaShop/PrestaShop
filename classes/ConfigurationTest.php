@@ -103,7 +103,6 @@ class ConfigurationTestCore
     public static function getDefaultTestsOp()
     {
         return array(
-            'new_phpversion' => false,
             'fopen' => false,
             'gz' => false,
             'mcrypt' => false,
@@ -137,11 +136,6 @@ class ConfigurationTestCore
     }
 
     public static function test_phpversion()
-    {
-        return version_compare(substr(phpversion(), 0, 5), '5.2.0', '>=');
-    }
-
-    public static function test_new_phpversion()
     {
         return version_compare(substr(phpversion(), 0, 5), '5.4.0', '>=');
     }
