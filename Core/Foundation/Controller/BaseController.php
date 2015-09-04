@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 abstract class BaseController
 {
@@ -244,6 +245,38 @@ abstract class BaseController
             return $this->getRouter()->getUrlGenerator()->generate($name, $parameters, $referenceType);
         } catch (RouteNotFoundException $rnfe) {
             return false; // FIXME mapping to legacy routing !!! :) Enjoy!
+        }
+    }
+
+    /**
+     * TODO
+     * @param unknown $name
+     * @param unknown $parameters
+     * @param unknown $layoutMode
+     * @throws \ErrorException
+     * @return string
+     */
+    final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    {
+        $urlGenerator = $this->getRouter()->getUrlGenerator();
+        $baseUrl = $urlGenerator->getContext()->getBaseUrl();
+
+        // ensure the route is open
+        $url = $urlGenerator->generate($name, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+        $path = parse_url($url)['path'];
+
+        // remove base URL (for '/admin-xxx/index.php' if present in the URL)
+        if(strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
+            $path = substr($path, strlen($baseUrl));
+        }
+
+        $subRequest = Request::create($path);
+        try {
+            return $this->getRouter()->subcall($subRequest, $layoutMode);
+        } catch (RouteNotFoundException $rnfe) {
+            // Since the route is not found in subcall, it's not a navigation problem, it's a development bug.
+            // So must replace RouteNotFoundException by ErrorException to ensure Router->dispatch() will never bypass.
+            throw new \ErrorException($rnfe->getMessage());
         }
     }
 }

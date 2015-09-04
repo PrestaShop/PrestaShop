@@ -40,7 +40,8 @@ class ProductController extends AdminController
 
     /**
      * Get only the list of products to display on the main Admin Product page.
-     * The full page that shows products list will subcall this action.
+     * The full page that shows products list will subcall this action (from productListCatalogAction).
+     * URL example: /product/list/layout_html/40/20/id/asc
      *
      * @param Request $request
      * @param Response $response
@@ -49,5 +50,14 @@ class ProductController extends AdminController
      */
     public function productListAction(Request &$request, Response &$response, $products)
     {
+    }
+    
+    public function productCatalogAction(Request &$request, Response &$response)
+    {
+        $subcallParams = array(
+            'ls_products_limit' => 42
+        );
+        // FIXME: fait planter et redirect ! le subcall doit etre corrigé et testé.
+        $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
     }
 }

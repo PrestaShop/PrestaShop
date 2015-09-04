@@ -255,11 +255,13 @@ abstract class AbstractRouter
 
         // Resolve route, and call Controller
         $parameters = $subRouter->match($requestContext->getPathInfo());
+
         $subRequest->attributes->add($parameters);
         $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
+
         list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
 
-        $res = $this->doSubcall($controllerName, $controllerMethod, $request);
+        $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
         $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
         return $res;
     }

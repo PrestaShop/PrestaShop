@@ -14,3 +14,14 @@ admin_product_list:
         _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
         ls_products_orderBy: id
         ls_products_orderWay: ASC|DESC|asc|desc
+admin_product_catalog:
+    path:     /product/catalog/{offset}/{limit}/{orderBy}/{orderWay}
+    defaults: 
+        _controller: 'Admin\ProductController::productCatalogAction'
+        limit: 10
+        offset: 0
+        orderBy: id
+        orderWay: ASC
+    requirements:
+        orderBy: id
+        orderWay: ASC|DESC|asc|desc
