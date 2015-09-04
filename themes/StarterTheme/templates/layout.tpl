@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{$page.language_code}">
+<html lang="">
 
   <head>
     {block name="head"}
