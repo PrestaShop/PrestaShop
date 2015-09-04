@@ -123,6 +123,11 @@ class FrontControllerCore extends Controller
     public $nb_items_per_page;
 
     /**
+     * @var object Adapter_ObjectSerializer
+     */
+    public $objectSerializer;
+
+    /**
      * Controller constructor
      *
      * @global bool $useSSL SSL connection flag
@@ -154,6 +159,9 @@ class FrontControllerCore extends Controller
                 $this->display_column_right = $columns['right_column'];
             }
         }
+
+        $this->objectSerializer = new Adapter_ObjectSerializer();
+
     }
 
     /**
@@ -433,6 +441,7 @@ class FrontControllerCore extends Controller
             $compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
         }
 
+        /* StarterTheme: Legacy - Should we remove old smarty vars */
         $this->context->smarty->assign(array(
             // Useful for layout.tpl
             'mobile_device'       => $this->context->getMobileDevice(),
@@ -455,7 +464,7 @@ class FrontControllerCore extends Controller
             'mail_dir'            => _MAIL_DIR_,
             'lang_iso'            => $this->context->language->iso_code,
             'lang_id'             => (int)$this->context->language->id,
-            'language_code'       => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code,
+            'language_code'       => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code, // done
             'come_from'           => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace(array('\'', '\\'), '', urldecode($_SERVER['REQUEST_URI']))),
             'cart_qties'          => (int)$cart->nbProducts(),
             'currencies'          => Currency::getCurrencies(),
@@ -529,6 +538,7 @@ class FrontControllerCore extends Controller
          */
         $this->context->smarty->assign([
             'urls' => $this->getTemplateUrls(),
+            'language' => $this->objectSerializer->toArray($this->context->language),
         ]);
     }
 
