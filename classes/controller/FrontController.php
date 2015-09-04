@@ -535,8 +535,8 @@ class FrontControllerCore extends Controller
          * Template vars assignation
          */
         $this->context->smarty->assign([
-            'urls' => $this->getTemplateUrls(),
             'language' => $this->objectSerializer->toArray($this->context->language),
+            'urls' => $this->getTemplateVarUrls(),
         ]);
     }
 
@@ -1632,5 +1632,16 @@ class FrontControllerCore extends Controller
             }
         }
         return $urls;
+    }
+
+    public function getTemplateVarCurrency()
+    {
+        $curr = [];
+        $fields = ['name', 'iso_code', 'iso_code_num', 'sign'];
+        foreach ($fields as $field_name) {
+            $curr[$field_name] = $this->context->currency->{$field_name};
+        }
+
+        return $curr;
     }
 }
