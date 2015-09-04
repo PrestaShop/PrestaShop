@@ -959,7 +959,7 @@ class AdminControllerCore extends Controller
             }
         }
         fputcsv($fd, $headers, ';', $text_delimiter);
-        
+
         foreach ($this->_list as $i => $row) {
             $content = array();
             $path_to_image = false;
@@ -2055,20 +2055,6 @@ class AdminControllerCore extends Controller
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
 
-        $modules = Module::getModulesOnDisk();
-
-        $tmp = array();
-        foreach ($modules as $module) {
-            $tmp[] = $module->name;
-        }
-
-        foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
-            if (!in_array($module, $tmp)) {
-                unset($this->tab_modules_list['slider_list'][$key]);
-            }
-        }
-
-
         if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
             $this->filter_modules_list = $this->tab_modules_list['default_list'];
         } elseif (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
@@ -2597,7 +2583,7 @@ class AdminControllerCore extends Controller
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
         $this->addjQueryPlugin('growl', null, false);
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
-        
+
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
 
@@ -2607,7 +2593,7 @@ class AdminControllerCore extends Controller
             'name' => Context::getContext()->currency->name,
             'format' => Context::getContext()->currency->format
         )));
-        
+
         $this->addJS(array(
             _PS_JS_DIR_.'admin.js',
             _PS_JS_DIR_.'cldr.js',
