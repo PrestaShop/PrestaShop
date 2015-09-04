@@ -53,7 +53,7 @@ class AdminRouter extends Router
      *
      * @return AdminRouter
      */
-    public final static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new self('admin_routes(_(.*))?\.yml');
@@ -61,10 +61,10 @@ class AdminRouter extends Router
         return self::$instance;
     }
 
-    protected final function checkControllerAuthority(\ReflectionClass $class)
+    final protected function checkControllerAuthority(\ReflectionClass $class)
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new \ErrorException('Admin router tried to call a non-admin controller ('.$class.'). Please verify your routes Settings, and controllers.');
+            throw new \ErrorException('Admin router tried to call a non-admin controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
         }
     }
 }

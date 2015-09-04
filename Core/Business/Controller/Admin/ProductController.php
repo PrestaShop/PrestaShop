@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 class ProductController extends AdminController
 {
@@ -50,6 +51,10 @@ class ProductController extends AdminController
      */
     public function productListAction(Request &$request, Response &$response, $products)
     {
+        try {
+            throw new WarningException('test', 'none');
+        } catch (WarningException $we) {
+        }
     }
     
     public function productCatalogAction(Request &$request, Response &$response)
@@ -57,7 +62,6 @@ class ProductController extends AdminController
         $subcallParams = array(
             'ls_products_limit' => 42
         );
-        // FIXME: fait planter et redirect ! le subcall doit etre corrigé et testé.
         $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
     }
 }

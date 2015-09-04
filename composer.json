@@ -98,7 +98,7 @@
   "autoload-dev": {
     "psr-4": {
       "PrestaShop\\PrestaShop\\Tests\\": "tests/",
-      "PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\": "tests/resources/module/routerTest/Controller/"
+      "PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\": "tests/resources/module/routerTest/Core/Controller"
     }
   },
   "autoload": {

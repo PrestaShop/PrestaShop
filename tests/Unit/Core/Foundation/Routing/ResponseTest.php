@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 class ResponseTest extends UnitTestCase
 {
-
     private $called = false;
 
     public function test_content_data_manipulation()
@@ -83,12 +82,12 @@ class ResponseTest extends UnitTestCase
     public function test_template_engine_manipulation()
     {
         $response = new Response('base content');
-        $this->assertFalse($response->getTemplateEngine(), 'Initial template engine callable must be False.');
+        $this->assertNotFalse($response->getTemplateEngine(), 'Initial template engine callable must not be False (auto init).');
         
         $that = $this;
         $this->called = false;
         
-        $callable = function() use($that) {
+        $callable = function () use ($that) {
             $that->called = true;
         };
         $response->setTemplateEngine($callable);

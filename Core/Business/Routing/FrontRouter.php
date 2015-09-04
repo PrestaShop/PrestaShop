@@ -55,7 +55,7 @@ class FrontRouter extends Router
      *
      * @return FrontRouter
      */
-    public final static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new self('front_routes(_(.*))?\.yml');
@@ -63,11 +63,11 @@ class FrontRouter extends Router
         return self::$instance;
     }
 
-    protected final function checkControllerAuthority(\ReflectionClass $class)
+    final protected function checkControllerAuthority(\ReflectionClass $class)
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\FrontController')
             || $class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new \ErrorException('Front router tried to call a non-front controller ('.$class.'). Please verify your routes Settings, and controllers.');
+            throw new \ErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
         }
     }
 }

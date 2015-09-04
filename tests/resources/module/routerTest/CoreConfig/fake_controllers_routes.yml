@@ -14,3 +14,7 @@ fake_controllers_route3:
 fake_controllers_route4:
     path:     /redirect
     defaults: { _controller: 'Test\RouterTestController::redirectAction' }
+
+fake_controllers_route5:
+    path:     /subcall
+    defaults: { _controller: 'Test\RouterTestController::subcallAction' }

@@ -41,6 +41,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use Symfony\Component\Routing\Router;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
+use PrestaShop\PrestaShop\ViewFactory;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
@@ -78,6 +82,11 @@ abstract class AbstractRouter
      * @var array[string]
      */
     protected $controllerNamespaces;
+
+    /**
+     * @var array[string]
+     */
+    protected $moduleRouteMapping;
 
     /**
      * @var ConfigCacheFactoryInterface|null
@@ -155,7 +164,7 @@ abstract class AbstractRouter
         // Instantiate Sf Router
         $this->sfRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles[array_keys($this->routingFiles)[0]],
+            $this->routingFiles['/'],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -166,23 +175,32 @@ abstract class AbstractRouter
         // Add modules' routing files
         $this->aggregateRoutingExtensions($this->sfRouter);
 
-        // Resolve route, and call Controller
         try {
-            $parameters = $this->sfRouter->match($requestContext->getPathInfo());
-            $request->attributes->add($parameters);
-            list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
-
-            $res = $this->doDispatch($controllerName, $controllerMethod, $request);
-            $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
-            return $res;
-        } catch (ResourceNotFoundException $e) {
-            $this->routingDispatcher->dispatch('dispatch_failed', new BaseEvent('Failed to resolve route from HTTP request.', $e));
-            if ($noRoutePassThrough) {
-                // Allow legacy code to handle request if not found in this dispatcher
-                return false;
-            } else {
-                throw $e;
+            try {
+                // Resolve route
+                $parameters = $this->sfRouter->match($requestContext->getPathInfo());
+    
+                // Add module info from matched route
+                $this->mapRouteToModule($parameters);
+                $request->attributes->add($parameters);
+    
+                // Call Controller/Action
+                list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
+                $res = $this->doDispatch($controllerName, $controllerMethod, $request);
+                $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
+                return $res;
+            } catch (ResourceNotFoundException $e) {
+                $this->routingDispatcher->dispatch('dispatch_failed', new BaseEvent('Failed to resolve route from HTTP request.', $e));
+                if ($noRoutePassThrough) {
+                    // Allow legacy code to handle request if not found in this dispatcher
+                    return false;
+                } else {
+                    throw $e;
+                }
             }
+        } catch (\Exception $e) {
+            $this->tryToDisplayExceptions($e);
+            return true; // do not bypass now!
         }
     }
 
@@ -210,7 +228,7 @@ abstract class AbstractRouter
         
         $subRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles[array_keys($this->routingFiles)[0]],
+            $this->routingFiles['/'],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -242,7 +260,7 @@ abstract class AbstractRouter
         
         $subRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles[array_keys($this->routingFiles)[0]],
+            $this->routingFiles['/'],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -253,14 +271,18 @@ abstract class AbstractRouter
         // Add modules' routing files
         $this->aggregateRoutingExtensions($subRouter);
 
-        // Resolve route, and call Controller
+        // Resolve route
         $parameters = $subRouter->match($requestContext->getPathInfo());
 
+        // Add module info from matched route
+        $this->mapRouteToModule($parameters);
         $subRequest->attributes->add($parameters);
+        
+        // Override layout mode for subcall
         $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
 
+        // Call Controller/Action
         list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
-
         $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
         $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
         return $res;
@@ -309,7 +331,7 @@ abstract class AbstractRouter
             $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
             http_response_code($to);
             exit;
-            // TODO: default error page for this code. Howto ?
+            // TODO: default error page for this code. Howto ? et un cas specific 500 ?
         }
         if (is_array($to) && count($to) == 2 && is_array($to[1])) {
             $route = $to[0];
@@ -332,7 +354,7 @@ abstract class AbstractRouter
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_setting_list.php',
             function (ConfigCacheInterface $cache) use (&$triggerCacheGenerationFlag) {
                 $moduleCoreConfigExists = (count(glob($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
-                $routingFiles = $routingFilePaths = array();
+                $routingFiles = $routingFilePaths = $routeIds = array();
 
                 // search for Core routes.yml files (base routes.yml is the first, then Core's others)
                 $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
@@ -346,7 +368,7 @@ abstract class AbstractRouter
                         $suffix = $matches[2];
                     }
                     $routingFiles[] = '\''.addslashes($prefix.$suffix).'\' => \''.addslashes($path).'\'';
-                    $routingFilePaths[$prefix.$suffix] = $path;
+                    $routingFilePaths['/'][$prefix.$suffix] = $path;
                 }
 
                 // test if at least one module will brings a setup file before to include path into search.
@@ -361,7 +383,7 @@ abstract class AbstractRouter
                             $prefix = '/'.$matches[1];
                             $suffix = isset($matches[2]) ? $matches[2] : '';
                             $routingFiles[] = '\''.addslashes($prefix.$suffix).'\' => \''.addslashes($path).'\'';
-                            $routingFilePaths[$prefix.$suffix] = $path;
+                            $routingFilePaths[$matches[1]][$prefix.$suffix] = $path;
                         }
                     }
                 }
@@ -374,16 +396,17 @@ abstract class AbstractRouter
                 $settingsFilesFinder->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
                 $namespaces = array();
 
-                // Check for error cases
-                $routeIds = array();
-                foreach ($routingFilePaths as $prefix => $path) {
-                    $content = Yaml::parse(file_get_contents($path));
-                    $ids = array_keys($content);
-                    foreach ($ids as $id) {
-                        if (in_array($id, $routeIds)) {
-                            throw new \ErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (route ID: '.$id.', prefix: '.$prefix.')');
+                // Check for error cases and retrieve mapping module/route
+                foreach ($routingFilePaths as $module => $moduleFilePaths) {
+                    foreach ($moduleFilePaths as $prefix => $path) {
+                        $content = Yaml::parse(file_get_contents($path));
+                        $routes = array_keys($content);
+                        foreach ($routes as $route) {
+                            if (array_key_exists($route, $routeIds)) {
+                                throw new \ErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (module: '.$module.', route ID: '.$route.', prefix: '.$prefix.')');
+                            }
+                            $routeIds[$route] = '\''.addslashes($route).'\' => \''.addslashes($module).'\'';
                         }
-                        $routeIds[] = $id;
                     }
                 }
                 foreach ($settingsFilesFinder as $file) {
@@ -391,7 +414,12 @@ abstract class AbstractRouter
                         $settings = Yaml::parse(file_get_contents($file->getRealpath()));
                         if (isset($settings['controllers']) && isset($settings['controllers']['override_namespace'])) {
                             $namespace = $settings['controllers']['override_namespace'];
-                            $namespaces[] = '\''.addslashes($namespace).'\'';
+                            $module = '/';
+                            $matches = array();
+                            if (1 === preg_match('&'.$this->configuration->get('_PS_MODULE_DIR_').'([^/]+)/CoreConfig/settings\\.yml$&i', $file, $matches) && isset($matches[1])) {
+                                $module = $matches[1];
+                            }
+                            $namespaces[] = '\''.addslashes($module).'\' => \''.addslashes($namespace).'\'';
                         }
                     } catch (\Exception $e) {
                         throw new \ErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
@@ -402,6 +430,7 @@ abstract class AbstractRouter
                 $phpCode = '<'.'?php
 $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
 $this->controllerNamespaces = array('.implode(', ', $namespaces).');
+$this->moduleRouteMapping = array('.implode(', ', $routeIds).');
 '; // Raw php code inside a string, do not indent please.
                 $cache->write($phpCode);
                 $triggerCacheGenerationFlag = true;
@@ -409,6 +438,12 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         );
 
         include $cache->getPath();
+    }
+
+    final private function mapRouteToModule(array &$parameters)
+    {
+        $route = $parameters['_route'];
+        $parameters['_route_from_module'] = $this->moduleRouteMapping[$route] ?: null;
     }
 
     final protected function getConfigCacheFactory($forceDebug = false)
@@ -420,7 +455,7 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
         return $this->configCacheFactory;
     }
 
-    final private function aggregateRoutingExtensions($sfRouter)
+    final private function aggregateRoutingExtensions(Router &$sfRouter)
     {
         foreach ($this->routingFiles as $prefix => $routingFile) {
             $collection = $this->routeLoader->load($routingFile);
@@ -433,5 +468,40 @@ $this->controllerNamespaces = array('.implode(', ', $namespaces).');
     {
         $null = null;
         EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
+    }
+    
+    final public function tryToDisplayExceptions(\Exception $lastException)
+    {
+        try {
+            $messageStackManager = MessageStackManager::getInstance();
+            $viewEngine = null;
+            $messages = '';
+
+            if ($messageStackManager->getErrorIterator() && $messageStackManager->getErrorIterator()->count()) {
+                if ($viewEngine == null) {
+                    $viewEngine = new ViewFactory('smarty');
+                }
+                $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
+                    'exceptions' => $messageStackManager->getErrorIterator(),
+                    'color' => 'red'
+                ));
+            }
+
+            if ($messageStackManager->getWarningIterator() && $messageStackManager->getWarningIterator()->count()) {
+                if ($viewEngine == null) {
+                    $viewEngine = new ViewFactory('smarty');
+                }
+                $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
+                    'exceptions' => $messageStackManager->getWarningIterator(),
+                    'color' => 'orange'
+                ));
+            }
+
+            echo $messages;
+            exit(1);
+        } catch (\Exception $e) {
+            // Failure. Don't need $e (templating failure), but should throws $lastException to display anyway.
+            throw $lastException;
+        }
     }
 }

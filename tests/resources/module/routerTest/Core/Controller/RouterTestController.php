@@ -29,18 +29,23 @@ use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 class RouterTestController extends FrontController
 {
     public function aAction(Request &$request, Response &$response)
     {
-        $response->setContent('');
-        return self::RESPONSE_RAW_TEXT;
+        $response->addContentData('a', 'AA');
+        return self::RESPONSE_NUDE_HTML;
     }
 
     public function redirectAction(Request &$request, Response &$response)
     {
-        $router = FakeRouter::getInstance();
-        $router->redirect(500);
+        $this->getRouter()->redirect(500);
+    }
+
+    public function subcallAction(Request &$request, Response &$response)
+    {
+        $response->addContentData('sub_a', $this->subcall('fake_controllers_route1', array(), BaseController::RESPONSE_PARTIAL_VIEW));
     }
 }

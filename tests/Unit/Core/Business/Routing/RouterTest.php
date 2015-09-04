@@ -140,7 +140,15 @@ class RouterTest extends UnitTestCase
 
     public function test_subcall()
     {
-        // TODO
+        $this->setup_env();
+        $router = FakeRouter::getInstance();
+        
+        $fakeRequest = Request::create('/routerTest/subcall'); // route to existing controller in a module, action OK.
+        $fakeRequest->overrideGlobals();
+        $found = $router->dispatch(true);
+        $this->assertTrue($found, '/routerTest/subcall should be found.');
+        
+        // TODO: when Views will be able to scan in modules View directory :)
     }
 
     public function test_forward()

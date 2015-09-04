@@ -49,19 +49,17 @@ class AdminController extends BaseController
      */
     protected function encapsulateLayout(Response &$response)
     {
-        $warnings = array();
+        // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
+        $warningBlock = '';
         if ($this->getWarningIterator()) {
-            foreach ($this->getWarningIterator() as $w) {
-                if ($w instanceof WarningException) {
-                    $warnings[] = $w->getMessage();
-                } else {
-                    $warnings[] = $w;
-                }
-            }
+            $warningBlock = $response->getTemplateEngine()->view->fetch('Core/system_messages.tpl', array(
+                'exceptions' => $this->getWarningIterator(),
+                'color' => 'orange'
+            ));
         }
 
         //AJOUTER LAYOUT ADMIN
-        $response->setContent(implode(', ', $warnings).'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
+        $response->setContent($warningBlock.'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
     }
 
     /**

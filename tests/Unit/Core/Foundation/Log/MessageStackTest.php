@@ -23,6 +23,11 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Log;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Log;
 
-// TODO : tests sur une instance, empiler/depiler
+use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+
+class MessageStackTest extends UnitTestCase
+{
+    // TODO : tests sur une instance, empiler/depiler, tester aussi de declenchement d'un warning et son affichage sur la page, puis une erreur qui donne une page 500 custom avec le détail de l'erreur...
+}

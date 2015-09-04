@@ -121,18 +121,20 @@ abstract class Router extends AbstractRouter
      */
     final protected function getControllerClass($controllerName)
     {
+        $foundModules = array();
         $foundOverrides = array();
-        foreach ($this->controllerNamespaces as $namespace) {
+        foreach ($this->controllerNamespaces as $module => $namespace) {
             $className = '\\'.$namespace.'\\'.$controllerName;
             if (!class_exists($className)) {
                 continue;
             }
             $foundOverrides[] = $className;
+            $foundModules[] = $module;
         }
 
         // One override found, use it.
         if (count($foundOverrides) === 1) {
-            return $foundOverrides[0];
+            return array($foundOverrides[0], $foundModules[0]);
         }
 
         // fallback on default Core controller (most of the time).
@@ -144,13 +146,13 @@ abstract class Router extends AbstractRouter
         // More overrides found: problem! do not use it but Warn!
         if (count($foundOverrides) > 1) {
             throw new WarningException(
-                'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundOverrides),
+                'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundModules),
                 $className,
-                $foundOverrides
+                array($foundModules, $foundOverrides)
             );
         }
 
-        return $className;
+        return array($className, '/');
     }
 
     /**
@@ -206,15 +208,18 @@ abstract class Router extends AbstractRouter
     final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false)
     {
         $warnings = 0;
-        
+
         // Find right Controller and check security on it
         try {
-            $controllerClass = $this->getControllerClass($controllerName);
+            list($controllerClass, $module) = $this->getControllerClass($controllerName);
+            $request->attributes->set('_controller_from_module', $module);
         } catch (WarningException $we) {
             // degraded mode, many module overrides canceled.
             $controllerClass = $we->alternative;
+            $request->attributes->set('_controller_from_module', '/');
             $warnings++;
         }
+
         $class = new \ReflectionClass($controllerClass);
         try {
             $this->checkControllerAuthority($class);
