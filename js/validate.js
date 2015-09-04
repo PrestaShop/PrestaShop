@@ -187,7 +187,7 @@ function validate_field(that)
 
 			var id_country = $(selector + ' option:selected').val();
 
-			if (typeof(countriesNeedZipCode[id_country]) != 'undefined' && typeof(countries[id_country]['iso_code']) != 'undefined')
+			if (typeof(countriesNeedZipCode[id_country]) != 'undefined' && typeof(countries[id_country]) != 'undefined')
 				var result = window['validate_'+$(that).attr('data-validate')]($(that).val(), countriesNeedZipCode[id_country], countries[id_country]['iso_code']);
 		}
 		else if($(that).attr('data-validate'))
