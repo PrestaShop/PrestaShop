@@ -161,7 +161,6 @@ class FrontControllerCore extends Controller
         }
 
         $this->objectSerializer = new Adapter_ObjectSerializer();
-
     }
 
     /**
@@ -537,6 +536,8 @@ class FrontControllerCore extends Controller
          * Template vars assignation
          */
         $this->context->smarty->assign([
+            'currency' => $this->getTemplateVarCurrency(),
+            'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectSerializer->toArray($this->context->language),
             'urls' => $this->getTemplateVarUrls(),
         ]);
@@ -1649,5 +1650,26 @@ class FrontControllerCore extends Controller
         }
 
         return $curr;
+    }
+
+    public function getTemplateVarCustomer()
+    {
+        $cust = $this->objectSerializer->toArray($this->context->customer);
+
+        unset($cust['secure_key']);
+        unset($cust['passwd']);
+        unset($cust['show_public_prices']);
+        unset($cust['deleted']);
+        unset($cust['id_lang']);
+
+        $cust['is_logged'] = $this->context->customer->isLogged();
+
+        $cust['gender'] = $this->objectSerializer->toArray(new Gender($cust['id_gender']));
+        unset($cust['id_gender']);
+
+        $cust['risk'] = $this->objectSerializer->toArray(new Risk($cust['id_risk']));
+        unset($cust['id_risk']);
+
+        return $cust;
     }
 }
