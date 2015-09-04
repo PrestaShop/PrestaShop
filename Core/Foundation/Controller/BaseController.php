@@ -266,7 +266,7 @@ abstract class BaseController
         $path = parse_url($url)['path'];
 
         // remove base URL (for '/admin-xxx/index.php' if present in the URL)
-        if(strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
+        if (strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
             $path = substr($path, strlen($baseUrl));
         }
 
