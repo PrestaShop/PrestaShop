@@ -173,7 +173,7 @@ abstract class BaseController
      */
     final public function getErrorIterator()
     {
-        MessageStackManager::getInstance()->getErrorIterator();
+        return MessageStackManager::getInstance()->getErrorIterator();
     }
 
     /**
@@ -187,7 +187,7 @@ abstract class BaseController
      */
     final public function getWarningIterator()
     {
-        MessageStackManager::getInstance()->getWarningIterator();
+        return MessageStackManager::getInstance()->getWarningIterator();
     }
 
     /**
@@ -198,7 +198,7 @@ abstract class BaseController
      */
     final public function getInfoIterator()
     {
-        MessageStackManager::getInstance()->getInfoIterator();
+        return MessageStackManager::getInstance()->getInfoIterator();
     }
 
     /**
@@ -209,7 +209,7 @@ abstract class BaseController
      */
     final public function getSuccessIterator()
     {
-        MessageStackManager::getInstance()->getSuccessIterator();
+        return MessageStackManager::getInstance()->getSuccessIterator();
     }
 
     /**

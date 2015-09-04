@@ -29,6 +29,7 @@ use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 
 /**
  * Base class for all Admin controllers. Others won't be accepted by AdminRouter.
