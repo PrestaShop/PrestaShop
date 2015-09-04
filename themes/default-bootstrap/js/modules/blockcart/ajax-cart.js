@@ -248,11 +248,11 @@ var ajaxCart = {
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
-			url: baseUri + '?rand=' + new Date().getTime(),
+			url: (typeof(baseUri) !== 'undefined') ? baseUri + '?rand=' + new Date().getTime() : '',
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=cart&ajax=true&token=' + static_token,
+			data: (typeof(static_token) !== 'undefined') ? 'controller=cart&ajax=true&token=' + static_token : '',
 			success: function(jsonData)
 			{
 				ajaxCart.updateCart(jsonData);

@@ -1447,7 +1447,7 @@ class CartCore extends ObjectModel
             if (is_null($products) && is_null($id_carrier)) {
                 $shipping_fees = $this->getTotalShippingCost(null, (bool)$with_taxes);
             } else {
-                $shipping_fees = $this->getPackageShippingCost($id_carrier, (bool)$with_taxes, null, $products);
+                $shipping_fees = $this->getPackageShippingCost((int)$id_carrier, (bool)$with_taxes, null, $products);
             }
         } else {
             $shipping_fees = 0;
@@ -2091,8 +2091,8 @@ class CartCore extends ObjectModel
                         $carriers_instance[$id_carrier] = new Carrier($id_carrier);
                     }
 
-                    $price_with_tax = $this->getPackageShippingCost($id_carrier, true, $country, $package['product_list']);
-                    $price_without_tax = $this->getPackageShippingCost($id_carrier, false, $country, $package['product_list']);
+                    $price_with_tax = $this->getPackageShippingCost((int)$id_carrier, true, $country, $package['product_list']);
+                    $price_without_tax = $this->getPackageShippingCost((int)$id_carrier, false, $country, $package['product_list']);
                     if (is_null($best_price) || $price_with_tax < $best_price) {
                         $best_price = $price_with_tax;
                         $best_price_carrier = $id_carrier;
@@ -2682,6 +2682,15 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
+     */
+    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
+    {
+        Tools::displayAsDeprecated();
+        return $this->getPackageShippingCost((int)$id_carrier, $use_tax, $default_country, $product_list);
+    }
+
+    /**
      * Return package shipping cost
      *
      * @param int          $id_carrier      Carrier ID (default : current carrier)
@@ -2727,6 +2736,10 @@ class CartCore extends ObjectModel
         }
         if (!Address::addressExists($address_id)) {
             $address_id = null;
+        }
+
+        if (is_null($id_carrier) && !empty($this->id_carrier)) {
+            $id_carrier = (int)$this->id_carrier;
         }
 
         $cache_id = 'getPackageShippingCost_'.(int)$this->id.'_'.(int)$address_id.'_'.(int)$id_carrier.'_'.(int)$use_tax.'_'.(int)$default_country->id;
@@ -3541,8 +3554,16 @@ class CartCore extends ObjectModel
                     $first = false;
                 }
 
+                $customized_value = $custom['value'];
+
+                if ((int)$custom['type'] == 0) {
+                    $customized_value = md5(uniqid(rand(), true));
+                    Tools::copy(_PS_UPLOAD_DIR_.$custom['value'], _PS_UPLOAD_DIR_.$customized_value);
+                    Tools::copy(_PS_UPLOAD_DIR_.$custom['value'].'_small', _PS_UPLOAD_DIR_.$customized_value.'_small');
+                }
+
                 $sql_custom_data .= '('.(int)$custom_ids[$custom['id_customization']].', '.(int)$custom['type'].', '.
-                    (int)$custom['index'].', \''.pSQL($custom['value']).'\')';
+                    (int)$custom['index'].', \''.pSQL($customized_value).'\')';
             }
             Db::getInstance()->execute($sql_custom_data);
         }
