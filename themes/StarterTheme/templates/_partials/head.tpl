@@ -2,14 +2,14 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 
 {block name="head_seo"}
-  <title>{block name="head_seo_title"}{$page.meta_title}{/block}</title>
-  <meta name="description" content="{block name='head_seo_description'}{$page.meta_description}{/block}" />
-  <meta name="keywords" content="{block name='head_seo_keywords'}{$page.meta_keywords}{/block}" />
+  <title>{block name="head_seo_title"}{/block}</title>
+  <meta name="description" content="{block name='head_seo_description'}{/block}" />
+  <meta name="keywords" content="{block name='head_seo_keywords'}{/block}" />
 {/block}
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<!-- TODO: favicon.ico and apple icons -->
+{* StarterTheme: favicon.ico and apple icons *}
 
 {if isset($css_files)}
   {foreach from=$css_files key=css_uri item=media}
