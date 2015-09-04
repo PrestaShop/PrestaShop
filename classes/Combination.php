@@ -185,9 +185,9 @@ class CombinationCore extends ObjectModel
                 $sql_values[] = '('.(int)$value.', '.(int)$this->id.')';
             }
 
-            $result = Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
-				VALUES '.implode(',', $sql_values)
+            $result = Db::getInstance()->execute(
+                'INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
+                VALUES '.implode(',', $sql_values)
             );
         }
         return $result;
@@ -205,10 +205,10 @@ class CombinationCore extends ObjectModel
     public function getWsProductOptionValues()
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT a.id_attribute AS id
-			FROM `'._DB_PREFIX_.'product_attribute_combination` a
-			'.Shop::addSqlAssociation('attribute', 'a').'
-			WHERE a.id_product_attribute = '.(int)$this->id);
+            SELECT a.id_attribute AS id
+            FROM `'._DB_PREFIX_.'product_attribute_combination` a
+            '.Shop::addSqlAssociation('attribute', 'a').'
+            WHERE a.id_product_attribute = '.(int)$this->id);
 
         return $result;
     }
@@ -216,18 +216,18 @@ class CombinationCore extends ObjectModel
     public function getWsImages()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT a.`id_image` as id
-			FROM `'._DB_PREFIX_.'product_attribute_image` a
-			'.Shop::addSqlAssociation('product_attribute', 'a').'
-			WHERE a.`id_product_attribute` = '.(int)$this->id.'
-		');
+            SELECT a.`id_image` as id
+            FROM `'._DB_PREFIX_.'product_attribute_image` a
+            '.Shop::addSqlAssociation('product_attribute', 'a').'
+            WHERE a.`id_product_attribute` = '.(int)$this->id.'
+        ');
     }
 
     public function setImages($ids_image)
     {
         if (Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
-			WHERE `id_product_attribute` = '.(int)$this->id) === false) {
+            DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
+            WHERE `id_product_attribute` = '.(int)$this->id) === false) {
             return false;
         }
 
@@ -239,9 +239,9 @@ class CombinationCore extends ObjectModel
             }
 
             if (is_array($sql_values) && count($sql_values)) {
-                Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
-					VALUES '.implode(',', $sql_values)
+                Db::getInstance()->execute(
+                    'INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
+                    VALUES '.implode(',', $sql_values)
                 );
             }
         }
@@ -260,10 +260,10 @@ class CombinationCore extends ObjectModel
     public function getAttributesName($id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT al.*
-			FROM '._DB_PREFIX_.'product_attribute_combination pac
-			JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
-			WHERE pac.id_product_attribute='.(int)$this->id);
+            SELECT al.*
+            FROM '._DB_PREFIX_.'product_attribute_combination pac
+            JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
+            WHERE pac.id_product_attribute='.(int)$this->id);
     }
 
     /**
@@ -318,12 +318,12 @@ class CombinationCore extends ObjectModel
     public function getColorsAttributes()
     {
         return Db::getInstance()->executeS('
-			SELECT a.id_attribute
-			FROM '._DB_PREFIX_.'product_attribute_combination pac
-			JOIN '._DB_PREFIX_.'attribute a ON (pac.id_attribute = a.id_attribute)
-			JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = a.id_attribute_group)
-			WHERE pac.id_product_attribute='.(int)$this->id.' AND ag.is_color_group = 1
-		');
+            SELECT a.id_attribute
+            FROM '._DB_PREFIX_.'product_attribute_combination pac
+            JOIN '._DB_PREFIX_.'attribute a ON (pac.id_attribute = a.id_attribute)
+            JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = a.id_attribute_group)
+            WHERE pac.id_product_attribute='.(int)$this->id.' AND ag.is_color_group = 1
+        ');
     }
 
     /**
@@ -335,11 +335,11 @@ class CombinationCore extends ObjectModel
      */
     public static function getPrice($id_product_attribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT product_attribute_shop.`price`
-			FROM `'._DB_PREFIX_.'product_attribute` pa
-			'.Shop::addSqlAssociation('product_attribute', 'pa').'
-			WHERE pa.`id_product_attribute` = '.(int)$id_product_attribute
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT product_attribute_shop.`price`
+            FROM `'._DB_PREFIX_.'product_attribute` pa
+            '.Shop::addSqlAssociation('product_attribute', 'pa').'
+            WHERE pa.`id_product_attribute` = '.(int)$id_product_attribute
         );
     }
 }
