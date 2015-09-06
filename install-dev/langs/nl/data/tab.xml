@@ -43,7 +43,7 @@
   <tab id="Customer_Service" name="Klantenservice"/>
   <tab id="Contacts" name="Contactpersonen"/>
   <tab id="Titles" name="Sociale titels"/>
-  <tab id="Outstanding" name="Uitzonderlijk"/>
+  <tab id="Outstanding" name="Openstaand"/>
   <tab id="Cart_Rules" name="Winkelwagenregels"/>
   <tab id="Catalog_Price_Rules" name="Catalogus prijsregels"/>
   <tab id="Marketing" name="Marketing"/>
