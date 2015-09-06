@@ -133,7 +133,6 @@ class AddressCore extends ObjectModel
         ),
     );
 
-    protected $_includeVars = array('addressType' => 'table');
     protected $_includeContainer = false;
 
     protected $webserviceParameters = array(
