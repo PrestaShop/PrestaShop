@@ -43,6 +43,13 @@ class Adapter_ObjectSerializer
             $arr = (array)$object;
         }
 
+        $must_remove = ['deleted', 'active'];
+        foreach ($must_remove as $field_name) {
+            if (isset($arr[$field_name])) {
+                unset($arr[$field_name]);
+            }
+        }
+
         return $arr;
     }
 }
