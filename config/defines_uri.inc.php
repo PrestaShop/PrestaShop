@@ -30,7 +30,7 @@ define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
 define('_THEMES_DIR_', __PS_BASE_URI__.'themes/');
 define('_THEME_DIR_', _THEMES_DIR_._THEME_NAME_.'/');
 define('_THEME_IMG_DIR_', _THEME_DIR_.'img/');
-define('_THEME_CSS_DIR_', _THEME_DIR_.'css/');
+define('_THEME_CSS_DIR_', _THEME_DIR_.'assets/css/');
 define('_THEME_JS_DIR_', _THEME_DIR_.'js/');
 define('_PS_THEME_OVERRIDE_DIR_', _PS_THEME_DIR_.'override/');
 
