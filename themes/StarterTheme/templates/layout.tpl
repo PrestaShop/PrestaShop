@@ -16,6 +16,12 @@
       <p>Hello world! This is HTML5 Boilerplate.</p>
     {/block}
 
+    <footer id="footer">
+      {block name="footer"}
+        {include file="_partials/footer.tpl"}
+      {/block}
+    </footer>
+
     <!-- Load JS files here -->
 
   </body>
