@@ -45,6 +45,12 @@ class AdminLegacyLayoutControllerCore extends AdminController
         return true;
     }
 
+    //always return true, cause of legacy redirect in layout
+    public function checkAccess()
+    {
+        return true;
+    }
+
     public function initContent()
     {
         $this->initPageHeaderToolbar();
