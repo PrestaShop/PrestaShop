@@ -876,9 +876,9 @@ class FrontControllerCore extends Controller
         }
 
         $cldrRepository = new Cldr\Repository($this->context->language->language_code);
-
         $this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5.0.1
         $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
+        $this->addCSS(_THEME_CSS_DIR_ . DIRECTORY_SEPARATOR . 'theme.css');
         $this->addJquery();
         $this->addJqueryPlugin('easing');
         $this->addJS(array(
