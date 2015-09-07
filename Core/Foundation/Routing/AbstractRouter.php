@@ -516,7 +516,7 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
                 ));
             }
 
-            echo $messages;
+            echo '<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> '.$messages;
             exit(1);
         } catch (\Exception $e) {
             // Failure. Don't need $e (templating failure), but should throws $lastException to display anyway.

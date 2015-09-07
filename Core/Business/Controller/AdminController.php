@@ -59,14 +59,6 @@ class AdminController extends BaseController
                 'color' => 'orange'
             ));
         }
-        // Display catched ErrorExceptions (not catched one will fail display and will be catched by Router->dispatch())
-        $errorBlock = '';
-        if ($this->getErrorIterator() && $this->getErrorIterator()->count()) {
-            $warningBlock = $response->getTemplateEngine()->view->fetch('Core/system_messages.tpl', array(
-                'exceptions' => $this->getErrorIterator(),
-                'color' => 'red'
-            ));
-        }
 
         //GET LAYOUT FROM ORIGINAL CONTROLLER REQUESTED
         $originCtrl = new \AdminLegacyLayoutControllerCore($response->getLegacyControllerName());
@@ -78,7 +70,7 @@ class AdminController extends BaseController
                 '{$content}',
                 'var currentIndex = \'index.php\';'),
             array(
-                $errorBlock.$warningBlock.$response->getContent(),
+                $warningBlock.$response->getContent(),
                 'var currentIndex = \''.$link->getAdminLink($response->getLegacyControllerName()).'\';'),
             $originCtrl->outPutHtml
         );
