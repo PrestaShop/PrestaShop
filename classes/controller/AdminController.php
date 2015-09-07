@@ -2770,7 +2770,8 @@ class AdminControllerCore extends Controller
             $query = (isset($url['query'])) ? $url['query'] : '';
             parse_str($query, $parse_query);
             unset($parse_query['setShopContext'], $parse_query['conf']);
-            $this->redirect_after = $url['path'].'?'.http_build_query($parse_query, '', '&');
+            $http_build_query = http_build_query($parse_query, '', '&');
+            $this->redirect_after = $url['path'].($http_build_query ? '?'.$http_build_query : '');
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-'.(int)Configuration::get('PS_SHOP_DEFAULT');
         } elseif (Shop::getTotalShops(false, null) < 2) {
