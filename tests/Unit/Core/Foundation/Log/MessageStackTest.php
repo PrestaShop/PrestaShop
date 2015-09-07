@@ -26,8 +26,20 @@
 namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Log;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 class MessageStackTest extends UnitTestCase
 {
+    public function test_message_stack()
+    {
+        $stackManager = MessageStackManager::getInstance();
+        $this->assertAttributeInstanceOf('\\SplQueue', 'errorQueue', $stackManager);
+        $this->assertAttributeInstanceOf('\\SplQueue', 'warningQueue', $stackManager);
+        $this->assertAttributeInstanceOf('\\SplQueue', 'infoQueue', $stackManager);
+        $this->assertAttributeInstanceOf('\\SplQueue', 'successQueue', $stackManager);
+
+        $stackManager->onError(new BaseEvent('test error'));
+    }
     // TODO : tests sur une instance, empiler/depiler, tester aussi de declenchement d'un warning et son affichage sur la page, puis une erreur qui donne une page 500 custom avec le détail de l'erreur...
 }

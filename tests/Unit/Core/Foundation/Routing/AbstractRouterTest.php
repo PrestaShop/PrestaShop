@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class FakeAbstractRouterNotAbstract extends AbstractRouter
 {
@@ -108,7 +109,7 @@ class AbstractRouterTest extends UnitTestCase
         try {
             $router = new FakeAbstractRouterNotAbstract('fake_test_conflict_routes(_(.*))?\.yml');
             $this->fail('This instanciation should throw ErrorException!');
-        } catch (\ErrorException $ee) {
+        } catch (DevelopmentErrorException $ee) {
             $this->assertContains('route ID: fake_test_route_module1, prefix: /abstractRouterTest', $ee->getMessage());
         }
     }

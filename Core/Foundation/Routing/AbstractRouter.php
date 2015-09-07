@@ -165,7 +165,7 @@ abstract class AbstractRouter
         // Instantiate Sf Router
         $this->sfRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles['/'],
+            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -200,6 +200,9 @@ abstract class AbstractRouter
                 }
             }
         } catch (\Exception $e) {
+            if (php_sapi_name() == "cli") {
+                throw $e;
+            }
             $this->tryToDisplayExceptions($e);
             return true; // do not bypass now!
         }
@@ -230,7 +233,7 @@ abstract class AbstractRouter
         
         $subRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles['/'],
+            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
@@ -262,7 +265,7 @@ abstract class AbstractRouter
         
         $subRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
-            $this->routingFiles['/'],
+            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
             array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
                   'debug' => $this->configuration->get('_PS_MODE_DEV_'),
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',

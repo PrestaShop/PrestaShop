@@ -63,6 +63,11 @@ trait AutoResponseFormatTrait
         }
         $accepts = explode(',', $request->headers->get('accept'));
 
+        // Legacy controller used to set Layout title
+        if ($legacyController = $request->attributes->get('_legacy_path')) {
+            $response->setLegacyControllerName($legacyController);
+        }
+
         // Order by HTTP accept values first, then by follwing switch cases order
         foreach ($accepts as $accept) {
             switch ($accept) {
@@ -126,11 +131,6 @@ trait AutoResponseFormatTrait
             $methodName = preg_replace('/Action$/', '', $methodName, 1, $matchCount);
             if ($matchCount !== 1) {
                 return true; // Action method does not follow standard name pattern
-            }
-
-            // Legacy controller used to set Layout title
-            if ($legacyController = $request->attributes->get('_legacy_path')) {
-                $response->setLegacyControllerName($legacyController);
             }
 
             //If template was not defined, try to find it dynamically

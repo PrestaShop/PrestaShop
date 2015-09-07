@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class FakeBaseController extends BaseController
 {
@@ -91,7 +92,7 @@ class BaseControllerTest extends UnitTestCase
         try {
             $controller->formatResponse('hello_tim', $response);
             $this->fail('Unknown format should throw ErrorException.');
-        } catch (\ErrorException $ee) {
+        } catch (DevelopmentErrorException $ee) {
             $this->assertEquals('Unknown format.', $ee->getMessage());
         }
 
@@ -115,7 +116,7 @@ class BaseControllerTest extends UnitTestCase
         try {
             $controller->encapsulateResponse('hello_tim', $response);
             $this->fail('Unknown encap should throw ErrorException.');
-        } catch (\ErrorException $ee) {
+        } catch (DevelopmentErrorException $ee) {
             $this->assertEquals('Unknown encapsulation.', $ee->getMessage());
         }
 

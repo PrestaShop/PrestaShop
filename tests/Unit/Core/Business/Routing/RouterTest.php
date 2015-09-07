@@ -112,7 +112,9 @@ class RouterTest extends UnitTestCase
         // load from a module! Controller & Action OK case.
         $fakeRequest = Request::create('/routerTest/a'); // route to existing controller in a module, action OK.
         $fakeRequest->overrideGlobals();
+        ob_start();
         $found = $router->dispatch(true);
+        ob_end_clean();
         $this->assertTrue($found, '/routerTest/a should be found.');
 
         // load from a module! Controller Error case (bad parent class checked)
@@ -145,7 +147,9 @@ class RouterTest extends UnitTestCase
         
         $fakeRequest = Request::create('/routerTest/subcall'); // route to existing controller in a module, action OK.
         $fakeRequest->overrideGlobals();
+        ob_start();
         $found = $router->dispatch(true);
+        ob_end_clean();
         $this->assertTrue($found, '/routerTest/subcall should be found.');
         
         // TODO: when Views will be able to scan in modules View directory :)
