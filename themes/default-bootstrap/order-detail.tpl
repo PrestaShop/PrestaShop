@@ -406,7 +406,6 @@
 			</thead>
 			<tbody>
 			{foreach from=$messages item=message name="messageList"}
-				{if !(!$message.id_customer && !$message.id_employee)}
 				<tr class="{if $smarty.foreach.messageList.first}first_item{elseif $smarty.foreach.messageList.last}last_item{/if} {if $smarty.foreach.messageList.index % 2}alternate_item{else}item{/if}">
 					<td>
 						<strong class="dark">
@@ -423,7 +422,6 @@
 					</td>
 					<td>{$message.message|escape:'html':'UTF-8'|nl2br}</td>
 				</tr>
-				{/if}
 			{/foreach}
 			</tbody>
 		</table>
