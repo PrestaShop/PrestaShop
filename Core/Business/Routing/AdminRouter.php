@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class AdminRouter extends Router
 {
@@ -64,7 +65,7 @@ class AdminRouter extends Router
     final protected function checkControllerAuthority(\ReflectionClass $class)
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new \ErrorException('Admin router tried to call a non-admin controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
+            throw new DevelopmentErrorException('Admin router tried to call a non-admin controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
         }
     }
 }

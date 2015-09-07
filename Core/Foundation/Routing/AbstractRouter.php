@@ -43,6 +43,7 @@ use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use Symfony\Component\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\ViewFactory;
 
@@ -217,7 +218,7 @@ abstract class AbstractRouter
     abstract protected function doDispatch($controllerName, $controllerMethod, Request &$request);
 
     /**
-     * TODO
+     * TODO !3
      */
     final public function forward(Request &$request, $routeName, $routeParameters = array())
     {
@@ -403,7 +404,7 @@ abstract class AbstractRouter
                         $routes = array_keys($content);
                         foreach ($routes as $route) {
                             if (array_key_exists($route, $routeIds)) {
-                                throw new \ErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (module: '.$module.', route ID: '.$route.', prefix: '.$prefix.')');
+                                throw new DevelopmentErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (module: '.$module.', route ID: '.$route.', prefix: '.$prefix.')');
                             }
                             $routeIds[$route] = '\''.addslashes($route).'\' => \''.addslashes($module).'\'';
                         }
@@ -422,7 +423,7 @@ abstract class AbstractRouter
                             $namespaces[] = '\''.addslashes($module).'\' => \''.addslashes($namespace).'\'';
                         }
                     } catch (\Exception $e) {
-                        throw new \ErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
+                        throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
                     }
                 }
 

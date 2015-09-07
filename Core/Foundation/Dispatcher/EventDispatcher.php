@@ -29,6 +29,7 @@ use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
  * Existing dispatchers:
@@ -129,7 +130,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                             }
                         }
                     } catch (\Exception $e) {
-                        throw new \ErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
+                        throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
                     }
                 }
                 $cache->write($phpCode);

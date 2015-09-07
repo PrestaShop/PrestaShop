@@ -23,8 +23,9 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop;
+
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class View
 {
@@ -155,7 +156,7 @@ class View
     {
         $templatePathname = $this->getTemplatePathname($template);
         if (!is_file($templatePathname)) {
-            throw new \ErrorException("View cannot render `$template` because the template does not exist");
+            throw new DevelopmentErrorException("View cannot render `$template` because the template does not exist");
         }
 
         $data = array_merge($this->data, (array) $data);

@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\ModuleRouterOverrideException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 abstract class Router extends AbstractRouter
 {
@@ -79,7 +80,7 @@ abstract class Router extends AbstractRouter
      *
      * @param array:\ReflectioClass $allTraits The traits used in the controller
      * @param string $startsWith Filter methods names that starts with this parameter.
-     * @throws \ErrorException If a method is not compliant (parameters)
+     * @throws DevelopmentErrorException If a method is not compliant (parameters)
      * @return array:string Methods names that matches the filter and belongs to the controller.
      */
     final private function filterTraits($allTraits, $startsWith)
@@ -90,15 +91,15 @@ abstract class Router extends AbstractRouter
             foreach ($methods as $method) {
                 $parameters = $method->getParameters();
                 if (count($parameters) < 2) {
-                    throw new \ErrorException('A trait method should always accept at least 2 parameters (&$request, &$response). The Trait method '
+                    throw new DevelopmentErrorException('A trait method should always accept at least 2 parameters (&$request, &$response). The Trait method '
                         .$method->name.' wants '.$method->getNumberOfParameters());
                 }
                 if (!$parameters[0]->isPassedByReference() || !$parameters[1]->isPassedByReference()) {
-                    throw new \ErrorException('A trait method should always accept both first parameters by reference only (&$request, &$response).');
+                    throw new DevelopmentErrorException('A trait method should always accept both first parameters by reference only (&$request, &$response).');
                 }
                 for ($i = 2; $i < count($parameters); $i++) {
                     if (!$parameters[$i]->isDefaultValueAvailable()) {
-                        throw new \ErrorException('A trait method can accept more than 2 parameters for specific cases, but always optional & with default values.');
+                        throw new DevelopmentErrorException('A trait method can accept more than 2 parameters for specific cases, but always optional & with default values.');
                     }
                 }
                 if (strpos($method->name, $startsWith) === 0) {
@@ -116,7 +117,7 @@ abstract class Router extends AbstractRouter
      * The result of this function is used to generate a cache.
      *
      * @param string $controllerName
-     * @throws \ErrorException If no default controller found in the Core. The routes YML file is incorrect.
+     * @throws DevelopmentErrorException If no default controller found in the Core. The routes YML file is incorrect.
      * @return string The controller class name (with right namespace)
      */
     final protected function getControllerClass($controllerName)
@@ -140,7 +141,7 @@ abstract class Router extends AbstractRouter
         // fallback on default Core controller (most of the time).
         $className = '\\PrestaShop\\PrestaShop\\Core\\Business\\Controller\\'.$controllerName;
         if (!class_exists($className)) {
-            throw new \ErrorException('Default Controller is not found for: '.$className);
+            throw new DevelopmentErrorException('Default Controller is not found for: '.$className);
         }
 
         // More overrides found: problem! do not use it but Warn!
@@ -159,7 +160,7 @@ abstract class Router extends AbstractRouter
      * This method should be overriden to check if Controller is allowed to be executed in this Router instance.
      *
      * @param \ReflectionClass $class
-     * @throws \ErrorException if the given controller violates the Router policy. This will stops execution.
+     * @throws DevelopmentErrorException if the given controller violates the Router policy. This will stops execution.
      * @throws \PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException to raise a major exception without stopping execution.
      */
     abstract protected function checkControllerAuthority(\ReflectionClass $class);
@@ -245,7 +246,7 @@ abstract class Router extends AbstractRouter
                 $beforeActionTraits = $this->filterTraits($traits, 'beforeAction');
                 $controllerResolverTrait = $this->filterTraits($traits, 'controllerResolver'); // only 1 allowed!
                 if (count($controllerResolverTrait) > 1) {
-                    throw new \ErrorException('A controller cannot use multiple traits that define a controllerResolver function. Please choose one of them.');
+                    throw new DevelopmentErrorException('A controller cannot use multiple traits that define a controllerResolver function. Please choose one of them.');
                 }
                 if (count($controllerResolverTrait) === 1) {
                     $controllerResolverTrait = $controllerResolverTrait[0];
@@ -262,6 +263,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router)
 {
@@ -290,7 +292,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                 $response->setResponseFormat($responseFormat);
             }
         } else {
-            throw new \ErrorException(\'The controller uses a Trait controllerResolver that failed to return a controllerResolver!\');
+            throw new DevelopmentErrorException(\'The controller uses a Trait controllerResolver that failed to return a controllerResolver!\');
         }
     }
 ';

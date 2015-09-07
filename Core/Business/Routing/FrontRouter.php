@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class FrontRouter extends Router
 {
@@ -67,7 +68,7 @@ class FrontRouter extends Router
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\FrontController')
             || $class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new \ErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
+            throw new DevelopmentErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
         }
     }
 }

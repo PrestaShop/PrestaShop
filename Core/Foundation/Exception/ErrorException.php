@@ -29,33 +29,27 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 /**
- * This exception is thrown when a major error occurs, but we must allow process to continue
- * in degraded mode (with an alternative way) to allow user fix a setting problem for example.
- * Constructor will trigger an event in the 'message' EventDispatcher, with 'warning_message' label.
- * Warning: If this exception is triggered and catched by the router, then the cache files won't be kept, and regenerated each time.
+ * This exception is thrown when a major error occurs, and we must stop the process.
+ * Constructor will trigger an event in the 'message' EventDispatcher, with 'error_message' label.
  *
- * Example of use: In the Router, when a module causes a forbidden override action, we must
- * warn, shut down the module, and ask the user to uninstall the module (or fix it).
+ * Example of use: In an action when an important action failed, and you should avoid the process to continue.
  */
-class WarningException extends \Core_Foundation_Exception_Exception
+class ErrorException extends \Core_Foundation_Exception_Exception
 {
-    public $alternative = null;
     public $reportData = null;
     
     /**
      * @param string $message The message to show to the user on the admin interface
-     * @param mixed $alternative The alternative data/setting to use when the main data/setting failed to be computed.
      * @param string $reportData Information to generate a 'report problem' link to PrestaShop.
      * @param number $code
      * @param Exception $previous Trace of the problem. Can be added in the report.
      */
-    final public function __construct($message, $alternative, $reportData = null, $code = 0, Exception $previous = null)
+    final public function __construct($message, $reportData = null, $code = 0, Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->alternative = $alternative;
         $this->reportData = $reportData;
         
-        EventDispatcher::getInstance('message')->dispatch('warning_message', new BaseEvent($message, $this));
-        EventDispatcher::getInstance('error')->dispatch('warning_message', new BaseEvent($message, $this));
+        EventDispatcher::getInstance('message')->dispatch('error_message', new BaseEvent($message, $this));
+        EventDispatcher::getInstance('error')->dispatch('error_message', new BaseEvent($message, $this));
     }
 }

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 abstract class BaseController
 {
@@ -64,7 +65,7 @@ abstract class BaseController
      *
      * @param string $format
      * @param Response $response
-     * @throws \ErrorException
+     * @throws DevelopmentErrorException
      */
     public function formatResponse($format, Response &$response)
     {
@@ -76,13 +77,13 @@ abstract class BaseController
                 $this->formatJsonResponse($response);
                 break;
             case 'xml':
-                throw new \ErrorException('Not yet supported!');
+                throw new DevelopmentErrorException('Not yet supported!');
             case 'raw':
                 return;
             case 'none':
                 exit(0); // Break PHP process! Controller action should have already sent its result by itself (file, binary, etc...)
             default:
-                throw new \ErrorException('Unknown format.');
+                throw new DevelopmentErrorException('Unknown format.');
         }
     }
 
@@ -114,7 +115,7 @@ abstract class BaseController
      *
      * @param string $encapsulation
      * @param Response $response
-     * @throws \ErrorException
+     * @throws DevelopmentErrorException
      */
     public function encapsulateResponse($encapsulation, Response &$response)
     {
@@ -128,7 +129,7 @@ abstract class BaseController
             case 'none':
                 return;
             default:
-                throw new \ErrorException('Unknown encapsulation.');
+                throw new DevelopmentErrorException('Unknown encapsulation.');
         }
     }
 
@@ -244,16 +245,16 @@ abstract class BaseController
         try {
             return $this->getRouter()->getUrlGenerator()->generate($name, $parameters, $referenceType);
         } catch (RouteNotFoundException $rnfe) {
-            return false; // FIXME mapping to legacy routing !!! :) Enjoy!
+            return false; // FIXME !1 mapping to legacy routing !!! :) Enjoy!
         }
     }
 
     /**
-     * TODO
+     * TODO !0
      * @param unknown $name
      * @param unknown $parameters
      * @param unknown $layoutMode
-     * @throws \ErrorException
+     * @throws DevelopmentErrorException
      * @return string
      */
     final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
@@ -276,7 +277,7 @@ abstract class BaseController
         } catch (RouteNotFoundException $rnfe) {
             // Since the route is not found in subcall, it's not a navigation problem, it's a development bug.
             // So must replace RouteNotFoundException by ErrorException to ensure Router->dispatch() will never bypass.
-            throw new \ErrorException($rnfe->getMessage());
+            throw new DevelopmentErrorException($rnfe->getMessage());
         }
     }
 }
