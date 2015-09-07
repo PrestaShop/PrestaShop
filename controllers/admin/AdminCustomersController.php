@@ -437,7 +437,7 @@ class AdminCustomersControllerCore extends AdminController
             //do what you want, redirect...
         }
 
-        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
         return $engine->view->render('form-test.html.twig', array(
             'form' => $form->createView()
         ));

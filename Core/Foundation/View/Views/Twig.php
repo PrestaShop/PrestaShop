@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Views;
+namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
