@@ -389,7 +389,14 @@ class FrontControllerCore extends Controller
             $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
         }
 
-        $this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
+        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
+
+        $page = array(
+            'title' => $meta_tags['meta_title'],
+            'description' => $meta_tags['meta_description'],
+        );
+
+        $this->context->smarty->assign('page', $page);
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         /* Breadcrumb */
@@ -645,6 +652,7 @@ class FrontControllerCore extends Controller
         }
 
         $this->context->smarty->assign(array(
+            'layout'         => $this->getLayout(),
             'css_files'      => $this->css_files,
             'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
@@ -653,36 +661,7 @@ class FrontControllerCore extends Controller
             'display_footer' => $this->display_footer,
         ));
 
-        $layout = $this->getLayout();
-        if ($layout) {
-            if ($this->template) {
-                $template = $this->context->smarty->fetch($this->template);
-            } else {
-                // For retrocompatibility with 1.4 controller
-
-                ob_start();
-                $this->displayContent();
-                $template = ob_get_contents();
-                ob_clean();
-            }
-            $this->context->smarty->assign('template', $template);
-            $this->smartyOutputContent($layout);
-        } else {
-            Tools::displayAsDeprecated('layout.tpl is missing in your theme directory');
-            if ($this->display_header) {
-                $this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
-            }
-
-            if ($this->template) {
-                $this->smartyOutputContent($this->template);
-            } else { // For retrocompatibility with 1.4 controller
-                $this->displayContent();
-            }
-
-            if ($this->display_footer) {
-                $this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
-            }
-        }
+        $this->smartyOutputContent($this->template);
 
         return true;
     }
@@ -695,7 +674,8 @@ class FrontControllerCore extends Controller
         if ($this->maintenance == true || !(int)Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
             if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
-                header('HTTP/1.1 503 temporarily overloaded');
+                header('HTTP/1.1 503 Service Unavailable');
+                header('Retry-After: 3600');
 
                 $this->context->smarty->assign($this->initLogoAndFavicon());
                 $this->context->smarty->assign(array(
@@ -704,7 +684,7 @@ class FrontControllerCore extends Controller
 
                 // If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
                 $front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
-                $this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+                $this->smartyOutputContent('errors/maintenance.tpl');
                 exit;
             }
         }
@@ -715,13 +695,13 @@ class FrontControllerCore extends Controller
      */
     protected function displayRestrictedCountryPage()
     {
-        header('HTTP/1.1 503 temporarily overloaded');
+        header('HTTP/1.1 403 Forbidden');
         $this->context->smarty->assign(array(
             'shop_name'   => $this->context->shop->name,
             'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
             'logo_url'    => $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'))
         ));
-        $this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'restricted-country.tpl'));
+        $this->smartyOutputContent('errors/restricted-country.tpl');
         exit;
     }
 
@@ -893,8 +873,7 @@ class FrontControllerCore extends Controller
             return true;
         }
 
-        $this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5.0.1
-        $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
+        $this->addCSS(_THEME_CSS_DIR_ . DIRECTORY_SEPARATOR . 'theme.css');
         $this->addJquery();
         $this->addJqueryPlugin('easing');
         $this->addJS(array(
@@ -1474,23 +1453,18 @@ class FrontControllerCore extends Controller
         $entity = $this->php_self;
         $id_item = (int)Tools::getValue('id_'.$entity);
 
-        $layout_dir = $this->getThemeDir();
         $layout_override_dir  = $this->getOverrideThemeDir();
 
         $layout = false;
         if ($entity) {
             if ($id_item > 0 && file_exists($layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl')) {
-                $layout = $layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl';
+                $layout = basename($layout_override_dir).'/layout-'.$entity.'-'.$id_item.'.tpl';
             } elseif (file_exists($layout_override_dir.'layout-'.$entity.'.tpl')) {
-                $layout = $layout_override_dir.'layout-'.$entity.'.tpl';
+                $layout = basename($layout_override_dir).'/layout-'.$entity.'.tpl';
             }
         }
 
-        if (!$layout && file_exists($layout_dir.'layout.tpl')) {
-            $layout = $layout_dir.'layout.tpl';
-        }
-
-        return $layout;
+        return ($layout) ?: 'layout.tpl';
     }
 
     /**
