@@ -29,6 +29,8 @@ $smarty->setTemplateDir(array(
     _PS_THEME_DIR_.'templates',
 ));
 
+$smarty->addPluginsDir(_PS_THEME_DIR_.'plugins');
+
 if (Configuration::get('PS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyMinifyHTML');
 }
