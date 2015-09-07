@@ -391,7 +391,14 @@ class FrontControllerCore extends Controller
             $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
         }
 
-        $this->context->smarty->assign(Meta::getMetaTags($this->context->language->id, $page_name));
+        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
+
+        $page = array(
+            'title' => $meta_tags['meta_title'],
+            'description' => $meta_tags['meta_description'],
+        );
+
+        $this->context->smarty->assign('page', $page);
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         /* Breadcrumb */
