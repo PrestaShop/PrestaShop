@@ -180,7 +180,7 @@ abstract class AbstractRouter
             try {
                 // Resolve route
                 $parameters = $this->sfRouter->match($requestContext->getPathInfo());
-    
+
                 // Add module info from matched route
                 $this->mapRouteToModule($parameters);
                 $request->attributes->add($parameters);

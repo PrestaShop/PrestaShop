@@ -128,6 +128,11 @@ trait AutoResponseFormatTrait
                 return true; // Action method does not follow standard name pattern
             }
 
+            // Legacy controller used to set Layout title
+            if ($legacyController = $request->attributes->get('_legacy_path')) {
+                $response->setLegacyControllerName($legacyController);
+            }
+
             //If template was not defined, try to find it dynamically
             if (!$response->getTemplate()) {
                 $templatePath = 'Core'.DIRECTORY_SEPARATOR.'Controller'.

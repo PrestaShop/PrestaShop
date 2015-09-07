@@ -71,6 +71,5 @@ class ProductController extends AdminController
         $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
         $response->addContentData('manu_forced', $this->generateUrl('admin_product_catalog', array('titi' => 'tutu'), true, UrlGeneratorInterface::ABSOLUTE_URL));
         $response->addContentData('auto_forced', $this->generateUrl('admin_product_categories'));
-        $response->setLegacyControllerName('AdminProducts'); // TODO : automatiser dans Trait
     }
 }
