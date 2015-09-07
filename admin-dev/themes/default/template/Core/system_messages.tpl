@@ -1,8 +1,8 @@
 <!-- Hard coded CSS: we could have nothing included in case of big failure! -->
 <div style="border: 7px solid {$color};">
-    <ul>
-    {foreach $exceptions as $exception}
-        <li><b>{get_class($exception)}</b><br/>{$exception->__toString()}</li>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    {foreach $exceptions as $exception name=exceptions}
+        <ul><li>{$exception->__toStringHtml()}</li></ul>
+        {if $smarty.foreach.exceptions.last}{else}<hr style="border: 1px solid {$color};" />{/if}
     {/foreach}
-    </ul>
 </div>

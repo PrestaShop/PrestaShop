@@ -28,8 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 /**
  * Base class for all Admin controllers. Others won't be accepted by AdminRouter.
@@ -99,5 +100,47 @@ class AdminController extends BaseController
     protected function isAuthenticationNeeded()
     {
         return true;
+    }
+    
+    /**
+     * Generates a URL or path for a specific ADMIN route based on the given parameters.
+     *
+     * This is a Wrapper for the Symfony method:
+     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * but also adds a legacy URL generation support for Admin interface.
+     *
+     * @param string      $name             The name of the route
+     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param bool        $forceLegacyUrl   True to use alternative URL to reach legacy dispatcher.
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     */
+    final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+        if (($routeParams = $this->getRouter()->getRouteParameters($name)) &&
+            ($defaultParams = $routeParams->getDefaults()) &&
+            ($forceLegacyUrl == true || (isset($defaultParams['_legacy_force']) && $defaultParams['_legacy_force'] === true)) &&
+            isset($defaultParams['_legacy_path']) &&
+            ($link = Context::getInstance()->link)) { // For legacy case!
+            $legacyPath = $defaultParams['_legacy_path'];
+
+            $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
+            $basePath = $legacyContext->getAdminBaseUrl();
+
+//             switch ($referenceType) {
+//                 case UrlGeneratorInterface::ABSOLUTE_URL:
+//                     return $basePath.$link->getAdminLink($legacyPath);
+//                 case UrlGeneratorInterface::ABSOLUTE_PATH:
+//                 default:
+                    return $basePath.$legacyContext->getAdminLink($legacyPath, true, $parameters);
+//             }
+        }
+        return parent::generateUrl($name, $parameters, false, $referenceType);
     }
 }

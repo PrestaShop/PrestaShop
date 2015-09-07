@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -23,10 +24,10 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class Adapter_LegacyContext
 {
-
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\Business\context class,
      * that will contains all you need in the Core architecture
@@ -40,19 +41,42 @@ class Adapter_LegacyContext
             !isset($legacyContext->theme) ||
             !isset($legacyContext->country) ||
             !isset($legacyContext->cookie) ||
-            !isset($legacyContext->language)
+            !isset($legacyContext->language) ||
+            !isset($legacyContext->link)
         ) {
-            throw new \ErrorException('Legacy context is not set properly. Cannot use it to merge with Context structure.');
+            throw new DevelopmentErrorException('Legacy context is not set properly. Cannot use it to merge with Context structure.');
         }
         return $legacyContext;
     }
-    
+
     public function mergeContextWithLegacy(PrestaShop\PrestaShop\Core\Business\Context &$newContext)
     {
         $legacyContext = $this->getContext();
-        foreach(get_object_vars($legacyContext) as $key => $value) { // gets public attributes.
-            if ($value !== null)
+        foreach (get_object_vars($legacyContext) as $key => $value) { // gets public attributes.
+            if ($value !== null) {
                 $newContext->$key = $value;
+            }
         }
+    }
+
+    public function getAdminBaseUrl()
+    {
+        return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
+    }
+
+    public function getAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        $id_lang = \Context::getContext()->language->id;
+        $params = $extraParams;
+        if ($withToken) {
+            $params['token'] = \Tools::getAdminTokenLite($controller);
+        }
+        return \Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+    }
+
+    public function getFrontUrl($controller)
+    {
+        $legacyContext = $this->getContext();
+        return $legacyContext->link->getPageLink($controller);
     }
 }

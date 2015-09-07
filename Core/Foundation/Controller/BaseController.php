@@ -34,6 +34,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 abstract class BaseController
 {
@@ -228,9 +229,12 @@ abstract class BaseController
      *
      * This is a Wrapper for the Symfony method:
      * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * but also adds a legacy URL generation support.
      *
-     * @param string      $name          The name of the route
-     * @param mixed       $parameters    An array of parameters
+     * @param string      $name             The name of the route
+     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
+     *                                      You must override the method in a Controller subclass in order to use this option.
      * @param bool|string $referenceType The type of reference to be generated (one of the constants)
      *
      * @return string The generated URL
@@ -239,23 +243,31 @@ abstract class BaseController
      * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
      * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
      *                                             it does not match the requirement
+     * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
      */
-    final public function generateUrl($name, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
+        if ($forceLegacyUrl == true) {
+            // This feature is made in AdminController and FrontController subclasses only.
+            throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.');
+        }
         try {
             return $this->getRouter()->getUrlGenerator()->generate($name, $parameters, $referenceType);
         } catch (RouteNotFoundException $rnfe) {
-            return false; // FIXME !1 mapping to legacy routing !!! :) Enjoy!
+            return false;
         }
     }
 
     /**
-     * TODO !0
-     * @param unknown $name
-     * @param unknown $parameters
-     * @param unknown $layoutMode
-     * @throws DevelopmentErrorException
-     * @return string
+     * You can call a Controller/action directly from another Controller/action by calling this.
+     * The route will be resolved, all pre-action and post-action Traits will be played, like a classical Router->dispatch action,
+     * BUT the output behavior will be overriden to return the result instead of print it in the output buffer, throught $layoutMode.
+     *
+     * @param string $name The route unique name/ID
+     * @param array $parameters The route's parameters (mandatory, and optional, and even more if needed)
+     * @param string $layoutMode The output mode overriden (partial view by default, means HTML content whithout any encapsulation).
+     * @throws DevelopmentErrorException If the route is not found.
+     * @return string The action result, after template/transformations depending on $layoutMode value.
      */
     final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
     {
@@ -263,10 +275,10 @@ abstract class BaseController
         $baseUrl = $urlGenerator->getContext()->getBaseUrl();
 
         // ensure the route is open
-        $url = $urlGenerator->generate($name, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+        $url = $urlGenerator->generate($name, $parameters, false, UrlGeneratorInterface::ABSOLUTE_PATH);
         $path = parse_url($url)['path'];
 
-        // remove base URL (for '/admin-xxx/index.php' if present in the URL)
+        // remove base URL (for '(/xxx)?/admin-xxx/index.php' if present in the URL)
         if (strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
             $path = substr($path, strlen($baseUrl));
         }

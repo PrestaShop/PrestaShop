@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProductController extends AdminController
 {
@@ -52,7 +53,11 @@ class ProductController extends AdminController
     public function productListAction(Request &$request, Response &$response, $products)
     {
         try {
-            throw new WarningException('test', 'none');
+            throw new WarningException('Vous avez fait une grosse connerie!', 'Je ne vois pass d\'alternative viable à ce sujet', array('test' => 'titi'), 42, new \Exception('pouet'));
+        } catch (WarningException $we) {
+        }
+        try {
+            throw new WarningException('Vous avez fait une grosse connerie!', 'Je ne vois pass d\'alternative viable à ce sujet', array('test' => 'titi'), 42, new \Exception('pouet'));
         } catch (WarningException $we) {
         }
     }
@@ -63,5 +68,7 @@ class ProductController extends AdminController
             'ls_products_limit' => 42
         );
         $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
+        $response->addContentData('manu_forced', $this->generateUrl('admin_product_catalog', array('titi' => 'tutu'), true, UrlGeneratorInterface::ABSOLUTE_URL));
+        $response->addContentData('auto_forced', $this->generateUrl('admin_product_categories'));
     }
 }

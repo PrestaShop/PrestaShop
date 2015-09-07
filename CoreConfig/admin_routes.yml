@@ -16,7 +16,9 @@ admin_product_list:
         ls_products_orderWay: ASC|DESC|asc|desc
 admin_product_catalog:
     path:     /product/catalog/{offset}/{limit}/{orderBy}/{orderWay}
-    defaults: 
+    defaults:
+        _legacy_path: AdminProducts
+        _legacy_force: false
         _controller: 'Admin\ProductController::productCatalogAction'
         limit: 10
         offset: 0

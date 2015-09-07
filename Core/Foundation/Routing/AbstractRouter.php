@@ -222,7 +222,8 @@ abstract class AbstractRouter
      */
     final public function forward(Request &$request, $routeName, $routeParameters = array())
     {
-        // TODO: backup $request->attributes-> _controller and others, to _previous_controller and others.
+        $attributes =& $request->attributes;
+        $attributes->set('_previous_controller', $attributes->get('_controller'));
 
         $requestContext = new RequestContext();
         $requestContext->fromRequest($request);
@@ -447,6 +448,9 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
         $parameters['_route_from_module'] = $this->moduleRouteMapping[$route] ?: null;
     }
 
+    /**
+     * TODO !4 : PHP doc
+     */
     final protected function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
@@ -464,13 +468,27 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
             $sfRouter->getRouteCollection()->addCollection($collection);
         }
     }
+    
+    /**
+     * TODO !4 : PHP doc
+     */
+    final public function getRouteParameters($route)
+    {
+        return $this->sfRouter->getRouteCollection()->get($route);
+    }
 
+    /**
+     * TODO !4 : PHP doc
+     */
     final public function registerShutdownFunctionCallback(Request &$request)
     {
         $null = null;
         EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
     
+    /**
+     * TODO !4 : PHP doc
+     */
     final public function tryToDisplayExceptions(\Exception $lastException)
     {
         try {

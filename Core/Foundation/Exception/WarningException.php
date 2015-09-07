@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 class WarningException extends \Core_Foundation_Exception_Exception
 {
     public $alternative = null;
-    public $reportData = null;
     
     /**
      * @param string $message The message to show to the user on the admin interface
@@ -49,13 +48,17 @@ class WarningException extends \Core_Foundation_Exception_Exception
      * @param number $code
      * @param Exception $previous Trace of the problem. Can be added in the report.
      */
-    final public function __construct($message, $alternative, $reportData = null, $code = 0, Exception $previous = null)
+    final public function __construct($message, $alternative, $reportData = null, $code = 0, \Exception $previous = null)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $reportData);
         $this->alternative = $alternative;
-        $this->reportData = $reportData;
         
         EventDispatcher::getInstance('message')->dispatch('warning_message', new BaseEvent($message, $this));
         EventDispatcher::getInstance('error')->dispatch('warning_message', new BaseEvent($message, $this));
+    }
+    
+    protected function getAfterMessageContent()
+    {
+        return $this->alternative;
     }
 }

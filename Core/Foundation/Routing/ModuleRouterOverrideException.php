@@ -29,8 +29,4 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 class ModuleRouterOverrideException extends WarningException
 {
-    public function __construct($message, $alternative, $reportData, $code = 0, Exception $previous = null)
-    {
-        parent::__construct($message, $alternative, $reportData, $code, $previous);
-    }
 }

@@ -56,7 +56,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 }
 
 // Prepare and trigger admin dispatcher
-if (!PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter::getInstance()->dispatch(false)) {
+if (!PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter::getInstance()->dispatch(true)) {
     // else, use legacy Dispatcher
     Dispatcher::getInstance()->dispatch();
 }

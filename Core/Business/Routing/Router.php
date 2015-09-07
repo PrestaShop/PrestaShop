@@ -118,6 +118,7 @@ abstract class Router extends AbstractRouter
      *
      * @param string $controllerName
      * @throws DevelopmentErrorException If no default controller found in the Core. The routes YML file is incorrect.
+     * @throws ModuleRouterOverrideException IF more than one module want to override the same Controller.
      * @return string The controller class name (with right namespace)
      */
     final protected function getControllerClass($controllerName)
@@ -146,10 +147,11 @@ abstract class Router extends AbstractRouter
 
         // More overrides found: problem! do not use it but Warn!
         if (count($foundOverrides) > 1) {
-            throw new WarningException(
+            throw new ModuleRouterOverrideException(
                 'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundModules),
                 $className,
-                array($foundModules, $foundOverrides)
+                array('Found modules: ' => $foundModules, 'Found overrides' => $foundOverrides),
+                1001
             );
         }
 
