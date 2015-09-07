@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 class ProductController extends AdminController
 {
@@ -70,5 +71,6 @@ class ProductController extends AdminController
         $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
         $response->addContentData('manu_forced', $this->generateUrl('admin_product_catalog', array('titi' => 'tutu'), true, UrlGeneratorInterface::ABSOLUTE_URL));
         $response->addContentData('auto_forced', $this->generateUrl('admin_product_categories'));
+        $response->setLegacyControllerName('AdminProducts'); // TODO : automatiser dans Trait
     }
 }

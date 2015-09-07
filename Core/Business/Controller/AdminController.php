@@ -53,16 +53,24 @@ class AdminController extends BaseController
     {
         // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
         $warningBlock = '';
-        if ($this->getWarningIterator()) {
+        if ($this->getWarningIterator() && $this->getWarningIterator()->count()) {
             $warningBlock = $response->getTemplateEngine()->view->fetch('Core/system_messages.tpl', array(
                 'exceptions' => $this->getWarningIterator(),
                 'color' => 'orange'
             ));
         }
+        // Display catched ErrorExceptions (not catched one will fail display and will be catched by Router->dispatch())
+        $errorBlock = '';
+        if ($this->getErrorIterator() && $this->getErrorIterator()->count()) {
+            $warningBlock = $response->getTemplateEngine()->view->fetch('Core/system_messages.tpl', array(
+                'exceptions' => $this->getErrorIterator(),
+                'color' => 'red'
+            ));
+        }
 
         //GET LAYOUT FROM ORIGINAL CONTROLLER REQUESTED
-        $orginCtrl = new \AdminLegacyLayoutController($response->getLegacyControllerName());
-        $orginCtrl->run();
+        $originCtrl = new \AdminLegacyLayoutControllerCore($response->getLegacyControllerName());
+        $originCtrl->run();
 
         $link = new \Link();
         $content = str_replace(
@@ -70,12 +78,12 @@ class AdminController extends BaseController
                 '{$content}',
                 'var currentIndex = \'index.php\';'),
             array(
-                $response->getContent(),
+                $errorBlock.$warningBlock.$response->getContent(),
                 'var currentIndex = \''.$link->getAdminLink($response->getLegacyControllerName()).'\';'),
-            $orginCtrl->outPutHtml
+            $originCtrl->outPutHtml
         );
 
-        $response->setContent($warningBlock.$content);
+        $response->setContent($content);
     }
 
     /**
