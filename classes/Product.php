@@ -1100,9 +1100,7 @@ class ProductCore extends ObjectModel
     */
     public function deleteTags()
     {
-        return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id)
-            && Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'product_tag
-												WHERE '._DB_PREFIX_.'product_tag.id_tag = '._DB_PREFIX_.'tag.id_tag)');
+        return Tag::deleteTagsForProduct((int)$this->id);
     }
 
     /**
