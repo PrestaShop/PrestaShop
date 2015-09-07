@@ -59,8 +59,22 @@ class AdminController extends BaseController
             ));
         }
 
-        //AJOUTER LAYOUT ADMIN
-        $response->setContent($warningBlock.'[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
+        //GET LAYOUT FROM ORIGINAL CONTROLLER REQUESTED
+        $orginCtrl = new \AdminLegacyLayoutController($response->getLegacyControllerName());
+        $orginCtrl->run();
+
+        $link = new \Link();
+        $content = str_replace(
+            array(
+                '{$content}',
+                'var currentIndex = \'index.php\';'),
+            array(
+                $response->getContent(),
+                'var currentIndex = \''.$link->getAdminLink($response->getLegacyControllerName()).'\';'),
+            $orginCtrl->outPutHtml
+        );
+
+        $response->setContent($warningBlock.$content);
     }
 
     /**

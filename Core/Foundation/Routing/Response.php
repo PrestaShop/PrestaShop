@@ -61,6 +61,11 @@ class Response extends sfResponse
     protected $template = null;
 
     /**
+     * @var string
+     */
+    protected $legacyControllerName = null;
+
+    /**
      * Set data before formatting.
      *
      * @param mixed $data
@@ -193,5 +198,25 @@ class Response extends sfResponse
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * Set legacyControllerName
+     *
+     * @param string $legacyControllerName
+     */
+    public function setLegacyControllerName($legacyControllerName)
+    {
+        $this->legacyControllerName = $legacyControllerName;
+    }
+
+    /**
+     * Get legacyControllerName
+     *
+     * @return string
+     */
+    public function getLegacyControllerName()
+    {
+        return $this->legacyControllerName ? $this->legacyControllerName : 'AdminDashboard';
     }
 }

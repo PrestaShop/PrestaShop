@@ -128,8 +128,11 @@ trait AutoResponseFormatTrait
                 return true; // Action method does not follow standard name pattern
             }
 
+            //If template was not defined, try to find it dynamically
             if (!$response->getTemplate()) {
-                $templatePath = 'Core'.DIRECTORY_SEPARATOR.'Controller'.DIRECTORY_SEPARATOR.$className.DIRECTORY_SEPARATOR.$methodName . '.' . ($response->getEngineName() == 'smarty' ? 'tpl' : 'html.twig');
+                $templatePath = 'Core'.DIRECTORY_SEPARATOR.'Controller'.
+                    DIRECTORY_SEPARATOR.$className.DIRECTORY_SEPARATOR. $methodName . '.' .
+                    ($response->getEngineName() == 'smarty' ? 'tpl' : 'html.twig');
 
                 $rootTemplatePath = _PS_THEME_DIR_;
                 if (defined('_PS_ADMIN_DIR_')) {

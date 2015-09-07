@@ -392,7 +392,9 @@ class LinkCore
         $id_lang = Context::getContext()->language->id;
 
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
-        return Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        $url = $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+
+        return $url;
     }
 
     /**

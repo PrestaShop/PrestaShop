@@ -38,7 +38,7 @@ class TestController extends AdminController
         $engine->view->set('content', 'toto');
         $engine->view->display('layout.tpl');*/
 
-
+        $response->setLegacyControllerName('AdminAccess');
         //$response->setTemplate('test.tpl'); //to override template, if not : lookup by Controller/Action.(tpl|html.twig)
         $response->setContentData(array('content' => 'toto'));
     }

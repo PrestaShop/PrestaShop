@@ -25,3 +25,6 @@ admin_product_catalog:
     requirements:
         orderBy: id
         orderWay: ASC|DESC|asc|desc
+admin_route1:
+    path:     /a
+    defaults: { _controller: 'Admin\TestController::aAction' }

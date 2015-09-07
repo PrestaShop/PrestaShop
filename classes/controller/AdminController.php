@@ -1814,7 +1814,7 @@ class AdminControllerCore extends Controller
 
         // Tab list
         $tabs = Tab::getTabs($this->context->language->id, 0);
-        $current_id = Tab::getCurrentParentId();
+        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
@@ -1848,6 +1848,7 @@ class AdminControllerCore extends Controller
             if (!file_exists($path_img)) {
                 $img = str_replace('png', 'gif', $img);
             }
+
             // tab[class_name] does not contains the "Controller" suffix
             $tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
             $tabs[$index]['img'] = $img;
@@ -1867,7 +1868,7 @@ class AdminControllerCore extends Controller
                 // class_name is the name of the class controller
                 if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard') {
                     $sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-                    $sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
+                    $sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller') || $sub_tab['class_name'] == $this->controller_name);
                 } elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this)) {
                     foreach ($sub_tabs as $i => $tab) {
                         if ($tab['class_name'] == 'AdminCarriers') {
@@ -2587,6 +2588,7 @@ class AdminControllerCore extends Controller
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
+        Media::addJsDef(array('baseAdminDir' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
 
         Media::addJsDef(array('currency' => array(
             'iso_code' => Context::getContext()->currency->iso_code,
