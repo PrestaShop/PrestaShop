@@ -37,8 +37,9 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use PrestaShop\PrestaShop\Core\Foundation\View\View;
 
-class Twig extends \PrestaShop\PrestaShop\View
+class Twig extends View
 {
     public $parserDirectory = null;
     public $twigTemplateDirs = [];

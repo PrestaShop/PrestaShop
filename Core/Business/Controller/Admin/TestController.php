@@ -22,7 +22,7 @@ class TestController extends AdminController
         /*
         VIEW EXAMPLE
 
-        $engine = new \PrestaShop\PrestaShop\ViewFactory('twig');
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
         echo $engine->view->render('test.html.twig', array(
             'content' => 'toto',
             'aa' => '11'
@@ -34,7 +34,7 @@ class TestController extends AdminController
         $engine->view->set('content', 'toto');
         echo $engine->view->fetch('test.html.twig', array('aa' => '33'));
 
-        $engine = new \PrestaShop\PrestaShop\ViewFactory();
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
         $engine->view->set('content', 'toto');
         $engine->view->display('layout.tpl');*/
 

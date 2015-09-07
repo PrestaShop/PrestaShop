@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use Symfony\Component\HttpFoundation\Response as sfResponse;
-use PrestaShop\PrestaShop\ViewFactory;
+use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 
 /**
  * This is an extension of Symfony's Response class, to add $contentData, and template engine callback attributes.

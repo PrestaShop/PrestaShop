@@ -24,9 +24,11 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Views;
+namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
-class Smarty extends \PrestaShop\PrestaShop\View
+use PrestaShop\PrestaShop\Core\Foundation\View\View;
+
+class Smarty extends View
 {
     public $parserDirectory = null;
     public $parserCompileDirectory = null;

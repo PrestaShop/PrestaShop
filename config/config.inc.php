@@ -265,5 +265,5 @@ if (!defined('_MEDIA_SERVER_3_')) {
 }
 
 /* View */
-$engine = new \PrestaShop\PrestaShop\ViewFactory();
+$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
 $smarty = $context->smarty = $engine->view->getInstance();

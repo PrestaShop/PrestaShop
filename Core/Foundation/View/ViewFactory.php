@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop;
+namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
 class ViewFactory
 {
@@ -32,7 +32,7 @@ class ViewFactory
 
     public function __construct($engine_name = 'smarty')
     {
-        $class_view = '\\PrestaShop\\PrestaShop\\Views\\'. ucfirst($engine_name);
+        $class_view = '\\PrestaShop\\PrestaShop\\Core\\Foundation\\View\\Views\\'. ucfirst($engine_name);
         if (!class_exists($class_view)) {
             throw new \Exception('Please define a valid template engine');
         }

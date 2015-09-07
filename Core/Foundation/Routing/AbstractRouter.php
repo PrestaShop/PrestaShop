@@ -45,7 +45,7 @@ use Symfony\Component\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
-use PrestaShop\PrestaShop\ViewFactory;
+use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
