@@ -166,45 +166,40 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         // Create WHERE clause with an array value (IN, NOT IN)
         if (is_array($value)) {
             switch (strtolower($operator)) {
-                case '=' :
-                case 'in' :
+                case '=':
+                case 'in':
                     $this->query->$method($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)).')');
-                break;
-
-                case '!=' :
-                case '<>' :
-                case 'notin' :
+                    break;
+                case '!=':
+                case '<>':
+                case 'notin':
                     $this->query->$method($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)).')');
-                break;
-
-                default :
+                    break;
+                default:
                     throw new PrestaShopException('Operator not supported for array value');
             }
-        }
-        // Create WHERE clause
-        else {
+        } else {
+            // Create WHERE clause
+
             switch (strtolower($operator)) {
-                case '=' :
-                case '!=' :
-                case '<>' :
-                case '>' :
-                case '>=' :
-                case '<' :
-                case '<=' :
-                case 'like' :
-                case 'regexp' :
+                case '=':
+                case '!=':
+                case '<>':
+                case '>':
+                case '>=':
+                case '<':
+                case '<=':
+                case 'like':
+                case 'regexp':
                     $this->query->$method($this->parseField($field).' '.$operator.' '.$this->formatValue($value, $field));
-                break;
-
-                case 'notlike' :
+                    break;
+                case 'notlike':
                     $this->query->$method($this->parseField($field).' NOT LIKE '.$this->formatValue($value, $field));
-                break;
-
-                case 'notregexp' :
+                    break;
+                case 'notregexp':
                     $this->query->$method($this->parseField($field).' NOT REGEXP '.$this->formatValue($value, $field));
-                break;
-
-                default :
+                    break;
+                default:
                     throw new PrestaShopException('Operator not supported');
             }
         }
@@ -331,17 +326,15 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         foreach ($this->join_list as $data) {
             $on = '('.implode(') AND (', $data['on']).')';
             switch ($data['type']) {
-                case self::LEFT_JOIN :
+                case self::LEFT_JOIN:
                     $this->query->leftJoin($data['table'], $data['alias'], $on);
-                break;
-
-                case self::INNER_JOIN :
+                    break;
+                case self::INNER_JOIN:
                     $this->query->innerJoin($data['table'], $data['alias'], $on);
-                break;
-
-                case self::LEFT_OUTER_JOIN :
+                    break;
+                case self::LEFT_OUTER_JOIN:
                     $this->query->leftOuterJoin($data['table'], $data['alias'], $on);
-                break;
+                    break;
             }
         }
 
@@ -356,8 +349,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         $this->results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($this->query);
-        if ($this->results && is_array($this->results))
+        if ($this->results && is_array($this->results)) {
             $this->results = ObjectModel::hydrateCollection($this->classname, $this->results, $this->id_lang);
+        }
 
         return $this;
     }

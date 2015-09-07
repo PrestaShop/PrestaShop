@@ -96,8 +96,8 @@ abstract class PaymentModuleCore extends Module
 
         foreach ($shops as $s) {
             if (!Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
-					SELECT '.(int)$this->id.', "'.(int)$s.'", `id_currency` FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0')) {
+                    INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
+                    SELECT '.(int)$this->id.', "'.(int)$s.'", `id_currency` FROM `'._DB_PREFIX_.'currency` WHERE deleted = 0')) {
                 return false;
             }
         }
@@ -118,7 +118,7 @@ abstract class PaymentModuleCore extends Module
 
         foreach ($shops as $s) {
             if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_shop`, `id_currency`)
-				VALUES ('.(int)$this->id.', "'.(int)$s.'", -2)')) {
+                VALUES ('.(int)$this->id.', "'.(int)$s.'", -2)')) {
                 return false;
             }
         }
@@ -159,10 +159,18 @@ abstract class PaymentModuleCore extends Module
      * @return bool
      * @throws PrestaShopException
      */
-    public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
-        $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
-        $secure_key = false, Shop $shop = null)
-    {
+    public function validateOrder(
+        $id_cart,
+        $id_order_state,
+        $amount_paid,
+        $payment_method = 'Unknown',
+        $message = null,
+        $extra_vars = array(),
+        $currency_special = null,
+        $dont_touch_amount = false,
+        $secure_key = false,
+        Shop $shop = null
+    ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
         }
@@ -589,7 +597,13 @@ abstract class PaymentModuleCore extends Module
                                     $params,
                                     $this->context->customer->email,
                                     $this->context->customer->firstname.' '.$this->context->customer->lastname,
-                                    null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    _PS_MAIL_DIR_,
+                                    false,
+                                    (int)$order->id_shop
                                 );
                             }
 
@@ -785,7 +799,10 @@ abstract class PaymentModuleCore extends Module
                                 null,
                                 null,
                                 $file_attachement,
-                                null, _PS_MAIL_DIR_, false, (int)$order->id_shop
+                                null,
+                                _PS_MAIL_DIR_,
+                                false,
+                                (int)$order->id_shop
                             );
                         }
                     }
@@ -928,8 +945,8 @@ abstract class PaymentModuleCore extends Module
 
         if (!empty($values)) {
             return Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
-			VALUES '.rtrim($values, ','));
+            INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
+            VALUES '.rtrim($values, ','));
         }
 
         return true;
@@ -950,13 +967,13 @@ abstract class PaymentModuleCore extends Module
         }
 
         return Db::getInstance()->executeS('
-		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-		FROM `'._DB_PREFIX_.'module` m
-		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
+        SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+        FROM `'._DB_PREFIX_.'module` m
+        LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
         .Shop::addSqlRestriction(false, 'hm').'
-		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
-		WHERE h.`name` = \''.pSQL($hook_payment).'\'');
+        LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+        INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
+        WHERE h.`name` = \''.pSQL($hook_payment).'\'');
     }
 
     public static function preCall($module_name)

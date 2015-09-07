@@ -423,7 +423,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 return $value;
 
             case self::TYPE_STRING:
-            default :
+            default:
                 if ($with_quotes) {
                     return '\''.pSQL($value).'\'';
                 }
@@ -550,11 +550,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     {
         $definition = ObjectModel::getDefinition($this);
 
-        $res = Db::getInstance()->getRow('
-					SELECT *
-					FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
-					WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
-                );
+        $res = Db::getInstance()->getRow(
+            'SELECT *
+            FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
+            WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
+        );
         if (!$res) {
             return false;
         }
@@ -562,8 +562,13 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         unset($res[$definition['primary']]);
         foreach ($res as $field => &$value) {
             if (isset($definition['fields'][$field])) {
-                $value = ObjectModel::formatValue($value, $definition['fields'][$field]['type'], false, true,
-                                                  !empty($definition['fields'][$field]['allow_null']));
+                $value = ObjectModel::formatValue(
+                    $value,
+                    $definition['fields'][$field]['type'],
+                    false,
+                    true,
+                    !empty($definition['fields'][$field]['allow_null'])
+                );
             }
         }
 
@@ -575,9 +580,9 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         if (isset($definition['multilang']) && $definition['multilang']) {
             $result = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
-			WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id);
+            SELECT *
+            FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
+            WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id);
             if (!$result) {
                 return false;
             }
@@ -585,8 +590,13 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             foreach ($result as &$row) {
                 foreach ($row as $field => &$value) {
                     if (isset($definition['fields'][$field])) {
-                        $value = ObjectModel::formatValue($value, $definition['fields'][$field]['type'], false, true,
-                                                          !empty($definition['fields'][$field]['allow_null']));
+                        $value = ObjectModel::formatValue(
+                            $value,
+                            $definition['fields'][$field]['type'],
+                            false,
+                            true,
+                            !empty($definition['fields'][$field]['allow_null'])
+                        );
                     }
                 }
             }
@@ -712,9 +722,9 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                                 $result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
                             }
                         }
-                    }
-                    // If this table is not linked to multishop system ...
-                    else {
+                    } else {
+                        // If this table is not linked to multishop system ...
+
                         $where = pSQL($this->def['primary']).' = '.(int)$this->id
                                     .' AND id_lang = '.(int)$field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where)) {
@@ -1272,8 +1282,8 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         if ($assoc !== false) {
             if ($assoc['type'] !== 'fk_shop') {
                 $multi_shop_join = ' LEFT JOIN `'._DB_PREFIX_.bqSQL($this->def['table']).'_'.bqSQL($assoc['type']).'`
-										AS `multi_shop_'.bqSQL($this->def['table']).'`
-										ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
+                                        AS `multi_shop_'.bqSQL($this->def['table']).'`
+                                        ON (main.`'.bqSQL($this->def['primary']).'` = `multi_shop_'.bqSQL($this->def['table']).'`.`'.bqSQL($this->def['primary']).'`)';
                 $sql_filter = 'AND `multi_shop_'.bqSQL($this->def['table']).'`.id_shop = '.Context::getContext()->shop->id.' '.$sql_filter;
                 $sql_join = $multi_shop_join.' '.$sql_join;
             } else {
@@ -1290,11 +1300,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             }
         }
         $query = '
-		SELECT DISTINCT main.`'.bqSQL($this->def['primary']).'` FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'` AS main
-		'.$sql_join.'
-		WHERE 1 '.$sql_filter.'
-		'.($sql_sort != '' ? $sql_sort : '').'
-		'.($sql_limit != '' ? $sql_limit : '');
+        SELECT DISTINCT main.`'.bqSQL($this->def['primary']).'` FROM `'._DB_PREFIX_.bqSQL($this->def['table']).'` AS main
+        '.$sql_join.'
+        WHERE 1 '.$sql_filter.'
+        '.($sql_sort != '' ? $sql_sort : '').'
+        '.($sql_limit != '' ? $sql_limit : '');
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -1343,9 +1353,9 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     public function getFieldsRequiredDatabase($all = false)
     {
         return Db::getInstance()->executeS('
-		SELECT id_required_field, object_name, field_name
-		FROM '._DB_PREFIX_.'required_field
-		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
+        SELECT id_required_field, object_name, field_name
+        FROM '._DB_PREFIX_.'required_field
+        '.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
     }
 
     /**
@@ -1423,11 +1433,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
         $cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
         if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id)) {
-            $associated = (bool)Db::getInstance()->getValue('
-				SELECT id_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-				AND id_shop = '.(int)$id_shop
+            $associated = (bool)Db::getInstance()->getValue(
+                'SELECT id_shop
+                FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+                WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+                AND id_shop = '.(int)$id_shop
             );
 
             if (!ObjectModel::$cache_objects) {
@@ -1515,8 +1525,8 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         }
 
         $sql = 'SELECT id_shop
-				FROM '._DB_PREFIX_.$this->def['table'].'_shop
-				WHERE '.$this->def['primary'].' = '.(int)$id;
+                FROM '._DB_PREFIX_.$this->def['table'].'_shop
+                WHERE '.$this->def['primary'].' = '.(int)$id;
         if ($results = Db::getInstance()->executeS($sql)) {
             $ids = array();
             foreach ($results as $row) {
@@ -1614,8 +1624,8 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         }
 
         $sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
-				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
-				SET '.implode(', ', $update_data).
+                '.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
+                SET '.implode(', ', $update_data).
                 (!empty($where) ? ' WHERE '.$where : '');
 
         return Db::getInstance()->execute($sql);
@@ -1673,10 +1683,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
      */
     public static function existsInDatabase($id_entity, $table)
     {
-        $row = Db::getInstance()->getRow('
-			SELECT `id_'.bqSQL($table).'` as id
-			FROM `'._DB_PREFIX_.bqSQL($table).'` e
-			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity, false
+        $row = Db::getInstance()->getRow(
+            'SELECT `id_'.bqSQL($table).'` as id
+            FROM `'._DB_PREFIX_.bqSQL($table).'` e
+            WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity,
+            false
         );
 
         return isset($row['id']);

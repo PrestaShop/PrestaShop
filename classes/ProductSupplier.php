@@ -123,9 +123,10 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.product_supplier_reference');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int)$id_product.'
-			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
-			AND ps.id_supplier = '.(int)$id_supplier
+        $query->where(
+            'ps.id_product = '.(int)$id_product.'
+            AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+            AND ps.id_supplier = '.(int)$id_supplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -149,9 +150,10 @@ class ProductSupplierCore extends ObjectModel
             $query->select('ps.id_currency');
         }
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int)$id_product.'
-			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
-			AND ps.id_supplier = '.(int)$id_supplier
+        $query->where(
+            'ps.id_product = '.(int)$id_product.'
+            AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+            AND ps.id_supplier = '.(int)$id_supplier
         );
 
         if (!$with_currency) {
@@ -180,9 +182,10 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.id_product_supplier');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = '.(int)$id_product.'
-			AND ps.id_product_attribute = '.(int)$id_product_attribute.'
-			AND ps.id_supplier = '.(int)$id_supplier
+        $query->where(
+            'ps.id_product = '.(int)$id_product.'
+            AND ps.id_product_attribute = '.(int)$id_product_attribute.'
+            AND ps.id_supplier = '.(int)$id_supplier
         );
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
