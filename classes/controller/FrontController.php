@@ -376,36 +376,6 @@ class FrontControllerCore extends Controller
             $this->context->cart = $cart;
         }
 
-        /* get page name to display it in body id */
-
-        // Are we in a payment module
-        $module_name = '';
-        if (Validate::isModuleName(Tools::getValue('module'))) {
-            $module_name = Tools::getValue('module');
-        }
-
-        if (!empty($this->page_name)) {
-            $page_name = $this->page_name;
-        } elseif (!empty($this->php_self)) {
-            $page_name = $this->php_self;
-        } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
-            $page_name = 'module-payment-submit';
-        } elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
-            // @retrocompatibility Are we in a module ?
-            $page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
-        } else {
-            $page_name = Dispatcher::getInstance()->getController();
-            $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
-        }
-
-        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
-
-        $page = array(
-            'title' => $meta_tags['meta_title'],
-            'description' => $meta_tags['meta_description'],
-        );
-
-        $this->context->smarty->assign('page', $page);
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
         /* Breadcrumb */
@@ -447,7 +417,6 @@ class FrontControllerCore extends Controller
             'link'                => $link,
             'cart'                => $cart,
             'cookie'              => $this->context->cookie,
-            'page_name'           => $page_name,
             'hide_left_column'    => !$this->display_column_left,
             'hide_right_column'   => !$this->display_column_right,
             'base_dir'            => _PS_BASE_URL_.__PS_BASE_URI__,
@@ -519,6 +488,7 @@ class FrontControllerCore extends Controller
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectSerializer->toArray($this->context->language),
+            'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
         ]);
@@ -1635,5 +1605,45 @@ class FrontControllerCore extends Controller
         ];
 
         return $shop;
+    }
+
+    public function getTemplateVarPage()
+    {
+        $page_name = $this->getPageName();
+        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
+
+        $page = [
+            'title' => $meta_tags['meta_title'],
+            'description' => $meta_tags['meta_description'],
+            'keywords' => $meta_tags['meta_keywords'],
+            'page_name' => $page_name,
+        ];
+
+        return $page;
+    }
+
+    public function getPageName()
+    {
+        // Are we in a payment module
+        $module_name = '';
+        if (Validate::isModuleName(Tools::getValue('module'))) {
+            $module_name = Tools::getValue('module');
+        }
+
+        if (!empty($this->page_name)) {
+            $page_name = $this->page_name;
+        } elseif (!empty($this->php_self)) {
+            $page_name = $this->php_self;
+        } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
+            $page_name = 'module-payment-submit';
+        } elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+            // @retrocompatibility Are we in a module ?
+            $page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
+        } else {
+            $page_name = Dispatcher::getInstance()->getController();
+            $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_'.$page_name : $page_name);
+        }
+
+        return $page_name;
     }
 }
