@@ -539,6 +539,7 @@ class FrontControllerCore extends Controller
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectSerializer->toArray($this->context->language),
+            'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
         ]);
     }
@@ -1671,5 +1672,14 @@ class FrontControllerCore extends Controller
         unset($cust['id_risk']);
 
         return $cust;
+    }
+
+    public function getTemplateVarShop()
+    {
+        $shop = [
+            'name' => Configuration::get('PS_SHOP_NAME'),
+        ];
+
+        return $shop;
     }
 }
