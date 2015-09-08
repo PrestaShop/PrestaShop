@@ -39,20 +39,20 @@ if (file_exists(_PS_THEME_DIR_.'mobile/')) {
     define('_PS_THEME_MOBILE_DIR_', _PS_THEME_DIR_.'mobile/');
     define('_THEME_MOBILE_DIR_', _THEMES_DIR_._THEME_NAME_.'/mobile/');
 } else {
-    define('_PS_THEME_MOBILE_DIR_', _PS_ROOT_DIR_.'/themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
-    define('_THEME_MOBILE_DIR_', __PS_BASE_URI__.'themes/'._PS_DEFAULT_THEME_NAME_.'/mobile/');
+    define('_PS_THEME_MOBILE_DIR_', _PS_ROOT_DIR_.'/themes/'._PS_DEFAULT_THEME_NAME_);
+    define('_THEME_MOBILE_DIR_', _PS_THEME_DIR_);
 }
-define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_MOBILE_DIR_.'override/');
+define('_PS_THEME_MOBILE_OVERRIDE_DIR_', _PS_THEME_OVERRIDE_DIR_);
 
-define('_THEME_MOBILE_IMG_DIR_', _THEME_MOBILE_DIR_.'img/');
-define('_THEME_MOBILE_CSS_DIR_', _THEME_MOBILE_DIR_.'css/');
-define('_THEME_MOBILE_JS_DIR_', _THEME_MOBILE_DIR_.'js/');
+define('_THEME_MOBILE_IMG_DIR_', _THEME_IMG_DIR_);
+define('_THEME_MOBILE_CSS_DIR_', _THEME_CSS_DIR_);
+define('_THEME_MOBILE_JS_DIR_', _THEME_JS_DIR_);
 
 /* For touch pad devices */
-define('_PS_THEME_TOUCHPAD_DIR_', _PS_THEME_DIR_.'touchpad/');
-define('_THEME_TOUCHPAD_DIR_', _THEMES_DIR_._THEME_NAME_.'/touchpad/');
-define('_THEME_TOUCHPAD_CSS_DIR_', _THEME_TOUCHPAD_DIR_.'css/');
-define('_THEME_TOUCHPAD_JS_DIR_', _THEME_TOUCHPAD_DIR_.'js/');
+define('_PS_THEME_TOUCHPAD_DIR_', _PS_THEME_DIR_);
+define('_THEME_TOUCHPAD_DIR_', _THEMES_DIR_._THEME_NAME_);
+define('_THEME_TOUCHPAD_CSS_DIR_', _THEME_CSS_DIR_);
+define('_THEME_TOUCHPAD_JS_DIR_', _THEME_JS_DIR_);
 
 /* Image URLs */
 define('_PS_IMG_', __PS_BASE_URI__.'img/');
