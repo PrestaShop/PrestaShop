@@ -1,9 +1,5 @@
 {extends "page.tpl"}
 
-{block name="head_seo_title"}{$cms.meta_title}{/block}
-{block name='head_seo_description'}{$cms.meta_description}{/block}
-{block name='head_seo_keywords'}{$cms.meta_keywords}{/block}
-
 {block name="page_title"}
   {$cms.meta_title}
 {/block}
