@@ -36,6 +36,9 @@ class CurrencyCore extends ObjectModel
     /** @var string Iso code */
     public $iso_code;
 
+    /** @var string numeric Iso code */
+    public $iso_code_num;
+
     /** @var string exchange rate from euros */
     public $conversion_rate;
 
@@ -58,7 +61,7 @@ class CurrencyCore extends ObjectModel
         'primary' => 'id_currency',
         'multilang_shop' => true,
         'fields' => array(
-            'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'name' =>           array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
             'iso_code' =>       array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
             'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -95,6 +98,7 @@ class CurrencyCore extends ObjectModel
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
 
             $this->sign = $cldrCurrency['symbol'];
+            $this->iso_code_num = $cldrCurrency['iso_code'];
             $this->name = $cldrCurrency['name'];
             $this->format = $this->cldr->getCurrencyFormatPattern();
             $this->blank = 1;
