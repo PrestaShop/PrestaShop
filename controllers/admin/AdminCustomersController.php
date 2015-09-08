@@ -24,18 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Form\FormFactory;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Constraints\File;
-use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
-use PrestaShop\PrestaShop\Form\Type\TestType;
-use PrestaShop\PrestaShop\Form\Type\DropFilesType;
-
 /**
  * @property Customer $object
  */
@@ -342,111 +330,8 @@ class AdminCustomersControllerCore extends AdminController
         return parent::renderList();
     }
 
-    public function renderFormTwig()
-    {
-        $request = Request::createFromGlobals();
-        $formFactory = new FormFactory();
-        $builder = $formFactory->create();
-
-        $simpleSubForm = $builder->create('author', 'form')
-            ->add('name', 'text')
-            ->add('email', 'text');
-
-        $defaultData = array(
-            'firstName' => 'tata',
-            'lastName' => 'toto'
-        );
-
-
-        $form = $builder
-            ->setAction('')
-            ->add('firstName', 'text', array(
-                'constraints' => array(
-                    new NotBlank(),
-                    new Length(array('min' => 4)),
-                    new ContainsAlphanumeric(),
-                ),
-            ))
-            ->add('lastName', 'text', array(
-                'constraints' => array(
-                    new NotBlank(),
-                    new Email(),
-                    new Length(array('min' => 4)),
-                ),
-            ))
-            ->add('gender', 'choice', array(
-                'choices' => array('m' => 'Male', 'f' => 'Female'),
-            ))
-            ->add('newsletter', 'checkbox', array(
-                'required' => false,
-            ))
-            ->add('imageAttachment', 'file', array(
-                'required' => false,
-                'constraints' => array(
-                    new Image(array(
-                        'maxSize' => '1024k',
-                        'minWidth' => 100,
-                        'minHeight' => 100,
-                        'mimeTypes' => array(
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/png',
-                            'image/gif'
-                        )
-                    ))
-                )
-            ))
-            ->add('fileAttachment', 'file', array(
-                'required' => false,
-                'constraints' => array(
-                    new File(array(
-                        'maxSize' => '1024k',
-                        'mimeTypes' => array(
-                            'text/plain'
-                        )
-                    ))
-                )
-            ))
-            ->add('dropAttachment', new DropFilesType())
-            ->add($simpleSubForm)
-            ->add('testSimpleCollection', 'collection', array(
-                'type' => new TestType(),
-                'prototype' => true,
-                'allow_add' => true,
-                'allow_delete' => true))
-            ->setData($defaultData)
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-
-            if (!empty($data['imageAttachment'])) {
-                $file = $data['imageAttachment'];
-                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '.' . $file->guessExtension());
-            }
-
-            if (!empty($data['fileAttachment'])) {
-                $file = $data['fileAttachment'];
-                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '_' .$file->getClientOriginalName());
-            }
-
-            print_r($data);
-            die;
-            //do what you want, redirect...
-        }
-
-        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
-        return $engine->view->render('form-test.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
-
     public function renderForm()
     {
-        return $this->renderFormTwig();
-
         /** @var Customer $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
