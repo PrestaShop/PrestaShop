@@ -32,6 +32,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     {
         parent::__construct();
 
+        $this->bootstrap = true;
         $this->controller_name = $controllerName;
         $this->id = Tab::getIdFromClassName($this->controller_name);
 
