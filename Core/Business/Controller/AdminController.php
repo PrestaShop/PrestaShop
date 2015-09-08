@@ -59,6 +59,20 @@ class AdminController extends BaseController
                 'color' => 'orange'
             ));
         }
+        // Display notices and success messages
+        $noticeBlock = '';
+        if ($this->getInfoIterator() && $this->getInfoIterator()->count()) {
+            $noticeBlock = $response->getTemplateEngine()->view->fetch('Core/user_messages.tpl', array(
+                'messages' => $this->getInfoIterator(),
+                'color' => 'blue'
+            ));
+        }
+        if ($this->getSuccessIterator() && $this->getSuccessIterator()->count()) {
+            $noticeBlock .= $response->getTemplateEngine()->view->fetch('Core/user_messages.tpl', array(
+                'messages' => $this->getSuccessIterator(),
+                'color' => 'green'
+            ));
+        }
 
         //GET LAYOUT FROM ORIGINAL CONTROLLER REQUESTED
         $originCtrl = new \AdminLegacyLayoutControllerCore($response->getLegacyControllerName());
@@ -70,7 +84,7 @@ class AdminController extends BaseController
                 '{$content}',
                 'var currentIndex = \'index.php\';'),
             array(
-                $warningBlock.$response->getContent(),
+                $warningBlock.$noticeBlock.$response->getContent(),
                 'var currentIndex = \''.$link->getAdminLink($response->getLegacyControllerName()).'\';'),
             $originCtrl->outPutHtml
         );

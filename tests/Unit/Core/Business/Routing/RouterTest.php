@@ -48,9 +48,8 @@ class FakeRouter extends Router
         }
         return self::$instance;
     }
-    
+
     public $calledcheckControllerAuthority = null;
-    
     protected function checkControllerAuthority(\ReflectionClass $class)
     {
         $this->calledcheckControllerAuthority = $class->name;
@@ -60,6 +59,12 @@ class FakeRouter extends Router
         if ($class->name == 'PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\RouterTestControllerWarning') {
             throw new WarningException('FakeControllerWarning does not stop!', 'alternateText');
         }
+    }
+
+    public static $calledExitNow = false;
+    public function exitNow($i = 0)
+    {
+        self::$calledExitNow = true;
     }
 }
 
@@ -115,7 +120,7 @@ class RouterTest extends UnitTestCase
         ob_start();
         $found = $router->dispatch(true);
         ob_end_clean();
-        $this->assertTrue($found, '/routerTest/a should be found.');
+        $this->assertEmpty($found, '/routerTest/a should be found.');
 
         // load from a module! Controller Error case (bad parent class checked)
         $fakeRequest = Request::create('/routerTest/b');
@@ -133,7 +138,7 @@ class RouterTest extends UnitTestCase
         EventDispatcher::getInstance('message')->addListener('warning_message', array($this, 'warningListenerEvent'));
         try {
             $found = $router->dispatch(true);
-            $this->assertTrue($found, '/routerTest/c should be found even with a warning exception.');
+            $this->assertEmpty($found, '/routerTest/c should be found even with a warning exception.');
             $this->assertAttributeEquals(true, 'warningReceived', $this);
         } catch (\Exception $e) {
             $this->fail('/routerTest/c should not trigger another exception.');
@@ -150,7 +155,7 @@ class RouterTest extends UnitTestCase
         ob_start();
         $found = $router->dispatch(true);
         ob_end_clean();
-        $this->assertTrue($found, '/routerTest/subcall should be found.');
+        $this->assertEmpty($found, '/routerTest/subcall should be found.');
         
         // TODO: when Views will be able to scan in modules View directory :)
     }
@@ -159,17 +164,24 @@ class RouterTest extends UnitTestCase
     {
         $this->setup_env();
         $router = FakeRouter::getInstance();
-        // TODO !2
+        
+        $fakeRequest = Request::create('/routerTest/forward'); // route to existing controller in a module, action OK.
+        $fakeRequest->overrideGlobals();
+        ob_start();
+        $found = $router->dispatch(true);
+        ob_end_clean();
+        $this->assertEmpty($found, '/routerTest/forward should be found.');
     }
 
-    // Because redirect will trigger exit;, this test will stops phpunit!
-//     public function test_redirect()
-//     {
-//         $this->setup_env();
-//         $router = FakeRouter::getInstance();
+    public function test_redirect()
+    {
+        $this->setup_env();
+        $router = FakeRouter::getInstance();
 
-//         $fakeRequest = Request::create('/routerTest/redirect');
-//         $fakeRequest->overrideGlobals();
-//         $router->dispatch();
-//     }
+        $fakeRequest = Request::create('/routerTest/redirect');
+        $fakeRequest->overrideGlobals();
+        ob_start();
+        $router->dispatch();
+        ob_end_clean();
+    }
 }

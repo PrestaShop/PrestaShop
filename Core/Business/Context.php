@@ -39,7 +39,7 @@ class Context extends ParameterBag
      *
      * @return Context
      */
-    public final static function getInstance()
+    final public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new self();
@@ -59,14 +59,14 @@ class Context extends ParameterBag
      * Final behavior:
      * - suppress 'override with legacy context' step.
      */
-    public final function __construct()
+    final public function __construct()
     {
-        // TODO: default values now.
-        
+        // TODO : default values now.
+
         // While Legacy architecture is here, retrieve some data from it.
         $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
         $legacyContext->mergeContextWithLegacy($this);
-        
+
         // TODO : override legacy values now.
     }
 }

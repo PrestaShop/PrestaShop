@@ -375,7 +375,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
             }
         );
 
-        include $cache->getPath();
+        include_once $cache->getPath();
         $functionName = 'doDispatchCached'.$cacheFullName;
         return $functionName($method, $request, $this);
     }
@@ -457,6 +457,6 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
             header('Status: 301 Moved Permanently', false, 301);
         }
         header('Location: '.$url, true);
-        exit;
+        $this->exitNow();
     }
 }

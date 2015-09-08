@@ -82,7 +82,7 @@ abstract class BaseController
             case 'raw':
                 return;
             case 'none':
-                exit(0); // Break PHP process! Controller action should have already sent its result by itself (file, binary, etc...)
+                $this->router->exitNow(); // Break PHP process! Controller action should have already sent its result by itself (file, binary, etc...)
             default:
                 throw new DevelopmentErrorException('Unknown format.');
         }
@@ -268,6 +268,61 @@ abstract class BaseController
     {
         return $this->getRouter()->subcall($name, $parameters, $layoutMode);
     }
-    
-    // TODO !1: wrapper forward, wrapper redirect, redirectToRoute
+
+    /**
+     * This method will forward the Router into another Controller/action without any redirection instruction to the browser.
+     * The browser will then receive response from a different action with no URL change.
+     * Used for example after a POST succeed, and we want to execute another action to display another content.
+     *
+     * This is a Wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::forward()
+     *
+     * @param Request $oldRequest The request of the action that called this method.
+     * @param string $routeName The new route name to forward to.
+     * @param array $routeParameters The parameters to override the route defaults parameters
+     * @throws DevelopmentErrorException if the forward is made from a subcall action.
+     * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
+     */
+    final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
+    {
+        return $this->getRouter()->forward($oldRequest, $routeName, $routeParameters);
+    }
+
+    /**
+     * The redirect call take a route and its parameters, to send a redirection header to the browser.
+     * If the redirect succeed, it does not return because an exit is done after redirection is sent.
+     *
+     * This is a Wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::redirectToRoute()
+     *
+     * @param mixed $to Integer, String or Array. See description for specific array format.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is not a return code.
+     * @throws DevelopmentErrorException if the redirect is made from a subcall action.
+     * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
+     */
+    final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
+    {
+        $this->getRouter()->redirectToRoute($oldRequest, $routeName, $routeParameters, $forceLegacyUrl, $permanent);
+    }
+
+    /**
+     * The redirect call take several values in parameter:
+     * - Integer value to return a specific HTTP return code and its default message (500, 404, etc...),
+     * - String to indicate the URL to redirect to
+     *
+     * If the redirect succeed, it does not return because an exit is done after redirection sent.
+     *
+     * This is a Wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::redirect()
+     *
+     * @throws DevelopmentErrorException if argument is not properly set.
+     *
+     * @param mixed $to Integer or String. See description for specific array format.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is an URL.
+     * @return false if headers already sent (cannot redirect, it's too late).
+     */
+    final public function redirect($to, $permanent = false)
+    {
+        $this->getRouter()->redirect($to, $permanent);
+    }
 }

@@ -35,8 +35,8 @@ class RouterTestController extends FrontController
 {
     public function aAction(Request &$request, Response &$response)
     {
-        $response->addContentData('a', 'AA');
-        return self::RESPONSE_NUDE_HTML;
+        $response->setContent('AA');
+        return self::RESPONSE_RAW_TEXT;
     }
 
     public function redirectAction(Request &$request, Response &$response)
@@ -47,5 +47,10 @@ class RouterTestController extends FrontController
     public function subcallAction(Request &$request, Response &$response)
     {
         $response->addContentData('sub_a', $this->subcall('fake_controllers_route1', array(), BaseController::RESPONSE_PARTIAL_VIEW));
+    }
+
+    public function forwardAction(Request &$request, Response &$response)
+    {
+        $this->forward($request, 'fake_controllers_route1');
     }
 }

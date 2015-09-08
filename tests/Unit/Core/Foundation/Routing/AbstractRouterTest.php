@@ -40,26 +40,30 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     public $calledControllerName;
     public $calledControllerMethod;
     public $calledWithResquest;
-    
+
     protected function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
     }
-    
+
     protected function doSubcall($controllerName, $controllerMethod, Request &$request)
     {
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
     }
-    
+
     protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
     {
     }
-    
+
     public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+    }
+
+    public function exitNow($i = 0)
     {
     }
 }

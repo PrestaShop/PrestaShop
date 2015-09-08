@@ -53,14 +53,14 @@ class ProductController extends AdminController
      */
     public function productListAction(Request &$request, Response &$response, $products)
     {
-        //$this->getRouter()->redirectToRoute($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
-        //$this->getRouter()->forward($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
+        //$this->redirectToRoute($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
+        //$this->forward($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
     }
-    
+
     public function productList2Action(Request &$request, Response &$response, $products)
     {
     }
-    
+
     public function productCatalogAction(Request &$request, Response &$response)
     {
         $subcallParams = array(

@@ -182,7 +182,7 @@ abstract class AbstractRouter
      *
      * @param boolean $noRoutePassThrough Use True to allow dispatch function to return false if no route found. Else, an exception is raised.
      * @throws ResourceNotFoundException if $noRoutePassThrough is set to False and no route is found for the request.
-     * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
+     * @return boolean false if $noRoutePassThrough is set to true and no route found. Does not returns if action finished successfully (blocked by exit;)
      */
     final public function dispatch($noRoutePassThrough = false)
     {
@@ -222,7 +222,7 @@ abstract class AbstractRouter
                 list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
                 $res = $this->doDispatch($controllerName, $controllerMethod, $request);
                 $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
-                return $res;
+                $this->exitNow();
             } catch (ResourceNotFoundException $e) {
                 $this->routingDispatcher->dispatch('dispatch_failed', new BaseEvent('Failed to resolve route from HTTP request.', $e));
                 if ($noRoutePassThrough) {
@@ -287,7 +287,7 @@ abstract class AbstractRouter
             list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
             $res = $this->doDispatch($controllerName, $controllerMethod, $oldRequest);
             $this->routingDispatcher->dispatch('forward'.($res?'_succeed':'_failed'), new BaseEvent('Forwarded on '.$parameters['_controller'].'.'));
-            return $res;
+            $this->exitNow();
         } catch (ResourceNotFoundException $e) {
             $this->routingDispatcher->dispatch('forward_failed', new BaseEvent('Failed to resolve route from forward request.', $e));
             throw new DevelopmentErrorException('A forward failed due to unresolved route.', $oldRequest, 1002, $e);
@@ -363,7 +363,7 @@ abstract class AbstractRouter
         }
 
         $this->doRedirect($routeName, $routeParameters, $forceLegacyUrl, $permanent);
-        exit;
+        $this->exitNow();
     }
 
     /**
@@ -391,12 +391,12 @@ abstract class AbstractRouter
                 header('Status: 301 Moved Permanently', false, 301);
             }
             header('Location: '.$to, true);
-            exit;
+            $this->exitNow();
         }
         if (is_int($to)) {
             $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
             http_response_code($to);
-            exit;
+            $this->exitNow();
             // TODO: default error page for this code. Howto ? et un cas specific 500 ?
         }
 
@@ -600,10 +600,15 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
             }
 
             echo '<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> '.$messages;
-            exit(1);
+            $this->exitNow(1);
         } catch (\Exception $e) {
             // Failure. Don't need $e (templating failure), but should throws $lastException to display anyway.
             throw $lastException;
         }
+    }
+
+    public function exitNow($i = 0)
+    {
+        exit($i);
     }
 }

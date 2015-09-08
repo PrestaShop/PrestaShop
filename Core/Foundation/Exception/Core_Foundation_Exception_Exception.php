@@ -51,7 +51,7 @@ class Core_Foundation_Exception_Exception extends Exception
         $data .= '</ul><br/>';
 
         $data .= 'To send support information about this exception, please use this link:<br/>';
-        $data .= '<a href="#">TODO (stratégie support à mettre en place, risque de flooding!)</a><br/><br/>';
+        $data .= '<a href="#">TODO (This link will allow to send report to support team directly, in a future release)</a><br/><br/>';
 
         if ($this->reportData != null && count($this->reportData) > 0) {
             $data .= '<a name="'.$this->randomInstantiationKey.'_reporting_block"></a><a href="#'.$this->randomInstantiationKey.'_reporting_block"

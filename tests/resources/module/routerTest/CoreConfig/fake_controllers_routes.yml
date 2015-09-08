@@ -18,3 +18,7 @@ fake_controllers_route4:
 fake_controllers_route5:
     path:     /subcall
     defaults: { _controller: 'Test\RouterTestController::subcallAction' }
+
+fake_controllers_route6:
+    path:     /forward
+    defaults: { _controller: 'Test\RouterTestController::forwardAction' }
