@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "cldrjs": "0.4.1",
+    "dropzone": "^4.0.1",
     "globalize": "1.0.0"
   }
 }

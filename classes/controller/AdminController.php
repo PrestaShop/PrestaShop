@@ -2580,6 +2580,7 @@ class AdminControllerCore extends Controller
         //Bootstrap
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
+        $this->addCSS(_PS_JS_DIR_.'vendor/node_modules/dropzone/dist/min/dropzone.min.css', 'all', 0);
 
         $this->addJquery();
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2611,7 +2612,8 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
+            _PS_JS_DIR_.'vendor/node_modules/dropzone/dist/min/dropzone.min.js'
         ));
 
         //loads specific javascripts for the admin theme

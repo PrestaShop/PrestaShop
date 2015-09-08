@@ -41,8 +41,33 @@
         <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form) }}
             <div class="{{ block('form_group_class') }}">
-                <div class="col-lg-12 panel text-center" style="height:200px;">drag&drop zone</div>
-                {#{ form_widget(form) }#}
+                <script>
+                    $(document).ready(function () {
+
+                        Dropzone.autoDiscover = false;
+
+                        $(".dropzone").dropzone({
+                            url: 'aaaaaaaaaaaaaaaaa',
+                            addRemoveLinks: true,
+                            uploadMultiple: true,
+                            success: function (file, response) {
+                                var imgName = response;
+                                console.log("Successfully uploaded");
+                            },
+                            error: function (file, response) {
+                                console.log('error')
+                            }
+                        });
+
+                    });
+                </script>
+
+                <div id="{{ id }}" class="col-lg-12 panel text-center dropzone" style="">
+                    <div class="fallback">
+                        {{ form_widget(form.files) }}
+                    </div>
+                </div>
+
                 {{ form_errors(form) }}
             </div>
         </div>
