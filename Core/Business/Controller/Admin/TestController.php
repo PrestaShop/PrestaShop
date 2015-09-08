@@ -9,6 +9,16 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
+use PrestaShop\PrestaShop\Form\FormFactory;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\File;
+use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
+use PrestaShop\PrestaShop\Form\Type\TestType;
+use PrestaShop\PrestaShop\Form\Type\DropFilesType;
 
 class TestController extends AdminController
 {
@@ -18,10 +28,8 @@ class TestController extends AdminController
 
     public function aAction(Request &$request, Response &$response)
     {
-
         /*
         VIEW EXAMPLE
-
         $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
         echo $engine->view->render('test.html.twig', array(
             'content' => 'toto',
@@ -36,11 +44,111 @@ class TestController extends AdminController
 
         $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
         $engine->view->set('content', 'toto');
-        $engine->view->display('layout.tpl');*/
+        $engine->view->display('layout.tpl');
 
-        $response->setLegacyControllerName('AdminAccess');
-        //$response->setTemplate('test.tpl'); //to override template, if not : lookup by Controller/Action.(tpl|html.twig)
-        $response->setContentData(array('content' => 'toto'));
+        //to override template, if not : lookup by Controller/Action.(tpl|html.twig)
+        $response->setTemplate('test.tpl');
+        */
+
+        $formFactory = new FormFactory();
+        $builder = $formFactory->create();
+
+        $simpleSubForm = $builder->create('author', 'form')
+            ->add('name', 'text')
+            ->add('email', 'text');
+
+        $defaultData = array(
+            'firstName' => 'tata',
+            'lastName' => 'toto'
+        );
+
+        $form = $builder
+            ->setAction('')
+            ->add('firstName', 'text', array(
+                'constraints' => array(
+                    new NotBlank(),
+                    new Length(array('min' => 4)),
+                    new ContainsAlphanumeric(),
+                ),
+            ))
+            ->add('lastName', 'text', array(
+                'constraints' => array(
+                    new NotBlank(),
+                    new Email(),
+                    new Length(array('min' => 4)),
+                ),
+            ))
+            ->add('gender', 'choice', array(
+                'choices' => array('m' => 'Male', 'f' => 'Female'),
+            ))
+            ->add('newsletter', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('imageAttachment', 'file', array(
+                'required' => false,
+                'constraints' => array(
+                    new Image(array(
+                        'maxSize' => '1024k',
+                        'minWidth' => 100,
+                        'minHeight' => 100,
+                        'mimeTypes' => array(
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                            'image/gif'
+                        )
+                    ))
+                )
+            ))
+            ->add('fileAttachment', 'file', array(
+                'required' => false,
+                'constraints' => array(
+                    new File(array(
+                        'maxSize' => '1024k',
+                        'mimeTypes' => array(
+                            'text/plain'
+                        )
+                    ))
+                )
+            ))
+            ->add('dropAttachment', new DropFilesType())
+            ->add($simpleSubForm)
+            ->add('testSimpleCollection', 'collection', array(
+                'type' => new TestType(),
+                'prototype' => true,
+                'allow_add' => true,
+                'allow_delete' => true))
+            ->setData($defaultData)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            if (!empty($data['imageAttachment'])) {
+                $file = $data['imageAttachment'];
+                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '.' . $file->guessExtension());
+            }
+
+            if (!empty($data['fileAttachment'])) {
+                $file = $data['fileAttachment'];
+                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '_' .$file->getClientOriginalName());
+            }
+
+            print_r($data);
+            die;
+            //do what you want, redirect...
+        }
+
+
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
+        $response->addContentData(
+            'form',
+            $engine->view->render('Core/Controller/Test/form.html.twig', array('form' => $form->createView()))
+        );
+
+        $response->setLegacyControllerName('AdminCustomers');
     }
 
     public function bAction(Request &$request, Response &$response)

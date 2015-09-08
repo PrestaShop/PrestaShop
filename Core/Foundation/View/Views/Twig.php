@@ -116,7 +116,7 @@ class Twig extends View
         if (defined('_PS_ADMIN_DIR_')) {
             return array(
                 _PS_BO_ALL_THEMES_DIR_ . 'default/template',
-                _PS_BO_ALL_THEMES_DIR_ . 'default/template/Form/Twig'
+                _PS_BO_ALL_THEMES_DIR_ . 'default/template/Core/Form/Twig'
             );
         } else {
             return array(
