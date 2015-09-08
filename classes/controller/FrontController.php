@@ -1634,6 +1634,7 @@ class FrontControllerCore extends Controller
             'description' => $meta_tags['meta_description'],
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
+            'body_classes' => '',
         ];
 
         return $page;
