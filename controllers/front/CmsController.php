@@ -97,10 +97,8 @@ class CmsControllerCore extends FrontController
                 $path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
             }
 
-            $objectSerializer = new Adapter_ObjectSerializer();
-
             $this->context->smarty->assign(array(
-                'cms' => $objectSerializer->toArray($this->cms),
+                'cms' => $this->objectSerializer->toArray($this->cms),
                 'path' => $path,
                 'body_classes' => array($this->php_self.'-'.$this->cms->id, $this->php_self.'-'.$this->cms->link_rewrite)
             ));
