@@ -160,7 +160,7 @@ class TagCore extends ObjectModel
 								LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
 								WHERE cgo.`id_group` = cg.id_group AND product_shop.`id_product` = cp.`id_product`)
 				'.$tag_list_query.'
-				GROUP BY pt.id_tag, pt.id_lang, cg.id_group, id_shop');
+				GROUP BY pt.id_tag, pt.id_lang, cg.id_group, id_shop ORDER BY NULL');
             Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT 0, pt.id_tag, pt.id_lang, id_shop, COUNT(pt.id_tag) AS times
 				FROM `'._DB_PREFIX_.'product_tag` pt
@@ -168,7 +168,7 @@ class TagCore extends ObjectModel
 					USING (id_product)
 				WHERE product_shop.`active` = 1
 				'.$tag_list_query.'
-				GROUP BY pt.id_tag, pt.id_lang, id_shop');
+				GROUP BY pt.id_tag, pt.id_lang, id_shop ORDER BY NULL');
         }
     }
 
