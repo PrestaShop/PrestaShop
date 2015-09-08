@@ -73,7 +73,7 @@ class AdminControllerTest extends UnitTestCase
 
         $router = AdminRouter::getInstance();
         $controller = new FakeAdminController($router);
-        // TODO : le controller et ses traits de base. + autoObjectInflaterTrait, AutoResponseFormatTrait en traits au FakeAdminController
-        // TODO : test URL generation for Admin
+        // TODO !3 : le controller et ses traits de base. + autoObjectInflaterTrait, AutoResponseFormatTrait en traits au FakeAdminController
+        // TODO !4 : test URL generation for Admin
     }
 }

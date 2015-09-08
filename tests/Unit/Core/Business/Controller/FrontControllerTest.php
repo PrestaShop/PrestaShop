@@ -73,7 +73,7 @@ class FrontControllerTest extends UnitTestCase
 
         $router = FrontRouter::getInstance();
         $controller = new FakeFrontController($router);
-        // TODO : le controller et ses traits de base.
-        // TODO : test URL generation for Front
+        // TODO !5 : le controller et ses traits de base.
+        // TODO !6 : test URL generation for Front
     }
 }

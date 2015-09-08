@@ -54,6 +54,14 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
     }
+    
+    protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
+    {
+    }
+    
+    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+    }
 }
 
 class AbstractRouterTest extends UnitTestCase

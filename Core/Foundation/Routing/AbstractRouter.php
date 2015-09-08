@@ -46,6 +46,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
@@ -54,6 +56,14 @@ use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
  */
 abstract class AbstractRouter
 {
+    /**
+     * Used for generateUrl() calls.
+     * Generates an absolute path, including route prefixes, but without the part preceding the route path.
+     *
+     * @see UrlGenerator::ABSOLUTE_PATH
+     */
+    const ABSOLUTE_ROUTE = 'absolute_route';
+    
     /**
      * @var \Core_Business_ConfigurationInterface
      */
@@ -143,6 +153,29 @@ abstract class AbstractRouter
     {
         return (!isset($this->sfRouter))? null : $this->sfRouter->getGenerator();
     }
+    
+    /**
+     * Generates a URL or path for a specific route based on the given parameters.
+     *
+     * This is a Wrapper for the Symfony method:
+     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * but also adds a legacy URL generation support.
+     *
+     * @param string      $name             The name of the route
+     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
+     *                                      You must override the method in a Controller subclass in order to use this option.
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
+     */
+    abstract public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
 
     /**
      * Dispatcher entry point. Called in entry point files (index.php).
@@ -221,76 +254,80 @@ abstract class AbstractRouter
     abstract protected function doDispatch($controllerName, $controllerMethod, Request &$request);
 
     /**
-     * TODO !2
+     * This method will forward the Router into another Controller/action without any redirection instruction to the browser.
+     * The browser will then receive response from a different action with no URL change.
+     * Used for example after a POST succeed, and we want to execute another action to display another content.
+     *
+     * @param Request $oldRequest The request of the action that called this method.
+     * @param string $routeName The new route name to forward to.
+     * @param array $routeParameters The parameters to override the route defaults parameters
+     * @throws DevelopmentErrorException if the forward is made from a subcall action.
+     * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
      */
-    final public function forward(Request &$request, $routeName, $routeParameters = array())
+    final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
     {
-        $attributes =& $request->attributes;
+        if (!$oldRequest || $oldRequest->attributes->get('_subcalling', false)) {
+            throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1005);
+        }
+
+        $attributes =& $oldRequest->attributes;
         $attributes->set('_previous_controller', $attributes->get('_controller'));
+        $attributes->set('_previous_route_from_module', $attributes->get('_route_from_module'));
+        $attributes->add($routeParameters); // FIXME: needed here?
+        $path = $this->generateUrl($routeName, $routeParameters, false, self::ABSOLUTE_ROUTE);
+        try {
+            // Resolve route
+            $parameters = $this->sfRouter->match($path);
 
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($request);
-        
-        $subRouter = new \Symfony\Component\Routing\Router(
-            $this->routeLoader,
-            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
-            array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
-                  'debug' => $this->configuration->get('_PS_MODE_DEV_'),
-                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
-            ),
-            $requestContext
-        );
+            // Add module info from matched route
+            $this->mapRouteToModule($parameters);
+            $oldRequest->attributes->add($parameters);
 
-        // Add modules' routing files
-        $this->aggregateRoutingExtensions($subRouter);
-
-        // Resolve route, and call Controller
-
-        // TODO: redispatch: resolve given route (and not one from requestContext) and then doDispatch on it.
-//         $this->routingDispatcher->dispatch('forward_succeed', new BaseEvent());
-//         $this->routingDispatcher->dispatch('forward_failed', new BaseEvent());
+            // Call Controller/Action
+            list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
+            $res = $this->doDispatch($controllerName, $controllerMethod, $oldRequest);
+            $this->routingDispatcher->dispatch('forward'.($res?'_succeed':'_failed'), new BaseEvent('Forwarded on '.$parameters['_controller'].'.'));
+            return $res;
+        } catch (ResourceNotFoundException $e) {
+            $this->routingDispatcher->dispatch('forward_failed', new BaseEvent('Failed to resolve route from forward request.', $e));
+            throw new DevelopmentErrorException('A forward failed due to unresolved route.', $oldRequest, 1002, $e);
+        }
     }
 
     /**
      * Dispatcher internal entry point. Called by a controller/action to get a content subpart from another controller.
      *
-     * @param Request $subRequest A request made manually (not from real HTTP request) to match the needed subpart.
+     * @param string $routeName The route unique name/ID
+     * @param array $routeParameters The route's parameters (mandatory, and optional, and even more if needed)
      * @throws ResourceNotFoundException if no route is found for the request.
      * @return string data/view returned by matching controller (not sent through output buffer)
      */
-    final public function subcall(Request &$subRequest, $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
     {
-        $requestContext = new RequestContext();
-        $requestContext->fromRequest($subRequest);
-        
-        $subRouter = new \Symfony\Component\Routing\Router(
-            $this->routeLoader,
-            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
-            array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
-                  'debug' => $this->configuration->get('_PS_MODE_DEV_'),
-                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
-            ),
-            $requestContext
-        );
+        $subRequest = new Request();
+        $subRequest->attributes->set('_subcalling', true);
+        $path = $this->generateUrl($routeName, $routeParameters, false, self::ABSOLUTE_ROUTE);
 
-        // Add modules' routing files
-        $this->aggregateRoutingExtensions($subRouter);
+        try {
+            // Resolve route
+            $parameters = $this->sfRouter->match($path);
 
-        // Resolve route
-        $parameters = $subRouter->match($requestContext->getPathInfo());
+            // Add module info from matched route
+            $this->mapRouteToModule($parameters);
+            $subRequest->attributes->add($parameters);
 
-        // Add module info from matched route
-        $this->mapRouteToModule($parameters);
-        $subRequest->attributes->add($parameters);
-        
-        // Override layout mode for subcall
-        $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
+            // Override layout mode for subcall
+            $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
 
-        // Call Controller/Action
-        list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
-        $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
-        $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
-        return $res;
+            // Call Controller/Action
+            list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
+            $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
+            $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
+            return $res;
+        } catch (ResourceNotFoundException $e) {
+            $this->routingDispatcher->dispatch('subcall_failed', new BaseEvent('Failed to resolve route from subcall request.', $e));
+            throw new DevelopmentErrorException('A subcall failed due to unresolved route.', $oldRequest, 1002, $e);
+        }
     }
 
     /**
@@ -306,20 +343,40 @@ abstract class AbstractRouter
     abstract protected function doSubcall($controllerName, $controllerMethod, Request &$request);
 
     /**
+     * The redirect call take a route and its parameters, to send a redirection header to the browser.
+     * If the redirect succeed, it does not return because an exit is done after redirection is sent.
+     *
+     * @param mixed $to Integer, String or Array. See description for specific array format.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is not a return code.
+     * @throws DevelopmentErrorException if the redirect is made from a subcall action.
+     * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
+     */
+    final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
+    {
+        if (!$oldRequest || $oldRequest->attributes->get('_subcalling', false)) {
+            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
+        }
+
+        if (headers_sent() !== false) {
+            $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent('Too late to redirect: headers already sent.'));
+            return false; // headers already sent
+        }
+
+        $this->doRedirect($routeName, $routeParameters, $forceLegacyUrl, $permanent);
+        exit;
+    }
+
+    /**
      * The redirect call take several values in parameter:
      * - Integer value to return a specific HTTP return code and its default message (500, 404, etc...),
-     * - String to indicate the URL to redirect to,
-     * - Array to indicate a route to generate a URL: [route name; [parameters]]
+     * - String to indicate the URL to redirect to
      *
      * If the redirect succeed, it does not return because an exit is done after redirection sent.
      *
-     * If the argument is an array containing a route and its parameters, then the method could
-     * throws exceptions due to URL generation errors (@see PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException::generate())
+     * @throws DevelopmentErrorException if argument is not properly set.
      *
-     * @throws \Core_Foundation_Exception_Exception if argument is not properly set.
-     *
-     * @param mixed $to Integer, String or Array. See description for specific array format.
-     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is a URL.
+     * @param mixed $to Integer or String. See description for specific array format.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is an URL.
      * @return false if headers already sent (cannot redirect, it's too late).
      */
     final public function redirect($to, $permanent = false)
@@ -342,22 +399,21 @@ abstract class AbstractRouter
             exit;
             // TODO: default error page for this code. Howto ? et un cas specific 500 ?
         }
-        if (is_array($to) && count($to) == 2 && is_array($to[1])) {
-            $route = $to[0];
-            $parameters = $to[1];
-            $url = $this->getUrlGenerator()->generate($route, $parameters);
-            $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($url));
-            if ($permanent) {
-                header('Status: 301 Moved Permanently', false, 301);
-            }
-            header('Location: '.$url, true);
-            exit;
-        }
-        
-        $e = new \Core_Foundation_Exception_Exception('Bad parameters format given to redirect().');
+
+        $e = new DevelopmentErrorException('Bad parameters format given to redirect().');
         $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent($to, $e));
         throw $e;
     }
+
+    /**
+     * This function will generate a URL and will send a redirection to it to the browser.
+     *
+     * @param string $route The route name
+     * @param array $parameters The route parameters
+     * @param boolean $forceLegacyUrl True to use alternative URL to reach legacy dispatcher.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
+     */
+    abstract protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false);
 
     final private function registerSettingFiles()
     {
@@ -459,14 +515,16 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
     }
 
     /**
-     * TODO !4 : PHP doc
+     * Gets the cache factory to build cache files. Used internally by the Router and its subclasses.
+     *
+     * @param boolean $forceDebug True to force debug mode (do not keep generated cache for next request).
+     * @return ConfigCacheFactoryInterface
      */
     final protected function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
             $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));
         }
-
         return $this->configCacheFactory;
     }
 
@@ -478,9 +536,12 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
             $sfRouter->getRouteCollection()->addCollection($collection);
         }
     }
-    
+
     /**
-     * TODO !4 : PHP doc
+     * Get the route parameters from all YAML files (Core and modules).
+     *
+     * @param string $route The route unique name/ID to retrieve
+     * @return \Symfony\Component\Routing\Route The found Route object, or null if not found.
      */
     final public function getRouteParameters($route)
     {
@@ -488,16 +549,28 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
     }
 
     /**
-     * TODO !4 : PHP doc
+     * This method is called by PHP process to register a listener when the process is about to shutdown.
+     * This is used to have a last chance of operating a fatal error for example.
+     * This listener will then dispatch an Event in the 'routing' EventDispatcher, with event name 'shutdown'.
+     * If you want to listen to the shutdown event, please use:
+     * EventDispatcher::getInstance('routing')->addListener('shutdown', <your_listener>).
+     *
+     * No need to call it by yourself.
+     *
+     * @param Request $request
      */
     final public function registerShutdownFunctionCallback(Request &$request)
     {
         $null = null;
         EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
-    
+
     /**
-     * TODO !4 : PHP doc
+     * This method is called at the end of a dispatch() call, if an exception is thrown and not catched.
+     * The result of this method is not guaranteed. If it fails, the input exception is just thrown again.
+     *
+     * @param \Exception $lastException The last exception that stopped the process.
+     * @throws \Exception Transmit the input exception in case of failure.
      */
     final public function tryToDisplayExceptions(\Exception $lastException)
     {

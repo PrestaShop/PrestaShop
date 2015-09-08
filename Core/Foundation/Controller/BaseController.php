@@ -227,8 +227,8 @@ abstract class BaseController
     /**
      * Generates a URL or path for a specific route based on the given parameters.
      *
-     * This is a Wrapper for the Symfony method:
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * This is a Wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::generateUrl()
      * but also adds a legacy URL generation support.
      *
      * @param string      $name             The name of the route
@@ -245,23 +245,18 @@ abstract class BaseController
      *                                             it does not match the requirement
      * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
      */
-    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
-        if ($forceLegacyUrl == true) {
-            // This feature is made in AdminController and FrontController subclasses only.
-            throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.');
-        }
-        try {
-            return $this->getRouter()->getUrlGenerator()->generate($name, $parameters, $referenceType);
-        } catch (RouteNotFoundException $rnfe) {
-            return false;
-        }
+        return $this->getRouter()->generateUrl($name, $parameters, $forceLegacyUrl, $referenceType);
     }
 
     /**
      * You can call a Controller/action directly from another Controller/action by calling this.
      * The route will be resolved, all pre-action and post-action Traits will be played, like a classical Router->dispatch action,
      * BUT the output behavior will be overriden to return the result instead of print it in the output buffer, throught $layoutMode.
+     *
+     * This is a Wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::subcall()
      *
      * @param string $name The route unique name/ID
      * @param array $parameters The route's parameters (mandatory, and optional, and even more if needed)
@@ -271,25 +266,8 @@ abstract class BaseController
      */
     final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
     {
-        $urlGenerator = $this->getRouter()->getUrlGenerator();
-        $baseUrl = $urlGenerator->getContext()->getBaseUrl();
-
-        // ensure the route is open
-        $url = $urlGenerator->generate($name, $parameters, false, UrlGeneratorInterface::ABSOLUTE_PATH);
-        $path = parse_url($url)['path'];
-
-        // remove base URL (for '(/xxx)?/admin-xxx/index.php' if present in the URL)
-        if (strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
-            $path = substr($path, strlen($baseUrl));
-        }
-
-        $subRequest = Request::create($path);
-        try {
-            return $this->getRouter()->subcall($subRequest, $layoutMode);
-        } catch (RouteNotFoundException $rnfe) {
-            // Since the route is not found in subcall, it's not a navigation problem, it's a development bug.
-            // So must replace RouteNotFoundException by ErrorException to ensure Router->dispatch() will never bypass.
-            throw new DevelopmentErrorException($rnfe->getMessage());
-        }
+        return $this->getRouter()->subcall($name, $parameters, $layoutMode);
     }
+    
+    // TODO !1: wrapper forward, wrapper redirect, redirectToRoute
 }

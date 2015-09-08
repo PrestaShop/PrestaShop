@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\ModuleRouterOverrideException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 abstract class Router extends AbstractRouter
 {
@@ -389,5 +391,72 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
             $this->redirect(500);
         }
         $this->redirect($this->forbiddenRedirection); // HTTP code 200 (Login page for example)
+    }
+    
+    /**
+     * Generates a URL or path for a specific route based on the given parameters.
+     *
+     * This is a Wrapper for the Symfony method:
+     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * but also adds a legacy URL generation support.
+     *
+     * @param string      $name             The name of the route
+     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
+     *                                      You must override the method in a Controller subclass in order to use this option.
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
+     */
+    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+        if ($forceLegacyUrl == true) {
+            // This feature is made in AdminController and FrontController subclasses only.
+            throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.');
+        }
+        try {
+            if ($referenceType === self::ABSOLUTE_ROUTE) {
+                $urlGenerator = $this->getUrlGenerator();
+                $baseUrl = $urlGenerator->getContext()->getBaseUrl();
+
+                $url = $urlGenerator->generate($name, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $path = parse_url($url)['path'];
+
+                // remove base URL (for '(/xxx)?/admin-xxx/index.php' if present in the URL)
+                if (strlen($baseUrl) > 0 && strpos($path, $baseUrl) === 0) {
+                    $path = substr($path, strlen($baseUrl));
+                }
+                
+                return $path;
+            }
+            return $this->getUrlGenerator()->generate($name, $parameters, $referenceType);
+        } catch (RouteNotFoundException $rnfe) {
+            return false;
+        }
+    }
+
+    /**
+     * This function will generate a URL and will send a redirection to it to the browser.
+     *
+     * @param string $route The route name
+     * @param array $parameters The route parameters
+     * @param boolean $forceLegacyUrl True to use alternative URL to reach legacy dispatcher.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
+     */
+    final protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
+    {
+        $url = $this->generateUrl($route, $parameters, $forceLegacyUrl, UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($url));
+        if ($permanent) {
+            header('Status: 301 Moved Permanently', false, 301);
+        }
+        header('Location: '.$url, true);
+        exit;
     }
 }

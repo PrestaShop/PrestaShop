@@ -30,3 +30,11 @@ admin_product_catalog:
 admin_route1:
     path:     /a
     defaults: { _controller: 'Admin\TestController::aAction' }
+admin_product_list_2:
+    path:     /product/list2/{_layout_mode}/{toto}
+    defaults: 
+        _controller: 'Admin\ProductController::productList2Action'
+        _layout_mode: layout_html
+        toto: tititutu
+    requirements:
+        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json

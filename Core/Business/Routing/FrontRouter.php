@@ -43,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Business\Context;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FrontRouter extends Router
 {
@@ -68,7 +70,41 @@ class FrontRouter extends Router
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\FrontController')
             || $class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new DevelopmentErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.');
+            throw new DevelopmentErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.', null, 1004);
         }
+    }
+
+    /**
+     * Generates a URL or path for a specific Front route based on the given parameters.
+     *
+     * This is a Wrapper for the Symfony method:
+     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
+     * but also adds a legacy URL generation support for Front interface.
+     *
+     * @param string      $name             The name of the route
+     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param bool        $forceLegacyUrl   True to use alternative URL to reach legacy dispatcher.
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     *
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
+     *                                             it does not match the requirement
+     */
+    final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+        if (($routeParams = $this->getRouteParameters($name)) &&
+            ($defaultParams = $routeParams->getDefaults()) &&
+            ($forceLegacyUrl == true || (isset($defaultParams['_legacy_force']) && $defaultParams['_legacy_force'] === true)) &&
+            isset($defaultParams['_legacy_path']) &&
+            ($link = Context::getInstance()->link)) { // For legacy case!
+            $legacyPath = $defaultParams['_legacy_path'];
+
+            $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
+            return $legacyContext->getFrontUrl($legacyPath);
+        }
+        return parent::generateUrl($name, $parameters, false, $referenceType);
     }
 }
