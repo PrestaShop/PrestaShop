@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="">
+<html lang="{$language.iso_code}">
 
   <head>
     {block name="head"}
@@ -7,7 +7,7 @@
     {/block}
   </head>
 
-  <body>
+  <body id="{$page.page_name}">
 
     <header id="header">
       {block name="header"}
