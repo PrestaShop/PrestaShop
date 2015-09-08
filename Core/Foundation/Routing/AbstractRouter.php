@@ -109,19 +109,20 @@ abstract class AbstractRouter
      */
     private $routingFilePattern;
     
+
     /**
      * @var EventDispatcher
      */
     protected $routingDispatcher;
 
-    private $triggerCacheGenerationFlag = false;
+    protected $triggerCacheGenerationFlag = false;
 
     /**
      * Instanciate a Router with a set of routes YML files.
      *
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    final public function __construct($routingFilePattern)
+    public function __construct($routingFilePattern)
     {
         $this->configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         $this->cacheFileName = explode('\\', get_class($this));
@@ -134,13 +135,6 @@ abstract class AbstractRouter
         // Register routing/settings extensions (modules)
         $this->routingFilePattern = $routingFilePattern;
         $this->registerSettingFiles();
-        
-        // EventDispatcher init
-        EventDispatcher::initDispatchers();
-        $this->routingDispatcher = EventDispatcher::getInstance('routing');
-        if ($this->triggerCacheGenerationFlag) {
-            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
-        }
     }
 
     /**
@@ -549,23 +543,6 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
     }
 
     /**
-     * This method is called by PHP process to register a listener when the process is about to shutdown.
-     * This is used to have a last chance of operating a fatal error for example.
-     * This listener will then dispatch an Event in the 'routing' EventDispatcher, with event name 'shutdown'.
-     * If you want to listen to the shutdown event, please use:
-     * EventDispatcher::getInstance('routing')->addListener('shutdown', <your_listener>).
-     *
-     * No need to call it by yourself.
-     *
-     * @param Request $request
-     */
-    final public function registerShutdownFunctionCallback(Request &$request)
-    {
-        $null = null;
-        EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
-    }
-
-    /**
      * This method is called at the end of a dispatch() call, if an exception is thrown and not catched.
      * The result of this method is not guaranteed. If it fails, the input exception is just thrown again.
      *
@@ -606,6 +583,15 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
             throw $lastException;
         }
     }
+
+    /**
+     * This method is called by PHP process to register a listener when the process is about to shutdown.
+     * This is used to have a last chance of operating a fatal error for example.
+     * No need to call it by yourself.
+     *
+     * @param Request $request
+     */
+    abstract public function registerShutdownFunctionCallback(Request &$request);
 
     public function exitNow($i = 0)
     {

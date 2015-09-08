@@ -51,21 +51,13 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
  *
  * - message        All events triggered when a PHP code wants to post a message to the user (often to Admin interface)
  *                  (warnings, notices, messages to flash on the screen, etc...).
- *      - error_message         When an error must be displayed (in RED?).
+ *      - error_message         When an error must be displayed (in RED?). Used by: ErrorException
  *      - warning_message       When an warning must be displayed (in ORANGE?). Used by: WarningException
  *      - info_message          When a notice must be displayed (in BLUE/themed?)
  *      - success_message       When a success must be displayed after an action (in GREEN/themed?)
- *
- * - module         All events concerning modules manipulation: install, update, uninstall, etc...
- *                  FOR NOW, THESE EVENTS ARE NOT TRIGGERED. FOR FUTURE BEHAVIOR.
- *      - before_install
- *      - after_install
- *      - before_update
- *      - after_update
- *      - before_uninstall
- *      - after_uninstall
  * - error
  *      - warning_message       Used by: WarningException
+ *      - error_message         Used by: ErrorException and DevelopmentErrorException
  */
 class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
@@ -79,10 +71,8 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         return self::$instances[$dispatcherName];
     }
 
-
-    private static $baseDispatcherRegistry = array(
+    protected static $dispatcherRegistry = array(
         'routing' => array(
-            array('cache_generation', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\RoutingLogger', 'onCacheGeneration', -255, false, 'getInstance'),
         ), // all events triggered during Routing (before action call, and after action result), and during shutdown
         'log' => array(
         ), // all events triggered when a log is dumped into the logger. WARNING: this could become slow if you listen to each log event!
@@ -92,11 +82,9 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
             array('info_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onInfo', -127, false, 'getInstance'),
             array('success_message', 'PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', 'onSuccess', -127, false, 'getInstance'),
         ), // all events triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
-        'module' => array(
-        ) // all events concerning modules manipulation: install, update, uninstall, etc...
     );
 
-    final public static function initDispatchers($forceDebug = false)
+    public static function initDispatchers($forceDebug = false)
     {
         $configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         
@@ -123,7 +111,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                                         $lazy = ($listener['lazy'] == 1)? 'true' : 'false';
                                         $staticInstantiator = (isset($listener['singletonMethod']))? ', '.$listener['singletonMethod'] : '';
                                         
-                                        $phpCode .= 'self::$baseDispatcherRegistry[\''.$dispatcherName.'\'][] = array(\''.$dispatchersEventName
+                                        $phpCode .= 'self::$dispatcherRegistry[\''.$dispatcherName.'\'][] = array(\''.$dispatchersEventName
                                             .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', '.$lazy.$staticInstantiator.');';
                                     }
                                 }
@@ -138,7 +126,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         );
         include $cache->getPath();
 
-        foreach (self::$baseDispatcherRegistry as $dispatcherName => $listeners) {
+        foreach (self::$dispatcherRegistry as $dispatcherName => $listeners) {
             /* @var $dispatcher EventDispatcher */
             $dispatcher = new self($dispatcherName);
             foreach ($listeners as $listener) {

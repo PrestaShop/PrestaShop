@@ -44,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 
 abstract class Router extends AbstractRouter
 {
@@ -63,6 +65,23 @@ abstract class Router extends AbstractRouter
      */
     private $forbiddenRedirection = null;
 
+    /**
+     * Instanciate a Router with a set of routes YML files.
+     *
+     * @param string $routingFilePattern a regex to indicate routes YML files to include.
+     */
+    final public function __construct($routingFilePattern)
+    {
+        parent::__construct($routingFilePattern);
+
+        // EventDispatcher init
+        BaseEventDispatcher::initDispatchers();
+        $this->routingDispatcher = EventDispatcher::getInstance('routing');
+        if ($this->triggerCacheGenerationFlag) {
+            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
+        }
+    }
+    
     /**
      * Because getTraits() from ReflectionClass does not return traits from ancestors classes, we must use recursive scan.
      *
@@ -458,5 +477,22 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
         }
         header('Location: '.$url, true);
         $this->exitNow();
+    }
+
+    /**
+     * This method is called by PHP process to register a listener when the process is about to shutdown.
+     * This is used to have a last chance of operating a fatal error for example.
+     * This listener will then dispatch an Event in the 'routing' EventDispatcher, with event name 'shutdown'.
+     * If you want to listen to the shutdown event, please use:
+     * EventDispatcher::getInstance('routing')->addListener('shutdown', <your_listener>).
+     *
+     * No need to call it by yourself.
+     *
+     * @param Request $request
+     */
+    final public function registerShutdownFunctionCallback(Request &$request)
+    {
+        $null = null;
+        EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
 }

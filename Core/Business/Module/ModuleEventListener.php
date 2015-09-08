@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Log;
+namespace PrestaShop\PrestaShop\Core\Business\Log;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
-class RoutingLogger
+class ModuleEventListener
 {
     private static $instance = null;
 
@@ -39,9 +39,15 @@ class RoutingLogger
         return self::$instance;
     }
 
-    public function onCacheGeneration(BaseEvent $event)
+    public function onBefore(BaseEvent $event)
     {
-        // TODO: logger avec un LogManager, level debug/info, (qui adaptera sur legacy ?) $event->getFilePath() doit fournir le nom de fichier generé
-        //echo 'Cache generated';
+        // TODO: clear routing/dispatchers caches, or maybe more!
+    }
+
+    public function onAfter(BaseEvent $event)
+    {
+        $cacheManager = \Adapter_ServiceLocator::get('Adapter_CacheManager');
+        //$cacheManager->clean();
+        // TODO: clear routing/dispatchers caches, or maybe more!
     }
 }

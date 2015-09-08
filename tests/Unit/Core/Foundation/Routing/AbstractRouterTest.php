@@ -34,12 +34,22 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 
 class FakeAbstractRouterNotAbstract extends AbstractRouter
 {
     public $calledControllerName;
     public $calledControllerMethod;
     public $calledWithResquest;
+
+    public function __construct($routingFilePattern)
+    {
+        parent::__construct($routingFilePattern);
+        // EventDispatcher init
+        BaseEventDispatcher::initDispatchers();
+        $this->routingDispatcher = EventDispatcher::getInstance('routing');
+    }
 
     protected function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
@@ -60,6 +70,10 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     }
 
     public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    {
+    }
+    
+    public function registerShutdownFunctionCallback(Request &$request)
     {
     }
 
