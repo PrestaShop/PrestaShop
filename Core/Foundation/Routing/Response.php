@@ -90,6 +90,11 @@ class Response extends sfResponse
     protected $legacyControllerName = null;
 
     /**
+     * @var array
+     */
+    protected $headerToolbarBtn = array();
+
+    /**
      * Set data before formatting.
      *
      * @param mixed $data
@@ -242,5 +247,25 @@ class Response extends sfResponse
     public function getLegacyControllerName()
     {
         return $this->legacyControllerName ? $this->legacyControllerName : 'AdminDashboard';
+    }
+
+    /**
+     * Set headerToolbarBtn
+     *
+     * @param array $headerToolbarBtn
+     */
+    public function setHeaderToolbarBtn($headerToolbarBtn)
+    {
+        $this->headerToolbarBtn = $headerToolbarBtn;
+    }
+
+    /**
+     * Get headerToolbarBtn
+     *
+     * @return string
+     */
+    public function getHeaderToolbarBtn()
+    {
+        return $this->headerToolbarBtn;
     }
 }

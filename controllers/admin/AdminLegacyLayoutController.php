@@ -27,14 +27,17 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+    private $headerToolbarBtn = array();
 
-    public function __construct($controllerName = '', $title = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '')
     {
         parent::__construct();
 
+        $this->display = $displayType;
         $this->bootstrap = true;
-        $this->controller_name = $controllerName;
+        $this->controller_name = $_GET['controller'] = $controllerName;
         $this->id = Tab::getIdFromClassName($this->controller_name);
+        $this->headerToolbarBtn = $headerToolbarBtn;
 
         if ($title) {
             $this->context->smarty->assign(array('title' => $title));
@@ -52,19 +55,31 @@ class AdminLegacyLayoutControllerCore extends AdminController
         return true;
     }
 
+    private function addHeaderToolbarBtn()
+    {
+        $this->page_header_toolbar_btn = array_merge($this->page_header_toolbar_btn, $this->headerToolbarBtn);
+    }
+
     public function initContent()
     {
-        $this->initPageHeaderToolbar();
+        parent::initToolbar();
+        parent::initTabModuleList();
+        parent::initPageHeaderToolbar();
+
+        $this->addHeaderToolbarBtn();
+
+        parent::initContent();
+
         $this->context->smarty->assign(array(
+            'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
             'content' => '{$content}', //replace content by original smarty tag var
-            'page_header_toolbar_title' => $this->page_header_toolbar_title,
-            'page_header_toolbar_btn' => $this->page_header_toolbar_btn
         ));
     }
 
     public function initToolbarTitle()
     {
         $this->toolbar_title = array_unique($this->breadcrumbs);
+        parent::initToolbarTitle();
     }
 
     public function initPageHeaderToolbar()

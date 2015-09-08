@@ -141,7 +141,6 @@ class TestController extends AdminController
             //do what you want, redirect...
         }
 
-
         $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
         $response->addContentData(
             'form',
@@ -149,6 +148,7 @@ class TestController extends AdminController
         );
 
         $response->setLegacyControllerName('AdminCustomers');
+        $response->setHeaderToolbarBtn(array('add' => array('href' => 'sdfsdfdsf', 'desc' => 'sdffdsfd', 'icon' => 'process-icon-new')));
     }
 
     public function bAction(Request &$request, Response &$response)
