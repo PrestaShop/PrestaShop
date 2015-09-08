@@ -46,6 +46,16 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 abstract class Router extends AbstractRouter
 {
     /**
+     * @var Request
+     */
+    private static $lastRouterRequestInstance = null;
+
+    public static function getLastRouterRequestInstance()
+    {
+        return self::$lastRouterRequestInstance;
+    }
+
+    /**
      * An URL, or an array of elements to generate an URL for HTTP 500 code.
      * @var array|string
      */
@@ -179,7 +189,8 @@ abstract class Router extends AbstractRouter
      */
     final protected function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
-        return $this->doCall($controllerName, $controllerMethod, $request, false);
+        self::$lastRouterRequestInstance = $request;
+        return $this->doCall($controllerName, $controllerMethod, $request, false, true);
     }
 
     /**
@@ -205,10 +216,11 @@ abstract class Router extends AbstractRouter
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
      * @param Request $request
      * @param boolean True to return content instead of sending it through output buffer. False by default.
+     * @param boolean True to pin the Response object instance in its $lastRouterResponseInstance singleton. Used by dispatch() only!
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return string|boolean True for success, false if fail, or the resulting content if $returnView is true.
      */
-    final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false)
+    final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false, $pinResponse = false)
     {
         $warnings = 0;
 
@@ -237,10 +249,10 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
-        $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'subcall':'');
+        $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'_subcall':'').($pinResponse?'_pinned':'');
         $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
-            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName) {
+            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName, $pinResponse) {
 
                 // find traits, classify them
                 $traits = $this->getAllTraits($class);
@@ -270,6 +282,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router)
 {
     $response = new Response();
+    '.($pinResponse? '$response->pinAsLastRouterResponseInstance();':'').'
     $response->setResponseFormat(BaseController::'.($returnView?'RESPONSE_PARTIAL_VIEW':'RESPONSE_LAYOUT_HTML').');
     $actionAllowed = true;
 

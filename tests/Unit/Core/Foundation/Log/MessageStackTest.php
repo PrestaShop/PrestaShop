@@ -31,6 +31,22 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 class MessageStackTest extends UnitTestCase
 {
+    private function cleanStacks($stackManager)
+    {
+        while ($stackManager->getErrorIterator()->count()) {
+            $stackManager->getErrorIterator()->dequeue();
+        }
+        while ($stackManager->getWarningIterator()->count()) {
+            $stackManager->getWarningIterator()->dequeue();
+        }
+        while ($stackManager->getInfoIterator()->count()) {
+            $stackManager->getInfoIterator()->dequeue();
+        }
+        while ($stackManager->getSuccessIterator()->count()) {
+            $stackManager->getSuccessIterator()->dequeue();
+        }
+    }
+
     public function test_message_stack()
     {
         $stackManager = MessageStackManager::getInstance();
@@ -38,8 +54,32 @@ class MessageStackTest extends UnitTestCase
         $this->assertAttributeInstanceOf('\\SplQueue', 'warningQueue', $stackManager);
         $this->assertAttributeInstanceOf('\\SplQueue', 'infoQueue', $stackManager);
         $this->assertAttributeInstanceOf('\\SplQueue', 'successQueue', $stackManager);
+        $this->cleanStacks($stackManager); // others Unit tests ran before could have enqueue elements.
 
-        $stackManager->onError(new BaseEvent('test error'));
+        $be1 = new BaseEvent('test event', new \Core_Foundation_Exception_Exception('test exception'));
+        $stackManager->onError($be1);
+        $this->assertEquals(1, $stackManager->getErrorIterator()->count(), "Error stack should contains 1 exception.");
+        $this->assertEquals(0, $stackManager->getWarningIterator()->count(), "Warning stack should contains 0 exception.");
+        $this->assertEquals(0, $stackManager->getInfoIterator()->count(), "Info stack should contains 0 message.");
+        $this->assertEquals(0, $stackManager->getSuccessIterator()->count(), "Success stack should contains 0 message.");
+        
+        $be2 = $stackManager->getErrorIterator()->dequeue();
+        $this->assertEquals($be1->getException(), $be2);
+        $this->assertEquals(0, $stackManager->getErrorIterator()->count(), "Error stack should contains 0 event after dequeue().");
+        
+        $stackManager->onWarning($be1);
+        $stackManager->onInfo($be1);
+        $stackManager->onSuccess($be1);
+        $this->assertEquals(0, $stackManager->getErrorIterator()->count(), "Error stack should contains 0 exception.");
+        $this->assertEquals(1, $stackManager->getWarningIterator()->count(), "Warning stack should contains 1 exception.");
+        $this->assertEquals(1, $stackManager->getInfoIterator()->count(), "Info stack should contains 1 message.");
+        $this->assertEquals(1, $stackManager->getSuccessIterator()->count(), "Success stack should contains 1 message.");
+        
+        $be3 = $stackManager->getWarningIterator()->dequeue();
+        $this->assertEquals($be1->getException(), $be3);
+        $be4 = $stackManager->getInfoIterator()->dequeue();
+        $this->assertEquals($be1->getMessage(), $be4);
+        $be5 = $stackManager->getSuccessIterator()->dequeue();
+        $this->assertEquals($be1->getMessage(), $be5);
     }
-    // TODO : tests sur une instance, empiler/depiler, tester aussi de declenchement d'un warning et son affichage sur la page, puis une erreur qui donne une page 500 custom avec le détail de l'erreur...
 }

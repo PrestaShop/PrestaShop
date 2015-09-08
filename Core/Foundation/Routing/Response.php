@@ -36,6 +36,30 @@ use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 class Response extends sfResponse
 {
     /**
+     * @var Response
+     */
+    private static $lastRouterResponseInstance = null;
+
+    /**
+     * Get the Reponse instance pinned by the Router during dispatch() call.
+     *
+     * @return Response
+     */
+    public static function getLastRouterResponseInstance()
+    {
+        return self::$lastRouterResponseInstance;
+    }
+    
+    /**
+     * Stores the current object in a singleton attribute, as the last Response instantiated during dispatch() call.
+     * This is done by the Router.
+     */
+    public function pinAsLastRouterResponseInstance()
+    {
+        self::$lastRouterResponseInstance = $this;
+    }
+
+    /**
      * @var mixed
      */
     protected $contentData = array();

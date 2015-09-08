@@ -157,12 +157,9 @@ class RouterTest extends UnitTestCase
 
     public function test_forward()
     {
-        // TODO
-    }
-
-    public function test_url_generation()
-    {
-        // TODO
+        $this->setup_env();
+        $router = FakeRouter::getInstance();
+        // TODO !3
     }
 
     // Because redirect will trigger exit;, this test will stops phpunit!

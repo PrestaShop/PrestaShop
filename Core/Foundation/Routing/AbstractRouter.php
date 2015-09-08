@@ -221,7 +221,7 @@ abstract class AbstractRouter
     abstract protected function doDispatch($controllerName, $controllerMethod, Request &$request);
 
     /**
-     * TODO !3
+     * TODO !2
      */
     final public function forward(Request &$request, $routeName, $routeParameters = array())
     {
@@ -319,9 +319,10 @@ abstract class AbstractRouter
      * @throws \Core_Foundation_Exception_Exception if argument is not properly set.
      *
      * @param mixed $to Integer, String or Array. See description for specific array format.
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is a URL.
      * @return false if headers already sent (cannot redirect, it's too late).
      */
-    final public function redirect($to)
+    final public function redirect($to, $permanent = false)
     {
         if (headers_sent() !== false) {
             $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent('Too late to redirect: headers already sent.'));
@@ -329,6 +330,9 @@ abstract class AbstractRouter
         }
         if (is_string($to)) {
             $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
+            if ($permanent) {
+                header('Status: 301 Moved Permanently', false, 301);
+            }
             header('Location: '.$to, true);
             exit;
         }
@@ -343,6 +347,9 @@ abstract class AbstractRouter
             $parameters = $to[1];
             $url = $this->getUrlGenerator()->generate($route, $parameters);
             $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($url));
+            if ($permanent) {
+                header('Status: 301 Moved Permanently', false, 301);
+            }
             header('Location: '.$url, true);
             exit;
         }

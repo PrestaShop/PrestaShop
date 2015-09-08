@@ -23,6 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 
 class Core_Foundation_Exception_Exception extends Exception
 {
@@ -64,6 +66,14 @@ class Core_Foundation_Exception_Exception extends Exception
         $data .= '<a name="'.$this->randomInstantiationKey.'_technical_block"></a><a href="#'.$this->randomInstantiationKey.'_technical_block"
             onclick="$(this).next(\'.technical_block\').toggle();">[+] <b>Technical data</b></a>
             <span class="technical_block" style="display: none;">: <br/><ul>';
+        try {
+            $request = Router::getLastRouterRequestInstance();
+            if ($request !== null) {
+                $data .= '<li><b>Route from module tracking:</b> '.$request->attributes->get('_route_from_module').'</li>';
+                $data .= '<li><b>Controller from module tracking:</b> '.$request->attributes->get('_controller_from_module').'</li>';
+            }
+        } catch (\Exception $e) {
+        }
         $data .= '<li><b>File #</b> '.md5_file($this->file).'</li>';
         $data .= '<li><b>URL:</b> <a href="http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'">http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'</a></li>';
         $data .= '<li><b>Stack trace:</b> '.parent::getTraceAsString().'</li>';

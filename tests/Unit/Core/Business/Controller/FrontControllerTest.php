@@ -40,12 +40,12 @@ class FakeFrontController extends FrontController
 {
     public $formatHtmlCalledWith = false;
     public $encapsulateCalledWith = false;
-    
+
     protected function formatHtmlResponse(Response &$response)
     {
         $this->formatHtmlCalledWith = $response;
     }
-    
+
     protected function encapsulateLayout(Response &$response)
     {
         $this->encapsulateCalledWith = $response;
@@ -73,7 +73,7 @@ class FrontControllerTest extends UnitTestCase
 
         $router = FrontRouter::getInstance();
         $controller = new FakeFrontController($router);
-        
         // TODO : le controller et ses traits de base.
+        // TODO : test URL generation for Front
     }
 }

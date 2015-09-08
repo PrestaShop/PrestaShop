@@ -40,12 +40,12 @@ class FakeAdminController extends AdminController
 {
     public $formatHtmlCalledWith = false;
     public $encapsulateCalledWith = false;
-    
+
     protected function formatHtmlResponse(Response &$response)
     {
         $this->formatHtmlCalledWith = $response;
     }
-    
+
     protected function encapsulateLayout(Response &$response)
     {
         $this->encapsulateCalledWith = $response;
@@ -73,7 +73,7 @@ class AdminControllerTest extends UnitTestCase
 
         $router = AdminRouter::getInstance();
         $controller = new FakeAdminController($router);
-        
         // TODO : le controller et ses traits de base. + autoObjectInflaterTrait, AutoResponseFormatTrait en traits au FakeAdminController
+        // TODO : test URL generation for Admin
     }
 }
