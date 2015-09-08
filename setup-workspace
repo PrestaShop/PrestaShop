@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# This script will:
+# - clone the StarterTheme
+# - clone the modified modules and replace the regular ones
+# - add the .editorconfig to wherever it is needed
+
+# modified modules to install
+modules=( blocklanguages )
+
+dependencies=( php curl git awk )
+for dependency in ${dependencies[@]}
+do
+    type $dependency >/dev/null 2>&1 || { echo >&2 "I require the '$dependency' executable but it doesn't seem to be installed. Aborting."; exit 1; }
+done
+
+echo "So I hear you want to remove some ugliness from templates? Welcome aboard!"
+echo ""
+
+echo "> Let me update this repo for you first..."
+git pull
+
+# get composer
+if ! [ -e composer.phar ]
+then
+    echo "> Getting composer for you, see how nice we are?"
+    curl -sS https://getcomposer.org/installer | php
+else
+    echo "> Good, composer is here!"
+fi
+
+# install the dependencies
+if ! [ -e vendor ]
+then
+    echo "> Forgot to run composer install? No worries!"
+    php composer.phar install
+else
+    echo "> Seems like you ran composer install, good for you."
+fi
+
+# this is needed somehow
+if ! [ -e js/vendor/node_modules ]
+then
+    echo "> Hey, you haven't run npm install? Let me do it..."
+    npm install
+else
+    echo "> Already ran npm install? You PrestaShop guru!"
+fi
+
+# get the Starter Theme
+if ! [ -e themes/StarterTheme/ ]
+then
+    echo "> Getting the awesome StarterTheme..."
+    git clone https://github.com/PrestaShop/StarterTheme themes/StarterTheme
+else
+    echo "> StarterTheme seems to be already there, nice!! Running git pull since it shouldn't hurt..."
+    git -C themes/StarterTheme pull
+fi
+
+# get the adapted modules
+for module in ${modules[@]}
+do
+    echo "> Installing modified version of module '$module'..."
+    if ! [ -e modules/$module/ ]
+    then
+        git clone https://github.com/PrestaShop/$module -b feat/starter-theme modules/$module
+    else
+        branch=$(git -C modules/$module branch | awk '/^\*/{print $2}')
+        if [ $branch = 'feat/starter-theme' ]
+        then
+            echo "> Module '$module' is already here and on the correct branch :) Gonna pull on it just in case..."
+            git -C modules/$module pull
+        else
+            read -r -p "> Hmm, module '$module' is on branch '$branch', shall I kill it for you and clone the right version? [y/N] " killModule
+            case $killModule in
+                [yY][eE][sS]|[yY])
+                    echo "Ok, killing it softly..."
+                    rm -Rvf modules/$module/
+                    git clone https://github.com/PrestaShop/$module -b feat/starter-theme modules/$module
+                    if [ $? -eq 0 ]
+                    then
+                        echo "> Successfully removed and cloned module '$module'! :)"
+                    else
+                        echo "> Something went wrong while cloning module '$module' :("
+                    fi
+                    ;;
+                *)
+                    echo "> Too bad! :("
+                    ;;
+            esac
+        fi
+    fi
+
+    cp themes/StarterTheme/.editorconfig modules/$module
+done
+
+cp themes/StarterTheme/.editorconfig .
+
+echo ""
+echo "I'm done."
