@@ -293,7 +293,7 @@ class ProductControllerCore extends FrontController
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
             ));
         }
-        $this->setTemplate(_PS_THEME_DIR_.'product.tpl');
+        $this->setTemplate('catalog/product.tpl');
     }
 
     /**
@@ -727,11 +727,11 @@ class ProductControllerCore extends FrontController
                 $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
-					if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-						$row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
-					} else {
-						$row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-					}
+                    if (Product::$_taxCalculationMethod == PS_TAX_INC) {
+                        $row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
+                    } else {
+                        $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+                    }
                     $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
