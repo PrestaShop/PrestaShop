@@ -533,7 +533,7 @@ abstract class ControllerCore
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
             $live_edit_content = '';
-            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
+            if ($this->checkLiveEditAccess()) {
                 $live_edit_content = $this->getLiveEditFooter();
             }
 
