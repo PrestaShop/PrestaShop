@@ -446,8 +446,6 @@ class FrontControllerCore extends Controller
             'mobile_device'       => $this->context->getMobileDevice(),
             'link'                => $link,
             'cart'                => $cart,
-            'currency'            => $currency,
-            'currencyRate'        => (float)$currency->getConversationRate(),
             'cookie'              => $this->context->cookie,
             'page_name'           => $page_name,
             'hide_left_column'    => !$this->display_column_left,
@@ -461,17 +459,10 @@ class FrontControllerCore extends Controller
             'tpl_uri'             => _THEME_DIR_,
             'modules_dir'         => _MODULE_DIR_,
             'mail_dir'            => _MAIL_DIR_,
-            'lang_iso'            => $this->context->language->iso_code,
-            'lang_id'             => (int)$this->context->language->id,
             'language_code'       => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code, // done
             'come_from'           => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace(array('\'', '\\'), '', urldecode($_SERVER['REQUEST_URI']))),
             'cart_qties'          => (int)$cart->nbProducts(),
-            'currencies'          => Currency::getCurrencies(),
-            'languages'           => $languages,
-            'meta_language'       => implode(',', $meta_language),
             'priceDisplay'        => Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer),
-            'is_logged'           => (bool)$this->context->customer->isLogged(),
-            'is_guest'            => (bool)$this->context->customer->isGuest(),
             'add_prod_display'    => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             'roundMode'           => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
             'use_taxes'           => (int)Configuration::get('PS_TAX'),
@@ -487,9 +478,6 @@ class FrontControllerCore extends Controller
             'shop_phone'          => Configuration::get('PS_SHOP_PHONE'),
             'compared_products'   => is_array($compared_products) ? $compared_products : array(),
             'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
-            'currencySign'        => $currency->sign, // backward compat, see global.tpl
-            'currencyFormat'      => $currency->format, // backward compat
-            'currencyBlank'       => $currency->blank, // backward compat
         ));
 
         // Add the tpl files directory for mobile
@@ -498,13 +486,6 @@ class FrontControllerCore extends Controller
                 'tpl_mobile_uri' => _PS_THEME_MOBILE_DIR_,
             ));
         }
-
-        // Deprecated
-        $this->context->smarty->assign(array(
-            'id_currency_cookie' => (int)$currency->id,
-            'logged'             => $this->context->customer->isLogged(),
-            'customerName'       => ($this->context->customer->logged ? $this->context->cookie->customer_firstname.' '.$this->context->cookie->customer_lastname : false)
-        ));
 
         /**
          * These shortcuts are DEPRECATED as of version 1.5.0.1
