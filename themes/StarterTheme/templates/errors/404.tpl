@@ -17,6 +17,5 @@
 {/block}
 
 {block name="page_footer"}
-  {* StarterTheme: Change the href for homepage link with correct protocol *}
-  <a href="#" title="{l s='Home'}">{l s='Home page'}</a>
+  <a href="{$urls.base_url}" title="{l s='Home'}">{l s='Home page'}</a>
 {/block}
