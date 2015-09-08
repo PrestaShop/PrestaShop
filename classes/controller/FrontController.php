@@ -448,13 +448,6 @@ class FrontControllerCore extends Controller
             'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
         ));
 
-        // Add the tpl files directory for mobile
-        if ($this->useMobileTheme()) {
-            $this->context->smarty->assign(array(
-                'tpl_mobile_uri' => _PS_THEME_MOBILE_DIR_,
-            ));
-        }
-
         /**
          * These shortcuts are DEPRECATED as of version 1.5.0.1
          * Use the Context to access objects instead.
@@ -514,18 +507,12 @@ class FrontControllerCore extends Controller
             $this->context->cart = new Cart();
         }
 
-        if (!$this->useMobileTheme()) {
-            // These hooks aren't used for the mobile theme.
-            // Needed hooks are called in the tpl files.
-            $this->context->smarty->assign(array(
-                'HOOK_HEADER'       => Hook::exec('displayHeader'),
-                'HOOK_TOP'          => Hook::exec('displayTop'),
-                'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
-                'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
-            ));
-        } else {
-            $this->context->smarty->assign('HOOK_MOBILE_HEADER', Hook::exec('displayMobileHeader'));
-        }
+        $this->context->smarty->assign(array(
+            'HOOK_HEADER'       => Hook::exec('displayHeader'),
+            'HOOK_TOP'          => Hook::exec('displayTop'),
+            'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
+            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
+        ));
     }
 
     /**
@@ -610,7 +597,7 @@ class FrontControllerCore extends Controller
                 $this->css_files = Media::cccCss($this->css_files);
             }
             //JS compressor management
-            if (Configuration::get('PS_JS_THEME_CACHE') && !$this->useMobileTheme()) {
+            if (Configuration::get('PS_JS_THEME_CACHE')) {
                 $this->js_files = Media::cccJs($this->js_files);
             }
         }
@@ -795,44 +782,12 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Specific medias for mobile device.
-     * If autoload directory is present in the mobile theme, these files will not be loaded
-     */
-    public function setMobileMedia()
-    {
-        $this->addJquery();
-
-        if (!file_exists($this->getThemeDir().'js/autoload/')) {
-            $this->addJS(_THEME_MOBILE_JS_DIR_.'jquery.mobile-1.3.0.min.js');
-            $this->addJS(_THEME_MOBILE_JS_DIR_.'jqm-docs.js');
-            $this->addJS(_PS_JS_DIR_.'tools.js');
-            $this->addJS(_THEME_MOBILE_JS_DIR_.'global.js');
-            $this->addJqueryPlugin('fancybox');
-        }
-
-        if (!file_exists($this->getThemeDir().'css/autoload/')) {
-            $this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
-            $this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
-            $this->addCSS(_THEME_MOBILE_CSS_DIR_.'global.css', 'all');
-        }
-    }
-
-    /**
      * Sets controller CSS and JS files.
      *
      * @return bool
      */
     public function setMedia()
     {
-        /**
-         * If website is accessed by mobile device
-         * @see FrontControllerCore::setMobileMedia()
-         */
-        if ($this->useMobileTheme()) {
-            $this->setMobileMedia();
-            return true;
-        }
-
         $cldrRepository = new Cldr\Repository($this->context->language->language_code);
         $this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5.0.1
         $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
@@ -1334,15 +1289,11 @@ class FrontControllerCore extends Controller
      */
     public function setTemplate($default_template)
     {
-        if ($this->useMobileTheme()) {
-            $this->setMobileTemplate($default_template);
+        $template = $this->getOverrideTemplate();
+        if ($template) {
+            parent::setTemplate($template);
         } else {
-            $template = $this->getOverrideTemplate();
-            if ($template) {
-                parent::setTemplate($template);
-            } else {
-                parent::setTemplate($default_template);
-            }
+            parent::setTemplate($default_template);
         }
     }
 
@@ -1360,21 +1311,13 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Checks if mobile theme is active and in use.
+     * Removed in PrestaShop 1.7
      *
-     * @staticvar bool|null $use_mobile_template
      * @return bool
      */
     protected function useMobileTheme()
     {
-        static $use_mobile_template = null;
-
-        // The mobile theme must have a layout to be used
-        if ($use_mobile_template === null) {
-            $use_mobile_template = ($this->context->getMobileDevice() && file_exists(_PS_THEME_MOBILE_DIR_.'layout.tpl'));
-        }
-
-        return $use_mobile_template;
+        return false;
     }
 
     /**
@@ -1384,7 +1327,7 @@ class FrontControllerCore extends Controller
      */
     protected function getThemeDir()
     {
-        return $this->useMobileTheme() ? _PS_THEME_MOBILE_DIR_ : _PS_THEME_DIR_;
+        return _PS_THEME_DIR_;
     }
 
 
@@ -1395,7 +1338,7 @@ class FrontControllerCore extends Controller
      */
     protected function getOverrideThemeDir()
     {
-        return $this->useMobileTheme() ? _PS_THEME_MOBILE_OVERRIDE_DIR_ : _PS_THEME_OVERRIDE_DIR_;
+        return _PS_THEME_OVERRIDE_DIR_;
     }
 
     /**
@@ -1437,62 +1380,7 @@ class FrontControllerCore extends Controller
      */
     public function getTemplatePath($template)
     {
-        if (!$this->useMobileTheme()) {
-            return $template;
-        }
-
-        $tpl_file = basename($template);
-        $dirname = dirname($template).(substr(dirname($template), -1, 1) == '/' ? '' : '/');
-
-        if ($dirname == _PS_THEME_DIR_) {
-            if (file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file)) {
-                $template = _PS_THEME_MOBILE_DIR_.$tpl_file;
-            }
-        } elseif ($dirname == _PS_THEME_MOBILE_DIR_) {
-            if (!file_exists(_PS_THEME_MOBILE_DIR_.$tpl_file) && file_exists(_PS_THEME_DIR_.$tpl_file)) {
-                $template = _PS_THEME_DIR_.$tpl_file;
-            }
-        }
-
         return $template;
-    }
-
-    /**
-     * Checks if the template set is available for mobile themes,
-     * otherwise front template is chosen.
-     *
-     * @param string $template
-     */
-    public function setMobileTemplate($template)
-    {
-        // Needed for site map
-        $blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
-        $blocksupplier     = Module::getInstanceByName('blocksupplier');
-
-        $this->context->smarty->assign(array(
-            'categoriesTree'            => Category::getRootCategory()->recurseLiteCategTree(0),
-            'categoriescmsTree'         => CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1),
-            'voucherAllowed'            => (int)CartRule::isFeatureActive(),
-            'display_manufacturer_link' => (bool)$blockmanufacturer->active,
-            'display_supplier_link'     => (bool)$blocksupplier->active,
-            'PS_DISPLAY_SUPPLIERS'      => Configuration::get('PS_DISPLAY_SUPPLIERS'),
-            'PS_DISPLAY_BEST_SELLERS'   => Configuration::get('PS_DISPLAY_BEST_SELLERS'),
-            'display_store'             => Configuration::get('PS_STORES_DISPLAY_SITEMAP'),
-            'conditions'                => Configuration::get('PS_CONDITIONS'),
-            'id_cgv'                    => Configuration::get('PS_CONDITIONS_CMS_ID'),
-            'PS_SHOP_NAME'              => Configuration::get('PS_SHOP_NAME'),
-        ));
-
-        $template = $this->getTemplatePath($template);
-
-        $assign = array();
-        $assign['tpl_file'] = basename($template, '.tpl');
-        if (isset($this->php_self)) {
-            $assign['controller_name'] = $this->php_self;
-        }
-
-        $this->context->smarty->assign($assign);
-        $this->template = $template;
     }
 
     /**
