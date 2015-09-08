@@ -473,7 +473,6 @@ class FrontControllerCore extends Controller
             'is_logged'           => (bool)$this->context->customer->isLogged(),
             'is_guest'            => (bool)$this->context->customer->isGuest(),
             'add_prod_display'    => (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            'shop_name'           => Configuration::get('PS_SHOP_NAME'),
             'roundMode'           => (int)Configuration::get('PS_PRICE_ROUND_MODE'),
             'use_taxes'           => (int)Configuration::get('PS_TAX'),
             'show_taxes'          => (int)(Configuration::get('PS_TAX_DISPLAY') == 1 && (int)Configuration::get('PS_TAX')),
@@ -664,8 +663,8 @@ class FrontControllerCore extends Controller
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
-                $this->context->smarty->assign($this->initLogoAndFavicon());
                 $this->context->smarty->assign(array(
+                    'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                 ));
 
@@ -684,9 +683,7 @@ class FrontControllerCore extends Controller
     {
         header('HTTP/1.1 403 Forbidden');
         $this->context->smarty->assign(array(
-            'shop_name'   => $this->context->shop->name,
-            'favicon_url' => _PS_IMG_.Configuration::get('PS_FAVICON'),
-            'logo_url'    => $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'))
+            'shop'   => $this->getTemplateVarShop(),
         ));
         $this->smartyOutputContent('errors/restricted-country.tpl');
         exit;
@@ -936,8 +933,6 @@ class FrontControllerCore extends Controller
             'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
             'content_only'          => (int)Tools::getValue('content_only'),
         ));
-
-        $this->context->smarty->assign($this->initLogoAndFavicon());
     }
 
     /**
@@ -1525,31 +1520,6 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns logo and favicon variables, depending
-     * on active theme type (regular or mobile)
-     *
-     * @since 1.5.3.0
-     * @return array
-     */
-    public function initLogoAndFavicon()
-    {
-        $mobile_device = $this->context->getMobileDevice();
-
-        if ($mobile_device && Configuration::get('PS_LOGO_MOBILE')) {
-            $logo = $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
-        } else {
-            $logo = $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'));
-        }
-
-        return array(
-            'favicon_url'       => _PS_IMG_.Configuration::get('PS_FAVICON'),
-            'logo_image_width'  => ($mobile_device == false ? Configuration::get('SHOP_LOGO_WIDTH')  : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
-            'logo_image_height' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
-            'logo_url'          => $logo
-        );
-    }
-
-    /**
      * Renders and adds color list HTML for each product in a list
      *
      * @param array $products
@@ -1678,6 +1648,9 @@ class FrontControllerCore extends Controller
     {
         $shop = [
             'name' => Configuration::get('PS_SHOP_NAME'),
+            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_.Configuration::get('PS_LOGO') : '',
+            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_.Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_.Configuration::get('PS_FAVICON') : '',
         ];
 
         return $shop;
