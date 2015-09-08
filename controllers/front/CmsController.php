@@ -89,7 +89,6 @@ class CmsControllerCore extends FrontController
     {
         parent::initContent();
 
-
         if ($this->assignCase == 1) {
             if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category) {
                 $path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
@@ -100,7 +99,6 @@ class CmsControllerCore extends FrontController
             $this->context->smarty->assign(array(
                 'cms' => $this->objectSerializer->toArray($this->cms),
                 'path' => $path,
-                'body_classes' => array($this->php_self.'-'.$this->cms->id, $this->php_self.'-'.$this->cms->link_rewrite)
             ));
 
             if ($this->cms->indexation == 0) {
@@ -124,5 +122,18 @@ class CmsControllerCore extends FrontController
 
             // StarterTheme: Create list template for cms
         }
+    }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        if ($this->assignCase == 2) {
+            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms_category->id.' '.$this->php_self.'-'.$this->cms_category->link_rewrite, ' ');
+        } else {
+            $page['body_classes'] = ltrim($page['body_classes'].' '.$this->php_self.'-'.$this->cms->id.' '.$this->php_self.'-'.$this->cms->link_rewrite, ' ');
+        }
+
+        return $page;
     }
 }
