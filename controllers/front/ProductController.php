@@ -259,6 +259,10 @@ class ProductControllerCore extends FrontController
             }
 
             $this->context->smarty->assign(array(
+                'priceDisplay' => $priceDisplay,
+                'productPrice' => $productPrice,
+                'productPriceWithoutReduction' => $productPriceWithoutReduction,
+                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && (bool)$this->product->available_for_order && !((bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices))) ? true : false,
                 'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
@@ -369,45 +373,48 @@ class ProductControllerCore extends FrontController
         $images = $this->product->getImages((int)$this->context->cookie->id_lang);
         $product_images = array();
 
-        if (isset($images[0])) {
-            $this->context->smarty->assign('mainImage', $images[0]);
-        }
-        foreach ($images as $k => $image) {
-            if ($image['cover']) {
-                $this->context->smarty->assign('mainImage', $image);
-                $cover = $image;
-                $cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$image['id_image']) : $image['id_image']);
-                $cover['id_image_only'] = (int)$image['id_image'];
-            }
-            $product_images[(int)$image['id_image']] = $image;
-        }
-
-        if (!isset($cover)) {
-            if (isset($images[0])) {
-                $cover = $images[0];
-                $cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$images[0]['id_image']) : $images[0]['id_image']);
-                $cover['id_image_only'] = (int)$images[0]['id_image'];
-            } else {
-                $cover = array(
-                    'id_image' => $this->context->language->iso_code.'-default',
-                    'legend' => 'No picture',
-                    'title' => 'No picture'
+        if (count($images) > 0) {
+            foreach ($images as $image) {
+                $product_images[(int)$image['id_image']] = array(
+                    'cover' => $image['cover'],
+                    'id_image' => (int)$image['id_image'],
+                    'legend' => !empty($image['legend']) ? $image['legend'] : $this->product->name,
+                    'urls' => $this->getImageUrls('products', (int)$image['id_image']),
+                    'position' => $image['position'],
                 );
             }
+        } else {
+            $product_images[] = array(
+                'cover' => true,
+                'id_image' => 0,
+                'legend' => $this->product->name,
+                'urls' => $this->getImageUrls('products'),
+                'position' => 1,
+            );
         }
-        $size = Image::getSize(ImageType::getFormatedName('large'));
+
         $this->context->smarty->assign(array(
-            'have_image' => (isset($cover['id_image']) && (int)$cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
-            'cover' => $cover,
-            'imgWidth' => (int)$size['width'],
-            'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-            'largeSize' => Image::getSize(ImageType::getFormatedName('large')),
-            'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
-            'cartSize' => Image::getSize(ImageType::getFormatedName('cart')),
-            'col_img_dir' => _PS_COL_IMG_DIR_));
-        if (count($product_images)) {
-            $this->context->smarty->assign('images', $product_images);
+            'images' => $product_images,
+            'col_img_dir' => _PS_COL_IMG_DIR_,
+        ));
+    }
+
+    protected function getImageUrls($type, $id_image = null)
+    {
+        $urls = array();
+        $product_images_types = array_reverse(ImageType::getImagesTypes($type, true));
+
+        foreach ($product_images_types as $image_type) {
+            $urls[$image_type['name']] = array(
+                'link' => !is_null($id_image) ? $this->context->link->getImageLink($this->product->link_rewrite, (int)$id_image, $image_type['name']) : _THEME_PROD_DIR_.$this->context->language->iso_code.'-default-large_default.jpg',
+                'width' => (int)$image_type['width'],
+                'height' => (int)$image_type['height'],
+                );
         }
+
+        $urls['default'] = current($urls);
+
+        return $urls;
     }
 
     /**
@@ -479,8 +486,10 @@ class ProductControllerCore extends FrontController
                 } else {
                     $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
                     if ($row['default_on']) {
-                        if (isset($this->context->smarty->tpl_vars['cover']->value)) {
-                            $current_cover = $this->context->smarty->tpl_vars['cover']->value;
+                        foreach ($this->context->smarty->tpl_vars['images']->value as $image) {
+                            if ($image['cover'] == 1) {
+                                $current_cover = $image;
+                            }
                         }
 
                         if (is_array($combination_images[$row['id_product_attribute']])) {
@@ -503,9 +512,7 @@ class ProductControllerCore extends FrontController
                                     $this->context->smarty->assign('images', $product_images);
                                 }
                             }
-                            if (isset($this->context->smarty->tpl_vars['cover']->value)) {
-                                $cover = $this->context->smarty->tpl_vars['cover']->value;
-                            }
+                            $cover = $current_cover;
                             if (isset($cover) && is_array($cover) && isset($product_images) && is_array($product_images)) {
                                 $product_images[$cover['id_image']]['cover'] = 0;
                                 if (isset($product_images[$id_image])) {
