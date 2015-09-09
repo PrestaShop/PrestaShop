@@ -6,7 +6,7 @@
 # - add the .editorconfig to wherever it is needed
 
 # modified modules to install
-modules=( blocklanguages blockbanner )
+modules=( blocklanguages blockbanner blockuserinfo )
 
 dependencies=( php curl git awk )
 for dependency in ${dependencies[@]}
