@@ -166,7 +166,7 @@ ALTER TABLE `PREFIX_cart` ADD KEY `id_shop_2` (`id_shop`,`date_upd`), ADD KEY `i
 ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
 UPDATE `PREFIX_product_shop` SET `date_add` = NOW() WHERE `date_add` = "0000-00-00 00:00:00";
 
-INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`, `live_edit`) VALUES
+INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`, `live_edit`) VALUES
 (NULL, 'actionAdminLoginControllerSetMedia', 'Set media on admin login page header', 'This hook is called after adding media to admin login page header', '1', '0'),
 (NULL, 'actionOrderEdited', 'Order edited', 'This hook is called when an order is edited.', '1', '0'),
 (NULL, 'displayAdminNavBarBeforeEnd', 'Admin Nav-bar before end', 'Called before the end of the nav-bar.', '1', '0'),
