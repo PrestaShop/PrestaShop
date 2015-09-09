@@ -2399,6 +2399,8 @@ class ProductCore extends ObjectModel
 
             $result = Db::getInstance()->getRow($sql);
 
+            Db::getInstance()->execute('DROP TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions`', false);
+
             if (!$id_product = $result['id_product']) {
                 return false;
             }
