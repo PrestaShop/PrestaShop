@@ -2497,7 +2497,7 @@ class AdminProductsControllerCore extends AdminController
             $tree->setAttribute('is_category_filter', (bool)$this->id_current_category)
                 ->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
                 ->setInputName('id-category')
-                ->setRootCategory(Configuration::get('PS_ROOT_CATEGORY'))
+                ->setRootCategory(Category::getRootCategory()->id)
                 ->setSelectedCategories(array((int)$id_category));
             $this->tpl_list_vars['category_tree'] = $tree->render();
 
