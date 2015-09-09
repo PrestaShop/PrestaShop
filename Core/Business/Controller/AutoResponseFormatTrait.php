@@ -29,6 +29,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
  * This Trait will add convenience hooks to search for data type to output, and the appropriate template engine
@@ -145,7 +147,7 @@ trait AutoResponseFormatTrait
                 }
 
                 if (!file_exists($rootTemplatePath.DIRECTORY_SEPARATOR.$templatePath)) {
-                    throw new \Exception('Template "'.$templatePath.'" could not be found');
+                    throw new DevelopmentErrorException('Template "'.$templatePath.'" could not be found');
                 }
 
                 $response->setTemplate($templatePath);

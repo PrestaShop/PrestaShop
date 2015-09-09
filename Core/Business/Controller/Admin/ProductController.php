@@ -42,32 +42,78 @@ class ProductController extends AdminController
     use SfControllerResolverTrait; // dependency injection in sf way.
 
     /**
+     * Get the Catalog page with stats banner, product list, bulk actions, filters, search, etc...
+     * URL example: /product/catalog/40/20/id_product/asc
+     *
+     * TODO : cette page sera-t-elle à refaire ? Pour le moment on bypass et on renvoie vers la page legacy.
+     *
+     * @param Request $request
+     * @param Response $response
+     */
+    public function productCatalogAction(Request &$request, Response &$response)
+    {
+        // FIXME: remove this redirection to legacy and develop catalog page when needed.
+        $this->redirectToRoute(
+            $request,
+            'admin_product_catalog',
+            array(
+                'productOrderby' => $request->attributes->get('orderBy'),
+                'productOrderway' => $request->attributes->get('orderWay')
+            ),
+            true, // force legacy URL
+            false // temporary
+        );
+
+        // get Product list from productListAction subcall
+        $productListParams = array(
+            'ls_products_limit' => $request->attributes->get('limit'),
+            'ls_products_offset' => $request->attributes->get('offset'),
+            'ls_products_orderBy' => $request->attributes->get('orderBy'),
+            'ls_products_orderWay' => $request->attributes->get('orderWay'),
+            '_layout_mode' => 'none_html',
+        );
+        // URL example: /product/list/none_html/40/20/id_product/asc
+        $response->addContentData('product_list', $this->subcall('admin_product_list', $productListParams));
+        
+        // Add layout top-right menu actions
+        // TODO
+    }
+
+    /**
      * Get only the list of products to display on the main Admin Product page.
      * The full page that shows products list will subcall this action (from productListCatalogAction).
-     * URL example: /product/list/layout_html/40/20/id/asc
+     * URL example: /product/list/layout_html/40/20/id_product/asc
      *
      * @param Request $request
      * @param Response $response
      * @param array $products The collection of products requested. Filled by AutoObjectInflaterTrait.
      * @return void The response format is automatically placed by the Router through _layout_mode attribute
      */
-    public function productListAction(Request &$request, Response &$response, $products)
+    public function productListAction(Request &$request, Response &$response, array $products)
     {
-        //$this->redirectToRoute($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
-        //$this->forward($request, 'admin_product_list_2', array('_layout_mode' => 'none_html'));
+        // empty list case: change template
+        if ($request->attributes->get('_layout_mode', 'layout_html') == 'none_html' && count($products) === 0) {
+            $response->setTemplate('Core/Controller/Product/productListEmpty.tpl');
+        }
     }
 
-    public function productList2Action(Request &$request, Response &$response, $products)
+    public function productFormAction(Request &$request, Response &$response, $product)
     {
-    }
+        // Should redirect to legacy or not?
+        if (false) { // FIXME: option 'UseLegacyProductPage' a tester pour le savoir!
+            $this->redirectToRoute(
+                $request,
+                'admin_product_form',
+                $request->attributes->all(),
+                true, // force legacy URL
+                false // temporary
+            );
+        }
 
-    public function productCatalogAction(Request &$request, Response &$response)
-    {
-        $subcallParams = array(
-            'ls_products_limit' => 42
-        );
-        $response->addContentData('product_list', $this->subcall('admin_product_list', $subcallParams));
-        $response->addContentData('manu_forced', $this->generateUrl('admin_product_catalog', array('titi' => 'tutu'), true, UrlGeneratorInterface::ABSOLUTE_URL));
-        $response->addContentData('auto_forced', $this->generateUrl('admin_product_categories'));
+        // setup template and layout
+        $response->setEngineName('twig'); // For forms
+        //$response->set#### // FIXME: when Luke will wakeup & push its new methods, I have to setup alternate Title here
+        // Add layout top-right menu actions
+        //$response->setHeader### // FIXME: idem, to add buttons in the top-right menu
     }
 }

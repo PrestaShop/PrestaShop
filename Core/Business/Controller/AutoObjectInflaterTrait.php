@@ -65,7 +65,7 @@ trait AutoObjectInflaterTrait
             // Find parameters that begins with id_ to try to inflate corresponding object
             if (strpos($key, 'id_') === 0) {
                 $className = substr($key, 3);
-                $autoInflaterManager = new \Adapter_AutoInflaterManager();
+                $autoInflaterManager = $this->container->make('Adapter_AutoInflaterManager');
                 $object = $autoInflaterManager->inflateObject($className, $value);
 
                 if ($object === false) {

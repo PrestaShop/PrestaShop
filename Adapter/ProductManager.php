@@ -41,4 +41,16 @@ class ProductManager
         // TODO
         return array('toto', 'titi', $offset, $limit, $orderBy, $orderWay);
     }
+    
+    public function mapLegacyParametersProductForm($coreParameters = array())
+    {
+        $params = array();
+        if ($coreParameters['id_product'] == 'new') {
+            $params['addproduct'] = 1;
+        } else {
+            $params['updateproduct'] = 1;
+            $params['id_product'] = $coreParameters['id_product'];
+        }
+        return $params;
+    }
 }

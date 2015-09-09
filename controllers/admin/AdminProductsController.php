@@ -1,4 +1,6 @@
 <?php
+use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
+
 /**
  * 2007-2015 PrestaShop
  *
@@ -2686,8 +2688,10 @@ class AdminProductsControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
+            $redirectLegacy = true;
+            // FIXME: en fonction d'une option, a aller chercher
             $this->page_header_toolbar_btn['new_product'] = array(
-                    'href' => self::$currentIndex.'&addproduct&token='.$this->token,
+                    'href' => AdminRouter::getInstance()->generateUrl('admin_product_form', array('id_product' => 'new'), $redirectLegacy),
                     'desc' => $this->l('Add new product', null, null, false),
                     'icon' => 'process-icon-new'
                 );

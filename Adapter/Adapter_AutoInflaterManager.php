@@ -41,15 +41,19 @@ class Adapter_AutoInflaterManager
     {
         $className = ucfirst($className);
         if (!class_exists('\\'.$className)) {
+            $className .= 'Core';
+        }
+        if (!class_exists('\\'.$className)) {
             return false;
         }
+
         $class = new \ReflectionClass('\\'.$className);
         $constructorParameters = $class->getConstructor()->getParameters();
         $constructorParametersValues = array();
 
         foreach ($constructorParameters as $p) {
-            if ($p->name == 'id') {
-                $constructorParametersValues[] = $value;
+            if ($p->name == 'id' || $p->name == 'id_'.lcfirst($className)) {
+                $constructorParametersValues[] = $id;
             }
         }
 

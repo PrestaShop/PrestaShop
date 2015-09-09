@@ -107,12 +107,23 @@ class AdminRouter extends Router
             $legacyContext = self::$container->make('Adapter_LegacyContext');
             $basePath = $legacyContext->getAdminBaseUrl();
 
+            if ($routeParams->hasOption('legacy_param_mapper_class') && $routeParams->hasOption('legacy_param_mapper_method')) {
+                $class = $routeParams->getOption('legacy_param_mapper_class');
+                $method = $routeParams->getOption('legacy_param_mapper_method');
+                $class = new \ReflectionClass('\\'.$class);
+                $method = $class->getMethod($method);
+                $legacyParameters = $method->invoke(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $parameters);
+            } else {
+                $legacyParameters = $parameters;
+            }
+            
+
 //             switch ($referenceType) {
 //                 case UrlGeneratorInterface::ABSOLUTE_URL:
 //                     return $basePath.$link->getAdminLink($legacyPath);
 //                 case UrlGeneratorInterface::ABSOLUTE_PATH:
 //                 default:
-                    return $basePath.$legacyContext->getAdminLink($legacyPath, true, $parameters);
+                    return $basePath.$legacyContext->getAdminLink($legacyPath, true, $legacyParameters);
 //             }
         }
         return parent::generateUrl($name, $parameters, false, $referenceType);
