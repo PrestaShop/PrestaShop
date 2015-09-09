@@ -547,6 +547,34 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * Non-static translation method for frontoffice
+     *
+     * @param string  $string Term or expression in english
+     * @param false|string  $specific Specific name, only for ModuleFrontController
+     * @param string|null $class Name of the class
+     * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+     * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+     * @return string The translation if available, or the english default text.
+     */
+    protected function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
+    {
+        if ($class === null) {
+            $class = get_class($this);
+        }
+
+        if (is_a($this, 'ModuleFrontController')) {
+            // ModuleFrontController must assign $this->module
+            if (isset($this->module) && is_a($this->module, 'Module')) {
+                return $this->module->l($string, $specific);
+            } else {
+                return $string;
+            }
+        }
+
+        return Translate::getFrontTranslation($string, $class, $addslashes, $htmlentities);
+    }
+
+    /**
      * Redirects to redirect_after link
      *
      * @see $redirect_after

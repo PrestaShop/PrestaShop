@@ -1121,6 +1121,12 @@ class AdminTranslationsControllerCore extends AdminController
 
         switch ($this->type_selected) {
             case 'front':
+                $directories['php'] = array(
+                    _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_),
+                    _PS_OVERRIDE_DIR_.'controllers/front/' => scandir(_PS_OVERRIDE_DIR_.'controllers/front/'),
+                    _PS_CLASS_DIR_.'controller/' => array('FrontController.php'),
+                );
+
                 $directories['tpl'] = array(_PS_ALL_THEMES_DIR_ => scandir(_PS_ALL_THEMES_DIR_));
                 self::$ignore_folder[] = 'modules';
                 $directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_SELECTED_DIR_));
@@ -1235,46 +1241,50 @@ class AdminTranslationsControllerCore extends AdminController
     {
         switch ($type_translation) {
             case 'front':
-                    // Parsing file in Front office
+                // Parsing file in Front office
+                if ($type_file == 'php') {
+                    $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+                } else {
                     $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?\s*\}/U';
+                }
                 break;
 
             case 'back':
-                    // Parsing file in Back office
-                    if ($type_file == 'php') {
-                        $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
-                    } elseif ($type_file == 'specific') {
-                        $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
-                    } else {
-                        $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
-                    }
+                // Parsing file in Back office
+                if ($type_file == 'php') {
+                    $regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
+                } elseif ($type_file == 'specific') {
+                    $regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
+                } else {
+                    $regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
+                }
                 break;
 
             case 'errors':
-                    // Parsing file for all errors syntax
-                    $regex = '/Tools::displayError\((\')'._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
+                // Parsing file for all errors syntax
+                $regex = '/Tools::displayError\((\')'._PS_TRANS_PATTERN_.'\'(,\s*(.+))?\)/U';
                 break;
 
             case 'modules':
-                    // Parsing modules file
-                    if ($type_file == 'php') {
-                        $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
-                    } else {
-                        // In tpl file look for something that should contain mod='module_name' according to the documentation
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
-                    }
+                // Parsing modules file
+                if ($type_file == 'php') {
+                    $regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
+                } else {
+                    // In tpl file look for something that should contain mod='module_name' according to the documentation
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
+                }
                 break;
 
             case 'pdf':
-                    // Parsing PDF file
-                    if ($type_file == 'php') {
-                        $regex = array(
-                            '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
-                            '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
-                        );
-                    } else {
-                        $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
-                    }
+                // Parsing PDF file
+                if ($type_file == 'php') {
+                    $regex = array(
+                        '/HTMLTemplate.*::l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U',
+                        '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U'
+                    );
+                } else {
+                    $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
+                }
                 break;
         }
 
@@ -1801,53 +1811,55 @@ class AdminTranslationsControllerCore extends AdminController
         $files_by_directory = $this->getFileToParseByTypeTranslation();
         $count = 0;
         $tabs_array = array();
-        foreach ($files_by_directory['tpl'] as $dir => $files) {
-            $prefix = '';
-            if ($dir == _PS_THEME_OVERRIDE_DIR_) {
-                $prefix = 'override_';
-            }
+        foreach ($files_by_directory as $file_type => $root_directory) {
+            foreach ($root_directory as $dir => $files) {
+                $prefix = '';
+                if ($dir == _PS_THEME_OVERRIDE_DIR_) {
+                    $prefix = 'override_';
+                }
 
-            foreach ($files as $file) {
-                if (preg_match('/^(.*).tpl$/', $file) && (Tools::file_exists_cache($file_path = $dir.$file))) {
-                    $prefix_key = $prefix.substr(basename($file), 0, -4);
-                    $new_lang = array();
+                foreach ($files as $file) {
+                    if (preg_match('/^(.*).(tpl|php)$/', $file) && (Tools::file_exists_cache($file_path = $dir.$file))) {
+                        $prefix_key = $prefix.substr(basename($file), 0, -4);
+                        $new_lang = array();
 
-                    // Get content for this file
-                    $content = file_get_contents($file_path);
+                        // Get content for this file
+                        $content = file_get_contents($file_path);
 
-                    // Parse this content
-                    $matches = $this->userParseFile($content, $this->type_selected);
+                        // Parse this content
+                        $matches = $this->userParseFile($content, $this->type_selected, $file_type);
 
-                    /* Get string translation */
-                    foreach ($matches as $key) {
-                        if (empty($key)) {
-                            $this->errors[] = sprintf($this->l('Empty string found, please edit: "%s"'), $file_path);
-                            $new_lang[$key] = '';
-                        } else {
-                            // Caution ! front has underscore between prefix key and md5, back has not
-                            if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)])) {
-                                $new_lang[$key]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+                        /* Get string translation */
+                        foreach ($matches as $key) {
+                            if (empty($key)) {
+                                $this->errors[] = sprintf($this->l('Empty string found, please edit: "%s"'), $file_path);
+                                $new_lang[$key] = '';
                             } else {
-                                if (!isset($new_lang[$key]['trad'])) {
-                                    $new_lang[$key]['trad'] = '';
-                                    if (!isset($missing_translations_front[$prefix_key])) {
-                                        $missing_translations_front[$prefix_key] = 1;
-                                    } else {
-                                        $missing_translations_front[$prefix_key]++;
+                                // Caution ! front has underscore between prefix key and md5, back has not
+                                if (isset($GLOBALS[$name_var][$prefix_key.'_'.md5($key)])) {
+                                    $new_lang[$key]['trad'] = stripslashes(html_entity_decode($GLOBALS[$name_var][$prefix_key.'_'.md5($key)], ENT_COMPAT, 'UTF-8'));
+                                } else {
+                                    if (!isset($new_lang[$key]['trad'])) {
+                                        $new_lang[$key]['trad'] = '';
+                                        if (!isset($missing_translations_front[$prefix_key])) {
+                                            $missing_translations_front[$prefix_key] = 1;
+                                        } else {
+                                            $missing_translations_front[$prefix_key]++;
+                                        }
                                     }
                                 }
+                                $new_lang[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
                             }
-                            $new_lang[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
                         }
-                    }
 
-                    if (isset($tabs_array[$prefix_key])) {
-                        $tabs_array[$prefix_key] = array_merge($tabs_array[$prefix_key], $new_lang);
-                    } else {
-                        $tabs_array[$prefix_key] = $new_lang;
-                    }
+                        if (isset($tabs_array[$prefix_key])) {
+                            $tabs_array[$prefix_key] = array_merge($tabs_array[$prefix_key], $new_lang);
+                        } else {
+                            $tabs_array[$prefix_key] = $new_lang;
+                        }
 
-                    $count += count($new_lang);
+                        $count += count($new_lang);
+                    }
                 }
             }
         }
