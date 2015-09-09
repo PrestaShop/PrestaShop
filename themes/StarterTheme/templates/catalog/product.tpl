@@ -16,7 +16,13 @@
     {block name="page_content_container"}
       <section id="content" class="page-content">
         {block name="page_content"}
-          <!-- Page content -->
+          {block name="product_images"}
+            <ul class="product-images">
+              {foreach from=$images item=image}
+                <li><img src="{$image.urls.default.link}" alt="{$image.legend}" title="{$image.legend}" width="{$image.urls.default.width}" height="{$image.urls.default.height}" itemprop="image" /></li>
+              {/foreach}
+            </ul>
+          {/block}
         {/block}
       </section>
     {/block}
