@@ -34,28 +34,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 
 /**
  * Existing dispatchers:
- *
- * - routing        All events triggered during Routing (before action call, and after action result),
- *                  and during shutdown, subcall, redirect, forward...
- *      - cache_generation      A cache file has been (re)generated from the Router.
- *      - dispatch_succeed
- *      - dispatch_failed
- *      - subcall_succeed
- *      - subcall_failed
- *      - redirection_sent      The redirection has been sent into the HTTP Location header. Cannot guarantee that it will succeed.
- *      - redirection_failed    The redirection failed due to a bad parameter given or headers already sent.
- *      - forward_succeed
- *      - forward_failed
- *
- * - log            All events triggered when a log is dumped into the logger.
- *                  WARNING: this could become very slow if you listen to many log event!
- *
- * - message        All events triggered when a PHP code wants to post a message to the user (often to Admin interface)
- *                  (warnings, notices, messages to flash on the screen, etc...).
- *      - error_message         When an error must be displayed (in RED?). Used by: ErrorException
- *      - warning_message       When an warning must be displayed (in ORANGE?). Used by: WarningException
- *      - info_message          When a notice must be displayed (in BLUE/themed?)
- *      - success_message       When a success must be displayed after an action (in GREEN/themed?)
+ * The default ones (@see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher)
+ * New ones are defined:
  *
  * - module         All events concerning modules manipulation: install, update, uninstall, etc...
  *                  FOR NOW, THESE EVENTS ARE NOT TRIGGERED. FOR FUTURE BEHAVIOR.
