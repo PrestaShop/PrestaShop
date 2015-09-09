@@ -44,7 +44,7 @@ trait AdminAuthenticationTrait
      */
     public function initActionCheckAuthenticated(Request &$request, Response &$response)
     {
-        $authManager = \Adapter_ServiceLocator::get('Adapter_AuthenticationManager');
+        $authManager = $this->container->make('Adapter_AuthenticationManager');
         return (!$this->isAuthenticationNeeded() || $authManager->isAdminAuthenticated());
     }
 
@@ -57,7 +57,7 @@ trait AdminAuthenticationTrait
      */
     public function closeActionCheckAuthenticated(Request &$request, Response &$response)
     {
-        $authManager = \Adapter_ServiceLocator::get('Adapter_AuthenticationManager');
+        $authManager = $this->container->make('Adapter_AuthenticationManager');
         AdminRouter::getInstance()->setForbiddenRedirection($authManager->getAdminLoginUrl());
         return true;
     }

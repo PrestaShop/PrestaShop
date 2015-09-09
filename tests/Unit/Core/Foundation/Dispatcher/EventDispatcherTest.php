@@ -36,7 +36,7 @@ class EventDispatcherTest extends UnitTestCase
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
-        $this->setConfiguration(array(
+        return $this->setConfiguration(array(
             '_PS_ROOT_DIR_' => $fakeRoot,
             '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
             '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
@@ -46,8 +46,12 @@ class EventDispatcherTest extends UnitTestCase
 
     public function test_event_dispatcher_instantiation()
     {
-        $this->setup_env();
-        EventDispatcher::initDispatchers(true);
+        $conf = $this->setup_env();
+        EventDispatcher::initDispatchers(
+            $conf->get('_PS_ROOT_DIR_'),
+            $conf->get('_PS_CACHE_DIR_'),
+            $conf->get('_PS_MODULE_DIR_'),
+            true);
         $defaultInstance = EventDispatcher::getInstance();
         $this->assertAttributeNotCount(0, 'instances', $defaultInstance);
         $this->assertAttributeContains($defaultInstance, 'instances', $defaultInstance);

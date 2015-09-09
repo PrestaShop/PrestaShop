@@ -63,7 +63,12 @@ abstract class AbstractRouter
      * @see UrlGenerator::ABSOLUTE_PATH
      */
     const ABSOLUTE_ROUTE = 'absolute_route';
-    
+
+    /**
+     * @var \Core_Foundation_IoC_Container
+     */
+    protected static $container = null;
+
     /**
      * @var \Core_Business_ConfigurationInterface
      */
@@ -124,7 +129,7 @@ abstract class AbstractRouter
      */
     public function __construct($routingFilePattern)
     {
-        $this->configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $this->configuration = self::$container->make('Core_Business_ConfigurationInterface');
         $this->cacheFileName = explode('\\', get_class($this));
         $this->cacheFileName = $this->cacheFileName[count($this->cacheFileName)-1];
 
@@ -506,6 +511,18 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
     {
         $route = $parameters['_route'];
         $parameters['_route_from_module'] = $this->moduleRouteMapping[$route] ?: null;
+    }
+
+    /**
+     * This method will retrieve a static element but is not static itself:
+     * The container should be filled only during instantiation of singleton,
+     * even if the container itself is another singleton.
+     *
+     * @return \Core_Foundation_IoC_Container The container
+     */
+    final public function getContainer()
+    {
+        return self::$container;
     }
 
     /**

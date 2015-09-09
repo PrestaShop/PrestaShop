@@ -56,9 +56,12 @@ class AdminRouter extends Router
      *
      * @return AdminRouter
      */
-    final public static function getInstance()
+    final public static function getInstance(\Core_Foundation_IoC_Container &$container = null)
     {
         if (!self::$instance) {
+            if ($container != null) {
+                self::$container = $container;
+            }
             self::$instance = new self('admin_routes(_(.*))?\.yml');
         }
         return self::$instance;
@@ -101,7 +104,7 @@ class AdminRouter extends Router
             ($link = Context::getInstance()->link)) { // For legacy case!
             $legacyPath = $defaultParams['_legacy_path'];
 
-            $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
+            $legacyContext = self::$container->make('Adapter_LegacyContext');
             $basePath = $legacyContext->getAdminBaseUrl();
 
 //             switch ($referenceType) {

@@ -23,11 +23,14 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
+namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
-use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerResolver;
 
 /**
  * This Trait will add dependency injection in the controller action methods.
@@ -47,8 +50,10 @@ trait SfControllerResolverTrait
     {
         return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$router) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
-            $resolver->setResponse($response); // inject content data values to resolve more than sf standard resolver.
             $resolver->setRouter($router); // inject router for Controller instantiation.
+            $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
+            $context = Context::getInstance();
+            $resolver->addInjection($context);
             $callable = $resolver->getController($request);
             $arguments = $resolver->getArguments($request, $callable);
             return $controllerMethod->invokeArgs($controllerInstance, $arguments);

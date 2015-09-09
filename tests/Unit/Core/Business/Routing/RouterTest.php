@@ -41,9 +41,10 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 class FakeRouter extends Router
 {
     private static $instance = null;
-    final public static function getInstance()
+    final public static function getInstance(\Core_Foundation_IoC_Container $container)
     {
         if (!self::$instance) {
+            self::$container = $container;
             self::$instance = new self('fake_controllers_routes(_(.*))?\.yml');
         }
         return self::$instance;
@@ -100,7 +101,7 @@ class RouterTest extends UnitTestCase
     public function test_router_unknown_route()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance();
+        $router = FakeRouter::getInstance($this->container);
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/unknown'); // unknown route, return false!
@@ -112,7 +113,7 @@ class RouterTest extends UnitTestCase
     public function test_router_module_routes()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance();
+        $router = FakeRouter::getInstance($this->container);
 
         // load from a module! Controller & Action OK case.
         $fakeRequest = Request::create('/routerTest/a'); // route to existing controller in a module, action OK.
@@ -148,7 +149,7 @@ class RouterTest extends UnitTestCase
     public function test_subcall()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance();
+        $router = FakeRouter::getInstance($this->container);
         
         $fakeRequest = Request::create('/routerTest/subcall'); // route to existing controller in a module, action OK.
         $fakeRequest->overrideGlobals();
@@ -163,7 +164,7 @@ class RouterTest extends UnitTestCase
     public function test_forward()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance();
+        $router = FakeRouter::getInstance($this->container);
         
         $fakeRequest = Request::create('/routerTest/forward'); // route to existing controller in a module, action OK.
         $fakeRequest->overrideGlobals();
@@ -176,7 +177,7 @@ class RouterTest extends UnitTestCase
     public function test_redirect()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance();
+        $router = FakeRouter::getInstance($this->container);
 
         $fakeRequest = Request::create('/routerTest/redirect');
         $fakeRequest->overrideGlobals();

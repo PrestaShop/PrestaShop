@@ -35,13 +35,22 @@ class Context extends ParameterBag
     private static $instance = null;
 
     /**
+     * @var \Core_Foundation_IoC_Container
+     */
+    private static $container = null;
+
+    /**
      * Get current instance of filled context (singleton)
      *
+     * @param \Core_Foundation_IoC_Container $container The service container
      * @return Context
      */
-    final public static function getInstance()
+    final public static function getInstance(\Core_Foundation_IoC_Container &$container = null)
     {
         if (!self::$instance) {
+            if ($container != null) {
+                self::$container = $container;
+            }
             self::$instance = new self();
         }
         return self::$instance;
@@ -64,7 +73,7 @@ class Context extends ParameterBag
         // TODO : default values now.
 
         // While Legacy architecture is here, retrieve some data from it.
-        $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
+        $legacyContext = self::$container->make('Adapter_LegacyContext');
         $legacyContext->mergeContextWithLegacy($this);
 
         // TODO : override legacy values now.

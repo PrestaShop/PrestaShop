@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Core\Business\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -52,15 +51,18 @@ class FrontRouter extends Router
      * @var FrontRouter
      */
     private static $instance = null;
-    
+
     /**
-     * Get current instance of router (singleton)
+     * Get current instance of router (singleton), and affect the Container singleton as well.
      *
      * @return FrontRouter
      */
-    final public static function getInstance()
+    final public static function getInstance(\Core_Foundation_IoC_Container &$container = null)
     {
         if (!self::$instance) {
+            if ($container != null) {
+                self::$container = $container;
+            }
             self::$instance = new self('front_routes(_(.*))?\.yml');
         }
         return self::$instance;
@@ -102,7 +104,7 @@ class FrontRouter extends Router
             ($link = Context::getInstance()->link)) { // For legacy case!
             $legacyPath = $defaultParams['_legacy_path'];
 
-            $legacyContext = \Adapter_ServiceLocator::get('Adapter_LegacyContext');
+            $legacyContext = self::$container->make('Adapter_LegacyContext');
             return $legacyContext->getFrontUrl($legacyPath);
         }
         return parent::generateUrl($name, $parameters, false, $referenceType);

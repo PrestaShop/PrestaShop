@@ -47,16 +47,26 @@ abstract class BaseController
     const RESPONSE_JSON = 'none_json'; // no layout, transform response from array to json format
     const RESPONSE_NONE = 'none_none'; // no auto response output: case when action want to dump a file for example
 
+    /**
+     * @var AbstractRouter
+     */
     private $router;
+
+    
+    /**
+     * @var \Core_Foundation_IoC_Container
+     */
+    protected $container;
 
     /**
      * Instantiate the Controller. Often made from a Router.
      *
      * @param AbstractRouter $router The Router instance that instantiated the Controller.
      */
-    public function __construct(AbstractRouter &$router)
+    public function __construct(AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
     {
-        $this->router = $router;
+        $this->router =& $router;
+        $this->container =& $container;
     }
 
     /**
@@ -105,7 +115,7 @@ abstract class BaseController
     final protected function formatJsonResponse(Response &$response)
     {
         $content = $response->getContentData();
-        $configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $configuration = $this->container->make('Core_Business_ConfigurationInterface');
         $response->setContent(json_encode($content, $configuration->get('_PS_MODE_DEV_') ? JSON_PRETTY_PRINT : 0));
     }
 

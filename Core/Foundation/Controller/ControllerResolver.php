@@ -27,7 +27,6 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 
 /**
@@ -40,23 +39,41 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
 {
     private $response;
 
-    public function setResponse(Response &$response)
+    public function setResponse($response)
     {
-        $this->response = $response;
+        $this->response =& $response;
+        $this->addInjection($this->response);
     }
 
     private $router;
 
     public function setRouter(AbstractRouter &$router)
     {
-        $this->router = $router;
+        $this->router =& $router;
+        $this->addInjection($this->router);
+    }
+
+    private $additionalInjections = array();
+
+    public function addInjection(&$objectInstance)
+    {
+        $this->additionalInjections[] =& $objectInstance;
+    }
+
+    private function checkAdditionalInjections($paramClass)
+    {
+        foreach ($this->additionalInjections as $injection) {
+            if ($paramClass->isInstance($injection)) {
+                return $injection;
+            }
+        }
+        return false; // Not found
     }
 
     protected function doGetArguments(Request $request, $controller, array $parameters)
     {
         $attributes = $request->attributes->all();
         $contentData = $this->response->getContentData();
-        $context = Context::getInstance();
         $arguments = array();
         foreach ($parameters as $param) {
             if (array_key_exists($param->name, $attributes)) {
@@ -67,12 +84,10 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
                 $arguments[] = $contentData[lcfirst($param->name)];
             } elseif (array_key_exists(ucfirst($param->name), $contentData)) {
                 $arguments[] = $contentData[ucfirst($param->name)];
-            } elseif ($param->getClass() && $param->getClass()->isInstance($this->response)) {
-                $arguments[] = &$this->response; // by ref
             } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
                 $arguments[] = &$request; // by ref
-            } elseif ($param->getClass() && $param->getClass()->isInstance($context)) {
-                $arguments[] = &$context; // by ref
+            } elseif ($param->getClass() && ($injection = $this->checkAdditionalInjections($param->getClass()))) {
+                $arguments[] = &$injection; // by ref
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
             } else {
@@ -95,11 +110,11 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      * Returns an instantiated controller
      *
      * @param string $class A class name
-     *
-     * @return object
+     * @return object The controller instantiated with the router and container as arguments.
      */
     protected function instantiateController($class)
     {
-        return new $class($this->router);
+        $container = $this->router->getContainer();
+        return new $class($this->router, $container);
     }
 }

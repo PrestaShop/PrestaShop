@@ -46,6 +46,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 abstract class Router extends AbstractRouter
 {
@@ -72,10 +73,13 @@ abstract class Router extends AbstractRouter
      */
     final public function __construct($routingFilePattern)
     {
+        // Push container instance inside Context singleton
+        Context::getInstance(self::$container);
+        
         parent::__construct($routingFilePattern);
 
         // EventDispatcher init
-        BaseEventDispatcher::initDispatchers();
+        BaseEventDispatcher::initBaseDispatchers(self::$container);
         $this->routingDispatcher = EventDispatcher::getInstance('routing');
         if ($this->triggerCacheGenerationFlag) {
             $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
@@ -270,10 +274,11 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
+        $container = self::$container;
         $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'_subcall':'').($pinResponse?'_pinned':'');
         $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
-            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName, $pinResponse) {
+            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName, $pinResponse, &$container) {
 
                 // find traits, classify them
                 $traits = $this->getAllTraits($class);
@@ -300,14 +305,14 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
-function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router)
+function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
 {
     $response = new Response();
     '.($pinResponse? '$response->pinAsLastRouterResponseInstance();':'').'
     $response->setResponseFormat(BaseController::'.($returnView?'RESPONSE_PARTIAL_VIEW':'RESPONSE_LAYOUT_HTML').');
     $actionAllowed = true;
 
-    $controllerInstance = new '.$controllerClass.'($router);
+    $controllerInstance = new '.$controllerClass.'($router, $container);
 ';
                 foreach ($initTraits as $initTrait) {
                     $phpCode .= '
@@ -396,7 +401,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
 
         include_once $cache->getPath();
         $functionName = 'doDispatchCached'.$cacheFullName;
-        return $functionName($method, $request, $this);
+        return $functionName($method, $request, $this, $container);
     }
 
     public function setForbiddenRedirection($redirection)

@@ -32,6 +32,8 @@ use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
+ * TODO : explain YML structure needed to add a listener.
+ *
  * Existing dispatchers:
  *
  * - routing        All events triggered during Routing (before action call, and after action result),
@@ -63,6 +65,13 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
     private static $instances = array();
 
+    /**
+     * Retrieve a singleton (default, or an indexed one) of EventDispatcher.
+     * If the dispatcher is not instantiated by initialization, then it will be instantiated.
+     *
+     * @param string $dispatcherName
+     * @return Ambigous <multitype:, \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher>
+     */
     final public static function getInstance($dispatcherName = 'default')
     {
         if (!isset(self::$instances[$dispatcherName])) {
@@ -71,6 +80,12 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         return self::$instances[$dispatcherName];
     }
 
+    /**
+     * This registry contains base listeners to init (lazy mode or not).
+     * This static registry can be completed by a subclass before calling initDispatchers().
+     *
+     * @var array
+     */
     protected static $dispatcherRegistry = array(
         'routing' => array(
         ), // all events triggered during Routing (before action call, and after action result), and during shutdown
@@ -84,21 +99,30 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         ), // all events triggered when a PHP code wants to post a message (warnings, notices, messages to flash on the screen, etc...)
     );
 
-    public static function initDispatchers($forceDebug = false)
+    /**
+     * Scan configuration files (Core and modules directories) to register listeners to event dispatchers that
+     * are instanciated as singletons at the same time. Each singleton is indexed by its name.
+     * Then use static registry $dispatcherRegistry to init all the registered listeners to event dispatchers.
+     *
+     * @param string $rootDir The root directory path.
+     * @param string $cacheDir The cache directory path.
+     * @param string $moduleDir The module directory path to scan configuration files.
+     * @param boolean $debug True to force debug mode (cache fil is generated each time).
+     * @throws DevelopmentErrorException If a configuration file is malformed.
+     */
+    final public static function initDispatchers($rootDir, $cacheDir, $moduleDir, $debug = false)
     {
-        $configuration = \Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
-        
-        $cache = (new ConfigCacheFactory($forceDebug || $configuration->get('_PS_MODE_DEV_')))->cache(
-            $configuration->get('_PS_CACHE_DIR_').'dispatcher/init_subscribers.php',
-            function (ConfigCacheInterface $cache) use (&$configuration) {
-                $moduleCoreConfigExists = (count(glob($configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
-                
+        $cache = (new ConfigCacheFactory($debug))->cache(
+            $cacheDir.'dispatcher/init_subscribers.php',
+            function (ConfigCacheInterface $cache) use ($rootDir, $cacheDir, $moduleDir) {
+                $moduleCoreConfigExists = (count(glob($moduleDir.'*/CoreConfig/')) > 0);
+
                 $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks()
-                    ->in($configuration->get('_PS_ROOT_DIR_').'/CoreConfig/');
+                    ->in($rootDir.'/CoreConfig/');
                 if ($moduleCoreConfigExists) {
-                    $settingsFilesFinder->in($configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/');
+                    $settingsFilesFinder->in($moduleDir.'*/CoreConfig/');
                 }
-                
+
                 $phpCode = '<'.'?php
 ';
                 foreach ($settingsFilesFinder as $file) {
@@ -110,7 +134,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                                     foreach ($listeners as $listener) {
                                         $lazy = ($listener['lazy'] == 1)? 'true' : 'false';
                                         $staticInstantiator = (isset($listener['singletonMethod']))? ', '.$listener['singletonMethod'] : '';
-                                        
+
                                         $phpCode .= 'self::$dispatcherRegistry[\''.$dispatcherName.'\'][] = array(\''.$dispatchersEventName
                                             .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', '.$lazy.$staticInstantiator.');';
                                     }
@@ -146,20 +170,10 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         }
     }
 
-
     private $name;
 
     private function __construct($dispatcherName)
     {
         $this->name = $dispatcherName;
-    }
-
-    final protected function getConfigCacheFactory($forceDebug = false)
-    {
-        if (null === $this->configCacheFactory) {
-            $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));
-        }
-
-        return $this->configCacheFactory;
     }
 }

@@ -28,7 +28,8 @@ require(dirname(__FILE__).'/config/config.inc.php');
 require(dirname(__FILE__).'/vendor/autoload.php');
 
 // try to find a route on the new Architecture
-if (!PrestaShop\PrestaShop\Core\Business\Routing\FrontRouter::getInstance()->dispatch(true)) {
+// $container is set by config/bootstrap.php included from config/config.inc.php.
+if (!PrestaShop\PrestaShop\Core\Business\Routing\FrontRouter::getInstance($container)->dispatch(true)) {
     // else, use legacy Dispatcher
     Dispatcher::getInstance()->dispatch();
 }

@@ -38,9 +38,6 @@ class Adapter_LegacyContext
     {
         $legacyContext = \Context::getContext();
         if (!isset($legacyContext->shop) ||
-            !isset($legacyContext->theme) ||
-            !isset($legacyContext->country) ||
-            !isset($legacyContext->cookie) ||
             !isset($legacyContext->language) ||
             !isset($legacyContext->link)
         ) {

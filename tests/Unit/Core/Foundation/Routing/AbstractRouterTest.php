@@ -43,11 +43,14 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     public $calledControllerMethod;
     public $calledWithResquest;
 
-    public function __construct($routingFilePattern)
+    public function __construct($routingFilePattern, $conf)
     {
         parent::__construct($routingFilePattern);
         // EventDispatcher init
-        BaseEventDispatcher::initDispatchers();
+        BaseEventDispatcher::initDispatchers(
+            $conf->get('_PS_ROOT_DIR_'),
+            $conf->get('_PS_CACHE_DIR_'),
+            $conf->get('_PS_MODULE_DIR_'));
         $this->routingDispatcher = EventDispatcher::getInstance('routing');
     }
 
@@ -89,7 +92,7 @@ class AbstractRouterTest extends UnitTestCase
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
-        $this->setConfiguration(array(
+        return $this->setConfiguration(array(
             '_PS_ROOT_DIR_' => $fakeRoot,
             '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
             '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
@@ -99,9 +102,9 @@ class AbstractRouterTest extends UnitTestCase
 
     public function test_router_instantiation()
     {
-        $this->setup_env();
+        $conf = $this->setup_env();
 
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml');
+        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
         $routingFiles = $this->getObjectAttribute($router, 'routingFiles');
         $this->assertCount(2, $routingFiles, 'Two configuration files should be scaned.');
         $this->assertArrayHasKey('/', $routingFiles);
@@ -116,8 +119,8 @@ class AbstractRouterTest extends UnitTestCase
 
     public function test_router_resolution()
     {
-        $this->setup_env();
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml');
+        $conf = $this->setup_env();
+        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/a');
@@ -131,9 +134,9 @@ class AbstractRouterTest extends UnitTestCase
 
     public function test_router_resolution_conflict()
     {
-        $this->setup_env();
+        $conf = $this->setup_env();
         try {
-            $router = new FakeAbstractRouterNotAbstract('fake_test_conflict_routes(_(.*))?\.yml');
+            $router = new FakeAbstractRouterNotAbstract('fake_test_conflict_routes(_(.*))?\.yml', $conf);
             $this->fail('This instanciation should throw ErrorException!');
         } catch (DevelopmentErrorException $ee) {
             $this->assertContains('route ID: fake_test_route_module1, prefix: /abstractRouterTest', $ee->getMessage());
@@ -142,8 +145,8 @@ class AbstractRouterTest extends UnitTestCase
 
     public function test_router_resolution_priority()
     {
-        $this->setup_env();
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml');
+        $conf = $this->setup_env();
+        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/abstractRouterTest/b/1'); // module must take priority, not Core

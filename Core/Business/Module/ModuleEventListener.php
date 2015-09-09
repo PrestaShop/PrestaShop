@@ -46,6 +46,7 @@ class ModuleEventListener
 
     public function onAfter(BaseEvent $event)
     {
+        // FIXME: access to container should be added to allow Listeners to access services!
         $cacheManager = \Adapter_ServiceLocator::get('Adapter_CacheManager');
         //$cacheManager->clean();
         // TODO: clear routing/dispatchers caches, or maybe more!

@@ -33,8 +33,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 
 /**
+ * This class extends EventDispatcher to add Business related listeners.
+ * @see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
+ *
  * Existing dispatchers:
- * The default ones (@see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher)
+ * The default ones: @see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
  * New ones are defined:
  *
  * - module         All events concerning modules manipulation: install, update, uninstall, etc...
@@ -67,9 +70,15 @@ class BaseEventDispatcher extends EventDispatcher
         ) // all events concerning modules manipulation: install, update, uninstall, etc...
     );
 
-    final public static function initBaseDispatchers($forceDebug = false)
+    final public static function initBaseDispatchers(&$container, $forceDebug = false)
     {
+        // complete registry with Business listeners, and then init
         EventDispatcher::$dispatcherRegistry = array_merge(EventDispatcher::$dispatcherRegistry, self::$baseDispatcherRegistry);
-        EventDispatcher::initDispatchers($forceDebug);
+        $configuration = $container->make('Core_Business_ConfigurationInterface');
+        EventDispatcher::initDispatchers(
+            $configuration->get('_PS_ROOT_DIR_'),
+            $configuration->get('_PS_CACHE_DIR_'),
+            $configuration->get('_PS_MODULE_DIR_'),
+            ($forceDebug || $configuration->get('_PS_MODE_DEV_')));
     }
 }

@@ -6,7 +6,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\SfControllerResolverTrait;
+use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 use PrestaShop\PrestaShop\Form\FormFactory;

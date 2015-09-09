@@ -72,8 +72,8 @@ class BaseControllerTest extends UnitTestCase
     {
         $this->setup_env();
 
-        $router = FakeRouter::getInstance();
-        $controller = new FakeBaseController($router);
+        $router = FakeRouter::getInstance($this->container);
+        $controller = new FakeBaseController($router, $this->container);
 
         $response = new Response();
 
