@@ -1377,10 +1377,11 @@ class CategoryCore extends ObjectModel
                 : '< '.(int)$moved_category['position'].' AND category_shop.`position` >= '.(int)$position).'
 			AND c.`id_parent`='.(int)$moved_category['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)$position.'
-			WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
-			AND c.`id_category`='.(int)$moved_category['id_category']));
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET category_shop.`position` = '.(int)$position.',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
+            AND c.`id_category`='.(int)$moved_category['id_category']));
         Hook::exec('actionCategoryUpdate');
         return $result;
     }
@@ -1409,9 +1410,10 @@ class CategoryCore extends ObjectModel
         $count = count($result);
         for ($i = 0; $i < $count; $i++) {
             $return &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)($i).'
-			WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET category_shop.`position` = '.(int)($i).',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
         }
         return $return;
     }
