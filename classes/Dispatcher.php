@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5.0
@@ -288,13 +288,24 @@ class DispatcherCore
                 $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
+                
                 if (Validate::isLoadedObject($module) && $module->active) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
-                    if (isset($controllers[strtolower($this->controller)])) {
+                    if (isset($controllers[Tools::strtolower($this->controller)])) {
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
+
+                        if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_ . 'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php'))
+                            include_once(_PS_OVERRIDE_DIR_ . 'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php');
+
+                        include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
+
                         $controller_class = $module_name.$this->controller.'ModuleFrontController';
+
+                        if (class_exists($controller_class . 'Override', false))
+                            $controller_class = $controller_class . 'Override';
                     }
                 }
+                
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
             break;
 

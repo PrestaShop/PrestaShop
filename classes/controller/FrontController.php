@@ -1,28 +1,28 @@
 <?php
 /**
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class FrontControllerCore extends Controller
 {
@@ -278,7 +278,7 @@ class FrontControllerCore extends Controller
 
                 $country = new Country($id_country, (int)$this->context->cookie->id_lang);
 
-                if (validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
+                if (!$has_currency && validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
                     $this->context->cookie->id_currency = (int)Currency::getCurrencyInstance($country->id_currency ? (int)$country->id_currency : (int)Configuration::get('PS_CURRENCY_DEFAULT'))->id;
                     $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
@@ -307,18 +307,18 @@ class FrontControllerCore extends Controller
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
-            }
-            /* Delete product of cart, if user can't make an order from his country */
-            elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED')) &&
-                    !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) &&
-                    $cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
-                    !FrontController::isInWhitelistForGeolocation() &&
-                    !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
+            } elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED'))
+                && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
+                && $cart->nbProducts()
+                && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
+                && !FrontController::isInWhitelistForGeolocation()
+                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))
+            ) {
+                /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart);
-            }
-            // update cart values
-            elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
+            } elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency) {
+                // update cart values
                 if ($this->context->cookie->id_customer) {
                     $cart->id_customer = (int)$this->context->cookie->id_customer;
                 }
@@ -381,9 +381,8 @@ class FrontControllerCore extends Controller
             $page_name = $this->php_self;
         } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
-        }
-        // @retrocompatibility Are we in a module ?
-        elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+        } elseif (preg_match('#^'.preg_quote($this->context->shop->physical_uri, '#').'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
+            // @retrocompatibility Are we in a module ?
             $page_name = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();
@@ -584,59 +583,6 @@ class FrontControllerCore extends Controller
         } else {
             $this->context->smarty->assign('HOOK_MOBILE_HEADER', Hook::exec('displayMobileHeader'));
         }
-    }
-
-    /**
-     * Compiles and outputs page header section (including HTML <head>)
-     *
-     * @param bool $display If true, renders visual page header section
-     * @deprecated 1.5.0.1
-     */
-    public function displayHeader($display = true)
-    {
-        Tools::displayAsDeprecated();
-
-        $this->initHeader();
-        $hook_header = Hook::exec('displayHeader');
-        if ((Configuration::get('PS_CSS_THEME_CACHE') || Configuration::get('PS_JS_THEME_CACHE')) && is_writable(_PS_THEME_DIR_.'cache')) {
-            // CSS compressor management
-            if (Configuration::get('PS_CSS_THEME_CACHE')) {
-                $this->css_files = Media::cccCss($this->css_files);
-            }
-
-            //JS compressor management
-            if (Configuration::get('PS_JS_THEME_CACHE')) {
-                $this->js_files = Media::cccJs($this->js_files);
-            }
-        }
-
-        // Call hook before assign of css_files and js_files in order to include correctly all css and javascript files
-        $this->context->smarty->assign(array(
-            'HOOK_HEADER'       => $hook_header,
-            'HOOK_TOP'          => Hook::exec('displayTop'),
-            'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
-            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
-            'HOOK_FOOTER'       => Hook::exec('displayFooter')
-        ));
-
-        $this->context->smarty->assign(array(
-            'css_files' => $this->css_files,
-            'js_files'  => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files
-        ));
-
-        $this->display_header = $display;
-        $this->smartyOutputContent(_PS_THEME_DIR_.'header.tpl');
-    }
-
-    /**
-     * Compiles and outputs page footer section
-     *
-     * @deprecated 1.5.0.1
-     */
-    public function displayFooter($display = true)
-    {
-        Tools::displayAsDeprecated();
-        $this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
     }
 
     /**
@@ -951,8 +897,17 @@ class FrontControllerCore extends Controller
         $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
         $this->addJquery();
         $this->addJqueryPlugin('easing');
-        $this->addJS(_PS_JS_DIR_.'tools.js');
-        $this->addJS(_THEME_JS_DIR_.'global.js');
+        $this->addJS(array(
+            _PS_JS_DIR_.'cldr.js',
+            _PS_JS_DIR_.'tools.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
+            _THEME_JS_DIR_.'global.js'
+        ));
 
         // Automatically add js files from js/autoload directory in the template
         if (@filemtime($this->getThemeDir().'js/autoload/')) {
@@ -984,6 +939,8 @@ class FrontControllerCore extends Controller
         if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0) {
             $this->addJS(_THEME_JS_DIR_.'products-comparison.js');
         }
+
+        Media::addJsDef(array('full_language_code' => $this->context->language->language_code));
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());

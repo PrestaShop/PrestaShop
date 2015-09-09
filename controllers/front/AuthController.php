@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AuthControllerCore extends FrontController
 {
@@ -164,7 +164,7 @@ class AuthControllerCore extends FrontController
                 'page' => $this->context->smarty->fetch($this->template),
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         }
     }
 
@@ -266,10 +266,14 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitLogin()
     {
-        Hook::exec('actionBeforeAuthentication');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeAuthentication');
+        Hook::exec('actionAuthenticationBefore');
+
+        $email = trim(Tools::getValue('email'));
         $passwd = trim(Tools::getValue('passwd'));
         $_POST['passwd'] = null;
-        $email = trim(Tools::getValue('email'));
+
         if (empty($email)) {
             $this->errors[] = Tools::displayError('An email address required.');
         } elseif (!Validate::isEmail($email)) {
@@ -344,7 +348,7 @@ class AuthControllerCore extends FrontController
                 'errors' => $this->errors,
                 'token' => Tools::getToken(false)
             );
-            $this->ajaxDie(Tools::jsonEncode($return));
+            $this->ajaxDie(json_encode($return));
         } else {
             $this->context->smarty->assign('authentification_error', $this->errors);
         }
@@ -377,7 +381,10 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitAccount()
     {
-        Hook::exec('actionBeforeSubmitAccount');
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeSubmitAccount');
+        Hook::exec('actionSubmitAccountBefore');
+
         $this->create_account = true;
         if (Tools::isSubmit('submitAccount')) {
             $this->context->smarty->assign('email_create', 1);
@@ -432,7 +439,7 @@ class AuthControllerCore extends FrontController
         // Check the requires fields which are settings in the BO
         $this->errors = $this->errors + $customer->validateFieldsRequiredDatabase();
 
-        if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount')) {
+        if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Tools::isSubmit('submitGuestAccount')) {
             if (!count($this->errors)) {
                 if (Tools::isSubmit('newsletter')) {
                     $this->processCustomerNewsletter($customer);
@@ -473,7 +480,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
 
                         if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
@@ -647,7 +654,7 @@ class AuthControllerCore extends FrontController
                                 'id_address_invoice' => $this->context->cart->id_address_invoice,
                                 'token' => Tools::getToken(false)
                             );
-                            $this->ajaxDie(Tools::jsonEncode($return));
+                            $this->ajaxDie(json_encode($return));
                         }
                         // if registration type is in two steps, we redirect to register address
                         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount')) {
@@ -687,7 +694,7 @@ class AuthControllerCore extends FrontController
                     'isSaved' => false,
                     'id_customer' => 0
                 );
-                $this->ajaxDie(Tools::jsonEncode($return));
+                $this->ajaxDie(json_encode($return));
             }
             $this->context->smarty->assign('account_error', $this->errors);
         }

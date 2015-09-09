@@ -83,5 +83,4 @@ class Adapter_PackItemsManager
     {
         return Pack::isPacked($product->id, $id_product_attribute);
     }
-    
 }

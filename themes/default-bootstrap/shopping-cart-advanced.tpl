@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <h2>{l s='Cart Summary'}</h2>
 {assign var='total_discounts_num' value="{if $total_discounts != 0}1{else}0{/if}"}
@@ -77,13 +77,6 @@
                 <tr class="cart_total_price">
                     <td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
                         {if $voucherAllowed}
-                            {if isset($errors_discount) && $errors_discount}
-                                <ul class="alert alert-danger">
-                                    {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'html':'UTF-8'}</li>
-                                    {/foreach}
-                                </ul>
-                            {/if}
                             <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                                 <fieldset>
                                     <h4>{l s='Vouchers'}</h4>
@@ -109,13 +102,6 @@
                 <tr class="cart_total_price">
                     <td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
                         {if $voucherAllowed}
-                            {if isset($errors_discount) && $errors_discount}
-                                <ul class="alert alert-danger">
-                                    {foreach $errors_discount as $k=>$error}
-                                        <li>{$error|escape:'html':'UTF-8'}</li>
-                                    {/foreach}
-                                </ul>
-                            {/if}
                             <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                                 <fieldset>
                                     <h4>{l s='Vouchers'}</h4>
@@ -142,13 +128,6 @@
             <tr class="cart_total_price">
                 <td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
                     {if $voucherAllowed}
-                        {if isset($errors_discount) && $errors_discount}
-                            <ul class="alert alert-danger">
-                                {foreach $errors_discount as $k=>$error}
-                                    <li>{$error|escape:'html':'UTF-8'}</li>
-                                {/foreach}
-                            </ul>
-                        {/if}
                         <form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
                             <fieldset>
                                 <h4>{l s='Vouchers'}</h4>

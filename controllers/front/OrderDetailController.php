@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class OrderDetailControllerCore extends FrontController
 {
@@ -175,6 +175,14 @@ class OrderDetailControllerCore extends FrontController
                 $order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
 
                 $customer = new Customer($order->id_customer);
+                $messages = CustomerMessage::getMessagesByOrderId((int)$order->id, false);
+
+                foreach ($messages as $i => $message) {
+                    if (!$message['id_customer'] && !$message['id_employee']) {
+                        unset($messages[$i]);
+                    }
+                }
+
                 $this->context->smarty->assign(array(
                     'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
                     'order' => $order,
@@ -197,7 +205,7 @@ class OrderDetailControllerCore extends FrontController
                     'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
                     'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
                     'is_guest' => false,
-                    'messages' => CustomerMessage::getMessagesByOrderId((int)$order->id, false),
+                    'messages' => $messages,
                     'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
                     'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
                     'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),

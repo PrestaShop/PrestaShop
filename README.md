@@ -43,6 +43,17 @@ Once the files in the PrestaShop archive have been decompressed and uploaded on 
 If you get any PHP error, it might be that you do not have PHP 5 on your web server, or that you need to activate it. See [this page for explanations about PHP 5][3], or contact your web host directly.  
 If you do not find any solution to start the installer, please post about your issue on [the PrestaShop forums][5].
 
+If you installed PrestaShop from GitHug :
+
+* Install Composer ([https://getcomposer.org][22])
+* Install Node.js ([https://nodejs.org][23])
+* Install Grunt-cli globally ([http://gruntjs.com][24])
+* Then run :
+
+>
+    composer install
+    npm install -g grunt-cli
+    npm install
 
 User documentation
 --------
@@ -88,7 +99,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 Getting support
 --------
 
-If you need help using PrestaShop 1.6, contact the PrestaShop support team: http://support.prestashop.com/.
+If you need help using PrestaShop 1.7, contact the PrestaShop support team: http://support.prestashop.com/.
 
 
 Thank you for downloading and using the PrestaShop open-source e-commerce solution!
@@ -114,3 +125,6 @@ Thank you for downloading and using the PrestaShop open-source e-commerce soluti
 [19]: http://doc.prestashop.com/display/PS16/System+Administrator+Guide
 [20]: http://addons.prestashop.com/
 [21]: CONTRIBUTORS.md
+[22]: https://getcomposer.org
+[23]: https://nodejs.org
+[24]: http://gruntjs.com

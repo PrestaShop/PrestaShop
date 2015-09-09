@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
 	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}

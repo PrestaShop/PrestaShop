@@ -72,7 +72,6 @@ return array(
         'Recommended PHP parameters' => 'Zalecane parametry PHP',
         'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!' => 'You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!',
         'Cannot open external URLs' => 'Nie można otworzyć zewnętrznych adresów URL ',
-        'PHP register_globals option is enabled' => 'PHP jest włączona opcja register_globals',
         'GZIP compression is not activated' => 'Kompresja GZIP nie jest włączona',
         'Mcrypt extension is not enabled' => 'Rozszerzenie Mcrypt nie jest włączone',
         'Mbstring extension is not enabled' => 'Rozszerzenie Mbstring nie jest włączone',

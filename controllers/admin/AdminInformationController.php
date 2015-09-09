@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminInformationControllerCore extends AdminController
 {
@@ -123,7 +123,6 @@ class AdminInformationControllerCore extends AdminController
             'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
             'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
             'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
-            'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
             'gz' => $this->l('Enable GZIP compression on your server.'),
             'files' => $this->l('Some PrestaShop files are missing from your server.'),
             'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion())
@@ -167,11 +166,11 @@ class AdminInformationControllerCore extends AdminController
         $this->file_list = array('missing' => array(), 'updated' => array());
         $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
         if (!$xml) {
-            die(Tools::jsonEncode($this->file_list));
+            die(json_encode($this->file_list));
         }
 
         $this->getListOfUpdatedFiles($xml->ps_root_dir[0]);
-        die(Tools::jsonEncode($this->file_list));
+        die(json_encode($this->file_list));
     }
 
     public function getListOfUpdatedFiles(SimpleXMLElement $dir, $path = '')

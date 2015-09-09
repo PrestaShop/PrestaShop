@@ -1,26 +1,27 @@
-/*
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 var ajax_running_timeout = null;
 
@@ -135,12 +136,14 @@ function str2url(str, encoding, ucfirst)
 
 function copy2friendlyURL()
 {
+	if (typeof($('#link_rewrite_' + id_language).val()) == 'undefined')
+		return;
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
 
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
-		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
+		$('#link_rewrite_' + id_language).val(str2url($.trim($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', '')));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
@@ -177,10 +180,12 @@ function updateFriendlyURL()
 
 function updateLinkRewrite()
 {
+	$('#name_' + id_language).val($.trim($('#name_' + id_language).val()));
+	$('#link_rewrite_' + id_language).val($.trim($('#link_rewrite_' + id_language).val()));
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
-		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+		link.val(str2url(link.val(), 'UTF-8'));
 		$('#friendly-url_' + id_language).text(link.val());
 	}
 }
@@ -725,7 +730,7 @@ $(document).ready(function()
 	}
 
 	$('select.chosen').each(function(k, item){
-		$(item).chosen({disable_search_threshold: 10});
+		$(item).chosen({disable_search_threshold: 10, search_contains: true});
 	});
 	// Apply chosen() when modal is loaded
 	$(document).on('shown.bs.modal', function (e) {
@@ -1190,10 +1195,54 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
+/**
+ * Searches for current controller and current CRUD action. This data can be used to know from where an ajax call is done (source tracking for example). 
+ * Action is 'index' by default.
+ * For instance, only used for back-office.
+ * @param force_action optional string to override action part of the result.
+ */
+function getControllerActionMap(force_action) {
+	query = window.location.search.substring(1);
+	vars = query.split("&");
+	controller = "Admin";
+	action = "index";
+
+	for (i = 0 ; i < vars.length; i++) {
+		pair = vars[i].split("=");
+		
+		if (pair[0] == "token")
+			continue;
+		if (pair[0] == "controller")
+			controller = pair[1];
+		
+		if (pair.length == 1) {
+			if (pair[0].indexOf("add") != -1)
+				action = "new";
+			else if (pair[0].indexOf("view") != -1)
+				action = "view";
+			else if (pair[0].indexOf("edit") != -1 || pair[0].indexOf("modify") != -1 || pair[0].indexOf("update") != -1)
+				action = "edit";
+			else if (pair[0].indexOf("delete") != -1)
+				action = "delete";
+		}
+	}
+	
+	if (force_action !== undefined)
+		action = force_action;
+	
+	if (typeof help_class_name != 'undefined')
+		controller = help_class_name;
+
+	return new Array('back-office',controller, action);
+}
+
 function openModulesList()
 {
+
 	if (!modules_list_loaded)
 	{
+		header = $('#modules_list_container .modal-header').html();
+
 		$.ajax({
 			type: "POST",
 			url : admin_modules_link,
@@ -1203,23 +1252,51 @@ function openModulesList()
 				controller : "AdminModules",
 				action : "getTabModulesList",
 				tab_modules_list : tab_modules_list,
-				back_tab_modules_list : window.location.href
+				back_tab_modules_list : window.location.href,
+				admin_list_from_source : getControllerActionMap().join()
 			},
 			success : function(data)
 			{
 				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
-				modules_list_loaded = true;
+				modules_list_loaded = data;
 				$('.help-tooltip').tooltip();
+				controllerQuickView();
 			}
 		});
 	}
 	else
 	{
-		$('#modules_list_container_tab_modal').slideDown();
+		$('#modules_list_container_tab_modal').html(modules_list_loaded).slideDown();
 		$('#modules_list_loader').hide();
+		$('#modules_list_container .modal-header').html(header);
+		controllerQuickView();
 	}
 	return false;
+}
+
+function controllerQuickView()
+{
+	$('.controller-quick-view').click(function()
+	{
+		$.ajax({
+			type: "POST",
+			url : admin_modules_link,
+			dataType: 'json',
+			async: true,
+			data : {
+				ajax : "1",
+				controller : "AdminModules",
+				action : "GetModuleReadMoreView",
+				module: $(this).data("name"),
+			},
+			success : function(data)
+			{
+				$('#modules_list_container_tab_modal').html(data.body);
+				$('#modules_list_container .modal-header').html(data.header);
+			}
+		});
+	});
 }
 
 function bindAddonsButtons()
@@ -1578,4 +1655,11 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 		else
 			document.location = cancel_link;
 	});
+
+}
+
+function TogglePackage(detail)
+{
+    var pack = $('#pack_items_' + detail);
+    pack.css('display', (pack.css('display') == 'block') ? "none" : "block");
 }

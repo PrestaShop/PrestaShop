@@ -6596,7 +6596,8 @@ table.table_block td {
   .block .products-block li .product-content {
     overflow: hidden; }
     .block .products-block li .product-content h5 {
-      margin: -3px 0 0 0; }
+      position: relative;
+      top: -11px; }
 .block .products-block .product-name {
   font-size: 15px;
   line-height: 18px; }

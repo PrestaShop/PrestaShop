@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <table id="total-tab" width="100%">
 
@@ -54,7 +54,7 @@
 			{if $footer.shipping_tax_excl > 0}
 				{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
 			{else}
-				{l s='Free Shipping' pdf=true}
+				{l s='Free Shipping' pdf='true'}
 			{/if}
 		</td>
 	</tr>

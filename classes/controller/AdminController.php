@@ -18,11 +18,13 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Business\Cldr;
 
 class AdminControllerCore extends Controller
 {
@@ -844,7 +846,6 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -948,6 +949,7 @@ class AdminControllerCore extends Controller
         header('Cache-Control: no-store, no-cache');
         header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.csv"');
 
+        $fd = fopen('php://output', 'wb');
         $headers = array();
         foreach ($this->fields_list as $key => $datas) {
             if ($datas['title'] == 'PDF') {
@@ -956,9 +958,10 @@ class AdminControllerCore extends Controller
                 $headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
             }
         }
-        $content = array();
+        fputcsv($fd, $headers, ';', $text_delimiter);
+
         foreach ($this->_list as $i => $row) {
-            $content[$i] = array();
+            $content = array();
             $path_to_image = false;
             foreach ($this->fields_list as $key => $params) {
                 $field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8(Tools::nl2br($row[$key])) : '';
@@ -978,19 +981,12 @@ class AdminControllerCore extends Controller
                         $field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
                     }
                 }
-                $content[$i][] = $field_value;
+                $content[] = $field_value;
             }
+            fputcsv($fd, $content, ';', $text_delimiter);
         }
-
-        $this->context->smarty->assign(array(
-            'export_precontent' => "",
-            'export_headers' => $headers,
-            'export_content' => $content,
-            'text_delimiter' => $text_delimiter
-            )
-        );
-
-        $this->layout = 'layout-export.tpl';
+        @fclose($fd);
+        die;
     }
 
     /**
@@ -1551,7 +1547,8 @@ class AdminControllerCore extends Controller
                     'desc' => $this->l('Save')
                 );
                 break;
-            default: // list
+            default:
+                // list
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
                     'desc' => $this->l('Add new')
@@ -1729,14 +1726,14 @@ class AdminControllerCore extends Controller
         }
 
         if ($conf = Tools::getValue('conf')) {
-            $this->context->smarty->assign('conf', $this->json ? Tools::jsonEncode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
+            $this->context->smarty->assign('conf', $this->json ? json_encode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
         }
 
         foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type) {
             if (!is_array($this->$type)) {
                 $this->$type = (array)$this->$type;
             }
-            $this->context->smarty->assign($type, $this->json ? Tools::jsonEncode(array_unique($this->$type)) : array_unique($this->$type));
+            $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));
         }
 
         if ($this->show_page_header_toolbar && !$this->lite_display) {
@@ -1750,11 +1747,10 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(
             array(
-                'page' =>  $this->json ? Tools::jsonEncode($page) : $page,
+                'page' =>  $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-            )
-        );
+        ));
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1923,6 +1919,8 @@ class AdminControllerCore extends Controller
         // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
         $this->context->shop = new Shop((int)$this->context->shop->id);
 
+        $cldrRepository = new Cldr\Repository($this->context->language->language_code);
+
         $this->context->smarty->assign(array(
             'img_dir' => _PS_IMG_,
             'iso' => $this->context->language->iso_code,
@@ -1932,6 +1930,7 @@ class AdminControllerCore extends Controller
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
             'full_language_code' => $this->context->language->language_code,
+            'full_cldr_language_code' => $cldrRepository->getCulture(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),
@@ -2055,20 +2054,6 @@ class AdminControllerCore extends Controller
         }
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
-
-        $modules = Module::getModulesOnDisk();
-
-        $tmp = array();
-        foreach ($modules as $module) {
-            $tmp[] = $module->name;
-        }
-
-        foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
-            if (!in_array($module, $tmp)) {
-                unset($this->tab_modules_list['slider_list'][$key]);
-            }
-        }
-
 
         if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
             $this->filter_modules_list = $this->tab_modules_list['default_list'];
@@ -2266,9 +2251,10 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * @param string|bool $tracking_source Source information for URL used by "Install" button
      * @return string
      */
-    public function renderModulesList()
+    public function renderModulesList($tracking_source = false)
     {
         // Load cache file modules list (natives and partners modules)
         $xml_modules = false;
@@ -2292,7 +2278,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if ($this->getModulesList($this->filter_modules_list)) {
+        if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
             $tmp = array();
             foreach ($this->modules_list as $key => $module) {
                 if ($module->active) {
@@ -2591,6 +2577,7 @@ class AdminControllerCore extends Controller
     {
         //Bootstrap
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/titatoggle-min.css', 'all', 0);
 
         $this->addJquery();
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2598,11 +2585,30 @@ class AdminControllerCore extends Controller
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+        Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
+
+        Media::addJsDef(array('currency' => array(
+            'iso_code' => Context::getContext()->currency->iso_code,
+            'sign' => Context::getContext()->currency->sign,
+            'name' => Context::getContext()->currency->name,
+            'format' => Context::getContext()->currency->format
+        )));
 
         $this->addJS(array(
             _PS_JS_DIR_.'admin.js',
+            _PS_JS_DIR_.'cldr.js',
             _PS_JS_DIR_.'tools.js',
-            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
+            _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
+            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/message.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/plural.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
+            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js'
         ));
 
         //loads specific javascripts for the admin theme
@@ -3112,7 +3118,7 @@ class AdminControllerCore extends Controller
         if ($this->shopLinkType) {
             $select_shop = ', shop.name as shop_name ';
             $join_shop = ' LEFT JOIN '._DB_PREFIX_.$this->shopLinkType.' shop
-							ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
+                            ON a.id_'.$this->shopLinkType.' = shop.id_'.$this->shopLinkType;
             $where_shop = Shop::addSqlRestriction($this->shopShareDatas, 'a', $this->shopLinkType);
         }
 
@@ -3121,10 +3127,10 @@ class AdminControllerCore extends Controller
                 $test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table)) {
                     $this->_where .= ' AND EXISTS (
-						SELECT 1
-						FROM `'._DB_PREFIX_.$this->table.'_shop` sa
-						WHERE a.'.$this->identifier.' = sa.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
-					)';
+                        SELECT 1
+                        FROM `'._DB_PREFIX_.$this->table.'_shop` sa
+                        WHERE a.'.$this->identifier.' = sa.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
+                    )';
                 }
             }
         }
@@ -3180,30 +3186,30 @@ class AdminControllerCore extends Controller
             }
 
             $this->_listsql .= '
-			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop;
+            '.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop;
 
             $sql_from = '
-			FROM `'._DB_PREFIX_.$sql_table.'` a ';
+            FROM `'._DB_PREFIX_.$sql_table.'` a ';
             $sql_join = '
-			'.$lang_join.'
-			'.(isset($this->_join) ? $this->_join.' ' : '').'
-			'.$join_shop;
+            '.$lang_join.'
+            '.(isset($this->_join) ? $this->_join.' ' : '').'
+            '.$join_shop;
             $sql_where = ' '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
             (isset($this->_filter) ? $this->_filter : '').$where_shop.'
-			'.(isset($this->_group) ? $this->_group.' ' : '').'
-			'.$having_clause;
+            '.(isset($this->_group) ? $this->_group.' ' : '').'
+            '.$having_clause;
             $sql_order_by = ' ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
             ($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
             $sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.', '.(int)$limit : '');
 
             if ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having)) {
                 $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS
-								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+                                '.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
                                 $sql_order_by.$sql_limit;
                 $list_count = 'SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`';
             } else {
                 $this->_listsql = 'SELECT
-								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+                                '.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
                                 $sql_order_by.$sql_limit;
                 $list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
             }
@@ -3235,10 +3241,11 @@ class AdminControllerCore extends Controller
 
     /**
      * @param array|string $filter_modules_list
+     * @param string|bool $tracking_source
      * @return bool
      * @throws PrestaShopException
      */
-    public function getModulesList($filter_modules_list)
+    public function getModulesList($filter_modules_list, $tracking_source = false)
     {
         if (!is_array($filter_modules_list) && !is_null($filter_modules_list)) {
             $filter_modules_list = array($filter_modules_list);
@@ -3263,7 +3270,7 @@ class AdminControllerCore extends Controller
             }
 
             if (in_array($module->name, $filter_modules_list) && $perm) {
-                $this->fillModuleData($module, 'array');
+                $this->fillModuleData($module, 'array', null, $tracking_source);
                 $this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
             }
         }
@@ -3408,9 +3415,9 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field.'_'.$default_language->id);
                     if (empty($value)) {
                         $this->errors[$field.'_'.$default_language->id] = sprintf(
-                                Tools::displayError('The field %1$s is required at least in %2$s.'),
-                                $object->displayFieldName($field, $class_name),
-                                $default_language->name
+                            Tools::displayError('The field %1$s is required at least in %2$s.'),
+                            $object->displayFieldName($field, $class_name),
+                            $default_language->name
                         );
                     }
                 }
@@ -3792,28 +3799,28 @@ class AdminControllerCore extends Controller
     {
         $help_class_name = $_GET['controller'];
         $popup_content = "<!doctype html>
-		<html>
-			<head>
-				<meta charset='UTF-8'>
-				<title>PrestaShop Help</title>
-				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
-				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
-				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
-				<script src='"._PS_JS_DIR_."admin.js'></script>
-				<script src='"._PS_JS_DIR_."tools.js'></script>
-				<script>
-					help_class_name='".addslashes($help_class_name)."';
-					iso_user = '".addslashes($this->context->language->iso_code)."'
-				</script>
-				<script src='themes/default/js/help.js'></script>
-				<script>
-					$(function(){
-						initHelp();
-					});
-				</script>
-			</head>
-			<body><div id='help-container' class='help-popup'></div></body>
-		</html>";
+        <html>
+            <head>
+                <meta charset='UTF-8'>
+                <title>PrestaShop Help</title>
+                <link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
+                <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
+                <script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
+                <script src='"._PS_JS_DIR_."admin.js'></script>
+                <script src='"._PS_JS_DIR_."tools.js'></script>
+                <script>
+                    help_class_name='".addslashes($help_class_name)."';
+                    iso_user = '".addslashes($this->context->language->iso_code)."'
+                </script>
+                <script src='themes/default/js/help.js'></script>
+                <script>
+                    $(function(){
+                        initHelp();
+                    });
+                </script>
+            </head>
+            <body><div id='help-container' class='help-popup'></div></body>
+        </html>";
         die($popup_content);
     }
 
@@ -3993,8 +4000,9 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type
      * @param string|null $back
+     * @param string|bool $install_source_tracking
      */
-    public function fillModuleData(&$module, $output_type = 'link', $back = null)
+    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
         /** @var Module $obj */
         $obj = null;
@@ -4015,11 +4023,17 @@ class AdminControllerCore extends Controller
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
 
-        $module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+        $module->options['install_url'] = $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name
+            .'&anchor='.ucfirst($module->name).($install_source_tracking ? '&source='.$install_source_tracking : '');
         $module->options['update_url'] = $link_admin_modules.'&update='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
         $module->options['uninstall_url'] = $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
 
-        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back);
+        // free modules get their source tracking data here
+        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back, $install_source_tracking);
+        // pay modules get their source tracking data here
+        if ($install_source_tracking && isset($module->addons_buy_url)) {
+            $module->addons_buy_url .= ($install_source_tracking ? '&utm_term='.$install_source_tracking : '');
+        }
 
         $module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
             ((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
@@ -4043,9 +4057,10 @@ class AdminControllerCore extends Controller
      * @param Module $module
      * @param string $output_type (link or select)
      * @param string|null $back
+     * @param string|bool $install_source_tracking
      * @return string|array
      */
-    public function displayModuleOptions($module, $output_type = 'link', $back = null)
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
     {
         if (!isset($module->enable_device)) {
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
@@ -4151,7 +4166,8 @@ class AdminControllerCore extends Controller
         );
 
         $install = array(
-            'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+            'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name)
+                .(!is_null($back) ? '&back='.urlencode($back) : '').($install_source_tracking ? '&source='.$install_source_tracking : ''),
             'onclick' => '',
             'title' => $this->translationsTab['Install'],
             'text' => $this->translationsTab['Install'],

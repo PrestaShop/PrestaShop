@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @deprecated 1.5.0.1
@@ -498,9 +498,7 @@ class ProductCore extends ObjectModel
 
             $this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
             $this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
-            if ($this->id) {
-                $this->tags = Tag::getProductTags((int)$this->id);
-            }
+            $this->tags = Tag::getProductTags((int)$this->id);
 
             $this->loadStockData();
         }
@@ -1139,14 +1137,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0 Use Combination::getPrice()
-     */
-    public static function getProductAttributePrice($id_product_attribute)
-    {
-        return Combination::getPrice($id_product_attribute);
-    }
-
-    /**
     * Get all available products
     *
     * @param int $id_lang Language id
@@ -1621,7 +1611,7 @@ class ProductCore extends ObjectModel
      * @return mixed $id_product_attribute or false
      */
     public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
-                                 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
+                                 $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null, $quantity = 0)
     {
         if (!$this->id) {
             return;
@@ -1634,7 +1624,7 @@ class ProductCore extends ObjectModel
         $combination->id_product = (int)$this->id;
         $combination->price = (float)$price;
         $combination->ecotax = (float)$ecotax;
-        $combination->quantity = 0;
+        $combination->quantity = (int)$quantity;
         $combination->weight = (float)$weight;
         $combination->unit_price_impact = (float)$unit_impact;
         $combination->reference = pSQL($reference);
@@ -4244,7 +4234,7 @@ class ProductCore extends ObjectModel
 
         $row['attribute_price'] = 0;
         if ($id_product_attribute) {
-            $row['attribute_price'] = (float)Product::getProductAttributePrice($id_product_attribute);
+            $row['attribute_price'] = (float)Combination::getPrice($id_product_attribute);
         }
 
         $row['price_tax_exc'] = Product::getPriceStatic(
@@ -5336,11 +5326,12 @@ class ProductCore extends ObjectModel
     public function setCoverWs($id_image)
     {
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop` image_shop, `'._DB_PREFIX_.'image` i
-			SET image_shop.`cover` = 0
-			WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
-			AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+            SET image_shop.`cover` = NULL
+            WHERE i.`id_product` = '.(int)$this->id.' AND i.id_image = image_shop.id_image
+            AND image_shop.id_shop='.(int)Context::getContext()->shop->id);
+
         Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_shop`
-			SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
+            SET `cover` = 1 WHERE `id_image` = '.(int)$id_image);
 
         return true;
     }
@@ -5353,26 +5344,26 @@ class ProductCore extends ObjectModel
     public function getWsImages()
     {
         return Db::getInstance()->executeS('
-		SELECT i.`id_image` as id
-		FROM `'._DB_PREFIX_.'image` i
-		'.Shop::addSqlAssociation('image', 'i').'
-		WHERE i.`id_product` = '.(int)$this->id.'
-		ORDER BY i.`position`');
+            SELECT i.`id_image` as id
+            FROM `'._DB_PREFIX_.'image` i
+            '.Shop::addSqlAssociation('image', 'i').'
+            WHERE i.`id_product` = '.(int)$this->id.'
+            ORDER BY i.`position`');
     }
 
     public function getWsStockAvailables()
     {
         return Db::getInstance()->executeS('SELECT `id_stock_available` id, `id_product_attribute`
-														FROM `'._DB_PREFIX_.'stock_available`
-														WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
+			FROM `'._DB_PREFIX_.'stock_available`
+			WHERE `id_product`='.($this->id).StockAvailable::addSqlShopRestriction());
     }
 
     public function getWsTags()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_tag` as id
-		FROM `'._DB_PREFIX_.'product_tag`
-		WHERE `id_product` = '.(int)$this->id);
+    		SELECT `id_tag` as id
+    		FROM `'._DB_PREFIX_.'product_tag`
+    		WHERE `id_product` = '.(int)$this->id);
     }
 
     /**

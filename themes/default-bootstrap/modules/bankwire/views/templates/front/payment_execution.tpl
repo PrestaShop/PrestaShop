@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {capture name=path}
@@ -85,7 +85,7 @@
             <a class="button-exclusive btn btn-default" href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}">
                 <i class="icon-chevron-left"></i>{l s='Other payment methods' mod='bankwire'}
             </a>
-            <button class="button btn btn-default button-medium" type="submit">
+            <button class="button btn btn-default button-medium" type="submit" data-trigger="disabled">
                 <span>{l s='I confirm my order' mod='bankwire'}<i class="icon-chevron-right right"></i></span>
             </button>
         </p>

@@ -1,27 +1,27 @@
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 //global variables
 var responsiveflag = false;
 
@@ -31,8 +31,6 @@ $(document).ready(function(){
 	$(window).resize(responsiveResize);
 	if (navigator.userAgent.match(/Android/i))
 	{
-		var viewport = document.querySelector('meta[name="viewport"]');
-		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 		window.scrollTo(0, 1);
 	}
 	if (typeof quickView !== 'undefined' && quickView)
@@ -68,6 +66,13 @@ $(document).ready(function(){
 		$(document).on('change', 'select[name="currency_payment"]', function(){
 			setCurrency($(this).val());
 		});
+
+		$(document).on('click', 'button[data-trigger="disabled"]', function(){
+			$(this).prop('disabled', true).parents('form').submit();
+		});
+		$(document).on('click', 'button[data-trigger="hide"]', function(){
+			$(this).slideUp();
+		});
 	}
 
 	$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
@@ -97,7 +102,7 @@ $(document).ready(function(){
 			}
 		}).css('opacity', 0.8);
 
-	if (!!$.prototype.fancybox)
+	if (typeof(FancyboxI18nClose) !== 'undefined' && typeof(FancyboxI18nNext) !== 'undefined' && typeof(FancyboxI18nPrev) !== 'undefined' && !!$.prototype.fancybox)
 		$.extend($.fancybox.defaults.tpl, {
 			closeBtn : '<a title="' + FancyboxI18nClose + '" class="fancybox-item fancybox-close" href="javascript:;"></a>',
 			next     : '<a title="' + FancyboxI18nNext + '" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
@@ -113,7 +118,9 @@ $(document).ready(function(){
 
 function highdpiInit()
 {
-	if($('.replace-2x').css('font-size') == "1px")
+	if (typeof highDPI === 'undefined')
+		return;
+	if(highDPI && $('.replace-2x').css('font-size') == "1px")
 	{
 		var els = $("img.replace-2x").get();
 		for(var i = 0; i < els.length; i++)
@@ -417,5 +424,5 @@ function accordion(status)
 function bindUniform()
 {
 	if (!!$.prototype.uniform)
-		$("select.form-control,input[type='radio'],input[type='checkbox']").not(".not_unifrom").uniform();
+		$("select.form-control,input[type='radio'],input[type='checkbox']").not(".not_uniform").uniform();
 }

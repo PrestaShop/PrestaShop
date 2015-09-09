@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 class AdminLoginControllerCore extends AdminController
@@ -220,14 +220,14 @@ class AdminLoginControllerCore extends AdminController
                 }
 
                 if (Tools::isSubmit('ajax')) {
-                    die(Tools::jsonEncode(array('hasErrors' => false, 'redirect' => $url)));
+                    die(json_encode(array('hasErrors' => false, 'redirect' => $url)));
                 } else {
                     $this->redirect_after = $url;
                 }
             }
         }
         if (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
+            die(json_encode(array('hasErrors' => true, 'errors' => $this->errors)));
         }
     }
 
@@ -271,19 +271,19 @@ class AdminLoginControllerCore extends AdminController
                 if (!$result) {
                     $this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
                 } else {
-                    die(Tools::jsonEncode(array(
+                    die(json_encode(array(
                         'hasErrors' => false,
                         'confirm' => $this->l('Your password has been emailed to you.', 'AdminTab', false, false)
                     )));
                 }
             } else {
-                die(Tools::jsonEncode(array(
+                die(json_encode(array(
                     'hasErrors' => true,
                     'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
                 )));
             }
         } elseif (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
+            die(json_encode(array('hasErrors' => true, 'errors' => $this->errors)));
         }
     }
 }
