@@ -1,5 +1,5 @@
 <?php
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Cache;
 use Configuration;
