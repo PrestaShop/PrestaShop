@@ -93,7 +93,7 @@ class StoreCore extends ObjectModel
             'city' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
             'latitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'longitude' =>        array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'hours' =>            array('type' => self::TYPE_STRING, 'validate' => 'isSerializedArray', 'size' => 65000),
+            'hours' =>            array('type' => self::TYPE_STRING, 'validate' => 'isJson', 'size' => 65000),
             'phone' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' =>            array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'note' =>            array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
@@ -121,12 +121,16 @@ class StoreCore extends ObjectModel
 
     public function getWsHours()
     {
-        return implode(';', Tools::unSerialize($this->hours));
+        return $this->hours;
     }
 
     public function setWsHours($hours)
     {
-        $this->hours = serialize(explode(';', $hours));
+        if (!is_string($hours)) {
+            return false;
+        }
+
+        $this->hours = $hours;
         return true;
     }
 

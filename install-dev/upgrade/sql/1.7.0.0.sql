@@ -40,3 +40,8 @@ ALTER TABLE `PREFIX_product_shop` ADD `show_condition` TINYINT(1) NOT NULL DEFAU
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminPaymentPreferences' LIMIT 1) AND `id_profile` > 1;
 
 UPDATE `PREFIX_quick_access` SET `link` = "product/new" WHERE `link` = "index.php?controller=AdminProducts&addproduct";
+
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
+
+/* PHP:ps1700_stores(); */
