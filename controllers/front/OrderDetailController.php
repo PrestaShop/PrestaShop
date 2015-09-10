@@ -175,14 +175,6 @@ class OrderDetailControllerCore extends FrontController
                 $order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
 
                 $customer = new Customer($order->id_customer);
-                $messages = CustomerMessage::getMessagesByOrderId((int)$order->id, false);
-
-                foreach ($messages as $i => $message) {
-                    if (!$message['id_customer'] && !$message['id_employee']) {
-                        unset($messages[$i]);
-                    }
-                }
-
                 $this->context->smarty->assign(array(
                     'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
                     'order' => $order,
@@ -205,7 +197,7 @@ class OrderDetailControllerCore extends FrontController
                     'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
                     'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
                     'is_guest' => false,
-                    'messages' => $messages,
+                    'messages' => CustomerMessage::getMessagesByOrderId((int)$order->id, false),
                     'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
                     'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
                     'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
