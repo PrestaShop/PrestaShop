@@ -94,6 +94,7 @@ class Twig extends View
             $formEngine = new TwigRendererEngine(array('bootstrap_3_layout.html.twig'));
             $formEngine->setEnvironment($this->parserInstance);
 
+            $this->parserInstance->addExtension(new \Twig_Extension_Debug());
             $this->parserInstance->addExtension(new TwigTranslationExtension(new Translator('')));
             $this->parserInstance->addExtension(new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider)));
 

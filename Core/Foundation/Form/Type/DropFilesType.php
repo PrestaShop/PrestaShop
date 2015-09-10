@@ -28,58 +28,62 @@ namespace PrestaShop\PrestaShop\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
+use PrestaShop\PrestaShop\Form\Validator\DropFile;
 
 class DropFilesType extends AbstractType
 {
-    private $multiple;
-    private $constraints;
     private $label;
+    private $dropzoneOptions;
+    private $dropzonePostUrl;
 
-    public function __construct($constraints = array(), $multiple = true, $label = false)
+    public function __construct($label = '', $dropzonePostUrl = '', $dropzoneOptions = null)
     {
-        $this->constraints = $constraints;
-        if (empty($this->constraints)) {
-            $this->constraints = array(
-                new Image(array(
-                    'maxSize' => '1024k',
-                    'minWidth' => 100,
-                    'minHeight' => 100,
-                    'mimeTypes' => array(
-                        'image/jpeg',
-                        'image/jpg',
-                        'image/png',
-                        'image/gif'
-                    )
-                )),
-                new File(array(
-                    'maxSize' => '1024k',
-                    'mimeTypes' => array(
-                        'text/plain'
-                    )
-                ))
-            );
+        $this->label = $label;
+        $this->dropzoneOptions = $dropzoneOptions;
+        $this->dropzonePostUrl = $dropzonePostUrl;
+
+        //create a new cache/tmp/uploads folder
+        if (!is_dir(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload')) {
+            $oldUmask = umask(0000);
+            mkdir(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', 0777, true);
+            umask($oldUmask);
+        }
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $arrayExistedFiles = array();
+        if ($form->get('files')->getData()) {
+            foreach ($form->get('files')->getData() as $file) {
+                $arrayExistedFiles[] = json_decode($file);
+            }
         }
 
-        $this->multiple = $multiple;
-        $this->label = $label;
+        $view->vars['dropzoneOptions'] = json_encode($this->dropzoneOptions);
+        $view->vars['dropzoneExsitedFiles'] = $arrayExistedFiles;
+        $view->vars['dropzonePostUrl'] = $this->dropzonePostUrl;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('files', 'file', array(
-            'label'     => $this->label,
-            'multiple' => $this->multiple,
-            'constraints' => $this->constraints,
-            'attr' => array(
-                'multiple' => $this->multiple ? 'multiple' : ''
+        $builder->add('files', 'collection', array(
+            'type' => 'hidden',
+            'required' => false,
+            'prototype' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'delete_empty' => true,
+            'label' => $this->label,
+            'constraints' => array(
+                new DropFile()
             )
         ));
     }
 
     public function getName()
     {
-        return 'drop_attachments';
+        return 'drop_files';
     }
 }

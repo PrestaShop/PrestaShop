@@ -17,7 +17,7 @@ admin_product_catalog:
 admin_product_list:
     path:     /product/list/{_layout_mode}/{ls_products_offset}/{ls_products_limit}/{ls_products_orderBy}/{ls_products_orderWay}
     methods:  [GET]
-    defaults: 
+    defaults:
         _controller: 'Admin\ProductController::productListAction'
         _layout_mode: layout_html
         ls_products_class: PrestaShop\PrestaShop\Adapter\ProductManager
@@ -50,9 +50,15 @@ admin_route1:
     defaults: { _controller: 'Admin\TestController::aAction' }
 admin_product_list_2:
     path:     /product/list2/{_layout_mode}/{toto}
-    defaults: 
+    defaults:
         _controller: 'Admin\ProductController::productList2Action'
         _layout_mode: layout_html
         toto: tititutu
     requirements:
         _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
+        
+admin_tools_upload:
+    path:     /common/upload/{file_type}
+    defaults: { _controller: 'AdminController::uploadAction', file_type: image }
+    requirements:
+        file_type:  image|file

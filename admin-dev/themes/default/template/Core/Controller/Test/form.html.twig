@@ -39,7 +39,7 @@ SIMPLE WAY TO RENDER A FORM
         {{ form_row(form.author) }}
     </div>
     <div>
-        {{ form_row(form.dropAttachment) }}
+        {{ form_row(form.dropFiles) }}
     </div>
     <div>
         <div class="form-group">
@@ -52,6 +52,7 @@ SIMPLE WAY TO RENDER A FORM
             {{ form_widget(form.testSimpleCollection) }}
         </div>
     </div>
+
     <input type="submit" />
 
     {{ form_end(form) }}

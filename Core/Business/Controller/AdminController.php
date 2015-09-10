@@ -41,7 +41,8 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 class AdminController extends BaseController
 {
     use AdminAuthenticationTrait;
-    
+    use AdminCommonActionTrait;
+
     /**
      * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...)
      * Implements it and use $response->getContent() to retrieve the main content.

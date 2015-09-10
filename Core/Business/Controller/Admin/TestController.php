@@ -8,9 +8,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
-use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 use PrestaShop\PrestaShop\Form\FormFactory;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
@@ -59,7 +57,7 @@ class TestController extends AdminController
 
         $defaultData = array(
             'firstName' => 'tata',
-            'lastName' => 'toto'
+            'lastName' => 'toto@sdfds.fr'
         );
 
         $form = $builder
@@ -111,7 +109,10 @@ class TestController extends AdminController
                     ))
                 )
             ))
-            ->add('dropAttachment', new DropFilesType())
+            ->add('dropFiles', new DropFilesType('Images', $this->generateUrl('admin_tools_upload'), array(
+                'maxFiles' => '10',
+                'dictRemoveFile' => 'Supprimer'
+            )))
             ->add($simpleSubForm)
             ->add('testSimpleCollection', 'collection', array(
                 'type' => new TestType(),
@@ -120,6 +121,7 @@ class TestController extends AdminController
                 'allow_delete' => true))
             ->setData($defaultData)
             ->getForm();
+
 
         $form->handleRequest($request);
 
@@ -133,13 +135,16 @@ class TestController extends AdminController
 
             if (!empty($data['fileAttachment'])) {
                 $file = $data['fileAttachment'];
-                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '_' .$file->getClientOriginalName());
+                $file->move(_PS_UPLOAD_DIR_, md5(uniqid()) . '_' . $file->getClientOriginalName());
             }
+
+            //process droped files
 
             print_r($data);
             die;
             //do what you want, redirect...
         }
+
 
         $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory('twig');
         $response->addContentData(
