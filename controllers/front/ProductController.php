@@ -183,6 +183,18 @@ class ProductControllerCore extends FrontController
 
             $this->context->smarty->assign('customizationFormTarget', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
+            $priceDisplay = Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
+            $productPrice = 0;
+            $productPriceWithoutReduction = 0;
+
+            if (!$priceDisplay || $priceDisplay == 2) {
+                $productPrice = $this->product->getPrice(true, null, 6);
+                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(false, null);
+            } elseif ($priceDisplay == 1) {
+                $productPrice = $this->product->getPrice(false, null, 6);
+                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
+            }
+
             if (Tools::isSubmit('submitCustomizedDatas')) {
                 // If cart has not been saved, we need to do it so that customization fields can have an id_cart
                 // We check that the cookie exists first to avoid ghost carts
@@ -238,6 +250,8 @@ class ProductControllerCore extends FrontController
 
             // Assign attributes combinations to the template
             $this->assignAttributesCombinations();
+
+            $this->assignLabels($productPrice, $productPriceWithoutReduction);
 
             // Pack management
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
@@ -415,6 +429,43 @@ class ProductControllerCore extends FrontController
         $urls['default'] = current($urls);
 
         return $urls;
+    }
+
+    protected function assignLabels($productPrice = 0, $productPriceWithoutReduction = 0)
+    {
+        $labels = array();
+
+        if ($this->product->new) {
+            $labels['new'] = array(
+                'type' => 'new',
+                'label' => $this->l('New'),
+                );
+        }
+
+        if ($this->product->on_sale) {
+            $labels['on_sale'] = array(
+                'type' => 'on_sale',
+                'label' => $this->l('Sale!'),
+                );
+        }
+
+        if ($this->product->online_only) {
+            $labels['online_only'] = array(
+                'type' => 'online_only',
+                'label' => $this->l('Online only'),
+                );
+        }
+
+        if ($this->product->specificPrice && $this->product->specificPrice['reduction'] && (int)$productPriceWithoutReduction > (int)$productPrice) {
+            $labels['discount'] = array(
+                'type' => 'discount',
+                'label' => $this->l('Reduced price!'),
+                );
+        }
+
+        $this->context->smarty->assign(array(
+            'labels' => $labels
+        ));
     }
 
     /**
