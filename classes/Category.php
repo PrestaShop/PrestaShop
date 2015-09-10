@@ -246,7 +246,7 @@ class CategoryCore extends ObjectModel
      *
      * @return array Subcategories lite tree
      */
-    public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
+    public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null, $format = 'default')
     {
         $id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
 
@@ -258,7 +258,7 @@ class CategoryCore extends ObjectModel
                     break;
                 } elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array)) {
                     $categ = new Category($subcat['id_category'], $id_lang);
-                    $children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
+                    $children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array, $format);
                 }
             }
         }
@@ -269,6 +269,15 @@ class CategoryCore extends ObjectModel
             }
         } else {
             $this->description = Category::getDescriptionClean($this->description);
+        }
+
+        if ($format == 'sitemap') {
+            return [
+                'id' => 'category-page-'.(int)$this->id,
+                'label' => $this->name,
+                'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
+                'children' => $children,
+            ];
         }
 
         return array(
