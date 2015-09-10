@@ -86,6 +86,7 @@ smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
+smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -250,6 +251,16 @@ function smartyWidget($params, &$smarty)
     });
 }
 
+function smartyWidgetBlock($params, $content, &$smarty)
+{
+    if (null === $content) {
+        withWidget($params, function ($widget, $params) use (&$smarty) {
+            $smarty->assign($widget->getWidgetVariables(null, $params));
+        });
+        return '';
+    } else {
+        return $content;
+    }
 }
 
 /**
