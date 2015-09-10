@@ -959,6 +959,18 @@ class ValidateCore
     }
 
     /**
+     * Check for PHP serialized data
+     *
+     * @param string $data json data to validate
+     * @return bool Validity is ok or not
+     */
+    public function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+    /**
      * Check for Latitude/Longitude
      *
      * @param string $data Coordinate to validate
