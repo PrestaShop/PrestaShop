@@ -28,13 +28,6 @@ class SitemapControllerCore extends FrontController
 {
     public $php_self = 'sitemap';
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'sitemap.css');
-        $this->addJS(_THEME_JS_DIR_.'tools/treeManagement.js');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -43,28 +36,114 @@ class SitemapControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->context->smarty->assign('categoriesTree', Category::getRootCategory()->recurseLiteCategTree(0));
-        $this->context->smarty->assign('categoriescmsTree', CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1));
-        $this->context->smarty->assign('voucherAllowed', (int)CartRule::isFeatureActive());
+        $this->context->smarty->assign(array(
+            'sitemap' => $this->getTemplateVarSitemap(),
+        ));
 
-        if (Module::isInstalled('blockmanufacturer') && Module::isEnabled('blockmanufacturer')) {
-            $blockmanufacturer = Module::getInstanceByName('blockmanufacturer');
-            $this->context->smarty->assign('display_manufacturer_link', isset($blockmanufacturer->active) ? (bool)$blockmanufacturer->active : false);
-        } else {
-            $this->context->smarty->assign('display_manufacturer_link', 0);
+        $this->setTemplate('cms/sitemap.tpl');
+    }
+
+    public function getTemplateVarSitemap()
+    {
+        $pages = [];
+        $pretty_url = Configuration::get('PS_REWRITING_SETTINGS');
+        $catalog_mode = Configuration::get('PS_CATALOG_MODE');
+
+        $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
+        foreach ($cms['cms'] as $p) {
+            $pages[] = [
+                'id' => 'cms-page-'.$p['id_cms'],
+                'label' => $p['meta_title'],
+                'link' => ($pretty_url) ? $p['link_rewrite'] : $p['link'],
+            ];
         }
 
-        if (Module::isInstalled('blocksupplier') && Module::isEnabled('blocksupplier')) {
-            $blocksupplier = Module::getInstanceByName('blocksupplier');
-            $this->context->smarty->assign('display_supplier_link', isset($blocksupplier->active) ? (bool)$blocksupplier->active : false);
-        } else {
-            $this->context->smarty->assign('display_supplier_link', 0);
+        if (Configuration::get('PS_STORES_DISPLAY_SITEMAP')) {
+            $pages[] = [
+                'id' => 'stores-page',
+                'label' => $this->l('Our stores'),
+                'link' => $this->context->link->getPageLink('stores'),
+            ];
         }
 
-        $this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
-        $this->context->smarty->assign('PS_DISPLAY_BEST_SELLERS', Configuration::get('PS_DISPLAY_BEST_SELLERS'));
-        $this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
+        $pages[] = [
+            'id' => 'contact-page',
+            'label' => $this->l('Contact us'),
+            'link' => $this->context->link->getPageLink('contact'),
+        ];
 
-        $this->setTemplate(_PS_THEME_DIR_.'sitemap.tpl');
+        $pages[] = [
+            'id' => 'sitemap-page',
+            'label' => $this->l('Sitemap'),
+            'link' => $this->context->link->getPageLink('sitemap'),
+        ];
+
+        $pages[] = [
+            'id' => 'login-page',
+            'label' => $this->l('Log in'),
+            'link' => $this->context->link->getPageLink('authentication'),
+        ];
+
+        $pages[] = [
+            'id' => 'register-page',
+            'label' => $this->l('Create new account'),
+            'link' => $this->context->link->getPageLink('authentication'),
+        ];
+
+        $catalog = [
+            'new-product' => [
+                'id' => 'new-product-page',
+                'label' => $this->l('New products'),
+                'link' => $this->context->link->getPageLink('new-products'),
+            ],
+        ];
+
+        if ($catalog_mode && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+            $catalog['best-sales'] = [
+                'id' => 'best-sales-page',
+                'label' => $this->l('Best sellers'),
+                'link' => $this->context->link->getPageLink('best-sales'),
+            ];
+            $catalog['prices-drop'] = [
+                'id' => 'prices-drop-page',
+                'label' => $this->l('Price drop'),
+                'link' => $this->context->link->getPageLink('prices-drop'),
+            ];
+        }
+
+        $catalog['manufacturer'] = [
+            'id' => 'manufacturer-page',
+            'label' => $this->l('Manufacturers'),
+            'link' => $this->context->link->getPageLink('manufacturer'),
+        ];
+
+        $catalog['supplier'] = [
+            'id' => 'supplier-page',
+            'label' => $this->l('Suppliers'),
+            'link' => $this->context->link->getPageLink('supplier'),
+        ];
+
+        $categories = Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap');
+        $catalog['category'] = [
+            'id' => 'category-page',
+            'label' => $this->l('Categories'),
+            'link' => '#',
+            'children' => $categories['children'],
+        ];
+
+        $sitemap = [[
+                'id' => 'page-page',
+                'label' => $this->l('Pages'),
+                'link' => '#',
+                'children' => $pages,
+            ],[
+                'id' => 'catalog-page',
+                'label' => $this->l('Catalog'),
+                'link' => '#',
+                'children' => $catalog,
+            ],
+        ];
+
+        return $sitemap;
     }
 }
