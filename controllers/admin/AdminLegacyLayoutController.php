@@ -28,20 +28,18 @@ class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
     private $headerToolbarBtn = array();
+    private $title;
 
     public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '')
     {
         parent::__construct();
 
+        $this->title = $title;
         $this->display = $displayType;
         $this->bootstrap = true;
         $this->controller_name = $_GET['controller'] = $controllerName;
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
-
-        if ($title) {
-            $this->context->smarty->assign(array('title' => $title));
-        }
     }
 
     public function viewAccess()
@@ -69,6 +67,10 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->addHeaderToolbarBtn();
 
         parent::initContent();
+
+        if ($this->title) {
+            $this->context->smarty->assign(array('title' => $this->title));
+        }
 
         $this->context->smarty->assign(array(
             'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),

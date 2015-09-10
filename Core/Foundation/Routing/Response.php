@@ -87,6 +87,16 @@ class Response extends sfResponse
     /**
      * @var string
      */
+    protected $title = '';
+
+    /**
+     * @var string
+     */
+    protected $displayType = null;
+
+    /**
+     * @var string
+     */
     protected $legacyControllerName = null;
 
     /**
@@ -267,5 +277,45 @@ class Response extends sfResponse
     public function getHeaderToolbarBtn()
     {
         return $this->headerToolbarBtn;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get legacyControllerName
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set displayType
+     *
+     * @param string $displayType
+     */
+    public function setDisplayType($displayType)
+    {
+        $this->displayType = $displayType;
+    }
+
+    /**
+     * Get $displayType
+     *
+     * @return string
+     */
+    public function getDisplayType()
+    {
+        return $this->displayType;
     }
 }
