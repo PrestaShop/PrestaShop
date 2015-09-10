@@ -85,7 +85,7 @@ smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
-smartyRegisterFunction($smarty, 'function', 'render_widget', 'smartyRenderWidget');
+smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -222,7 +222,7 @@ function toolsConvertPrice($params, &$smarty)
     return Tools::convertPrice($params['price'], Context::getContext()->currency);
 }
 
-function smartyRenderWidget($params, &$smarty)
+function withWidget($params, callable $cb)
 {
     if (!isset($params['name'])) {
         throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
@@ -240,7 +240,16 @@ function smartyRenderWidget($params, &$smarty)
         ));
     }
 
-    return $moduleInstance->renderWidget(null, $params);
+    return $cb($moduleInstance, $params);
+}
+
+function smartyWidget($params, &$smarty)
+{
+    return withWidget($params, function ($widget, $params) {
+        return $widget->renderWidget(null, $params);
+    });
+}
+
 }
 
 /**
