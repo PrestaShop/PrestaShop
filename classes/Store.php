@@ -26,6 +26,9 @@
 
 class StoreCore extends ObjectModel
 {
+    /** @var int Store id */
+    public $id;
+
     /** @var int Country id */
     public $id_country;
 
@@ -117,6 +120,18 @@ class StoreCore extends ObjectModel
         parent::__construct($id_store);
         $this->id_image = ($this->id && file_exists(_PS_STORE_IMG_DIR_.(int)$this->id.'.jpg')) ? (int)$this->id : false;
         $this->image_dir = _PS_STORE_IMG_DIR_;
+    }
+
+    public static function getStores()
+    {
+        $stores = Db::getInstance()->executeS('
+            SELECT s.id_store AS `id`, s.*
+            FROM '._DB_PREFIX_.'store s
+            '.Shop::addSqlAssociation('store', 's').'
+            WHERE s.active = 1'
+        );
+
+        return $stores;
     }
 
     public function getWsHours()
