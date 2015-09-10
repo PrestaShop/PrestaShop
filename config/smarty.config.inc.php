@@ -253,12 +253,38 @@ function smartyWidget($params, &$smarty)
 
 function smartyWidgetBlock($params, $content, &$smarty)
 {
+    static $backedUpVariablesStack = [];
+
     if (null === $content) {
-        withWidget($params, function ($widget, $params) use (&$smarty) {
-            $smarty->assign($widget->getWidgetVariables(null, $params));
+        // Function is called twice: at the opening of the block
+        // and when it is closed.
+        // This is the first call.
+        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
+            // Assign widget variables and backup all the variables they override
+            $currentVariables = $smarty->getTemplateVars();
+            $scopedVariables = $widget->getWidgetVariables();
+            $backedUpVariables = [];
+            foreach ($scopedVariables as $key => $value) {
+                if (array_key_exists($key, $currentVariables)) {
+                    $backedUpVariables[$key] = $currentVariables[$key];
+                }
+                $smarty->assign($key, $value);
+            }
+            $backedUpVariablesStack[] = $backedUpVariables;
         });
+        // We don't display anything since the template is not rendered yet.
         return '';
     } else {
+        // Function gets called for the closing tag of the block.
+        // We restore the backed up variables in order not to override
+        // template variables.
+        if (!empty($backedUpVariablesStack)) {
+            $backedUpVariables = array_pop($backedUpVariablesStack);
+            foreach ($backedUpVariables as $key => $value) {
+                $smarty->assign($key, $value);
+            }
+        }
+        // This time content is filled with rendered template, so return it.
         return $content;
     }
 }
