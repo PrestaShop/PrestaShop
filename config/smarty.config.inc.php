@@ -85,6 +85,7 @@ smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
+smartyRegisterFunction($smarty, 'function', 'render_widget', 'smartyRenderWidget');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -219,6 +220,27 @@ function smartyCleanHtml($data)
 function toolsConvertPrice($params, &$smarty)
 {
     return Tools::convertPrice($params['price'], Context::getContext()->currency);
+}
+
+function smartyRenderWidget($params, &$smarty)
+{
+    if (!isset($params['name'])) {
+        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
+    }
+
+    $moduleName = $params['name'];
+    unset($params['name']);
+
+    $moduleInstance = Module::getInstanceByName($moduleName);
+
+    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface) {
+        throw new Exception(sprintf(
+            'Module `%1$s` is not a WidgetInterface.',
+            $moduleName
+        ));
+    }
+
+    return $moduleInstance->renderWidget(null, $params);
 }
 
 /**
