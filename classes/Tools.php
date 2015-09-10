@@ -752,7 +752,7 @@ class ToolsCore
      */
     public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
     {
-        if ($currency_from === $currency_to) {
+        if ($currency_from == $currency_to) {
             return $amount;
         }
 
