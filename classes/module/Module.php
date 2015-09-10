@@ -751,7 +751,7 @@ abstract class ModuleCore
         Db::getInstance()->execute('
 			UPDATE '._DB_PREFIX_.'module_shop
 			SET enable_device = enable_device + '.(int)$device.'
-			WHERE enable_device &~ '.(int)$device.' AND id_module='.(int)$this->id.
+			WHERE (enable_device &~ '.(int)$device.' OR enable_device = 0) AND id_module='.(int)$this->id.
             Shop::addSqlRestriction()
         );
 
