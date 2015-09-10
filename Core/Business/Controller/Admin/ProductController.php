@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
+use PrestaShop\PrestaShop\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Business\Context;
@@ -100,7 +101,7 @@ class ProductController extends AdminController
     public function productFormAction(Request &$request, Response &$response, $product)
     {
         // Should redirect to legacy or not?
-        if (false) { // FIXME: option 'UseLegacyProductPage' a tester pour le savoir!
+        /*if (false) { // FIXME: option 'UseLegacyProductPage' a tester pour le savoir!
             $this->redirectToRoute(
                 $request,
                 'admin_product_form',
@@ -108,12 +109,22 @@ class ProductController extends AdminController
                 true, // force legacy URL
                 false // temporary
             );
-        }
+        }*/
 
-        // setup template and layout
-        $response->setEngineName('twig'); // For forms
-        //$response->set#### // FIXME: when Luke will wakeup & push its new methods, I have to setup alternate Title here
-        // Add layout top-right menu actions
-        //$response->setHeader### // FIXME: idem, to add buttons in the top-right menu
+        $formFactory = new FormFactory();
+        $builder = $formFactory->create();
+
+        $form = $builder
+            ->setAction('')
+            ->add('title', 'text')
+            ->add('description', 'textarea')
+            ->getForm();
+
+        $response->setEngineName('twig');
+        $response->setLegacyControllerName('AdminProducts');
+        $response->setTitle('My custom title');
+        $response->setDisplayType('add');
+
+        $response->addContentData('form', $form->createView());
     }
 }
