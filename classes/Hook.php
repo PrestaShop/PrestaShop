@@ -91,9 +91,21 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
+    public static function normalizeHookName($hookName)
+    {
+        if (strtolower($hookName) == 'displayheader') {
+            return 'displayHeader';
+        }
+        $hookAliasList = Hook::getHookAliasList();
+        if (isset($hookAliasList[strtolower($hookName)])) {
+            return $hookAliasList[strtolower($hookName)];
+        }
+        return $hookName;
+    }
+
     public static function isDisplayHookName($hook_name)
     {
-        $hook_name = strtolower($hook_name);
+        $hook_name = strtolower(self::normalizeHookName($hook_name));
 
         if ($hook_name === 'header') {
             // this hook is to add resources to the <head> section of the page
