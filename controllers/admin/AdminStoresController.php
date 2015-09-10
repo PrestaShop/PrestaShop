@@ -334,16 +334,17 @@ class AdminStoresControllerCore extends AdminController
         $days[6] = $this->l('Saturday');
         $days[7] = $this->l('Sunday');
 
-        $hours = $this->getFieldValue($obj, 'hours');
-        if (!empty($hours)) {
-            $hours_unserialized = Tools::unSerialize($hours);
+        $hours_temp = json_decode($this->getFieldValue($obj, 'hours'));
+        $hours = [];
+        foreach ($hours_temp as $h) {
+            $hours[] = implode(' | ', $h);
         }
 
         $this->fields_value = array(
             'latitude' => $this->getFieldValue($obj, 'latitude') ? $this->getFieldValue($obj, 'latitude') : Configuration::get('PS_STORES_CENTER_LAT'),
             'longitude' => $this->getFieldValue($obj, 'longitude') ? $this->getFieldValue($obj, 'longitude') : Configuration::get('PS_STORES_CENTER_LONG'),
             'days' => $days,
-            'hours' => isset($hours_unserialized) ? $hours_unserialized : false
+            'hours' => $hours,
         );
 
         return parent::renderForm();
@@ -393,13 +394,13 @@ class AdminStoresControllerCore extends AdminController
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
                 $this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
             }
-
             /* Store hours */
             $_POST['hours'] = array();
+            $hours = [];
             for ($i = 1; $i < 8; $i++) {
-                $_POST['hours'][] .= Tools::getValue('hours_'.(int)$i);
+                $hours[] = explode(' | ', Tools::getValue('hours_'.(int)$i));
             }
-            $_POST['hours'] = serialize($_POST['hours']);
+            $_POST['hours'] = json_encode($hours);
         }
 
         if (!count($this->errors)) {
