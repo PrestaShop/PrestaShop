@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+ use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+
 class HookCore extends ObjectModel
 {
     /**
@@ -581,6 +583,16 @@ class HookCore extends ObjectModel
                     $output[$moduleInstance->name] = $display;
                 } else {
                     $output .= $display;
+                }
+            } else {
+                if ($moduleInstance instanceof WidgetInterface) {
+                    $display = $moduleInstance->renderWidget($hook_name, $hook_args);
+
+                    if ($array_return) {
+                        $output[$moduleInstance->name] = $display;
+                    } else {
+                        $output .= $display;
+                    }
                 }
             }
         }
