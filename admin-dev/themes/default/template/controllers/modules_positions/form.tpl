@@ -39,7 +39,7 @@
 			<div class="col-lg-9">
 				<select class="chosen" name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{if !$hooks}
-						<option value="0">{l s='Please select a module'}</option>
+						<option value="0" selected disabled>{l s='Please select a module'}</option>
 					{/if}
 					{foreach $modules as $module}
 						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>

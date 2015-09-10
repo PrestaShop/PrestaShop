@@ -168,7 +168,6 @@ $(function(){
 
 		if ($this.val() != 0)
 		{
-			$this.find("[value='0']").remove();
 			hook_select.find("option").remove();
 
 			$.ajax({
