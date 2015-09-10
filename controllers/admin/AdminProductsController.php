@@ -2340,7 +2340,7 @@ class AdminProductsControllerCore extends AdminController
 
             // Trick's
             if ($edit == 1) {
-                $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
+                $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id, false);
                 if (!$id_product_download) {
                     $id_product_download = (int)Tools::getValue('virtual_product_id');
                 }
@@ -2364,7 +2364,6 @@ class AdminProductsControllerCore extends AdminController
             $download->nb_downloadable = (int)$virtual_product_nb_downloable;
             $download->active = 1;
             $download->is_shareable = (int)$is_shareable;
-
             if ($download->save()) {
                 return true;
             }
