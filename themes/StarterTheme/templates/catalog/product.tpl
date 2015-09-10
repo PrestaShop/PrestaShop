@@ -8,7 +8,7 @@
     {block name="page_header_container"}
       <header class="page-header">
         {block name="page_header"}
-          <h1 itemprop="name">{block name="page_title"}{$product->name}{/block}</h1>
+          <h1 itemprop="name">{block name="page_title"}{$product.name}{/block}</h1>
         {/block}
       </header>
     {/block}
@@ -30,6 +30,33 @@
                 <li><img src="{$image.urls.default.link}" alt="{$image.legend}" title="{$image.legend}" width="{$image.urls.default.width}" height="{$image.urls.default.height}" itemprop="image" /></li>
               {/foreach}
             </ul>
+          {/block}
+
+          {block name="product_reference"}
+            {if $product.reference}
+              <p id="product-reference">
+                <label>{l s='Reference:'} </label>
+                <span itemprop="sku">{$product.reference}</span>
+              </p>
+            {/if}
+          {/block}
+
+          {block name="product_condition"}
+            {if $product.condition}
+              <p id="product-condition">
+                <label>{l s='Condition:'} </label>
+                <link itemprop="itemCondition" href="{$product_conditions.{$product.condition}.schema_url}"/>
+                <span>{$product_conditions.{$product.condition}.label}</span>
+              </p>
+            {/if}
+          {/block}
+
+          {block name="product_description_short"}
+            <div id="product-description-short" itemprop="description">{$product.description_short}</div>
+          {/block}
+
+          {block name="product_description"}
+            <div id="product-description">{$product.description}</div>
           {/block}
         {/block}
       </section>
