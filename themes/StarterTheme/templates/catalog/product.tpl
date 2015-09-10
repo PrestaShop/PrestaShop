@@ -16,6 +16,14 @@
     {block name="page_content_container"}
       <section id="content" class="page-content">
         {block name="page_content"}
+          {block name="product_labels"}
+            <ul class="product-labels">
+              {foreach from=$labels item=label}
+                <li>{$label.label}</li>
+              {/foreach}
+            </ul>
+          {/block}
+
           {block name="product_images"}
             <ul class="product-images">
               {foreach from=$images item=image}
