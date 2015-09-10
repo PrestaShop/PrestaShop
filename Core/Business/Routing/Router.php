@@ -74,7 +74,9 @@ abstract class Router extends AbstractRouter
     final public function __construct($routingFilePattern)
     {
         // Push container instance inside Context singleton
-        Context::getInstance(self::$container);
+        $context = Context::getInstance(self::$container);
+        // Push itself into Context
+        $context->set('routerInstance', $this);
         
         parent::__construct($routingFilePattern);
 
