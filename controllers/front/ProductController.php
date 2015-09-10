@@ -276,13 +276,13 @@ class ProductControllerCore extends FrontController
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && (bool)$this->product->available_for_order && !((bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices))) ? true : false,
+                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !((bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices))) ? true : false,
                 'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'return_link' => $return_link,
-                'product' => $this->product,
+                'product' => $this->objectSerializer->toArray($this->product),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'token' => Tools::getToken(false),
                 'features' => $this->product->getFrontFeatures($this->context->language->id),
@@ -307,6 +307,20 @@ class ProductControllerCore extends FrontController
                     $this->php_self.'-'.$this->product->link_rewrite,
                     'category-'.(isset($this->category) ? $this->category->id : ''),
                     'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
+                ),
+                'product_conditions' => array(
+                    'new' => array(
+                        'label' => $this->l('New product'),
+                        'schema_url' => 'https://schema.org/NewCondition',
+                        ),
+                    'used' => array(
+                        'label' => $this->l('Used'),
+                        'schema_url' => 'https://schema.org/UsedCondition',
+                        ),
+                    'refurbished' => array(
+                        'label' => $this->l('Refurbished'),
+                        'schema_url' => 'https://schema.org/RefurbishedCondition',
+                        ),
                 ),
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
             ));
