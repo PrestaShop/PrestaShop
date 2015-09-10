@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
+use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
 use Symfony\Component\Translation\Translator;
 use PrestaShop\PrestaShop\Twig\Extension\TranslationExtension as TwigTranslationExtension;
+use PrestaShop\PrestaShop\Twig\Extension\RoutingExtension as TwigRoutingExtension;
 use Symfony\Component\Validator\Validation;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Forms;
@@ -76,6 +78,8 @@ class Twig extends View
                 require_once $this->parserDirectory . '/Autoloader.php';
             }
 
+            $context = Context::getInstance();
+
             $this->parserOptions = array(
                 'debug' => true,
                 'cache' => $this->parserCacheDirectory
@@ -96,6 +100,7 @@ class Twig extends View
 
             $this->parserInstance->addExtension(new \Twig_Extension_Debug());
             $this->parserInstance->addExtension(new TwigTranslationExtension(new Translator('')));
+            $this->parserInstance->addExtension(new TwigRoutingExtension($context->get('routerInstance')));
             $this->parserInstance->addExtension(new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider)));
 
             foreach ($this->parserExtensions as $ext) {
