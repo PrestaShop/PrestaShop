@@ -1377,14 +1377,16 @@ class CarrierCore extends ObjectModel
         }
 
         $cart_quantity = 0;
+        $weight_attribute = 0;
 
         foreach ($cart->getProducts(false, $product->id) as $cart_product) {
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
+                $weight_attribute = $cart_product['weight_attribute'];
             }
         }
 
-        if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0) {
+        if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0 || $weight_attribute > 0) {
             foreach ($carrier_list as $key => $id_carrier) {
                 $carrier = new Carrier($id_carrier);
 
@@ -1401,7 +1403,7 @@ class CarrierCore extends ObjectModel
                     unset($carrier_list[$key]);
                 }
 
-                if ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity) {
+                if ($carrier->max_weight > 0 && ($carrier->max_weight < $product->weight * $cart_quantity OR $carrier->max_weight < $weight_attribute * $cart_quantity)) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($carrier_list[$key]);
                 }
