@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+
 abstract class ModuleCore
 {
     /** @var int Module ID */
@@ -1359,7 +1361,7 @@ abstract class ModuleCore
 
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (eval('if (false){	'.$file.' }') !== false) {
+                    if (eval('if (false){	'.preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file).' }') !== false) {
                         require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
                     } else {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
@@ -2500,6 +2502,10 @@ abstract class ModuleCore
      */
     public function isHookableOn($hook_name)
     {
+        if ($this instanceof WidgetInterface) {
+            return Hook::isDisplayHookName($hook_name);
+        }
+
         $retro_hook_name = Hook::getRetroHookName($hook_name);
         return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
     }
@@ -3065,6 +3071,11 @@ abstract class ModuleCore
         return true;
     }
 
+    private function getWidgetHooks()
+    {
+        return array_values(Hook::getHooks(false, true));
+    }
+
     /**
      * Return the hooks list where this module can be hooked.
      *
@@ -3072,6 +3083,10 @@ abstract class ModuleCore
      */
     public function getPossibleHooksList()
     {
+        if ($this instanceof WidgetInterface) {
+            return $this->getWidgetHooks();
+        }
+
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
         foreach ($hooks_list as &$current_hook) {

@@ -85,6 +85,8 @@ smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
+smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
+smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -219,6 +221,72 @@ function smartyCleanHtml($data)
 function toolsConvertPrice($params, &$smarty)
 {
     return Tools::convertPrice($params['price'], Context::getContext()->currency);
+}
+
+function withWidget($params, callable $cb)
+{
+    if (!isset($params['name'])) {
+        throw new Exception('Smarty helper `render_widget` expects at least the `name` parameter.');
+    }
+
+    $moduleName = $params['name'];
+    unset($params['name']);
+
+    $moduleInstance = Module::getInstanceByName($moduleName);
+
+    if (!$moduleInstance instanceof PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface) {
+        throw new Exception(sprintf(
+            'Module `%1$s` is not a WidgetInterface.',
+            $moduleName
+        ));
+    }
+
+    return $cb($moduleInstance, $params);
+}
+
+function smartyWidget($params, &$smarty)
+{
+    return withWidget($params, function ($widget, $params) {
+        return $widget->renderWidget(null, $params);
+    });
+}
+
+function smartyWidgetBlock($params, $content, &$smarty)
+{
+    static $backedUpVariablesStack = [];
+
+    if (null === $content) {
+        // Function is called twice: at the opening of the block
+        // and when it is closed.
+        // This is the first call.
+        withWidget($params, function ($widget, $params) use (&$smarty, &$backedUpVariablesStack) {
+            // Assign widget variables and backup all the variables they override
+            $currentVariables = $smarty->getTemplateVars();
+            $scopedVariables = $widget->getWidgetVariables();
+            $backedUpVariables = [];
+            foreach ($scopedVariables as $key => $value) {
+                if (array_key_exists($key, $currentVariables)) {
+                    $backedUpVariables[$key] = $currentVariables[$key];
+                }
+                $smarty->assign($key, $value);
+            }
+            $backedUpVariablesStack[] = $backedUpVariables;
+        });
+        // We don't display anything since the template is not rendered yet.
+        return '';
+    } else {
+        // Function gets called for the closing tag of the block.
+        // We restore the backed up variables in order not to override
+        // template variables.
+        if (!empty($backedUpVariablesStack)) {
+            $backedUpVariables = array_pop($backedUpVariablesStack);
+            foreach ($backedUpVariables as $key => $value) {
+                $smarty->assign($key, $value);
+            }
+        }
+        // This time content is filled with rendered template, so return it.
+        return $content;
+    }
 }
 
 /**

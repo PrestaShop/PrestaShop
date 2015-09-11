@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+ use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+
 class HookCore extends ObjectModel
 {
     /**
@@ -89,19 +91,58 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
+    public static function normalizeHookName($hookName)
+    {
+        if (strtolower($hookName) == 'displayheader') {
+            return 'displayHeader';
+        }
+        $hookAliasList = Hook::getHookAliasList();
+        if (isset($hookAliasList[strtolower($hookName)])) {
+            return $hookAliasList[strtolower($hookName)];
+        }
+        return $hookName;
+    }
+
+    public static function isDisplayHookName($hook_name)
+    {
+        $hook_name = strtolower(self::normalizeHookName($hook_name));
+
+        if ($hook_name === 'header') {
+            // this hook is to add resources to the <head> section of the page
+            // so it doesn't display anything by itself
+            return false;
+        }
+
+        if (strpos($hook_name, 'display') === 0) {
+            return true;
+        } else if (strpos($hook_name, 'action') === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * Return Hooks List
      *
      * @param bool $position
      * @return array Hooks List
      */
-    public static function getHooks($position = false)
+    public static function getHooks($position = false, $only_display_hooks = false)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT * FROM `'._DB_PREFIX_.'hook` h
 			'.($position ? 'WHERE h.`position` = 1' : '').'
 			ORDER BY `name`'
         );
+
+        if ($only_display_hooks) {
+            return array_filter($hooks, function ($hook) {
+                return self::isDisplayHookName($hook['name']);
+            });
+        } else {
+            return $hooks;
+        }
     }
 
     /**
@@ -554,6 +595,16 @@ class HookCore extends ObjectModel
                     $output[$moduleInstance->name] = $display;
                 } else {
                     $output .= $display;
+                }
+            } else {
+                if ($moduleInstance instanceof WidgetInterface) {
+                    $display = $moduleInstance->renderWidget($hook_name, $hook_args);
+
+                    if ($array_return) {
+                        $output[$moduleInstance->name] = $display;
+                    } else {
+                        $output .= $display;
+                    }
                 }
             }
         }
