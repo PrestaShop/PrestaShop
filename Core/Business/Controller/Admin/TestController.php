@@ -8,15 +8,15 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
-use PrestaShop\PrestaShop\Form\FormFactory;
+use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\File;
-use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
-use PrestaShop\PrestaShop\Form\Type\TestType;
-use PrestaShop\PrestaShop\Form\Type\DropFilesType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\ContainsAlphanumeric;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TestType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 
 class TestController extends AdminController
 {

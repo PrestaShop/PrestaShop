@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Form;
+namespace PrestaShop\PrestaShop\Core\Foundation\Form;
 
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Form\Forms;

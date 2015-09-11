@@ -123,6 +123,6 @@
     "git-hook-install" : "bash tools/contrib/install.sh",
     "git-hook-uninstall" : "bash tools/contrib/uninstall.sh",
     "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
-    "phpdoc" : "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -t docs/phpdoc"
+    "phpdoc" : "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -t docs/phpdoc --template=\"responsive-twig\""
   }
 }

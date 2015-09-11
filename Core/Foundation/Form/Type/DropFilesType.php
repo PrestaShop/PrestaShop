@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Form\Type;
+namespace PrestaShop\PrestaShop\Core\Foundation\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use PrestaShop\PrestaShop\Form\Validator\DropFile;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\DropFile;
 
 class DropFilesType extends AbstractType
 {
