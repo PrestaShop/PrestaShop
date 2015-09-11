@@ -333,6 +333,7 @@ class AdminImportControllerCore extends AdminController
                     'firstname' => array('label' => $this->l('First Name *')),
                     'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
                     'optin' => array('label' => $this->l('Opt-in (0/1)')),
+                    'date_add' => array('label' => $this->l('Registration date (yyyy-mm-dd)')),
                     'group' => array('label' => $this->l('Groups (x,y,z...)')),
                     'id_default_group' => array('label' => $this->l('Default group ID')),
                     'id_shop' => array(
@@ -2465,6 +2466,7 @@ class AdminImportControllerCore extends AdminController
             }
 
             $customer_exist = false;
+            $autodate = true;
 
             if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer)) {
                 $current_id_customer = (int)$customer->id;
@@ -2512,6 +2514,10 @@ class AdminImportControllerCore extends AdminController
                 }
             } elseif (empty($info['group']) && isset($customer->id) && $customer->id) {
                 $customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
+            }
+
+            if (isset($info['date_add']) && !empty($info['date_add'])) {
+                $autodate = false;
             }
 
             AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
@@ -2575,7 +2581,7 @@ class AdminImportControllerCore extends AdminController
                                 $customer->id = (int)$current_id_customer;
                                 $res &= $customer->update();
                             } else {
-                                $res &= $customer->add();
+                                $res &= $customer->add($autodate);
                                 if (isset($addresses)) {
                                     foreach ($addresses as $address) {
                                         $address['id_customer'] = $customer->id;
@@ -2595,7 +2601,7 @@ class AdminImportControllerCore extends AdminController
                             $customer->id = (int)$current_id_customer;
                             $res &= $customer->update();
                         } else {
-                            $res &= $customer->add();
+                            $res &= $customer->add($autodate);
                             if (isset($addresses)) {
                                 foreach ($addresses as $address) {
                                     $address['id_customer'] = $customer->id;
