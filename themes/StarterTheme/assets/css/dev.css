@@ -1,0 +1,106 @@
+/* general purpose */
+
+.placeholder-template {
+    margin: 2px;
+}
+
+
+/* blocklanguages */
+
+.language-selector {
+  position: absolute;
+  display: block;
+  width: 150px;
+  background-color: white;
+  text-align: center;
+  margin: 0;
+  padding: 0
+}
+
+/* technically this does not yield valid HTML but it's fun :) */
+.language-selector:before {
+  content: attr(data-current-language-name);
+  border: 1px solid #ccc;
+  padding: 3px;
+  display: block;
+}
+
+.language-selector li {
+  display: none;
+  padding: 3px;
+  background-color: #666;
+}
+
+.language-selector li a {
+  color: white;
+  text-decoration: none;
+}
+
+.language-selector li a.current {
+  font-style: italic;
+}
+
+.language-selector:hover li {
+  display: block;
+}
+
+/* blocktopmenu */
+
+.menu a, .menu a:visited {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.5em;
+  padding: 3px;
+  display: block;
+}
+
+.menu > ul > li > a {
+  background-color: #eee;
+}
+
+.menu a:hover, .menu li.current > a {
+  background-color: #666;
+  color: white;
+}
+
+.menu li {
+  list-style: none;
+}
+
+.menu > ul {
+  position: absolute;
+  z-index: 1;
+  background-color: white;
+  display: block;
+  border: 1px solid #ccc;
+}
+
+.menu ul[data-depth="0"] {
+  padding: 0px;
+}
+
+.menu ul[data-depth="1"] {
+  padding: 0px;
+}
+
+.menu > ul > li > div {
+  border: 1px solid #ccc;
+}
+
+.menu > ul > li {
+  display: inline-block;
+  vertical-align: top;
+}
+.menu > ul > li:not(:first-child) {
+  border-left: 1px solid #ccc;
+}
+
+.menu > ul > li > div {
+  display: none;
+  position: absolute;
+  background-color: white;
+}
+
+.menu > ul > li:hover > div {
+  display: block;
+}
