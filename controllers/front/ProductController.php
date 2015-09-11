@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class ProductControllerCore extends FrontController
+class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
     public $php_self = 'product';
 
@@ -33,35 +33,6 @@ class ProductControllerCore extends FrontController
 
     /** @var Category */
     protected $category;
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        if (count($this->errors)) {
-            return;
-        }
-
-        if (!$this->useMobileTheme()) {
-            $this->addCSS(_THEME_CSS_DIR_.'product.css');
-            $this->addCSS(_THEME_CSS_DIR_.'print.css', 'print');
-            $this->addJqueryPlugin(array('fancybox', 'idTabs', 'scrollTo', 'serialScroll', 'bxslider'));
-            $this->addJS(array(
-                _THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
-                _THEME_JS_DIR_.'product.js'
-            ));
-        } else {
-            $this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
-            $this->addJS(array(
-                _THEME_JS_DIR_.'tools.js',  // retro compat themes 1.5
-                _THEME_MOBILE_JS_DIR_.'product.js',
-                _THEME_MOBILE_JS_DIR_.'jquery.touch-gallery.js'
-            ));
-        }
-
-        if (Configuration::get('PS_DISPLAY_JQZOOM') == 1) {
-            $this->addJqueryPlugin('jqzoom');
-        }
-    }
 
     public function canonicalRedirection($canonical_url = '')
     {
@@ -243,15 +214,8 @@ class ProductControllerCore extends FrontController
             // Assign template vars related to the price and tax
             $this->assignPriceAndTax();
 
-            // Assign template vars related to the images
-            $this->assignImages();
-            // Assign attribute groups to the template
-            $this->assignAttributesGroups();
-
             // Assign attributes combinations to the template
             $this->assignAttributesCombinations();
-
-            $this->assignLabels($productPrice, $productPriceWithoutReduction);
 
             // Pack management
             $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
@@ -275,29 +239,24 @@ class ProductControllerCore extends FrontController
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
+                'productPriceWithCurrency' => Tools::displayPrice($productPrice, $this->context->currency),
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !((bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices))) ? true : false,
+                'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !($this->context->smarty->tpl_vars['PS_CATALOG_MODE']->value)) ? true : false,
                 'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'return_link' => $return_link,
-                'product' => $this->objectSerializer->toArray($this->product),
+                'product' => $this->getTemplateVarProduct(),
+                'quantity_label' => ($this->getTemplateVarProduct()['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'token' => Tools::getToken(false),
-                'features' => $this->product->getFrontFeatures($this->context->language->id),
-                'attachments' => (($this->product->cache_has_attachments) ? $this->product->getAttachments($this->context->language->id) : array()),
                 'allow_oosp' => $this->product->isAvailableWhenOutOfStock((int)$this->product->out_of_stock),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-                'HOOK_EXTRA_LEFT' => Hook::exec('displayLeftColumnProduct'),
-                'HOOK_EXTRA_RIGHT' => Hook::exec('displayRightColumnProduct'),
-                'HOOK_PRODUCT_OOS' => Hook::exec('actionProductOutOfStock', array('product' => $this->product)),
-                'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons', array('product' => $this->product)),
-                'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab', array('product' => $this->product)),
-                'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent', array('product' => $this->product)),
                 'HOOK_PRODUCT_CONTENT' =>  Hook::exec('displayProductContent', array('product' => $this->product)),
                 'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
                 'display_ht' => !Tax::excludeTaxeOption(),
+                'display_taxes_label' => ((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value) ? true : false,
                 'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
                 'ENT_NOQUOTES' => ENT_NOQUOTES,
                 'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
@@ -324,6 +283,9 @@ class ProductControllerCore extends FrontController
                 ),
                 'display_discount_price' => Configuration::get('PS_DISPLAY_DISCOUNT_PRICE'),
             ));
+
+            // Assign attribute groups to the template
+            $this->assignAttributesGroups();
         }
         $this->setTemplate('catalog/product.tpl');
     }
@@ -390,95 +352,6 @@ class ProductControllerCore extends FrontController
             'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
-        ));
-    }
-
-    /**
-     * Assign template vars related to images
-     */
-    protected function assignImages()
-    {
-        $images = $this->product->getImages((int)$this->context->cookie->id_lang);
-        $product_images = array();
-
-        if (count($images) > 0) {
-            foreach ($images as $image) {
-                $product_images[(int)$image['id_image']] = array(
-                    'cover' => $image['cover'],
-                    'id_image' => (int)$image['id_image'],
-                    'legend' => !empty($image['legend']) ? $image['legend'] : $this->product->name,
-                    'urls' => $this->getImageUrls('products', (int)$image['id_image']),
-                    'position' => $image['position'],
-                );
-            }
-        } else {
-            $product_images[] = array(
-                'cover' => true,
-                'id_image' => 0,
-                'legend' => $this->product->name,
-                'urls' => $this->getImageUrls('products'),
-                'position' => 1,
-            );
-        }
-
-        $this->context->smarty->assign(array(
-            'images' => $product_images,
-            'col_img_dir' => _PS_COL_IMG_DIR_,
-        ));
-    }
-
-    protected function getImageUrls($type, $id_image = null)
-    {
-        $urls = array();
-        $product_images_types = array_reverse(ImageType::getImagesTypes($type, true));
-
-        foreach ($product_images_types as $image_type) {
-            $urls[$image_type['name']] = array(
-                'link' => !is_null($id_image) ? $this->context->link->getImageLink($this->product->link_rewrite, (int)$id_image, $image_type['name']) : _THEME_PROD_DIR_.$this->context->language->iso_code.'-default-large_default.jpg',
-                'width' => (int)$image_type['width'],
-                'height' => (int)$image_type['height'],
-                );
-        }
-
-        $urls['default'] = current($urls);
-
-        return $urls;
-    }
-
-    protected function assignLabels($productPrice = 0, $productPriceWithoutReduction = 0)
-    {
-        $labels = array();
-
-        if ($this->product->new) {
-            $labels['new'] = array(
-                'type' => 'new',
-                'label' => $this->l('New'),
-                );
-        }
-
-        if ($this->product->on_sale) {
-            $labels['on_sale'] = array(
-                'type' => 'on_sale',
-                'label' => $this->l('Sale!'),
-                );
-        }
-
-        if ($this->product->online_only) {
-            $labels['online_only'] = array(
-                'type' => 'online_only',
-                'label' => $this->l('Online only'),
-                );
-        }
-
-        if ($this->product->specificPrice && $this->product->specificPrice['reduction'] && (int)$productPriceWithoutReduction > (int)$productPrice) {
-            $labels['discount'] = array(
-                'type' => 'discount',
-                'label' => $this->l('Reduced price!'),
-                );
-        }
-
-        $this->context->smarty->assign(array(
-            'labels' => $labels
         ));
     }
 
@@ -551,7 +424,7 @@ class ProductControllerCore extends FrontController
                 } else {
                     $combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$combination_images[$row['id_product_attribute']][0]['id_image'];
                     if ($row['default_on']) {
-                        foreach ($this->context->smarty->tpl_vars['images']->value as $image) {
+                        foreach ($this->context->smarty->tpl_vars['product']->value['images'] as $image) {
                             if ($image['cover'] == 1) {
                                 $current_cover = $image;
                             }
@@ -681,7 +554,6 @@ class ProductControllerCore extends FrontController
                 'categories' => Category::getHomeCategories($this->context->language->id, true, (int)$this->context->shop->id)
             ));
         }
-        $this->context->smarty->assign(array('HOOK_PRODUCT_FOOTER' => Hook::exec('displayFooterProduct', array('product' => $this->product, 'category' => $this->category))));
     }
 
     protected function transformDescriptionWithImg($desc)
@@ -822,5 +694,22 @@ class ProductControllerCore extends FrontController
     public function getCategory()
     {
         return $this->category;
+    }
+
+    public function getTemplateVarProduct()
+    {
+        $product = $this->objectSerializer->toArray($this->product);
+        $product['id_product'] = (int)$this->product->id;
+        $product['out_of_stock'] = (int)$this->product->out_of_stock;
+        $product['new'] = (int)$this->product->new;
+
+        $presenter = $this->getProductPresenter();
+        $settings = $this->getProductPresentationSettings();
+
+        return $presenter->presentForListing(
+            $settings,
+            Product::getProductProperties($this->context->language->id, $product, $this->context),
+            $this->context->language
+        );
     }
 }
