@@ -58,6 +58,12 @@
           {block name="product_description"}
             <div id="product-description">{$product.description}</div>
           {/block}
+
+          {block name="product_quantities"}
+            {if $display_quantities}
+              <p id="product-quantities"></p>
+            {/if}
+          {/block}
         {/block}
       </section>
     {/block}
