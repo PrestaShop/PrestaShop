@@ -18,6 +18,15 @@ class Adapter_ImageRetriever
         );
         $images = $productInstance->getImages($language->id);
 
+        if (count($images) <= 0) {
+            $images[] = array(
+                'cover' => true,
+                'id_image' => 0,
+                'legend' => $productInstance->name,
+                'position' => 1,
+            );
+        }
+
         return array_map(function (array $image) use ($productInstance) {
             $image =  array_merge($image, $this->getImage(
                 $productInstance,
