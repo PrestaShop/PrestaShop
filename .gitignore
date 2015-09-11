@@ -1,4 +1,21 @@
-# Cache, temp and personal files
+# Editors, tools and OS's
+
+.buildpath
+.htaccess
+.project
+.settings
+.idea
+.svn
+.DS_Store
+.sass-cache
+config.codekit
+*.sublime-project
+*.sublime-workspace
+nbproject
+bower_components
+composer.lock
+
+# Cache, temp, dev and personal files
 
 .htaccess
 *.log
@@ -9,6 +26,7 @@ log/*
 upload/*
 vendor/*
 /composer.phar
+docs/phpdoc/*
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*

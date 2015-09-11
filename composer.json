@@ -93,7 +93,8 @@
   "require-dev": {
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
-    "fabpot/php-cs-fixer": "^1.10"
+    "fabpot/php-cs-fixer": "^1.10",
+    "phpdocumentor/phpdocumentor": "2.*"
   },
   "autoload-dev": {
     "psr-4": {
@@ -121,6 +122,7 @@
     ],
     "git-hook-install" : "bash tools/contrib/install.sh",
     "git-hook-uninstall" : "bash tools/contrib/uninstall.sh",
-    "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+    "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "phpdoc" : "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -t docs/phpdoc"
   }
 }
