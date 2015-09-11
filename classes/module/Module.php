@@ -1369,7 +1369,8 @@ abstract class ModuleCore
                     // We check any parse error before including the file.
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.$file."\n".' }') !== false) {
+
+                    if (substr(`php -l $file_path`, 0, 16) == 'No syntax errors' || eval('if (false){	'.preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file)."\n".' }') !== false) {
                         require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
                     } else {
                         $module_errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
