@@ -233,15 +233,18 @@ class ProductPresenter
                     'Product'
                 );
                 $presentedProduct['availability'] = 'available';
+                $presentedProduct['availability_date'] = null;
             } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
                     $presentedProduct['availability_message'] = $product['available_later'];
+                    $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'available';
                 } else {
                     $presentedProduct['availability_message'] = $this->translator->l(
                         'Out Of Stock',
                         'Product'
                     );
+                    $presentedProduct['availability_date'] = $product['available_date'];
                     $presentedProduct['availability'] = 'unavailable';
                 }
             } elseif ($product['quantity_all_versions']) {
@@ -249,16 +252,19 @@ class ProductPresenter
                     'Product available with different options',
                     'Product'
                 );
+                $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             } else {
                 $presentedProduct['availability_message'] = $this->translator->l(
                     'Out Of Stock',
                     'Product'
                 );
+                $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
         } else {
             $presentedProduct['availability_message'] = null;
+            $presentedProduct['availability_date'] = null;
             $presentedProduct['availability'] = null;
         }
 
