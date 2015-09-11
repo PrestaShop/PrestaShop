@@ -78,7 +78,7 @@
   <tab id="Performance" name="Uspešnost"/>
   <tab id="E-mail" name="E-naslov"/>
   <tab id="Multistore" name="Multi-trgovina"/>
-  <tab id="CSV_Import" name="CSV Uvoz"/>
+  <tab id="CSV_Import" name="Uvoz"/>
   <tab id="DB_Backup" name="Varnostna kopija podatkovne baze"/>
   <tab id="SQL_Manager" name="SQL upravitelj"/>
   <tab id="Logs" name="Dnevniki"/>

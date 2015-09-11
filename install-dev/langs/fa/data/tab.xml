@@ -78,7 +78,7 @@
   <tab id="Performance" name="کارایی"/>
   <tab id="E-mail" name="ایمیل"/>
   <tab id="Multistore" name="چند فروشگاهی"/>
-  <tab id="CSV_Import" name="واردسازی CSV"/>
+  <tab id="CSV_Import" name="واردسازی"/>
   <tab id="DB_Backup" name="پشتیبان پایگاه داده"/>
   <tab id="SQL_Manager" name="مدیریت SQL"/>
   <tab id="Logs" name="گزارش‌ها"/>
