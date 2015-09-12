@@ -40,7 +40,7 @@ h2, .h2 {
   justify-content: space-around;
 }
 
-.subcategories > section {
+.category-miniature {
   overflow: hidden;
   margin: 15px;
   max-width: 300px;
@@ -50,11 +50,11 @@ h2, .h2 {
   flex-grow: 1;
 }
 
-.subcategories > section img {
+.category-miniature img {
   max-width: 100%;
 }
 
-#subcategories .subcategory-description {
+.category-miniature .category-description {
   text-align: left;
 }
 
