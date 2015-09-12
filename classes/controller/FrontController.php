@@ -858,6 +858,8 @@ class FrontControllerCore extends Controller
         header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
         header('Powered-By: PrestaShop');
 
+        $theme_assets_url = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
+
         // Hooks are voluntary out the initialize array (need those variables already assigned)
         $this->context->smarty->assign(array(
             'time'                  => time(),
@@ -866,6 +868,7 @@ class FrontControllerCore extends Controller
             'token'                 => Tools::getToken(),
             'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
             'content_only'          => (int)Tools::getValue('content_only'),
+            'theme_assets_url'      => $theme_assets_url
         ));
     }
 
