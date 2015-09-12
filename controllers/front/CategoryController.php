@@ -121,6 +121,52 @@ class CategoryControllerCore extends FrontController
         }
     }
 
+    protected function getImage($object, $id_image)
+    {
+        if (get_class($object) === 'Product') {
+            $type = 'products';
+            $getImageURL = 'getImageLink';
+        } else {
+            $type = 'categories';
+            $getImageURL = 'getCatImageLink';
+        }
+
+        $urls  = [];
+        $image_types = ImageType::getImagesTypes($type, true);
+
+        foreach ($image_types as $image_type) {
+            $url = $this->context->link->$getImageURL(
+                $object->link_rewrite,
+                $id_image,
+                $image_type['name']
+            );
+
+            $urls[$image_type['name']] = [
+                'url'      => $url,
+                'width'     => (int)$image_type['width'],
+                'height'    => (int)$image_type['height'],
+            ];
+        }
+
+        uasort($urls, function (array $a, array $b) {
+            return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
+        });
+
+        $keys = array_keys($urls);
+
+        $small  = $urls[$keys[0]];
+        $large  = end($urls);
+        $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
+
+        return [
+            'bySize' => $urls,
+            'small'  => $small,
+            'medium' => $medium,
+            'large'  => $large,
+            'legend' => $object->meta_title
+        ];
+    }
+
     /**
      * Initializes page content variables
      */
@@ -128,7 +174,7 @@ class CategoryControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->setTemplate(_PS_THEME_DIR_.'category.tpl');
+        $this->setTemplate('catalog/category.tpl');
 
         if (!$this->customer_access) {
             return;
@@ -145,10 +191,34 @@ class CategoryControllerCore extends FrontController
         $this->assignSubcategories();
         $this->assignProductList();
 
+        $category = $this->objectSerializer->toArray($this->category);
+        $category['image'] = $this->getImage($this->category, $this->category->id_image);
+
+        $products = array_map(function (array $product) {
+            $productInstance = new Product($product['id_product'], false, $this->context->language->id);
+            $images = $productInstance->getImages($this->context->language->id);
+
+            $product['images'] = array_map(function (array $image) use ($productInstance, &$product) {
+                $image =  array_merge($image, $this->getImage($productInstance, $image['id_image']));
+
+                if ($image['cover']) {
+                    $product['cover'] = $image;
+                }
+
+                return $image;
+            }, $images);
+
+            if (!isset($product['cover'])) {
+                $product['cover'] = $product['images'][0];
+            }
+
+            return $product;
+        }, $this->cat_products);
+
         $this->context->smarty->assign(array(
-            'category'             => $this->category,
+            'category'             => $category,
             'description_short'    => Tools::truncateString($this->category->description, 350),
-            'products'             => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
+            'products'             => $products,
             'id_category'          => (int)$this->category->id,
             'id_category_parent'   => (int)$this->category->id_parent,
             'return_category_name' => Tools::safeOutput($this->category->name),
@@ -195,13 +265,28 @@ class CategoryControllerCore extends FrontController
      */
     protected function assignSubcategories()
     {
-        if ($sub_categories = $this->category->getSubCategories($this->context->language->id)) {
-            $this->context->smarty->assign(array(
-                'subcategories'          => $sub_categories,
-                'subcategories_nb_total' => count($sub_categories),
-                'subcategories_nb_half'  => ceil(count($sub_categories) / 2)
-            ));
-        }
+        $subcategories = array_map(function (array $category) {
+            $object = new Category(
+                $category['id_category'],
+                $this->context->language->id
+            );
+
+            $category['image'] = $this->getImage(
+                $object,
+                $object->id_image
+            );
+
+            $category['url'] = $this->context->link->getCategoryLink(
+                $category['id_category'],
+                $category['link_rewrite']
+            );
+
+            return $category;
+        }, $this->category->getSubCategories($this->context->language->id));
+
+        $this->context->smarty->assign([
+            'subcategories' => $subcategories
+        ]);
     }
 
     /**
@@ -228,7 +313,7 @@ class CategoryControllerCore extends FrontController
             // Pagination must be call after "getProducts"
             $this->pagination($this->nbProducts);
         }
-        
+
         $this->addColorsToProductList($this->cat_products);
 
         Hook::exec('actionProductListModifier', array(
@@ -241,7 +326,7 @@ class CategoryControllerCore extends FrontController
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
         }
-        
+
         $this->context->smarty->assign('nb_products', $this->nbProducts);
     }
 
