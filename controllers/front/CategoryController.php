@@ -212,6 +212,9 @@ class CategoryControllerCore extends FrontController
                 $product['cover'] = $product['images'][0];
             }
 
+            $product['url'] = $product['link'];
+            unset($product['link']);
+
             return $product;
         }, $this->cat_products);
 
