@@ -33,6 +33,12 @@ h2, .h2 {
 
 /* category pages */
 
+.category-cover {
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 25px;
+}
+
 .subcategories {
   display: flex;
   flex-wrap: wrap;
