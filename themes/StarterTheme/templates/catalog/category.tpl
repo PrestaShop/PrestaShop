@@ -16,10 +16,10 @@
         <div class="subcategories">
           {foreach from=$subcategories item="subcategory"}
             <section>
-              <h1 class="h2"><a href="{$subcategory.url}">{$subcategory.name}</a></h1>
               <a href="{$subcategory.url}">
                 <img src="{$subcategory.image.medium.url}" alt="{$subcategory.image.legend}">
               </a>
+              <h1 class="h2"><a href="{$subcategory.url}">{$subcategory.name}</a></h1>
               <div class="subcategory-description">{$subcategory.description nofilter}</div>
             </section>
           {/foreach}
