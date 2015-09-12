@@ -36,7 +36,7 @@ h2, .h2 {
 .subcategories {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-around;
 }
 
@@ -61,7 +61,7 @@ h2, .h2 {
 .products {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-around;
 }
 
