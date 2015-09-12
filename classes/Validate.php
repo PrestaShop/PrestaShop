@@ -964,7 +964,7 @@ class ValidateCore
      * @param string $data json data to validate
      * @return bool Validity is ok or not
      */
-    public function isJson($string)
+    public static function isJson($string)
     {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
