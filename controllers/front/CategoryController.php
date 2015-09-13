@@ -24,10 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
-use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
-
-class CategoryControllerCore extends FrontController
+class CategoryControllerCore extends ProductPresentingFrontControllerCore
 {
     /** string Internal controller name */
     public $php_self = 'category';
@@ -132,17 +129,6 @@ class CategoryControllerCore extends FrontController
         return $retriever->getImage($object, $id_image);
     }
 
-    protected function getProductPresentationSettings()
-    {
-        $settings = new ProductPresentationSettings;
-
-        $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
-        $settings->restricted_country_mode = $this->restricted_country_mode;
-        $settings->include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
-
-        return $settings;
-    }
-
     public function prepareProductForTemplate(array $product)
     {
         $productInstance = new Product(
@@ -151,15 +137,8 @@ class CategoryControllerCore extends FrontController
             $this->context->language->id
         );
 
+        $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
-
-        $imageRetriever = new Adapter_ImageRetriever($this->context->link);
-        $presenter = new ProductPresenter(
-            new Adapter_ProductPriceCalculator,
-            $imageRetriever,
-            $this->context->link,
-            new Adapter_PricePresenter
-        );
 
         return $presenter->present(
             $settings,
