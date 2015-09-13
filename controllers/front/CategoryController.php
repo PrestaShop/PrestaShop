@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
+
 class CategoryControllerCore extends FrontController
 {
     /** string Internal controller name */
@@ -123,48 +126,47 @@ class CategoryControllerCore extends FrontController
 
     protected function getImage($object, $id_image)
     {
-        if (get_class($object) === 'Product') {
-            $type = 'products';
-            $getImageURL = 'getImageLink';
-        } else {
-            $type = 'categories';
-            $getImageURL = 'getCatImageLink';
-        }
+        $retriever = new Adapter_ImageRetriever(
+            $this->context->link
+        );
+        return $retriever->getImage($object, $id_image);
+    }
 
-        $urls  = [];
-        $image_types = ImageType::getImagesTypes($type, true);
+    protected function getProductPresentationSettings()
+    {
+        $settings = new ProductPresentationSettings;
 
-        foreach ($image_types as $image_type) {
-            $url = $this->context->link->$getImageURL(
-                $object->link_rewrite,
-                $id_image,
-                $image_type['name']
-            );
+        $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
+        $settings->restricted_country_mode = $this->restricted_country_mode;
+        $settings->include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer);
 
-            $urls[$image_type['name']] = [
-                'url'      => $url,
-                'width'     => (int)$image_type['width'],
-                'height'    => (int)$image_type['height'],
-            ];
-        }
+        return $settings;
+    }
 
-        uasort($urls, function (array $a, array $b) {
-            return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
-        });
+    public function prepareProductForTemplate(array $product)
+    {
+        $productInstance = new Product(
+            $product['id_product'],
+            false,
+            $this->context->language->id
+        );
 
-        $keys = array_keys($urls);
+        $settings = $this->getProductPresentationSettings();
 
-        $small  = $urls[$keys[0]];
-        $large  = end($urls);
-        $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
+        $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+        $presenter = new ProductPresenter(
+            new Adapter_ProductPriceCalculator,
+            $imageRetriever,
+            $this->context->link,
+            new Adapter_PricePresenter
+        );
 
-        return [
-            'bySize' => $urls,
-            'small'  => $small,
-            'medium' => $medium,
-            'large'  => $large,
-            'legend' => $object->meta_title
-        ];
+        return $presenter->present(
+            $settings,
+            $productInstance,
+            $product['id_product_attribute'],
+            $this->context->language
+        );
     }
 
     /**
@@ -195,27 +197,7 @@ class CategoryControllerCore extends FrontController
         $category['image'] = $this->getImage($this->category, $this->category->id_image);
 
         $products = array_map(function (array $product) {
-            $productInstance = new Product($product['id_product'], false, $this->context->language->id);
-            $images = $productInstance->getImages($this->context->language->id);
-
-            $product['images'] = array_map(function (array $image) use ($productInstance, &$product) {
-                $image =  array_merge($image, $this->getImage($productInstance, $image['id_image']));
-
-                if ($image['cover']) {
-                    $product['cover'] = $image;
-                }
-
-                return $image;
-            }, $images);
-
-            if (!isset($product['cover'])) {
-                $product['cover'] = $product['images'][0];
-            }
-
-            $product['url'] = $product['link'];
-            unset($product['link']);
-
-            return $product;
+            return $this->prepareProductForTemplate($product);
         }, $this->cat_products);
 
         $this->context->smarty->assign(array(
