@@ -9,13 +9,18 @@ class Adapter_ImageRetriever
         $this->link = $link;
     }
 
-    public function getProductImages(Product $product, Language $language)
+    public function getProductImages(array $product, Language $language)
     {
-        $images = $product->getImages($language->id);
+        $productInstance = new Product(
+            $product['id_product'],
+            false,
+            $language->id
+        );
+        $images = $productInstance->getImages($language->id);
 
-        return array_map(function (array $image) use ($product) {
+        return array_map(function (array $image) use ($productInstance) {
             $image =  array_merge($image, $this->getImage(
-                $product,
+                $productInstance,
                 $image['id_image']
             ));
 
