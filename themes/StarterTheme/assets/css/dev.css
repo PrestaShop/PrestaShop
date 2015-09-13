@@ -84,6 +84,19 @@ h2, .h2 {
   max-width: 100%;
 }
 
+.regular-price {
+  text-decoration: line-through;
+  color: #ccc;
+}
+
+.discount-percentage {
+  display: inline-block;
+  padding: 5px;
+  color: white;
+  background-color: red;
+  font-weight: bold;
+}
+
 /* blocklanguages */
 
 .language-selector {
