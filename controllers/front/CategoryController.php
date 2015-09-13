@@ -134,7 +134,7 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
 
-        return $presenter->present(
+        return $presenter->presentForListing(
             $settings,
             $product,
             $this->context->language
