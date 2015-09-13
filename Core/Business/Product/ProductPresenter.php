@@ -64,15 +64,56 @@ class ProductPresenter
             $language->id
         );
 
-        $price = $this->productPriceCalculator->getProductPrice(
+        $specific_price = [];
+
+        $regular_price = $price = $this->productPriceCalculator->getProductPrice(
             $product->id,
             $settings->include_taxes,
-            $id_product_attribute
+            $id_product_attribute,
+            6,
+            null,
+            false,
+            true,
+            1,
+            false,
+            null,
+            null,
+            null,
+            $specific_price
         );
+
+        if ($specific_price) {
+            $regular_price = $this->productPriceCalculator->getProductPrice(
+                $product->id,
+                $settings->include_taxes,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                false,
+                1,
+                false,
+                null,
+                null,
+                null,
+                $specific_price
+            );
+            $presentedProduct['has_discount'] = true;
+            $presentedProduct['discount_type'] = $specific_price['reduction_type'];
+            // TODO: format according to locale preferences
+            $presentedProduct['discount_percentage'] = -round(100 * $specific_price['reduction'])."%";
+        } else {
+            $presentedProduct['has_discount'] = false;
+            $presentedProduct['discount_percentage'] = 0;
+        }
 
 
         $presentedProduct['price'] = $this->pricePresenter->format(
             $this->pricePresenter->convertAmount($price)
+        );
+
+        $presentedProduct['regular_price'] = $this->pricePresenter->format(
+            $this->pricePresenter->convertAmount($regular_price)
         );
 
         return $presentedProduct;
