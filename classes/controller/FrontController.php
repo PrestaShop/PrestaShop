@@ -94,6 +94,7 @@ class FrontControllerCore extends Controller
 
     /** @var bool If true, switches display to restricted country page during init. */
     protected $restrictedCountry = false;
+    protected $restricted_country_mode = false;
 
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
@@ -743,6 +744,7 @@ class FrontControllerCore extends Controller
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = true;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
+                                $this->restricted_country_mode = true;
                                 $this->context->smarty->assign(array(
                                     'restricted_country_mode' => true,
                                     'geolocation_country'     => $record->country_name
@@ -771,6 +773,7 @@ class FrontControllerCore extends Controller
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = true;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restricted_country_mode = true;
                     $this->context->smarty->assign(array(
                         'restricted_country_mode' => true,
                         'geolocation_country'     => isset($record->country_name) && $record->country_name ? $record->country_name : 'Undefined'
