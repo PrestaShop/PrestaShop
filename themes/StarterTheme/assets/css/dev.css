@@ -33,6 +33,17 @@ h2, .h2 {
 
 /* category pages */
 
+a.add-to-cart, a.add-to-cart:hover {
+  display: inline-block;
+  margin: 5px;
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  padding: 5px;
+  background-color: green;
+  font-weight: bold;
+}
+
 .category-cover {
   text-align: center;
   border: 1px solid #ccc;
