@@ -17,40 +17,11 @@ class PricePresenter implements PricePresenterInterface
 {
     public function convertAmount($price)
     {
-        return 2 * $price;
+        return $price;
     }
     public function format($price)
     {
         return "#$price";
-    }
-}
-
-class PriceCalculator extends Adapter_ProductPriceCalculator
-{
-    public function getProductPrice(
-        $id_product,
-        $usetax = true,
-        $id_product_attribute = null,
-        $decimals = 6,
-        $divisor = null,
-        $only_reduc = false,
-        $usereduc = true,
-        $quantity = 1,
-        $force_associated_tax = false,
-        $id_customer = null,
-        $id_cart = null,
-        $id_address = null,
-        &$specific_price_output = null,
-        $with_ecotax = true,
-        $use_group_reduction = true,
-        Context $context = null,
-        $use_customer_price = true
-    ) {
-        if ($usetax) {
-            return 8;
-        } else {
-            return 4;
-        }
     }
 }
 
@@ -68,24 +39,31 @@ class ProductPresenterTest extends UnitTestCase
         $this->settings->catalog_mode = false;
         $this->settings->restricted_country_mode = false;
 
-        $this->product = new Product;
-        $this->product->show_price = true;
-        $this->product->available_for_order = true;
+        $this->product = [];
+        $this->product['show_price'] = true;
+        $this->product['available_for_order'] = true;
+        $this->product['id_product'] = 1;
+        $this->product['id_product_attribute'] = 0;
+        $this->product['link_rewrite'] = 'hérisson';
+        $this->product['price'] = null;
+        $this->product['price_tax_exc'] = null;
+        $this->product['specific_prices'] = null;
+        $this->product['customizable'] = false;
+        $this->product['quantity'] = 0;
+        $this->product['allow_oosp'] = false;
         $this->language = new Language;
     }
 
-    private function getPresentedProduct($field = null)
+    private function _presentProduct($method, $field)
     {
         $presenter = new ProductPresenter(
-            new PriceCalculator,
             Phake::mock('Adapter_ImageRetriever'),
             Phake::mock('Link'),
             new PricePresenter
         );
-        $product = $presenter->present(
+        $product = $presenter->$method(
             $this->settings,
             $this->product,
-            null,
             $this->language
         );
 
@@ -96,30 +74,42 @@ class ProductPresenterTest extends UnitTestCase
         }
     }
 
+    private function getPresentedProduct($field = null)
+    {
+        return $this->_presentProduct('present', $field);
+    }
+
+    private function getPresentedProductForListing($field = null)
+    {
+        return $this->_presentProduct('presentForListing', $field);
+    }
+
+
     public function test_price_should_not_be_shown_in_catalog_mode()
     {
-        $this->product->show_price = true;
+        $this->product['show_price'] = true;
         $this->settings->catalog_mode = true;
         $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function test_price_should_not_be_shown_in_restricted_country_mode()
     {
-        $this->product->show_price = true;
+        $this->product['show_price'] = true;
         $this->settings->restricted_country_mode = true;
         $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function test_price_should_not_be_shown_if_product_not_available_for_order()
     {
-        $this->product->show_price = true;
-        $this->product->available_for_order = false;
+        $this->product['show_price'] = true;
+        $this->product['available_for_order'] = false;
         $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function test_price_is_tax_excluded()
     {
         $this->settings->include_taxes = false;
+        $this->product['price_tax_exc'] = 8;
         $this->assertStringStartsWith(
             '#8',
             $this->getPresentedProduct('price')
@@ -129,9 +119,29 @@ class ProductPresenterTest extends UnitTestCase
     public function test_price_is_tax_included()
     {
         $this->settings->include_taxes = true;
+        $this->product['price'] = 16;
         $this->assertStringStartsWith(
             '#16',
             $this->getPresentedProduct('price')
+        );
+    }
+
+    public function test_cannot_add_to_cart_from_listing_if_variants()
+    {
+        $this->settings->allow_add_variant_to_cart_from_listing = false;
+        $this->assertEquals(
+            null,
+            $this->getPresentedProductForListing('add_to_cart_url')
+        );
+    }
+
+    public function test_can_add_to_cart_from_listing_if_variants()
+    {
+        $this->product['add_to_cart_url'] = 'yay';
+        $this->settings->allow_add_variant_to_cart_from_listing = true;
+        $this->assertNotEquals(
+            'yay',
+            $this->getPresentedProductForListing('add_to_cart_url')
         );
     }
 }
