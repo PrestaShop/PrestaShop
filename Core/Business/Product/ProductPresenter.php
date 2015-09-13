@@ -128,7 +128,7 @@ class ProductPresenter
             $language
         );
 
-        if ($product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
+        if ($product['id_product_attribute'] != 0 && !$settings->allow_add_variant_to_cart_from_listing) {
             $presentedProduct['add_to_cart_url'] = null;
         }
 
