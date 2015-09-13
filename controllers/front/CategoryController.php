@@ -131,19 +131,12 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
 
     public function prepareProductForTemplate(array $product)
     {
-        $productInstance = new Product(
-            $product['id_product'],
-            false,
-            $this->context->language->id
-        );
-
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
 
         return $presenter->present(
             $settings,
-            $productInstance,
-            $product['id_product_attribute'],
+            $product,
             $this->context->language
         );
     }
@@ -174,7 +167,6 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
 
         $category = $this->objectSerializer->toArray($this->category);
         $category['image'] = $this->getImage($this->category, $this->category->id_image);
-
         $products = array_map(function (array $product) {
             return $this->prepareProductForTemplate($product);
         }, $this->cat_products);
