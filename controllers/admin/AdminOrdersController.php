@@ -691,6 +691,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     $choosen = false;
+
                     $voucher = 0;
 
                     if ((int)Tools::getValue('refund_voucher_off') == 1) {
@@ -1930,27 +1931,15 @@ class AdminOrdersControllerCore extends AdminController
                 die(Tools::jsonEncode(array(
                 'result' => false,
                 'error' => Tools::displayError('The combination object cannot be loaded.')
-            )));
+                )));
             }
         }
 
         // Total method
         $total_method = Cart::BOTH_WITHOUT_SHIPPING;
 
-        // Create new cart
-        $cart = new Cart();
-        $cart->id_shop_group = $order->id_shop_group;
-        $cart->id_shop = $order->id_shop;
-        $cart->id_customer = $order->id_customer;
-        $cart->id_carrier = $order->id_carrier;
-        $cart->id_address_delivery = $order->id_address_delivery;
-        $cart->id_address_invoice = $order->id_address_invoice;
-        $cart->id_currency = $order->id_currency;
-        $cart->id_lang = $order->id_lang;
-        $cart->secure_key = $order->secure_key;
-
-        // Save new cart
-        $cart->add();
+        // Load the old cart
+        $cart = new Cart($order->id_cart);
 
         // Save context (in order to apply cart rule)
         $this->context->cart = $cart;
@@ -1959,8 +1948,7 @@ class AdminOrdersControllerCore extends AdminController
         // always add taxes even if there are not displayed to the customer
         $use_taxes = true;
 
-        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-            false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null, 2, null, false, true, 1, false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 
         // Creating specific price if needed
         if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl) {
@@ -1987,9 +1975,60 @@ class AdminOrdersControllerCore extends AdminController
             $specific_price->add();
         }
 
+        if (is_array($field_ids = $product->getCustomizationFieldIds())) {
+            $authorized_text_fields = array();
+            foreach ($field_ids as $field_id) {
+                if ($field_id['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                    $authorized_text_fields[(int)$field_id['id_customization_field']] = 'textField'.(int)$field_id['id_customization_field'];
+                } elseif ($field_id['type'] == Product::CUSTOMIZE_FILE) {
+                    $authorized_file_fields[(int)$field_id['id_customization_field']] = 'file'.(int)$field_id['id_customization_field'];
+                }
+            }
+
+            $indexes_text_fields = array_flip($authorized_text_fields);
+            foreach ($_POST as $field_name => $value) {
+                if (in_array($field_name, $authorized_text_fields) && $value != '') {
+                    if (!Validate::isMessage($value)) {
+                        $this->errors[] = Tools::displayError('Invalid message');
+                    } else {
+                        $id_customization = $this->context->cart->addTextFieldToProduct($product->id, $indexes_text_fields[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
+                    }
+                } elseif (in_array($field_name, $authorized_text_fields) && $value == '') {
+                    $this->context->cart->deleteCustomizationToProduct((int)$product->id, $indexes_text_fields[$field_name]);
+                }
+            }
+
+            $indexes_file_fields = array_flip($authorized_file_fields);
+            foreach ($_FILES as $field_name => $file) {
+                if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
+                    $file_name = md5(uniqid(rand(), true));
+                    if ($error = ImageManager::validateUpload($file, (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
+                        $this->errors[] = $error;
+                    }
+
+                    $product_picture_width = (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
+                    $product_picture_height = (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
+                    $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+                    if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
+                        return false;
+                    }
+
+                    if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } else {
+                        $this->context->cart->addPictureToProduct($product->id, $indexes_file_fields[$field_name], Product::CUSTOMIZE_FILE, $file_name);
+                    }
+                    unlink($tmp_name);
+                }
+            }
+        }
+
         // Add product to cart
-        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
-            isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null, null, 'up', 0, new Shop($cart->id_shop));
 
         if ($update_quantity < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -2055,13 +2094,13 @@ class AdminOrdersControllerCore extends AdminController
                 $order_invoice->shipping_tax_computation_method = (int)$tax_calculator->computation_method;
 
                 // Update current order field, only shipping because other field is updated later
-                $order->total_shipping += $order_invoice->total_shipping_tax_incl;
-                $order->total_shipping_tax_excl += $order_invoice->total_shipping_tax_excl;
-                $order->total_shipping_tax_incl += ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
+                $order->total_shipping = $order_invoice->total_shipping_tax_incl;
+                $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
+                $order->total_shipping_tax_incl = ($use_taxes) ? $order_invoice->total_shipping_tax_incl : $order_invoice->total_shipping_tax_excl;
 
-                $order->total_wrapping += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
-                $order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-                $order->total_wrapping_tax_incl += abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+                $order->total_wrapping = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
+                $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+                $order->total_wrapping_tax_incl = abs($cart->getOrderTotal($use_taxes, Cart::ONLY_WRAPPING));
                 $order_invoice->add();
 
                 $order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
@@ -2074,15 +2113,19 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
-            }
-            // Update current invoice
-            else {
-                $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-                $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
-                $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-                $order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+            } else {
+                $order_invoice->total_paid_tax_excl = Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+                $order_invoice->total_paid_tax_incl = Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+                $order_invoice->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                $order_invoice->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
                 $order_invoice->update();
             }
+        }
+
+        $order_details = OrderDetail::getList($order->id);
+        foreach ($order_details as $order_detail) {
+            $detail = new OrderDetail($order_detail['id_order_detail']);
+            $detail->delete();
         }
 
         // Create Order detail information
@@ -2090,12 +2133,12 @@ class AdminOrdersControllerCore extends AdminController
         $order_detail->createList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int)Tools::getValue('add_product_warehouse'));
 
         // update totals amount of order
-        $order->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $order->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
+        $order->total_products = (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $order->total_products_wt = (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
 
-        $order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
-        $order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
-        $order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
+        $order->total_paid = Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
+        $order->total_paid_tax_excl = Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
+        $order->total_paid_tax_incl = Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
 
         if (isset($order_invoice) && Validate::isLoadedObject($order_invoice)) {
             $order->total_shipping = $order_invoice->total_shipping_tax_incl;
@@ -2103,9 +2146,9 @@ class AdminOrdersControllerCore extends AdminController
             $order->total_shipping_tax_excl = $order_invoice->total_shipping_tax_excl;
         }
         // discount
-        $order->total_discounts += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_excl += (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_incl += (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_excl = (float)abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_incl = (float)abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 
         // Save changes of order
         $order->update();
@@ -2213,7 +2256,7 @@ class AdminOrdersControllerCore extends AdminController
 
         die(Tools::jsonEncode(array(
             'result' => true,
-            'view' => $this->createTemplate('_product_line.tpl')->fetch(),
+            'view' => $this->createTemplate(($product['customizedDatas']) ? '_customized_data.tpl' : '_product_line.tpl')->fetch(),
             'can_edit' => $this->tabAccess['add'],
             'order' => $order,
             'invoices' => $invoice_array,
@@ -2746,7 +2789,8 @@ class AdminOrdersControllerCore extends AdminController
 
             $id_product = $order_detail->product_id;
             if ($delete) {
-                $order_detail->delete();
+                $order_detail->delete(true);
+                $order_detail->deleteCustomization();
             }
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
@@ -2758,7 +2802,8 @@ class AdminOrdersControllerCore extends AdminController
                 );
 
             if ($delete) {
-                $order_detail->delete();
+                $order_detail->delete(true);
+                $order_detail->deleteCustomization();
             }
         } else {
             $this->errors[] = Tools::displayError('This product cannot be re-stocked.');
