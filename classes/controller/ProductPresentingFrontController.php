@@ -3,7 +3,7 @@
 use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
 
-class ProductPresentingFrontControllerCore extends FrontController
+abstract class ProductPresentingFrontControllerCore extends FrontController
 {
     protected function getProductPresentationSettings()
     {
