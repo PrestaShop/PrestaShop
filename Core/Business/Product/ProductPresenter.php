@@ -4,6 +4,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Product;
 
 use Adapter_ObjectSerializer;
 use Adapter_ImageRetriever;
+use Adapter_PricePresenter;
 use Adapter_ProductPriceCalculator;
 use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
 use Product;
@@ -20,7 +21,7 @@ class ProductPresenter
     public function __construct(
         Adapter_ImageRetriever $imageRetriever,
         Link $link,
-        PricePresenterInterface $pricePresenter
+        Adapter_PricePresenter $pricePresenter
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
