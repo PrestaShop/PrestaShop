@@ -7,6 +7,7 @@ use Adapter_ImageRetriever;
 use Adapter_PricePresenter;
 use Adapter_ProductPriceCalculator;
 use Adapter_ProductColorsRetriever;
+use Adapter_Translator;
 use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
 use Product;
 use Language;
@@ -19,17 +20,20 @@ class ProductPresenter
     private $pricePresenter;
     private $productPriceCalculator;
     private $productColorsRetriever;
+    private $translator;
 
     public function __construct(
         Adapter_ImageRetriever $imageRetriever,
         Link $link,
         Adapter_PricePresenter $pricePresenter,
-        Adapter_ProductColorsRetriever $productColorsRetriever
+        Adapter_ProductColorsRetriever $productColorsRetriever,
+        Adapter_Translator $translator
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
         $this->pricePresenter = $pricePresenter;
         $this->productColorsRetriever = $productColorsRetriever;
+        $this->translator = $translator;
     }
 
     private function shouldShowPrice(
@@ -163,17 +167,60 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    private function addLabels(
+        array $presentedProduct,
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        $labels = [];
+
+        $show_price = $this->shouldShowPrice($settings, $product);
+
+        if ($show_price && $product['online_only']) {
+            $labels['online_only'] = [
+                'type' => 'online_only',
+                'label' => $this->translator->l('Online only', 'Product')
+            ];
+        }
+
+        if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
+            $labels['on_sale'] = [
+                'type' => 'on_sale',
+                'label' => $this->translator->l('On sale!', 'Product')
+            ];
+        }
+
+        if ($show_price && $product['reduction'] && !$settings->catalog_mode && !$product['on_sale']) {
+            $labels['discount'] = [
+                'type' => 'discount',
+                'label' => $this->translator->l('Reduced price', 'Product')
+            ];
+        }
+
+        if ($product['new']) {
+            $labels['new'] = [
+                'type' => 'new',
+                'label' => $this->translator->l('New', 'Product')
+            ];
+        }
+
+        $presentedProduct['labels'] = $labels;
+
+        return $presentedProduct;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
         Language $language
     ) {
         $presentedProduct = $product;
-
-        $presentedProduct['show_price'] = $this->shouldShowPrice(
+        $show_price = $this->shouldShowPrice(
             $settings,
             $product
         );
+
+        $presentedProduct['show_price'] = $show_price;
 
         $presentedProduct = $this->fillImages(
             $presentedProduct,
@@ -201,6 +248,12 @@ class ProductPresenter
             $presentedProduct,
             $product,
             $language
+        );
+
+        $presentedProduct = $this->addLabels(
+            $presentedProduct,
+            $settings,
+            $product
         );
 
         return $presentedProduct;
