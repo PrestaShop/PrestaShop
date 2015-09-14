@@ -47,6 +47,6 @@ class MyAccountControllerCore extends FrontController
         ));
         $this->context->smarty->assign('HOOK_CUSTOMER_ACCOUNT', Hook::exec('displayCustomerAccount'));
 
-        $this->setTemplate(_PS_THEME_DIR_.'my-account.tpl');
+        $this->setTemplate('customer/my-account.tpl');
     }
 }
