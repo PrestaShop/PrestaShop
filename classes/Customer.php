@@ -488,6 +488,52 @@ class CustomerCore extends ObjectModel
         return Cache::retrieve($cache_id);
     }
 
+    public function getSimpleAddresses($id_lang = null)
+    {
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
+        }
+
+        $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+        $cache_id = 'Customer::getSimpleAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
+        if (!Cache::isStored($cache_id)) {
+            $sql = 'SELECT DISTINCT
+                      a.`id_address` AS `id`,
+                      a.`alias`,
+                      a.`firstname`,
+                      a.`lastname`,
+                      a.`company`,
+                      a.`address1`,
+                      a.`address2`,
+                      a.`postcode`,
+                      a.`city`,
+                      s.name AS state,
+                      s.`iso_code` AS state_iso,
+                      cl.`name` AS country,
+                      co.`iso_code` AS country_iso,
+                      a.`other`,
+                      a.`phone`,
+                      a.`phone_mobile`,
+                      a.`vat_number`,
+                      a.`dni`
+                    FROM `'._DB_PREFIX_.'address` a
+                    LEFT JOIN `'._DB_PREFIX_.'country` co ON (a.`id_country` = co.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (co.`id_country` = cl.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+                    '.($share_order ? '' : Shop::addSqlAssociation('country', 'co')).'
+                    WHERE
+                        `id_lang` = '.(int)$id_lang.'
+                        AND `id_customer` = '.(int)$this->id.'
+                        AND a.`deleted` = 0
+                        AND a.`active` = 1';
+
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            Cache::store($cache_id, $result);
+            return $result;
+        }
+        return Cache::retrieve($cache_id);
+    }
+
     /**
      * Count the number of addresses for a customer
      *
