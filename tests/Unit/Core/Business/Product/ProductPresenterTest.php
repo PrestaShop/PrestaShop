@@ -12,8 +12,9 @@ use Language;
 use Link;
 use Context;
 use Adapter_ProductPriceCalculator;
+use Adapter_PricePresenter;
 
-class PricePresenter implements PricePresenterInterface
+class PricePresenter extends Adapter_PricePresenter
 {
     public function convertAmount($price)
     {
