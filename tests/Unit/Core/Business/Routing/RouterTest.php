@@ -23,7 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Routing;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
@@ -45,7 +45,7 @@ class FakeRouter extends Router
     {
         if (!self::$instance) {
             self::$container = $container;
-            self::$instance = new self('fake_controllers_routes(_(.*))?\.yml');
+            self::$instance = new self('fake_test_routes(_(.*))?\.yml');
         }
         return self::$instance;
     }
@@ -98,7 +98,7 @@ class RouterTest extends UnitTestCase
         $this->warningReceived = ($e->getException()->alternative == 'alternateText');
     }
 
-    public function test_router_unknown_route()
+    public function test_router_instance()
     {
         $this->setup_env();
         $router = FakeRouter::getInstance($this->container);
@@ -108,81 +108,5 @@ class RouterTest extends UnitTestCase
         $fakeRequest->overrideGlobals();
         $found = $router->dispatch(true);
         $this->assertFalse($found, 'Unknown route should return false through dispatch().');
-    }
-
-    public function test_router_module_routes()
-    {
-        $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
-
-        // load from a module! Controller & Action OK case.
-        $fakeRequest = Request::create('/routerTest/a'); // route to existing controller in a module, action OK.
-        $fakeRequest->overrideGlobals();
-        ob_start();
-        $found = $router->dispatch(true);
-        ob_end_clean();
-        $this->assertEmpty($found, '/routerTest/a should be found.');
-
-        // load from a module! Controller Error case (bad parent class checked)
-        $fakeRequest = Request::create('/routerTest/b');
-        $fakeRequest->overrideGlobals();
-        try {
-            $found = $router->dispatch(true);
-            $this->fail('/routerTest/b should be found but must trigger an error.');
-        } catch (\ErrorException $ee) {
-            $this->assertEquals('FakeControllerError stops!', $ee->getMessage());
-        }
-
-        // load from a module! Controller Warning case (bad parent class checked)
-        $fakeRequest = Request::create('/routerTest/c');
-        $fakeRequest->overrideGlobals();
-        EventDispatcher::getInstance('message')->addListener('warning_message', array($this, 'warningListenerEvent'));
-        try {
-            $found = $router->dispatch(true);
-            $this->assertEmpty($found, '/routerTest/c should be found even with a warning exception.');
-            $this->assertAttributeEquals(true, 'warningReceived', $this);
-        } catch (\Exception $e) {
-            $this->fail('/routerTest/c should not trigger another exception.');
-        }
-    }
-
-    public function test_subcall()
-    {
-        $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
-        
-        $fakeRequest = Request::create('/routerTest/subcall'); // route to existing controller in a module, action OK.
-        $fakeRequest->overrideGlobals();
-        ob_start();
-        $found = $router->dispatch(true);
-        ob_end_clean();
-        $this->assertEmpty($found, '/routerTest/subcall should be found.');
-        
-        // TODO: when Views will be able to scan in modules View directory :)
-    }
-
-    public function test_forward()
-    {
-        $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
-        
-        $fakeRequest = Request::create('/routerTest/forward'); // route to existing controller in a module, action OK.
-        $fakeRequest->overrideGlobals();
-        ob_start();
-        $found = $router->dispatch(true);
-        ob_end_clean();
-        $this->assertEmpty($found, '/routerTest/forward should be found.');
-    }
-
-    public function test_redirect()
-    {
-        $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
-
-        $fakeRequest = Request::create('/routerTest/redirect');
-        $fakeRequest->overrideGlobals();
-        ob_start();
-        $router->dispatch();
-        ob_end_clean();
     }
 }

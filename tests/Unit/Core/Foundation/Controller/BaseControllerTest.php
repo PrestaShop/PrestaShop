@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
+use PrestaShop\PrestaShop\Tests\Unit\Core\Business\Routing\FakeRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 class FakeBaseController extends BaseController

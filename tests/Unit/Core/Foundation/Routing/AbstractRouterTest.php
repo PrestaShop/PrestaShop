@@ -106,15 +106,8 @@ class AbstractRouterTest extends UnitTestCase
 
         $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
         $routingFiles = $this->getObjectAttribute($router, 'routingFiles');
-        $this->assertCount(2, $routingFiles, 'Two configuration files should be scaned.');
+        $this->assertCount(1, $routingFiles, 'One configuration file should be scaned.');
         $this->assertArrayHasKey('/', $routingFiles);
-        $this->assertArrayHasKey('/abstractRouterTest', $routingFiles);
-
-        $controllerNamespaces = $this->getObjectAttribute($router, 'controllerNamespaces');
-        $this->assertCount(3, $controllerNamespaces, 'Tree configuration files should be scaned.');
-
-        $this->assertContains('PrestaShop\\PrestaShop\\Tests\\Unit\\Core\\Business\\ControllerFakeModule', $controllerNamespaces);
-        $this->assertContains('PrestaShop\\PrestaShop\\Tests\\Unit\\Core\\Business\\Controller', $controllerNamespaces);
     }
 
     public function test_router_resolution()
@@ -130,31 +123,5 @@ class AbstractRouterTest extends UnitTestCase
         $this->assertEquals('Test\\TestController', $router->calledControllerName, 'Bad controller resolution');
         $this->assertEquals('aAction', $router->calledControllerMethod, 'Bad method resolution');
         $this->assertEquals('fake_test_route1', $router->calledWithResquest->attributes->get('_route'));
-    }
-
-    public function test_router_resolution_conflict()
-    {
-        $conf = $this->setup_env();
-        try {
-            $router = new FakeAbstractRouterNotAbstract('fake_test_conflict_routes(_(.*))?\.yml', $conf);
-            $this->fail('This instanciation should throw ErrorException!');
-        } catch (DevelopmentErrorException $ee) {
-            $this->assertContains('route ID: fake_test_route_module1, prefix: /abstractRouterTest', $ee->getMessage());
-        }
-    }
-
-    public function test_router_resolution_priority()
-    {
-        $conf = $this->setup_env();
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
-
-        // push request into PHP globals (simulate a request) and resolve through dispatch().
-        $fakeRequest = Request::create('/abstractRouterTest/b/1'); // module must take priority, not Core
-        $fakeRequest->overrideGlobals();
-        $router->dispatch();
-
-        $this->assertEquals('Test\\TestController', $router->calledControllerName, 'Bad controller resolution');
-        $this->assertEquals('bModuleAction', $router->calledControllerMethod, 'Bad method resolution');
-        $this->assertEquals('fake_test_route_module2', $router->calledWithResquest->attributes->get('_route'));
     }
 }
