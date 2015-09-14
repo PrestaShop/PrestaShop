@@ -37,16 +37,13 @@ $(document).ready(function(){
 // check resolution
 function responsiveMenu()
 {
-   if ($(document).width() <= 767 && responsiveflagMenu == false)
-	{
-		menuChange('enable');
-		responsiveflagMenu = true;
-	}
-	else if ($(document).width() >= 768)
-	{
-		menuChange('disable');
-		responsiveflagMenu = false;
-	}
+    if ($(window).width() <= 767 && responsiveflagMenu == false) {
+        menuChange('enable');
+        responsiveflagMenu = true;
+    } else if ($(window).width() >= 768) {
+        menuChange('disable');
+        responsiveflagMenu = false;
+    }
 }
 
 // init Super Fish Menu for 767px+ resolution
