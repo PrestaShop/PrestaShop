@@ -41,7 +41,7 @@ class Adapter_PackItemsManager
         }
         return Pack::getItems($pack->id, $id_lang);
     }
-    
+
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
@@ -58,7 +58,7 @@ class Adapter_PackItemsManager
         }
         return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
-    
+
     /**
      * Is this product a pack?
      *
@@ -69,7 +69,7 @@ class Adapter_PackItemsManager
     {
         return Pack::isPack($product->id);
     }
-    
+
     /**
      * Is this product in a pack?
      * If $id_product_attribute specified, then will restrict search on the given combination,
