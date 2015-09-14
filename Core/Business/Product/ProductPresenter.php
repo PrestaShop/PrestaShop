@@ -27,25 +27,22 @@ class ProductPresenter
         $this->pricePresenter = $pricePresenter;
     }
 
-    public function present(
+    private function shouldShowPrice(
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        return  !$settings->catalog_mode &&
+                !$settings->restricted_country_mode &&
+                $product['available_for_order']
+        ;
+    }
+
+    private function fillImages(
+        array $presentedProduct,
         ProductPresentationSettings $settings,
         array $product,
         Language $language
     ) {
-        $presentedProduct = $product;
-
-        if ($settings->catalog_mode) {
-            $presentedProduct['show_price'] = false;
-        }
-
-        if ($settings->restricted_country_mode) {
-            $presentedProduct['show_price'] = false;
-        }
-
-        if (!$product['available_for_order']) {
-            $presentedProduct['show_price'] = false;
-        }
-
         $presentedProduct['images'] = $this->imageRetriever->getProductImages(
             $product,
             $language
@@ -55,12 +52,15 @@ class ProductPresenter
             $presentedProduct['cover'] = $presentedProduct['images'][0];
         }
 
-        $presentedProduct['url'] = $this->link->getProductLink(
-            $product['id_product'],
-            $product['link_rewrite'], null, null,
-            $language->id
-        );
+        return $presentedProduct;
+    }
 
+    private function addPriceInformation(
+        array $presentedProduct,
+        ProductPresentationSettings $settings,
+        array $product,
+        Language $language
+    ) {
         $presentedProduct['has_discount'] = false;
         $presentedProduct['discount_type'] = null;
         $presentedProduct['discount_percentage'] = null;
@@ -87,7 +87,14 @@ class ProductPresenter
             $this->pricePresenter->convertAmount($regular_price)
         );
 
-        $can_add_to_cart = $presentedProduct['show_price'];
+        return $presentedProduct;
+    }
+
+    private function shouldShowAddToCartButton(
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        $can_add_to_cart = $this->shouldShowPrice($settings, $product);
 
         if ($product['customizable'] == 2) {
             $can_add_to_cart = false;
@@ -101,18 +108,57 @@ class ProductPresenter
             $can_add_to_cart = false;
         }
 
-        if ($can_add_to_cart) {
-            $presentedProduct['add_to_cart_url'] = $this->link->getPageLink(
-                'cart',
-                true,
-                null,
-                'add=1&id_product=' . $product['id_product'] . '&id_product_attribute=' . $product['id_product_attribute'],
-                false
-            );
+        return $can_add_to_cart;
+    }
+
+    private function getAddToCartURL(array $product)
+    {
+        return $this->link->getPageLink(
+            'cart',
+            true,
+            null,
+            'add=1&id_product=' . $product['id_product'] . '&id_product_attribute=' . $product['id_product_attribute'],
+            false
+        );
+    }
+
+    public function present(
+        ProductPresentationSettings $settings,
+        array $product,
+        Language $language
+    ) {
+        $presentedProduct = $product;
+
+        $presentedProduct['show_price'] = $this->shouldShowPrice(
+            $settings,
+            $product
+        );
+
+        $presentedProduct = $this->fillImages(
+            $presentedProduct,
+            $settings,
+            $product,
+            $language
+        );
+
+        $presentedProduct['url'] = $this->link->getProductLink(
+            $product['id_product'],
+            $product['link_rewrite'], null, null,
+            $language->id
+        );
+
+        $presentedProduct = $this->addPriceInformation(
+            $presentedProduct,
+            $settings,
+            $product,
+            $language
+        );
+
+        if ($this->shouldShowAddToCartButton($settings, $product)) {
+            $presentedProduct['add_to_cart_url'] = $this->getAddToCartURL($product);
         } else {
             $presentedProduct['add_to_cart_url'] = null;
         }
-
 
         return $presentedProduct;
     }
