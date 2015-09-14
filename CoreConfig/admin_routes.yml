@@ -1,64 +1,10 @@
-# routes.yml
-admin_product_catalog:
-    path:     /product/catalog/{offset}/{limit}/{orderBy}/{orderWay}
-    methods:  [GET]
-    defaults:
-        _legacy_path: AdminProducts
-        _legacy_force: true #FIXME: change to false when Catalog will be refacto into new Core
-        _controller: 'Admin\ProductController::productCatalogAction'
-        limit: 10
-        offset: 0
-        orderBy: id_product
-        orderWay: asc
-    requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity
-        orderWay: asc|desc
-
-admin_product_list:
-    path:     /product/list/{_layout_mode}/{ls_products_offset}/{ls_products_limit}/{ls_products_orderBy}/{ls_products_orderWay}
-    methods:  [GET]
-    defaults:
-        _controller: 'Admin\ProductController::productListAction'
-        _layout_mode: layout_html
-        ls_products_class: PrestaShop\PrestaShop\Adapter\ProductManager
-        ls_products_method: getProductList
-        ls_products_limit: 10
-        ls_products_offset: 0
-        ls_products_orderBy: id_product
-        ls_products_orderWay: asc
-    requirements:
-        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
-        ls_products_orderBy: id_product|name|reference|name_category|price|sav_quantity
-        ls_products_orderWay: asc|desc
-
-admin_product_form:
-    path:     /product/form/{id_product}
-    methods:  [GET, POST]
-    defaults:
-        _legacy_path: AdminProducts
-        _legacy_force: false
-        _controller: 'Admin\ProductController::productFormAction'
-        id_product: new
-    requirements:
-        id_product: new|\d+
-    options:
-        legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\ProductManager
-        legacy_param_mapper_method: mapLegacyParametersProductForm
-
-admin_route1:
-    path:     /a
-    defaults: { _controller: 'Admin\TestController::aAction' }
-admin_product_list_2:
-    path:     /product/list2/{_layout_mode}/{toto}
-    defaults:
-        _controller: 'Admin\ProductController::productList2Action'
-        _layout_mode: layout_html
-        toto: tititutu
-    requirements:
-        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
-        
+# admin_routes.yml
 admin_tools_upload:
     path:     /common/upload/{file_type}
     defaults: { _controller: 'AdminController::uploadAction', file_type: image }
     requirements:
         file_type:  image|file
+
+admin_route1:
+    path:     /a
+    defaults: { _controller: 'Admin\TestController::aAction' }

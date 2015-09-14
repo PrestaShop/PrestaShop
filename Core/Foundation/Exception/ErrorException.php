@@ -42,9 +42,9 @@ class ErrorException extends \Core_Foundation_Exception_Exception
      * @param number $code
      * @param Exception $previous Trace of the problem. Can be added in the report.
      */
-    final public function __construct($message, $reportData = null, $code = 0, \Exception $previous = null)
+    final public function __construct($message, $reportData = null, $code = 0, \Exception $previous = null, $moduleToDeactivate = null)
     {
-        parent::__construct($message, $code, $previous, $reportData);
+        parent::__construct($message, $code, $previous, $reportData, $moduleToDeactivate);
         
         EventDispatcher::getInstance('message')->dispatch('error_message', new BaseEvent($message, $this));
         EventDispatcher::getInstance('error')->dispatch('error_message', new BaseEvent($message, $this));

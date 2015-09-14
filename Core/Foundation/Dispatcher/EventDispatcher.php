@@ -30,6 +30,8 @@ use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 /**
  * TODO : explain YML structure needed to add a listener.
@@ -135,12 +137,23 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                                         $lazy = ($listener['lazy'] == 1)? 'true' : 'false';
                                         $staticInstantiator = (isset($listener['singletonMethod']))? ', '.$listener['singletonMethod'] : '';
 
+                                        // check for Class existence (throws ReflectionException if not found)
+                                        $class = new \ReflectionClass($listener['class']);
+                                        $method = new \ReflectionMethod($class, $listener['method']);
+
                                         $phpCode .= 'self::$dispatcherRegistry[\''.$dispatcherName.'\'][] = array(\''.$dispatchersEventName
-                                            .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', '.$lazy.$staticInstantiator.');';
+                                            .'\', \''.$listener['class'].'\', \''.$listener['method'].'\', '.$listener['priority'].', \''.$lazy.$staticInstantiator.'\');';
                                     }
                                 }
                             }
                         }
+                    } catch (\ReflectionException $e) {
+                        throw new ErrorException(
+                            'The following listener is not found or incorrectly set: '.$listener['class'],
+                            array('Settings File' => $file->getRealPath(), 'Unknown listener' => $listener['class']),
+                            $e->getCode(),
+                            $e);
+                        // FIXME: retrieve moduleDir/Name, to insert into ErrorException to auto-deactivate the module.
                     } catch (\Exception $e) {
                         throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
                     }

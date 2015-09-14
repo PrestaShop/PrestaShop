@@ -30,21 +30,27 @@ class Core_Foundation_Exception_Exception extends Exception
 {
     public $reportData = null;
     private $randomInstantiationKey = null;
+    private $moduleToDeactivate = null;
 
-    public function __construct($message = null, $code = 0, \Exception $previous = null, $reportData = null)
+    public function __construct($message = null, $code = 0, \Exception $previous = null, $reportData = null, $moduleToDeactivate = null)
     {
         parent::__construct($message, $code, $previous);
         $this->reportData = $reportData;
         $this->randomInstantiationKey = uniqid('psexc', true);
+        $this->moduleToDeactivate = $moduleToDeactivate;
+        $this->deactivateModule();
     }
     
     public function __toStringHtml()
     {
-        $data =  '<b>"'.$this->message.'"</b><br/>';
+        $data =  '<b>'.$this->message.'</b><br/>';
         if ($afterMessageContent = $this->getAfterMessageContent()) {
             $data .= '<i>Alternative used data given: "'.(string)$afterMessageContent.'"</i><br/>';
         }
         $data .= '<ul><li><b>Exception type:</b> '.get_class($this).'</li>';
+        if ($this->moduleToDeactivate != null) {
+            $data .= '<li><b>THIS MODULE HAS BEEN DEACTIVATED:</b> '.$this->moduleToDeactivate.'</li>';
+        }
         $data .= '<li><b>Code #</b> '.$this->code.'</li>';
         $data .= '<li><b>Occurred at line</b> '.$this->line.' <b>in file</b> '.$this->file.'</li>';
         $data .= '<li><b>Time:</b> '.date('D, d M Y H:i:s').' / '.time().'</li>';
@@ -84,9 +90,18 @@ class Core_Foundation_Exception_Exception extends Exception
 
         return $data;
     }
-    
+
     protected function getAfterMessageContent()
     {
         return null;
+    }
+
+    protected function deactivateModule()
+    {
+        if ($this->moduleToDeactivate != null) {
+            // TODO!
+            return true;
+        }
+        return false;
     }
 }

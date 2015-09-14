@@ -73,18 +73,27 @@ abstract class Router extends AbstractRouter
      */
     final public function __construct($routingFilePattern)
     {
-        // Push container instance inside Context singleton
-        $context = Context::getInstance(self::$container);
-        // Push itself into Context
-        $context->set('routerInstance', $this);
-        
-        parent::__construct($routingFilePattern);
-
-        // EventDispatcher init
-        BaseEventDispatcher::initBaseDispatchers(self::$container);
-        $this->routingDispatcher = EventDispatcher::getInstance('routing');
-        if ($this->triggerCacheGenerationFlag) {
-            $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
+        try {
+            // Push container instance inside Context singleton
+            $context = Context::getInstance(self::$container);
+            // Push itself into Context
+            $context->set('routerInstance', $this);
+            
+            parent::__construct($routingFilePattern);
+    
+            // EventDispatcher init
+            BaseEventDispatcher::initBaseDispatchers(self::$container);
+            $this->routingDispatcher = EventDispatcher::getInstance('routing');
+            if ($this->triggerCacheGenerationFlag) {
+                $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
+            }
+        } catch (\Exception $e) {
+            if (php_sapi_name() == "cli") {
+                throw $e;
+            }
+            // At this point every exception is blocking, even WarningException (because MessageStackManager is not yet instantiated).
+            $this->tryToDisplayExceptions($e);
+            exit(1);
         }
     }
     

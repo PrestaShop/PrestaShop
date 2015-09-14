@@ -593,6 +593,17 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
                 ));
             }
 
+            // Well, in this case we just have to display $lastException
+            if ($messages == '') {
+                if ($viewEngine == null) {
+                    $viewEngine = new ViewFactory('smarty');
+                }
+                $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
+                    'exceptions' => array($lastException),
+                    'color' => 'red'
+                ));
+            }
+
             echo '<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> '.$messages;
             $this->exitNow(1);
         } catch (\Exception $e) {
