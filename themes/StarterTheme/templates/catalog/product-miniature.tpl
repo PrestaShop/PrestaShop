@@ -32,6 +32,11 @@
     {/foreach}
   </ul>
 
+  {if $product.show_availability}
+    {* availability may take the values "available" or "unavailable" *}
+    <span class='product-availability {$product.availability}'>{$product.availability_message}</span>
+  {/if}
+
   {* TODO: Hooks *}
 
 </article>
