@@ -209,6 +209,60 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    public function addQuantityInformation(
+        array $presentedProduct,
+        ProductPresentationSettings $settings,
+        array $product
+    ) {
+        $show_price = $this->shouldShowPrice(
+            $settings,
+            $product
+        );
+
+        $show_availability = $show_price && $settings->stock_management_enabled;
+
+        $presentedProduct['show_availability'] = $show_availability;
+
+        if ($show_availability) {
+
+            if ($product['quantity'] > 0) {
+                $presentedProduct['availability_message'] = $this->translator->l(
+                    'In Stock',
+                    'Product'
+                );
+                $presentedProduct['availability'] = 'available';
+            } else if ($product['allow_oosp']) {
+                if ($product['available_later']) {
+                    $presentedProduct['availability_message'] = $product['available_later'];
+                    $presentedProduct['availability'] = 'available';
+                } else {
+                    $presentedProduct['availability_message'] = $this->translator->l(
+                        'Out Of Stock',
+                        'Product'
+                    );
+                    $presentedProduct['availability'] = 'unavailable';
+                }
+            } else if ($product['quantity_all_versions']) {
+                $presentedProduct['availability_message'] = $this->translator->l(
+                    'Product available with different options',
+                    'Product'
+                );
+                $presentedProduct['availability'] = 'unavailable';
+            } else {
+                $presentedProduct['availability_message'] = $this->translator->l(
+                    'Out Of Stock',
+                    'Product'
+                );
+                $presentedProduct['availability'] = 'unavailable';
+            }
+        } else {
+            $presentedProduct['availability_message'] = null;
+            $presentedProduct['availability'] = null;
+        }
+
+        return $presentedProduct;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
@@ -251,6 +305,12 @@ class ProductPresenter
         );
 
         $presentedProduct = $this->addLabels(
+            $presentedProduct,
+            $settings,
+            $product
+        );
+
+        $presentedProduct = $this->addQuantityInformation(
             $presentedProduct,
             $settings,
             $product
