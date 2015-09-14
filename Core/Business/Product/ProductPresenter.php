@@ -6,6 +6,7 @@ use Adapter_ObjectSerializer;
 use Adapter_ImageRetriever;
 use Adapter_PricePresenter;
 use Adapter_ProductPriceCalculator;
+use Adapter_ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
 use Product;
 use Language;
@@ -17,15 +18,18 @@ class ProductPresenter
     private $link;
     private $pricePresenter;
     private $productPriceCalculator;
+    private $productColorsRetriever;
 
     public function __construct(
         Adapter_ImageRetriever $imageRetriever,
         Link $link,
-        Adapter_PricePresenter $pricePresenter
+        Adapter_PricePresenter $pricePresenter,
+        Adapter_ProductColorsRetriever $productColorsRetriever
     ) {
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
         $this->pricePresenter = $pricePresenter;
+        $this->productColorsRetriever = $productColorsRetriever;
     }
 
     private function shouldShowPrice(
@@ -123,6 +127,42 @@ class ProductPresenter
         );
     }
 
+    private function getProductURL(array $product, Language $language)
+    {
+        return $this->link->getProductLink(
+            $product['id_product'],
+            null, null, null,
+            $language->id,
+            null,
+            $product['id_product_attribute']
+        );
+    }
+
+    private function addMainVariantsInformation(
+        array $presentedProduct,
+        array $product,
+        Language $language
+    ) {
+        $colors = $this->productColorsRetriever->getColoredVariants($product['id_product']);
+
+        if (!is_array($colors)) {
+            return $presentedProduct;
+        }
+
+        $presentedProduct['main_variants'] = array_map(function (array $color) use ($language) {
+            $color['add_to_cart_url']   = $this->getAddToCartURL($color);
+            $color['url']               = $this->getProductURL($color, $language);
+            $color['type']              = 'color';
+            $color['html_color_code']   = $color['color'];
+            unset($color['color']);
+            unset($color['id_attribute']); // because what is a template supposed to do with it?
+
+            return $color;
+        }, $colors);
+
+        return $presentedProduct;
+    }
+
     public function present(
         ProductPresentationSettings $settings,
         array $product,
@@ -142,11 +182,7 @@ class ProductPresenter
             $language
         );
 
-        $presentedProduct['url'] = $this->link->getProductLink(
-            $product['id_product'],
-            $product['link_rewrite'], null, null,
-            $language->id
-        );
+        $presentedProduct['url'] = $this->getProductURL($product, $language);
 
         $presentedProduct = $this->addPriceInformation(
             $presentedProduct,
@@ -160,6 +196,12 @@ class ProductPresenter
         } else {
             $presentedProduct['add_to_cart_url'] = null;
         }
+
+        $presentedProduct = $this->addMainVariantsInformation(
+            $presentedProduct,
+            $product,
+            $language
+        );
 
         return $presentedProduct;
     }

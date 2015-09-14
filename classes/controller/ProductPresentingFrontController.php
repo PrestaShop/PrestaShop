@@ -24,7 +24,8 @@ abstract class ProductPresentingFrontControllerCore extends FrontController
         return new ProductPresenter(
             $imageRetriever,
             $this->context->link,
-            new Adapter_PricePresenter
+            new Adapter_PricePresenter,
+            new Adapter_ProductColorsRetriever
         );
     }
 }
