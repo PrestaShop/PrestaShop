@@ -17,6 +17,15 @@
   padding: 40px;
 }
 
+.header-banner {
+  text-align: center;
+  background-color: black;
+}
+
+.header-nav {
+  float: right;
+}
+
 /* headings */
 h1, .h1 {
   font-size: 2em;
