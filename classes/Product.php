@@ -1448,7 +1448,7 @@ class ProductCore extends ObjectModel
 
     public static function updateDefaultAttribute($id_product)
     {
-        $id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+        $id_default_attribute = (int)Product::getDefaultAttribute($id_product, 0, true);
 
         $result = Db::getInstance()->update('product_shop', array(
             'cache_default_attribute' => $id_default_attribute,
