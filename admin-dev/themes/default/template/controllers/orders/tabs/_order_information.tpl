@@ -12,7 +12,7 @@
                 <div class="tab-content panel">
                     {$HOOK_CONTENT_ORDER}
                     <!-- Tab documents -->
-                    <div class="tab-pane" id="documents">
+                    <div class="tab-panel" id="documents">
                         <h4 class="visible-print">{l s='Documents'} <span class="badge">({$order->getDocuments()|@count})</span></h4>
                         {* Include document template *}
                         {include file='controllers/orders/_documents.tpl'}
