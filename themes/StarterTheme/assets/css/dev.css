@@ -40,7 +40,7 @@ a.add-to-cart, a.add-to-cart:hover {
   color: black;
   border: 1px solid black;
   padding: 5px;
-  background-color: green;
+  background-color: rgba(0, 255, 0, 0.8);
   font-weight: bold;
 }
 
