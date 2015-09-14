@@ -205,16 +205,13 @@ abstract class AbstractRouter
             $requestContext
         );
 
-        // Add modules' routing files
+        // Add multiple routing files (prefixed or not)
         $this->aggregateRoutingExtensions($this->sfRouter);
 
         try {
             try {
                 // Resolve route
                 $parameters = $this->sfRouter->match($requestContext->getPathInfo());
-
-                // Add module info from matched route
-                $this->mapRouteToModule($parameters);
                 $request->attributes->add($parameters);
     
                 // Call Controller/Action
@@ -277,9 +274,6 @@ abstract class AbstractRouter
         try {
             // Resolve route
             $parameters = $this->sfRouter->match($path);
-
-            // Add module info from matched route
-            $this->mapRouteToModule($parameters);
             $oldRequest->attributes->add($parameters);
 
             // Call Controller/Action
@@ -310,9 +304,6 @@ abstract class AbstractRouter
         try {
             // Resolve route
             $parameters = $this->sfRouter->match($path);
-
-            // Add module info from matched route
-            $this->mapRouteToModule($parameters);
             $subRequest->attributes->add($parameters);
 
             // Override layout mode for subcall
@@ -420,7 +411,6 @@ abstract class AbstractRouter
         $cache = $this->getConfigCacheFactory()->cache(
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_setting_list.php',
             function (ConfigCacheInterface $cache) use (&$triggerCacheGenerationFlag) {
-                $moduleCoreConfigExists = (count(glob($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/')) > 0);
                 $routingFiles = $routingFilePaths = $routeIds = array();
 
                 // search for Core routes.yml files (base routes.yml is the first, then Core's others)
@@ -438,66 +428,9 @@ abstract class AbstractRouter
                     $routingFilePaths['/'][$prefix.$suffix] = $path;
                 }
 
-                // test if at least one module will brings a setup file before to include path into search.
-                if ($moduleCoreConfigExists) {
-                    $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
-                            ->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/');
-                    foreach ($routingFilesFinder as $file) {
-                        $path = $file->getRealpath();
-                        $matches = array();
-                        if (1 === preg_match('&'.$this->configuration->get('_PS_MODULE_DIR_').'([^/]+)/CoreConfig/'.$this->routingFilePattern.'$&i', $path, $matches) &&
-                            isset($matches[1])) {
-                            $prefix = '/'.$matches[1];
-                            $suffix = isset($matches[2]) ? $matches[2] : '';
-                            $routingFiles[] = '\''.addslashes($prefix.$suffix).'\' => \''.addslashes($path).'\'';
-                            $routingFilePaths[$matches[1]][$prefix.$suffix] = $path;
-                        }
-                    }
-                }
-
-                // search for controller override namespaces
-                $settingsFilesFinder = Finder::create()->files()->name('settings.yml')->sortByName()->followLinks();
-                if ($moduleCoreConfigExists) {
-                    $settingsFilesFinder->in($this->configuration->get('_PS_MODULE_DIR_').'*/CoreConfig/'); // first Modules (for override priority)
-                }
-                $settingsFilesFinder->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/'); // then default Core routes
-                $namespaces = array();
-
-                // Check for error cases and retrieve mapping module/route
-                foreach ($routingFilePaths as $module => $moduleFilePaths) {
-                    foreach ($moduleFilePaths as $prefix => $path) {
-                        $content = Yaml::parse(file_get_contents($path));
-                        $routes = array_keys($content);
-                        foreach ($routes as $route) {
-                            if (array_key_exists($route, $routeIds)) {
-                                throw new DevelopmentErrorException('A modules\' route identifier is duplicated. Route IDs must be Unique (module: '.$module.', route ID: '.$route.', prefix: '.$prefix.')');
-                            }
-                            $routeIds[$route] = '\''.addslashes($route).'\' => \''.addslashes($module).'\'';
-                        }
-                    }
-                }
-                foreach ($settingsFilesFinder as $file) {
-                    try {
-                        $settings = Yaml::parse(file_get_contents($file->getRealpath()));
-                        if (isset($settings['controllers']) && isset($settings['controllers']['override_namespace'])) {
-                            $namespace = $settings['controllers']['override_namespace'];
-                            $module = '/';
-                            $matches = array();
-                            if (1 === preg_match('&'.$this->configuration->get('_PS_MODULE_DIR_').'([^/]+)/CoreConfig/settings\\.yml$&i', $file, $matches) && isset($matches[1])) {
-                                $module = $matches[1];
-                            }
-                            $namespaces[] = '\''.addslashes($module).'\' => \''.addslashes($namespace).'\'';
-                        }
-                    } catch (\Exception $e) {
-                        throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
-                    }
-                }
-
                 // generate cache
                 $phpCode = '<'.'?php
 $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
-$this->controllerNamespaces = array('.implode(', ', $namespaces).');
-$this->moduleRouteMapping = array('.implode(', ', $routeIds).');
 '; // Raw php code inside a string, do not indent please.
                 $cache->write($phpCode);
                 $triggerCacheGenerationFlag = true;
@@ -505,12 +438,6 @@ $this->moduleRouteMapping = array('.implode(', ', $routeIds).');
         );
 
         include $cache->getPath();
-    }
-
-    final private function mapRouteToModule(array &$parameters)
-    {
-        $route = $parameters['_route'];
-        $parameters['_route_from_module'] = $this->moduleRouteMapping[$route] ?: null;
     }
 
     /**

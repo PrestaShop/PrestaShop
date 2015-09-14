@@ -157,48 +157,21 @@ abstract class Router extends AbstractRouter
     }
 
     /**
-     * Will scan modules to find an override of the Core controller.
-     * If not, use the Core controller (most of the cases).
-     * If more than one controller found, the conflict is rejected, and the default Core controller is used.
+     * Will find the finally used controller.
      * The result of this function is used to generate a cache.
+     *
+     * TODO: Support prefixed routes from modules.
+     * For now, only Core base controllers are looked for when route is from the Core (means no possible override by a module).
      *
      * @param string $controllerName
      * @throws DevelopmentErrorException If no default controller found in the Core. The routes YML file is incorrect.
-     * @throws ModuleRouterOverrideException IF more than one module want to override the same Controller.
-     * @return string The controller class name (with right namespace)
+     * @return string The controller class name (with right namespace) and the module name (or Core for '/') that responded.
      */
     final protected function getControllerClass($controllerName)
     {
-        $foundModules = array();
-        $foundOverrides = array();
-        foreach ($this->controllerNamespaces as $module => $namespace) {
-            $className = '\\'.$namespace.'\\'.$controllerName;
-            if (!class_exists($className)) {
-                continue;
-            }
-            $foundOverrides[] = $className;
-            $foundModules[] = $module;
-        }
-
-        // One override found, use it.
-        if (count($foundOverrides) === 1) {
-            return array($foundOverrides[0], $foundModules[0]);
-        }
-
-        // fallback on default Core controller (most of the time).
         $className = '\\PrestaShop\\PrestaShop\\Core\\Business\\Controller\\'.$controllerName;
         if (!class_exists($className)) {
             throw new DevelopmentErrorException('Default Controller is not found for: '.$className);
-        }
-
-        // More overrides found: problem! do not use it but Warn!
-        if (count($foundOverrides) > 1) {
-            throw new ModuleRouterOverrideException(
-                'More than one module want to override '.$controllerName.'. You must uninstall one of them: '.implode(', ', $foundModules),
-                $className,
-                array('Found modules: ' => $foundModules, 'Found overrides' => $foundOverrides),
-                1001
-            );
         }
 
         return array($className, '/');
