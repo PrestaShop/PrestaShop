@@ -144,6 +144,16 @@ ul.product-labels li {
   text-transform: capitalize;
 }
 
+.product-availability.available {
+  color: green;
+  font-weight: bold;
+}
+
+.product-availability.unavailable {
+  color: red;
+  font-weight: bold;
+}
+
 /* blocklanguages */
 
 .language-selector {
