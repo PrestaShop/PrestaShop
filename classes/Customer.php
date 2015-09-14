@@ -168,7 +168,7 @@ class CustomerCore extends ObjectModel
             'lastname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'firstname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
+            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
             'last_passwd_gen' =>            array('type' => self::TYPE_STRING, 'copy_post' => false),
             'id_gender' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'birthday' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isBirthDate'),
@@ -332,8 +332,9 @@ class CustomerCore extends ObjectModel
             $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
                 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
 
-            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_))
+            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
                 return false;
+            }
         }
 
         $result = Db::getInstance()->getRow('
@@ -349,17 +350,16 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-
-        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
-            $this->update();
-        }
-
         $this->id = $result['id_customer'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
+        }
+
+        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
+            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+            $this->update();
         }
 
         return $this;
@@ -798,8 +798,7 @@ class CustomerCore extends ObjectModel
         $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
-        if ($this->update())
-        {
+        if ($this->update()) {
             $vars = array(
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
@@ -924,8 +923,9 @@ class CustomerCore extends ObjectModel
         $errors = parent::validateController($htmlentities);
         $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
 
-        if ($value = Tools::getValue('passwd'))
+        if ($value = Tools::getValue('passwd')) {
             $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);
+        }
 
         return $errors;
     }
