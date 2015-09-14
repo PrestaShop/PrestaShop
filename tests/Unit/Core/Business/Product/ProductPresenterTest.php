@@ -13,6 +13,7 @@ use Link;
 use Context;
 use Adapter_ProductPriceCalculator;
 use Adapter_PricePresenter;
+use Adapter_Translator;
 
 class PricePresenter extends Adapter_PricePresenter
 {
@@ -52,17 +53,26 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['customizable'] = false;
         $this->product['quantity'] = 0;
         $this->product['allow_oosp'] = false;
+        $this->product['online_only'] = false;
+        $this->product['reduction'] = false;
+        $this->product['on_sale'] = false;
+        $this->product['new'] = false;
         $this->language = new Language;
     }
 
     private function _presentProduct($method, $field)
     {
+        $translator = Phake::mock('Adapter_Translator');
+        Phake::when($translator)->l(Phake::anyParameters())->thenReturn('some label');
+
         $presenter = new ProductPresenter(
             Phake::mock('Adapter_ImageRetriever'),
             Phake::mock('Link'),
             new PricePresenter,
-            Phake::mock('Adapter_ProductColorsRetriever')
+            Phake::mock('Adapter_ProductColorsRetriever'),
+            $translator
         );
+
         $product = $presenter->$method(
             $this->settings,
             $this->product,
@@ -144,6 +154,65 @@ class ProductPresenterTest extends UnitTestCase
         $this->assertNotEquals(
             'yay',
             $this->getPresentedProductForListing('add_to_cart_url')
+        );
+    }
+
+    public function test_product_has_online_only_label_if_it_is_online_only()
+    {
+        $this->product['online_only'] = true;
+        $this->assertEquals(
+            ['online_only' => [
+                'type'  => 'online_only',
+                'label' => 'some label'
+            ]],
+            $this->getPresentedProduct('labels')
+        );
+    }
+
+    public function test_product_has_discount_label_if_it_has_a_discount()
+    {
+        $this->product['reduction'] = true;
+        $this->assertEquals(
+            ['discount' => [
+                'type'  => 'discount',
+                'label' => 'some label'
+            ]],
+            $this->getPresentedProduct('labels')
+        );
+    }
+
+    public function test_product_has_only_on_sale_label_if_it_has_a_discount_and_is_on_sale()
+    {
+        $this->product['reduction'] = true;
+        $this->product['on_sale'] = true;
+        $this->assertEquals(
+            ['on_sale' => [
+                'type'  => 'on_sale',
+                'label' => 'some label'
+            ]],
+            $this->getPresentedProduct('labels')
+        );
+    }
+
+    public function test_product_has_new_label_if_it_is_new()
+    {
+        $this->product['new'] = true;
+        $this->assertEquals(
+            ['new' => [
+                'type'  => 'new',
+                'label' => 'some label'
+            ]],
+            $this->getPresentedProduct('labels')
+        );
+    }
+
+    public function test_product_has_no_labels_if_not_available_for_order()
+    {
+        $this->product['online_only'] = true;
+        $this->product['available_for_order'] = false;
+        $this->assertEquals(
+            [],
+            $this->getPresentedProduct('labels')
         );
     }
 }
