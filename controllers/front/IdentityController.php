@@ -108,9 +108,11 @@ class IdentityControllerCore extends FrontController
                     $this->context->cookie->customer_lastname = $this->customer->lastname;
                     $this->context->cookie->customer_firstname = $this->customer->firstname;
                     $this->context->smarty->assign('confirmation', 1);
+
                     Hook::exec('actionCustomerAccountUpdate', array(
-                            'customer' => $this->customer
-                        ));
+                        'customer' => $this->customer
+                    ));
+
                 } else {
                     $this->errors[] = Tools::displayError('The information cannot be updated.');
                 }
@@ -135,36 +137,46 @@ class IdentityControllerCore extends FrontController
             $birthday = array('-', '-', '-');
         }
 
-        /* Generate years, months and days */
+        $genders = [];
+        $collec = Gender::getGenders();
+        foreach ($collec as $g) {
+            $genders[] = $this->objectSerializer->toArray($g);
+        }
+
+        $months = [
+            1 => $this->l('January'),
+            2 => $this->l('February'),
+            3 => $this->l('March'),
+            4 => $this->l('April'),
+            5 => $this->l('May'),
+            6 => $this->l('June'),
+            7 => $this->l('July'),
+            8 => $this->l('August'),
+            9 => $this->l('September'),
+            10 => $this->l('October'),
+            11=> $this->l('November'),
+            12 => $this->l('December'),
+        ];
+
         $this->context->smarty->assign(array(
-                'years' => Tools::dateYears(),
-                'sl_year' => $birthday[0],
-                'months' => Tools::dateMonths(),
-                'sl_month' => $birthday[1],
-                'days' => Tools::dateDays(),
-                'sl_day' => $birthday[2],
                 'errors' => $this->errors,
-                'genders' => Gender::getGenders(),
+                'genders' => $genders,
+                'birthday_dates' => [
+                    'years' => Tools::dateYears(),
+                    'sl_year' => $birthday[0],
+                    'months' => $months,
+                    'sl_month' => $birthday[1],
+                    'days' => Tools::dateDays(),
+                    'sl_day' => $birthday[2],
+                ],
+                'feature_active' => [
+                    'b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
+                    'optin' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+                    'newsletter' => Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active),
+                ],
+                'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             ));
 
-        // Call a hook to display more information
-        $this->context->smarty->assign(array(
-            'HOOK_CUSTOMER_IDENTITY_FORM' => Hook::exec('displayCustomerIdentityForm'),
-        ));
-
-        $newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
-        $this->context->smarty->assign('newsletter', $newsletter);
-        $this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
-
-        $this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
-
-        $this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
-    }
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'identity.css');
-        $this->addJS(_PS_JS_DIR_.'validate.js');
+        $this->setTemplate('customer/identity.tpl');
     }
 }
