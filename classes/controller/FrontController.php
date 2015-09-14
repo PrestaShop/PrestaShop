@@ -1473,6 +1473,21 @@ class FrontControllerCore extends Controller
                 $urls[$assign_key] = $assign_value;
             }
         }
+
+        $pages = [];
+        $p = [
+            'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+            'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
+            'order-confirmation', 'order-detail', 'order-follow', 'order-opc', 'order-return',
+            'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+            'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier'
+        ];
+        foreach ($p as $page_name) {
+            $index = str_replace('-', '_', $page_name);
+            $pages[$index] = $this->context->link->getPageLink($page_name, true);
+        }
+        $urls['pages'] = $pages;
+
         return $urls;
     }
 
