@@ -31,12 +31,6 @@ class MyAccountControllerCore extends FrontController
     public $authRedirection = 'my-account';
     public $ssl = true;
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'my-account.css');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
