@@ -132,6 +132,21 @@ a.add-to-cart, a.add-to-cart:hover {
   border: 2px solid #d6d4d4
 }
 
+ul.product-labels {
+  margin: 0;
+  padding: 0;
+}
+
+ul.product-labels li {
+  list-style: none;
+  display: inline-block;
+  margin: 5px;
+  padding: 5px;
+  color: #333;
+  border: 1px solid #333;
+  text-transform: capitalize;
+}
+
 /* blocklanguages */
 
 .language-selector {
