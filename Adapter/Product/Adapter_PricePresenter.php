@@ -1,8 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
-
-class Adapter_PricePresenter implements PricePresenterInterface
+class Adapter_PricePresenter
 {
     public function convertAmount($price)
     {
