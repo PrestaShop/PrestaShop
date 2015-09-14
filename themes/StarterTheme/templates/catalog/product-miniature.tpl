@@ -10,6 +10,7 @@
         data-id-product-attribute="{$product.id_product_attribute}"
       >{l s='Add to cart'}</a>
   {/if}
+  {include './_partials/variant-links.tpl' variants=$product.main_variants}
   <div class="price-container">
     {if $product.has_discount}
       <span class="regular-price">{$product.regular_price}</span>

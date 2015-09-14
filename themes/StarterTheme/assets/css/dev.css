@@ -117,6 +117,21 @@ a.add-to-cart, a.add-to-cart:hover {
   font-weight: bold;
 }
 
+.variant-links a, .variant-links a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.variant-links a.color {
+  display: inline-block;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d6d4d4
+}
+
 /* blocklanguages */
 
 .language-selector {
