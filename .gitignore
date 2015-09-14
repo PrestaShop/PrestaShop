@@ -56,6 +56,7 @@ themes/default-bootstrap/mails/*
 !themes/default-bootstrap/mails/en/
 themes/default-bootstrap/modules/*/mails/*
 !themes/default-bootstrap/modules/*/mails/en
+themes/StarterTheme/
 
 # MISC
 
