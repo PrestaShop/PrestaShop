@@ -145,7 +145,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $total_cart_rule = 0;
         if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
-            foreach($cart_rules as $cart_rule) {
+            foreach ($cart_rules as $cart_rule) {
                 if ($tax_excluded_display) {
                     $total_cart_rule += $cart_rule['value_tax_excl'];
                 } else {
