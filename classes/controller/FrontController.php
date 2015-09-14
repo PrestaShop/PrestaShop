@@ -1514,6 +1514,12 @@ class FrontControllerCore extends Controller
         $cust['risk'] = $this->objectSerializer->toArray(new Risk($cust['id_risk']));
         unset($cust['id_risk']);
 
+        $addresses = $this->context->customer->getSimpleAddresses();
+        foreach ($addresses as &$a) {
+            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br />');
+        }
+        $cust['addresses'] = $addresses;
+
         return $cust;
     }
 
