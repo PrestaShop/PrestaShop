@@ -60,7 +60,8 @@ class ProductPresenterTest extends UnitTestCase
         $presenter = new ProductPresenter(
             Phake::mock('Adapter_ImageRetriever'),
             Phake::mock('Link'),
-            new PricePresenter
+            new PricePresenter,
+            Phake::mock('Adapter_ProductColorsRetriever')
         );
         $product = $presenter->$method(
             $this->settings,
