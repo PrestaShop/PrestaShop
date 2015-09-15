@@ -859,7 +859,7 @@ class FrontControllerCore extends Controller
             'static_token'          => Tools::getToken(false),
             'token'                 => Tools::getToken(),
             'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
-            'content_only'          => (int)Tools::getValue('content_only'),
+            'content_only'          => (int)Tools::getValue('content_only')
         ));
     }
 
@@ -1484,6 +1484,8 @@ class FrontControllerCore extends Controller
             $pages[$index] = $this->context->link->getPageLink($page_name, true);
         }
         $urls['pages'] = $pages;
+
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
 
         return $urls;
     }
