@@ -154,8 +154,39 @@ ul.product-labels li {
   font-weight: bold;
 }
 
+.products-sort-by a, .products-sort-by a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.products-sort-by ul {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.products-sort-by li {
+  list-style: none;
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .product-description-short {
   text-align: left;
+}
+
+.products-sort-by li.current {
+  font-weight: bold;
+}
+
+.products-sort-by a:hover {
+  font-style: italic;
+}
+
+.products-sort-by li.current a:hover {
+  font-style: inherit;
+  cursor: default;
 }
 
 /* blocklanguages */
