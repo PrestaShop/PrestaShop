@@ -160,7 +160,7 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
 
         // Product sort must be called before assignProductList()
         $this->productSort();
-
+        $this->assignSortOptions();
         $this->assignScenes();
         $this->assignSubcategories();
         $this->assignProductList();
@@ -188,6 +188,51 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
             'comparator_max_item'  => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
             'body_classes'         => array($this->php_self.'-'.$this->category->id, $this->php_self.'-'.$this->category->link_rewrite)
         ));
+    }
+
+    protected function getSortOptions()
+    {
+        $settings = $this->getProductPresentationSettings();
+
+        if ($settings->catalog_mode) {
+            $options = [];
+        } else {
+            $options = [
+                ['orderBy' => 'price', 'sortOrder' => 'asc', 'label' => $this->l('Increasing price')],
+                ['orderBy' => 'price', 'sortOrder' => 'desc', 'label' => $this->l('Decreasing price')],
+            ];
+        }
+
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'asc', 'label' => $this->l('Product name, A to Z')];
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'desc', 'label' => $this->l('Product name, 2 to A')];
+
+        if (!$settings->catalog_mode && $settings->stock_management_enabled) {
+            $options[] = ['orderBy' => 'quantity', 'sortOrder' => 'desc', 'label' => $this->l('In stock')];
+        }
+
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'asc', 'label' => $this->l('Product reference, A to Z')];
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'desc', 'label' => $this->l('Product reference, 2 to A')];
+
+        $pageURL = $this->context->link->getCategoryLink(
+            $this->category,
+            $this->category->link_rewrite,
+            $this->context->language->id
+        );
+
+        $options = array_map(function ($option) use ($pageURL) {
+            $option['url'] = $pageURL . '?orderby=' . $option['orderBy'] . '&orderway=' . $option['sortOrder'];
+            $option['current'] = ($option['orderBy'] === Tools::getValue('orderby')) &&
+                                 ($option['sortOrder'] === Tools::getValue('orderway'))
+            ;
+            return $option;
+        }, $options);
+
+        return $options;
+    }
+
+    public function assignSortOptions()
+    {
+        $this->context->smarty->assign('sort_options', $this->getSortOptions());
     }
 
     /**
