@@ -383,8 +383,9 @@ function accordionFooter(status)
 {
 	if(status == 'enable')
 	{
-		$('#footer .footer-block h4').on('click', function(){
+		$('#footer .footer-block h4').on('click', function(e){
 			$(this).toggleClass('active').parent().find('.toggle-footer').stop().slideToggle('medium');
+			e.preventDefault();
 		})
 		$('#footer').addClass('accordion').find('.toggle-footer').slideUp('fast');
 	}
