@@ -136,6 +136,32 @@
     {%- endif %}
 {%- endblock radio_widget %}
 
+{% block choice_tree_widget -%}
+    <div {{ block('widget_container_attributes') }}>
+        <ul {{ block('widget_container_attributes') }}>
+        {%- for child in choices %}
+            {{ block('choice_tree_item_widget') }}
+        {% endfor -%}
+        </ul>
+    </div>
+{%- endblock choice_tree_widget %}
+
+{% block choice_tree_item_widget -%}
+    <li>
+        <div class="checkbox">
+            <label><input type="checkbox" name="form[categorys][tree][]" value="{{ child.id_category }}">{{ child.name }}</label>
+        </div>
+        {% if child.children %}
+            <ul>
+                {% for item in child.children %}
+                    {% set child = item %}
+                    {{ block('choice_tree_item_widget') }}
+                {% endfor -%}
+            </ul>
+        {% endif %}
+    </li>
+{%- endblock choice_tree_item_widget %}
+
 {# Labels #}
 
 {% block form_label -%}

@@ -1,6 +1,7 @@
 <div class="panel">
     <div class="panel-heading">Ajouter un produit</div>
     {{ form_start(form) }}
+    {{ form_errors(form) }}
     {{ form_widget(form) }}
     <input type="submit" />
     {{ form_end(form) }}

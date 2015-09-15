@@ -32,12 +32,12 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 
 class ProductController extends AdminController
 {
