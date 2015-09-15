@@ -1216,7 +1216,7 @@ class OrderCore extends ObjectModel
     public function setInvoice($use_existing_payment = false)
     {
         if (!$this->hasInvoice()) {
-            if ($id = (int)$this->hasDelivery()) {
+            if ($id = (int)$this->getOrderInvoiceIdIfHasDelivery()) {
                 $order_invoice = new OrderInvoice($id);
             } else {
                 $order_invoice = new OrderInvoice();
@@ -2046,11 +2046,21 @@ class OrderCore extends ObjectModel
      */
     public function hasDelivery()
     {
-        return (bool)Db::getInstance()->getValue('
-			SELECT `id_order_invoice`
-			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE `id_order` =  '.(int)$this->id.'
-			AND `delivery_number` > 0'
+        return (bool)$this->getOrderInvoiceIdIfHasDelivery();
+    }
+
+    /**
+     * Get order invoice id if has delivery return id_order_invoice if this order has already a delivery slip
+     *
+     * @return int
+     */
+    public function getOrderInvoiceIdIfHasDelivery()
+    {
+        return (int)Db::getInstance()->getValue('
+            SELECT `id_order_invoice`
+            FROM `'._DB_PREFIX_.'order_invoice`
+            WHERE `id_order` =  '.(int)$this->id.'
+            AND `delivery_number` > 0'
         );
     }
 
@@ -2228,7 +2238,7 @@ class OrderCore extends ObjectModel
         return true;
     }
 
-    
+
     /**
      * By default this function was made for invoice, to compute tax amounts and balance delta (because of computation made on round values).
      * If you provide $limitToOrderDetails, only these item will be taken into account. This option is usefull for order slip for example,
