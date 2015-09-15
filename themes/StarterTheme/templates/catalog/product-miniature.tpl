@@ -4,6 +4,10 @@
 
   <h1 class="h2" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
 
+  {block name="product_description_short"}
+    <div class="product-description-short" itemprop="description">{$product.description_short}</div>
+  {/block}
+
   {if $product.add_to_cart_url}
       <a
         class = "add-to-cart"
