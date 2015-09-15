@@ -106,6 +106,11 @@ class Response extends sfResponse
     protected $headerToolbarBtn = array();
 
     /**
+     * @var array
+     */
+    protected $js = array();
+
+    /**
      * Set data before formatting.
      *
      * @param mixed $data
@@ -326,5 +331,25 @@ class Response extends sfResponse
     public function getDisplayType()
     {
         return $this->displayType;
+    }
+
+    /**
+     * Set js
+     *
+     * @param array $js
+     */
+    public function setJs($js)
+    {
+        $this->js = $js;
+    }
+
+    /**
+     * Get $js
+     *
+     * @return array
+     */
+    public function getJs()
+    {
+        return $this->js;
     }
 }

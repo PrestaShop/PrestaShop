@@ -76,7 +76,7 @@ class AdminController extends BaseController
         }
 
         //GET LAYOUT FROM ORIGINAL CONTROLLER REQUESTED
-        $originCtrl = new \AdminLegacyLayoutControllerCore($response->getLegacyControllerName(), $response->getTitle(), $response->getHeaderToolbarBtn(), $response->getDisplayType());
+        $originCtrl = new \AdminLegacyLayoutControllerCore($response->getLegacyControllerName(), $response->getTitle(), $response->getHeaderToolbarBtn(), $response->getDisplayType(), $response->getJs());
         $originCtrl->run();
 
         $link = new \Link();
