@@ -152,7 +152,7 @@ class OrderInvoiceCore extends ObjectModel
 		ON p.id_product = od.product_id
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)$this->id_order.'
-		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : ''));
+		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : '').' ORDER BY od.`product_name`');
     }
 
     public static function getInvoiceByNumber($id_invoice)
