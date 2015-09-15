@@ -39,18 +39,21 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
 {
     private $response;
 
-    public function setResponse($response)
+    public function setResponse(&$response)
     {
         $this->response =& $response;
         $this->addInjection($this->response);
     }
 
-    private $router;
+    /**
+     * @var \Core_Foundation_IoC_Container
+     */
+    private $container;
 
-    public function setRouter(AbstractRouter &$router)
+    public function setContainer(\Core_Foundation_IoC_Container &$container)
     {
-        $this->router =& $router;
-        $this->addInjection($this->router);
+        $this->container =& $container;
+        $this->addInjection($this->container);
     }
 
     private $additionalInjections = array();
@@ -60,13 +63,24 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         $this->additionalInjections[] =& $objectInstance;
     }
 
-    private function checkAdditionalInjections($paramClass)
+    private function checkAdditionalInjections(\ReflectionClass $paramClass)
     {
+        $names = explode('\\', $paramClass->name);
+        $names = array('\\'.$paramClass->name, $paramClass->name, $names[count($names)-1]);
+        // search for Service instance in container
+        foreach ($names as $name) {
+            if ($this->container->knows($name)) {
+                return $this->container->make($name);
+            }
+        }
+
+        // then search for additional injections
         foreach ($this->additionalInjections as $injection) {
             if ($paramClass->isInstance($injection)) {
                 return $injection;
             }
         }
+
         return false; // Not found
     }
 
@@ -75,6 +89,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         $attributes = $request->attributes->all();
         $contentData = $this->response->getContentData();
         $arguments = array();
+        $injection = array();
         foreach ($parameters as $param) {
             if (array_key_exists($param->name, $attributes)) {
                 $arguments[] = $attributes[$param->name];
@@ -86,8 +101,8 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
                 $arguments[] = $contentData[ucfirst($param->name)];
             } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
                 $arguments[] = &$request; // by ref
-            } elseif ($param->getClass() && ($injection = $this->checkAdditionalInjections($param->getClass()))) {
-                $arguments[] = &$injection; // by ref
+            } elseif ($param->getClass() && ($injection[] = $this->checkAdditionalInjections($param->getClass()))) {
+                $arguments[] = &$injection[count($injection)-1]; // by ref
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
             } else {
@@ -102,7 +117,6 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
                 throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
             }
         }
-
         return $arguments;
     }
 
@@ -114,7 +128,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     protected function instantiateController($class)
     {
-        $container = $this->router->getContainer();
-        return new $class($this->router, $container);
+        $router = $this->container->make('Router');
+        return new $class($router, $this->container);
     }
 }

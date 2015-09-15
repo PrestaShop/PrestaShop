@@ -53,8 +53,7 @@ class RoutingExtension extends \Twig_Extension
 
     public function getLegacyUrl($name, array $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
-        $context = Context::getInstance();
-        return $context->getRouter()->generateUrl($name, $parameters, true, $referenceType);
+        return $this->router->generateUrl($name, $parameters, true, $referenceType);
     }
 
     public function getName()

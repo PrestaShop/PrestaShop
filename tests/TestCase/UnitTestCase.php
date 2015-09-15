@@ -26,9 +26,14 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     public $entity_mapper;
 
     /**
-     * @var Context
+     * @var \Context The legacy Context
      */
     public $context;
+
+    /**
+     * @var Context The new Architecture Context
+     */
+    public $newContext;
 
     /**
      * @var Db
@@ -57,17 +62,23 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
         $this->container->bind('Adapter_EntityMapper', $this->entity_mapper);
 
+        // Old legacy context
         $this->context = Phake::mock('Context');
-
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
-
         $this->context->shop = Phake::mock('Shop');
         $this->context->link = Phake::mock('Link');
         $this->context->language = Phake::mock('Language');
         Context::setInstanceForTesting($this->context);
 
+        // Cache mock
         $this->cache = Phake::mock('Cache');
         Cache::setInstanceForTesting($this->cache);
+
+        $this->newContext = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Business\\Context');
+        Phake::when($this->newContext)->cloneContext()->thenReturn($this->newContext);
+        $newContextMapper = $this->container->make('Adapter_LegacyContext');
+        $newContextMapper->mergeContextWithLegacy($this->newContext);
+        $this->container->bind('Context', $this->newContext);
     }
 
     public function setConfiguration(array $keys)

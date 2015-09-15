@@ -58,7 +58,7 @@ trait AdminAuthenticationTrait
     public function closeActionCheckAuthenticated(Request &$request, Response &$response)
     {
         $authManager = $this->container->make('Adapter_AuthenticationManager');
-        AdminRouter::getInstance()->setForbiddenRedirection($authManager->getAdminLoginUrl());
+        $this->router->setForbiddenRedirection($authManager->getAdminLoginUrl());
         return true;
     }
     

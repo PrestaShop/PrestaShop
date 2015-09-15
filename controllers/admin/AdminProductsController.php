@@ -2689,9 +2689,10 @@ class AdminProductsControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $redirectLegacy = true;
+            global $container;
             // FIXME: en fonction d'une option, a aller chercher
             $this->page_header_toolbar_btn['new_product'] = array(
-                    'href' => AdminRouter::getInstance()->generateUrl('admin_product_form', array('id_product' => 'new'), $redirectLegacy),
+                    'href' => $container->make('Router')->generateUrl('admin_product_form', array('id_product' => 'new'), $redirectLegacy),
                     'desc' => $this->l('Add new product', null, null, false),
                     'icon' => 'process-icon-new'
                 );

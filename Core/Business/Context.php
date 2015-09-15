@@ -30,33 +30,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Context extends ParameterBag
 {
     /**
-     * @var Context
-     */
-    private static $instance = null;
-
-    /**
-     * @var \Core_Foundation_IoC_Container
-     */
-    private static $container = null;
-
-    /**
-     * Get current instance of filled context (singleton)
-     *
-     * @param \Core_Foundation_IoC_Container $container The service container
-     * @return Context
-     */
-    final public static function getInstance(\Core_Foundation_IoC_Container &$container = null)
-    {
-        if (!self::$instance) {
-            if ($container != null) {
-                self::$container = $container;
-            }
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    /**
      * Construct Core Context. This will contains data from old legacy context, and new data structure from new Core architecture.
      *
      * Initial behavior:
@@ -67,13 +40,14 @@ class Context extends ParameterBag
      * - add overrides on last step when a legacy data is transferred in the new Core
      * Final behavior:
      * - suppress 'override with legacy context' step.
+     *
+     * @param \Adapter_LegacyContext $legacyContext Given by IoC
      */
-    final public function __construct()
+    final public function __construct(\Adapter_LegacyContext $legacyContext)
     {
         // TODO : default values now.
 
         // While Legacy architecture is here, retrieve some data from it.
-        $legacyContext = self::$container->make('Adapter_LegacyContext');
         $legacyContext->mergeContextWithLegacy($this);
 
         // TODO : override legacy values now.

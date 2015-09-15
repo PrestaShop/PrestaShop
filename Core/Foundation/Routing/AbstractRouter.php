@@ -67,7 +67,7 @@ abstract class AbstractRouter
     /**
      * @var \Core_Foundation_IoC_Container
      */
-    protected static $container = null;
+    protected $container;
 
     /**
      * @var \Core_Business_ConfigurationInterface
@@ -127,9 +127,9 @@ abstract class AbstractRouter
      *
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    public function __construct($routingFilePattern)
+    protected function __construct($routingFilePattern)
     {
-        $this->configuration = self::$container->make('Core_Business_ConfigurationInterface');
+        $this->configuration = $this->container->make('Core_Business_ConfigurationInterface');
         $this->cacheFileName = explode('\\', get_class($this));
         $this->cacheFileName = $this->cacheFileName[count($this->cacheFileName)-1];
 
@@ -449,7 +449,8 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      */
     final public function getContainer()
     {
-        return self::$container;
+        // FIXME : encore necessaire ?
+        return $this->container;
     }
 
     /**
@@ -523,7 +524,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
             // Well, in this case we just have to display $lastException
             if ($messages == '') {
                 if ($viewEngine == null) {
-                    $viewEngine = new ViewFactory('smarty');
+                    $viewEngine = new ViewFactory($this->container->make('Context'), 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
                     'exceptions' => array($lastException),

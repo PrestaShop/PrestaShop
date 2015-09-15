@@ -59,7 +59,7 @@ class FrontController extends BaseController
      */
     protected function formatHtmlResponse(Response &$response)
     {
-        $templateEngineCallable = $response->getTemplateEngine();
+        $templateEngineCallable = $response->getTemplateEngine($this->container->make('Context'));
         if (is_callable($templateEngineCallable)) {
             $response->setContent($templateEngineCallable($response->getContentData()));
         } else {

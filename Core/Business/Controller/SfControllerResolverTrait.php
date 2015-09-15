@@ -46,14 +46,13 @@ trait SfControllerResolverTrait
      * @param Response $response
      * @return \Closure The controller resolver closure to be executed by the Router.
      */
-    public function controllerResolverSymfony(Request &$request, Response &$response, AbstractRouter &$router = null)
+    public function controllerResolverSymfony(Request &$request, Response &$response)
     {
-        return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$router) {
+        $container =& $this->container;
+        return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$container) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
-            $resolver->setRouter($router); // inject router for Controller instantiation.
+            $resolver->setContainer($container); // inject router for Controller instantiation.
             $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
-            $context = Context::getInstance();
-            $resolver->addInjection($context);
             $callable = $resolver->getController($request);
             $arguments = $resolver->getArguments($request, $callable);
             return $controllerMethod->invokeArgs($controllerInstance, $arguments);

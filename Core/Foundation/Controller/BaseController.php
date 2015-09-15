@@ -50,7 +50,7 @@ abstract class BaseController
     /**
      * @var AbstractRouter
      */
-    private $router;
+    protected $router;
 
     
     /**

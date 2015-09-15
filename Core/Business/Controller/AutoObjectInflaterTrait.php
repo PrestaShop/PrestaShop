@@ -117,12 +117,12 @@ trait AutoObjectInflaterTrait
             $collectionParameters[$subKeys[1]][$subKeys[2]] = $value;
         }
 
+        $autoInflaterManager = $this->container->make('Adapter_AutoInflaterManager');
         foreach ($collectionParameters as $key => $parameters) {
             try {
                 $method = $parameters['method'];
                 $class = $parameters['class'];
 
-                $autoInflaterManager = new \Adapter_AutoInflaterManager();
                 $collection = $autoInflaterManager->inflateCollection($class, $method, $parameters);
 
                 if ($collection === false) {

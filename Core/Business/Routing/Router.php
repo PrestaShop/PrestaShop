@@ -69,20 +69,18 @@ abstract class Router extends AbstractRouter
     /**
      * Instanciate a Router with a set of routes YML files.
      *
+     * @param \Core_Foundation_IoC_Container $container The application Container instance
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    final public function __construct($routingFilePattern)
+    protected function __construct(\Core_Foundation_IoC_Container &$container, $routingFilePattern)
     {
         try {
-            // Push container instance inside Context singleton
-            $context = Context::getInstance(self::$container);
-            // Push itself into Context
-            $context->set('routerInstance', $this);
-            
+            $this->container =& $container;
             parent::__construct($routingFilePattern);
+            $this->container->bind('Router', $this, true);
     
             // EventDispatcher init
-            BaseEventDispatcher::initBaseDispatchers(self::$container);
+            BaseEventDispatcher::initBaseDispatchers($this->container);
             $this->routingDispatcher = EventDispatcher::getInstance('routing');
             if ($this->triggerCacheGenerationFlag) {
                 $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
@@ -258,7 +256,7 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
-        $container = self::$container;
+        $container =& $this->container; // to pass it throught callback 'use' statement
         $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'_subcall':'').($pinResponse?'_pinned':'');
         $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
@@ -310,7 +308,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                     $phpCode .= '
 
     if ($actionAllowed) {
-        $controllerResolver = $controllerInstance->'.$controllerResolverTrait.'($request, $response, $router);
+        $controllerResolver = $controllerInstance->'.$controllerResolverTrait.'($request, $response);
         if ($controllerResolver) {
             $responseFormat = $controllerResolver($controllerInstance, $method);
             if ($responseFormat) {
@@ -370,7 +368,6 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
     }
 
     if (!$actionAllowed) {
-        $router = '.get_class($this).'::getInstance();
         $router->redirectToForbidden();
     }
     return true;

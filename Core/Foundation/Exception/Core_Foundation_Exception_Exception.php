@@ -41,8 +41,12 @@ class Core_Foundation_Exception_Exception extends Exception
         $this->deactivateModule();
     }
     
-    public function __toStringHtml()
+    public function __toString()
     {
+        if (!func_num_args() || func_get_arg(0) == false) {
+            return parent::__toString();
+        }
+
         $data =  '<b>'.$this->message.'</b><br/>';
         if ($afterMessageContent = $this->getAfterMessageContent()) {
             $data .= '<i>Alternative used data given: "'.(string)$afterMessageContent.'"</i><br/>';

@@ -47,24 +47,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class AdminRouter extends Router
 {
     /**
-     * @var AdminRouter
-     */
-    private static $instance = null;
-
-    /**
-     * Get current instance of router (singleton)
+     * Constructor. Instantiated from index.php files only.
      *
-     * @return AdminRouter
+     * @param \Core_Foundation_IoC_Container $container The Service Container
      */
-    final public static function getInstance(\Core_Foundation_IoC_Container &$container = null)
+    final public function __construct(\Core_Foundation_IoC_Container &$container = null)
     {
-        if (!self::$instance) {
-            if ($container != null) {
-                self::$container = $container;
-            }
-            self::$instance = new self('admin_routes(_(.*))?\.yml');
-        }
-        return self::$instance;
+        parent::__construct($container, 'admin_routes(_(.*))?\.yml');
     }
 
     final protected function checkControllerAuthority(\ReflectionClass $class)
@@ -102,10 +91,10 @@ class AdminRouter extends Router
             ($defaultParams = $routeParams->getDefaults()) &&
             ($forceLegacyUrl == true || (isset($defaultParams['_legacy_force']) && $defaultParams['_legacy_force'] === true)) &&
             isset($defaultParams['_legacy_path']) &&
-            ($link = Context::getInstance()->link)) { // For legacy case!
+            ($link = $this->container->make('Context')->link)) { // For legacy case!
             $legacyPath = $defaultParams['_legacy_path'];
 
-            $legacyContext = self::$container->make('Adapter_LegacyContext');
+            $legacyContext = $this->container->make('Adapter_LegacyContext');
             $basePath = $legacyContext->getAdminBaseUrl();
 
             if ($routeParams->hasOption('legacy_param_mapper_class') && $routeParams->hasOption('legacy_param_mapper_method')) {

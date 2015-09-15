@@ -102,7 +102,7 @@ class AdminController extends BaseController
      */
     protected function formatHtmlResponse(Response &$response)
     {
-        $templateEngine = $response->getTemplateEngine();
+        $templateEngine = $response->getTemplateEngine($this->container->make('Context'));
         $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
     }
     

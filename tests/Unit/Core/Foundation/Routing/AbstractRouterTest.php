@@ -43,8 +43,9 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     public $calledControllerMethod;
     public $calledWithResquest;
 
-    public function __construct($routingFilePattern, $conf)
+    public function __construct($container, $routingFilePattern, $conf)
     {
+        $this->container = $container;
         parent::__construct($routingFilePattern);
         // EventDispatcher init
         BaseEventDispatcher::initDispatchers(
@@ -104,7 +105,7 @@ class AbstractRouterTest extends UnitTestCase
     {
         $conf = $this->setup_env();
 
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
+        $router = new FakeAbstractRouterNotAbstract($this->container, 'fake_test_routes(_(.*))?\.yml', $conf);
         $routingFiles = $this->getObjectAttribute($router, 'routingFiles');
         $this->assertCount(1, $routingFiles, 'One configuration file should be scaned.');
         $this->assertArrayHasKey('/', $routingFiles);
@@ -113,7 +114,7 @@ class AbstractRouterTest extends UnitTestCase
     public function test_router_resolution()
     {
         $conf = $this->setup_env();
-        $router = new FakeAbstractRouterNotAbstract('fake_test_routes(_(.*))?\.yml', $conf);
+        $router = new FakeAbstractRouterNotAbstract($this->container, 'fake_test_routes(_(.*))?\.yml', $conf);
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/a');

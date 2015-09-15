@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 class FakeRouter extends Router
 {
@@ -44,8 +45,7 @@ class FakeRouter extends Router
     final public static function getInstance(\Core_Foundation_IoC_Container $container)
     {
         if (!self::$instance) {
-            self::$container = $container;
-            self::$instance = new self('fake_test_routes(_(.*))?\.yml');
+            self::$instance = new self($container, 'fake_test_routes(_(.*))?\.yml');
         }
         return self::$instance;
     }

@@ -57,7 +57,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 
 // Prepare and trigger admin dispatcher
 // $container is set by config/bootstrap.php included from config/config.inc.php.
-if (!PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter::getInstance($container)->dispatch(true)) {
+if (!(new PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter($container))->dispatch(true)) {
     // else, use legacy Dispatcher
     Dispatcher::getInstance()->dispatch();
 }

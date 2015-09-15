@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use Symfony\Component\HttpFoundation\Response as sfResponse;
 use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 /**
  * This is an extension of Symfony's Response class, to add $contentData, and template engine callback attributes.
@@ -188,12 +189,13 @@ class Response extends sfResponse
     /**
      * Get template engine
      *
+     * @param Context $context The Context needed to call ViewFactory
      * @return object
      */
-    final public function getTemplateEngine()
+    final public function getTemplateEngine(Context $context)
     {
         if (!$this->templateEngine) {
-            $this->setTemplateEngine(new ViewFactory($this->getEngineName()));
+            $this->setTemplateEngine(new ViewFactory($context, $this->getEngineName()));
         }
 
         return $this->templateEngine;

@@ -26,15 +26,18 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Business\Context;
 
 class View
 {
+    protected $context;
     protected $data;
     protected $templatesDirectory;
     public $appPath;
 
-    public function __construct()
+    public function __construct(Context $context)
     {
+        $this->context = $context;
         $this->data = [];
     }
 

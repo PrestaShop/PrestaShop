@@ -29,6 +29,19 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 class Adapter_AutoInflaterManager
 {
     /**
+     * @var Context
+     */
+    private $context;
+
+    /**
+     * @param Context $context The Context, given from IoC
+     */
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
      * Try to retrieve an Object of the Legacy architecture by its class name and its ID.
      * The instantiation will be equivalent to:
      * <$className>::_construct(<$id>); or new <$className>(<$id>);
@@ -76,8 +89,6 @@ class Adapter_AutoInflaterManager
      */
     public function inflateCollection($className, $method, $parameters)
     {
-        $context = Context::getInstance();
-
         $className = ucfirst($className);
         if (!class_exists('\\'.$className)) {
             return false;
@@ -94,10 +105,10 @@ class Adapter_AutoInflaterManager
                 continue;
             } else {
                 if ($mp->name == 'id_lang') {
-                    if (isset($context->language) && isset($context->language->id_lang)) {
-                        $givenParameters[] = $context->language->id_lang;
-                    } elseif (isset($context->cookie) && isset($context->cookie->id_lang)) {
-                        $givenParameters[] = $context->cookie->id_lang;
+                    if (isset($this->context->language) && isset($this->context->language->id_lang)) {
+                        $givenParameters[] = $this->context->language->id_lang;
+                    } elseif (isset($this->context->cookie) && isset($this->context->cookie->id_lang)) {
+                        $givenParameters[] = $this->context->cookie->id_lang;
                     }
                     continue;
                 }
