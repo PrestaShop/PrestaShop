@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class CategoryControllerCore extends FrontController
+class CategoryControllerCore extends ProductPresentingFrontControllerCore
 {
     /** string Internal controller name */
     public $php_self = 'category';
@@ -121,6 +121,26 @@ class CategoryControllerCore extends FrontController
         }
     }
 
+    protected function getImage($object, $id_image)
+    {
+        $retriever = new Adapter_ImageRetriever(
+            $this->context->link
+        );
+        return $retriever->getImage($object, $id_image);
+    }
+
+    public function prepareProductForTemplate(array $product)
+    {
+        $presenter = $this->getProductPresenter();
+        $settings = $this->getProductPresentationSettings();
+
+        return $presenter->presentForListing(
+            $settings,
+            $product,
+            $this->context->language
+        );
+    }
+
     /**
      * Initializes page content variables
      */
@@ -128,7 +148,7 @@ class CategoryControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->setTemplate(_PS_THEME_DIR_.'category.tpl');
+        $this->setTemplate('catalog/category.tpl');
 
         if (!$this->customer_access) {
             return;
@@ -140,15 +160,21 @@ class CategoryControllerCore extends FrontController
 
         // Product sort must be called before assignProductList()
         $this->productSort();
-
+        $this->assignSortOptions();
         $this->assignScenes();
         $this->assignSubcategories();
         $this->assignProductList();
 
+        $category = $this->objectSerializer->toArray($this->category);
+        $category['image'] = $this->getImage($this->category, $this->category->id_image);
+        $products = array_map(function (array $product) {
+            return $this->prepareProductForTemplate($product);
+        }, $this->cat_products);
+
         $this->context->smarty->assign(array(
-            'category'             => $this->category,
+            'category'             => $category,
             'description_short'    => Tools::truncateString($this->category->description, 350),
-            'products'             => (isset($this->cat_products) && $this->cat_products) ? $this->cat_products : null,
+            'products'             => $products,
             'id_category'          => (int)$this->category->id,
             'id_category_parent'   => (int)$this->category->id_parent,
             'return_category_name' => Tools::safeOutput($this->category->name),
@@ -162,6 +188,51 @@ class CategoryControllerCore extends FrontController
             'comparator_max_item'  => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
             'body_classes'         => array($this->php_self.'-'.$this->category->id, $this->php_self.'-'.$this->category->link_rewrite)
         ));
+    }
+
+    protected function getSortOptions()
+    {
+        $settings = $this->getProductPresentationSettings();
+
+        if ($settings->catalog_mode) {
+            $options = [];
+        } else {
+            $options = [
+                ['orderBy' => 'price', 'sortOrder' => 'asc', 'label' => $this->l('Increasing price')],
+                ['orderBy' => 'price', 'sortOrder' => 'desc', 'label' => $this->l('Decreasing price')],
+            ];
+        }
+
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'asc', 'label' => $this->l('Product name, A to Z')];
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'desc', 'label' => $this->l('Product name, 2 to A')];
+
+        if (!$settings->catalog_mode && $settings->stock_management_enabled) {
+            $options[] = ['orderBy' => 'quantity', 'sortOrder' => 'desc', 'label' => $this->l('In stock')];
+        }
+
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'asc', 'label' => $this->l('Product reference, A to Z')];
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'desc', 'label' => $this->l('Product reference, 2 to A')];
+
+        $pageURL = $this->context->link->getCategoryLink(
+            $this->category,
+            $this->category->link_rewrite,
+            $this->context->language->id
+        );
+
+        $options = array_map(function ($option) use ($pageURL) {
+            $option['url'] = $pageURL . '?orderby=' . $option['orderBy'] . '&orderway=' . $option['sortOrder'];
+            $option['current'] = ($option['orderBy'] === Tools::getValue('orderby')) &&
+                                 ($option['sortOrder'] === Tools::getValue('orderway'))
+            ;
+            return $option;
+        }, $options);
+
+        return $options;
+    }
+
+    public function assignSortOptions()
+    {
+        $this->context->smarty->assign('sort_options', $this->getSortOptions());
     }
 
     /**
@@ -195,13 +266,28 @@ class CategoryControllerCore extends FrontController
      */
     protected function assignSubcategories()
     {
-        if ($sub_categories = $this->category->getSubCategories($this->context->language->id)) {
-            $this->context->smarty->assign(array(
-                'subcategories'          => $sub_categories,
-                'subcategories_nb_total' => count($sub_categories),
-                'subcategories_nb_half'  => ceil(count($sub_categories) / 2)
-            ));
-        }
+        $subcategories = array_map(function (array $category) {
+            $object = new Category(
+                $category['id_category'],
+                $this->context->language->id
+            );
+
+            $category['image'] = $this->getImage(
+                $object,
+                $object->id_image
+            );
+
+            $category['url'] = $this->context->link->getCategoryLink(
+                $category['id_category'],
+                $category['link_rewrite']
+            );
+
+            return $category;
+        }, $this->category->getSubCategories($this->context->language->id));
+
+        $this->context->smarty->assign([
+            'subcategories' => $subcategories
+        ]);
     }
 
     /**
@@ -228,7 +314,7 @@ class CategoryControllerCore extends FrontController
             // Pagination must be call after "getProducts"
             $this->pagination($this->nbProducts);
         }
-        
+
         $this->addColorsToProductList($this->cat_products);
 
         Hook::exec('actionProductListModifier', array(
@@ -241,7 +327,7 @@ class CategoryControllerCore extends FrontController
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
         }
-        
+
         $this->context->smarty->assign('nb_products', $this->nbProducts);
     }
 

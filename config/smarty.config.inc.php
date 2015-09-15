@@ -87,6 +87,7 @@ smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval')
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -303,6 +304,17 @@ function smartyWidgetBlock($params, $content, &$smarty)
         // This time content is filled with rendered template, so return it.
         return $content;
     }
+}
+
+function smartyClassnames(array $classnames)
+{
+    $enabled_classes = [];
+    foreach ($classnames as $classname => $enabled) {
+        if ($enabled) {
+            $enabled_classes[] = $classname;
+        }
+    }
+    return implode(' ', $enabled_classes);
 }
 
 /**
