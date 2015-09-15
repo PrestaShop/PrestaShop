@@ -194,42 +194,36 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
 
 function smartyHook($params, &$smarty)
 {
-            $id_module = null;
-            $hook_params = $params;
-            $hook_params['smarty'] = $smarty;
-            if (!empty($params['mod']))
-            {
-                $module = Module::getInstanceByName($params['mod']);
-                unset($hook_params['mod']);
-                if ($module && $module->id) {
-                    $id_module = $module->id;
-                } else {
-                    unset($hook_params['h']);
-                    return '';
-                }
-
-            }
-            if(!empty($params['excl']))
-            {
-                $result = '';
-                $modules = Hook::getHookModuleExecList($hook_params['h']);
-
-                $moduleexcl = explode(',', $params['excl']);
-                foreach ($modules as $module)
-                {
-                    if (!in_array($module['module'], $moduleexcl))
-                        {
-                            $result .= Hook::exec($params['h'], $hook_params, $module['id_module']);
-                        }
-                }
-
-                unset($hook_params['h']);
-                unset($hook_params['excl']);
-                return $result;
-            }
+    $id_module = null;
+    $hook_params = $params;
+    $hook_params['smarty'] = $smarty;
+    if (!empty($params['mod'])) {
+        $module = Module::getInstanceByName($params['mod']);
+        unset($hook_params['mod']);
+        if ($module && $module->id) {
+            $id_module = $module->id;
+        } else {
             unset($hook_params['h']);
-            return Hook::exec($params['h'], $hook_params, $id_module);
+            return '';
         }
+    }
+    if (!empty($params['excl'])) {
+        $result = '';
+        $modules = Hook::getHookModuleExecList($hook_params['h']);
+
+        $moduleexcl = explode(',', $params['excl']);
+        foreach ($modules as $module) {
+            if (!in_array($module['module'], $moduleexcl)) {
+                $result .= Hook::exec($params['h'], $hook_params, $module['id_module']);
+            }
+        }
+
+        unset($hook_params['h']);
+        unset($hook_params['excl']);
+        return $result;
+    }
+    unset($hook_params['h']);
+    return Hook::exec($params['h'], $hook_params, $id_module);
 }
 
 function smartyCleanHtml($data)
