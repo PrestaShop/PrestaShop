@@ -168,7 +168,7 @@ class CustomerCore extends ObjectModel
             'lastname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'firstname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
+            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
             'last_passwd_gen' =>            array('type' => self::TYPE_STRING, 'copy_post' => false),
             'id_gender' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'birthday' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isBirthDate'),
@@ -195,7 +195,7 @@ class CustomerCore extends ObjectModel
             'date_add' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'date_upd' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'reset_password_token' =>        array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
-            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
         ),
     );
 
@@ -332,8 +332,9 @@ class CustomerCore extends ObjectModel
             $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
                 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
 
-            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_))
+            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
                 return false;
+            }
         }
 
         $result = Db::getInstance()->getRow('
@@ -349,17 +350,16 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-
-        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
-            $this->update();
-        }
-
         $this->id = $result['id_customer'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
+        }
+
+        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
+            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+            $this->update();
         }
 
         return $this;
@@ -479,6 +479,52 @@ class CustomerCore extends ObjectModel
                     LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
                     '.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).'
                     WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
+
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            Cache::store($cache_id, $result);
+            return $result;
+        }
+        return Cache::retrieve($cache_id);
+    }
+
+    public function getSimpleAddresses($id_lang = null)
+    {
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
+        }
+
+        $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+        $cache_id = 'Customer::getSimpleAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
+        if (!Cache::isStored($cache_id)) {
+            $sql = 'SELECT DISTINCT
+                      a.`id_address` AS `id`,
+                      a.`alias`,
+                      a.`firstname`,
+                      a.`lastname`,
+                      a.`company`,
+                      a.`address1`,
+                      a.`address2`,
+                      a.`postcode`,
+                      a.`city`,
+                      s.name AS state,
+                      s.`iso_code` AS state_iso,
+                      cl.`name` AS country,
+                      co.`iso_code` AS country_iso,
+                      a.`other`,
+                      a.`phone`,
+                      a.`phone_mobile`,
+                      a.`vat_number`,
+                      a.`dni`
+                    FROM `'._DB_PREFIX_.'address` a
+                    LEFT JOIN `'._DB_PREFIX_.'country` co ON (a.`id_country` = co.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (co.`id_country` = cl.`id_country`)
+                    LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+                    '.($share_order ? '' : Shop::addSqlAssociation('country', 'co')).'
+                    WHERE
+                        `id_lang` = '.(int)$id_lang.'
+                        AND `id_customer` = '.(int)$this->id.'
+                        AND a.`deleted` = 0
+                        AND a.`active` = 1';
 
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
             Cache::store($cache_id, $result);
@@ -798,8 +844,7 @@ class CustomerCore extends ObjectModel
         $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
-        if ($this->update())
-        {
+        if ($this->update()) {
             $vars = array(
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
@@ -924,8 +969,9 @@ class CustomerCore extends ObjectModel
         $errors = parent::validateController($htmlentities);
         $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
 
-        if ($value = Tools::getValue('passwd'))
+        if ($value = Tools::getValue('passwd')) {
             $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);
+        }
 
         return $errors;
     }

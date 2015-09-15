@@ -493,6 +493,15 @@ class ValidateCore
         return checkdate((int)$matches[2], (int)$matches[3], (int)$matches[1]);
     }
 
+    public static function isDateOrNull($date)
+    {
+        if (is_null($date) || $date === '0000-00-00 00:00:00') {
+            return true;
+        }
+
+        return self::isDate($date);
+    }
+
     /**
      * Check for birthDate validity
      *

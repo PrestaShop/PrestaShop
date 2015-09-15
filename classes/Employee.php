@@ -129,7 +129,7 @@ class EmployeeCore extends ObjectModel
             'id_last_customer_message' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'id_last_customer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'reset_password_token' =>       array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
-            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'copy_post' => false),
+            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false),
         ),
     );
 
