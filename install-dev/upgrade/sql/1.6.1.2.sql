@@ -29,4 +29,8 @@ REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 				AND product_shop.id_shop = ps.id_shop
 				GROUP BY pt.id_tag, pt.id_lang, ps.id_shop;
 
+ALTER TABLE `PREFIX_cart_product` DROP KEY `cart_product_index`;
+ALTER TABLE `PREFIX_shop` DROP KEY `id_group_shop`;
+INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`) VALUES (NULL , NULL , NULL ,  'PS_ACTIVE_CRONJOB_EXCHANGE_RATE',  '0',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00');
+
 TRUNCATE TABLE `PREFIX_smarty_last_flush`;
