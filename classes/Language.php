@@ -443,7 +443,7 @@ class LanguageCore extends ObjectModel
                 $shop_field_exists = $primary_key_exists = false;
                 $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
                 foreach ($columns as $column) {
-                    $fields .= $column['Field'].', ';
+                    $fields .= '`'.$column['Field'].'`, ';
                     if ($column['Field'] == 'id_shop') {
                         $shop_field_exists = true;
                     }
@@ -451,7 +451,8 @@ class LanguageCore extends ObjectModel
                         $primary_key_exists = true;
                     }
                 }
-                $fields = rtrim($fields, ', ');
+                $fields = rtrim($fields, '`, ');
+		$fields .= '`';
 
                 if (!$primary_key_exists) {
                     continue;
