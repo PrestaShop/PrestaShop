@@ -24,6 +24,9 @@
     {if $products|count}
       <section id="products">
         <h1>{l s='Products'}</h1>
+
+        {include './_partials/sort-by.tpl' options=$sort_options}
+
         <div class="products">
           {foreach from=$products item="product"}
             {include './product-miniature.tpl' product=$product}
