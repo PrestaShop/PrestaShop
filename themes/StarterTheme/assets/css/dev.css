@@ -154,6 +154,10 @@ ul.product-labels li {
   font-weight: bold;
 }
 
+.product-description-short {
+  text-align: left;
+}
+
 /* blocklanguages */
 
 .language-selector {
