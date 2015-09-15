@@ -84,6 +84,7 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['billing_invoicing']['name'] = $this->l('Taxes & Invoicing');
         $this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
         $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
+        $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
         $this->list_modules_categories['export']['name'] = $this->l('Export');
         $this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
         $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
@@ -106,6 +107,7 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization & Localization');
         $this->list_modules_categories['emailing']['name'] = $this->l('Emailing & SMS');
         $this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
+        $this->list_modules_categories['social_community']['name'] = $this->l('Social & Community');
 
         uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
 
@@ -200,9 +202,9 @@ class AdminModulesControllerCore extends AdminController
             }
         }
 
-        // If logged to Addons Webservices, refresh customer modules list every day
+        // If logged to Addons Webservices, refresh customer modules list every 5 minutes
         if ($this->logged_on_addons && $this->status != 'error') {
-            if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 60) || $force_reload_cache) {
+            if (!$this->isFresh(Module::CACHE_FILE_CUSTOMER_MODULES_LIST, 300) || $force_reload_cache) {
                 if (file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_CUSTOMER_MODULES_LIST, Tools::addonsRequest('customer'))) {
                     $this->status = 'refresh';
                 } else {
@@ -1386,6 +1388,8 @@ class AdminModulesControllerCore extends AdminController
 
         // If we are on a module configuration, no need to load all modules
         if (Tools::getValue('configure') != '') {
+            $this->context->smarty->assign(array('maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')));
+
             return true;
         }
 

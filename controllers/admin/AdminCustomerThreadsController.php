@@ -399,7 +399,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $params = array(
                         '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
                         '{link}' => Tools::url(
-                            $this->context->link->getPageLink('contact', true),
+                            $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
                             'id_customer_thread='.(int)$ct->id.'&token='.$ct->token
                         ),
                         '{firstname}' => $customer->firstname,
@@ -421,7 +421,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'reply_msg',
                         sprintf(Mail::l('An answer to your message is available #ct%1$s #tc%2$s', $ct->id_lang), $ct->id, $ct->token),
                         $params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
-                        _PS_MAIL_DIR_, true)) {
+                        _PS_MAIL_DIR_, true, $ct->id_shop)) {
                         $ct->status = 'closed';
                         $ct->update();
                     }

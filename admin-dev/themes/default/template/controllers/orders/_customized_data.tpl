@@ -51,7 +51,7 @@
 						<div class="input-group">
 							{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 							<input type="text" name="product_price_tax_excl" class="edit_product_price_tax_excl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_excl'], 2)}" size="5" />
-							{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
+							{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.'}</div>{/if}
 						</div>
 					</div>
 					<br/>
@@ -59,7 +59,7 @@
 						<div class="input-group">
 							{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 							<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" />
-							{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+							{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 						</div>
 					</div>
 				</div>
@@ -216,7 +216,7 @@
 							<div class="input-group">
 								{if $currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
 								<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />
-								{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
+								{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign}</div>{/if}
 							</div>
 							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id), $smarty.capture.TaxMethod]}</p>
 						</div>

@@ -30,7 +30,8 @@ var states = [];
 $(document).ready(function(){
 	setCountries();
 	bindStateInputAndUpdate();
-	bindUniform();
+	if (typeof bindUniform !=='undefined')
+		bindUniform();
 	bindZipcode();
 	bindCheckbox();
 	$(document).on('click', '#invoice_address', function(e){
@@ -69,16 +70,11 @@ function bindCheckbox()
 		$('#opc_invoice_address').slideDown('slow');
 		if ($('#company_invoice').val() == '')
 			$('#vat_number_block_invoice').hide();
-		bindUniform();
+		if (typeof bindUniform !=='undefined')
+			bindUniform();
 	}
 	else
 		$('#opc_invoice_address').slideUp('slow');
-}
-
-function bindUniform()
-{
-	if (!!$.prototype.uniform)
-		$("select.form-control,input[type='radio'],input[type='checkbox']").uniform();
 }
 
 function bindZipcode()

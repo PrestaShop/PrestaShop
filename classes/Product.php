@@ -872,6 +872,16 @@ class ProductCore extends ObjectModel
             if ($real_quantity > $physical_quantity) {
                 return false;
             }
+
+            $warehouse_product_locations = Adapter_ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
+            foreach ($warehouse_product_locations as $warehouse_product_location) {
+                $warehouse_product_location->delete();
+            }
+
+            $stocks = Adapter_ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
+            foreach ($stocks as $stock) {
+                $stock->delete();
+            }
         }
         $result = parent::delete();
 
@@ -1090,9 +1100,7 @@ class ProductCore extends ObjectModel
     */
     public function deleteTags()
     {
-        return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id)
-            && Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'product_tag
-												WHERE '._DB_PREFIX_.'product_tag.id_tag = '._DB_PREFIX_.'tag.id_tag)');
+        return Tag::deleteTagsForProduct((int)$this->id);
     }
 
     /**
@@ -2366,9 +2374,9 @@ class ProductCore extends ObjectModel
             }
 
             $ids_products = rtrim($ids_products, ',');
-            Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('CREATE TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions` (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY', false);
+            Db::getInstance()->execute('CREATE TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions` (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY', false);
             if ($ids_products) {
-                Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('INSERT INTO `'._DB_PREFIX_.'product_reductions` VALUES '.$ids_products, false);
+                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_reductions` VALUES '.$ids_products, false);
             }
 
             $groups = FrontController::getCurrentCustomerGroups();
@@ -2389,7 +2397,7 @@ class ProductCore extends ObjectModel
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					ORDER BY RAND()';
 
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+            $result = Db::getInstance()->getRow($sql);
 
             if (!$id_product = $result['id_product']) {
                 return false;
@@ -2509,7 +2517,7 @@ class ProductCore extends ObjectModel
 
         $sql = '
 		SELECT
-			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`,
+			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`,
 			IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 			pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 			pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,

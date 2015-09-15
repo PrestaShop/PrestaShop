@@ -78,13 +78,13 @@
 										<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
 														{if is_array($hint)}
-															{$hint.text|escape:'html':'UTF-8'}
+															{$hint.text|escape:'quotes'}
 														{else}
-															{$hint|escape:'html':'UTF-8'}
+															{$hint|escape:'quotes'}
 														{/if}
 													{/foreach}
 												{else}
-													{$input.hint|escape:'html':'UTF-8'}
+													{$input.hint|escape:'quotes'}
 												{/if}">
 										{/if}
 										{$input.label}
@@ -461,7 +461,7 @@
 									<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
 										<div class="col-lg-9">
 									{/if}
-											<textarea {if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else}{if isset($input.class)} {$input.class}{else} textarea-autosize{/if}{/if}">{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
+											<textarea {if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}">{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
 									{if $languages|count > 1}
 										</div>
 										<div class="col-lg-2">
@@ -482,7 +482,7 @@
 									{/foreach}
 
 									{else}
-										<textarea {if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else} textarea-autosize{/if}">{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
+										<textarea {if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}">{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
