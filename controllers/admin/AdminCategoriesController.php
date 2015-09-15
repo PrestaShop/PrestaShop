@@ -256,7 +256,7 @@ class AdminCategoriesControllerCore extends AdminController
         $nb_items = count($this->_list);
         for ($i = 0; $i < $nb_items; $i++) {
             $item = &$this->_list[$i];
-            $category_tree = Category::getChildren((int)$item['id_category'], $this->context->language->id);
+            $category_tree = Category::getChildren((int)$item['id_category'], $this->context->language->id, false);
             if (!count($category_tree)) {
                 $this->addRowActionSkipList('view', array($item['id_category']));
             }
