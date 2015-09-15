@@ -268,5 +268,5 @@ if (!defined('_MEDIA_SERVER_3_')) {
 $container->bind('Context', '\\PrestaShop\\PrestaShop\\Core\\Business\\Context', true);
 
 /* View */
-$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($container->make('Context'));
+$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($container);
 $smarty = $context->smarty = $engine->view->getInstance();

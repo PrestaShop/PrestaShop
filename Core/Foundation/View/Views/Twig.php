@@ -98,7 +98,7 @@ class Twig extends View
 
             $this->parserInstance->addExtension(new \Twig_Extension_Debug());
             $this->parserInstance->addExtension(new TwigTranslationExtension(new Translator('')));
-            $this->parserInstance->addExtension(new TwigRoutingExtension($this->context->get('routerInstance')));
+            $this->parserInstance->addExtension(new TwigRoutingExtension($this->container->make('Routing')));
             $this->parserInstance->addExtension(new FormExtension(new TwigRenderer($formEngine, $this->csrfProvider)));
 
             foreach ($this->parserExtensions as $ext) {

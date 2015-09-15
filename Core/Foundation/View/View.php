@@ -30,14 +30,14 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 
 class View
 {
-    protected $context;
+    protected $container;
     protected $data;
     protected $templatesDirectory;
     public $appPath;
 
-    public function __construct(Context $context)
+    public function __construct(\Core_Foundation_IoC_Container $container)
     {
-        $this->context = $context;
+        $this->container = $container;
         $this->data = [];
     }
 

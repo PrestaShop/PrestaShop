@@ -28,14 +28,15 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 
 use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\RoutingService;
 
 class RoutingExtension extends \Twig_Extension
 {
-    private $router;
+    private $routing;
 
-    public function __construct($router)
+    public function __construct(RoutingService $routing)
     {
-        $this->router = $router;
+        $this->routing = $routing;
     }
 
     public function getFunctions()
@@ -48,12 +49,12 @@ class RoutingExtension extends \Twig_Extension
 
     public function getUrl($name, array $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
-        return $this->router->generateUrl($name, $parameters, false, $referenceType);
+        return $this->routing->generateUrl($name, $parameters, false, $referenceType);
     }
 
     public function getLegacyUrl($name, array $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
-        return $this->router->generateUrl($name, $parameters, true, $referenceType);
+        return $this->routing->generateUrl($name, $parameters, true, $referenceType);
     }
 
     public function getName()

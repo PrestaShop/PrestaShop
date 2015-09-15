@@ -55,7 +55,7 @@ class AdminController extends BaseController
         // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
         $warningBlock = '';
         if ($this->getWarningIterator() && $this->getWarningIterator()->count()) {
-            $warningBlock = $response->getTemplateEngine()->view->fetch('Core/system_messages.tpl', array(
+            $warningBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/system_messages.tpl', array(
                 'exceptions' => $this->getWarningIterator(),
                 'color' => 'orange'
             ));
@@ -63,13 +63,13 @@ class AdminController extends BaseController
         // Display notices and success messages
         $noticeBlock = '';
         if ($this->getInfoIterator() && $this->getInfoIterator()->count()) {
-            $noticeBlock = $response->getTemplateEngine()->view->fetch('Core/user_messages.tpl', array(
+            $noticeBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
                 'messages' => $this->getInfoIterator(),
                 'color' => 'blue'
             ));
         }
         if ($this->getSuccessIterator() && $this->getSuccessIterator()->count()) {
-            $noticeBlock .= $response->getTemplateEngine()->view->fetch('Core/user_messages.tpl', array(
+            $noticeBlock .= $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
                 'messages' => $this->getSuccessIterator(),
                 'color' => 'green'
             ));
@@ -102,7 +102,7 @@ class AdminController extends BaseController
      */
     protected function formatHtmlResponse(Response &$response)
     {
-        $templateEngine = $response->getTemplateEngine($this->container->make('Context'));
+        $templateEngine = $response->getTemplateEngine($this->container);
         $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
     }
     

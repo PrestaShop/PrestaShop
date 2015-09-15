@@ -82,7 +82,7 @@ class ResponseTest extends UnitTestCase
     public function test_template_engine_manipulation()
     {
         $response = new Response('base content');
-        $this->assertNotFalse($response->getTemplateEngine($this->container->make('Context')), 'Initial template engine callable must not be False (auto init).');
+        $this->assertNotFalse($response->getTemplateEngine($this->container), 'Initial template engine callable must not be False (auto init).');
         
         $that = $this;
         $this->called = false;
@@ -91,7 +91,7 @@ class ResponseTest extends UnitTestCase
             $that->called = true;
         };
         $response->setTemplateEngine($callable);
-        $r = $response->getTemplateEngine($this->container->make('Context'));
+        $r = $response->getTemplateEngine($this->container);
         $r();
         $this->assertTrue($this->called, 'TemplateEngine callable not called.');
     }

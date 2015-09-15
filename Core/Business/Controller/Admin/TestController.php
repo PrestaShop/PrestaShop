@@ -146,7 +146,7 @@ class TestController extends AdminController
         }
 
 
-        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container->make('Context'), 'twig');
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
         $response->addContentData(
             'form',
             $engine->view->render('Core/Controller/Test/form.html.twig', array('form' => $form->createView()))

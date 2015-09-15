@@ -189,13 +189,13 @@ class Response extends sfResponse
     /**
      * Get template engine
      *
-     * @param Context $context The Context needed to call ViewFactory
+     * @param \Core_Foundation_IoC_Container &$container The Container needed to call ViewFactory
      * @return object
      */
-    final public function getTemplateEngine(Context $context)
+    final public function getTemplateEngine(\Core_Foundation_IoC_Container &$container)
     {
         if (!$this->templateEngine) {
-            $this->setTemplateEngine(new ViewFactory($context, $this->getEngineName()));
+            $this->setTemplateEngine(new ViewFactory($container, $this->getEngineName()));
         }
 
         return $this->templateEngine;

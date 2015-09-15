@@ -113,7 +113,11 @@ abstract class AbstractRouter
      * @var string regex
      */
     private $routingFilePattern;
-    
+
+    /**
+     * @var boolean
+     */
+    private $isSubcalling = false;
 
     /**
      * @var EventDispatcher
@@ -265,7 +269,7 @@ abstract class AbstractRouter
      */
     final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
     {
-        if (!$oldRequest || $oldRequest->attributes->get('_subcalling', false)) {
+        if (!$oldRequest || !$this->canForward()) {
             throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1005);
         }
 
@@ -291,6 +295,17 @@ abstract class AbstractRouter
     }
 
     /**
+     * Check if a forward is possible at the moment.
+     * For now, this function checks if a sucball is in progress. If it's the case, then the forward is not possible.
+     *
+     * @return boolean
+     */
+    public function canForward()
+    {
+        return !$this->isSubcalling;
+    }
+
+    /**
      * Dispatcher internal entry point. Called by a controller/action to get a content subpart from another controller.
      *
      * @param string $routeName The route unique name/ID
@@ -300,8 +315,8 @@ abstract class AbstractRouter
      */
     final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
     {
+        $this->isSubcalling = true;
         $subRequest = new Request();
-        $subRequest->attributes->set('_subcalling', true);
         $path = $this->generateUrl($routeName, $routeParameters, false, self::ABSOLUTE_ROUTE);
 
         try {
@@ -316,9 +331,11 @@ abstract class AbstractRouter
             list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
             $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
             $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
+            $this->isSubcalling = false;
             return $res;
         } catch (ResourceNotFoundException $e) {
             $this->routingDispatcher->dispatch('subcall_failed', new BaseEvent('Failed to resolve route from subcall request.', $e));
+            $this->isSubcalling = false;
             throw new DevelopmentErrorException('A subcall failed due to unresolved route.', $oldRequest, 1002, $e);
         }
     }
@@ -346,7 +363,7 @@ abstract class AbstractRouter
      */
     final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
-        if (!$oldRequest || $oldRequest->attributes->get('_subcalling', false)) {
+        if (!$oldRequest || !$this->canRedirect()) {
             throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
         }
 
@@ -370,10 +387,14 @@ abstract class AbstractRouter
      *
      * @param mixed $to Integer or String. See description for specific array format.
      * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is an URL.
+     * @throws DevelopmentErrorException if the redirect is made from a subcall action.
      * @return false if headers already sent (cannot redirect, it's too late).
      */
     final public function redirect($to, $permanent = false)
     {
+        if (!$this->canRedirect()) {
+            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
+        }
         if (headers_sent() !== false) {
             $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent('Too late to redirect: headers already sent.'));
             return false; // headers already sent
@@ -396,6 +417,17 @@ abstract class AbstractRouter
         $e = new DevelopmentErrorException('Bad parameters format given to redirect().');
         $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent($to, $e));
         throw $e;
+    }
+
+    /**
+     * Check if a redirect is possible at the moment.
+     * For now, this function checks if a sucball is in progress. If it's the case, then the redirect is not possible.
+     *
+     * @return boolean
+     */
+    public function canRedirect()
+    {
+        return !$this->isSubcalling;
     }
 
     /**
@@ -493,7 +525,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
 
             if ($messageStackManager->getErrorIterator() && $messageStackManager->getErrorIterator()->count()) {
                 if ($viewEngine == null) {
-                    $viewEngine = new ViewFactory('smarty');
+                    $viewEngine = new ViewFactory($this->container, 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
                     'exceptions' => $messageStackManager->getErrorIterator(),
@@ -503,7 +535,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
 
             if ($messageStackManager->getWarningIterator() && $messageStackManager->getWarningIterator()->count()) {
                 if ($viewEngine == null) {
-                    $viewEngine = new ViewFactory('smarty');
+                    $viewEngine = new ViewFactory($this->container, 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
                     'exceptions' => $messageStackManager->getWarningIterator(),
@@ -514,7 +546,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
             // Well, in this case we just have to display $lastException
             if ($messages == '') {
                 if ($viewEngine == null) {
-                    $viewEngine = new ViewFactory($this->container->make('Context'), 'smarty');
+                    $viewEngine = new ViewFactory($this->container, 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
                     'exceptions' => array($lastException),

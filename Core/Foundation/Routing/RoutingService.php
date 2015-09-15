@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * This Router wrapper will offers public services that will be available from the main IoC Container provider.

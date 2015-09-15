@@ -32,14 +32,14 @@ class ViewFactory
 {
     public $view;
 
-    public function __construct(Context $context, $engine_name = 'smarty')
+    public function __construct(\Core_Foundation_IoC_Container $container, $engine_name = 'smarty')
     {
         $class_view = '\\PrestaShop\\PrestaShop\\Core\\Foundation\\View\\Views\\'. ucfirst($engine_name);
         if (!class_exists($class_view)) {
             throw new \Exception('Please define a valid template engine');
         }
 
-        $view = new $class_view($context);
+        $view = new $class_view($container);
         $view->parserDirectory = _PS_VENDOR_DIR_ . $engine_name;
         $view->parserCompileDirectory = _PS_CACHE_DIR_.$engine_name.'/compile';
         $view->parserCacheDirectory = _PS_CACHE_DIR_.$engine_name.'/cache';
