@@ -140,6 +140,9 @@ abstract class AbstractRouter
         // Register routing/settings extensions (modules)
         $this->routingFilePattern = $routingFilePattern;
         $this->registerSettingFiles();
+        
+        // Register a RouterService in the container
+        RoutingService::registerRoutingService($this, $this->container);
     }
 
     /**
@@ -148,7 +151,7 @@ abstract class AbstractRouter
      *
      * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface An URL generator with Router routes loaded. NULL if router did never dispatch before.
      */
-    final public function getUrlGenerator()
+    final protected function getUrlGenerator()
     {
         return (!isset($this->sfRouter))? null : $this->sfRouter->getGenerator();
     }
@@ -441,19 +444,6 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
     }
 
     /**
-     * This method will retrieve a static element but is not static itself:
-     * The container should be filled only during instantiation of singleton,
-     * even if the container itself is another singleton.
-     *
-     * @return \Core_Foundation_IoC_Container The container
-     */
-    final public function getContainer()
-    {
-        // FIXME : encore necessaire ?
-        return $this->container;
-    }
-
-    /**
      * Gets the cache factory to build cache files. Used internally by the Router and its subclasses.
      *
      * @param boolean $forceDebug True to force debug mode (do not keep generated cache for next request).
@@ -494,7 +484,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      * @param \Exception $lastException The last exception that stopped the process.
      * @throws \Exception Transmit the input exception in case of failure.
      */
-    final public function tryToDisplayExceptions(\Exception $lastException)
+    final protected function tryToDisplayExceptions(\Exception $lastException)
     {
         try {
             $messageStackManager = MessageStackManager::getInstance();
@@ -549,7 +539,13 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      */
     abstract public function registerShutdownFunctionCallback(Request &$request);
 
-    public function exitNow($i = 0)
+    /**
+     * Wrapper method to exit process. This will do an exit($i) except
+     * if you override the method. For testing environment.
+     *
+     * @param number $i
+     */
+    protected function exitNow($i = 0)
     {
         exit($i);
     }

@@ -32,6 +32,7 @@ use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * TODO : explain YML structure needed to add a listener.
@@ -65,7 +66,17 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
  */
 class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
+    /**
+     * Indexed singleton array of dispatchers
+     * @var EventDispatcher
+     */
     private static $instances = array();
+
+    /**
+     * The initialized services container
+     * @var \Core_Foundation_IoC_Container
+     */
+    private static $containerInit = null;
 
     /**
      * Retrieve a singleton (default, or an indexed one) of EventDispatcher.
@@ -77,7 +88,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     final public static function getInstance($dispatcherName = 'default')
     {
         if (!isset(self::$instances[$dispatcherName])) {
-            self::$instances[$dispatcherName] = new self($dispatcherName);
+            self::$instances[$dispatcherName] = new self($dispatcherName, self::$containerInit);
         }
         return self::$instances[$dispatcherName];
     }
@@ -106,14 +117,16 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      * are instanciated as singletons at the same time. Each singleton is indexed by its name.
      * Then use static registry $dispatcherRegistry to init all the registered listeners to event dispatchers.
      *
+     * @param \Core_Foundation_IoC_Container $container The initialized services container
      * @param string $rootDir The root directory path.
      * @param string $cacheDir The cache directory path.
      * @param string $moduleDir The module directory path to scan configuration files.
      * @param boolean $debug True to force debug mode (cache fil is generated each time).
      * @throws DevelopmentErrorException If a configuration file is malformed.
      */
-    final public static function initDispatchers($rootDir, $cacheDir, $moduleDir, $debug = false)
+    final public static function initDispatchers(\Core_Foundation_IoC_Container &$container, $rootDir, $cacheDir, $moduleDir, $debug = false)
     {
+        self::$containerInit = $container;
         $cache = (new ConfigCacheFactory($debug))->cache(
             $cacheDir.'dispatcher/init_subscribers.php',
             function (ConfigCacheInterface $cache) use ($rootDir, $cacheDir, $moduleDir) {
@@ -165,7 +178,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 
         foreach (self::$dispatcherRegistry as $dispatcherName => $listeners) {
             /* @var $dispatcher EventDispatcher */
-            $dispatcher = new self($dispatcherName);
+            $dispatcher = new self($dispatcherName, self::$containerInit);
             foreach ($listeners as $listener) {
                 if ($listener[4] === true) { // lazy instantiation, use one-shot auto-destructive closure
                     $closure = function (ResponseEvent $event) use ($dispatcher, $listener, &$closure) {
@@ -184,9 +197,25 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     }
 
     private $name;
+    private $container;
 
-    private function __construct($dispatcherName)
+    private function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container)
     {
         $this->name = $dispatcherName;
+        $this->container =& $container;
+    }
+
+    /* (non-PHPdoc)
+     * @see \Symfony\Component\EventDispatcher\EventDispatcher::dispatch()
+     */
+    public function dispatch($eventName, Event $event = null)
+    {
+        if (null === $event) {
+            $event = new BaseEvent();
+        }
+
+        $event->setContainer($this->container);
+
+        return parent::dispatch($eventName, $event);
     }
 }

@@ -36,7 +36,8 @@ class BaseEvent extends Event
     private $filePath = null;
     private $message = null;
     private $exception = null;
-
+    private $container = null;
+    
     public function __construct($message = null, $exception = null)
     {
         $this->message = $message;
@@ -74,6 +75,17 @@ class BaseEvent extends Event
     public function getFilePath()
     {
         return $this->filePath;
+    }
+
+    public function setContainer(\Core_Foundation_IoC_Container &$container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 
     public function getMessage()

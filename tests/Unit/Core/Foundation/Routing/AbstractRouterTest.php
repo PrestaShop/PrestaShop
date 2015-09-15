@@ -49,6 +49,7 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         parent::__construct($routingFilePattern);
         // EventDispatcher init
         BaseEventDispatcher::initDispatchers(
+            $container,
             $conf->get('_PS_ROOT_DIR_'),
             $conf->get('_PS_CACHE_DIR_'),
             $conf->get('_PS_MODULE_DIR_'));

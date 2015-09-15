@@ -63,7 +63,7 @@ class FakeRouter extends Router
     }
 
     public static $calledExitNow = false;
-    public function exitNow($i = 0)
+    protected function exitNow($i = 0)
     {
         self::$calledExitNow = true;
     }

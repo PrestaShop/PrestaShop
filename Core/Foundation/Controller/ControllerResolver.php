@@ -56,6 +56,16 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         $this->addInjection($this->container);
     }
 
+    /**
+     * @var AbstractRouter
+     */
+    private $router;
+
+    public function setRouter(AbstractRouter &$router)
+    {
+        $this->router =& $router;
+    }
+
     private $additionalInjections = array();
 
     public function addInjection(&$objectInstance)
@@ -128,7 +138,6 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     protected function instantiateController($class)
     {
-        $router = $this->container->make('Router');
-        return new $class($router, $this->container);
+        return new $class($this->router, $this->container);
     }
 }

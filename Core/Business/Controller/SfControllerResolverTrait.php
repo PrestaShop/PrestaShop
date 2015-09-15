@@ -49,9 +49,11 @@ trait SfControllerResolverTrait
     public function controllerResolverSymfony(Request &$request, Response &$response)
     {
         $container =& $this->container;
-        return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$container) {
+        $router =& $this->router;
+        return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$container, &$router) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
             $resolver->setContainer($container); // inject router for Controller instantiation.
+            $resolver->setRouter($router);
             $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
             $callable = $resolver->getController($request);
             $arguments = $resolver->getArguments($request, $callable);

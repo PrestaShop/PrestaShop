@@ -50,11 +50,20 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 
 abstract class Router extends AbstractRouter
 {
+    private static $instantiated = false;
+
     /**
+     * This singleton is filled during 'dispatch()' method only.
      * @var Request
      */
     private static $lastRouterRequestInstance = null;
 
+    /**
+     * Returns the last Request received from HTTP.
+     * This singleton is filled during 'dispatch()' method only.
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
     public static function getLastRouterRequestInstance()
     {
         return self::$lastRouterRequestInstance;
@@ -69,16 +78,20 @@ abstract class Router extends AbstractRouter
     /**
      * Instanciate a Router with a set of routes YML files.
      *
+     * @throws DevelopmentErrorException If the Router has already been instantiated.
+     *
      * @param \Core_Foundation_IoC_Container $container The application Container instance
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
     protected function __construct(\Core_Foundation_IoC_Container &$container, $routingFilePattern)
     {
+        if (self::$instantiated !== false) {
+            throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.');
+        }
         try {
             $this->container =& $container;
             parent::__construct($routingFilePattern);
-            $this->container->bind('Router', $this, true);
-    
+
             // EventDispatcher init
             BaseEventDispatcher::initBaseDispatchers($this->container);
             $this->routingDispatcher = EventDispatcher::getInstance('routing');
@@ -93,6 +106,7 @@ abstract class Router extends AbstractRouter
             $this->tryToDisplayExceptions($e);
             exit(1);
         }
+        self::$instantiated = true; // avoid another instance during process (from third part code).
     }
     
     /**

@@ -76,6 +76,7 @@ class BaseEventDispatcher extends EventDispatcher
         EventDispatcher::$dispatcherRegistry = array_merge(EventDispatcher::$dispatcherRegistry, self::$baseDispatcherRegistry);
         $configuration = $container->make('Core_Business_ConfigurationInterface');
         EventDispatcher::initDispatchers(
+            $container,
             $configuration->get('_PS_ROOT_DIR_'),
             $configuration->get('_PS_CACHE_DIR_'),
             $configuration->get('_PS_MODULE_DIR_'),

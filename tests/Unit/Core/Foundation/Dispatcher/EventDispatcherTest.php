@@ -48,6 +48,7 @@ class EventDispatcherTest extends UnitTestCase
     {
         $conf = $this->setup_env();
         EventDispatcher::initDispatchers(
+            $this->container,
             $conf->get('_PS_ROOT_DIR_'),
             $conf->get('_PS_CACHE_DIR_'),
             $conf->get('_PS_MODULE_DIR_'),
