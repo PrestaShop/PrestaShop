@@ -1467,6 +1467,21 @@ class FrontControllerCore extends Controller
                 $urls[$assign_key] = $assign_value;
             }
         }
+
+        $pages = [];
+        $p = [
+            'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+            'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
+            'order-confirmation', 'order-detail', 'order-follow', 'order-opc', 'order-return',
+            'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+            'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier'
+        ];
+        foreach ($p as $page_name) {
+            $index = str_replace('-', '_', $page_name);
+            $pages[$index] = $this->context->link->getPageLink($page_name, true);
+        }
+        $urls['pages'] = $pages;
+
         return $urls;
     }
 
@@ -1498,6 +1513,12 @@ class FrontControllerCore extends Controller
 
         $cust['risk'] = $this->objectSerializer->toArray(new Risk($cust['id_risk']));
         unset($cust['id_risk']);
+
+        $addresses = $this->context->customer->getSimpleAddresses();
+        foreach ($addresses as &$a) {
+            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br />');
+        }
+        $cust['addresses'] = $addresses;
 
         return $cust;
     }

@@ -54,25 +54,6 @@ class AuthControllerCore extends FrontController
     }
 
     /**
-     * Set default medias for this controller
-     * @see FrontController::setMedia()
-     */
-    public function setMedia()
-    {
-        parent::setMedia();
-        if (!$this->useMobileTheme()) {
-            $this->addCSS(_THEME_CSS_DIR_.'authentication.css');
-        }
-        $this->addJqueryPlugin('typewatch');
-        $this->addJS(array(
-            _THEME_JS_DIR_.'tools/vatManagement.js',
-            _THEME_JS_DIR_.'tools/statesManagement.js',
-            _THEME_JS_DIR_.'authentication.js',
-            _PS_JS_DIR_.'validate.js'
-        ));
-    }
-
-    /**
      * Run ajax process
      * @see FrontController::displayAjax()
      */
@@ -151,7 +132,7 @@ class AuthControllerCore extends FrontController
         ));
 
         // Just set $this->template value here in case it's used by Ajax
-        $this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
+        $this->setTemplate('customer/authentication.tpl');
 
         if ($this->ajax) {
             // Call a hook to display more information on form
@@ -184,7 +165,6 @@ class AuthControllerCore extends FrontController
 
         $this->context->smarty->assign(array(
                 'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
-                'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
                 'years' => $years,
                 'sl_year' => $selectedYears,
                 'months' => $months,
