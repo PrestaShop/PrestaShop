@@ -2040,13 +2040,13 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Has Delivery return true if this order has already a delivery slip
+     * Has Delivery returns the id of the first invoice related to a delivery slip
      *
-     * @return bool
+     * @return int
      */
     public function hasDelivery()
     {
-        return (bool)Db::getInstance()->getValue('
+        return (int)Db::getInstance()->getValue('
 			SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
 			WHERE `id_order` =  '.(int)$this->id.'
