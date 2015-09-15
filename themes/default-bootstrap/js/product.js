@@ -793,7 +793,7 @@ function updatePrice()
 			ecotax = +combination.ecotax;
 
 		if (!noTaxForThisProduct)
-			ecotax = ecotax * (1 + ecotaxTax_rate/100)
+			ecotax = ecotax * (1 + ecotaxTax_rate/100);
 
 		$('#ecotax_price_display').text(formatCurrency(ecotax * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$('.price-ecotax').show();

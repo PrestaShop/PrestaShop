@@ -381,7 +381,7 @@ function accordionFooter(status)
 	{
 		$('#footer .footer-block h4').on('click', function(){
 			$(this).toggleClass('active').parent().find('.toggle-footer').stop().slideToggle('medium');
-		})
+		});
 		$('#footer').addClass('accordion').find('.toggle-footer').slideUp('fast');
 	}
 	else

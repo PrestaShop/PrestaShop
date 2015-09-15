@@ -132,7 +132,7 @@ $(document).ready(function(){
 		// VALIDATION / CREATION AJAX
 		$(document).on('click', '#submitAccount, #submitGuestAccount', function(e){
 			e.preventDefault();
-			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
+			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow');
 
 			var callingFile = '';
             var advApiParam = '';

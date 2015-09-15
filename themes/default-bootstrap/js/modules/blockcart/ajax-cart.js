@@ -860,13 +860,13 @@ function HoverWatcher(selector)
 
 	this.isHoveringOver = function(){
 		return self.hovering;
-	}
+	};
 
 	$(selector).hover(function(){
 		self.hovering = true;
 	}, function(){
 		self.hovering = false;
-	})
+	});
 }
 
 function crossselling_serialScroll()
