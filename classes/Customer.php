@@ -853,10 +853,15 @@ class CustomerCore extends ObjectModel
      */
     public function logout()
     {
+        Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
+
         if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->logout();
         }
+
         $this->logged = 0;
+
+        Hook::exec('actionCustomerLogoutAfter', array('customer' => $this));
     }
 
     /**
@@ -867,10 +872,15 @@ class CustomerCore extends ObjectModel
      */
     public function mylogout()
     {
+        Hook::exec('actionCustomerLogoutBefore', array('customer' => $this));
+
         if (isset(Context::getContext()->cookie)) {
             Context::getContext()->cookie->mylogout();
         }
+
         $this->logged = 0;
+
+        Hook::exec('actionCustomerLogoutAfter', array('customer' => $this));
     }
 
     public function getLastCart($with_order = true)

@@ -437,7 +437,6 @@ abstract class PaymentModuleCore extends Module
                             }
                             $msg->message = $message;
                             $msg->id_cart = (int)$id_cart;
-                            $msg->id_customer = intval($order->id_customer);
                             $msg->id_order = intval($order->id);
                             $msg->private = 1;
                             $msg->add();
@@ -567,6 +566,7 @@ abstract class PaymentModuleCore extends Module
                             }
 
                             $voucher->quantity = 1;
+                            $voucher->reduction_currency = $order->id_currency;
                             $voucher->quantity_per_user = 1;
                             $voucher->free_shipping = 0;
                             if ($voucher->add()) {
@@ -682,7 +682,7 @@ abstract class PaymentModuleCore extends Module
                     $new_history->addWithemail(true, $extra_vars);
 
                     // Switch to back order if needed
-                    if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState()) {
+                    if (Configuration::get('PS_STOCK_MANAGEMENT') && ($order_detail->getStockState() || $order_detail->product_quantity_in_stock <= 0)) {
                         $history = new OrderHistory();
                         $history->id_order = (int)$order->id;
                         $history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);

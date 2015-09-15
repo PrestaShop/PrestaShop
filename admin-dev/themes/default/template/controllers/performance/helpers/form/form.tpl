@@ -175,6 +175,7 @@
 		$('#testMemcachedServer').click(function() {
 			var host = $('input:text[name=memcachedIp]').val();
 			var port = $('input:text[name=memcachedPort]').val();
+			var type = $('input[name="caching_system"]:radio:checked').val() == 'CacheMemcached' ? 'memcached' : 'memcache';
 			if (host && port)
 			{
 				$.ajax({
@@ -186,6 +187,7 @@
 						action: 'test_server',
 						sHost: host,
 						sPort: port,
+						type: type,
 						ajax: true
 					},
 					context: document.body,

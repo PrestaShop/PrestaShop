@@ -135,12 +135,14 @@ function str2url(str, encoding, ucfirst)
 
 function copy2friendlyURL()
 {
+	if (typeof($('#link_rewrite_' + id_language).val()) == 'undefined')
+		return;
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
 
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
-		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
+		$('#link_rewrite_' + id_language).val(str2url($.trim($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', '')));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
@@ -177,10 +179,12 @@ function updateFriendlyURL()
 
 function updateLinkRewrite()
 {
+	$('#name_' + id_language).val($.trim($('#name_' + id_language).val()));
+	$('#link_rewrite_' + id_language).val($.trim($('#link_rewrite_' + id_language).val()));
 	var link = $('#link_rewrite_' + id_language);
 	if (link[0])
 	{
-		link.val(str2url($('#link_rewrite_' + id_language).val(), 'UTF-8'));
+		link.val(str2url(link.val(), 'UTF-8'));
 		$('#friendly-url_' + id_language).text(link.val());
 	}
 }
@@ -725,7 +729,7 @@ $(document).ready(function()
 	}
 
 	$('select.chosen').each(function(k, item){
-		$(item).chosen({disable_search_threshold: 10});
+		$(item).chosen({disable_search_threshold: 10, search_contains: true});
 	});
 	// Apply chosen() when modal is loaded
 	$(document).on('shown.bs.modal', function (e) {
@@ -803,11 +807,8 @@ $(document).ready(function()
 		});
 
 		$(document.body).find("select[name*='"+list_id+"Filter']").each(function() {
-			if ($(this).val() != '')
-			{
-				empty_filters = false;
-				return false;
-			}
+			empty_filters = false;
+			return false;
 		});
 
 		if (empty_filters)
@@ -949,6 +950,9 @@ $(document).ready(function()
                 $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
             }
         });
+    }
+    if ($('.kpi-container').length) {
+        refresh_kpis();
     }
 });
 
@@ -1526,8 +1530,14 @@ function parseDate(date){
 
 function refresh_kpis()
 {
-	$('.box-stats').each(function(){
-		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	$('.box-stats').each(function() {
+		if ($(this).attr('id')) {
+			var functionName = 'refresh_' + $(this).attr('id').replace(/-/g, '_');
+
+			if (typeof window[functionName] === 'function') {
+				window[functionName]();
+			}
+		}
 	});
 }
 

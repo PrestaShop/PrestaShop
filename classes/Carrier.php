@@ -637,7 +637,7 @@ class CarrierCore extends ObjectModel
                 if ($row['range_behavior']) {
                     // Get id zone
                     if (!$id_zone) {
-                        $id_zone = Country::getIdZone(Country::getDefaultCountryId());
+                        $id_zone = (int)Country::getIdZone(Country::getDefaultCountryId());
                     }
 
                     // Get only carriers that have a range compatible with cart
@@ -660,7 +660,7 @@ class CarrierCore extends ObjectModel
             $row['name'] = (strval($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], false, null, null, $id_zone));
-            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier']).'.jpg' ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
+            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier'].'.jpg') ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
 
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
@@ -1293,6 +1293,10 @@ class CarrierCore extends ObjectModel
         }
         if (is_null($cart)) {
             $cart = Context::getContext()->cart;
+        }
+
+        if (is_null($error) || !is_array($error)) {
+            $error = array();
         }
 
         $id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);

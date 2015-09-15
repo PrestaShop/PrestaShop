@@ -18,7 +18,7 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @author  PrestaShop SA <contact@prestashop.com>
  *  @copyright  2007-2015 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -575,16 +575,17 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        if ($id_country = Tools::getValue('id_country')); elseif (isset($address) && isset($address->id_country) && $address->id_country) {
-     $id_country = $address->id_country;
- } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-     preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-     if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-         $id_country = Country::getByIso($array[0], true);
-     }
- }
+        $id_country = (int)Tools::getValue('id_country');
+        if (!$id_country && isset($address) && isset($address->id_country) && $address->id_country) {
+            $id_country = (int)$address->id_country;
+        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
+                $id_country = (int)Country::getByIso($array[0], true);
+            }
+        }
         if (!isset($id_country) || !$id_country) {
-            $id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+            $id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
         }
         return (int)$id_country;
     }
@@ -633,6 +634,7 @@ class ToolsCore
     * @param float $price Product price
     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
     * @return string Price correctly formated (sign, decimal separator...)
+    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
     */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
@@ -644,9 +646,7 @@ class ToolsCore
         }
         if ($currency === null) {
             $currency = $context->currency;
-        }
-        // if you modified this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-        elseif (is_int($currency)) {
+        } elseif (is_int($currency)) {
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
@@ -1492,7 +1492,7 @@ class ToolsCore
 
             /* Uppercase */
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
-            /* B  */ '/[\x{0411}]]/u',
+            /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
             /* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
             /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
@@ -2370,8 +2370,7 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
-        if (
-            !$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
+        if (!$medias && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
@@ -2898,7 +2897,7 @@ exit;
     public static function getProductsOrder($type, $value = null, $prefix = false)
     {
         switch ($type) {
-            case 'by' :
+            case 'by':
                 $list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
                 $value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
@@ -2919,7 +2918,7 @@ exit;
                 return $order_by_prefix.$value;
             break;
 
-            case 'way' :
+            case 'way':
                 $value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = array(0 => 'asc', 1 => 'desc');
                 return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
@@ -3058,8 +3057,8 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, 'product-list-colors.tpl',
-            ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+        Tools::clearCache(null, 'product-list-colors.tpl', $id_product ?
+            'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors');
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 
@@ -3635,9 +3634,7 @@ exit;
                         'type' => 'Text',
                     ));
                     if ($allow_style) {
-                        $def->addElement('style', 'Block', 'Flow', 'Common', array(
-                        'type' => 'Text',
-                    ));
+                        $def->addElement('style', 'Block', 'Flow', 'Common', array('type' => 'Text'));
                     }
                 }
 
@@ -3687,7 +3684,7 @@ exit;
      *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
      *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
      *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
-     * @param &$rows array 	 An array, associative or not, containing arrays that have at least $column and $sort_column fields
+     * @param &$rows array   An array, associative or not, containing arrays that have at least $column and $sort_column fields
      * @param $column string The column on which to perform adjustments
      */
     public static function spreadAmount($amount, $precision, &$rows, $column)
