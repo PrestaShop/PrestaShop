@@ -177,7 +177,7 @@ class ProductPresenter
         $show_price = $this->shouldShowPrice($settings, $product);
 
         if ($show_price && $product['online_only']) {
-            $labels['online_only'] = [
+            $labels['online-only'] = [
                 'type' => 'online_only',
                 'label' => $this->translator->l('Online only', 'Product')
             ];
@@ -185,7 +185,7 @@ class ProductPresenter
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
             $labels['on_sale'] = [
-                'type' => 'on_sale',
+                'type' => 'on-sale',
                 'label' => $this->translator->l('On sale!', 'Product')
             ];
         }
@@ -224,14 +224,13 @@ class ProductPresenter
         $presentedProduct['show_availability'] = $show_availability;
 
         if ($show_availability) {
-
             if ($product['quantity'] > 0) {
                 $presentedProduct['availability_message'] = $this->translator->l(
                     'In Stock',
                     'Product'
                 );
                 $presentedProduct['availability'] = 'available';
-            } else if ($product['allow_oosp']) {
+            } elseif ($product['allow_oosp']) {
                 if ($product['available_later']) {
                     $presentedProduct['availability_message'] = $product['available_later'];
                     $presentedProduct['availability'] = 'available';
@@ -242,7 +241,7 @@ class ProductPresenter
                     );
                     $presentedProduct['availability'] = 'unavailable';
                 }
-            } else if ($product['quantity_all_versions']) {
+            } elseif ($product['quantity_all_versions']) {
                 $presentedProduct['availability_message'] = $this->translator->l(
                     'Product available with different options',
                     'Product'
