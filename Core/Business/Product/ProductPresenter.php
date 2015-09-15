@@ -138,7 +138,10 @@ class ProductPresenter
             null, null, null,
             $language->id,
             null,
-            $product['id_product_attribute']
+            $product['id_product_attribute'],
+            false,
+            false,
+            true
         );
     }
 
