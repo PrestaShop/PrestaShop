@@ -37,7 +37,7 @@ class FormFactory
 {
     public $builder;
 
-    public function __construct($csrf_protection = true)
+    public function __construct($datas = null, $options = array())
     {
         // Set up the CSRF provider
         $csrfProvider = new DefaultCsrfProvider(_COOKIE_KEY_);
@@ -48,7 +48,7 @@ class FormFactory
             ->addExtension(new CsrfExtension($csrfProvider))
             ->addExtension(new HttpFoundationExtension())
             ->getFormFactory()
-            ->createBuilder('form', null, array('csrf_protection' => $csrf_protection));
+            ->createBuilder('form', $datas, $options);
     }
 
     public function create()

@@ -39,7 +39,7 @@ trait AdminCommonActionTrait
 {
     public function uploadAction(Request &$request, Response &$response)
     {
-        $formFactory = new FormFactory(false);
+        $formFactory = new FormFactory(null, array('csrf_protection' => false));
         $builder = $formFactory->create();
         $constraints = array();
 
