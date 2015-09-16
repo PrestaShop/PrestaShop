@@ -149,10 +149,17 @@ class Response extends sfResponse
     /**
      * Get data to format it.
      *
-     * @return mixed
+     * @param string $key The key to retrieve in the data. If null (by default), retrieves all data array.
+     * @return array|mixed The whole array, or just the requested sub element.
      */
-    final public function getContentData()
+    final public function getContentData($key = null)
     {
+        if ($key !== null) {
+            if (!array_key_exists($key, $this->contentData)) {
+                return null;
+            }
+            return $this->contentData[$key];
+        }
         return $this->contentData;
     }
     

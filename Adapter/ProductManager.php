@@ -36,10 +36,15 @@ class ProductManager
      * @param string $orderWay 'asc' or 'desc'
      * @return array A list of products, as a collection of legacy Product objects.
      */
-    public function getProductList($offset, $limit, $orderBy, $orderWay)
+    public function getAdminCatalogProductList($offset, $limit, $orderBy, $orderWay)
     {
-        // TODO
-        return array('toto', 'titi', $offset, $limit, $orderBy, $orderWay);
+        // FIXME: to optimize! Only needed columns, well filtered, and format columns like CLDR and others
+        $idLang = \Context::getContext()->language->id;
+        $products = \Product::getProducts($idLang, $offset, $limit, $orderBy, $orderWay);
+        foreach ($products as &$product) {
+            $product['price'] = \Tools::displayPrice($product['price']);
+        }
+        return $products;
     }
     
     public function mapLegacyParametersProductForm($coreParameters = array())

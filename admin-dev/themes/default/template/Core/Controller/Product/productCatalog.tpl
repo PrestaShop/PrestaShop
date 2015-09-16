@@ -1,5 +1,30 @@
-<div style="border 1px red;">
-Catalog to do
-	{$product_list}<br/>
-/Catalog
+<div class="panel">
+    ## STATS
+</div>
+
+<div class="panel">
+    ## GROS FILTRE
+</div>
+
+<div class="panel col-lg-12">
+    <div class="panel-heading">
+        ## PRODUITS
+        <span class="badge">{$product_count}</span>
+    </div>
+
+    <form>
+        <table class="table product">
+            <theader>
+            
+            </theader>
+        	{$product_list}
+        	<tfooter>
+        	
+        	</tfooter>
+        </table>
+    
+        <div class="row">
+            ## ACTIONS GROUPIR
+        </div>
+    </form>
 </div>

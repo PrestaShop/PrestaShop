@@ -271,12 +271,13 @@ abstract class BaseController
      * @param string $name The route unique name/ID
      * @param array $parameters The route's parameters (mandatory, and optional, and even more if needed)
      * @param string $layoutMode The output mode overriden (partial view by default, means HTML content whithout any encapsulation).
+     * @param boolean $fullResponse True to return full Response object instead of just the rendered content.
      * @throws DevelopmentErrorException If the route is not found.
-     * @return string The action result, after template/transformations depending on $layoutMode value.
+     * @return string|Response The action result, after template/transformations depending on $layoutMode and $fullResponse values.
      */
-    final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
-        return $this->getRouter()->subcall($name, $parameters, $layoutMode);
+        return $this->getRouter()->subcall($name, $parameters, $layoutMode, $fullResponse);
     }
 
     /**

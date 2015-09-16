@@ -38,6 +38,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 class ProductController extends AdminController
 {
@@ -57,16 +58,16 @@ class ProductController extends AdminController
     public function productCatalogAction(Request &$request, Response &$response)
     {
         // FIXME: remove this redirection to legacy and develop catalog page when needed.
-        $this->redirectToRoute(
-            $request,
-            'admin_product_catalog',
-            array(
-                'productOrderby' => $request->attributes->get('orderBy'),
-                'productOrderway' => $request->attributes->get('orderWay')
-            ),
-            true, // force legacy URL
-            false // temporary
-        );
+//         $this->redirectToRoute(
+//             $request,
+//             'admin_product_catalog',
+//             array(
+//                 'productOrderby' => $request->attributes->get('orderBy'),
+//                 'productOrderway' => $request->attributes->get('orderWay')
+//             ),
+//             true, // force legacy URL
+//             false // temporary
+//         );
 
         // get Product list from productListAction subcall
         $productListParams = array(
@@ -76,11 +77,33 @@ class ProductController extends AdminController
             'ls_products_orderWay' => $request->attributes->get('orderWay'),
             '_layout_mode' => 'none_html',
         );
-        // URL example: /product/list/none_html/40/20/id_product/asc
-        $response->addContentData('product_list', $this->subcall('admin_product_list', $productListParams));
-        
+        $subResponse = $this->subcall('admin_product_list', $productListParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
+        $response->addContentData('product_list', $subResponse->getContent());
+
+        // Alternative layout for empty list
+        $totalProductCount = $subResponse->getContentData('product_count');
+        if ($totalProductCount === 0) {
+            $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
+        } else {
+            $response->addContentData('product_count', $totalProductCount);
+        }
+
         // Add layout top-right menu actions
-        // TODO
+        $response->setHeaderToolbarBtn(
+            array(
+                'legacy' => array(
+                    'href' => '#', // FIXME
+                    'desc' => '##No! Give me the old page!',
+                    'icon' => 'process-icon-toggle-on',
+                    'help' => '##The new page cannot fit your needs now? Fallback to the old one, and tell us why!'
+                ),
+                'add' => array(
+                    'href' => $this->generateUrl('admin_product_form'),
+                    'desc' => '##Add euh niou product',
+                    'icon' => 'process-icon-new'
+                ),
+            )
+        );
     }
 
     /**
@@ -95,10 +118,16 @@ class ProductController extends AdminController
      */
     public function productListAction(Request &$request, Response &$response, array $products)
     {
-        // empty list case: change template
-        if ($request->attributes->get('_layout_mode', 'layout_html') == 'none_html' && count($products) === 0) {
-            $response->setTemplate('Core/Controller/Product/productListEmpty.tpl');
+        $totalCount = 0;
+
+        // Adds controller info (URLs, etc...) to product list
+        foreach ($products as &$product) {
+            $totalCount = count($products); // FIXME: on doit recup le nombre total, pas avec offset et limit! (a mettre en SQL, SQL_CALC_FOUND_ROWS)
+            $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
         }
+
+        $response->replaceContentData('products', $products);
+        $response->addContentData('product_count', $totalCount);
     }
 
     public function productFormAction(Request &$request, Response &$response, $product)

@@ -49,10 +49,21 @@ class Adapter_LegacyContext
     public function mergeContextWithLegacy(PrestaShop\PrestaShop\Core\Business\Context &$newContext)
     {
         $legacyContext = $this->getContext();
+
+        // inject from Legacy to new Context
         foreach (get_object_vars($legacyContext) as $key => $value) { // gets public attributes.
             if ($value !== null) {
                 $newContext->$key = $value;
             }
+        }
+
+        // simulate a controller object in legacy Context
+        $legacyContext->controller = new stdClass();
+        $legacyContext->controller->controller_type = 'unknown';
+
+        // add a default currency
+        if (!$legacyContext->currency) {
+            $legacyContext->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         }
     }
 

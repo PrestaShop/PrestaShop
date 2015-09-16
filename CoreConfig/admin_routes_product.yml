@@ -21,7 +21,7 @@ admin_product_list:
         _controller: 'Admin\ProductController::productListAction'
         _layout_mode: layout_html
         ls_products_class: PrestaShop\PrestaShop\Adapter\ProductManager
-        ls_products_method: getProductList
+        ls_products_method: getAdminCatalogProductList
         ls_products_limit: 10
         ls_products_offset: 0
         ls_products_orderBy: id_product

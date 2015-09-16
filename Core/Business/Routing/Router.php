@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 
 abstract class Router extends AbstractRouter
 {
@@ -222,7 +223,7 @@ abstract class Router extends AbstractRouter
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
      * @param Request $request
      * @throws ResourceNotFoundException if controller action failed (not found)
-     * @return string Data/view returned by matching controller (not sent through output buffer).
+     * @return Response Data/view returned by matching controller (not sent through output buffer).
      */
     final protected function doSubcall($controllerName, $controllerMethod, Request &$request)
     {
@@ -367,7 +368,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                 if ($returnView) {
                     $phpCode .= '
         // Do not use send (no output buffer tricks)
-        return $response->getContent();
+        return $response;
     }
 
     if (!$actionAllowed) {

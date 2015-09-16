@@ -310,10 +310,12 @@ abstract class AbstractRouter
      *
      * @param string $routeName The route unique name/ID
      * @param array $routeParameters The route's parameters (mandatory, and optional, and even more if needed)
+     * @param string $layoutMode The output mode overriden (partial view by default, means HTML content whithout any encapsulation).
+     * @param boolean $fullResponse True to return full Response object instead of just the rendered content.
      * @throws ResourceNotFoundException if no route is found for the request.
-     * @return string data/view returned by matching controller (not sent through output buffer)
+     * @return string|Response data/view returned by matching controller (not sent through output buffer)
      */
-    final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW)
+    final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
         $this->isSubcalling = true;
         $subRequest = new Request();
@@ -329,10 +331,10 @@ abstract class AbstractRouter
 
             // Call Controller/Action
             list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
-            $res = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
-            $this->routingDispatcher->dispatch('subcall'.($res?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
+            $response = $this->doSubcall($controllerName, $controllerMethod, $subRequest);
+            $this->routingDispatcher->dispatch('subcall'.($response?'_succeed':'_failed'), new BaseEvent('Subcall done on '.$parameters['_controller'].'.'));
             $this->isSubcalling = false;
-            return $res;
+            return ($fullResponse)? $response : $response->getContent();
         } catch (ResourceNotFoundException $e) {
             $this->routingDispatcher->dispatch('subcall_failed', new BaseEvent('Failed to resolve route from subcall request.', $e));
             $this->isSubcalling = false;
@@ -348,7 +350,7 @@ abstract class AbstractRouter
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
      * @param Request $request
      * @throws ResourceNotFoundException if controller action failed (not found)
-     * @return string Data/view returned by matching controller (not sent through output buffer).
+     * @return Response Data/view returned by matching controller (not sent through output buffer).
      */
     abstract protected function doSubcall($controllerName, $controllerMethod, Request &$request);
 
