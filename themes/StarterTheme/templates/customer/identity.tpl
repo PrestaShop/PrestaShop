@@ -22,7 +22,9 @@
         {block name="identity_form_fields"}
         <section id="identity-form-fields" class="form-fields">
 
-          {include file="customer/_partials/form-gender.tpl" genders=$genders}
+          {block name="form_item_gender"}
+            {include file="customer/_partials/form-item-gender.tpl" genders=$genders}
+          {/block}
 
           <label class="required">
             <span>{l s='First name'}</span>
@@ -39,7 +41,9 @@
             <input type="email" name="email" id="email" value="{$smarty.post.email}" />
           </label>
 
-          {include file="customer/_partials/form-date.tpl" dates=$birthday_dates}
+          {block name="form_item_date"}
+            {include file="customer/_partials/form-item-date.tpl" dates=$birthday_dates}
+          {/block}
 
           <label class="required">
             <span>{l s='Current Password'}</span>
