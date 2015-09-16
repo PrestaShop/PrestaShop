@@ -196,7 +196,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'label' => $this->l('Currency'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies()),
+                        'query' => array_merge(array(0 => array('id_currency' => 0, 'name' => $this->l('All currencies'))), Currency::getCurrencies(false, true, true)),
                         'id' => 'id_currency',
                         'name' => 'name'
                     ),
