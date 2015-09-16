@@ -975,8 +975,8 @@ class FrontControllerCore extends Controller
      */
     public function initFooter()
     {
-		if (!isset($this->context->cookie->id_guest))
-			Guest::setNewGuest($this->context->cookie);
+        if (!isset($this->context->cookie->id_guest))
+            Guest::setNewGuest($this->context->cookie);
 
         $this->context->smarty->assign(array(
             'HOOK_FOOTER'            => Hook::exec('displayFooter'),
