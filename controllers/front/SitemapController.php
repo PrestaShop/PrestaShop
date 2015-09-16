@@ -46,7 +46,6 @@ class SitemapControllerCore extends FrontController
     public function getTemplateVarSitemap()
     {
         $pages = [];
-        $pretty_url = Configuration::get('PS_REWRITING_SETTINGS');
         $catalog_mode = Configuration::get('PS_CATALOG_MODE');
 
         $cms = CMSCategory::getRecurseCategory($this->context->language->id, 1, 1, 1);
@@ -54,7 +53,7 @@ class SitemapControllerCore extends FrontController
             $pages[] = [
                 'id' => 'cms-page-'.$p['id_cms'],
                 'label' => $p['meta_title'],
-                'link' => ($pretty_url) ? $p['link_rewrite'] : $p['link'],
+                'link' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
             ];
         }
 
