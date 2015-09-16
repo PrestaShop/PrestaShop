@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
+use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Business\Context;
@@ -132,24 +134,74 @@ class ProductController extends AdminController
 
     public function productFormAction(Request &$request, Response &$response, $product)
     {
-        // Should redirect to legacy or not?
-        /*if (false) { // FIXME: option 'UseLegacyProductPage' a tester pour le savoir!
-            $this->redirectToRoute(
-                $request,
-                'admin_product_form',
-                $request->attributes->all(),
-                true, // force legacy URL
-                false // temporary
-            );
-        }*/
-
         $formFactory = new FormFactory();
         $builder = $formFactory->create();
 
+        $response->setJs(array(
+            _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
+            _PS_JS_DIR_.'admin/tinymce.inc.js',
+            _PS_JS_DIR_.'admin/tinymce_loader.js',
+        ));
+
         $form = $builder
             ->setAction('')
-            ->add('title', 'text')
+            ->add('name', new TranslateType(
+                'text',
+                array('constraints' => array(
+                        new Assert\NotBlank(),
+                        new Assert\Length(array('min' => 3))
+                    )
+                )
+            ))
+            ->add('reference', 'text')
+            ->add('ean13', 'text')
+            ->add('upc', 'text')
+            ->add('active', 'choice', array(
+                'choices'  => array( 1 => 'Oui', 0 => 'Non'),
+                'expanded' => true,
+                'required' => true,
+                'multiple' => false,
+                'data' => 0
+            ))
+            ->add('visibility', 'choice', array(
+                'choices'  => array(
+                    'both' => 'Partout',
+                    'catalog' => 'Catalogue uniquement',
+                    'search' => 'Recherche uniquement',
+                    'none' => 'Nulle part',
+                ),
+                'required' => true,
+                'data' => 'both'
+            ))
+            ->add(
+                $builder->create('options', 'form')
+                    ->add('available_for_order', 'checkbox', array(
+                        'label'    => 'Disponible à la vente',
+                        'required' => false,
+                    ))
+                    ->add('show_price', 'checkbox', array(
+                        'label'    => 'Afficher le prix',
+                        'required' => false,
+                    ))
+                    ->add('online_only', 'checkbox', array(
+                        'label'    => 'Exclusivité web (non vendu en magasin)',
+                        'required' => false,
+                    ))
+            )
+            ->add('condition', 'choice', array(
+                'choices'  => array(
+                    'new' => 'Nouveau',
+                    'used' => 'Utilisé',
+                    'refurbished' => 'Reconditionné',
+                ),
+                'required' => true,
+                'data' => 'new'
+            ))
+            ->add('description_short', 'textarea', array(
+                'attr' => array('class' => 'autoload_rte')
+            ))
             ->add('description', 'textarea')
+            ->add('categorys', new ChoiceCategorysTreeType('Catégories', \Category::getNestedCategories()))
             ->getForm();
 
         $response->setEngineName('twig');
@@ -157,6 +209,7 @@ class ProductController extends AdminController
         $response->setTitle('My custom title');
         $response->setDisplayType('add');
 
+        $response->addContentData('form', $form->createView());
         $response->addContentData('form', $form->createView());
     }
 }

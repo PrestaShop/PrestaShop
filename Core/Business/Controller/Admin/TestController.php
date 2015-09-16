@@ -9,13 +9,10 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\ContainsAlphanumeric;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TestType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 
 class TestController extends AdminController
@@ -64,16 +61,16 @@ class TestController extends AdminController
             ->setAction('')
             ->add('firstName', 'text', array(
                 'constraints' => array(
-                    new NotBlank(),
-                    new Length(array('min' => 4)),
+                    new Assert\NotBlank(),
+                    new Assert\Length(array('min' => 4)),
                     new ContainsAlphanumeric(),
                 ),
             ))
             ->add('lastName', 'text', array(
                 'constraints' => array(
-                    new NotBlank(),
-                    new Email(),
-                    new Length(array('min' => 4)),
+                    new Assert\NotBlank(),
+                    new Assert\Email(),
+                    new Assert\Length(array('min' => 4)),
                 ),
             ))
             ->add('gender', 'choice', array(
@@ -85,7 +82,7 @@ class TestController extends AdminController
             ->add('imageAttachment', 'file', array(
                 'required' => false,
                 'constraints' => array(
-                    new Image(array(
+                    new Assert\Image(array(
                         'maxSize' => '1024k',
                         'minWidth' => 100,
                         'minHeight' => 100,
@@ -101,7 +98,7 @@ class TestController extends AdminController
             ->add('fileAttachment', 'file', array(
                 'required' => false,
                 'constraints' => array(
-                    new File(array(
+                    new Assert\File(array(
                         'maxSize' => '1024k',
                         'mimeTypes' => array(
                             'text/plain'
@@ -119,9 +116,16 @@ class TestController extends AdminController
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true))
+            ->add('title', new TranslateType(
+                'text',
+                array('constraints' => array(
+                    new Assert\NotBlank(),
+                    new Assert\Length(array('min' => 4)),
+                    new ContainsAlphanumeric())
+                )
+            ))
             ->setData($defaultData)
             ->getForm();
-
 
         $form->handleRequest($request);
 

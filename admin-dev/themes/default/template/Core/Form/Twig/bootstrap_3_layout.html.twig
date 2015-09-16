@@ -162,6 +162,40 @@
     </li>
 {%- endblock choice_tree_item_widget %}
 
+{% block translatefields_widget %}
+    {{ form_errors(form) }}
+    <div class="translations tabbable">
+
+        {% if form|length > 1 %}
+        <ul class="translationsLocales nav nav-tabs">
+            {% for translationsFields in form %}
+                <li {% if defaultLocale.id_lang == translationsFields.vars.name %}class="active"{% endif %}>
+                    <a href="#" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+                        {{ translationsFields.vars.label|capitalize }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="translationsFields tab-content ">
+            {% for translationsFields in form %}
+                <div class="translationsFields-{{ translationsFields.vars.id }} tab-pane {% if form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} {% if not form.vars.valid %}field-error{% endif %}">
+                    {{ form_errors(translationsFields) }}
+                    {{ form_widget(translationsFields) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block translate_fields_widget -%}
+    {% if type is not defined or 'file' != type %}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
+    {% endif %}
+    {{- parent() -}}
+{%- endblock translate_fields_widget %}
+
 {# Labels #}
 
 {% block form_label -%}
