@@ -9,12 +9,12 @@
   <footer class="actions address-actions">
     <ul class="action-list">
       <li>
-        <a href="{$urls.pages.address}id_address={$address.id}">
+        <a href="TODO">
           {l s='Update'}
         </a>
       </li>
       <li>
-        <a href="{$urls.pages.address}id_address={$address.id}&delete">
+        <a href="TODO">
           {l s='Delete'}
         </a>
       </li>
