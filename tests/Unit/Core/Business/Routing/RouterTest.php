@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
 class FakeRouter extends Router
 {
@@ -76,6 +78,21 @@ class FakeControllerWarning extends FrontController
 {
 }
 
+class Fake_Adapter_HookManager extends \Adapter_HookManager
+{
+    public function exec(
+        $hook_name,
+        $hook_args = array(),
+        $id_module = null,
+        $array_return = false,
+        $check_exceptions = true,
+        $use_push = false,
+        $id_shop = null
+    ) {
+        return $hook_name;
+    }
+}
+
 class RouterTest extends UnitTestCase
 {
     private function setup_env()
@@ -108,5 +125,35 @@ class RouterTest extends UnitTestCase
         $fakeRequest->overrideGlobals();
         $found = $router->dispatch(true);
         $this->assertFalse($found, 'Unknown route should return false through dispatch().');
+    }
+
+    public function test_event_dispatcher_auto_instantiated()
+    {
+        $this->setup_env();
+        $router = FakeRouter::getInstance($this->container);
+        $hookDispatcher = BaseEventDispatcher::getInstance('hook');
+
+        // check there is listeners registered at Router instatiation.
+        $count = count($hookDispatcher->getListeners());
+        $this->assertGreaterThan(0, $count);
+
+        // add hook listener
+        $hookDispatcher->addListener('legacy_TestLegacyHook', array($this, 'listenHook'), 255);
+        $this->assertEquals($count+1, count($hookDispatcher->getListeners()));
+        $result = $hookDispatcher->hook('legacy_TestLegacyHook', array('k1' => 'v1'));
+        
+        // add legacy hook listener
+        $hookDispatcher->addListener('legacy_TestLegacyHook', array(new Fake_Adapter_HookManager(), 'onHook'), 128);
+        $result = $hookDispatcher->hook('legacy_TestLegacyHook', array('k1' => 'v1'));
+        $this->assertContains('TestLegacyHook', $result); // 'legacy_' prefix is removed for legacy HOOKS!
+    }
+    
+    public function listenHook(HookEvent $event, $eventName)
+    {
+        $this->assertEquals('legacy_TestLegacyHook', $eventName, 'Event name should not be modified here.');
+        $this->assertInstanceOf('PrestaShop\\PrestaShop\\Core\\Business\\Dispatcher\\HookEvent', $event, 'Event should be instance of HookEvent.');
+        $params = $event->getHookParameters();
+        $this->assertArrayHasKey('k1', $params, 'Failed to transfer hook params.');
+        $event->appendHookResult('result1');
     }
 }

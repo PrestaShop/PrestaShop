@@ -83,12 +83,12 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      * If the dispatcher is not instantiated by initialization, then it will be instantiated.
      *
      * @param string $dispatcherName
-     * @return Ambigous <multitype:, \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher>
+     * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
      */
-    final public static function getInstance($dispatcherName = 'default')
+    public static function getInstance($dispatcherName = 'default')
     {
         if (!isset(self::$instances[$dispatcherName])) {
-            self::$instances[$dispatcherName] = new self($dispatcherName, self::$containerInit);
+            self::$instances[$dispatcherName] = new static($dispatcherName, self::$containerInit);
         }
         return self::$instances[$dispatcherName];
     }
@@ -178,7 +178,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 
         foreach (self::$dispatcherRegistry as $dispatcherName => $listeners) {
             /* @var $dispatcher EventDispatcher */
-            $dispatcher = new self($dispatcherName, self::$containerInit);
+            $dispatcher = new static($dispatcherName, self::$containerInit);
             foreach ($listeners as $listener) {
                 if ($listener[4] === true) { // lazy instantiation, use one-shot auto-destructive closure
                     $closure = function (ResponseEvent $event) use ($dispatcher, $listener, &$closure) {
@@ -208,13 +208,14 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     /* (non-PHPdoc)
      * @see \Symfony\Component\EventDispatcher\EventDispatcher::dispatch()
      */
-    public function dispatch($eventName, Event $event = null)
+    final public function dispatch($eventName, Event $event = null)
     {
         if (null === $event) {
             $event = new BaseEvent();
         }
-
-        $event->setContainer($this->container);
+        if ($event instanceof BaseEvent) {
+            $event->setContainer($this->container);
+        }
 
         return parent::dispatch($eventName, $event);
     }

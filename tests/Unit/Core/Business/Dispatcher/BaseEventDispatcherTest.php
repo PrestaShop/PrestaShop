@@ -28,8 +28,10 @@ namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Dispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
-class EventDispatcherTest extends UnitTestCase
+class BaseEventDispatcherTest extends UnitTestCase
 {
     private function setup_env()
     {
@@ -47,42 +49,19 @@ class EventDispatcherTest extends UnitTestCase
     public function test_event_methods()
     {
         $conf = $this->setup_env();
-        
-        $event = new BaseEvent('thé', new \Core_Foundation_Exception_Exception('exception_test'));
-        try {
-            $container = 'toto';
-            $event->setContainer($container); // should fail
-            $this->fail();
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('PHPUnit_Framework_Error', $e, 'Should generate an exception since the Container is not from the Container class.');
-        }
-    }
-    
-    public function test_event_dispatcher_instantiation()
-    {
-        $conf = $this->setup_env();
-        EventDispatcher::initDispatchers(
-            $this->container,
-            $conf->get('_PS_ROOT_DIR_'),
-            $conf->get('_PS_CACHE_DIR_'),
-            $conf->get('_PS_MODULE_DIR_'),
-            true);
-        $defaultInstance = EventDispatcher::getInstance('test2');
-        $this->assertAttributeNotCount(0, 'instances', $defaultInstance);
-        $this->assertAttributeContains($defaultInstance, 'instances', $defaultInstance);
+        $event = new HookEvent('thé', new \Core_Foundation_Exception_Exception('exception_test'));
 
-        $defaultInstance->addListener('thaï', array($this, 'defaultListener'));
-        $event = new BaseEvent('thé', new \Core_Foundation_Exception_Exception('exception_test'));
-        $event->setContainer($this->container)->setFilePath('/my/pat/to/file');
-        $defaultInstance->dispatch('thaï', $event);
+        // string concat mode
+        $event->setHookResult('string');
+        $event->appendHookResult('-string');
+        $this->assertEquals('string-string', $event->getHookResult());
 
-        $this->assertAttributeEquals(true, 'listenerCalled', $this);
-    }
-
-    private $listenerCalled = false;
-    public function defaultListener(BaseEvent $e, $event)
-    {
-        $this->assertEquals($event, 'thaï', 'Event name mismatch.');
-        $this->listenerCalled = true;
+        // array append mode
+        $event->setHookResult(array('k1' => 'v1'));
+        $event->appendHookResult(array('k2' => 'v2'));
+        $event->appendHookResult('v3');
+        $this->assertArrayHasKey('k1', $event->getHookResult());
+        $this->assertArrayHasKey('k2', $event->getHookResult());
+        $this->assertArrayHasKey('0', $event->getHookResult());
     }
 }

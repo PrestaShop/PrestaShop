@@ -31,9 +31,12 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
 /**
  * This class extends EventDispatcher to add Business related listeners.
+ *
  * @see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
  *
  * Existing dispatchers:
@@ -55,6 +58,25 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
  */
 class BaseEventDispatcher extends EventDispatcher
 {
+    /**
+     * Retrieve a singleton (default, or an indexed one) of BaseEventDispatcher.
+     * If the dispatcher is not instantiated by initialization, then it will be instantiated.
+     *
+     * @param string $dispatcherName
+     * @return \PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher
+     */
+    final public static function getInstance($dispatcherName = 'default')
+    {
+        return parent::getInstance($dispatcherName);
+    }
+
+    /**
+     * PrestaShop Business specific listeners.
+     *
+     * This static attribute contains PrestaShop Business specific listeners to register during Router instantiation.
+     * The array will be merged into the super class array to complete the list.
+     * @var array
+     */
     private static $baseDispatcherRegistry = array(
         'module' => array(
             array('before_install', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
@@ -67,19 +89,50 @@ class BaseEventDispatcher extends EventDispatcher
             array('after_uninstall', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
             array('after_deactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
             array('after_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
-        ) // all events concerning modules manipulation: install, update, uninstall, etc...
+        ), // all events concerning modules manipulation: install, update, uninstall, etc...
+        'hook' => array(
+            array('legacy_actionProductAdd', 'Adapter_HookManager', 'onHook', 0, true),
+            array('legacy_actionProductUpdate', 'Adapter_HookManager', 'onHook', 0, true),
+            array('legacy_actionCategoryUpdate', 'Adapter_HookManager', 'onHook', 0, true),
+            // TODO: complete this list for Admin Product page
+        ) // hooks
     );
 
+    /**
+     * This method is called at the Router instantiation to initialize the base event listeners.
+     *
+     * @param \Core_Foundation_IoC_Container $container The application service container.
+     * @param boolean $forceDebug True for debug mode.
+     */
     final public static function initBaseDispatchers(&$container, $forceDebug = false)
     {
         // complete registry with Business listeners, and then init
         EventDispatcher::$dispatcherRegistry = array_merge(EventDispatcher::$dispatcherRegistry, self::$baseDispatcherRegistry);
         $configuration = $container->make('Core_Business_ConfigurationInterface');
-        EventDispatcher::initDispatchers(
+        self::initDispatchers(
             $container,
             $configuration->get('_PS_ROOT_DIR_'),
             $configuration->get('_PS_CACHE_DIR_'),
             $configuration->get('_PS_MODULE_DIR_'),
             ($forceDebug || $configuration->get('_PS_MODE_DEV_')));
+    }
+
+    /**
+     * Call this instead of ->dispatch() to trigger a hook event (a more structured event than the base one).
+     *
+     * This case will use a HookEvent instead of a BaseEvent (means a subclass of BaseEvent with more options),
+     * to allow Hook parameters and Hook results to pass through the event object, and to return the result.
+     *
+     * @param string $hookName
+     * @param array $hookParameters An indexed array of parameters to send to the Hook listener.
+     * @return string|array The result of the hook(s) if there is any.
+     */
+    final public static function hook($hookName, $hookParameters = array())
+    {
+        $dispatcher = self::getInstance('hook');
+        $event = new HookEvent();
+        $event->setHookParameters($hookParameters);
+        $dispatcher->dispatch($hookName, $event);
+        return $event->getHookResult();
     }
 }
