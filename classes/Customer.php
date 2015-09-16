@@ -500,7 +500,29 @@ class CustomerCore extends ObjectModel
         $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
         $cache_id = 'Customer::getSimpleAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
         if (!Cache::isStored($cache_id)) {
-            $sql = 'SELECT DISTINCT
+            $sql = $this->getSimpleAddressSql(null, $id_lang);
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            Cache::store($cache_id, $result);
+            return $result;
+        }
+        return Cache::retrieve($cache_id);
+    }
+
+    public function getSimpleAddress($id_address, $id_lang = null)
+    {
+        $sql = $this->getSimpleAddressSql($id_address, $id_lang);
+
+        return Db::getInstance()->executeS($sql)[0];
+    }
+
+    public function getSimpleAddressSql($id_address = null, $id_lang = null)
+    {
+        if (is_null($id_lang)) {
+            $id_lang = Context::getContext()->language->id;
+        }
+        $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
+
+        $sql = 'SELECT DISTINCT
                       a.`id_address` AS `id`,
                       a.`alias`,
                       a.`firstname`,
@@ -530,11 +552,11 @@ class CustomerCore extends ObjectModel
                         AND a.`deleted` = 0
                         AND a.`active` = 1';
 
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-            Cache::store($cache_id, $result);
-            return $result;
+        if (!is_null($id_address)) {
+            $sql .= ' AND a.`id_address` = '.(int)$id_address;
         }
-        return Cache::retrieve($cache_id);
+
+        return $sql;
     }
 
     /**
