@@ -4,7 +4,7 @@ admin_product_catalog:
     methods:  [GET]
     defaults:
         _legacy_path: AdminProducts
-        _legacy_force: true #FIXME: change to false when Catalog will be refacto into new Core
+        _legacy_force: false
         _controller: 'Admin\ProductController::productCatalogAction'
         limit: 10
         offset: 0
@@ -20,8 +20,8 @@ admin_product_list:
     defaults:
         _controller: 'Admin\ProductController::productListAction'
         _layout_mode: layout_html
-        ls_products_class: PrestaShop\PrestaShop\Adapter\ProductManager
-        ls_products_method: getAdminCatalogProductList
+        ls_products_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        ls_products_method: getCatalogProductList
         ls_products_limit: 10
         ls_products_offset: 0
         ls_products_orderBy: id_product
@@ -42,14 +42,5 @@ admin_product_form:
     requirements:
         id_product: new|\d+
     options:
-        legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\ProductManager
+        legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         legacy_param_mapper_method: mapLegacyParametersProductForm
-
-admin_product_list_2:
-    path:     /list2/{_layout_mode}/{toto}
-    defaults:
-        _controller: 'Admin\ProductController::productList2Action'
-        _layout_mode: layout_html
-        toto: tititutu
-    requirements:
-        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json

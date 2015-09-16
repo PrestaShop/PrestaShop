@@ -85,18 +85,23 @@ class Adapter_AutoInflaterManager
      *
      * @param string $className
      * @param string $method
+     * @param array $parameters The route attributes
+     * @param array $queryParameters The GETS parameters
+     * @param array $requestParameters The POSTs parameters
      * @return boolean|object|NULL False if conditions are not satisfied (calssName not found, mandatory params mmissing). Null if the ID is not in the DB.
      */
-    public function inflateCollection($className, $method, $parameters)
+    public function inflateCollection($className, $method, $parameters, $queryParameters, $requestParameters)
     {
         $className = ucfirst($className);
         if (!class_exists('\\'.$className)) {
             return false;
         }
 
+        // reflective call
         $class = new \ReflectionClass('\\'.$className);
         $method = $class->getMethod($method);
 
+        // inject route parameters
         $methodParameters = $method->getParameters();
         $givenParameters = array();
         foreach ($methodParameters as $mp) {
@@ -110,6 +115,14 @@ class Adapter_AutoInflaterManager
                     } elseif (isset($this->context->cookie) && isset($this->context->cookie->id_lang)) {
                         $givenParameters[] = $this->context->cookie->id_lang;
                     }
+                    continue;
+                }
+                if (in_array($mp->name, array('query', 'get'))) {
+                    $givenParameters[] = $queryParameters;
+                    continue;
+                }
+                if (in_array($mp->name, array('request', 'post'))) {
+                    $givenParameters[] = $requestParameters;
                     continue;
                 }
             }

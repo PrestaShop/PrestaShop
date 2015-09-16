@@ -227,6 +227,12 @@ abstract class Router extends AbstractRouter
      */
     final protected function doSubcall($controllerName, $controllerMethod, Request &$request)
     {
+        // merge query and request subparts from caller's Request
+        $callerRequest = $this->getLastRouterRequestInstance();
+        $request->query = $callerRequest->query;
+        $request->request = $callerRequest->request;
+        // FIXME: maybe more? (files, cookies, headers parameterBags)
+
         return $this->doCall($controllerName, $controllerMethod, $request, true);
     }
 

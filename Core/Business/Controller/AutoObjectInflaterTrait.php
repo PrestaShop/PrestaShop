@@ -97,7 +97,8 @@ trait AutoObjectInflaterTrait
      *     ls_mykey_order_by: 'id'
      *     ls_mykey_order_way: 'ASC'
      *
-     * TODO: filter system!
+     * All these route parameters will be completed by query (GETs) and request (POSTs) parameters that
+     * starts with 'ls_mykey_' prefix
      *
      * @param Request $request
      * @param Response $response
@@ -105,6 +106,7 @@ trait AutoObjectInflaterTrait
      */
     public function beforeActionInflateRequestedCollection(Request &$request, Response &$response)
     {
+        // fetch parameters from route attributes
         $collectionParameters = array();
         foreach ($request->attributes->all() as $key => $value) {
             $subKeys = explode('_', $key, 3);
@@ -117,13 +119,45 @@ trait AutoObjectInflaterTrait
             $collectionParameters[$subKeys[1]][$subKeys[2]] = $value;
         }
 
+        // fetch parameters from query bag (GETs)
+        $collectionQueryParameters = array();
+        foreach ($request->query->all() as $key => $value) {
+            $subKeys = explode('_', $key, 3);
+            if (count($subKeys) < 3) {
+                continue;
+            }
+            if ($subKeys[0] != 'ls') {
+                continue;
+            }
+            $collectionQueryParameters[$subKeys[1]][$subKeys[2]] = $value;
+        }
+
+        // fetch parameters from request bag (POSTs)
+        $collectionRequestParameters = array();
+        foreach ($request->request->all() as $key => $value) {
+            $subKeys = explode('_', $key, 3);
+            if (count($subKeys) < 3) {
+                continue;
+            }
+            if ($subKeys[0] != 'ls') {
+                continue;
+            }
+            $collectionRequestParameters[$subKeys[1]][$subKeys[2]] = $value;
+        }
+
         $autoInflaterManager = $this->container->make('Adapter_AutoInflaterManager');
         foreach ($collectionParameters as $key => $parameters) {
             try {
                 $method = $parameters['method'];
                 $class = $parameters['class'];
 
-                $collection = $autoInflaterManager->inflateCollection($class, $method, $parameters);
+                $collection = $autoInflaterManager->inflateCollection(
+                    $class,
+                    $method,
+                    $parameters,
+                    isset($collectionQueryParameters[$key])? $collectionQueryParameters[$key] : null,
+                    isset($collectionRequestParameters[$key])? $collectionRequestParameters[$key] : null
+                );
 
                 if ($collection === false) {
                     continue;

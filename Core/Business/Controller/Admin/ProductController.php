@@ -121,7 +121,6 @@ class ProductController extends AdminController
     public function productListAction(Request &$request, Response &$response, array $products)
     {
         $totalCount = 0;
-
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
             $totalCount = count($products); // FIXME: on doit recup le nombre total, pas avec offset et limit! (a mettre en SQL, SQL_CALC_FOUND_ROWS)
