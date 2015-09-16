@@ -2,8 +2,7 @@
  * File used for compatibility purpose
  * @type {*|jQuery}
  */
-var path = $(location).attr('pathname');
-var path_array = path.split('/');
+var path_array = baseAdminDir.split('/');
 path_array.splice((path_array.length - 2), 2);
 var final_path = path_array.join('/');
 window.tinyMCEPreInit = {};
