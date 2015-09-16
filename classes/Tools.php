@@ -3057,8 +3057,7 @@ exit;
         // Change template dir if called from the BackOffice
         $current_template_dir = Context::getContext()->smarty->getTemplateDir();
         Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
-        Tools::clearCache(null, 'product-list-colors.tpl', $id_product ?
-            'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors');
+        Tools::clearCache(null, _PS_THEME_DIR_.'product-list-colors.tpl', Product::getColorsListCacheId((int)$id_product, false));
         Context::getContext()->smarty->setTemplateDir($current_template_dir);
     }
 

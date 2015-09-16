@@ -1448,7 +1448,7 @@ class ProductCore extends ObjectModel
 
     public static function updateDefaultAttribute($id_product)
     {
-        $id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+        $id_default_attribute = (int)Product::getDefaultAttribute($id_product, 0, true);
 
         $result = Db::getInstance()->update('product_shop', array(
             'cache_default_attribute' => $id_default_attribute,
@@ -6087,9 +6087,18 @@ class ProductCore extends ObjectModel
         );
     }
 
-    public static function getColorsListCacheId($id_product)
+    public static function getColorsListCacheId($id_product, $full = true)
     {
-        return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
+        $cache_id = 'productlist_colors';
+        if ($id_product) {
+            $cache_id .= '|'.(int)$id_product;
+        }
+
+        if ($full) {
+            $cache_id .= '|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
+        }
+
+        return $cache_id;
     }
 
     public static function setPackStockType($id_product, $pack_stock_type)
