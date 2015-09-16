@@ -53,7 +53,7 @@ class SitemapControllerCore extends FrontController
             $pages[] = [
                 'id' => 'cms-page-'.$p['id_cms'],
                 'label' => $p['meta_title'],
-                'link' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
+                'url' => $this->context->link->getCMSLink(new CMS($p['id_cms'])),
             ];
         }
 
@@ -61,39 +61,39 @@ class SitemapControllerCore extends FrontController
             $pages[] = [
                 'id' => 'stores-page',
                 'label' => $this->l('Our stores'),
-                'link' => $this->context->link->getPageLink('stores'),
+                'url' => $this->context->link->getPageLink('stores'),
             ];
         }
 
         $pages[] = [
             'id' => 'contact-page',
             'label' => $this->l('Contact us'),
-            'link' => $this->context->link->getPageLink('contact'),
+            'url' => $this->context->link->getPageLink('contact'),
         ];
 
         $pages[] = [
             'id' => 'sitemap-page',
             'label' => $this->l('Sitemap'),
-            'link' => $this->context->link->getPageLink('sitemap'),
+            'url' => $this->context->link->getPageLink('sitemap'),
         ];
 
         $pages[] = [
             'id' => 'login-page',
             'label' => $this->l('Log in'),
-            'link' => $this->context->link->getPageLink('authentication'),
+            'url' => $this->context->link->getPageLink('authentication'),
         ];
 
         $pages[] = [
             'id' => 'register-page',
             'label' => $this->l('Create new account'),
-            'link' => $this->context->link->getPageLink('authentication'),
+            'url' => $this->context->link->getPageLink('authentication'),
         ];
 
         $catalog = [
             'new-product' => [
                 'id' => 'new-product-page',
                 'label' => $this->l('New products'),
-                'link' => $this->context->link->getPageLink('new-products'),
+                'url' => $this->context->link->getPageLink('new-products'),
             ],
         ];
 
@@ -101,44 +101,44 @@ class SitemapControllerCore extends FrontController
             $catalog['best-sales'] = [
                 'id' => 'best-sales-page',
                 'label' => $this->l('Best sellers'),
-                'link' => $this->context->link->getPageLink('best-sales'),
+                'url' => $this->context->link->getPageLink('best-sales'),
             ];
             $catalog['prices-drop'] = [
                 'id' => 'prices-drop-page',
                 'label' => $this->l('Price drop'),
-                'link' => $this->context->link->getPageLink('prices-drop'),
+                'url' => $this->context->link->getPageLink('prices-drop'),
             ];
         }
 
         $catalog['manufacturer'] = [
             'id' => 'manufacturer-page',
             'label' => $this->l('Manufacturers'),
-            'link' => $this->context->link->getPageLink('manufacturer'),
+            'url' => $this->context->link->getPageLink('manufacturer'),
         ];
 
         $catalog['supplier'] = [
             'id' => 'supplier-page',
             'label' => $this->l('Suppliers'),
-            'link' => $this->context->link->getPageLink('supplier'),
+            'url' => $this->context->link->getPageLink('supplier'),
         ];
 
         $categories = Category::getRootCategory()->recurseLiteCategTree(0, 0, null, null, 'sitemap');
         $catalog['category'] = [
             'id' => 'category-page',
             'label' => $this->l('Categories'),
-            'link' => '#',
+            'url' => '#',
             'children' => $categories['children'],
         ];
 
         $sitemap = [[
                 'id' => 'page-page',
                 'label' => $this->l('Pages'),
-                'link' => '#',
+                'url' => '#',
                 'children' => $pages,
             ],[
                 'id' => 'catalog-page',
                 'label' => $this->l('Catalog'),
-                'link' => '#',
+                'url' => '#',
                 'children' => $catalog,
             ],
         ];
