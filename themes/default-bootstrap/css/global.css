@@ -1513,50 +1513,50 @@ textarea.input-lg, .input-group-lg > textarea.form-control,
 
 .has-warning .help-block,
 .has-warning .control-label {
-  color: #fff; }
+  color: #e4752b; }
 .has-warning .form-control {
-  border-color: #fff;
+  border-color: #e4752b;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-warning .form-control:focus {
-    border-color: #e6e6e6;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white; }
+.has-warning .form-control:focus {
+    border-color: #c35d19;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f0b085;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #f0b085; }
 .has-warning .input-group-addon {
-  color: #fff;
-  border-color: #fff;
+  color: #e4752b;
+  border-color: #e4752b;
   background-color: #fe9126; }
 
 .has-error .help-block,
 .has-error .control-label {
-  color: #fff; }
+  color: #d4323d; }
 .has-error .form-control {
-  border-color: #fff;
+  border-color: #d4323d;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-error .form-control:focus {
-    border-color: #e6e6e6;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white; }
+.has-error .form-control:focus {
+    border-color: #ae252e;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #e6868d;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #e6868d; }
 .has-error .input-group-addon {
-  color: #fff;
-  border-color: #fff;
+  color: #d4323d;
+  border-color: #d4323d;
   background-color: #f3515c; }
 
 .has-success .help-block,
 .has-success .control-label {
-  color: #fff; }
+  color: #48b151; }
 .has-success .form-control {
-  border-color: #fff;
+  border-color: #48b151;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); }
-  .has-success .form-control:focus {
-    border-color: #e6e6e6;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px white; }
+.has-success .form-control:focus {
+    border-color: #398d40;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #8ed194;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #8ed194; }
 .has-success .input-group-addon {
-  color: #fff;
-  border-color: #fff;
+  color: #48b151;
+  border-color: #48b151;
   background-color: #55c65e; }
 
 .form-control-static {
