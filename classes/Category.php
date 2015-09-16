@@ -271,11 +271,11 @@ class CategoryCore extends ObjectModel
             $this->description = Category::getDescriptionClean($this->description);
         }
 
-        if ($format == 'sitemap') {
+        if ($format === 'sitemap') {
             return [
                 'id' => 'category-page-'.(int)$this->id,
                 'label' => $this->name,
-                'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
+                'url' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
                 'children' => $children,
             ];
         }
