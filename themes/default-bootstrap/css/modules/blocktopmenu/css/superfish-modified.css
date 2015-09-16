@@ -223,8 +223,8 @@ ul.sf-menu li li li.sfHover ul {
     background: #fff;
     margin: 13px 10px 0 0;
     font-size: 13px;
-    color: #9c9b9b;
-    border: 1px solid #d6d4d4; }
+    color: #555555;
+    border: 1px solid #ccc; }
 
 #block_top_menu .category-thumbnail {
   clear: both;

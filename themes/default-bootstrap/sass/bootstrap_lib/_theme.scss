@@ -7,7 +7,6 @@
 @import "mixins";
 
 
-
 //
 // Buttons
 // --------------------------------------------------
@@ -28,17 +27,36 @@
   &.active {
     @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
   }
+
+  .badge {
+    text-shadow: none;
+  }
 }
 
 // Mixin for generating new styles
 @mixin btn-styles($btn-color: #555) {
-  @include gradient-vertical($start-color: $btn-color, $end-color: darken($btn-color, 10%));
-  border-color: darken($btn-color, 12%);
+  @include gradient-vertical($start-color: $btn-color, $end-color: darken($btn-color, 12%));
+  @include reset-filter; // Disable gradients for IE9 because filter bleeds through rounded corners; see https://github.com/twbs/bootstrap/issues/10620
+  background-repeat: repeat-x;
+  border-color: darken($btn-color, 14%);
+
+  &:hover,
+  &:focus  {
+    background-color: darken($btn-color, 12%);
+    background-position: 0 -15px;
+  }
 
   &:active,
   &.active {
-    background-color: darken($btn-color, 10%);
-    border-color: darken($btn-color, 12%);
+    background-color: darken($btn-color, 12%);
+    border-color: darken($btn-color, 14%);
+  }
+
+  &.disabled,
+  &:disabled,
+  &[disabled] {
+    background-color: darken($btn-color, 12%);
+    background-image: none;
   }
 }
 
@@ -55,10 +73,9 @@
 .btn-default { @include btn-styles($btn-default-bg); text-shadow: 0 1px 0 #fff; border-color: #ccc; }
 .btn-primary { @include btn-styles($btn-primary-bg); }
 .btn-success { @include btn-styles($btn-success-bg); }
+.btn-info    { @include btn-styles($btn-info-bg); }
 .btn-warning { @include btn-styles($btn-warning-bg); }
 .btn-danger  { @include btn-styles($btn-danger-bg); }
-.btn-info    { @include btn-styles($btn-info-bg); }
-
 
 
 //
@@ -71,35 +88,39 @@
 }
 
 
-
 //
 // Dropdowns
 // --------------------------------------------------
 
 .dropdown-menu > li > a:hover,
-.dropdown-menu > li > a:focus,
-.dropdown-menu > .active > a,
-.dropdown-menu > .active > a:hover,
-.dropdown-menu > .active > a:focus {
+.dropdown-menu > li > a:focus {
   @include gradient-vertical($start-color: $dropdown-link-hover-bg, $end-color: darken($dropdown-link-hover-bg, 5%));
   background-color: darken($dropdown-link-hover-bg, 5%);
 }
-
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  @include gradient-vertical($start-color: $dropdown-link-active-bg, $end-color: darken($dropdown-link-active-bg, 5%));
+  background-color: darken($dropdown-link-active-bg, 5%);
+}
 
 
 //
 // Navbar
 // --------------------------------------------------
 
-// Basic navbar
-.navbar {
+// Default navbar
+.navbar-default {
   @include gradient-vertical($start-color: lighten($navbar-default-bg, 10%), $end-color: $navbar-default-bg);
+  @include reset-filter; // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
   border-radius: $navbar-border-radius;
   $shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 5px rgba(0,0,0,.075);
   @include box-shadow($shadow);
 
+  .navbar-nav > .open > a,
   .navbar-nav > .active > a {
-    background-color: $navbar-default-bg;
+    @include gradient-vertical($start-color: darken($navbar-default-link-active-bg, 5%), $end-color: darken($navbar-default-link-active-bg, 2%));
+    @include box-shadow(inset 0 3px 9px rgba(0,0,0,.075));
   }
 }
 .navbar-brand,
@@ -110,9 +131,12 @@
 // Inverted navbar
 .navbar-inverse {
   @include gradient-vertical($start-color: lighten($navbar-inverse-bg, 10%), $end-color: $navbar-inverse-bg);
+  @include reset-filter; // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered; see https://github.com/twbs/bootstrap/issues/10257
 
+  .navbar-nav > .open > a,
   .navbar-nav > .active > a {
-    background-color: $navbar-inverse-bg;
+    @include gradient-vertical($start-color: $navbar-inverse-link-active-bg, $end-color: lighten($navbar-inverse-link-active-bg, 2.5%));
+    @include box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
   }
 
   .navbar-brand,
@@ -128,6 +152,17 @@
   border-radius: 0;
 }
 
+// Fix active state of dropdown items in collapsed mode
+@media (max-width: $grid-float-breakpoint-max) {
+  .navbar .navbar-nav .open .dropdown-menu > .active > a {
+    &,
+    &:hover,
+    &:focus {
+      color: #fff;
+      @include gradient-vertical($start-color: $dropdown-link-active-bg, $end-color: darken($dropdown-link-active-bg, 5%));
+    }
+  }
+}
 
 
 //
@@ -154,7 +189,6 @@
 .alert-danger     { @include alert-styles($alert-danger-bg); }
 
 
-
 //
 // Progress bars
 // --------------------------------------------------
@@ -176,6 +210,11 @@
 .progress-bar-warning    { @include progress-bar-styles($progress-bar-warning-bg); }
 .progress-bar-danger     { @include progress-bar-styles($progress-bar-danger-bg); }
 
+// Reset the striped class because our mixins don't do multiple gradients and
+// the above custom styles override the new `.progress-bar-striped` in v3.2.0.
+.progress-bar-striped {
+  @include gradient-striped;
+}
 
 
 //
@@ -192,8 +231,11 @@
   text-shadow: 0 -1px 0 darken($list-group-active-bg, 10%);
   @include gradient-vertical($start-color: $list-group-active-bg, $end-color: darken($list-group-active-bg, 7.5%));
   border-color: darken($list-group-active-border, 7.5%);
-}
 
+  .badge {
+    text-shadow: none;
+  }
+}
 
 
 //
@@ -217,7 +259,6 @@
 .panel-info > .panel-heading      { @include panel-heading-styles($panel-info-heading-bg); }
 .panel-warning > .panel-heading   { @include panel-heading-styles($panel-warning-heading-bg); }
 .panel-danger > .panel-heading    { @include panel-heading-styles($panel-danger-heading-bg); }
-
 
 
 //

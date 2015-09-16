@@ -9,7 +9,7 @@
   margin: 2px 0 31px; }
 
 .product-heading-h5 {
-  color: #999999;
+  color: #777777;
   font-weight: 200;
   margin: 3px 0 8px;
   font-size: 19px;
@@ -909,7 +909,7 @@ ul#text_fields {
   .customizationUploadLine textarea {
     width: 50%;
     border: 1px solid #d6d4d4;
-    color: #777777; }
+    color: #333333; }
 
 .customizationUploadBrowse img + a {
   position: relative;

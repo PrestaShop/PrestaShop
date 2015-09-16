@@ -14,6 +14,9 @@ $main_border:						1px solid $base-border-color;
 $dark-border-color:					#333;
 $light-border-color:				#fff;
 $homepage-footer-border:            #d9d9d9;
+$border-radius-base:                0;
+$border-radius-large:               0;
+$border-radius-small:               0;
 
 //--------- BACKGROUNDS
 $base-box-bg:                       #fbfbfb;
@@ -28,8 +31,8 @@ $base-text-color:                   #333;
 $base-heading-color:				#555454;
 $base-title-color:					$base-text-color;
 $light-text-color:                  #fff;
-$link-color:						$link-color;
-$link-hover-color:                  $link-hover-color;
+$link-color:						#777;
+$link-hover-color:                  #515151;
 $description-color:					#666;
 
 

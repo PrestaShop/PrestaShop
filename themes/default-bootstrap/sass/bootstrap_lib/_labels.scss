@@ -5,28 +5,36 @@
 .label {
   display: inline;
   padding: .2em .6em .3em;
-  font-size: 100%;
+  font-size: 75%;
   font-weight: bold;
   line-height: 1;
   color: $label-color;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0;
+  border-radius: .25em;
 
-  // Add hover effects, but only for links
-  &[href] {
-    &:hover,
-    &:focus {
-      color: $label-link-hover-color;
-      text-decoration: none;
-      cursor: pointer;
-    }
-  }
+  // [converter] extracted a& to a.label
 
   // Empty labels collapse automatically (not available in IE8)
   &:empty {
     display: none;
+  }
+
+  // Quick fix for labels in buttons
+  .btn & {
+    position: relative;
+    top: -1px;
+  }
+}
+
+// Add hover effects, but only for links
+a.label {
+  &:hover,
+  &:focus {
+    color: $label-link-hover-color;
+    text-decoration: none;
+    cursor: pointer;
   }
 }
 
@@ -43,20 +51,16 @@
 
 .label-success {
   @include label-variant($label-success-bg);
-  border:1px solid $label-success-border;
 }
 
 .label-info {
   @include label-variant($label-info-bg);
-   border:1px solid $label-info-border;
 }
 
 .label-warning {
   @include label-variant($label-warning-bg);
-  border:1px solid $label-warning-border;
 }
 
 .label-danger {
   @include label-variant($label-danger-bg);
-  border:1px solid $label-danger-border;
 }
