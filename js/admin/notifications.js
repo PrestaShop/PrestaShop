@@ -35,7 +35,7 @@ function getPush(refresh)
 	$.ajax({
 		type: 'POST',
 		headers: {"cache-control": "no-cache"},
-		url: 'ajax.php?rand=' + new Date().getTime(),
+		url: baseAdminDir+'ajax.php?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : 'json',
