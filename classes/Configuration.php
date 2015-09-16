@@ -443,7 +443,7 @@ class ConfigurationCore extends ObjectModel
                         'date_add'      => $now,
                         'date_upd'      => $now,
                     );
-                    $result &= Db::getInstance()->insert('configuration', $data, true);
+                    $result &= Db::getInstance()->insert(self::$definition['table'], $data, true);
                     $configID = Db::getInstance()->Insert_ID();
                 }
 
