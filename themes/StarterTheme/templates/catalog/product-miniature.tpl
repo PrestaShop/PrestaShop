@@ -1,7 +1,7 @@
 <article class="product-miniature" itemscope itemtype="http://schema.org/Product">
 
   {block name="product_thumbnail"}
-    <a href="{$product.url}">
+    <a href="{$product.url}" class="thumbnail product-thumbnail">
       <img
         src = "{$product.cover.medium.url}"
         alt = "{$product.cover.legend}"
