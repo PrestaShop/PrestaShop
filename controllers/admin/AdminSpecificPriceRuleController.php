@@ -308,7 +308,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'price' => $price,
             'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
             'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 6),
-            'leave_bprice_on' => $price ? 0 : 1
+            'leave_bprice_on' => $price ? 0 : 1,
+            'shop_id' => (($value = $this->getFieldValue($this->object, 'id_shop')) ? $value : 1)
         );
 
         $attribute_groups = array();
