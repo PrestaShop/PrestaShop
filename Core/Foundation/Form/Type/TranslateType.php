@@ -46,9 +46,14 @@ class TranslateType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $i=0;
         foreach ($this->locales as $locale) {
             $this->options['label'] = $locale['iso_code'];
+            if ($i>0) {
+                $this->options['required'] = false;
+            }
             $builder->add($locale['id_lang'], $this->type, $this->options);
+            $i++;
         }
     }
 
