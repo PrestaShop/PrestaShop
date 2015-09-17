@@ -702,4 +702,29 @@ class LinkCore
             return false;
         }
     }
+
+    public static function getUrlSmarty($params, &$smarty)
+    {
+        $context = Context::getContext();
+
+        if (!isset($params['params'])) {
+            $params['params'] = [];
+        }
+
+        if (isset($params['id'])) {
+            $entity = str_replace('-', '_', $params['entity']);
+            $id = ['id_'.$entity => $params['id']];
+            $params['params'] = array_merge($id, $params['params']);
+        }
+
+        $url_parameters = http_build_query($params['params']);
+
+        switch ($params['entity']) {
+            default:
+                $link = $context->link->getPageLink($params['entity'], true, null, $url_parameters);
+                break;
+        }
+
+        return $link;
+    }
 }
