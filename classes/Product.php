@@ -2309,11 +2309,12 @@ class ProductCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        if ($order_by == 'price') {
-            Tools::orderbyPrice($result, $order_way);
-        }
         if (!$result) {
             return false;
+        }
+        
+        if ($order_by == 'price') {
+            Tools::orderbyPrice($result, $order_way);
         }
 
         $products_ids = array();
