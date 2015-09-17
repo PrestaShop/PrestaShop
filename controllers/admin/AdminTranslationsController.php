@@ -2325,7 +2325,6 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $translation_missing_badge_type = 'badge-danger';
         }
-
         $str_return .= '<div class="mails_field">
 			<h4>
 			<span class="badge">'.((int)$mails['empty_values'] + (int)$mails['total_filled']).' <i class="icon-envelope-o"></i></span>
@@ -2338,8 +2337,8 @@ class AdminTranslationsControllerCore extends AdminController
             $topic_already_displayed = array();
             foreach ($mails['files'] as $mail_name => $mail_files) {
                 $str_return .= '<div class="panel translations-email-panel">';
-                $str_return .= '<a href="#email-'.$mail_name.'" class="panel-title" data-toggle="collapse" data-parent="#'.$id_html.'" >'.$mail_name.' <i class="icon-caret-down"></i> </a>';
-                $str_return .= '<div id="email-'.$mail_name.'" class="email-collapse panel-collapse collapse">';
+                $str_return .= '<a href="#'.$id_html.'-'.$mail_name.'" class="panel-title" data-toggle="collapse" data-parent="#'.$id_html.'" >'.$mail_name.' <i class="icon-caret-down"></i> </a>';
+                $str_return .= '<div id="'.$id_html.'-'.$mail_name.'" class="email-collapse panel-collapse collapse">';
                 if (array_key_exists('html', $mail_files) || array_key_exists('txt', $mail_files)) {
                     if (array_key_exists($mail_name, $all_subject_mail)) {
                         foreach ($all_subject_mail[$mail_name] as $subject_mail) {
