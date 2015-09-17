@@ -123,9 +123,9 @@ class ImageTypeCore extends ObjectModel
         }
 
         Db::getInstance()->executeS('
-			SELECT `id_image_type`
-			FROM `'._DB_PREFIX_.'image_type`
-			WHERE `name` = \''.pSQL($type_name).'\'');
+            SELECT `id_image_type`
+            FROM `'._DB_PREFIX_.'image_type`
+            WHERE `name` = \''.pSQL($type_name).'\'');
 
         return Db::getInstance()->NumRows();
     }
