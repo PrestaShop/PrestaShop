@@ -39,8 +39,12 @@ trait AdminCommonActionTrait
 {
     public function uploadAction(Request &$request, Response &$response)
     {
-        $formFactory = new FormFactory(null, array('csrf_protection' => false));
-        $builder = $formFactory->create();
+        /*$formFactory = new FormFactory(null, array('csrf_protection' => false));
+        $builder = $formFactory->create();*/
+
+        $formFactory = new FormFactory();
+        $builder = $formFactory->createBuilder('form', null, array('csrf_protection' => false));
+
         $constraints = array();
 
         if ($request->get('file_type') == 'image') {

@@ -46,7 +46,10 @@ class TestController extends AdminController
         */
 
         $formFactory = new FormFactory();
-        $builder = $formFactory->create();
+        $builder = $formFactory->createBuilder();
+
+        //create form from Class Form Type
+        //$form = $formFactory->create(new \PrestaShop\PrestaShop\Core\Foundation\Form\Type\TestType());
 
         $simpleSubForm = $builder->create('author', 'form')
             ->add('name', 'text')

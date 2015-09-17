@@ -35,9 +35,9 @@ use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 
 class FormFactory
 {
-    public $builder;
+    private $builder;
 
-    public function __construct($datas = null, $options = array())
+    public function __construct()
     {
         // Set up the CSRF provider
         $csrfProvider = new DefaultCsrfProvider(_COOKIE_KEY_);
@@ -47,12 +47,18 @@ class FormFactory
             ->addExtension(new ValidatorExtension(Validation::createValidator()))
             ->addExtension(new CsrfExtension($csrfProvider))
             ->addExtension(new HttpFoundationExtension())
-            ->getFormFactory()
-            ->createBuilder('form', $datas, $options);
+            ->getFormFactory();
+
+        return $this->builder;
     }
 
-    public function create()
+    public function createBuilder($name = 'form', $datas = null, $options = array())
     {
-        return $this->builder;
+        return $this->builder->createBuilder($name, $datas, $options);
+    }
+
+    public function create($formType, $datas = null, $options = array())
+    {
+        return $this->builder->create($formType, $datas, $options);
     }
 }
