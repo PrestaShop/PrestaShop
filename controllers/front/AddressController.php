@@ -39,19 +39,6 @@ class AddressControllerCore extends FrontController
     protected $id_country;
 
     /**
-     * Set default medias for this controller
-     */
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addJS(array(
-            _THEME_JS_DIR_.'tools/vatManagement.js',
-            _THEME_JS_DIR_.'tools/statesManagement.js',
-            _PS_JS_DIR_.'validate.js'
-        ));
-    }
-
-    /**
      * Initialize address controller
      * @see FrontController::init()
      */
@@ -256,63 +243,55 @@ class AddressControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->assignCountries();
+        $this->id_country = (int)Tools::getCountry();
+
+        $address = $this->context->customer->getSimpleAddress(Tools::getValue('id_address'));
+        foreach ($address as $key => $value) {
+            if (isset($_POST[$key])) {
+                $address[$key] = $_POST[$key];
+            }
+        }
+
+        $countries = $this->getFormCountries();
         $this->assignVatNumber();
         $this->assignAddressFormat();
 
-        // Assign common vars
+        $back = Tools::getValue('back');
+        $mod = Tools::getValue('mod');
+
         $this->context->smarty->assign(array(
             'address_validation' => Address::$definition['fields'],
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
-            'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
             'ajaxurl' => _MODULE_DIR_,
             'errors' => $this->errors,
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
-            'address' => $this->_address,
-            'id_address' => (Validate::isLoadedObject($this->_address)) ? $this->_address->id : 0
+            'address' => $address,
+            'countries' => $countries,
+            'back' => Tools::safeOutput($back),
+            'mod' => Tools::safeOutput($mod),
         ));
 
-        if ($back = Tools::getValue('back')) {
-            $this->context->smarty->assign('back', Tools::safeOutput($back));
-        }
-        if ($mod = Tools::getValue('mod')) {
-            $this->context->smarty->assign('mod', Tools::safeOutput($mod));
-        }
         if (isset($this->context->cookie->account_created)) {
             $this->context->smarty->assign('account_created', 1);
             unset($this->context->cookie->account_created);
         }
 
-        $this->setTemplate(_PS_THEME_DIR_.'address.tpl');
+        $this->setTemplate('customer/address.tpl');
     }
 
     /**
      * Assign template vars related to countries display
      */
-    protected function assignCountries()
+    protected function getFormCountries()
     {
-        $this->id_country = (int)Tools::getCountry($this->_address);
-        // Generate countries list
         if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
             $countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
         } else {
             $countries = Country::getCountries($this->context->language->id, true);
         }
 
-        // @todo use helper
-        $list = '';
-        foreach ($countries as $country) {
-            $selected = ((int)$country['id_country'] === $this->id_country) ? ' selected="selected"' : '';
-            $list .= '<option value="'.(int)$country['id_country'].'"'.$selected.'>'.htmlentities($country['name'], ENT_COMPAT, 'UTF-8').'</option>';
-        }
-
-        // Assign vars
-        $this->context->smarty->assign(array(
-            'countries_list' => $list,
-            'countries' => $countries,
-            'sl_country' => (int)$this->id_country,
-        ));
+        return $countries;
     }
 
     /**
@@ -322,11 +301,11 @@ class AddressControllerCore extends FrontController
     {
         $id_country = is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country;
         $requireFormFieldsList = AddressFormat::getFieldsRequired();
-        $ordered_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
-        $ordered_adr_fields = array_unique(array_merge($ordered_adr_fields, $requireFormFieldsList));
+        $ordered_address_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
+        $ordered_address_fields = array_unique(array_merge($ordered_address_fields, $requireFormFieldsList));
 
         $this->context->smarty->assign(array(
-            'ordered_adr_fields' => $ordered_adr_fields,
+            'ordered_address_fields' => $ordered_address_fields,
             'required_fields' => $requireFormFieldsList
         ));
     }
