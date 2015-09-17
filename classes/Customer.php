@@ -507,9 +507,38 @@ class CustomerCore extends ObjectModel
 
     public function getSimpleAddress($id_address, $id_lang = null)
     {
-        $sql = $this->getSimpleAddressSql($id_address, $id_lang);
+        if (!intval($id_address)) {
+            return [
+                'id' => '',
+                'alias' => '',
+                'firstname' => '',
+                'lastname' => '',
+                'company' => '',
+                'address1' => '',
+                'address2' => '',
+                'postcode' => '',
+                'city' => '',
+                'id_state' => '',
+                'state' => '',
+                'state_iso' => '',
+                'id_country' => '',
+                'country' => '',
+                'country_iso' => '',
+                'other' => '',
+                'phone' => '',
+                'phone_mobile' => '',
+                'vat_number' => '',
+                'dni' => '',
+            ];
+        }
 
-        return Db::getInstance()->executeS($sql)[0];
+        $sql = $this->getSimpleAddressSql($id_address, $id_lang);
+        $res = Db::getInstance()->executeS($sql);
+        if (count($res) === 1) {
+            return $res[0];
+        } else {
+            return $res;
+        }
     }
 
     public function getSimpleAddressSql($id_address = null, $id_lang = null)
