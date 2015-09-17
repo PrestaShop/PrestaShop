@@ -741,12 +741,28 @@ class LinkCore
     {
         $context = Context::getContext();
 
+        if (!isset($params['args'])) {
+            $params['args'] = [];
+        }
+
+        if (isset($params['id'])) {
+            $entity = str_replace('-', '_', $params['entity']);
+            $id = ['id_'.$entity => $params['id']];
+            $params['args'] = array_merge($id, $params['args']);
+        }
+
         $str = '';
         foreach ($params['args'] as $key => $val) {
-            $str = $key.'='.$val.'&';
+            $str .= $key.'='.$val.'&';
         }
         $str = rtrim($str, '&');
 
-        return $context->link->getPageLink($params['name'], true, null, $str);
+        switch ($params['entity']) {
+            default:
+                $link = $context->link->getPageLink($params['entity'], true, null, $str);
+                break;
+        }
+
+        return $link;
     }
 }
