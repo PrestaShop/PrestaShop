@@ -88,6 +88,7 @@ smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
+smartyRegisterFunction($smarty, 'function', 'getUrl', array('Link', 'getUrlSmarty'));
 
 function smartyDieObject($params, &$smarty)
 {
