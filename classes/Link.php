@@ -751,15 +751,11 @@ class LinkCore
             $params['args'] = array_merge($id, $params['args']);
         }
 
-        $str = '';
-        foreach ($params['args'] as $key => $val) {
-            $str .= $key.'='.$val.'&';
-        }
-        $str = rtrim($str, '&');
+        $url_parameters = http_build_query($params['args']);
 
         switch ($params['entity']) {
             default:
-                $link = $context->link->getPageLink($params['entity'], true, null, $str);
+                $link = $context->link->getPageLink($params['entity'], true, null, $url_parameters);
                 break;
         }
 
