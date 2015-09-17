@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
 use PrestaShop\PrestaShop\Core\Foundation\View\View;
 
+// FIXME: tout est legacy ici, déplacer vers Adapter ? ou sous-couche Adapter en plus ?
 class Smarty extends View
 {
     public $parserDirectory = null;
@@ -62,6 +63,7 @@ class Smarty extends View
         if (!($this->parserInstance instanceof \Smarty)) {
             if (!class_exists('\Smarty')) {
                 if (!is_dir($this->parserDirectory)) {
+                    // FIXME: utiliser les Exceptions PS
                     throw new \Exception('Cannot set the Smarty lib directory : ' . $this->parserDirectory . '. Directory does not exist.');
                 }
                 require_once $this->parserDirectory . '/Smarty.class.php';

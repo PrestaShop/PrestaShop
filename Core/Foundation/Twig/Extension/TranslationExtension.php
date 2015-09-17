@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 
 use Symfony\Component\Translation\TranslatorInterface;
 
+// FIXME: vers Business (Prestashop dependant)
 class TranslationExtension extends \Twig_Extension
 {
     private $translator;
@@ -48,6 +49,7 @@ class TranslationExtension extends \Twig_Extension
     private function getPrestaShopTranslation($message)
     {
         return \Tools::displayError($message, false);
+        // FIXME: vers Adapter
     }
 
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)

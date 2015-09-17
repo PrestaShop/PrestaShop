@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\RoutingService;
 
+// FIXME: vers Business (Prestashop dependant)
 class RoutingExtension extends \Twig_Extension
 {
     private $routing;

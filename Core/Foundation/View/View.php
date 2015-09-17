@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Business\Context; // FIXME: to remove ?
 
 class View
 {
