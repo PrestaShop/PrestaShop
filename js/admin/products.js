@@ -808,7 +808,7 @@ product_tabs['Associations'] = new function(){
 	var self = this;
 	this.initAccessoriesAutocomplete = function (){
 		$('#product_autocomplete_input')
-			.autocomplete('ajax_products_list.php', {
+			.autocomplete('ajax_products_list.php?exclude_packs=0&excludeVirtuals=0', {
 				minChars: 1,
 				autoFill: true,
 				max:20,
