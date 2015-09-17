@@ -645,7 +645,7 @@ class CustomerCore extends ObjectModel
 
     public function cleanGroups()
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
+    	return Db::getInstance()->delete('customer_group', 'id_customer = '.(int)$this->id);
     }
 
     public function addGroups($groups)
