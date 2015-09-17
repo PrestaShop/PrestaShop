@@ -736,4 +736,17 @@ class LinkCore
             return false;
         }
     }
+
+    public static function getUrlSmarty($params, &$smarty)
+    {
+        $context = Context::getContext();
+
+        $str = '';
+        foreach ($params['args'] as $key => $val) {
+            $str = $key.'='.$val.'&';
+        }
+        $str = rtrim($str, '&');
+
+        return $context->link->getPageLink($params['name'], true, null, $str);
+    }
 }
