@@ -320,29 +320,6 @@ function paginationButton(nbProductsIn, nbProductOut)
 			isNaN(nbPage) ? nbPage = 1 : nbPage = nbPage;
 			nbPerPage*nbPage < nb_products ? productShowing = nbPerPage*nbPage :productShowing = (nbPerPage*nbPage-nb_products-nbPerPage*nbPage)*-1;
 			nbPage==1 ? productShowingStart=1 : productShowingStart=nbPerPage*nbPage-nbPerPage+1;
-
-
-			//insert values into a .product-count
-			productCountRow = $.trim(productCountRow);
-			productCountRow = productCountRow.split(' ');
-
-			var backStart = new Array;
-			for (row in productCountRow)
-				if (parseInt(productCountRow[row]) + 0 == parseInt(productCountRow[row]))
-					backStart.push(row);
-
-			if (typeof backStart[0] !== 'undefined')
-				productCountRow[backStart[0]] = productShowingStart;
-			if (typeof backStart[1] !== 'undefined')
-				productCountRow[backStart[1]] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
-			if (typeof backStart[2] !== 'undefined')
-				productCountRow[backStart[2]] = nb_products;
-
-			if (typeof backStart[1] !== 'undefined' && typeof backStart[2] !== 'undefined' && productCountRow[backStart[1]] > productCountRow[backStart[2]])
-				productCountRow[backStart[1]] = productCountRow[backStart[2]];
-
-			productCountRow = productCountRow.join(' ');
-			$('.product-count').html(productCountRow);
 			$('.product-count').show();
 		}
 		else
@@ -519,25 +496,20 @@ function reloadContent(params_plus)
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
 				$('.product_list').css('filter', '');
 
-			if (result.pagination.search(/[^\s]/) >= 0)
+			if (result.pagination.length)
 			{
-				var pagination = $('<div/>').html(result.pagination)
-				var pagination_bottom = $('<div/>').html(result.pagination_bottom);
-
-				if ($('<div/>').html(pagination).find('#pagination').length)
-				{
-					$('#pagination').show();
-					$('#pagination').replaceWith(pagination.find('#pagination'));
-				}
-				else
+				if ($('#pagination_holder').length) {
+					$('.product-count').remove();
+					$('#pagination_holder').replaceWith(result.pagination);
+					$('#pagination_holder').show();
+				} else
 					$('#pagination').hide();
-
-				if ($('<div/>').html(pagination_bottom).find('#pagination_bottom').length)
-				{
-					$('#pagination_bottom').show();
-					$('#pagination_bottom').replaceWith(pagination_bottom.find('#pagination_bottom'));
-				}
-				else
+					
+				if ($('#pagination_bottom_holder').length) {
+					$('.product-count').remove();
+					$('#pagination_bottom_holder').replaceWith(result.pagination_bottom);
+					$('#pagination_bottom_holder').show();
+				} else
 					$('#pagination_bottom').hide();
 			}
 			else
