@@ -1042,7 +1042,7 @@ product_tabs['Informations'] = new function(){
 		});
 
 		$('#related_product_autocomplete_input')
-			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
+			.autocomplete('ajax_products_list.php?exclude_packs=0&excludeVirtuals=0&excludeIds='+id_product, {
 				minChars: 1,
 				autoFill: true,
 				max:20,
