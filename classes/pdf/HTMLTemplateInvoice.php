@@ -53,7 +53,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 OrderInvoice::fixAllShopAddresses();
             }
         }
-        
+
         // header informations
         $this->date = Tools::displayDate($order_invoice->date_add);
 
@@ -83,7 +83,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      *
      * @return Array Layout elements columns size
      */
-    private function computeLayout($params)
+    protected function computeLayout($params)
     {
         $layout = array(
             'reference' => array(
