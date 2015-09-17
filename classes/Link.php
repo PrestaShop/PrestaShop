@@ -741,17 +741,17 @@ class LinkCore
     {
         $context = Context::getContext();
 
-        if (!isset($params['args'])) {
-            $params['args'] = [];
+        if (!isset($params['params'])) {
+            $params['params'] = [];
         }
 
         if (isset($params['id'])) {
             $entity = str_replace('-', '_', $params['entity']);
             $id = ['id_'.$entity => $params['id']];
-            $params['args'] = array_merge($id, $params['args']);
+            $params['params'] = array_merge($id, $params['params']);
         }
 
-        $url_parameters = http_build_query($params['args']);
+        $url_parameters = http_build_query($params['params']);
 
         switch ($params['entity']) {
             default:
