@@ -493,6 +493,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
+        $id_lang = Context::getContext()->language->id;
+        $id_shop = (int)$this->order->id_shop;
+        $format = '%1$s%2$06d';
+
+        if (Configuration::get('PS_INVOICE_USE_YEAR')) {
+            $format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s-%2$06d' : '%1$s%2$06d-%3$s';
+        }
+
+        return sprintf(
+            $format,
+            Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
+            $this->order_invoice->number,
+            date('Y', strtotime($this->order_invoice->date_add))
+        ).'.pdf';
     }
 }
