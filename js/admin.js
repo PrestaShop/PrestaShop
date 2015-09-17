@@ -1655,3 +1655,11 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 			document.location = cancel_link;
 	});
 }
+function countDown($source, $target) {
+	var max = $source.attr("data-maxchar");
+	$target.html(max-$source.val().length);
+
+	$source.keyup(function(){
+		$target.html(max-$source.val().length);
+	});
+}
