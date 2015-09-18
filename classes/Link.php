@@ -110,8 +110,8 @@ class LinkCore
         // Set available keywords
         $params = array();
         $params['id'] = $product->id;
-        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite', $id_lang) : $alias;
-
+        $params['id_product_attribute'] = $ipa;
+        $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
         $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         $params['meta_keywords'] =    Tools::str2url($product->getFieldByLang('meta_keywords'));
         $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));
