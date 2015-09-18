@@ -189,9 +189,9 @@ ul.product-labels li {
   cursor: default;
 }
 
-/* blocklanguages */
+/* blocklanguages and blockcurrencies */
 
-.language-selector {
+[class*="-selector"] {
   display: inline-block;
   position: relative;
   border: 1px solid #ccc;
@@ -200,7 +200,7 @@ ul.product-labels li {
   z-index: 100;
 }
 
-.language-selector ul {
+[class*="-selector"] ul {
   display: none;
   position: absolute;
   background-color: white;
@@ -211,37 +211,37 @@ ul.product-labels li {
   top: 100%;
 }
 
-.language-selector li {
+[class*="-selector"] li {
   list-style: none;
   display: block;
   padding: 5px;
   border: 1px solid #ccc;
 }
 
-.language-selector li:not(:first-child) {
+[class*="-selector"] li:not(:first-child) {
   border-top: 0px;
 }
 
-.language-selector:hover ul {
+[class*="-selector"]:hover ul {
   display: block;
 }
 
-.language-selector a, .language-selector a:visited {
+[class*="-selector"] a, [class*="-selector"] a:visited {
   display: block;
   text-decoration: none;
   color: #333;
 }
 
-.language-selector li:hover {
+[class*="-selector"] li:hover {
   background-color: #666;
   cursor: pointer;
 }
 
-.language-selector li:hover a {
+[class*="-selector"] li:hover a {
   color: white;
 }
 
-.language-selector li.current a {
+[class*="-selector"] li.current a {
   font-style: italic;
 }
 
