@@ -41,6 +41,12 @@
 	{else}
 		{$smarty.block.parent}
 	{/if}
+	{if in_array($input.name, ['image', 'thumb'])}
+		<div class="col-lg-6">
+			<div class="help-block">{l s='Recommended dimensions (for the default theme): %1spx x %2spx' sprintf=[$input.format.width, $input.format.height]}
+			</div>
+		</div>
+	{/if}
 {/block}
 {block name="description"}
 	{$smarty.block.parent}
@@ -55,7 +61,7 @@
 {/block}
 {block name="input_row"}
 	{$smarty.block.parent}
-	{if ($input.name == 'image')}
+	{if ($input.name == 'thumb')}
 	{$displayBackOfficeCategory}
 	{/if}
 {/block}
