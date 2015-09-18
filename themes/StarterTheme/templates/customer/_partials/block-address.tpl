@@ -5,16 +5,15 @@
 
   <p>{$address.formatted}</p>
 
-{* StarterTheme: find a good idea to not build url in template *}
   <footer class="actions address-actions">
     <ul class="action-list">
       <li>
-        <a href="TODO">
+        <a href="{url entity=address id=$address.id}">
           {l s='Update'}
         </a>
       </li>
       <li>
-        <a href="TODO">
+        <a href="{url entity=address id=$address.id params=['delete' => 1]}">
           {l s='Delete'}
         </a>
       </li>
