@@ -18,31 +18,49 @@
     <div class="product-description-short" itemprop="description">{$product.description_short}</div>
   {/block}
 
-  {block name="product_add_to_cart"}
-    {if $product.add_to_cart_url}
-        <a
-          class = "add-to-cart"
-          href  = "{$product.add_to_cart_url}"
-          rel   = "nofollow"
-          data-id-product="{$product.id_product}"
-          data-id-product-attribute="{$product.id_product_attribute}"
-        >{l s='Add to cart'}</a>
-    {/if}
+  {block name="product_list_actions"}
+    <div class="product-list-actions">
+      {if $product.add_to_cart_url}
+          <a
+            class = "add-to-cart"
+            href  = "{$product.add_to_cart_url}"
+            rel   = "nofollow"
+            data-id-product="{$product.id_product}"
+            data-id-product-attribute="{$product.id_product_attribute}"
+          >{l s='Add to cart'}</a>
+      {/if}
+      {hook h='displayProductListFunctionalButtons' product=$product}
+    </div>
   {/block}
 
   {block name="product_variants"}
     {include './_partials/variant-links.tpl' variants=$product.main_variants}
   {/block}
 
-  {block name="product_price"}
-    <div class="price-container">
+  {block name="product_price_and_shipping"}
+    <div class="product-price-and-shipping">
       {if $product.has_discount}
+        {hook h="displayProductPriceBlock" product=$product type="old_price"}
+
         <span class="regular-price">{$product.regular_price}</span>
         {if $product.discount_type === 'percentage'}
           <span class="discount-percentage">{$product.discount_percentage}</span>
         {/if}
       {/if}
+
+      {hook h="displayProductPriceBlock" product=$product type="before_price"}
+
       <span itemprop="price" class="price">{$product.price}</span>
+
+      {hook h="displayProductPriceBlock" product=$product type="price"}
+      {hook h="displayProductPriceBlock" product=$product type="unit_price"}
+      {hook h="displayProductPriceBlock" product=$product type="after_price"}
+
+      {if !$product.is_virtual}
+        {hook h="displayProductDeliveryTime" product=$product}
+      {/if}
+
+      {hook h="displayProductPriceBlock" product=$product type="weight"}
     </div>
   {/block}
 
@@ -61,6 +79,6 @@
     {/if}
   {/block}
 
-  {* TODO: Hooks *}
+  {hook h='displayProductListReviews' product=$product}
 
 </article>
