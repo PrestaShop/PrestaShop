@@ -592,7 +592,7 @@ class CustomerCore extends ObjectModel
             return array();
         }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
+		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
 		FROM `'._DB_PREFIX_.'guest` g
 		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
 		LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
