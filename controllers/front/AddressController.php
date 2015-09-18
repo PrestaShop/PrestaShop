@@ -308,12 +308,18 @@ class AddressControllerCore extends FrontController
     {
         $id_country = is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country;
         $requireFormFieldsList = AddressFormat::getFieldsRequired();
-        $ordered_address_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
-        $ordered_address_fields = array_unique(array_merge($ordered_address_fields, $requireFormFieldsList));
+        $ordered = AddressFormat::getOrderedAddressFields($id_country, true, true);
+        $ordered = array_unique(array_merge($ordered, $requireFormFieldsList));
+
+        $ordered_address_fields = [];
+        foreach ($ordered as $field) {
+            $ordered_address_fields[$field] = [
+                'required' => in_array($field, $requireFormFieldsList),
+            ];
+        }
 
         $this->context->smarty->assign(array(
-            'ordered_address_fields' => $ordered_address_fields,
-            'required_fields' => $requireFormFieldsList
+            'address_fields' => $ordered_address_fields,
         ));
     }
 
