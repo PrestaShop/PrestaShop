@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\File;
+use PrestaShop\PrestaShop\Core\Business\Routing\Router;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**
  * This Trait will add common action such as uplad, delete, change status and more...
@@ -95,5 +97,92 @@ trait AdminCommonActionTrait
         $response->setContentData($return_data);
 
         return self::RESPONSE_JSON;
+    }
+
+    /**
+     * TODO
+     *
+     * @param Request $request
+     * @param integer $totalCount
+     */
+    final protected function fetchNavigator(Request &$request, $totalCount)
+    {
+        $navigatorParams = array_merge(
+            $request->attributes->all(),
+            array(
+                '_total' => $totalCount,
+            )
+        );
+        return $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
+    }
+
+    public function navigatorAction(Request &$request, Response &$response)
+    {
+        $response->setTemplate('Core/Controller/Admin/navigator.tpl');
+
+        // base elements
+        $total = $request->attributes->get('caller_parameters')['_total'];
+        $offset = $request->attributes->get('caller_parameters')['offset'];
+        $limit = $request->attributes->get('caller_parameters')['limit'];
+        if ($limit <= 0) {
+            $limit = 10;
+        }
+        $currentPage = floor($offset/$limit)+1;
+        $pageCount = ceil($total/$limit);
+        $from = $offset;
+        $to = $offset+$limit-1;
+
+        // urls from route
+        $callerParameters = $request->attributes->get('caller_parameters', array());
+        foreach ($callerParameters as $k => $v) {
+            if (strpos($k, '_') === 0) {
+                unset($callerParameters[$k]);
+            }
+        }
+        
+        $routeName = $request->attributes->get('caller_parameters')['_route'];
+        $nextPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => min($total-1, $offset+$limit),
+                'limit' => $limit
+            )
+        ));
+        $previousPageUrl = $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => max(0, $offset-$limit),
+                'limit' => $limit
+            )
+        ));
+        $firstPageUrl = $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => 0,
+                'limit' => $limit
+            )
+        ));
+        $lastPageUrl = $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => ($pageCount-1)*$limit,
+                'limit' => $limit
+            )
+        ));
+
+        $response->setContentData(array(
+            'total' => $total,
+            'offset' => $offset,
+            'limit' => $limit,
+            'current_page' => $currentPage,
+            'page_count' => $pageCount,
+            'from' => $from + 1,
+            'to' => min(array($to+1, $total)),
+            'next_url' => $nextPageUrl,
+            'previous_url' => $previousPageUrl,
+            'first_url' => $firstPageUrl,
+            'last_url' => $lastPageUrl
+        ));
+        return self::RESPONSE_PARTIAL_VIEW;
     }
 }

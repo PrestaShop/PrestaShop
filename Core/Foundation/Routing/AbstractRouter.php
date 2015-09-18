@@ -328,6 +328,7 @@ abstract class AbstractRouter
 
             // Override layout mode for subcall
             $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.
+            $subRequest->attributes->set('caller_parameters', $routeParameters);
 
             // Call Controller/Action
             list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);

@@ -88,6 +88,11 @@ class ProductController extends AdminController
             $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
         } else {
             $response->addContentData('product_count', $totalProductCount);
+
+            // Navigator
+            $navigator = $this->fetchNavigator($request, $totalProductCount);
+            echo $navigator;
+            die;
         }
 
         // Add layout top-right menu actions
@@ -123,7 +128,7 @@ class ProductController extends AdminController
         $totalCount = 0;
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
-            $totalCount = count($products); // FIXME: on doit recup le nombre total, pas avec offset et limit! (a mettre en SQL, SQL_CALC_FOUND_ROWS)
+            $totalCount = $product['total'];
             $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
         }
 

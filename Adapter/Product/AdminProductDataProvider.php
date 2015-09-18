@@ -25,10 +25,12 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Adapter\AbstractAdminDataProvider;
+
 /**
  * This class will provide data from DB / ORM about Products for the Admin interface.
  */
-class AdminProductDataProvider
+class AdminProductDataProvider extends AbstractAdminDataProvider
 {
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
@@ -44,7 +46,7 @@ class AdminProductDataProvider
         $persistedParams = array(); // TODO
 
         // merge with new values
-        $paramsOut = array_merge_recursive($persistedParams, $paramsIn);
+        $paramsOut = array_merge_recursive($persistedParams, (array)$paramsIn);
 
         // persist new values
         // TODO: $paramsOut
@@ -66,39 +68,109 @@ class AdminProductDataProvider
     {
         $filterParams = $this->combinePersistentCatalogProductFilter($get);
 
-        // FIXME: to optimize! Only needed columns, well filtered, and format columns like CLDR and others. FAIRE LA REQUETE ICI ! +SQL_CALC_FOUND_ROWS
-
-        $where = '';
-        $sql = '
-          SELECT SQL_CALC_FOUND_ROWS AS `total`,
-              p.`id_product`, p.`reference`, p.`price` AS `price`, p.`id_shop_default`, p.`is_virtual`,
-              pl.`name` AS `name`,
-              sa.`active` AS `active`, sa.`price`, sa.`active`,
-              shop.`name` AS `shopname`,
-              image_shop.`id_image` AS `id_image`,
-              cl.`name` AS `name_category`,
-              0 AS `price_final`,
-              pd.`nb_downloadable`,
-              sav.`quantity` AS `sav_quantity`, IF(sav.`quantity`<=0, 1, 0) AS `badge_danger`
-          FROM `ps_product` p
-          LEFT JOIN `ps_product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = 1 AND pl.`id_shop` = 1)
-          LEFT JOIN `ps_stock_available` sav ON (sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0 )
-          JOIN `ps_product_shop` sa ON (p.`id_product` = sa.`id_product` AND sa.id_shop = 1)
-          LEFT JOIN `ps_category_lang` cl ON (sa.`id_category_default` = cl.`id_category` AND pl.`id_lang` = cl.`id_lang` AND cl.id_shop = 1)
-          LEFT JOIN `ps_shop` shop ON (shop.id_shop = 1)
-          LEFT JOIN `ps_image_shop` image_shop ON (image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = 1)
-          LEFT JOIN `ps_image` i ON (i.`id_image` = image_shop.`id_image`)
-          LEFT JOIN `ps_product_download` pd ON (pd.`id_product` = p.`id_product`)
-          WHERE '.$where.'
-          ORDER BY '.$orderBy.' '.$orderWay.'
-          LIMIT '.$offset.', '.$limit;
-        //$products = Db::getInstance()->executeS($sql, true, false);
-
+        $idShop = \Context::getContext()->shop->id;
         $idLang = \Context::getContext()->language->id;
-        $products = \Product::getProducts($idLang, $offset, $limit, $orderBy, $orderWay);
+
+        $sqlSelect = array(
+            'id_product' => array('table' => 'p', 'field' => 'id_product'),
+            'reference' => array('table' => 'p', 'field' => 'reference'),
+            'price' => array('table' => 'p', 'field' => 'price'),
+            'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
+            'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
+            'name' => array('table' => 'pl', 'field' => 'name'),
+            'active' => array('table' => 'sa', 'field' => 'active'),
+            'price' => array('table' => 'sa', 'field' => 'price'),
+            'shopname' => array('table' => 'shop', 'field' => 'name'),
+            'id_image' => array('table' => 'image_shop', 'field' => 'id_image'),
+            'name_category' => array('table' => 'cl', 'field' => 'name'),
+            'price_final' => '0',
+            'nb_downloadable' => array('table' => 'pd', 'field' => 'nb_downloadable'),
+            'sav_quantity' => array('table' => 'sav', 'field' => 'quantity'),
+            'sav_quantity' => array('table' => 'sav', 'field' => 'quantity'),
+            'badge_danger' => 'IF(sav.`quantity`<=0, 1, 0)'
+        );
+        $sqlTable = array(
+            'p' => 'product',
+            'pl' => array(
+                'table' => 'product_lang',
+                'join' => 'LEFT JOIN',
+                'on' => 'pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.$idLang.' AND pl.`id_shop` = '.$idShop
+            ),
+            'sav' => array(
+                'table' => 'stock_available',
+                'join' => 'LEFT JOIN',
+                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0' // FIXME, +anomalie id_shop ?
+            ),
+            'sa' => array(
+                'table' => 'product_shop',
+                'join' => 'JOIN',
+                'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = '.$idShop
+            ),
+            'cl' => array(
+                'table' => 'category_lang',
+                'join' => 'LEFT JOIN',
+                'on' => 'sa.`id_category_default` = cl.`id_category` AND cl.`id_lang` = '.$idLang.' AND cl.id_shop = '.$idShop
+            ),
+            'shop' => array(
+                'table' => 'shop',
+                'join' => 'LEFT JOIN',
+                'on' => 'shop.id_shop = '.$idShop
+            ),
+            'image_shop' => array(
+                'table' => 'image_shop',
+                'join' => 'LEFT JOIN',
+                'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$idShop // FIXME: cover
+            ),
+            'i' => array(
+                'table' => 'image',
+                'join' => 'LEFT JOIN',
+                'on' => 'i.`id_image` = image_shop.`id_image`'
+            ),
+            'pd' => array(
+                'table' => 'product_download',
+                'join' => 'LEFT JOIN',
+                'on' => 'pd.`id_product` = p.`id_product`'
+            )
+        );
+        $sqlWhere = array(
+//             'AND', // opt
+//             array(
+//                 'AND', // opt
+//                 '1'
+//             ),
+//             array(
+//                 'OR',
+//                 '2',
+//                 '3'
+//             ),
+//             array(
+//                 'AND', // opt
+//                 array(
+//                     'OR',
+//                     '4',
+//                     '5'
+//                 ),
+//                 array(
+//                     '6',
+//                     '7'
+//                 )
+//             )
+        ); // TODO
+        $sqlOrder = array($orderBy.' '.$orderWay);
+        $sqlLimit = $offset.', '.$limit;
+
+        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlOrder, $sqlLimit);
+        $products = \Db::getInstance()->executeS($sql, true, false);
+        $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
+        $total = $total[0]['FOUND_ROWS()'];
+
+        // post treatment
         foreach ($products as &$product) {
             $product['price'] = \Tools::displayPrice($product['price']);
+            $product['total'] = $total;
         }
+        // FIXME: format columns like CLDR and others
+
         return $products;
     }
 
