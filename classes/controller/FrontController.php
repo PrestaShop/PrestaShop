@@ -683,6 +683,8 @@ class FrontControllerCore extends Controller
             return;
         }
 
+        $canonical_url = preg_replace('/#.*$/', '', $canonical_url);
+
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         if (!preg_match('/^'.Tools::pRegexp(rawurldecode($canonical_url), '/').'([&?].*)?$/', $match_url)) {
             $params = array();
@@ -710,7 +712,6 @@ class FrontControllerCore extends Controller
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
-
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
                 die('[Debug] This page has moved<br />Please use the following URL instead: <a href="'.$final_url.'">'.$final_url.'</a>');
             }
