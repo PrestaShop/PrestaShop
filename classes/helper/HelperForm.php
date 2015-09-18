@@ -75,6 +75,7 @@ class HelperFormCore extends Helper
         $categories = true;
         $color = true;
         $date = true;
+        $select2 = true;
         $tinymce = true;
         $textarea_autosize = true;
         $file = true;
@@ -191,6 +192,16 @@ class HelperFormCore extends Helper
                                 $date = false;
                             }
                             break;
+
+                        case 'select':
+                            if ($select2) {
+                                if (isset($params['advanced_select']) && $params['advanced_select']) {
+                                    $this->context->controller->addjQueryPlugin(array('select2'));
+                                    $this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
+                                    $select2 = false;
+                                }
+                            }
+                        break;
 
                         case 'textarea':
                             if ($tinymce) {
