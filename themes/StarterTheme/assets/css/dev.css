@@ -304,3 +304,11 @@ ul.product-labels li {
 .menu > ul > li:hover > div {
   display: block;
 }
+
+label {
+  display: block;
+  margin-bottom: 42px;
+}
+label span {
+  display: block;
+}
