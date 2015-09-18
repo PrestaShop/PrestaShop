@@ -294,7 +294,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         case Order::ROUND_TOTAL:
                 $round_type = 'total';
             break;
-        case Order::ROUND_LINE;
+        case Order::ROUND_LINE:
                 $round_type = 'line';
             break;
         case Order::ROUND_ITEM:
