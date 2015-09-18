@@ -15,16 +15,21 @@
     <form>
         <table class="table product">
             <theader>
-            
+                
             </theader>
-        	{$product_list}
-        	<tfooter>
-        	
-        	</tfooter>
+            {$product_list}
+            <tfooter>
+                
+            </tfooter>
         </table>
-    
+        
         <div class="row">
-            ## ACTIONS GROUPIR
+            <div class="pull-left">
+                ## ACTIONS GROUPIR
+            </div>
+            <div class="pull-right">
+                {$navigator}
+            </div>
         </div>
     </form>
 </div>

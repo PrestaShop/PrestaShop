@@ -103,7 +103,8 @@ class Core_Foundation_Exception_Exception extends Exception
     protected function deactivateModule()
     {
         if ($this->moduleToDeactivate != null) {
-            // TODO!
+            // TODO: to code when modules will be able to register features into the new Core.
+            // This will deactivate the module. The merchant will have to reactivate it manually.
             return true;
         }
         return false;

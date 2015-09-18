@@ -100,10 +100,17 @@ trait AdminCommonActionTrait
     }
 
     /**
-     * TODO
+     * This will allow you to retrieve an HTML code from the navigatorAction with a ready and linked navigator.
      *
-     * @param Request $request
-     * @param integer $totalCount
+     * To be able to use this navigator, the current route must have these standard parameters:
+     * - offset
+     * - limit
+     * Both will be automatically manipulated by the navigator.
+     * The navigator links (previous/next page...) will never tranfer POST and/or GET parameters
+     * (only route parameters that are in the URL).
+     *
+     * @param Request $request The original request to retrieve route parameters (to generate links)
+     * @param integer $totalCount The total count of elements to paginate (not the count of one page).
      */
     final protected function fetchNavigator(Request &$request, $totalCount)
     {
@@ -113,9 +120,18 @@ trait AdminCommonActionTrait
                 '_total' => $totalCount,
             )
         );
-        return $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
+        return $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW);
     }
 
+    /**
+     * This action is mainly used as a subcall from Admin page actions to generate a navigator.
+     *
+     * A row of links to navigates through paginated list of elements.
+     * Please call it via $this->fetchNavigator() method (that will make the subcall with the right parameters).
+     *
+     * @param Request $request
+     * @param Response $response
+     */
     public function navigatorAction(Request &$request, Response &$response)
     {
         $response->setTemplate('Core/Controller/Admin/navigator.tpl');
@@ -139,8 +155,8 @@ trait AdminCommonActionTrait
                 unset($callerParameters[$k]);
             }
         }
-        
         $routeName = $request->attributes->get('caller_parameters')['_route'];
+
         $nextPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
@@ -148,21 +164,21 @@ trait AdminCommonActionTrait
                 'limit' => $limit
             )
         ));
-        $previousPageUrl = $this->generateUrl($routeName, array_merge(
+        $previousPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => max(0, $offset-$limit),
                 'limit' => $limit
             )
         ));
-        $firstPageUrl = $this->generateUrl($routeName, array_merge(
+        $firstPageUrl = ($offset == 0) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => 0,
                 'limit' => $limit
             )
         ));
-        $lastPageUrl = $this->generateUrl($routeName, array_merge(
+        $lastPageUrl = ($offset+$limit >= $total) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
                 'offset' => ($pageCount-1)*$limit,

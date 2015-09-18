@@ -99,6 +99,9 @@ abstract class Router extends AbstractRouter
             if ($this->triggerCacheGenerationFlag) {
                 $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
             }
+
+            // Translator service init
+            $this->container->bind('Translator', '\\PrestaShop\\PrestaShop\\Adapter\\Translator');
         } catch (\Exception $e) {
             if (php_sapi_name() == "cli") {
                 throw $e;

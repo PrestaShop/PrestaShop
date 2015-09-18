@@ -414,7 +414,7 @@ abstract class AbstractRouter
             $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($to));
             http_response_code($to);
             $this->exitNow();
-            // TODO: default error page for this code. Howto ? et un cas specific 500 ?
+            // TODO: default error page for this code. Howto? redirect to custom error pages (500, etc...).
         }
 
         $e = new DevelopmentErrorException('Bad parameters format given to redirect().');

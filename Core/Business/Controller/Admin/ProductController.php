@@ -52,8 +52,6 @@ class ProductController extends AdminController
      * Get the Catalog page with stats banner, product list, bulk actions, filters, search, etc...
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * TODO : cette page sera-t-elle à refaire ? Pour le moment on bypass et on renvoie vers la page legacy.
-     *
      * @param Request $request
      * @param Response $response
      */
@@ -88,11 +86,8 @@ class ProductController extends AdminController
             $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
         } else {
             $response->addContentData('product_count', $totalProductCount);
-
-            // Navigator
             $navigator = $this->fetchNavigator($request, $totalProductCount);
-            echo $navigator;
-            die;
+            $response->addContentData('navigator', $navigator);
         }
 
         // Add layout top-right menu actions
@@ -100,7 +95,7 @@ class ProductController extends AdminController
             array(
                 'legacy' => array(
                     'href' => '#', // FIXME
-                    'desc' => '##No! Give me the old page!',
+                    'desc' => $this->container->make('Translator')->trans('##No! Give me the old page!'),
                     'icon' => 'process-icon-toggle-on',
                     'help' => '##The new page cannot fit your needs now? Fallback to the old one, and tell us why!'
                 ),

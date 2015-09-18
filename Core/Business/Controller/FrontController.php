@@ -46,8 +46,30 @@ class FrontController extends BaseController
      */
     protected function encapsulateLayout(Response &$response)
     {
-        // TODO
-        $response->setContent('[DEBUT]<br/>'.$response->getContent().'<br/>[FIN]');
+        // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
+        $warningBlock = '';
+        if ($this->getWarningIterator() && $this->getWarningIterator()->count()) {
+            $warningBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/system_messages.tpl', array(
+                'exceptions' => $this->getWarningIterator(),
+                'color' => 'orange'
+            ));
+        }
+        // Display notices and success messages
+        $noticeBlock = '';
+        if ($this->getInfoIterator() && $this->getInfoIterator()->count()) {
+            $noticeBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
+                'messages' => $this->getInfoIterator(),
+                'color' => 'blue'
+            ));
+        }
+        if ($this->getSuccessIterator() && $this->getSuccessIterator()->count()) {
+            $noticeBlock .= $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
+                'messages' => $this->getSuccessIterator(),
+                'color' => 'green'
+            ));
+        }
+
+        $response->setContent($warningBlock.$noticeBlock.$response->getContent());
     }
 
     /**
@@ -59,11 +81,7 @@ class FrontController extends BaseController
      */
     protected function formatHtmlResponse(Response &$response)
     {
-        $templateEngineCallable = $response->getTemplateEngine($this->container);
-        if (is_callable($templateEngineCallable)) {
-            $response->setContent($templateEngineCallable($response->getContentData()));
-        } else {
-            // TODO
-        }
+        $templateEngine = $response->getTemplateEngine($this->container);
+        $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
     }
 }
