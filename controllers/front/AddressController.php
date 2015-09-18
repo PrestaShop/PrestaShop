@@ -38,6 +38,8 @@ class AddressControllerCore extends FrontController
     protected $_address;
     protected $id_country;
 
+    public $form_errors = [];
+
     /**
      * Initialize address controller
      * @see FrontController::init()
@@ -105,7 +107,8 @@ class AddressControllerCore extends FrontController
     protected function processSubmitAddress()
     {
         $address = new Address();
-        $this->errors = $address->validateController();
+        $address->validateController();
+        $this->validateFormController();
         $address->id_customer = (int)$this->context->customer->id;
 
         // Check page token
@@ -115,7 +118,7 @@ class AddressControllerCore extends FrontController
 
         // Check phone
         if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile')) {
-            $this->errors[] = Tools::displayError('You must register at least one phone number.');
+            $this->form_errors['phone'][] = $this->form_errors['phone_mobile'][] = $this->l('You must register at least one phone number.');
         }
         if ($address->id_country) {
             // Check country
@@ -124,30 +127,33 @@ class AddressControllerCore extends FrontController
             }
 
             if ((int)$country->contains_states && !(int)$address->id_state) {
-                $this->errors[] = Tools::displayError('This country requires you to chose a State.');
+                $this->form_errors['state'][] = $this->l('This country requires you to chose a State.');
             }
 
             if (!$country->active) {
-                $this->errors[] = Tools::displayError('This country is not active.');
+                $this->form_errors['country'][] = $this->l('This country is not active.');
             }
 
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
+                $this->form_errors['postcode'][] = sprintf($this->l('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
             } elseif (empty($postcode) && $country->need_zip_code) {
-                $this->errors[] = Tools::displayError('A Zip/Postal code is required.');
+                $this->form_errors['postcode'][] = $this->l('A Zip/Postal code is required.');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
-                $this->errors[] = Tools::displayError('The Zip/Postal code is invalid.');
+                $this->form_errors['postcode'][] = $this->l('The Zip/Postal code is invalid.');
             }
 
             // Check country DNI
             if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni')))) {
-                $this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
+                $this->form_errors['dni'][] = $this->l('The identification number is incorrect or has already been used.');
             } elseif (!$country->isNeedDni()) {
                 $address->dni = null;
             }
+        } else {
+            $this->form_errors['country'][] = $this->l('This information is required.');
         }
+
         // Check if the alias exists
         if (!$this->context->customer->is_guest && !empty($_POST['alias']) && (int)$this->context->customer->id > 0) {
             $id_address = Tools::getValue('id_address');
@@ -156,15 +162,15 @@ class AddressControllerCore extends FrontController
             }
 
             if (Address::aliasExist(Tools::getValue('alias'), (int)$id_address, (int)$this->context->customer->id)) {
-                $this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));
+                $this->form_errors['alias'][] = sprintf($this->l('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));
             }
         }
 
         // Check the requires fields which are settings in the BO
-        $this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
+        $this->form_errors = array_merge($this->form_errors, $address->validateFieldsRequiredDatabase());
 
         // Don't continue this process if we have errors !
-        if ($this->errors && !$this->ajax) {
+        if (($this->form_errors || $this->errors) && !$this->ajax) {
             return;
         }
 
@@ -260,10 +266,11 @@ class AddressControllerCore extends FrontController
         $mod = Tools::getValue('mod');
 
         $this->context->smarty->assign(array(
-            'address_validation' => Address::$definition['fields'],
+            'form_validation' => Address::$definition['fields'],
+            'form_errors' => $this->form_errors,
+            'errors' => $this->errors,
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
             'ajaxurl' => _MODULE_DIR_,
-            'errors' => $this->errors,
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
@@ -344,6 +351,17 @@ class AddressControllerCore extends FrontController
                 'errors' => $this->errors
             );
             $this->ajaxDie(json_encode($return));
+        }
+    }
+
+    public function validateFormController()
+    {
+        $requireFormFieldsList = AddressFormat::getFieldsRequired();
+
+        foreach ($_POST as $field_name => $val) {
+            if (in_array($field_name, $requireFormFieldsList) && empty($val)) {
+                $this->form_errors[$field_name][] = $this->l('This information is required.');
+            }
         }
     }
 }
