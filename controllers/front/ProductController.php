@@ -39,8 +39,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (Tools::getValue('live_edit')) {
             return;
         }
+
+        $id_product_attribute = Tools::getValue('id_product_attribute');
         if (Validate::isLoadedObject($this->product)) {
-            parent::canonicalRedirection($this->context->link->getProductLink($this->product));
+            parent::canonicalRedirection($this->context->link->getProductLink(
+                $this->product,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $id_product_attribute
+            ));
         }
     }
 
