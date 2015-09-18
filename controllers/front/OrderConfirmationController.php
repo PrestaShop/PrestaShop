@@ -57,6 +57,9 @@ class OrderConfirmationControllerCore extends FrontController
         $this->id_order = Order::getOrderByCartId((int)($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $order = new Order((int)($this->id_order));
+        if (!Validate::isLoadedObject($order)) {
+            Tools::redirect($redirectLink);
+        }
         if ($is_guest) {
             $customer = new Customer((int)$order->id_customer);
             $redirectLink .= '&id_order='.$order->reference.'&email='.urlencode($customer->email);
@@ -69,7 +72,7 @@ class OrderConfirmationControllerCore extends FrontController
             Tools::redirect($redirectLink);
         }
         $module = Module::getInstanceById((int)($this->id_module));
-        if ($order->module != $module->name) {
+        if (!Validate::isLoadedObject($module) || $order->module != $module->name) {
             Tools::redirect($redirectLink);
         }
     }
@@ -82,10 +85,19 @@ class OrderConfirmationControllerCore extends FrontController
     {
         parent::initContent();
 
+        $order = new Order($this->id_order);
+        $currency = new Currency($order->id_currency);
+        $params = array(
+            'total_to_pay' => $order->getOrdersTotalPaid(),
+            'currency' => $currency->sign,
+            'objOrder' => $order,
+            'currencyObj' => $currency,
+        );
+
         $this->context->smarty->assign(array(
             'is_guest' => $this->context->customer->is_guest,
-            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
+            'HOOK_ORDER_CONFIRMATION' => Hook::exec('displayOrderConfirmation', $params),
+            'HOOK_PAYMENT_RETURN' => Hook::exec('displayPaymentReturn', $params, $this->id_module)
         ));
 
         if ($this->context->customer->is_guest) {
@@ -99,50 +111,6 @@ class OrderConfirmationControllerCore extends FrontController
             $this->context->customer->mylogout();
         }
 
-        $this->setTemplate(_PS_THEME_DIR_.'order-confirmation.tpl');
-    }
-
-    /**
-     * Execute the hook displayPaymentReturn
-     */
-    public function displayPaymentReturn()
-    {
-        if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
-
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayPaymentReturn', $params, $this->id_module);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Execute the hook displayOrderConfirmation
-     */
-    public function displayOrderConfirmation()
-    {
-        if (Validate::isUnsignedId($this->id_order)) {
-            $params = array();
-            $order = new Order($this->id_order);
-            $currency = new Currency($order->id_currency);
-
-            if (Validate::isLoadedObject($order)) {
-                $params['total_to_pay'] = $order->getOrdersTotalPaid();
-                $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
-                $params['currencyObj'] = $currency;
-
-                return Hook::exec('displayOrderConfirmation', $params);
-            }
-        }
-        return false;
+        $this->setTemplate(_PS_THEME_DIR_.'checkout/order-confirmation.tpl');
     }
 }
