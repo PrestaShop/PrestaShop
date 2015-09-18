@@ -108,9 +108,10 @@ class DispatcherCore
         ),
         'product_rule' => array(
             'controller' =>    'product',
-            'rule' =>        '{category:/}{id}-{rewrite}{-:ean13}.html',
+            'rule' =>        '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}.html',
             'keywords' => array(
                 'id' =>            array('regexp' => '[0-9]+', 'param' => 'id_product'),
+                'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
                 'rewrite' =>        array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
                 'ean13' =>        array('regexp' => '[0-9\pL]*'),
                 'category' =>        array('regexp' => '[_a-zA-Z0-9-\pL]*'),
@@ -523,8 +524,8 @@ class DispatcherCore
 
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
-                    $prepend_regexp = '('.preg_quote($prepend);
-                    $append_regexp = preg_quote($append).')?';
+                    $prepend_regexp = '('.$prepend;
+                    $append_regexp = $append.')?';
                 }
 
                 if (isset($keywords[$keyword]['param'])) {
