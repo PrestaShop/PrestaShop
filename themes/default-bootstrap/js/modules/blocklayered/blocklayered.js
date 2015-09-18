@@ -93,17 +93,12 @@ $(document).ready(function()
 	});
 
 	// Click on label
-	$('#layered_block_left label:not(.layered_color) a').on({
-		click: function(e) {
-			e.preventDefault();
-			var disable = $(this).parent().parent().find('input').attr('disabled');
-			if (disable == ''
-			|| typeof(disable) == 'undefined'
-			|| disable == false)
-			{
-				$(this).parent().parent().find('input').click();
-				reloadContent();
-			}
+	$(document).on('click', '#layered_block_left label:not(.layered_color) a', function(e) {
+		e.preventDefault();
+		var disable = $(this).parent().parent().find('input').attr('disabled');
+		if (disable == '' || typeof(disable) == 'undefined' || disable == false)
+		{
+			$(this).parent().parent().find('input').click();
 		}
 	});
 
