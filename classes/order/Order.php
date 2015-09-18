@@ -709,8 +709,7 @@ class OrderCore extends ObjectModel
 				SELECT `image_shop`.id_image
 				FROM `'._DB_PREFIX_.'image` i'.
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE i.id_product = '.(int)$product['product_id']
-            );
+				WHERE i.id_product = '.(int)$product['product_id']);
         }
 
         $product['image'] = null;
@@ -1166,10 +1165,11 @@ class OrderCore extends ObjectModel
 
     public static function getLastInvoiceNumber()
     {
-        return Db::getInstance()->getValue('
-			SELECT MAX(`number`)
-			FROM `'._DB_PREFIX_.'order_invoice`
-		');
+        $sql = 'SELECT MAX(`number`) FROM `'._DB_PREFIX_.'order_invoice`';
+        if (Configuration::get('PS_INVOICE_RESET')) {
+            $sql .= ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y');
+        }
+        return Db::getInstance()->getValue($sql);
     }
 
     public static function setLastInvoiceNumber($order_invoice_id, $id_shop)
@@ -1190,7 +1190,8 @@ class OrderCore extends ObjectModel
             $sql .= (int)$number;
         } else {
             $sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
-			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+			FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
+                ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '').') AS result)';
         }
 
         $sql .= ' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
@@ -1207,8 +1208,7 @@ class OrderCore extends ObjectModel
         return Db::getInstance()->getValue('
 			SELECT `number`
 			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE `id_order_invoice` = '.(int)$order_invoice_id
-        );
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id);
     }
 
     /**
@@ -1410,8 +1410,7 @@ class OrderCore extends ObjectModel
         return Db::getInstance()->getValue('
 			SELECT `delivery_number`
 			FROM `'._DB_PREFIX_.'order_invoice`
-			WHERE `id_order_invoice` = '.(int)$order_invoice_id
-        );
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id);
     }
 
     public function setDelivery()
@@ -1657,8 +1656,7 @@ class OrderCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_detail_tax` odt
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
 		WHERE od.`id_order` = '.(int)$this->id.'
-		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
-        );
+		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD);
     }
 
     /**
@@ -1892,8 +1890,7 @@ class OrderCore extends ObjectModel
 			SELECT SUM(total_paid_tax_incl)
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE `reference` = \''.pSQL($this->reference).'\'
-			AND `id_cart` = '.(int)$this->id_cart
-        );
+			AND `id_cart` = '.(int)$this->id_cart);
     }
 
     /**
@@ -2000,7 +1997,6 @@ class OrderCore extends ObjectModel
     /**
      * Returns the wrapping taxes breakdown
      * @todo
-
      * @since 1.5.0.1
      * @return array
      */
@@ -2021,8 +2017,7 @@ class OrderCore extends ObjectModel
         return Db::getInstance()->executeS('
 		SELECT `ecotax_tax_rate`, SUM(`ecotax`) as `ecotax_tax_excl`, SUM(`ecotax`) as `ecotax_tax_incl`
 		FROM `'._DB_PREFIX_.'order_detail`
-		WHERE `id_order` = '.(int)$this->id
-        );
+		WHERE `id_order` = '.(int)$this->id);
     }
 
     /**
@@ -2058,11 +2053,10 @@ class OrderCore extends ObjectModel
     public function getOrderInvoiceIdIfHasDelivery()
     {
         return (int)Db::getInstance()->getValue('
-            SELECT `id_order_invoice`
-            FROM `'._DB_PREFIX_.'order_invoice`
-            WHERE `id_order` =  '.(int)$this->id.'
-            AND `delivery_number` > 0'
-        );
+			SELECT `id_order_invoice`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id.'
+			AND `delivery_number` > 0');
     }
 
     /**
