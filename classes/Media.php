@@ -275,18 +275,13 @@ class MediaCore
             return false;
         }
 
-        $file_uri = '';
         if (!array_key_exists('host', $url_data)) {
             $media_uri_host_mode = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_CORE_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
             $media_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
-            $url_data['path'] = $media_uri;
             // remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-            $file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-            $file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, Tools::str_replace_once(_PS_CORE_DIR_, '', $url_data['path']));
-        }
+            $file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $media_uri);
+            $file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, Tools::str_replace_once(_PS_CORE_DIR_, '', $media_uri));
 
-        // check if css files exists
-        if (!array_key_exists('host', $url_data)) {
             if (!@filemtime($file_uri) || @filesize($file_uri) === 0) {
                 if (!defined('_PS_HOST_MODE_')) {
                     return false;
@@ -296,9 +291,7 @@ class MediaCore
                     $media_uri = $media_uri_host_mode;
                 }
             }
-        }
 
-        if (!array_key_exists('host', $url_data)) {
             $media_uri = str_replace('//', '/', $media_uri);
         }
 
