@@ -17,5 +17,7 @@
 {/block}
 
 {block name="header_top"}
-  {hook h='displayTop'}
+  <div class="header-top">
+    {hook h='displayTop'}
+  </div>
 {/block}
