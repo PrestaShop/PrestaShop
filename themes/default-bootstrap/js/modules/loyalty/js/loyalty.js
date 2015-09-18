@@ -34,7 +34,7 @@ function updateLoyaltyView(new_price) {
 	if (typeof(new_price) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
 		return;
 
-	var points = Math.round(new_price / point_rate);
+	var points = Math.floor(new_price / point_rate);
 	var total_points = points_in_cart + points;
 	var voucher = total_points * point_value;
 
