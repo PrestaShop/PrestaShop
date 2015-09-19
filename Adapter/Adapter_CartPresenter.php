@@ -17,12 +17,10 @@ class Adapter_CartPresenter
     protected function presentProduct(array $rawProduct)
     {
         $product['name'] = $rawProduct['name'];
-        $product['price'] = $this->pricePresenter->format(
-            $this->pricePresenter->convertAmount(
-                $this->includeTaxes() ?
-                $rawProduct['total_wt'] :
-                $rawProduct['total']
-            )
+        $product['price'] = $this->pricePresenter->convertAndFormat(
+            $this->includeTaxes() ?
+            $rawProduct['total_wt'] :
+            $rawProduct['total']
         );
 
         $product['quantity'] = $rawProduct['quantity'];
@@ -37,7 +35,10 @@ class Adapter_CartPresenter
         $products = array_map([$this, 'presentProduct'], $rawProducts);
 
         return [
-            'products' => $products
+            'products' => $products,
+            'total'    => $this->pricePresenter->convertAndFormat(
+                $cart->getOrderTotal($this->includeTaxes())
+            )
         ];
     }
 }
