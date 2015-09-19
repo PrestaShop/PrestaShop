@@ -11,4 +11,9 @@ class Adapter_PricePresenter
     {
         return Tools::displayPrice($price);
     }
+
+    public function convertAndFormat($price)
+    {
+        return $this->format($this->convertAmount($price));
+    }
 }
