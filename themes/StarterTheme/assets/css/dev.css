@@ -68,14 +68,8 @@ a.add-to-cart, a.add-to-cart:hover {
   font-weight: bold;
 }
 
-.category-cover {
-  text-align: center;
-  border: 1px solid #ccc;
-  padding: 25px;
-}
-
 .category-cover img {
-  max-width: 100%;
+  width: 100%;
 }
 
 .subcategories {
