@@ -56,6 +56,7 @@ class Adapter_CartPresenter
 
         $products = array_map([$this, 'presentProduct'], $rawProducts);
 
+
         $totals = [];
 
         $total_excluding_tax = $cart->getOrderTotal(false);
@@ -79,9 +80,20 @@ class Adapter_CartPresenter
             'amount' => $this->pricePresenter->convertAndFormat($total)
         ];
 
+        $products_count = array_reduce($products, function ($count, $product) {
+            return $count + $product['quantity'];
+        }, 0);
+
+        $summary_string = $products_count === 1 ?
+                          $this->translator->l('1 product', 'Cart') :
+                          sprintf($this->translator->l('%d products', 'Cart'), $products_count)
+        ;
+
         return [
             'products' => $products,
-            'totals'   => $totals
+            'totals'   => $totals,
+            'products_count' => $products_count,
+            'summary_string' => $summary_string
         ];
     }
 }
