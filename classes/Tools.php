@@ -650,7 +650,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository(Context::getContext()->language);
+        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository($context->language);
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
