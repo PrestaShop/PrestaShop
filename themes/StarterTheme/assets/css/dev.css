@@ -121,6 +121,10 @@ a.add-to-cart, a.add-to-cart:hover {
   .products, .subcategories {
     justify-content: space-around;
   }
+
+  .product-miniature {
+    margin-left: 25px;
+  }
 }
 
 .product-miniature {
@@ -130,10 +134,6 @@ a.add-to-cart, a.add-to-cart:hover {
   padding: 15px;
   flex-grow: 1;
   margin-bottom: 25px;
-}
-
-.product-miniature:not(:first-child) {
-  margin-left: 25px;
 }
 
 .product-miniature img {
