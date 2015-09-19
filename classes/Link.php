@@ -519,6 +519,10 @@ class LinkCore
             parse_str($request, $request);
         }
 
+        if ($controller === 'cart' && !empty($request['add']) && Configuration::get('PS_TOKEN_ENABLE')) {
+            $request['token'] = Tools::getToken(false);
+        }
+
         $uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
 
         return $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
