@@ -520,7 +520,7 @@ class LinkCore
             parse_str($request, $request);
         }
 
-        if ($controller === 'cart' && !empty($request['add']) && Configuration::get('PS_TOKEN_ENABLE')) {
+        if ($controller === 'cart' && (!empty($request['add']) || !empty($request['delete'])) && Configuration::get('PS_TOKEN_ENABLE')) {
             $request['token'] = Tools::getToken(false);
         }
 
