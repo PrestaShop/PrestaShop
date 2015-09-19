@@ -11,6 +11,10 @@
   color: red;
 }
 
+body {
+  background-color: #efefef;
+}
+
 /* layout */
 
 #main, .header-nav, .header-top, a.logo {
@@ -77,6 +81,10 @@ a.add-to-cart, a.add-to-cart:hover {
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: flex-start;
+}
+
+.product-miniature, .category-miniature {
+  background-color: white;
 }
 
 .category-miniature {
