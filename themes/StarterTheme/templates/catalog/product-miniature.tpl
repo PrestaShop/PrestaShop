@@ -27,6 +27,7 @@
             rel   = "nofollow"
             data-id-product="{$product.id_product}"
             data-id-product-attribute="{$product.id_product_attribute}"
+            data-link-action="add-to-cart"
           >{l s='Add to cart'}</a>
       {/if}
       {hook h='displayProductListFunctionalButtons' product=$product}
