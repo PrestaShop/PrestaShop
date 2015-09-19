@@ -677,7 +677,6 @@ class ToolsCore
 
         $cldr = self::getCldr($context);
 
-
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
