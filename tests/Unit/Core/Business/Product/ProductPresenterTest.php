@@ -161,8 +161,8 @@ class ProductPresenterTest extends UnitTestCase
     {
         $this->product['online_only'] = true;
         $this->assertEquals(
-            ['online_only' => [
-                'type'  => 'online_only',
+            ['online-only' => [
+                'type'  => 'online-only',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('labels')
@@ -186,8 +186,8 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
         $this->assertEquals(
-            ['on_sale' => [
-                'type'  => 'on_sale',
+            ['on-sale' => [
+                'type'  => 'on-sale',
                 'label' => 'some label'
             ]],
             $this->getPresentedProduct('labels')
