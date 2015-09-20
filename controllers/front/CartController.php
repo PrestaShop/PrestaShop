@@ -389,6 +389,8 @@ class CartControllerCore extends FrontController
      */
     public function displayAjax()
     {
+        return; // TODO: disable cleanly, wanna keep the code for now for reference
+
         if ($this->errors) {
             $this->ajaxDie(json_encode(array('hasError' => true, 'errors' => $this->errors)));
         }
