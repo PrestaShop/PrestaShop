@@ -96,11 +96,22 @@ class CartControllerCore extends FrontController
                     }
                 }
 
-                Tools::redirect('index.php?controller=order&'.(isset($this->id_product) ? 'ipa='.$this->id_product : ''));
+                Tools::redirect('index.php?controller=cart&action=show');
             }
+        } elseif (Tools::getValue('action') === 'show') {
+            return;
         } elseif (!$this->isTokenValid()) {
             Tools::redirect('index.php');
         }
+    }
+
+    protected function showAction()
+    {
+        $presenter = new Adapter_CartPresenter;
+        $this->context->smarty->assign([
+            'cart' => $presenter->present($this->context->cart)
+        ]);
+        $this->setTemplate('checkout/cart.tpl');
     }
 
     /**
@@ -363,6 +374,10 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Tools::getValue('action') === 'show') {
+            return $this->showAction();
+        }
+
         $this->setTemplate(_PS_THEME_DIR_.'errors.tpl');
         if (!$this->ajax) {
             parent::initContent();
