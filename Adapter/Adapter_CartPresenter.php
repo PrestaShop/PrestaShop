@@ -43,6 +43,9 @@ class Adapter_CartPresenter
             $rawProduct['total']
         );
 
+        $product['id_product_attribute'] = $rawProduct['id_product_attribute'];
+        $product['id_product'] = $rawProduct['id_product'];
+
         $product['remove_from_cart_url'] = $this->getAddToCartURL($rawProduct);
 
         $product['quantity'] = $rawProduct['quantity'];
