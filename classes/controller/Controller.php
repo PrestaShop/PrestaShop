@@ -152,7 +152,7 @@ abstract class ControllerCore
         $this->context->controller = $this;
 
         // Usage of ajax parameter is deprecated
-        $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
+        $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax') || $_SERVER['HTTP_ACCEPT'] === 'application/json';
 
         if (!headers_sent()
             && isset($_SERVER['HTTP_USER_AGENT'])
