@@ -61,7 +61,7 @@ function initMarkers()
 {
 	searchUrl += '?ajax=1&all=1';
 	downloadUrl(searchUrl, function(data) {
-		var xml = parseXml(data.trim());
+		var xml = parseXml(data);
 		var markerNodes = xml.documentElement.getElementsByTagName('marker');
 		var bounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < markerNodes.length; i++)
