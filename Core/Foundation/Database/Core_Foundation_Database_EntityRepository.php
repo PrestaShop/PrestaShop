@@ -77,7 +77,7 @@ class Core_Foundation_Database_EntityRepository
      * @param $camel_case_field_name
      * @return string
      */
-    private function convertToDbFieldName($camel_case_field_name)
+    final private function convertToDbFieldName($camel_case_field_name)
     {
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camel_case_field_name));
     }
@@ -179,7 +179,7 @@ class Core_Foundation_Database_EntityRepository
      * @return array|mixed|null
      * @throws Core_Foundation_Database_Exception
      */
-    private function doFind($one, array $cumulativeConditions)
+    final private function doFind($one, array $cumulativeConditions)
     {
         $whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
 

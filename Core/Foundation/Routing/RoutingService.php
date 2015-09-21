@@ -38,7 +38,7 @@ class RoutingService
      */
     private $router;
 
-    private function __construct(AbstractRouter &$router)
+    final private function __construct(AbstractRouter &$router)
     {
         $this->router =& $router;
     }

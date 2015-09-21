@@ -35,7 +35,7 @@ class Core_Foundation_IoC_Container
         return array_key_exists($serviceName, $this->bindings);
     }
 
-    private function knowsNamespaceAlias($alias)
+    final private function knowsNamespaceAlias($alias)
     {
         return array_key_exists($alias, $this->namespaceAliases);
     }
@@ -85,7 +85,7 @@ class Core_Foundation_IoC_Container
         return $className;
     }
 
-    private function makeInstanceFromClassName($className, array $alreadySeen)
+    final private function makeInstanceFromClassName($className, array $alreadySeen)
     {
         $className = $this->resolveClassName($className);
 
@@ -125,7 +125,7 @@ class Core_Foundation_IoC_Container
         }
     }
 
-    private function doMake($serviceName, array $alreadySeen = array())
+    final private function doMake($serviceName, array $alreadySeen = array())
     {
         if (array_key_exists($serviceName, $alreadySeen)) {
             throw new Core_Foundation_IoC_Exception(sprintf(

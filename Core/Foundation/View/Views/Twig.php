@@ -115,7 +115,7 @@ class Twig extends View
      *
      * @return array
      **/
-    private function getTemplateDirs()
+    final private function getTemplateDirs()
     {
         if (defined('_PS_ADMIN_DIR_')) {
             return array(

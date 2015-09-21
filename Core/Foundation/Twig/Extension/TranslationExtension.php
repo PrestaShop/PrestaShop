@@ -46,7 +46,7 @@ class TranslationExtension extends \Twig_Extension
         );
     }
 
-    private function getPrestaShopTranslation($message)
+    final private function getPrestaShopTranslation($message)
     {
         return \Tools::displayError($message, false);
         // FIXME: vers Adapter

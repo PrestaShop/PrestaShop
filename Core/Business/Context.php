@@ -45,11 +45,13 @@ class Context extends ParameterBag
      */
     final public function __construct(\Adapter_LegacyContext $legacyContext)
     {
-        // TODO : default values now.
+        // Default values now.
+        $this->set('app_entry_point', 'unknown'); // admin / front / unknown
 
         // While Legacy architecture is here, retrieve some data from it.
         $legacyContext->mergeContextWithLegacy($this);
 
-        // TODO : override legacy values now.
+        // Override legacy values & define new Architecture values.
+        //here
     }
 }

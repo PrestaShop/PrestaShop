@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Adapter\UrlGenerator;
 
 class AdminRouter extends Router
 {
@@ -54,6 +55,7 @@ class AdminRouter extends Router
     final public function __construct(\Core_Foundation_IoC_Container &$container = null)
     {
         parent::__construct($container, 'admin_routes(_(.*))?\.yml');
+        $container->make('Context')->set('app_entry_point', 'admin');
     }
 
     final protected function checkControllerAuthority(\ReflectionClass $class)
@@ -92,29 +94,13 @@ class AdminRouter extends Router
             ($forceLegacyUrl == true || (isset($defaultParams['_legacy_force']) && $defaultParams['_legacy_force'] === true)) &&
             isset($defaultParams['_legacy_path']) &&
             ($link = $this->container->make('Context')->link)) { // For legacy case!
-            $legacyPath = $defaultParams['_legacy_path'];
-
-            $legacyContext = $this->container->make('Adapter_LegacyContext');
-            $basePath = $legacyContext->getAdminBaseUrl();
-
-            if ($routeParams->hasOption('legacy_param_mapper_class') && $routeParams->hasOption('legacy_param_mapper_method')) {
-                $class = $routeParams->getOption('legacy_param_mapper_class');
-                $method = $routeParams->getOption('legacy_param_mapper_method');
-                $class = new \ReflectionClass('\\'.$class);
-                $method = $class->getMethod($method);
-                $legacyParameters = $method->invoke(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $parameters);
-            } else {
-                $legacyParameters = $parameters;
-            }
-            
-
-//             switch ($referenceType) {
-//                 case UrlGeneratorInterface::ABSOLUTE_URL:
-//                     return $basePath.$link->getAdminLink($legacyPath);
-//                 case UrlGeneratorInterface::ABSOLUTE_PATH:
-//                 default:
-                    return $basePath.$legacyContext->getAdminLink($legacyPath, true, $legacyParameters);
-//             }
+            // get it from Adapter
+            return (new UrlGenerator())->generateAdminLegacyUrlForNewArchitecture(
+                $routeParams,
+                $defaultParams,
+                $parameters,
+                $this->container,
+                $link);
         }
         return parent::generateUrl($name, $parameters, false, $referenceType);
     }

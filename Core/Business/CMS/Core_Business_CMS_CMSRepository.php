@@ -30,7 +30,7 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
      * Return CMSRepository lang associative table name
      * @return string
      */
-    private function getLanguageTableNameWithPrefix()
+    final private function getLanguageTableNameWithPrefix()
     {
         return $this->getTableNameWithPrefix() . '_lang';
     }

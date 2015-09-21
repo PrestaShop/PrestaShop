@@ -144,7 +144,7 @@ class Update extends Repository
     /**
      * generate CLDR supplemental datas
      */
-    private function generateSupplementalDatas()
+    final private function generateSupplementalDatas()
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
         $files = @scandir($rootPath.'supplemental');
@@ -167,7 +167,7 @@ class Update extends Repository
      *
      * @param string $locale
      */
-    private function generateMainDatas($locale)
+    final private function generateMainDatas($locale)
     {
         $rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR;
         $files = @scandir($rootPath.'main'.DIRECTORY_SEPARATOR.$locale);

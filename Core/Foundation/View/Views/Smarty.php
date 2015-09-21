@@ -95,7 +95,7 @@ class Smarty extends View
     /**
      * Set options
      */
-    private function setDefaultOptions()
+    final private function setDefaultOptions()
     {
         $this->parserInstance->caching = false;
         $this->parserInstance->force_compile = (\Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
@@ -122,7 +122,7 @@ class Smarty extends View
         require_once(dirname(__FILE__).'/SmartyPlugins/SmartyFunctions.php');
     }
 
-    private function setDefaultAdminOptions()
+    final private function setDefaultAdminOptions()
     {
         $this->parserInstance->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template');
 
@@ -135,7 +135,7 @@ class Smarty extends View
         $this->parserInstance->compile_check = true;
     }
 
-    private function setDefaultFrontOptions()
+    final private function setDefaultFrontOptions()
     {
         $this->parserInstance->setTemplateDir(_PS_THEME_DIR_);
 

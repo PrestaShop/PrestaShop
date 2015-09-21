@@ -199,7 +199,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     private $name;
     private $container;
 
-    private function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container)
+    final private function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container)
     {
         $this->name = $dispatcherName;
         $this->container =& $container;

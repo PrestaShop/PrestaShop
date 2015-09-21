@@ -73,7 +73,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         $this->additionalInjections[] =& $objectInstance;
     }
 
-    private function checkAdditionalInjections(\ReflectionClass $paramClass)
+    final private function checkAdditionalInjections(\ReflectionClass $paramClass)
     {
         $names = explode('\\', $paramClass->name);
         $names = array('\\'.$paramClass->name, $paramClass->name, $names[count($names)-1]);

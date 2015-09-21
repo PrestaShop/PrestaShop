@@ -55,6 +55,7 @@ class FrontRouter extends Router
     final public function __construct(\Core_Foundation_IoC_Container &$container = null)
     {
         parent::__construct($container, 'admin_routes(_(.*))?\.yml');
+        $container->make('Context')->set('app_entry_point', 'front');
     }
 
     final protected function checkControllerAuthority(\ReflectionClass $class)
@@ -92,10 +93,10 @@ class FrontRouter extends Router
             ($forceLegacyUrl == true || (isset($defaultParams['_legacy_force']) && $defaultParams['_legacy_force'] === true)) &&
             isset($defaultParams['_legacy_path']) &&
             ($link = $this->container->make('Context')->link)) { // For legacy case!
-            $legacyPath = $defaultParams['_legacy_path'];
-
-            $legacyContext = $this->container->make('Adapter_LegacyContext');
-            return $legacyContext->getFrontUrl($legacyPath);
+            // get it from Adapter
+            return (new UrlGenerator())->generateFrontLegacyUrlForNewArchitecture(
+                $defaultParams,
+                $this->container);
         }
         return parent::generateUrl($name, $parameters, false, $referenceType);
     }

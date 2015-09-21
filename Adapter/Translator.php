@@ -34,12 +34,10 @@ class Translator implements TranslatorInterface
     private $context;
     private $locale;
 
-    public function __construct(Context $context)
+    public function __construct(Context &$context)
     {
         $this->context = $context;
-        $this->setLocale($this->context->language->iso_code);
-        var_dump($this->context);
-        die;
+        $this->setLocale($this->context->language->iso_code); // from legacy value
     }
 
     /**
@@ -61,23 +59,23 @@ class Translator implements TranslatorInterface
         // Very specific cases (PDF)
         if ($domain == 'pdf') {
             // Does not support overriding the language for this adapter!
-            return Translate::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
+            return \Translate::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Search for Admin case
-        $isAdmin = true; // ($this->context->controller->controller_type == 'admin' || ); // FIXME: trouver un moyen sur pour la nouvelle ARCHI !
+        $isAdmin = ($this->context->controller->controller_type == 'admin' || $this->context->get('app_entry_point', 'unknown') == 'admin');
         if ($isAdmin && $domain == null) {
             $domain = 'AdminTab'; // default class value for legacy Admin translation
         }
         if ($isAdmin) {
             $domain = preg_replace('/(c|C)ontroller$/', '', $domain); // remove trailing 'Controller'
 
-            return Translate::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
+            return \Translate::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Front / Module case ?
         if ($domain !== null) {
-            throw new DevelopmentErrorException('Module translation is not yet implemented. Please contact the Architect team.');
+            throw new DevelopmentErrorException('Module & Front translation is not yet implemented. Please contact the Architect team.');
         }
     }
 
@@ -98,7 +96,8 @@ class Translator implements TranslatorInterface
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
-        // TODO : utile ?
+        // TODO: to be done when legacy will accept this (or will be replaced).
+        throw new DevelopmentErrorException('transChoice method is not yet implemented. Please contact the Architect team.');
     }
 
     /**
