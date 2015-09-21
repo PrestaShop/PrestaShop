@@ -91,7 +91,9 @@ class MediaCore
     /**
      * @var string pattern used in packJSinHTML
      */
-    public static $pattern_js = '#\s*(<\s*script(?:\s[^>]*(?:javascript)[^>]*|)+>)(.*)(<\s*/script\s*[^>]*>)\s*#Uims';
+    public static $pattern_js = '/(<\s*script(?:\s+[^>]*(?:javascript|src)[^>]*)?\s*>)(.*)(<\s*\/script\s*[^>]*>)/Uims';
+
+    protected static $pattern_keepinline = 'data-keepinline';
 
     public static function minifyHTML($html_content)
     {
@@ -133,19 +135,21 @@ class MediaCore
     {
         if (strlen($html_content) > 0) {
             $html_content_copy = $html_content;
-            $html_content = preg_replace_callback(
-                Media::$pattern_js,
-                array('Media', 'packJSinHTMLpregCallback'),
-                $html_content,
-                Media::getBackTrackLimit());
+            if (!preg_match('/'.Media::$pattern_keepinline.'/', $html_content)) {
+                    $html_content = preg_replace_callback(
+                    Media::$pattern_js,
+                    array('Media', 'packJSinHTMLpregCallback'),
+                    $html_content,
+                    Media::getBackTrackLimit());
 
-            // If the string is too big preg_replace return an error
-            // In this case, we don't compress the content
-            if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR) {
-                if (_PS_MODE_DEV_) {
-                    Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+                // If the string is too big preg_replace return an error
+                // In this case, we don't compress the content
+                if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR) {
+                    if (_PS_MODE_DEV_) {
+                        Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+                    }
+                    return $html_content_copy;
                 }
-                return $html_content_copy;
             }
             return $html_content;
         }
@@ -823,7 +827,7 @@ class MediaCore
                             }
                         }
                     }
-                    if (!in_array($src, Media::$inline_script_src)) {
+                    if (!in_array($src, Media::$inline_script_src) && !$script->getAttribute(Media::$pattern_keepinline)) {
                         Context::getContext()->controller->addJS($src);
                     }
                 }
@@ -857,10 +861,9 @@ class MediaCore
         }
 
         /* This is an inline script, add its content to inline scripts stack then remove it from content */
-        if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && Media::$inline_script[] = $inline) {
+        if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/'.Media::$pattern_keepinline.'/', $original) && Media::$inline_script[] = $inline) {
             return '';
         }
-
         /* This is an external script, if it already belongs to js_files then remove it from content */
         preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
         if (array_key_exists(1, $results)) {
@@ -868,12 +871,13 @@ class MediaCore
                 $protocol_link = Tools::getCurrentUrlProtocolPrefix();
                 $results[1] = $protocol_link.ltrim($results[1], '/');
             }
+
             if (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src)) {
                 return '';
             }
         }
 
         /* return original string because no match was found */
-        return $original;
+        return "\n".$original;
     }
 }
