@@ -22,3 +22,5 @@ REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 				GROUP BY pt.id_tag, pt.id_lang, id_shop ORDER BY NULL;
 
 TRUNCATE TABLE `PREFIX_smarty_last_flush`;
+
+ALTER TABLE `PREFIX_search_index` ADD INDEX(`id_product`);
