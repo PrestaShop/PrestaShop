@@ -228,48 +228,57 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->assignAttributesCombinations();
 
             // Pack management
-            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
+            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : null;
             $this->context->smarty->assign('packItems', $pack_items);
+            $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
+            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < $this->product->getNoPackPrice()) ? true : false);
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
-            if (isset($this->category->id) && $this->category->id) {
-                $return_link = Tools::safeOutput($this->context->link->getCategoryLink($this->category));
-            } else {
-                $return_link = 'javascript: history.back();';
+            $presenter = $this->getProductPresenter();
+            $presentationSettings = $this->getProductPresentationSettings();
+            $accessories = $this->product->getAccessories($this->context->language->id);
+            if (is_array($accessories)) {
+                foreach ($accessories as &$accessory) {
+                    $accessory = $presenter->presentForListing(
+                        $presentationSettings,
+                        Product::getProductProperties($this->context->language->id, $accessory, $this->context),
+                        $this->context->language
+                    );
+                }
+                unset($accessory);
             }
 
-            $accessories = $this->product->getAccessories($this->context->language->id);
-            if ($this->product->cache_is_pack || count($accessories)) {
-                $this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
-            }
+
             if ($this->product->customizable) {
                 $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
             }
 
+            $quantity = 1;
+            if (isset($_POST['quantityBackup'])) {
+                $quantity = (int)$_POST['quantityBackup'];
+            } elseif ($this->product->minimal_quantity) {
+                $quantity = (int)$this->product->minimal_quantity;
+            }
+            $this->context->smarty->assign('quantityBackup', $quantity);
+
+            $product_for_template = $this->getTemplateVarProduct();
+
             $this->context->smarty->assign(array(
                 'priceDisplay' => $priceDisplay,
                 'productPrice' => $productPrice,
-                'productPriceWithCurrency' => Tools::displayPrice($productPrice, $this->context->currency),
                 'productPriceWithoutReduction' => $productPriceWithoutReduction,
                 'display_quantities' => ((bool)Configuration::get('PS_DISPLAY_QTIES') && (bool)Configuration::get('PS_STOCK_MANAGEMENT') && $this->product->quantity > 0 && (bool)$this->product->available_for_order && !($this->context->smarty->tpl_vars['PS_CATALOG_MODE']->value)) ? true : false,
-                'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
                 'customizationFields' => $customization_fields,
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
-                'return_link' => $return_link,
-                'product' => $this->getTemplateVarProduct(),
-                'quantity_label' => ($this->getTemplateVarProduct()['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
+                'product' => $product_for_template,
+                'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
+                'unit_price' => ($this->product->unit_price_ratio > 0) ? ($productPrice / $this->product->unit_price_ratio) : 0,
+                'quantity_label' => ($product_for_template['quantity'] > 1) ? $this->l('Items') : $this->l('Item'),
                 'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
                 'token' => Tools::getToken(false),
-                'allow_oosp' => $this->product->isAvailableWhenOutOfStock((int)$this->product->out_of_stock),
                 'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
-                'HOOK_PRODUCT_CONTENT' =>  Hook::exec('displayProductContent', array('product' => $this->product)),
-                'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
-                'display_ht' => !Tax::excludeTaxeOption(),
                 'display_taxes_label' => ((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value) ? true : false,
-                'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
-                'ENT_NOQUOTES' => ENT_NOQUOTES,
-                'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
                 'errors' => $this->errors,
                 'body_classes' => array(
                     $this->php_self.'-'.$this->product->id,
@@ -295,7 +304,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ));
 
             // Assign attribute groups to the template
-            $this->assignAttributesGroups();
+            $this->assignAttributesGroups($product_for_template);
         }
         $this->setTemplate('catalog/product.tpl');
     }
@@ -353,8 +362,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $this->context->smarty->assign(array(
             'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
-            'ecotax_tax_inc' => $ecotax_tax_amount,
-            'ecotax_tax_exc' => Tools::ps_round($this->product->ecotax, 2),
+            'displayEcotax' => ($ecotax_tax_amount > 0) ? true : false,
+            'ecotax' => (Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer) == 2) ? Product::convertAndFormatPrice($this->product->ecotax, false, $this->context) : Product::convertAndFormatPrice($ecotax_tax_amount, false, $this->context),
             'ecotaxTax_rate' => $ecotax_rate,
             'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
             'group_reduction' => $group_reduction,
@@ -368,7 +377,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * Assign template vars related to attribute groups and colors
      */
-    protected function assignAttributesGroups()
+    protected function assignAttributesGroups($product_for_template = null)
     {
         $colors = array();
         $groups = array();
@@ -397,7 +406,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     );
                 }
 
-                $groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = $row['attribute_name'];
+                $groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = array(
+                    'name' => $row['attribute_name'],
+                    'html_color_code' => $row['attribute_color'],
+                    'selected' => (isset($product_for_template['attributes'][$row['id_attribute_group']]['id_attribute']) && $product_for_template['attributes'][$row['id_attribute_group']]['id_attribute'] == $row['id_attribute']) ? true : false,
+                );
+
+                //$product.attributes.$id_attribute_group.id_attribute eq $id_attribute
                 if ($row['default_on'] && $groups[$row['id_attribute_group']]['default'] == -1) {
                     $groups[$row['id_attribute_group']]['default'] = (int)$row['id_attribute'];
                 }
@@ -527,8 +542,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $this->context->smarty->assign(array(
             'attributesCombinations' =>  $attributes_combinations,
             'attribute_anchor_separator' => Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR')
-            )
-        );
+        ));
     }
 
     /**
@@ -606,9 +620,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 /* Original file */
                 if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
                     $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
-                }
-                /* A smaller one */
-                elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
+                } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
                     $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
                 } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
                     $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
@@ -656,14 +668,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $customization_form_target = preg_replace('/&group_([[:digit:]]+)=([[:digit:]]+)/', '', $customization_form_target);
             }
         }
-        if (isset($_POST['quantityBackup'])) {
-            $this->context->smarty->assign('quantityBackup', (int)$_POST['quantityBackup']);
-        }
         $this->context->smarty->assign('customizationFormTarget', $customization_form_target);
     }
 
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
+        $pricePresenter = new Adapter_PricePresenter();
+
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
             if ($row['price'] >= 0) {
@@ -677,7 +688,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } else {
                     $cur_price *= 1 - $row['reduction'];
                 }
-
+                $discountPrice = $price - $row['real_value'];
+                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                    if ($row['reduction_tax'] == 0 && !$row['price']) {
+                        $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                    } else {
+                        $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                    }
+                } else {
+                    $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                }
                 $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
@@ -687,12 +707,36 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
                     }
                     $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
+                    $discountPrice = $price - $row['real_value'];
+                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                        if ($row['reduction_tax'] == 0 && !$row['price']) {
+                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                        } else {
+                            $row['discount'] = $pricePresenter->convertAndFormat($price - $row['real_value']);
+                        }
+                    } else {
+                        $row['discount'] = $pricePresenter->convertAndFormat($row['real_value']);
+                    }
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
+                    $discountPrice = $price - $price*$row['reduction'];
+                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                        if ($row['reduction_tax'] == 0) {
+                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction_with_tax']));
+                        } else {
+                            $row['discount'] = $pricePresenter->convertAndFormat($price - ($price*$row['reduction']));
+                        }
+                    } else {
+                        $row['discount'] = $row['real_value'].'%';
+                    }
                 }
             }
+
+            $row['save'] = $pricePresenter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
         }
+        // d($price);
+        // d($specific_prices);
         return $specific_prices;
     }
 
@@ -713,11 +757,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['out_of_stock'] = (int)$this->product->out_of_stock;
         $product['new'] = (int)$this->product->new;
 
+        if (Tools::getValue('refresh_product')) {
+            $product['id_product_attribute'] = (int)$this->product->getIdProductAttributesByIdAttributes((int)$this->product->id, Tools::getValue('group'));
+        } else {
+            $product['id_product_attribute'] = (int)Tools::getValue('id_product_attribute');
+        }
+
         $presenter = $this->getProductPresenter();
-        $settings = $this->getProductPresentationSettings();
 
         return $presenter->presentForListing(
-            $settings,
+            $this->getProductPresentationSettings(),
             Product::getProductProperties($this->context->language->id, $product, $this->context),
             $this->context->language
         );
