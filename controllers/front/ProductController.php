@@ -235,15 +235,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
             $presenter = $this->getProductPresenter();
+            $presentationSettings = $this->getProductPresentationSettings();
             $accessories = $this->product->getAccessories($this->context->language->id);
-
-            foreach ($accessories as &$accessory) {
-                $accessory = $presenter->presentForListing(
-                    $this->getProductPresentationSettings(),
-                    Product::getProductProperties($this->context->language->id, $accessory, $this->context),
-                    $this->context->language
-                );
+            if (is_array($accessories)) {
+                foreach ($accessories as &$accessory) {
+                    $accessory = $presenter->presentForListing(
+                        $presentationSettings,
+                        Product::getProductProperties($this->context->language->id, $accessory, $this->context),
+                        $this->context->language
+                    );
+                }
+                unset($accessory);
             }
+
 
             if ($this->product->customizable) {
                 $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
