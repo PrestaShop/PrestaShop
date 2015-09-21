@@ -181,13 +181,13 @@ class ProductPresenter
 
         if ($show_price && $product['online_only']) {
             $labels['online-only'] = [
-                'type' => 'online_only',
+                'type' => 'online-only',
                 'label' => $this->translator->l('Online only', 'Product')
             ];
         }
 
         if ($show_price && $product['on_sale'] && !$settings->catalog_mode) {
-            $labels['on_sale'] = [
+            $labels['on-sale'] = [
                 'type' => 'on-sale',
                 'label' => $this->translator->l('On sale!', 'Product')
             ];
