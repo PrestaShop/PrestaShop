@@ -1383,7 +1383,7 @@ class CategoryCore extends ObjectModel
 			SET category_shop.`position` = '.(int)$position.'
 			WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
 			AND c.`id_category`='.(int)$moved_category['id_category']));
-        Hook::exec('actionCategoryUpdate');
+        Hook::exec('actionCategoryUpdate', array('moved_category' => $moved_category));
         return $result;
     }
 
