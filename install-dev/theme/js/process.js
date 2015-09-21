@@ -69,7 +69,7 @@ function process_install(step)
 			// No error during this step
 			if (json && json.success === true)
 			{
-				$('#process_step_'+step.key).addClass('success');
+				$('#process_step_' + step.key).addClass('success');
 				current_step++;
 				if (current_step >= process_steps.length)
 				{
@@ -180,9 +180,10 @@ function install_error(step, errors)
 
 		var display = '<ol>';
 
-		$.each(list_errors, function(k, v) {
+		$.each(list_errors, function(k, v)
+		{
 			if (typeof psuser_assistance != 'undefined') {
-				psuser_assistance.setStep('install_process_error', {'error': v});
+				psuser_assistance.setStep('install_process_error', {'error': v, 'version': ps_version});
 			}
 			display += '<li>' + (k + 1) + ': ' + v + '</li>';
 		});
@@ -190,9 +191,8 @@ function install_error(step, errors)
 		display += '</ol>';
 		$('#error_process').append(display);
 	}
-
 	if (typeof psuser_assistance != 'undefined') {
-		psuser_assistance.setStep('install_process_error');
+		psuser_assistance.setStep('install_process_error', {'version': ps_version});
 	}
 
 	$('#tabs li a').each(function() {
@@ -208,8 +208,9 @@ function install_success()
 	$('#install_process_form').slideUp();
 	$('#install_process_success').slideDown();
 	$('.stepList li:last-child').addClass('ok');
-	if (typeof psuser_assistance != 'undefined')
-		psuser_assistance.setStep('install_process_success');
+	if (typeof psuser_assistance != 'undefined') {
+		psuser_assistance.setStep('install_process_success', {'version': ps_version});
+	}
 
 	$('#tabs li a').each(function() {
 		 this.href=this.rel;
