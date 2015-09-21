@@ -1,0 +1,15 @@
+{
+  "name": "prestashop-starter-theme-dev-tools",
+  "version": "0.0.1",
+  "description": "Tools to help while developing the starter theme",
+  "main": "index.js",
+  "scripts": {
+    "build": "node_modules/.bin/stylus --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
+    "watch": "node_modules/.bin/stylus --watch --compress --sourcemap --include-css css/dev.styl -o ../assets/css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "stylus": "^0.52.4"
+  }
+}
