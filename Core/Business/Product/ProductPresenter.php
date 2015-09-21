@@ -131,14 +131,19 @@ class ProductPresenter
         );
     }
 
-    private function getProductURL(array $product, Language $language)
-    {
+    private function getProductURL(
+        array $product,
+        Language $language,
+        $canonical = false
+    ) {
         return $this->link->getProductLink(
             $product['id_product'],
-            null, null, null,
+            null,
+            null,
+            null,
             $language->id,
             null,
-            $product['id_product_attribute'],
+            (!$canonical) ? $product['id_product_attribute'] : null,
             false,
             false,
             true
@@ -292,6 +297,7 @@ class ProductPresenter
         );
 
         $presentedProduct['url'] = $this->getProductURL($product, $language);
+        $presentedProduct['canonical_url'] = $this->getProductURL($product, $language, true);
 
         $presentedProduct = $this->addPriceInformation(
             $presentedProduct,
