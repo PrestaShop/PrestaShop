@@ -3153,14 +3153,12 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT pa.`id_product_attribute`
 		FROM `'._DB_PREFIX_.'product_attribute` pa
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
 		WHERE pa.`id_product` = '.(int)$this->id.'
 		ORDER BY product_attribute_shop.`price` DESC');
-
-        return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
     }
 
     public function getDefaultIdProductAttribute()
