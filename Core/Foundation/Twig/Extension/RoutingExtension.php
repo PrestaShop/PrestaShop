@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 
-use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\RoutingService;
 

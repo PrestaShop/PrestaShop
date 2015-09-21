@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Cldr;
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
-use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
 use Curl\Curl;
 
 class Update extends Repository

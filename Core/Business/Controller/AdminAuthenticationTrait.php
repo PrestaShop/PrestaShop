@@ -27,8 +27,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 
 /**
  * This Trait will add middleware functions to check authentication state.

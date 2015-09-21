@@ -25,7 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
-use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 

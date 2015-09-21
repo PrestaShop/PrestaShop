@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\File;
-use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**

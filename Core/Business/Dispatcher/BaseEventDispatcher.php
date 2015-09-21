@@ -25,14 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\Dispatcher;
 
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
-use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
 /**
  * This class extends EventDispatcher to add Business related listeners.

@@ -25,12 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
-use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShop\PrestaShop\Core\Business\Context;
 
 /**
  * Base class for all Admin controllers. Others won't be accepted by AdminRouter.

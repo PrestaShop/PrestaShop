@@ -26,10 +26,8 @@
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**

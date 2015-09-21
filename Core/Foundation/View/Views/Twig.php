@@ -26,19 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
-use PrestaShop\PrestaShop\Core\Business\Context;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
 use Symfony\Component\Translation\Translator;
 use PrestaShop\PrestaShop\Core\Foundation\Twig\Extension\TranslationExtension as TwigTranslationExtension;
 use PrestaShop\PrestaShop\Core\Foundation\Twig\Extension\RoutingExtension as TwigRoutingExtension;
-use Symfony\Component\Validator\Validation;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use PrestaShop\PrestaShop\Core\Foundation\View\View;
 
 class Twig extends View

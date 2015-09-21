@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 
 class Core_Foundation_Exception_Exception extends Exception
