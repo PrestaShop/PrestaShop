@@ -4401,6 +4401,12 @@ class ProductCore extends ObjectModel
             }
         }
 
+        $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+
+        foreach ($attributes as $attribute) {
+            $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+        }
+
         $row = Product::getTaxesInformations($row, $context);
         self::$producPropertiesCache[$cache_key] = $row;
         return self::$producPropertiesCache[$cache_key];
@@ -5707,6 +5713,21 @@ class ProductCore extends ObjectModel
 			WHERE pa.`id_product` = '.(int)$id_product);
         }
         return $result;
+    }
+
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes)
+    {
+        if (!is_array($id_attributes)) {
+            return 0;
+        }
+
+        return Db::getInstance()->getValue('
+        SELECT pac.`id_product_attribute`
+        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', $id_attributes).')
+        GROUP BY id_product_attribute
+        HAVING COUNT(id_product) = '.count($id_attributes));
     }
 
     /**
