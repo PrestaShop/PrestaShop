@@ -626,16 +626,16 @@ class CustomerCore extends ObjectModel
         LIMIT 10');
     }
 
-    /*
-    * Specify if a customer already in base
-    *
-    * @param $id_customer Customer id
-    * @return bool
-    */
-    /* DEPRECATED */
+    /**
+     * Specify if a customer already in base
+     * @deprecated Use Customer::customerIdExistsStatic((int)$id_customer) instead
+     * @param int $id_customer Customer ID
+     * @return int
+     */
     public function customerIdExists($id_customer)
     {
-        return Customer::customerIdExistsStatic((int)$id_customer);
+        Tools::displayAsDeprecated('Use Customer::customerIdExistsStatic((int)$id_customer) instead');
+        return (int)Customer::customerIdExistsStatic((int)$id_customer);
     }
 
     public static function customerIdExistsStatic($id_customer)
