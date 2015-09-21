@@ -28,6 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Form\Validator;
 
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * DropFile
+ *
+ * This class is used to override the Symfony\Component\Validator\Constraint class
+ */
 class DropFile extends Constraint
 {
 }

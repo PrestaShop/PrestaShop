@@ -27,8 +27,11 @@ namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
-// FIXME: to remove ?
-
+/**
+ * View
+ *
+ * The view is responsible for rendering a template
+ */
 class View
 {
     protected $container;
@@ -36,6 +39,11 @@ class View
     protected $templatesDirectory;
     public $appPath;
 
+    /**
+     * Constructor
+     *
+     * @param  \Core_Foundation_IoC_Container $container
+     */
     public function __construct(\Core_Foundation_IoC_Container $container)
     {
         $this->container = $container;
@@ -44,6 +52,7 @@ class View
 
     /**
      * Has data
+     *
      * @param  string  $key
      * @return boolean
      */
@@ -54,6 +63,7 @@ class View
 
     /**
      * Get data
+     *
      * @param  string $key
      * @return mixed
      */
@@ -64,6 +74,7 @@ class View
 
     /**
      * Set data
+     *
      * @param string $key
      * @param mixed $value
      */
@@ -74,6 +85,7 @@ class View
 
     /**
      * Get all datas
+     *
      * @return array
      */
     public function all()
@@ -83,6 +95,7 @@ class View
 
     /**
      * Replace datas
+     *
      * @param  array  $data
      */
     public function replace(array $data)
@@ -91,7 +104,7 @@ class View
     }
 
     /**
-     * Clear datas
+     * Clear all datas
      */
     public function clear()
     {
@@ -100,7 +113,8 @@ class View
 
     /**
      * Set the base template directory
-     * @param   string $directory
+     *
+     * @param string $directory
      */
     public function setTemplatesDirectory($directory)
     {
@@ -109,6 +123,7 @@ class View
 
     /**
      * Get template directory
+     *
      * @return string
      */
     public function getTemplatesDirectory()
@@ -118,7 +133,9 @@ class View
 
     /**
      * Get template directory path
+     *
      * @param  string $file
+     *
      * @return string
      */
     public function getTemplatePathname($file)
@@ -142,6 +159,7 @@ class View
      *
      * @param  string $template
      * @param  array  $data
+     *
      * @return string
      */
     public function fetch($template, $data = null)
@@ -153,8 +171,10 @@ class View
      * Render
      * @param  string $template
      * @param  array  $data
+     *
      * @return string
-     * @throws \Exception
+     *
+     * @throws DevelopmentErrorException
      */
     protected function render($template, $data = null)
     {

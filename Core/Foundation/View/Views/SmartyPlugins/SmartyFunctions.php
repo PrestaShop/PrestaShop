@@ -23,8 +23,10 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-// FIXME: tout le dossier SmartyPlugins a transférer versBusiness
-// FIXME: tout est legacy ici, déplacer vers Adapter ? ou sous-couche Adapter en plus ?
+
+/**
+ * Smarty shared env custom functions definition
+ */
 
 smartyRegisterFunction($this->parserInstance, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($this->parserInstance, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));

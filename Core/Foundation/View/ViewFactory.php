@@ -26,10 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
+/**
+ * ViewFactory
+ *
+ * This factory class is responsible to load a valid rendering template engine (smarty/twig)
+ */
 class ViewFactory
 {
     public $view;
 
+    /**
+     * Constructor
+     *
+     * @param \Core_Foundation_IoC_Container $container
+     * @param string $engine_name
+     *
+     * @throws \Exception If the class defined by the engine name do not exists
+     */
     public function __construct(\Core_Foundation_IoC_Container $container, $engine_name = 'smarty')
     {
         $class_view = '\\PrestaShop\\PrestaShop\\Core\\Foundation\\View\\Views\\'. ucfirst($engine_name);

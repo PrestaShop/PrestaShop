@@ -33,10 +33,24 @@ use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\DefaultCsrfProvider;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 
+/**
+ * FormFactory
+ *
+ * This factory class is responsible to create a SF2 Form Factory Builder
+ * Also add 3 extensions :
+ * - ValidatorExtension : for SF2 form validation
+ * - ValidatorExtension : for SF2 CSRF form validation/protection
+ * - HttpFoundationExtension : for SF2 form request handle
+ */
 class FormFactory
 {
     private $builder;
 
+    /**
+     * Constructor
+     *
+     * Create a SF2 form factory builder
+     */
     public function __construct()
     {
         // Set up the CSRF provider
@@ -52,11 +66,29 @@ class FormFactory
         return $this->builder;
     }
 
+    /**
+     * Return a form builder
+     *
+     * @param string $name The name of the form
+     * @param array $datas The initial data
+     * @param array $options The form options
+     *
+     * @return FormBuilderInterface The form builder
+     */
     public function createBuilder($name = 'form', $datas = null, $options = array())
     {
         return $this->builder->createBuilder($name, $datas, $options);
     }
 
+    /**
+     * Return a form
+     *
+     * @param FormTypeInterface $formType The type of the form
+     * @param array $datas The initial data
+     * @param array $options The form options
+     *
+     * @return FormInterface The form type
+     */
     public function create($formType, $datas = null, $options = array())
     {
         return $this->builder->create($formType, $datas, $options);

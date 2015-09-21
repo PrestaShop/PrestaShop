@@ -31,12 +31,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * This form class is risponsible to create a nested category selector
+ */
 class ChoiceCategorysTreeType extends AbstractType
 {
     private $label;
     private $list;
     private $validList;
 
+    /**
+     * Constructor
+     *
+     * @param string $label The field label
+     * @param array $list The nested array categorys
+     */
     public function __construct($label = '', $list = array())
     {
         $this->label = $label;
@@ -44,6 +53,11 @@ class ChoiceCategorysTreeType extends AbstractType
         $this->formatValidList($list);
     }
 
+    /**
+     * Create and format a valid array keys categorys that can be validate by the choice SF2 cform component
+     *
+     * @param array $list The nested array categorys
+     */
     protected function formatValidList($list)
     {
         foreach ($list as $item) {
@@ -55,11 +69,21 @@ class ChoiceCategorysTreeType extends AbstractType
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Add the var choices to the view
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = $this->list;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Builds the form.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('tree', 'choice', array(
@@ -72,6 +96,11 @@ class ChoiceCategorysTreeType extends AbstractType
         ));
     }
 
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
     public function getName()
     {
         return 'choice_tree';

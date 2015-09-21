@@ -28,16 +28,28 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 
 use Symfony\Component\Translation\TranslatorInterface;
 
-// FIXME: vers Business (Prestashop dependant)
+/**
+ * This class is used by Twig_Environment and provide some methods callable from a twig template
+ */
 class TranslationExtension extends \Twig_Extension
 {
     private $translator;
 
+    /**
+     * Constructor : Inject Symfony\Component\Translation Translator
+     *
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * Define available filters
+     *
+     * @return array Twig_SimpleFilter
+     */
     public function getFilters()
     {
         return array(
@@ -46,22 +58,55 @@ class TranslationExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * This method wrap the Tools::displayError legacy method
+     *
+     * @param string $message The string to translate
+     *
+     * @return string The translated string
+     */
     final private function getPrestaShopTranslation($message)
     {
         return \Tools::displayError($message, false);
         // FIXME: vers Adapter
     }
 
+    /**
+     * Translates the given message
+     *
+     * @param string $message The string to translate
+     * @param array $arguments An array of parameters for the message
+     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $locale The locale or null to use the default
+     *
+     * @return string The translated string
+     */
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)
     {
         return $this->translator->trans($this->getPrestaShopTranslation($message), $arguments, $domain, $locale);
     }
 
+    /**
+     * Translates the given message by choosing a translation according to a number
+     *
+     * @param string $message The string to translate
+     * @param int $count The number to use to find the indice of the message
+     * @param array $arguments An array of parameters for the message
+     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $locale The locale or null to use the default
+     *
+     * @return string The translated string
+     */
     public function transchoice($message, $count, array $arguments = array(), $domain = null, $locale = null)
     {
         return $this->translator->transChoice($this->getPrestaShopTranslation($message), $count, array_merge(array('%count%' => $count), $arguments), $domain, $locale);
     }
 
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
     public function getName()
     {
         return 'twig_translation_extension';

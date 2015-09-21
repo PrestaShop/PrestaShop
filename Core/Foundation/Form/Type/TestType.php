@@ -29,14 +29,27 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * This form class is a use case test
+ */
 class TestType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     *
+     * Builds form
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title');
         $builder->add('description');
     }
 
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
     public function getName()
     {
         return 'test';

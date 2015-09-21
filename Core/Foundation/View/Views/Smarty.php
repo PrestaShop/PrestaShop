@@ -28,7 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
 use PrestaShop\PrestaShop\Core\Foundation\View\View;
 
-// FIXME: tout est legacy ici, déplacer vers Adapter ? ou sous-couche Adapter en plus ?
+/**
+ * Smarty view
+ *
+ * The Smarty view is a custom View class that renders templates using Smarty
+ */
 class Smarty extends View
 {
     public $parserDirectory = null;
@@ -42,6 +46,7 @@ class Smarty extends View
      *
      * @param string $template
      * @param null $data
+     *
      * @return string
      */
     public function render($template = null, $data = null)
@@ -56,6 +61,7 @@ class Smarty extends View
      * Create new instance
      *
      * @throws \Exception
+     *
      * @return \Smarty Instance
      */
     public function getInstance()
@@ -93,7 +99,7 @@ class Smarty extends View
     }
 
     /**
-     * Set options
+     * Set the default options
      */
     final private function setDefaultOptions()
     {
@@ -122,6 +128,9 @@ class Smarty extends View
         require_once(dirname(__FILE__).'/SmartyPlugins/SmartyFunctions.php');
     }
 
+    /**
+     * Set the default options for an admin instance
+     */
     final private function setDefaultAdminOptions()
     {
         $this->parserInstance->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template');
@@ -135,6 +144,9 @@ class Smarty extends View
         $this->parserInstance->compile_check = true;
     }
 
+    /**
+     * Set the default options for a front instance
+     */
     final private function setDefaultFrontOptions()
     {
         $this->parserInstance->setTemplateDir(_PS_THEME_DIR_);

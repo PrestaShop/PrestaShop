@@ -29,16 +29,28 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\RoutingService;
 
-// FIXME: vers Business (Prestashop dependant)
+/**
+ * This class is used by Twig_Environment and provide some methods callable from a twig template
+ */
 class RoutingExtension extends \Twig_Extension
 {
     private $routing;
 
+    /**
+     * Constructor : Inject Routing service
+     *
+     * @param RoutingService $routing
+     */
     public function __construct(RoutingService $routing)
     {
         $this->routing = $routing;
     }
 
+    /**
+     * Define available functions
+     *
+     * @return array Twig_SimpleFunction
+     */
     public function getFunctions()
     {
         return array(
@@ -47,16 +59,39 @@ class RoutingExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * This method wrap the routing generateUrl method for new urls
+     *
+     * @param string $name
+     * @param array $parameters
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     */
     public function getUrl($name, array $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         return $this->routing->generateUrl($name, $parameters, false, $referenceType);
     }
 
+    /**
+     * This method wrap the routing generateUrl method for legacy urls
+     *
+     * @param string $name
+     * @param array $parameters
+     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
+     *
+     * @return string The generated URL
+     */
     public function getLegacyUrl($name, array $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         return $this->routing->generateUrl($name, $parameters, true, $referenceType);
     }
 
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
     public function getName()
     {
         return 'twig_routing_extension';

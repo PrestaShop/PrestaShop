@@ -29,8 +29,19 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Form\Validator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * ContainsAlphanumericValidator
+ *
+ * This class validate if a string contain alpha numeric char
+ */
 class ContainsAlphanumericValidator extends ConstraintValidator
 {
+    /**
+     * Validate the constraint
+     *
+     * @param string $value The value to test
+     * @param Constraint $constraint
+     */
     public function validate($value, Constraint $constraint)
     {
         if (!preg_match('/^[a-zA-Za0-9]+$/', $value, $matches)) {

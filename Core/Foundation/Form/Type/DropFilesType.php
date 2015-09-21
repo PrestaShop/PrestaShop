@@ -32,12 +32,22 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\DropFile;
 
+/**
+ * This form class is risponsible to create/manage a drag&drop form field
+ */
 class DropFilesType extends AbstractType
 {
     private $label;
     private $dropzoneOptions;
     private $dropzonePostUrl;
 
+    /**
+     * Constructor
+     *
+     * @param string $label The field label
+     * @param string $dropzonePostUrl The url to post files
+     * @param array $dropzoneOptions The options to render/translate the dropzone JS lib (see : http://www.dropzonejs.com)
+     */
     public function __construct($label = '', $dropzonePostUrl = '', $dropzoneOptions = null)
     {
         $this->label = $label;
@@ -52,6 +62,11 @@ class DropFilesType extends AbstractType
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Add the uploaded files datas to the view
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $arrayExistedFiles = array();
@@ -66,6 +81,11 @@ class DropFilesType extends AbstractType
         $view->vars['dropzonePostUrl'] = $this->dropzonePostUrl;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Builds form
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('files', 'collection', array(
@@ -82,6 +102,11 @@ class DropFilesType extends AbstractType
         ));
     }
 
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
     public function getName()
     {
         return 'drop_files';

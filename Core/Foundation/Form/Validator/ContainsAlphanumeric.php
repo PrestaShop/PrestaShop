@@ -28,6 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Form\Validator;
 
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * ContainsAlphanumeric
+ *
+ * This class is used to override the Symfony\Component\Validator\Constraint class
+ */
 class ContainsAlphanumeric extends Constraint
 {
     public $message = 'The string {{ string }} contain non authorized character : it just can contain alpha numeric char';

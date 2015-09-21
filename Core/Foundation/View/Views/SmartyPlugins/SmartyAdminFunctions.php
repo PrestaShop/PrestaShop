@@ -23,7 +23,10 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-// FIXME: tout le dossier SmartyPlugins a transférer versBusiness
+
+/**
+ * Smarty custom functions definition for Admin env
+ */
 
 function smartyTranslate($params, &$smarty)
 {

@@ -35,6 +35,11 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use PrestaShop\PrestaShop\Core\Foundation\View\View;
 
+/**
+ * Twig view
+ *
+ * The Twig view is a custom View class that renders templates using Twig
+ */
 class Twig extends View
 {
     public $parserDirectory = null;
@@ -48,6 +53,7 @@ class Twig extends View
      *
      * @param string $template
      * @param null $data
+     *
      * @return string
      */
     public function render($template, $data = null)
@@ -108,7 +114,7 @@ class Twig extends View
      * Get template directories
      *
      * @return array
-     **/
+     */
     final private function getTemplateDirs()
     {
         if (defined('_PS_ADMIN_DIR_')) {

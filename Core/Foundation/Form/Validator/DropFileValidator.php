@@ -32,8 +32,19 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints\Image;
 
+/**
+ * DropFileValidator
+ *
+ * This class validate uploaded files from DropFilesType form type
+ */
 class DropFileValidator extends ConstraintValidator
 {
+    /**
+     * Validate the new created image constraint
+     *
+     * @param array $files The files to test
+     * @param Constraint $constraint
+     */
     public function validate($files, Constraint $constraint)
     {
         $validator = Validation::createValidator();

@@ -31,12 +31,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
+/**
+ * This form class is risponsible to create a translatable form
+ */
 class TranslateType extends AbstractType
 {
     private $type;
     private $options;
     private $locales;
 
+    /**
+     * Constructor
+     *
+     * @param string $type The field type
+     * @param array $options The field options as constraints, attributes...
+     * @param array $locales The locales to render all fields
+     */
     public function __construct($type, $options = array(), $locales = array())
     {
         $this->type = $type;
@@ -44,6 +54,11 @@ class TranslateType extends AbstractType
         $this->locales = empty($locales) ? \Language::getLanguages() : $locales;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Builds form fields for each locales
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $i=0;
@@ -57,12 +72,22 @@ class TranslateType extends AbstractType
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * Add the var locales and defaultLocale to the view
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['locales'] = $this->locales;
         $view->vars['defaultLocale'] = $this->locales[0];
     }
 
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
     public function getName()
     {
         return 'translatefields';
