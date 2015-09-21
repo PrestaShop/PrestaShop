@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
@@ -129,7 +130,7 @@ class ProductController extends AdminController
     public function productFormAction(Request &$request, Response &$response, $product)
     {
         $formFactory = new FormFactory();
-        $builder = $formFactory->create();
+        $builder = $formFactory->createBuilder();
 
         $response->setJs(array(
             _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
@@ -139,14 +140,31 @@ class ProductController extends AdminController
 
         $form = $builder
             ->setAction('')
+            ->add('type_product', 'choice', array(
+                'choices'  => array(
+                    0 => 'Produit standard',
+                    1 => 'Pack de produits existants',
+                    2 => 'Produit dématérialisé (services, réservations, produits téléchargeables, etc.)',
+                ),
+                'required' => true,
+                'data' => 'both'
+            ))
             ->add('name', new TranslateType(
                 'text',
-                array('constraints' => array(
+                array(
+                    'constraints' => array(
                         new Assert\NotBlank(),
                         new Assert\Length(array('min' => 3))
                     )
                 )
             ))
+            ->add('description', 'textarea', array(
+                'attr' => array('class' => 'autoload_rte')
+            ))
+            ->add('images', new DropFilesType('Images', $this->generateUrl('admin_tools_upload'), array(
+                'maxFiles' => '10',
+                'dictRemoveFile' => 'Supprimer'
+            )))
             ->add('reference', 'text')
             ->add('ean13', 'text')
             ->add('upc', 'text')
@@ -182,6 +200,7 @@ class ProductController extends AdminController
                         'required' => false,
                     ))
             )
+            ->add('categorys', new ChoiceCategorysTreeType('Catégories', \Category::getNestedCategories()))
             ->add('condition', 'choice', array(
                 'choices'  => array(
                     'new' => 'Nouveau',
@@ -191,11 +210,6 @@ class ProductController extends AdminController
                 'required' => true,
                 'data' => 'new'
             ))
-            ->add('description_short', 'textarea', array(
-                'attr' => array('class' => 'autoload_rte')
-            ))
-            ->add('description', 'textarea')
-            ->add('categorys', new ChoiceCategorysTreeType('Catégories', \Category::getNestedCategories()))
             ->getForm();
 
         $response->setEngineName('twig');
@@ -203,7 +217,6 @@ class ProductController extends AdminController
         $response->setTitle('My custom title');
         $response->setDisplayType('add');
 
-        $response->addContentData('form', $form->createView());
         $response->addContentData('form', $form->createView());
     }
 }
