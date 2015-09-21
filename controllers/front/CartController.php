@@ -79,6 +79,8 @@ class CartControllerCore extends FrontController
                 $this->processAllowSeperatedPackage();
             } elseif (Tools::getIsset('duplicate')) {
                 $this->processDuplicateProduct();
+            } elseif (Tools::getValue('action') === 'show') {
+                return;
             }
             // Make redirection
             if (!$this->errors && !$this->ajax) {
