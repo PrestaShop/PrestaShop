@@ -28,8 +28,13 @@
 <div class="translatable-field row lang-{$language.id_lang}">
 	<div class="col-lg-9">
 {/if}
-		<textarea id="{$input_name}_{$language.id_lang}" name="{$input_name}_{$language.id_lang}" class="{if isset($class)}{$class}{else}textarea-autosize{/if}">{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
-    <span class="counter" data-max="{if isset($max)}{$max}{else}none{/if}"></span>
+		{if isset($maxchar) && $maxchar}
+			<span id="{if isset($input_id)}{$input_id}_{$language.id_lang}{else}{$input_name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
+				<span class="text-count-down">{$maxchar|intval}</span>
+			</span>
+		{/if}
+		<textarea id="{$input_name}_{$language.id_lang}" name="{$input_name}_{$language.id_lang}" class="{if isset($class)}{$class}{else}textarea-autosize{/if}"{if isset($maxlength) && $maxlength} maxlength="{$maxlength|intval}"{/if}{if isset($maxchar) && $maxchar} data-maxchar="{$maxchar|intval}"{/if}>{if isset($input_value[$language.id_lang])}{$input_value[$language.id_lang]|htmlentitiesUTF8}{/if}</textarea>
+    <span class="counter" data-max="{if isset($max)}{$max|intval}{/if}{if isset($maxlength)}{$maxlength|intval}{/if}{if !isset($max) && !isset($maxlength)}none{/if}"></span>
 {if $languages|count > 1}
 	</div>
 	<div class="col-lg-2">
@@ -46,7 +51,14 @@
 </div>
 {/if}
 {/foreach}
-
 <script type="text/javascript">
+	{if isset($maxchar) && $maxchar}
+		$(document).ready(function(){
+		{foreach from=$languages item=language}
+			countDown($("#{$input_name}_{$language.id_lang}"), $("#{$input_name}_{$language.id_lang}_counter"));
+		{/foreach}
+		});
+	{/if}
 	$(".textarea-autosize").autosize();
 </script>
+

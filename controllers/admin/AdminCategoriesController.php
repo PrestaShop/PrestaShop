@@ -550,9 +550,11 @@ class AdminCategoriesControllerCore extends AdminController
                    'format' => $format['medium']
                 ),
                 array(
-                    'type' => 'textarea',
+                    'type' => 'text',
                     'label' => $this->l('Meta title'),
                     'name' => 'meta_title',
+                    'maxlength' => 70,
+                    'maxchar' => 70,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
@@ -562,6 +564,8 @@ class AdminCategoriesControllerCore extends AdminController
                     'type' => 'textarea',
                     'label' => $this->l('Meta description'),
                     'name' => 'meta_description',
+                    'maxlength' => 160,
+                    'maxchar' => 160,
                     'lang' => true,
                     'rows' => 5,
                     'cols' => 100,
