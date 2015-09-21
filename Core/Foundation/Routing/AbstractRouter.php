@@ -242,6 +242,7 @@ abstract class AbstractRouter
     /**
      * This function will call controller and the corresponding action. In this function, all security layers,
      * pre-actions and post-actions, must be called.
+     * The function could generate a cache function to be executed quickly.
      *
      * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
@@ -341,6 +342,7 @@ abstract class AbstractRouter
     /**
      * This function will call controller and the corresponding action. In this function, all security layers,
      * pre-actions and post-actions, must be called.
+     * The function could generate a cache function to be executed quickly.
      *
      * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
      * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
@@ -354,8 +356,11 @@ abstract class AbstractRouter
      * The redirect call take a route and its parameters, to send a redirection header to the browser.
      * If the redirect succeed, it does not return because an exit is done after redirection is sent.
      *
-     * @param mixed $to Integer, String or Array. See description for specific array format.
-     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is not a return code.
+     * @param Request $oldRequest The previous Request instance (to take route parameters if needed)
+     * @param string $routeName The name of the route (see route YML files)
+     * @param array $routeParameters The route parameters to use for this route (see route YML parameters settings).
+     * @param boolean $forceLegacyUrl True to use the legacy URL generation (redirects to legacy controllers)
+     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
      * @throws DevelopmentErrorException if the redirect is made from a subcall action.
      * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
      */
@@ -438,6 +443,9 @@ abstract class AbstractRouter
      */
     abstract protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false);
 
+    /**
+     * Search for setting files (routes*.yml, and others).
+     */
     final private function registerSettingFiles()
     {
         $triggerCacheGenerationFlag = &$this->triggerCacheGenerationFlag;
@@ -487,6 +495,11 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
         return $this->configCacheFactory;
     }
 
+    /**
+     * Adds YML files to complete routes with a prefix.
+     *
+     * @param Router $sfRouter
+     */
     final private function aggregateRoutingExtensions(Router &$sfRouter)
     {
         foreach ($this->routingFiles as $prefix => $routingFile) {

@@ -27,10 +27,22 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Log;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
+/**
+ * This singleton will contains 4 SPplQueue objects, for 4 levels of messages:
+ * - error and warning, filled during Exception instantiations
+ * - info and success, filled by actions (or other Core code).
+ *
+ * The singleton is also a listener registered on the 'message' EventDispatcher.
+ */
 class MessageStackManager
 {
     private static $instance = null;
 
+    /**
+     * Way to retrieve singleton object.
+     *
+     * @return \PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager
+     */
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -44,7 +56,10 @@ class MessageStackManager
     private $infoQueue;
     private $successQueue;
 
-    public final function __construct()
+    /**
+     * Private constructor. Use singleton getter instead: getInstance()
+     */
+    final private function __construct()
     {
         $this->errorQueue = new \SplQueue();
         $this->warningQueue = new \SplQueue();
@@ -52,42 +67,90 @@ class MessageStackManager
         $this->successQueue = new \SplQueue();
     }
 
-    public final function onError(BaseEvent $event)
+    /**
+     * Triggered when a ErrorException or DevelopmentErrorException is instantiated.
+     *
+     * Do not call it by yourself.
+     *
+     * @param BaseEvent $event
+     */
+    final public function onError(BaseEvent $event)
     {
         $this->errorQueue->enqueue($event->getException());
     }
 
-    public final function onWarning(BaseEvent $event)
+    /**
+     * Triggered when a WarningException is instantiated.
+     *
+     * Do not call it by yourself.
+     *
+     * @param BaseEvent $event
+     */
+    final public function onWarning(BaseEvent $event)
     {
         $this->warningQueue->enqueue($event->getException());
     }
 
-    public final function onInfo(BaseEvent $event)
+    /**
+     * Triggered by the 'message' EventDisptacher
+     *
+     * Do not call it by yourself.
+     *
+     * @param BaseEvent $event
+     */
+    final public function onInfo(BaseEvent $event)
     {
         $this->infoQueue->enqueue($event->getMessage());
     }
 
-    public final function onSuccess(BaseEvent $event)
+    /**
+     * Triggered by the 'message' EventDisptacher
+     *
+     * Do not call it by yourself.
+     *
+     * @param BaseEvent $event
+     */
+    final public function onSuccess(BaseEvent $event)
     {
         $this->successQueue->enqueue($event->getMessage());
     }
 
-    public final function getErrorIterator()
+    /**
+     * Gets the Error SplQueue.
+     *
+     * @return \SplQueue
+     */
+    final public function getErrorIterator()
     {
         return $this->errorQueue;
     }
 
-    public final function getWarningIterator()
+    /**
+     * Gets the Warning SplQueue.
+     *
+     * @return \SplQueue
+     */
+    final public function getWarningIterator()
     {
         return $this->warningQueue;
     }
 
-    public final function getInfoIterator()
+    /**
+     * Gets the Info SplQueue.
+     *
+     * @return \SplQueue
+     */
+    final public function getInfoIterator()
     {
         return $this->infoQueue;
     }
 
-    public final function getSuccessIterator()
+    /**
+     * Gets the Success SplQueue.
+     *
+     * @return \SplQueue
+     */
+    final public function getSuccessIterator()
     {
         return $this->successQueue;
     }

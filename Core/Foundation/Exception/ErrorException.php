@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 class ErrorException extends \Core_Foundation_Exception_Exception
 {
     /**
+     * Constructor.
+     *
      * @param string $message The message to show to the user on the admin interface
      * @param string $reportData Information to generate a 'report problem' link to PrestaShop.
      * @param number $code
@@ -46,7 +48,8 @@ class ErrorException extends \Core_Foundation_Exception_Exception
     {
         parent::__construct($message, $code, $previous, $reportData, $moduleToDeactivate);
         
-        EventDispatcher::getInstance('message')->dispatch('error_message', new BaseEvent($message, $this));
-        EventDispatcher::getInstance('error')->dispatch('error_message', new BaseEvent($message, $this));
+        if (self::$messageDispatcher) {
+            self::$messageDispatcher->dispatch('error_message', new BaseEvent($message, $this));
+        }
     }
 }

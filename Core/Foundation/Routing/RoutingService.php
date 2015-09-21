@@ -45,6 +45,13 @@ class RoutingService
 
     private static $instanciated = false;
 
+    /**
+     * Called by Router during start of the PHP process, to register this service in the Container.
+     * Do not call it by yourself.
+     *
+     * @param AbstractRouter $router
+     * @param \Core_Foundation_IoC_Container $container
+     */
     final public static function registerRoutingService(AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
     {
         if (self::$instanciated !== false) {

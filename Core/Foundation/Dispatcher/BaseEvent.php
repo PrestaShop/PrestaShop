@@ -48,6 +48,8 @@ class BaseEvent extends Event
     private $container = null;
 
     /**
+     * Constructor
+     *
      * @see Event::__construct()
      *
      * @param string $message The optional message to dispatch, if any.

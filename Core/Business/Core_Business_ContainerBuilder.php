@@ -24,10 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Used to build the Container at the process starting (bootstrap.php)
+ */
 class Core_Business_ContainerBuilder
 {
     /**
-     * Construct PrestaShop Core Service container
+     * Construct PrestaShop Core Service container.
+     *
      * @return Core_Foundation_IoC_Container
      * @throws Core_Foundation_IoC_Exception
      */

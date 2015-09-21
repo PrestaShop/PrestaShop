@@ -39,6 +39,11 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
 {
     private $response;
 
+    /**
+     * Keeps the Response object to allow injection of it into action.
+     *
+     * @param unknown $response
+     */
     public function setResponse(&$response)
     {
         $this->response =& $response;
@@ -50,6 +55,10 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     private $container;
 
+    /**
+     * Keeps the Container object to allow injection of it (or another service that it provides) into action.
+     * @param \Core_Foundation_IoC_Container $container
+     */
     public function setContainer(\Core_Foundation_IoC_Container &$container)
     {
         $this->container =& $container;
@@ -61,6 +70,11 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     private $router;
 
+    /**
+     * Keeps the Router instance to allow Controller's instantiation.
+     *
+     * @param AbstractRouter $router
+     */
     public function setRouter(AbstractRouter &$router)
     {
         $this->router =& $router;
@@ -68,6 +82,11 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
 
     private $additionalInjections = array();
 
+    /**
+     * Add an object to inject into the action signature.
+     *
+     * @param unknown $objectInstance
+     */
     public function addInjection(&$objectInstance)
     {
         $this->additionalInjections[] =& $objectInstance;
@@ -94,6 +113,9 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         return false; // Not found
     }
 
+    /* (non-PHPdoc)
+     * @see \Symfony\Component\HttpKernel\Controller\ControllerResolver::doGetArguments()
+     */
     protected function doGetArguments(Request $request, $controller, array $parameters)
     {
         $attributes = $request->attributes->all();

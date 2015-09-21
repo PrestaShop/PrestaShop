@@ -24,13 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Business\Routing\Router;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 
+/**
+ * This is a common layer over Exception, to add basic features.
+ *
+ * (using dispatchers, with a formatted __toString() output, etc...)
+ */
 class Core_Foundation_Exception_Exception extends Exception
 {
+    /**
+     * @var EventDispatcher
+     */
+    protected static $messageDispatcher = null;
+
+    /**
+     * Sets the EventDispatcher to allow subclasses to dispatch messages when they are instantiated.
+     *
+     * @param EventDispatcher $dispatcher
+     */
+    final public static function setMessageDispatcher(EventDispatcher $dispatcher)
+    {
+        self::$messageDispatcher = $dispatcher;
+    }
+
+    /**
+     * A set of data (unknown format) to link to the Exception.
+     * Used in __toString() to show Exception details.
+     *
+     * @var mixed
+     */
     public $reportData = null;
+
     private $randomInstantiationKey = null;
     private $moduleToDeactivate = null;
 
+    /**
+     * Constructor.
+     *
+     * @param string $message
+     * @param number $code
+     * @param \Exception $previous
+     * @param mixed $reportData
+     * @param mixed $moduleToDeactivate
+     */
     public function __construct($message = null, $code = 0, \Exception $previous = null, $reportData = null, $moduleToDeactivate = null)
     {
         parent::__construct($message, $code, $previous);
@@ -39,7 +76,10 @@ class Core_Foundation_Exception_Exception extends Exception
         $this->moduleToDeactivate = $moduleToDeactivate;
         $this->deactivateModule();
     }
-    
+
+    /**
+     * Overrides default __toString() to add a lot of event data to the output.
+     */
     public function __toString()
     {
         if (!func_num_args() || func_get_arg(0) == false) {
@@ -94,16 +134,26 @@ class Core_Foundation_Exception_Exception extends Exception
         return $data;
     }
 
+    /**
+     * Does nothing in this class. Must be overriden to appears in the __toString() dumping.
+     *
+     * @return mixed
+     */
     protected function getAfterMessageContent()
     {
         return null;
     }
 
+    /**
+     * TODO to code when modules will be able to register features into the new Core.
+     * This will deactivate the module. The merchant will have to reactivate it manually.
+     *
+     * @return boolean
+     */
     protected function deactivateModule()
     {
         if ($this->moduleToDeactivate != null) {
-            // TODO: to code when modules will be able to register features into the new Core.
-            // This will deactivate the module. The merchant will have to reactivate it manually.
+            // TODO
             return true;
         }
         return false;

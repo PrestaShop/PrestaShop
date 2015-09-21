@@ -26,13 +26,14 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
  * Base class for data provider, to give common Adapter functions.
  */
 abstract class AbstractAdminDataProvider
 {
-    private function compileSqlWhere($whereArray)
+    final private function compileSqlWhere($whereArray)
     {
         $operator = 'AND';
         $s = array();
@@ -51,6 +52,19 @@ abstract class AbstractAdminDataProvider
         return '('.implode(' '.$operator.' ', $s).')';
     }
 
+    /**
+     * Compiles a SQL query (SELECT), from a group of associative arrays.
+     *
+     * @see AdminProductDataProvider::getCatalogProductList() for an example.
+     *
+     * @param array $select
+     * @param array $table
+     * @param array $where
+     * @param array $order
+     * @param string $limit
+     * @throws DevelopmentErrorException if SQL elements cannot be joined.
+     * @return string The SQL query ready to be executed.
+     */
     protected function compileSqlQuery(array $select, array $table, array $where, array $order, $limit = null)
     {
         $sql = array();

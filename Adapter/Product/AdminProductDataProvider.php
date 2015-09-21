@@ -62,6 +62,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      * @param integer $limit
      * @param string $orderBy Field name to sort during SQL query
      * @param string $orderWay 'asc' or 'desc'
+     * @param array $get filter params values to take into acount (often comes from GET data).
      * @return array A list of products, as a collection of legacy Product objects.
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $get = array())

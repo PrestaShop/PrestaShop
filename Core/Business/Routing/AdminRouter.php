@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Adapter\UrlGenerator;
 
+/**
+ * This final layer supports URL generation for Administration interface, and
+ * checks security parameters to execute only AdminController actions.
+ */
 class AdminRouter extends Router
 {
     /**
@@ -43,6 +47,13 @@ class AdminRouter extends Router
         $container->make('Context')->set('app_entry_point', 'admin');
     }
 
+    /**
+     * Will check if the controller is an AdminController.
+     *
+     * @see \PrestaShop\PrestaShop\Core\Business\Routing\Router::checkControllerAuthority()
+     * @param \ReflectionClass $class The class of the controller to execute
+     * @throws DevelopmentErrorException if the class is not a subclass of AdminController.
+     */
     final protected function checkControllerAuthority(\ReflectionClass $class)
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')
@@ -51,26 +62,8 @@ class AdminRouter extends Router
         }
     }
 
-    /**
-     * Generates a URL or path for a specific route based on the given parameters.
-     *
-     * This is a Wrapper for the Symfony method:
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
-     * but also adds a legacy URL generation support.
-     *
-     * @param string      $name             The name of the route
-     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
-     * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
-     *                                      You must override the method in a Controller subclass in order to use this option.
-     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
-     *
-     * @return string The generated URL
-     *
-     * @throws RouteNotFoundException              If the named route doesn't exist
-     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
-     *                                             it does not match the requirement
-     * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Business\Routing\Router::generateUrl()
      */
     final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {

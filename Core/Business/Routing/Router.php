@@ -38,8 +38,20 @@ use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 
+/**
+ * Second layer of the Router classes structure, to add Business specific behaviors.
+ *
+ * - Avoid double instantiation of a Router class,
+ * - Generates the action execution sequence (with Traits methods),
+ * - Implements dispatch, subcall, redirect,
+ * - Exposes new abstract functions to be implemented specifically on Admin/Front subclasses.
+ */
 abstract class Router extends AbstractRouter
 {
+    /**
+     * If true, a new instance will fail to construct. Avoid multiple Router instances in the same PHP process.
+     * @var boolean
+     */
     private static $instantiated = false;
 
     /**
@@ -69,7 +81,6 @@ abstract class Router extends AbstractRouter
      * Instanciate a Router with a set of routes YML files.
      *
      * @throws DevelopmentErrorException If the Router has already been instantiated.
-     *
      * @param \Core_Foundation_IoC_Container $container The application Container instance
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
@@ -84,10 +95,13 @@ abstract class Router extends AbstractRouter
 
             // EventDispatcher init
             BaseEventDispatcher::initBaseDispatchers($this->container);
-            $this->routingDispatcher = EventDispatcher::getInstance('routing');
+            $this->routingDispatcher = $this->container->make('EventDispatcher/routing');
             if ($this->triggerCacheGenerationFlag) {
                 $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
             }
+
+            // Exception dispatching handling
+            \Core_Foundation_Exception_Exception::setMessageDispatcher($this->container->make('EventDispatcher/message'));
 
             // Translator service init
             $this->container->bind('Translator', '\\PrestaShop\\PrestaShop\\Adapter\\Translator');
@@ -191,15 +205,8 @@ abstract class Router extends AbstractRouter
      */
     abstract protected function checkControllerAuthority(\ReflectionClass $class);
 
-    /**
-     * This function will call controller and the corresponding action. In this function, all security layers,
-     * pre-actions and post-actions, must be called. The function will generate a cache function to be executed quickly.
-     *
-     * @param string $controllerName The name of the Controller (partial namespace given, to complete)
-     * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
-     * @param Request $request
-     * @throws ResourceNotFoundException if controller action failed (not found)
-     * @return boolean True for success, false if the router should pass through for the next Router (legacy Dispatcher).
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doDispatch()
      */
     final protected function doDispatch($controllerName, $controllerMethod, Request &$request)
     {
@@ -207,15 +214,8 @@ abstract class Router extends AbstractRouter
         return $this->doCall($controllerName, $controllerMethod, $request, false, true);
     }
 
-    /**
-     * This function will call controller and the corresponding action. In this function, all security layers,
-     * pre-actions and post-actions, must be called. The function will generate a cache function to be executed quickly.
-     *
-     * @param string $controllerName The name of the Controller (partial namespace given, instantiateController() will complete with the first part)
-     * @param string $controllerMethod The name of the function to execute. Must accept parameters: Request &$request, Response &$response
-     * @param Request $request
-     * @throws ResourceNotFoundException if controller action failed (not found)
-     * @return Response Data/view returned by matching controller (not sent through output buffer).
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doSubcall()
      */
     final protected function doSubcall($controllerName, $controllerMethod, Request &$request)
     {
@@ -398,11 +398,21 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
         return $functionName($method, $request, $this, $container);
     }
 
+    /**
+     * Sets the URL/code to use if a forbidden redirection is called through setForbiddenRedirection().
+     *
+     * @see AbstractRouter::redirect()
+     *
+     * @param mixed $redirection Integer or String
+     */
     public function setForbiddenRedirection($redirection)
     {
         $this->forbiddenRedirection = $redirection;
     }
 
+    /**
+     * Call this to redirect to the forbidden page.
+     */
     public function redirectToForbidden()
     {
         if ($this->forbiddenRedirection === null) {
@@ -410,27 +420,9 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
         }
         $this->redirect($this->forbiddenRedirection); // HTTP code 200 (Login page for example)
     }
-    
-    /**
-     * Generates a URL or path for a specific route based on the given parameters.
-     *
-     * This is a Wrapper for the Symfony method:
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
-     * but also adds a legacy URL generation support.
-     *
-     * @param string      $name             The name of the route
-     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
-     * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
-     *                                      You must override the method in a Controller subclass in order to use this option.
-     * @param bool|string $referenceType The type of reference to be generated (one of the constants)
-     *
-     * @return string The generated URL
-     *
-     * @throws RouteNotFoundException              If the named route doesn't exist
-     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
-     *                                             it does not match the requirement
-     * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::generateUrl()
      */
     public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
@@ -459,13 +451,8 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
         }
     }
 
-    /**
-     * This function will generate a URL and will send a redirection to it to the browser.
-     *
-     * @param string $route The route name
-     * @param array $parameters The route parameters
-     * @param boolean $forceLegacyUrl True to use alternative URL to reach legacy dispatcher.
-     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doRedirect()
      */
     final protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
     {
@@ -483,7 +470,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
      * This is used to have a last chance of operating a fatal error for example.
      * This listener will then dispatch an Event in the 'routing' EventDispatcher, with event name 'shutdown'.
      * If you want to listen to the shutdown event, please use:
-     * EventDispatcher::getInstance('routing')->addListener('shutdown', <your_listener>).
+     * $container->make('EventDispatcher/routing')->addListener('shutdown', <your_listener>).
      *
      * No need to call it by yourself.
      *
@@ -492,6 +479,6 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
     final public function registerShutdownFunctionCallback(Request &$request)
     {
         $null = null;
-        EventDispatcher::getInstance('routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
+        $this->container->make('EventDispatcher/routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
 }

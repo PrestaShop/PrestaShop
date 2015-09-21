@@ -39,9 +39,15 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
  */
 class WarningException extends \Core_Foundation_Exception_Exception
 {
-    public $alternative = null;
-    
     /**
+     * An alternative data to allow alternative feature behavior when the Exception occurs.
+     * @var unknown
+     */
+    public $alternative = null;
+
+    /**
+     * Constructor
+     *
      * @param string $message The message to show to the user on the admin interface
      * @param mixed $alternative The alternative data/setting to use when the main data/setting failed to be computed.
      * @param string $reportData Information to generate a 'report problem' link to PrestaShop.
@@ -53,10 +59,14 @@ class WarningException extends \Core_Foundation_Exception_Exception
         parent::__construct($message, $code, $previous, $reportData);
         $this->alternative = $alternative;
         
-        EventDispatcher::getInstance('message')->dispatch('warning_message', new BaseEvent($message, $this));
-        EventDispatcher::getInstance('error')->dispatch('warning_message', new BaseEvent($message, $this));
+        if (self::$messageDispatcher) {
+            self::$messageDispatcher->dispatch('warning_message', new BaseEvent($message, $this));
+        }
     }
-    
+
+    /* (non-PHPdoc)
+     * @see Core_Foundation_Exception_Exception::getAfterMessageContent()
+     */
     protected function getAfterMessageContent()
     {
         return $this->alternative;

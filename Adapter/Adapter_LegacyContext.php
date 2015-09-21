@@ -26,6 +26,11 @@
  */
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
+/**
+ * This adapter will complete the new architecture Context with legacy values.
+ * A merge is done, but the legacy values will be transfered to the new Context
+ * during legacy refactoring.
+ */
 class Adapter_LegacyContext
 {
     /**
@@ -46,6 +51,11 @@ class Adapter_LegacyContext
         return $legacyContext;
     }
 
+    /**
+     * Will merge the legacy Context values inside the new Context object.
+     *
+     * @param PrestaShop\PrestaShop\Core\Business\Context $newContext
+     */
     public function mergeContextWithLegacy(PrestaShop\PrestaShop\Core\Business\Context &$newContext)
     {
         $legacyContext = $this->getContext();
@@ -67,11 +77,23 @@ class Adapter_LegacyContext
         }
     }
 
+    /**
+     * Gets the Admin base url (actually random directory name).
+     * @return string
+     */
     public function getAdminBaseUrl()
     {
         return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
     }
 
+    /**
+     * Adapter to get Admin HTTP link.
+     *
+     * @param string $controller the controller name
+     * @param string $withToken
+     * @param array $extraParams
+     * @return string
+     */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
         $id_lang = \Context::getContext()->language->id;
@@ -82,6 +104,11 @@ class Adapter_LegacyContext
         return \Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
+    /**
+     * Adapter to get Front controller HTTP link.
+     *
+     * @param string $controller the controller name
+     */
     public function getFrontUrl($controller)
     {
         $legacyContext = $this->getContext();

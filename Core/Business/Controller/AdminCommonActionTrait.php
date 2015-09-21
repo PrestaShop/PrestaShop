@@ -33,10 +33,17 @@ use Symfony\Component\Validator\Constraints\File;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**
- * This Trait will add common action such as uplad, delete, change status and more...
+ * This Trait will add common action such as upload, delete, change status and more...
  */
 trait AdminCommonActionTrait
 {
+    /**
+     * Used by Dropfiles plugin to upload files asynchronously.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return string
+     */
     public function uploadAction(Request &$request, Response &$response)
     {
         /*$formFactory = new FormFactory(null, array('csrf_protection' => false));

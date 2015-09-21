@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
-
 class ViewFactory
 {
     public $view;

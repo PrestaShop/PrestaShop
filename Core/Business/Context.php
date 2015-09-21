@@ -27,6 +27,11 @@ namespace PrestaShop\PrestaShop\Core\Business;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * This context contains application global information as main parameters
+ *
+ * (language, user/employee, session data, etc...)
+ */
 class Context extends ParameterBag
 {
     /**

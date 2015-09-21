@@ -60,38 +60,14 @@ use Symfony\Component\EventDispatcher\Event;
  *      - warning_message       When an warning must be displayed (in ORANGE?). Used by: WarningException
  *      - info_message          When a notice must be displayed (in BLUE/themed?)
  *      - success_message       When a success must be displayed after an action (in GREEN/themed?)
- * - error
- *      - warning_message       Used by: WarningException
- *      - error_message         Used by: ErrorException and DevelopmentErrorException
  */
 class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
     /**
-     * Indexed singleton array of dispatchers
+     * Indexed array of dispatchers, to avoid duplicated names (and to allow Core code to access them all :))
      * @var EventDispatcher
      */
     private static $instances = array();
-
-    /**
-     * The initialized services container
-     * @var \Core_Foundation_IoC_Container
-     */
-    private static $containerInit = null;
-
-    /**
-     * Retrieve a singleton (default, or an indexed one) of EventDispatcher.
-     * If the dispatcher is not instantiated by initialization, then it will be instantiated.
-     *
-     * @param string $dispatcherName
-     * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
-     */
-    public static function getInstance($dispatcherName = 'default')
-    {
-        if (!isset(self::$instances[$dispatcherName])) {
-            self::$instances[$dispatcherName] = new static($dispatcherName, self::$containerInit);
-        }
-        return self::$instances[$dispatcherName];
-    }
 
     /**
      * This registry contains base listeners to init (lazy mode or not).
@@ -126,7 +102,6 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      */
     final public static function initDispatchers(\Core_Foundation_IoC_Container &$container, $rootDir, $cacheDir, $moduleDir, $debug = false)
     {
-        self::$containerInit = $container;
         $cache = (new ConfigCacheFactory($debug))->cache(
             $cacheDir.'dispatcher/init_subscribers.php',
             function (ConfigCacheInterface $cache) use ($rootDir, $cacheDir, $moduleDir) {
@@ -178,7 +153,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 
         foreach (self::$dispatcherRegistry as $dispatcherName => $listeners) {
             /* @var $dispatcher EventDispatcher */
-            $dispatcher = new static($dispatcherName, self::$containerInit);
+            $dispatcher = new static($dispatcherName, $container);
             foreach ($listeners as $listener) {
                 if ($listener[4] === true) { // lazy instantiation, use one-shot auto-destructive closure
                     $closure = function (ResponseEvent $event) use ($dispatcher, $listener, &$closure) {
@@ -192,28 +167,60 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                     $dispatcher->addListener($listener[0], array((isset($listener[5]))? $listener[1]::$listener[5]() : new $listener[1](), $listener[2]), $listener[3]);
                 }
             }
-            self::$instances[$dispatcherName] = $dispatcher;
         }
     }
 
+    /**
+     * Name of the Dispatcher.
+     * @var string
+     */
     private $name;
-    private $container;
 
-    final private function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container)
+    /**
+     * Container instance, by reference. Optional.
+     * @var \Core_Foundation_IoC_Container
+     */
+    private $container = null;
+
+    /**
+     * Constructs a dispatcher with a specific unique name.
+     *
+     * The name must be unique system widely.
+     * If a container is given, then the dispatcher will be attached to it with the following service name:
+     * 'EventDispatcher/<$dispatcherName>'.
+     *
+     * @param string $dispatcherName The dispatcher name (must be unique).
+     * @param \Core_Foundation_IoC_Container $container Optional container to attach the dispatcher in (passed by reference).
+     * @throws DevelopmentErrorException If the eventDispatcher already exists (duplicated name).
+     * @throws \Core_Foundation_IoC_Exception If the eventDispatcher already exists in the container (duplicated name).
+     */
+    final public function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container = null)
     {
+        if (array_key_exists($dispatcherName, self::$instances)) {
+            throw new DevelopmentErrorException('The dispatcher name already exists in the system.');
+        }
         $this->name = $dispatcherName;
-        $this->container =& $container;
+        if ($container !== null) {
+            $this->container = $container;
+            $this->container->bind('EventDispatcher/'.$dispatcherName, $this, true);
+        }
+        self::$instances[$dispatcherName] = $this;
     }
 
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\EventDispatcher\EventDispatcher::dispatch()
+    /**
+     * Dispatch an event to its listeners.
+     *
+     * @see EventDispatcherInterface::dispatch()
+     *
+     * @param string $eventName The name of the event.
+     * @param Event $event The event to send to the listeners.
      */
     final public function dispatch($eventName, Event $event = null)
     {
         if (null === $event) {
             $event = new BaseEvent();
         }
-        if ($event instanceof BaseEvent) {
+        if ($event instanceof BaseEvent && $this->container !== null) {
             $event->setContainer($this->container);
         }
 

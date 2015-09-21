@@ -25,7 +25,14 @@
  */
 
 use PrestaShop\PrestaShop\Core\Business\Context;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
+/**
+ * This adapter will 'try' to inflate objects or collections in the Legacy object model.
+ *
+ * This adapter is called by AutoObjectInflaterTrait methods when an action is executed from
+ * a controller that uses this Trait.
+ */
 class Adapter_AutoInflaterManager
 {
     /**
@@ -34,6 +41,7 @@ class Adapter_AutoInflaterManager
     private $context;
 
     /**
+     * Constructor. Keeps the context
      * @param Context $context The Context, given from IoC
      */
     public function __construct(Context $context)
@@ -77,7 +85,7 @@ class Adapter_AutoInflaterManager
             return null;
         }
     }
-    
+
     /**
      * Try to retrieve a collection of Objects of the Legacy architecture by its class name, a method and methods parameters.
      * The instantiation will be equivalent to:
@@ -127,9 +135,7 @@ class Adapter_AutoInflaterManager
                 }
             }
             if (!$mp->isOptional()) {
-                // mandatory argument missing, cannot fetch Collection at all.
-                EventDispatcher::getInstance('log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list: mandatory argument missing.'));
-                return false;
+                throw new DevelopmentErrorException('An optional argument is missing to inflate a collection: '.$className.'->'.$method.'(), missing argument: '.$mp->name);
             }
         }
 

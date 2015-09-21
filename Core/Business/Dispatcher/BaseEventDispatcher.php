@@ -53,18 +53,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 class BaseEventDispatcher extends EventDispatcher
 {
     /**
-     * Retrieve a singleton (default, or an indexed one) of BaseEventDispatcher.
-     * If the dispatcher is not instantiated by initialization, then it will be instantiated.
-     *
-     * @param string $dispatcherName
-     * @return \PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher
-     */
-    final public static function getInstance($dispatcherName = 'default')
-    {
-        return parent::getInstance($dispatcherName);
-    }
-
-    /**
      * PrestaShop Business specific listeners.
      *
      * This static attribute contains PrestaShop Business specific listeners to register during Router instantiation.

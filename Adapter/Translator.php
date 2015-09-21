@@ -29,11 +29,25 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
+/**
+ * This Adapter implements Symfony2 TranslatorInterface, and calls Legacy functions
+ * to do the stuff.
+ *
+ * When legacy translation system will be refactored, we must implements the same interface to allow compatibility,
+ * and keep the same way to use '$domain' function argument.
+ */
 class Translator implements TranslatorInterface
 {
     private $context;
     private $locale;
 
+    /**
+     * Constructor.
+     *
+     * Keeps the Context to look inside language settings.
+     *
+     * @param Context $context
+     */
     public function __construct(Context &$context)
     {
         $this->context = $context;

@@ -26,6 +26,10 @@
 
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
+/**
+ * This adapter will be registered as a EventDispatcher listener, on the 'hook' dispatcher,
+ * and will allow legacy modules/legacy hooks to be called by the new Architecture.
+ */
 class Adapter_HookManager
 {
     /**

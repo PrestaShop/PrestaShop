@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * The application container. Used to retrieve/locate services, and instantiate them.
+ */
 class Core_Foundation_IoC_Container
 {
     private $bindings = array();
