@@ -121,7 +121,7 @@ $(document).ready(function()
 			reloadContent('forceSlide');
 	});
 
-	$(document).off('change', 'select[name=n]').on('change', 'select[name=n]', function(e)
+	$(document).off('change', 'select[name="n"]').on('change', 'select[name=n]', function(e)
 	{
 		$('select[name=n]').val($(this).val());
 		reloadContent('forceSlide');
