@@ -215,7 +215,7 @@ $(function() {
 						};
 					});
 					d.resolve();
-				},
+				}
 			});
 			return d.promise();
 		};

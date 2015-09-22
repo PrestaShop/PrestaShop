@@ -83,7 +83,7 @@
 						}
 					}
 				}
-			},
+			}
 		}).on('fileuploadalways', function (e, data) {
 			{$id|escape:'html':'UTF-8'}_add_button.stop();
 		}).on('fileuploadprocessalways', function (e, data) {

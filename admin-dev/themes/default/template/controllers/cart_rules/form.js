@@ -385,7 +385,7 @@ $('.datepicker').datetimepicker({
 	timeOnlyTitle: timeOnlyTitle,
 	timeText: timeText,
 	hourText: hourText,
-	minuteText: minuteText,
+	minuteText: minuteText
 });
 
 $('#giftProductFilter').typeWatch({

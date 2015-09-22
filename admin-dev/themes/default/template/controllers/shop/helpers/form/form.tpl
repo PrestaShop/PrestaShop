@@ -48,12 +48,12 @@
 					$('#id_category').change(function(){
 						doAdminAjax(
 							{
-							ajax: '1',
-							id_category : $(this).val(),
-							use_shop_context : 0,
-							action : 'getCategoriesFromRootCategory',
-							controller: 'AdminShop',
-							token : '{$token|escape:'html':'UTF-8'}',
+								ajax: '1',
+								id_category : $(this).val(),
+								use_shop_context : 0,
+								action : 'getCategoriesFromRootCategory',
+								controller: 'AdminShop',
+								token : '{$token|escape:'html':'UTF-8'}'
 							},
 							function(res)
 							{

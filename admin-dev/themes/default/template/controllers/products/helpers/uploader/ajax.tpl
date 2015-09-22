@@ -123,7 +123,7 @@
 
 					$(data.context).find('button').remove();
 				}
-			},
+			}
 		}).on('fileuploadalways', function (e, data) {
 				{$id|escape:'html':'UTF-8'}_total_files--;
 
