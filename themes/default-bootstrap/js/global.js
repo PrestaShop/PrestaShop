@@ -57,12 +57,20 @@ $(document).ready(function(){
 					if (typeof splitData[1] !== 'undefined' && splitData[1])
 						url += '&orderway=' + splitData[1];
 				}
-				document.location.href = url;
+				if($('#layered_form').length > 0) {
+					reloadContent(true);
+				} else {
+					document.location.href = url;
+				}
 			}
 		});
 
 		$(document).on('change', 'select[name="n"]', function(){
-			$(this.form).submit();
+			if($('#layered_form').length > 0) {
+				reloadContent(true);
+			} else {
+				$(this.form).submit();
+			}
 		});
 
 		$(document).on('change', 'select[name="currency_payment"]', function(){
