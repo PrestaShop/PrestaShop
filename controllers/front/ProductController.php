@@ -212,11 +212,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $this->product->customization_required = false;
             $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
             if (is_array($customization_fields)) {
-                foreach ($customization_fields as $customization_field) {
-                    if ($this->product->customization_required = $customization_field['required']) {
-                        break;
+                foreach ($customization_fields as &$customization_field) {
+                    if ($customization_field['type'] == 0) {
+                        $customization_field['key'] = 'pictures_'.$this->product->id.'_'.$customization_field['id_customization_field'];
+                    } elseif ($customization_field['type'] == 1) {
+                        $customization_field['key'] = 'textFields_'.$this->product->id.'_'.$customization_field['id_customization_field'];
                     }
                 }
+                unset($customization_field);
             }
 
             // Assign template vars related to the category + execute hooks related to the category
@@ -785,7 +788,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         return $presenter->presentForListing(
             $this->getProductPresentationSettings(),
-            Product::getProductProperties($this->context->language->id, $product, $this->context),
+            $product_full,
             $this->context->language
         );
     }
