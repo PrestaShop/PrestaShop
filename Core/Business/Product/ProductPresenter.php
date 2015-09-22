@@ -105,11 +105,7 @@ class ProductPresenter
     ) {
         $can_add_to_cart = $this->shouldShowPrice($settings, $product);
 
-        if ($product['customizable'] == 2) {
-            $can_add_to_cart = false;
-        }
-
-        if (!empty($product['customization_required'])) {
+        if (($product['customizable'] == 2 || !empty($product['customization_required'])) && !isset($product['is_already_customized']) || (isset($product['is_already_customized']) && !$product['is_already_customized'])) {
             $can_add_to_cart = false;
         }
 
