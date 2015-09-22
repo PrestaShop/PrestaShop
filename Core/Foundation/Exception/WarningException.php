@@ -58,7 +58,7 @@ class WarningException extends \Core_Foundation_Exception_Exception
     {
         parent::__construct($message, $code, $previous, $reportData);
         $this->alternative = $alternative;
-        
+
         if (self::$messageDispatcher) {
             self::$messageDispatcher->dispatch('warning_message', new BaseEvent($message, $this));
         }

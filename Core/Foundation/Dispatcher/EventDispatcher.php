@@ -35,7 +35,19 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * TODO : explain YML structure needed to add a listener.
+ * The current EventDispatcher is used to trigger a lot of event system widely.
+ * You can get system EventDispatchers from the container (see below), but also create your own directly with the constructor.
+ *
+ * settings.yml files will be able to add some listeners to initialization time dispatchers:
+ * Example of settings.yml file to register a listener on 'message' dispatcher, for 'error_message' event name:
+ * dispatchers:
+ *     message:
+ *         error_message:
+ *             - class: PrestaShop\PrestaShop\Tests\RouterTest\ErrorMessageLoggerExample
+ *               method: onErrorEvent
+ *               priority: 42
+ *               lazy: 1
+ *               singletonMethod: getInstance
  *
  * Existing dispatchers:
  *

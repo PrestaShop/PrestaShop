@@ -45,7 +45,13 @@ use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * TODO
+ * This interface gives minimal compliance for new Architecture Router/Controller/Actions mechanism.
+ *
+ * The interfaced methods will be implemented by each Router to let Controllers' actions call them.
+ *
+ * Since the Router is not a public singleton nor a global var accessible from everywhere,
+ * if you have no access to the application router instance, then you can call a RoutingService instead,
+ * from the application container: $container->make('CoreFoundation:Routing')
  */
 interface RouterInterface
 {

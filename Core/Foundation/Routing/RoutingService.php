@@ -30,6 +30,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * This Router wrapper will offers public services that will be available from the main IoC Container provider.
+ *
+ * To retrieve this service you should call:
+ * $container->make('CoreFoundation:RoutingService'); or $container->make('Routing');
+ *
+ * From legacy code, $container is a global. From the new architecture, you must have access to the
+ * application container (from a Controller/action, use $this->container).
+ *
  */
 class RoutingService
 {
@@ -58,6 +65,7 @@ class RoutingService
             return;
         }
         $service = new self($router);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Routing\\RoutingService', $service, true);
         $container->bind('Routing', $service, true);
         self::$instanciated = true;
     }

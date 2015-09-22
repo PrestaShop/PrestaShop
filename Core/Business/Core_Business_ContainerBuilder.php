@@ -26,6 +26,26 @@
 
 /**
  * Used to build the Container at the process starting (bootstrap.php)
+ *
+ * At instantiation, the following aliases are created:
+ * - CoreFoundation
+ * - CoreBusiness
+ * - CoreAdapter
+ * These aliases can be used like this (to avoid long namespace in the parameter):
+ * Instead of $container->make('PrestaShop\\PrestaShop\\Core\\Business\\Context'), use $container->make('CoreBusiness:Context')
+ *
+ * Final service instances are generated and can be called from make() (but not auto-injected in other services):
+ * - final:EventDispatcher/routing
+ * - final:EventDispatcher/log
+ * - final:EventDispatcher/message
+ * - final:EventDispatcher/module
+ * - final:EventDispatcher/hook
+ *
+ * During init process of the new Router system, some services are mapped to specific shortcuts:
+ * - Context = CoreBusiness:Context = PrestaShop\\PrestaShop\\Core\\Business\\Context
+ * - Translator = TranslatorInterface = CoreAdapter:Translator = PrestaShop\\PrestaShop\\Adapter\\Translator
+ * - Routing = CoreFoundation:RoutingService = PrestaShop\\PrestaShop\\Core\\Foundation\\Routing\\RoutingService
+ *
  */
 class Core_Business_ContainerBuilder
 {

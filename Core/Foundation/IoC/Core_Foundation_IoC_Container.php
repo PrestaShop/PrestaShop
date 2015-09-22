@@ -26,8 +26,18 @@
 
 /**
  * The application container. Used to retrieve/locate services, and instantiate them.
+ * This container class is a transitive system before deeper Symfony2 integration.
  *
- * TODO. Expliquer les alias CoreFoundation, CoreBusiness, CoreAdapter, le special 'final:' et lister les alias (Context, Translator, TranslatorInterface)
+ * The container can hold already instantiated services to avoid new instances. If a required service
+ * already exists, then the instance is returned, else it instantiate it and resolve its dependencies.
+ *
+ * Some alias exists but can only be called into make(), not bind()!
+ * In the bind() method you MUST indicate either:
+ * - a full namespaced class name (to allow injection of its instance into other services)
+ * - a 'final:' prefixed service name to avoid injection. In this case the service is only accessible through explicit make() call, not through dependency injection.
+ *
+ * To hav a full list of available services and final instances, please see:
+ * @see Core_Business_ContainerBuilder
  */
 class Core_Foundation_IoC_Container
 {

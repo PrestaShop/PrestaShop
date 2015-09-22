@@ -47,7 +47,7 @@ class ErrorException extends \Core_Foundation_Exception_Exception
     final public function __construct($message, $reportData = null, $code = 0, \Exception $previous = null, $moduleToDeactivate = null)
     {
         parent::__construct($message, $code, $previous, $reportData, $moduleToDeactivate);
-        
+
         if (self::$messageDispatcher) {
             self::$messageDispatcher->dispatch('error_message', new BaseEvent($message, $this));
         }
