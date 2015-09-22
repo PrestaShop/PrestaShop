@@ -54,7 +54,7 @@ class Repository
         'ku-tr' => 'en-GB',
         'ms-my' => 'ms-Latn-MY',
         'no-no' => 'nb-NO',
-        'sr-cs' => 'sr-Cyrl-RS',
+        'sr-cs' => 'sr-Latn-RS',
         'tlh-aa' => 'en-GB',
         'tt-ru' => 'en-GB',
         'ug-cn' => 'ug-Arab-CN',
