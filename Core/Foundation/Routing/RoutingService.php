@@ -40,7 +40,7 @@ class RoutingService
 
     final private function __construct(AbstractRouter &$router)
     {
-        $this->router =& $router;
+        $this->router = $router;
     }
 
     private static $instanciated = false;

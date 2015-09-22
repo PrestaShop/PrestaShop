@@ -71,7 +71,7 @@ trait AutoObjectInflaterTrait
                     continue;
                 }
                 if ($object === null) {
-                    $this->container->make('EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object.'));
+                    $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object.'));
                     $response->addContentData($className, null);
                     continue;
                 }
@@ -162,13 +162,13 @@ trait AutoObjectInflaterTrait
                     continue;
                 }
                 if ($collection === null) {
-                    $this->container->make('EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
+                    $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
                     $response->addContentData($key, null);
                 }
                 $response->addContentData($key, $collection);
             } catch (\Exception $e) {
                 // To indicate we tried, but failed.
-                $this->container->make('EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
+                $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
                 $response->addContentData($key, null);
             }
         }

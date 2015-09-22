@@ -53,7 +53,10 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->container = new Core_Foundation_IoC_Container;
+        $this->container = new Core_Foundation_IoC_Container();
+        $this->container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
+        $this->container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
+        $this->container->aliasNamespace('CoreAdapter', 'PrestaShop\\PrestaShop\\Adapter');
         Adapter_ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->setupDatabaseMock();
@@ -74,11 +77,12 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->cache = Phake::mock('Cache');
         Cache::setInstanceForTesting($this->cache);
 
+        // Context mock
         $this->newContext = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Business\\Context');
         Phake::when($this->newContext)->cloneContext()->thenReturn($this->newContext);
         $newContextMapper = $this->container->make('Adapter_LegacyContext');
         $newContextMapper->mergeContextWithLegacy($this->newContext);
-        $this->container->bind('Context', $this->newContext);
+        $this->container->bind('PrestaShop\\PrestaShop\\Core\\Business\\Context', $this->newContext);
     }
 
     public function setConfiguration(array $keys)

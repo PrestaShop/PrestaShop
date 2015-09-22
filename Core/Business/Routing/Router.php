@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Adapter\Translator;
 
 /**
  * Second layer of the Router classes structure, to add Business specific behaviors.
@@ -90,21 +91,24 @@ abstract class Router extends AbstractRouter
             throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.');
         }
         try {
-            $this->container =& $container;
+            $this->container = $container;
             parent::__construct($routingFilePattern);
 
             // EventDispatcher init
             BaseEventDispatcher::initBaseDispatchers($this->container);
-            $this->routingDispatcher = $this->container->make('EventDispatcher/routing');
+            $this->routingDispatcher = $this->container->make('final:EventDispatcher/routing');
             if ($this->triggerCacheGenerationFlag) {
                 $this->routingDispatcher->dispatch('cache_generation', new BaseEvent());
             }
 
             // Exception dispatching handling
-            \Core_Foundation_Exception_Exception::setMessageDispatcher($this->container->make('EventDispatcher/message'));
+            \Core_Foundation_Exception_Exception::setMessageDispatcher($this->container->make('final:EventDispatcher/message'));
 
             // Translator service init
-            $this->container->bind('Translator', '\\PrestaShop\\PrestaShop\\Adapter\\Translator');
+            $translator = new Translator($this->container->make('CoreBusiness:Context'));
+            $this->container->bind(get_class($translator), $translator, true);
+            $this->container->bind('TranslatorInterface', $translator, true);
+            $this->container->bind('Translator', $translator);
         } catch (\Exception $e) {
             if (php_sapi_name() == "cli") {
                 throw $e;
@@ -269,7 +273,7 @@ abstract class Router extends AbstractRouter
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
         $routingDispatcher = $this->routingDispatcher;
-        $container =& $this->container; // to pass it throught callback 'use' statement
+        $container = $this->container; // to pass it throught callback 'use' statement
         $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'_subcall':'').($pinResponse?'_pinned':'');
         $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
             $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
@@ -470,7 +474,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
      * This is used to have a last chance of operating a fatal error for example.
      * This listener will then dispatch an Event in the 'routing' EventDispatcher, with event name 'shutdown'.
      * If you want to listen to the shutdown event, please use:
-     * $container->make('EventDispatcher/routing')->addListener('shutdown', <your_listener>).
+     * $container->make('final:EventDispatcher/routing')->addListener('shutdown', <your_listener>).
      *
      * No need to call it by yourself.
      *
@@ -479,6 +483,6 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
     final public function registerShutdownFunctionCallback(Request &$request)
     {
         $null = null;
-        $this->container->make('EventDispatcher/routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
+        $this->container->make('final:EventDispatcher/routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
 }

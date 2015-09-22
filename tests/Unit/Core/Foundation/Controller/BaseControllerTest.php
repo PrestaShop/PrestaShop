@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Business\Routing\FakeRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Business\Routing\Router;
 
 class FakeBaseController extends BaseController
 {
@@ -60,6 +61,18 @@ class BaseControllerTest extends UnitTestCase
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
+        // Router instance clean
+        $routerClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\Router');
+        $instantiated = $routerClass->getProperty('instantiated');
+        $instantiated->setAccessible(true);
+        $instantiated->setValue(null, false);
+
+        // Dispatcher clean
+        $dispatcherClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Foundation\\Dispatcher\\EventDispatcher');
+        $instances = $dispatcherClass->getProperty('instances');
+        $instances->setAccessible(true);
+        $instances->setValue(null, array());
+
         $this->setConfiguration(array(
             '_PS_ROOT_DIR_' => $fakeRoot,
             '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
@@ -72,7 +85,7 @@ class BaseControllerTest extends UnitTestCase
     {
         $this->setup_env();
 
-        $router = FakeRouter::getInstance($this->container);
+        $router = new FakeRouter($this->container);
         $controller = new FakeBaseController($router, $this->container);
 
         $response = new Response();

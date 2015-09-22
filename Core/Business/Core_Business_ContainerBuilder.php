@@ -39,6 +39,10 @@ class Core_Business_ContainerBuilder
     {
         $container = new Core_Foundation_IoC_Container;
 
+        $container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
+        $container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
+        $container->aliasNamespace('CoreAdapter', 'PrestaShop\\PrestaShop\\Adapter');
+
         $container->bind('Core_Business_ConfigurationInterface', 'Adapter_Configuration', true);
         $container->bind('Core_Foundation_Database_DatabaseInterface', 'Adapter_Database', true);
 

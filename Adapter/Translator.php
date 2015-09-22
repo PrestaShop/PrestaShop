@@ -48,7 +48,7 @@ class Translator implements TranslatorInterface
      *
      * @param Context $context
      */
-    public function __construct(Context &$context)
+    public function __construct(Context $context)
     {
         $this->context = $context;
         $this->setLocale($this->context->language->iso_code); // from legacy value
@@ -77,7 +77,8 @@ class Translator implements TranslatorInterface
         }
 
         // Search for Admin case
-        $isAdmin = ($this->context->controller->controller_type == 'admin' || $this->context->get('app_entry_point', 'unknown') == 'admin');
+        $isAdmin = ((isset($this->context->controller) && $this->context->controller->controller_type == 'admin')
+                    || $this->context->get('app_entry_point', 'unknown') === 'admin');
         if ($isAdmin && $domain == null) {
             $domain = 'AdminTab'; // default class value for legacy Admin translation
         }
@@ -91,6 +92,8 @@ class Translator implements TranslatorInterface
         if ($domain !== null) {
             throw new DevelopmentErrorException('Module & Front translation is not yet implemented. Please contact the Architect team.');
         }
+
+        throw new DevelopmentErrorException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.');
     }
 
     /**

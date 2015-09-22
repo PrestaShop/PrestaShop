@@ -36,6 +36,18 @@ class EventDispatcherTest extends UnitTestCase
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
+        // Router instance clean
+        $routerClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\Router');
+        $instantiated = $routerClass->getProperty('instantiated');
+        $instantiated->setAccessible(true);
+        $instantiated->setValue(null, false);
+
+        // Dispatcher clean
+        $dispatcherClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Foundation\\Dispatcher\\EventDispatcher');
+        $instances = $dispatcherClass->getProperty('instances');
+        $instances->setAccessible(true);
+        $instances->setValue(null, array());
+
         return $this->setConfiguration(array(
             '_PS_ROOT_DIR_' => $fakeRoot,
             '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
@@ -67,7 +79,7 @@ class EventDispatcherTest extends UnitTestCase
             $conf->get('_PS_CACHE_DIR_'),
             $conf->get('_PS_MODULE_DIR_'),
             true);
-        $defaultInstance = EventDispatcher::getInstance('test2');
+        $defaultInstance = new EventDispatcher('test2');
         $this->assertAttributeNotCount(0, 'instances', $defaultInstance);
         $this->assertAttributeContains($defaultInstance, 'instances', $defaultInstance);
 

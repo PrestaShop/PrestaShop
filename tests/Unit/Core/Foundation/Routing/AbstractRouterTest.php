@@ -53,7 +53,7 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
             $conf->get('_PS_ROOT_DIR_'),
             $conf->get('_PS_CACHE_DIR_'),
             $conf->get('_PS_MODULE_DIR_'));
-        $this->routingDispatcher = EventDispatcher::getInstance('routing');
+        $this->routingDispatcher = $this->container->make('final:EventDispatcher/routing');
     }
 
     protected function doDispatch($controllerName, $controllerMethod, Request &$request)
@@ -93,6 +93,18 @@ class AbstractRouterTest extends UnitTestCase
     {
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
+
+        // Router instance clean
+        $routerClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\Router');
+        $instantiated = $routerClass->getProperty('instantiated');
+        $instantiated->setAccessible(true);
+        $instantiated->setValue(null, false);
+
+        // Dispatcher clean
+        $dispatcherClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Foundation\\Dispatcher\\EventDispatcher');
+        $instances = $dispatcherClass->getProperty('instances');
+        $instances->setAccessible(true);
+        $instances->setValue(null, array());
 
         return $this->setConfiguration(array(
             '_PS_ROOT_DIR_' => $fakeRoot,

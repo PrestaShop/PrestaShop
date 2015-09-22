@@ -26,14 +26,20 @@
 namespace PrestaShop\PrestaShop\Core\Business;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
- * This context contains application global information as main parameters
+ * This context contains application global information as main parameters.
  *
- * (language, user/employee, session data, etc...)
+ * Kind of data you will find in: language, user/employee, session data, etc...
+ *
+ * To retrieve the Context, do not instantiate by yourself. Call it from the container:
+ * $container->make('CoreBusiness:Context');, or with alias $container->make('Context');
  */
 class Context extends ParameterBag
 {
+    private static $instantiated = false;
+
     /**
      * Construct Core Context. This will contains data from old legacy context, and new data structure from new Core architecture.
      *
@@ -50,6 +56,11 @@ class Context extends ParameterBag
      */
     final public function __construct(\Adapter_LegacyContext $legacyContext)
     {
+        if (self::$instantiated == true) {
+            throw new DevelopmentErrorException('The Context cannot be instantiated twice. Please call it from container.');
+        }
+        self::$instantiated = true;
+
         // Default values now.
         $this->set('app_entry_point', 'unknown'); // admin / front / unknown
 

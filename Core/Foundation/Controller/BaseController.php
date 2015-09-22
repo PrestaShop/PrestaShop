@@ -60,8 +60,8 @@ abstract class BaseController implements ControllerInterface
      */
     public function __construct(AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
     {
-        $this->router =& $router;
-        $this->container =& $container;
+        $this->router = $router;
+        $this->container = $container;
     }
 
     /* (non-PHPdoc)

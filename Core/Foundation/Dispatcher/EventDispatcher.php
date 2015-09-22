@@ -60,6 +60,15 @@ use Symfony\Component\EventDispatcher\Event;
  *      - warning_message       When an warning must be displayed (in ORANGE?). Used by: WarningException
  *      - info_message          When a notice must be displayed (in BLUE/themed?)
  *      - success_message       When a success must be displayed after an action (in GREEN/themed?)
+ *
+ * How to access these dispatchers:
+ * You must call them from the $container instance, with the 'final:' prefix.
+ * (final prefixed services cannot be injected in other services)
+ *
+ * Example:
+ * - $container->make('final:EventDispatcher/routing');
+ * - $container->make('final:EventDispatcher/message');
+ * - $container->make('final:EventDispatcher/log');
  */
 class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 {
@@ -67,7 +76,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      * Indexed array of dispatchers, to avoid duplicated names (and to allow Core code to access them all :))
      * @var EventDispatcher
      */
-    private static $instances = array();
+    protected static $instances = array();
 
     /**
      * This registry contains base listeners to init (lazy mode or not).
@@ -202,7 +211,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
         $this->name = $dispatcherName;
         if ($container !== null) {
             $this->container = $container;
-            $this->container->bind('EventDispatcher/'.$dispatcherName, $this, true);
+            $this->container->bind('final:EventDispatcher/'.$dispatcherName, $this, true);
         }
         self::$instances[$dispatcherName] = $this;
     }

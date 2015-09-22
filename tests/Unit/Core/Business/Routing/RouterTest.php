@@ -43,15 +43,10 @@ use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
 class FakeRouter extends Router
 {
-    private static $instance = null;
-    final public static function getInstance(\Core_Foundation_IoC_Container $container)
+    public function __construct(\Core_Foundation_IoC_Container $container)
     {
-        if (!self::$instance) {
-            self::$instance = new self($container, 'fake_test_routes(_(.*))?\.yml');
-        }
-        return self::$instance;
+        parent::__construct($container, 'fake_test_routes(_(.*))?\.yml');
     }
-
     public $calledcheckControllerAuthority = null;
     protected function checkControllerAuthority(\ReflectionClass $class)
     {
@@ -65,7 +60,7 @@ class FakeRouter extends Router
     }
 
     public static $calledExitNow = false;
-    protected function exitNow($i = 0)
+    public function exitNow($i = 0)
     {
         self::$calledExitNow = true;
     }
@@ -106,6 +101,18 @@ class RouterTest extends UnitTestCase
             '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
             '_PS_MODE_DEV_' => true
         ));
+
+        // Router instance clean
+        $routerClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\Router');
+        $instantiated = $routerClass->getProperty('instantiated');
+        $instantiated->setAccessible(true);
+        $instantiated->setValue(null, false);
+
+        // Dispatcher clean
+        $dispatcherClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Foundation\\Dispatcher\\EventDispatcher');
+        $instances = $dispatcherClass->getProperty('instances');
+        $instances->setAccessible(true);
+        $instances->setValue(null, array());
     }
 
     private $warningReceived = false;
@@ -118,36 +125,29 @@ class RouterTest extends UnitTestCase
     public function test_router_instance()
     {
         $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
+        $router = new FakeRouter($this->container);
 
         // push request into PHP globals (simulate a request) and resolve through dispatch().
         $fakeRequest = Request::create('/unknown'); // unknown route, return false!
         $fakeRequest->overrideGlobals();
         $found = $router->dispatch(true);
         $this->assertFalse($found, 'Unknown route should return false through dispatch().');
-    }
 
-    public function test_event_dispatcher_auto_instantiated()
-    {
-        $this->setup_env();
-        $router = FakeRouter::getInstance($this->container);
-        $hookDispatcher = BaseEventDispatcher::getInstance('hook');
-
-        // check there is listeners registered at Router instatiation.
+        // hook listener
+        $hookDispatcher = $this->container->make('final:EventDispatcher/hook'); // FIXME
+        // check there is listeners registered at Router instantiation.
         $count = count($hookDispatcher->getListeners());
         $this->assertGreaterThan(0, $count);
-
         // add hook listener
         $hookDispatcher->addListener('legacy_TestLegacyHook', array($this, 'listenHook'), 255);
         $this->assertEquals($count+1, count($hookDispatcher->getListeners()));
         $result = $hookDispatcher->hook('legacy_TestLegacyHook', array('k1' => 'v1'));
-        
         // add legacy hook listener
         $hookDispatcher->addListener('legacy_TestLegacyHook', array(new Fake_Adapter_HookManager(), 'onHook'), 128);
         $result = $hookDispatcher->hook('legacy_TestLegacyHook', array('k1' => 'v1'));
         $this->assertContains('TestLegacyHook', $result); // 'legacy_' prefix is removed for legacy HOOKS!
     }
-    
+
     public function listenHook(HookEvent $event, $eventName)
     {
         $this->assertEquals('legacy_TestLegacyHook', $eventName, 'Event name should not be modified here.');

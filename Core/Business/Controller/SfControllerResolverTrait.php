@@ -46,8 +46,8 @@ trait SfControllerResolverTrait
      */
     public function controllerResolverSymfony(Request &$request, Response &$response)
     {
-        $container =& $this->container;
-        $router =& $this->router;
+        $container = $this->container;
+        $router = $this->router;
         return function (BaseController &$controllerInstance, \ReflectionMethod &$controllerMethod) use (&$request, &$response, &$container, &$router) {
             $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
             $resolver->setContainer($container); // inject router for Controller instantiation.

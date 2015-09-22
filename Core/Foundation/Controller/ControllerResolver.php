@@ -46,7 +46,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     public function setResponse(&$response)
     {
-        $this->response =& $response;
+        $this->response = $response;
         $this->addInjection($this->response);
     }
 
@@ -61,7 +61,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     public function setContainer(\Core_Foundation_IoC_Container &$container)
     {
-        $this->container =& $container;
+        $this->container = $container;
         $this->addInjection($this->container);
     }
 
@@ -77,7 +77,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     public function setRouter(AbstractRouter &$router)
     {
-        $this->router =& $router;
+        $this->router = $router;
     }
 
     private $additionalInjections = array();
@@ -89,7 +89,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      */
     public function addInjection(&$objectInstance)
     {
-        $this->additionalInjections[] =& $objectInstance;
+        $this->additionalInjections[] = $objectInstance;
     }
 
     final private function checkAdditionalInjections(\ReflectionClass $paramClass)

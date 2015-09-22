@@ -49,7 +49,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * will cache routes YML files, will scan module directories to add new routes and Controller overrides.
  * The router will find the route, and extended classes will dispatch to the controllers through doDispatch().
  */
-abstract class AbstractRouter
+abstract class AbstractRouter implements RouterInterface
 {
     /**
      * Used for generateUrl() calls.
@@ -158,6 +158,7 @@ abstract class AbstractRouter
     /**
      * Generates a URL or path for a specific route based on the given parameters.
      *
+     * {@inheritdoc}
      * This is a Wrapper for the Symfony method:
      * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate()
      * but also adds a legacy URL generation support.
@@ -178,12 +179,8 @@ abstract class AbstractRouter
      */
     abstract public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
 
-    /**
-     * Dispatcher entry point. Called in entry point files (index.php).
-     *
-     * @param boolean $noRoutePassThrough Use True to allow dispatch function to return false if no route found. Else, an exception is raised.
-     * @throws ResourceNotFoundException if $noRoutePassThrough is set to False and no route is found for the request.
-     * @return boolean false if $noRoutePassThrough is set to true and no route found. Does not returns if action finished successfully (blocked by exit;)
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::dispatch()
      */
     final public function dispatch($noRoutePassThrough = false)
     {
@@ -193,7 +190,7 @@ abstract class AbstractRouter
         $requestContext->fromRequest($request);
 
         // shutdown registration, to ensure event dispatching
-        $that =& $this; // pass by ref!
+        $that = $this;
         register_shutdown_function(array($that, 'registerShutdownFunctionCallback'), $request);
 
         // Instantiate Sf Router
@@ -252,16 +249,8 @@ abstract class AbstractRouter
      */
     abstract protected function doDispatch($controllerName, $controllerMethod, Request &$request);
 
-    /**
-     * This method will forward the Router into another Controller/action without any redirection instruction to the browser.
-     * The browser will then receive response from a different action with no URL change.
-     * Used for example after a POST succeed, and we want to execute another action to display another content.
-     *
-     * @param Request $oldRequest The request of the action that called this method.
-     * @param string $routeName The new route name to forward to.
-     * @param array $routeParameters The parameters to override the route defaults parameters
-     * @throws DevelopmentErrorException if the forward is made from a subcall action.
-     * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::forward()
      */
     final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
     {
@@ -269,7 +258,7 @@ abstract class AbstractRouter
             throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1005);
         }
 
-        $attributes =& $oldRequest->attributes;
+        $attributes = $oldRequest->attributes;
         $attributes->set('_previous_controller', $attributes->get('_controller'));
         $attributes->set('_previous_route_from_module', $attributes->get('_route_from_module'));
         $attributes->add($routeParameters); // FIXME: needed here?
@@ -292,6 +281,8 @@ abstract class AbstractRouter
 
     /**
      * Check if a forward is possible at the moment.
+     *
+     * {@inheritdoc}
      * For now, this function checks if a sucball is in progress. If it's the case, then the forward is not possible.
      *
      * @return boolean
@@ -301,15 +292,8 @@ abstract class AbstractRouter
         return !$this->isSubcalling;
     }
 
-    /**
-     * Dispatcher internal entry point. Called by a controller/action to get a content subpart from another controller.
-     *
-     * @param string $routeName The route unique name/ID
-     * @param array $routeParameters The route's parameters (mandatory, and optional, and even more if needed)
-     * @param string $layoutMode The output mode overriden (partial view by default, means HTML content whithout any encapsulation).
-     * @param boolean $fullResponse True to return full Response object instead of just the rendered content.
-     * @throws ResourceNotFoundException if no route is found for the request.
-     * @return string|Response data/view returned by matching controller (not sent through output buffer)
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::subcall()
      */
     final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
@@ -352,17 +336,8 @@ abstract class AbstractRouter
      */
     abstract protected function doSubcall($controllerName, $controllerMethod, Request &$request);
 
-    /**
-     * The redirect call take a route and its parameters, to send a redirection header to the browser.
-     * If the redirect succeed, it does not return because an exit is done after redirection is sent.
-     *
-     * @param Request $oldRequest The previous Request instance (to take route parameters if needed)
-     * @param string $routeName The name of the route (see route YML files)
-     * @param array $routeParameters The route parameters to use for this route (see route YML parameters settings).
-     * @param boolean $forceLegacyUrl True to use the legacy URL generation (redirects to legacy controllers)
-     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
-     * @throws DevelopmentErrorException if the redirect is made from a subcall action.
-     * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::redirectToRoute()
      */
     final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
@@ -379,19 +354,8 @@ abstract class AbstractRouter
         $this->exitNow();
     }
 
-    /**
-     * The redirect call take several values in parameter:
-     * - Integer value to return a specific HTTP return code and its default message (500, 404, etc...),
-     * - String to indicate the URL to redirect to
-     *
-     * If the redirect succeed, it does not return because an exit is done after redirection sent.
-     *
-     * @throws DevelopmentErrorException if argument is not properly set.
-     *
-     * @param mixed $to Integer or String. See description for specific array format.
-     * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code. Only if $to is an URL.
-     * @throws DevelopmentErrorException if the redirect is made from a subcall action.
-     * @return false if headers already sent (cannot redirect, it's too late).
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::redirect()
      */
     final public function redirect($to, $permanent = false)
     {
@@ -424,6 +388,8 @@ abstract class AbstractRouter
 
     /**
      * Check if a redirect is possible at the moment.
+     *
+     * {@inheritdoc}
      * For now, this function checks if a sucball is in progress. If it's the case, then the redirect is not possible.
      *
      * @return boolean
@@ -509,11 +475,8 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
         }
     }
 
-    /**
-     * Get the route parameters from all YAML files (Core and modules).
-     *
-     * @param string $route The route unique name/ID to retrieve
-     * @return \Symfony\Component\Routing\Route The found Route object, or null if not found.
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getRouteParameters()
      */
     final public function getRouteParameters($route)
     {
@@ -573,12 +536,8 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
         }
     }
 
-    /**
-     * This method is called by PHP process to register a listener when the process is about to shutdown.
-     * This is used to have a last chance of operating a fatal error for example.
-     * No need to call it by yourself.
-     *
-     * @param Request $request
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::registerShutdownFunctionCallback()
      */
     abstract public function registerShutdownFunctionCallback(Request &$request);
 
@@ -588,7 +547,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      *
      * @param number $i
      */
-    protected function exitNow($i = 0)
+    public function exitNow($i = 0)
     {
         exit($i);
     }

@@ -50,7 +50,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
  *      - before_reactivate
  *      - after_reactivate
  */
-class BaseEventDispatcher extends EventDispatcher
+final class BaseEventDispatcher extends EventDispatcher
 {
     /**
      * PrestaShop Business specific listeners.
@@ -111,7 +111,7 @@ class BaseEventDispatcher extends EventDispatcher
      */
     final public static function hook($hookName, $hookParameters = array())
     {
-        $dispatcher = self::getInstance('hook');
+        $dispatcher = self::$instances['hook'];
         $event = new HookEvent();
         $event->setHookParameters($hookParameters);
         $dispatcher->dispatch($hookName, $event);

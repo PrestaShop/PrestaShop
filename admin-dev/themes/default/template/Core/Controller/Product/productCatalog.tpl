@@ -4,6 +4,7 @@
 
 <div class="panel">
     ## GROS FILTRE
+    {$categories}
 </div>
 
 <div class="panel col-lg-12">

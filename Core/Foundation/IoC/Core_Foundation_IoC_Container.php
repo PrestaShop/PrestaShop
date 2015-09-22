@@ -26,6 +26,8 @@
 
 /**
  * The application container. Used to retrieve/locate services, and instantiate them.
+ *
+ * TODO. Expliquer les alias CoreFoundation, CoreBusiness, CoreAdapter, le special 'final:' et lister les alias (Context, Translator, TranslatorInterface)
  */
 class Core_Foundation_IoC_Container
 {
@@ -79,12 +81,14 @@ class Core_Foundation_IoC_Container
         $colonPos = strpos($className, ':');
         if (0 !== $colonPos) {
             $alias = substr($className, 0, $colonPos);
+            if ($alias == 'final') {
+                throw new Core_Foundation_IoC_Exception(sprintf('This final service is unknown: `%s`.', $className));
+            }
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(substr($className, $colonPos + 1), '\\');
                 return $this->namespaceAliases[$alias] . '\\' . $class;
             }
         }
-
         return $className;
     }
 
@@ -140,7 +144,12 @@ class Core_Foundation_IoC_Container
         $alreadySeen[$serviceName] = true;
 
         if (!$this->knows($serviceName)) {
-            $this->bind($serviceName, $serviceName);
+            $serviceNameAlias = $this->resolveClassName($serviceName);
+            if (!$this->knows($serviceNameAlias)) {
+                $this->bind($serviceName, $serviceName);
+            } else {
+                $serviceName = $serviceNameAlias;
+            }
         }
 
         $binding = $this->bindings[$serviceName];

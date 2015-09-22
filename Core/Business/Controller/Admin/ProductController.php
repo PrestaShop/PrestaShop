@@ -46,6 +46,7 @@ class ProductController extends AdminController
 
     /**
      * Get the Catalog page with stats banner, product list, bulk actions, filters, search, etc...
+     *
      * URL example: /product/catalog/40/20/id_product/asc
      *
      * @param Request $request
@@ -82,8 +83,21 @@ class ProductController extends AdminController
             $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
         } else {
             $response->addContentData('product_count', $totalProductCount);
+
+            // Navigator
             $navigator = $this->fetchNavigator($request, $totalProductCount);
             $response->addContentData('navigator', $navigator);
+
+            // Category tree
+            $formFactory = new FormFactory();
+            $form = $formFactory->create(new ChoiceCategorysTreeType('##Categories', \Category::getNestedCategories()));
+            //var_dump($builder); die;
+            //$form = $builder->getForm();
+            $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
+            $response->addContentData(
+                'categories',
+                $engine->view->render('Core/Controller/Product/categoriesTreeSelector.html.twig', array('form' => $form->createView()))
+            );
         }
 
         // Add layout top-right menu actions
@@ -91,7 +105,7 @@ class ProductController extends AdminController
             array(
                 'legacy' => array(
                     'href' => '#', // FIXME
-                    'desc' => $this->container->make('Translator')->trans('##No! Give me the old page!'),
+                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('##No! Give me the old page!', array(), 'AdminProducts'),
                     'icon' => 'process-icon-toggle-on',
                     'help' => '##The new page cannot fit your needs now? Fallback to the old one, and tell us why!'
                 ),
