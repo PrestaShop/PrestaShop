@@ -51,7 +51,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * Since the Router is not a public singleton nor a global var accessible from everywhere,
  * if you have no access to the application router instance, then you can call a RoutingService instead,
- * from the application container: $container->make('CoreFoundation:Routing')
+ * from the application container: $container->make('Routing')
  */
 interface RouterInterface
 {

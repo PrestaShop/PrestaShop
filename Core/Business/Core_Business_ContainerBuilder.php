@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 
 /**
  * Used to build the Container at the process starting (bootstrap.php)
@@ -45,6 +46,7 @@
  * - Context = CoreBusiness:Context = PrestaShop\\PrestaShop\\Core\\Business\\Context
  * - Translator = TranslatorInterface = CoreAdapter:Translator = PrestaShop\\PrestaShop\\Adapter\\Translator
  * - Routing = CoreFoundation:RoutingService = PrestaShop\\PrestaShop\\Core\\Foundation\\Routing\\RoutingService
+ * - MessageStack = CoreFoundation:MessageStackManager = PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager
  *
  */
 class Core_Business_ContainerBuilder
@@ -65,6 +67,27 @@ class Core_Business_ContainerBuilder
 
         $container->bind('Core_Business_ConfigurationInterface', 'Adapter_Configuration', true);
         $container->bind('Core_Foundation_Database_DatabaseInterface', 'Adapter_Database', true);
+        
+        $messageStackManager = new MessageStackManager();
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', $messageStackManager, true);
+        $container->bind('MessageStack', $messageStackManager, true);
+
+        return $container;
+    }
+    
+    public function buildForTesting()
+    {
+        $container = new Core_Foundation_IoC_Container;
+
+        $container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
+        $container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
+        $container->aliasNamespace('CoreAdapter', 'PrestaShop\\PrestaShop\\Adapter');
+
+        // No ConfigurationInterface, neither DB (mocked)
+
+        $messageStackManager = new MessageStackManager();
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', $messageStackManager, true);
+        $container->bind('MessageStack', $messageStackManager, true);
 
         return $container;
     }

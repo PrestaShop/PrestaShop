@@ -73,7 +73,7 @@ interface ControllerInterface
 
     /**
      * Get error(s) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager::getInstance()->getErrorIterator()
+     * This is a wrapper method for MessageStackManager->getErrorIterator()
      *
      * @return SplQueue The Error queue to dequeue messages.
      */
@@ -84,7 +84,7 @@ interface ControllerInterface
      * This warnings are generally important malfunction of the software that must
      * be fixed. But these warnings will not throw an error and stop execution to let the user
      * fix settings in the admin interface.
-     * This is a wrapper method for MessageStackManager::getInstance()->getWarningIterator()
+     * This is a wrapper method for MessageStackManager->getWarningIterator()
      *
      * @return SplQueue The Warning queue to dequeue messages.
      */
@@ -92,7 +92,7 @@ interface ControllerInterface
 
     /**
      * Get info(s) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager::getInstance()->getInfoIterator()
+     * This is a wrapper method for MessageStackManager->getInfoIterator()
      *
      * @return SplQueue The Info queue to dequeue messages.
      */
@@ -100,7 +100,7 @@ interface ControllerInterface
 
     /**
      * Get success(es) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager::getInstance()->getSuccessIterator()
+     * This is a wrapper method for MessageStackManager->getSuccessIterator()
      *
      * @return SplQueue The Success queue to dequeue messages.
      */

@@ -53,10 +53,8 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->container = new Core_Foundation_IoC_Container();
-        $this->container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
-        $this->container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
-        $this->container->aliasNamespace('CoreAdapter', 'PrestaShop\\PrestaShop\\Adapter');
+        $container_builder = new \Core_Business_ContainerBuilder();
+        $this->container = $container_builder->buildForTesting();
         Adapter_ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->setupDatabaseMock();

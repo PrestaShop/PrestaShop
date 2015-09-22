@@ -26,40 +26,28 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Log;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
- * This singleton will contains 4 SPplQueue objects, for 4 levels of messages:
+ * This class instance will contains 4 SPplQueue objects, for 4 levels of messages:
  * - error and warning, filled during Exception instantiations
  * - info and success, filled by actions (or other Core code).
  *
- * The singleton is also a listener registered on the 'message' EventDispatcher.
+ * The instance is also a listener registered on the 'message' EventDispatcher.
  */
 class MessageStackManager
 {
-    private static $instance = null;
-
-    /**
-     * Way to retrieve singleton object.
-     *
-     * @return \PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager
-     */
-    public static function getInstance()
-    {
-        if (self::$instance == null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
     private $errorQueue;
     private $warningQueue;
     private $infoQueue;
     private $successQueue;
 
     /**
-     * Private constructor. Use singleton getter instead: getInstance()
+     * Constructor. Gives 4 levels of SplQueues.
+     *
+     * This class should not been instantiated multiple times. Please use $container->make('MessageStack') instead.
      */
-    final private function __construct()
+    final public function __construct()
     {
         $this->errorQueue = new \SplQueue();
         $this->warningQueue = new \SplQueue();

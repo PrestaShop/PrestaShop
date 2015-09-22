@@ -165,7 +165,7 @@ abstract class BaseController implements ControllerInterface
      */
     final public function getErrorIterator()
     {
-        return MessageStackManager::getInstance()->getErrorIterator();
+        return $this->container->make('MessageStack')->getErrorIterator();
     }
 
     /* (non-PHPdoc)
@@ -173,7 +173,7 @@ abstract class BaseController implements ControllerInterface
      */
     final public function getWarningIterator()
     {
-        return MessageStackManager::getInstance()->getWarningIterator();
+        return $this->container->make('MessageStack')->getWarningIterator();
     }
 
     /* (non-PHPdoc)
@@ -181,7 +181,7 @@ abstract class BaseController implements ControllerInterface
      */
     final public function getInfoIterator()
     {
-        return MessageStackManager::getInstance()->getInfoIterator();
+        return $this->container->make('MessageStack')->getInfoIterator();
     }
 
     /* (non-PHPdoc)
@@ -189,7 +189,7 @@ abstract class BaseController implements ControllerInterface
      */
     final public function getSuccessIterator()
     {
-        return MessageStackManager::getInstance()->getSuccessIterator();
+        return $this->container->make('MessageStack')->getSuccessIterator();
     }
 
     /* (non-PHPdoc)

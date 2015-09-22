@@ -49,7 +49,7 @@ class MessageStackTest extends UnitTestCase
 
     public function test_message_stack()
     {
-        $stackManager = MessageStackManager::getInstance();
+        $stackManager = $this->container->make('MessageStack');
         $this->assertAttributeInstanceOf('\\SplQueue', 'errorQueue', $stackManager);
         $this->assertAttributeInstanceOf('\\SplQueue', 'warningQueue', $stackManager);
         $this->assertAttributeInstanceOf('\\SplQueue', 'infoQueue', $stackManager);

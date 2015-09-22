@@ -493,7 +493,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
     final protected function tryToDisplayExceptions(\Exception $lastException)
     {
         try {
-            $messageStackManager = MessageStackManager::getInstance();
+            $messageStackManager = $this->container->make('MessageStack');
             $viewEngine = null;
             $messages = '';
 
