@@ -659,6 +659,7 @@ class CustomerCore extends ObjectModel
      */
     public function updateGroup($list)
     {
+        Hook::exec('actionCustomerBeforeUpdateGroup', array('id_customer' => $this->id, 'groups' => $list));
         if ($list && !empty($list)) {
             $this->cleanGroups();
             $this->addGroups($list);
