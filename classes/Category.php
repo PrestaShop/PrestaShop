@@ -1349,12 +1349,12 @@ class CategoryCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
-			FROM `'._DB_PREFIX_.'category` cp
-			'.Shop::addSqlAssociation('category', 'cp').'
-			WHERE cp.`id_parent` = '.(int)$this->id_parent.'
-			ORDER BY category_shop.`position` ASC'
-        )) {
+            SELECT cp.`id_category`, category_shop.`position`, cp.`id_parent`
+            FROM `'._DB_PREFIX_.'category` cp
+            '.Shop::addSqlAssociation('category', 'cp').'
+            WHERE cp.`id_parent` = '.(int)$this->id_parent.'
+            ORDER BY category_shop.`position` ASC')
+            ) {
             return false;
         }
 
@@ -1371,18 +1371,20 @@ class CategoryCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').'
-			WHERE category_shop.`position`
-			'.($way
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE category_shop.`position`
+            '.($way
                 ? '> '.(int)$moved_category['position'].' AND category_shop.`position` <= '.(int)$position
                 : '< '.(int)$moved_category['position'].' AND category_shop.`position` >= '.(int)$position).'
-			AND c.`id_parent`='.(int)$moved_category['id_parent'])
+            AND c.`id_parent`='.(int)$moved_category['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)$position.'
-			WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
-			AND c.`id_category`='.(int)$moved_category['id_category']));
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET category_shop.`position` = '.(int)$position.',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
+            AND c.`id_category`='.(int)$moved_category['id_category']));
         Hook::exec('actionCategoryUpdate');
         return $result;
     }
@@ -1403,17 +1405,18 @@ class CategoryCore extends ObjectModel
 
         $return = true;
         $result = Db::getInstance()->executeS('
-		SELECT c.`id_category`
-		FROM `'._DB_PREFIX_.'category` c
-		'.Shop::addSqlAssociation('category', 'c').'
-		WHERE c.`id_parent` = '.(int)$id_category_parent.'
-		ORDER BY category_shop.`position`');
+        SELECT c.`id_category`
+        FROM `'._DB_PREFIX_.'category` c
+        '.Shop::addSqlAssociation('category', 'c').'
+        WHERE c.`id_parent` = '.(int)$id_category_parent.'
+        ORDER BY category_shop.`position`');
         $count = count($result);
         for ($i = 0; $i < $count; $i++) {
             $return &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)($i).'
-			WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
+            UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
+            SET category_shop.`position` = '.(int)($i).',
+            c.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
         }
         return $return;
     }

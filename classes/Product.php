@@ -618,11 +618,11 @@ class ProductCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_product`, cp.`position`, cp.`id_category`
-			FROM `'._DB_PREFIX_.'category_product` cp
-			WHERE cp.`id_category` = '.(int)Tools::getValue('id_category', 1).'
-			ORDER BY cp.`position` ASC'
-        )) {
+            SELECT cp.`id_product`, cp.`position`, cp.`id_category`
+            FROM `'._DB_PREFIX_.'category_product` cp
+            WHERE cp.`id_category` = '.(int)Tools::getValue('id_category', 1).'
+            ORDER BY cp.`position` ASC')
+            ) {
             return false;
         }
 
@@ -638,19 +638,21 @@ class ProductCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position`
-			'.($way
+        $result = (Db::getInstance()->execute('
+            UPDATE `'._DB_PREFIX_.'category_product`
+            SET `position`= `position` '.($way ? '- 1' : '+ 1').'
+            WHERE `position`
+            '.($way
                 ? '> '.(int)$moved_product['position'].' AND `position` <= '.(int)$position
                 : '< '.(int)$moved_product['position'].' AND `position` >= '.(int)$position).'
-			AND `id_category`='.(int)$moved_product['id_category'])
+            AND `id_category`='.(int)$moved_product['id_category'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position` = '.(int)$position.'
-			WHERE `id_product` = '.(int)$moved_product['id_product'].'
-			AND `id_category`='.(int)$moved_product['id_category']));
+            UPDATE `'._DB_PREFIX_.'category_product`
+            SET `position` = '.(int)$position.'
+            WHERE `id_product` = '.(int)$moved_product['id_product'].'
+            AND `id_category`='.(int)$moved_product['id_category']));
+        Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this));
+        return $result;
     }
 
     /*
@@ -665,24 +667,48 @@ class ProductCore extends ObjectModel
 
         if (!(int)$position) {
             $result = Db::getInstance()->executeS('
-				SELECT `id_product`
-				FROM `'._DB_PREFIX_.'category_product`
-				WHERE `id_category` = '.(int)$id_category.'
-				ORDER BY `position`
-			');
+                SELECT `id_product`
+                FROM `'._DB_PREFIX_.'category_product`
+                WHERE `id_category` = '.(int)$id_category.'
+                ORDER BY `position`
+            ');
             $total = count($result);
 
             for ($i = 0; $i < $total; $i++) {
-                $return &= Db::getInstance()->update('category_product', array(
-                    'position' => $i,
-                ), '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']);
+                $return &= Db::getInstance()->update(
+                    'category_product',
+                    array('position' => $i),
+                    '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']
+                );
+                $return &= Db::getInstance()->update(
+                    'product_shop',
+                    array('date_upd' => date('Y-m-d H:i:s')),
+                    '`id_product` = '.(int)$result[$i]['id_product']
+                );
             }
         } else {
-            $return &= Db::getInstance()->update('category_product',
-                array('position' => array('type' => 'sql', 'value' => '`position`-1')),
-                '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position);
-        }
+            $result = Db::getInstance()->executeS('
+                SELECT `id_product`
+                FROM `'._DB_PREFIX_.'category_product`
+                WHERE `id_category` = '.(int)$id_category.' AND `position` > '.(int)$position.'
+                ORDER BY `position`
+            ');
+            $total = count($result);
 
+            $return &= Db::getInstance()->update(
+                'category_product',
+                array('position' => array('type' => 'sql', 'value' => '`position`-1')),
+                '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position
+            );
+
+            for ($i = 0; $i < $total; $i++) {
+                $return &= Db::getInstance()->update(
+                    'product_shop',
+                    array('date_upd' => date('Y-m-d H:i:s')),
+                    '`id_product` = '.(int)$result[$i]['id_product']
+                );
+            }
+        }
         return $return;
     }
 
