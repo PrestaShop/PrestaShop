@@ -176,7 +176,9 @@ abstract class PaymentModuleCore extends Module
         $this->context->cart->setTaxCalculationMethod();
 
         $this->context->language = new Language($this->context->cart->id_lang);
-        $this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+        if(! $this->context->shop->id) {
+          $this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+        }
         ShopUrl::resetMainDomainCache();
         $id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
         $this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
