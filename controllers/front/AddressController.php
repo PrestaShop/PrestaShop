@@ -308,7 +308,7 @@ class AddressControllerCore extends FrontController
         $id_country = is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country;
         $requireFormFieldsList = AddressFormat::getFieldsRequired();
         $ordered = AddressFormat::getOrderedAddressFields($id_country, true, true);
-        $ordered = array_unique(array_merge($ordered, $requireFormFieldsList));
+        $ordered = array_unique(array_merge(['alias'], $ordered, $requireFormFieldsList));
 
         $ordered_address_fields = [];
         foreach ($ordered as $field) {
@@ -320,6 +320,53 @@ class AddressControllerCore extends FrontController
                 $ordered_address_fields[$field]['errors'] = $this->form_errors[$field];
             } else {
                 $ordered_address_fields[$field]['errors'] = [];
+            }
+
+            switch ($field) {
+                case 'alias':
+                    $ordered_address_fields[$field]['label'] = $this->l('Address alias');
+                    break;
+                case 'firstname':
+                    $ordered_address_fields[$field]['label'] = $this->l('First name');
+                    break;
+                case 'lastname':
+                    $ordered_address_fields[$field]['label'] = $this->l('Last name');
+                    break;
+                case 'address1':
+                case 'address2':
+                    $ordered_address_fields[$field]['label'] = $this->l('Address');
+                    break;
+                case 'postcode':
+                    $ordered_address_fields[$field]['label'] = $this->l('Zip/Postal Code');
+                    break;
+                case 'city':
+                    $ordered_address_fields[$field]['label'] = $this->l('City');
+                    break;
+                case 'Country:name':
+                    $ordered_address_fields[$field]['label'] = $this->l('Country');
+                    break;
+                case 'State:name':
+                    $ordered_address_fields[$field]['label'] = $this->l('State');
+                    break;
+                case 'phone':
+                    $ordered_address_fields[$field]['label'] = $this->l('Home phone');
+                    break;
+                case 'phone_mobile':
+                    $ordered_address_fields[$field]['label'] = $this->l('Mobile phone');
+                    break;
+                case 'company':
+                    $ordered_address_fields[$field]['label'] = $this->l('Company');
+                    break;
+                case 'vat_number':
+                    $ordered_address_fields[$field]['label'] = $this->l('VAT number');
+                    break;
+                case 'dni':
+                    $ordered_address_fields[$field]['label'] = $this->l('Identification number');
+                    break;
+                default:
+                    // StarterTheme: All EVERY address fields available in backoffice
+                    $ordered_address_fields[$field]['label'] = '';
+                    break;
             }
         }
 
