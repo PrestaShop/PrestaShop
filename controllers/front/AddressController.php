@@ -267,7 +267,6 @@ class AddressControllerCore extends FrontController
 
         $this->context->smarty->assign(array(
             'form_validation' => Address::$definition['fields'],
-            'form_errors' => $this->form_errors,
             'errors' => $this->errors,
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
             'ajaxurl' => _MODULE_DIR_,
@@ -316,6 +315,12 @@ class AddressControllerCore extends FrontController
             $ordered_address_fields[$field] = [
                 'required' => in_array($field, $requireFormFieldsList),
             ];
+
+            if (isset($this->form_errors[$field])) {
+                $ordered_address_fields[$field]['errors'] = $this->form_errors[$field];
+            } else {
+                $ordered_address_fields[$field]['errors'] = [];
+            }
         }
 
         $this->context->smarty->assign(array(
