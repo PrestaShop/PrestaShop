@@ -117,7 +117,7 @@ class CartControllerCore extends FrontController
             } else {
                 $minimal_quantity = (int)$product->minimal_quantity;
             }
-            
+
             $total_quantity = 0;
             foreach ($customization_product as $custom) {
                 $total_quantity += $custom['quantity'];
@@ -288,6 +288,7 @@ class CartControllerCore extends FrontController
 
             if (!$this->errors) {
                 $cart_rules = $this->context->cart->getCartRules();
+                $available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
                 $update_quantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery);
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -300,7 +301,7 @@ class CartControllerCore extends FrontController
                     $cart_rules2 = $this->context->cart->getCartRules();
                     if (count($cart_rules2) != count($cart_rules)) {
                         $this->ajax_refresh = true;
-                    } else {
+                    } elseif (count($cart_rules2)) {
                         $rule_list = array();
                         foreach ($cart_rules2 as $rule) {
                             $rule_list[] = $rule['id_cart_rule'];
@@ -309,6 +310,22 @@ class CartControllerCore extends FrontController
                             if (!in_array($rule['id_cart_rule'], $rule_list)) {
                                 $this->ajax_refresh = true;
                                 break;
+                            }
+                        }
+                    } else {
+                        $available_cart_rules2 = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
+                        if (count($available_cart_rules2) != count($available_cart_rules)) {
+                            $this->ajax_refresh = true;
+                        } elseif (count($available_cart_rules2)) {
+                            $rule_list = array();
+                            foreach ($available_cart_rules2 as $rule) {
+                                $rule_list[] = $rule['id_cart_rule'];
+                            }
+                            foreach ($cart_rules2 as $rule) {
+                                if (!in_array($rule['id_cart_rule'], $rule_list)) {
+                                    $this->ajax_refresh = true;
+                                    break;
+                                }
                             }
                         }
                     }
