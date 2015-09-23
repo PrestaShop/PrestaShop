@@ -2,7 +2,7 @@
     ## STATS
 </div>
 
-<div class="panel">
+<div id="product_catalog_category_tree_filter" class="panel">
     ## GROS FILTRE
     {$categories}
 </div>
@@ -13,7 +13,8 @@
         <span class="badge">{$product_count}</span>
     </div>
 
-    <form>
+    <form name="product_catalog_list" method="post" action="{$post_url}">
+        <input type="hidden" name="ls_products_filter_category" value="{$ls_products_filter_category|default:''}" />
         <table class="table product">
             <theader>
                 

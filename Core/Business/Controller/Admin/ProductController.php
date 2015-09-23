@@ -38,6 +38,14 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
+/**
+ * Admin controller for the Product pages:
+ * - categories
+ * - product list
+ * - product details
+ * - product attributes
+ * - ...
+ */
 class ProductController extends AdminController
 {
     use AutoObjectInflaterTrait; // auto inflate objects if pattern found in the route format.
@@ -54,6 +62,7 @@ class ProductController extends AdminController
      */
     public function productCatalogAction(Request &$request, Response &$response)
     {
+        
         // FIXME: remove this redirection to legacy and develop catalog page when needed.
 //         $this->redirectToRoute(
 //             $request,
@@ -66,6 +75,13 @@ class ProductController extends AdminController
 //             false // temporary
 //         );
 
+        // Retrieve persisted filter parameters
+        $persistedFilterParameters = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider')->getPersistedFilterParameters('ls_products_');
+
+        // Transmit persisted filter parameters updated by posted ones variables
+        $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
+        $response->addContentData(null, $persistedFilterParameters);
+
         // get Product list from productListAction subcall
         $productListParams = array(
             'ls_products_limit' => $request->attributes->get('limit'),
@@ -76,6 +92,15 @@ class ProductController extends AdminController
         );
         $subResponse = $this->subcall('admin_product_list', $productListParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
         $response->addContentData('product_list', $subResponse->getContent());
+
+        // URL action form params
+        $formParams = array(
+            'limit' => $request->attributes->get('limit'),
+            'offset' => $request->attributes->get('offset'),
+            'orderBy' => $request->attributes->get('orderBy'),
+            'orderWay' => $request->attributes->get('orderWay')
+        );
+        $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', $formParams));
 
         // Alternative layout for empty list
         $totalProductCount = $subResponse->getContentData('product_count');
@@ -90,14 +115,14 @@ class ProductController extends AdminController
 
             // Category tree
             $formFactory = new FormFactory();
-            $form = $formFactory->create(new ChoiceCategorysTreeType('##Categories', \Category::getNestedCategories()));
-            //var_dump($builder); die;
-            //$form = $builder->getForm();
+            // FIXME: ajouter la selection par defaut, provenant de ls_products_category_filter OU
+            $form = $formFactory->create(new ChoiceCategorysTreeType('##Categories', \Category::getNestedCategories(), false));
             $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
             $response->addContentData(
                 'categories',
                 $engine->view->render('Core/Controller/Product/categoriesTreeSelector.html.twig', array('form' => $form->createView()))
             );
+            $response->addJs(_PS_JS_DIR_.'Core/Admin/Categories.js');
         }
 
         // Add layout top-right menu actions
@@ -125,7 +150,7 @@ class ProductController extends AdminController
      *
      * @param Request $request
      * @param Response $response
-     * @param array $products The collection of products requested. Filled by AutoObjectInflaterTrait.
+     * @param Product[] $products The collection of products requested. Filled by AutoObjectInflaterTrait.
      * @return void The response format is automatically placed by the Router through _layout_mode attribute
      */
     public function productListAction(Request &$request, Response &$response, array $products)

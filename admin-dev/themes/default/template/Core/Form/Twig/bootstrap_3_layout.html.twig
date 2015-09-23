@@ -148,9 +148,16 @@
 
 {% block choice_tree_item_widget -%}
     <li>
-        <div class="checkbox">
-            <label><input type="checkbox" name="form[categorys][tree][]" value="{{ child.id_category }}">{{ child.name }}</label>
-        </div>
+        
+        {% if multiple -%}
+            <div class="checkbox">
+                <label><input type="checkbox" name="form[categorys][tree][]" value="{{ child.id_category }}">{{ child.name }}</label>
+            </div>
+        {%- else -%}
+            <div class="radio">
+                <label><input type="radio" name="form[categorys][tree]" value="{{ child.id_category }}">{{ child.name }}</label>
+            </div>
+        {%- endif %}
         {% if child.children %}
             <ul>
                 {% for item in child.children %}

@@ -111,6 +111,7 @@ interface RouterInterface
      * Dispatcher internal entry point.
      *
      * Called by a controller/action to get a content subpart from another controller.
+     * The subcalled route must be opened to GET method: the Router will try to match a GET request on that route.
      *
      * @param string $routeName The route unique name/ID
      * @param array $routeParameters The route's parameters (mandatory, and optional, and even more if needed)

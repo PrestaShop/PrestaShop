@@ -302,9 +302,16 @@ abstract class AbstractRouter implements RouterInterface
         $path = $this->generateUrl($routeName, $routeParameters, false, self::ABSOLUTE_ROUTE);
 
         try {
+            // change method value before to ->match(): only GET allowed on subcalls.
+            $routerContextMethod = $this->sfRouter->getContext()->getMethod();
+            $this->sfRouter->getContext()->setMethod('GET');
+
             // Resolve route
             $parameters = $this->sfRouter->match($path);
             $subRequest->attributes->add($parameters);
+
+            // restore old method value on the router.
+            $this->sfRouter->getContext()->setMethod($routerContextMethod);
 
             // Override layout mode for subcall
             $subRequest->headers->set('layout-mode', $layoutMode); // this param is prior to 'accept' HTTP data.

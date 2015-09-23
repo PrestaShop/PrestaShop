@@ -121,14 +121,23 @@ class Response extends sfResponse
 
     /**
      * Add data before formatting.
-     * The key should not exists in the dataset to be inserted.
      *
-     * @param string $key
+     * The key should not exists in the dataset to be inserted.
+     * If $key is null and $data is an array, the content of the array will be merged with existing content.
+     *
+     * @param string|null $key The data key.
      * @param mixed $data
      * @return boolean False if key already exists in the dataset. True for success.
      */
     final public function addContentData($key, $data)
     {
+        // merge case
+        if ($key === null && is_array($data)) {
+            $this->contentData = array_merge($this->contentData, $data);
+            return true;
+        }
+
+        // add case
         if (array_key_exists($key, $this->contentData)) {
             return false;
         }
@@ -333,7 +342,7 @@ class Response extends sfResponse
     }
 
     /**
-     * Set js
+     * Sets (and replace) javascript file list to include in the page.
      *
      * @param array $js
      */
@@ -343,7 +352,17 @@ class Response extends sfResponse
     }
 
     /**
-     * Get $js
+     * Add javascript file(s) to the list to include in the page.
+     *
+     * @param string|array $js
+     */
+    public function addJs($js)
+    {
+        $this->js = array_unique(array_merge($this->js, (array)$js));
+    }
+
+    /**
+     * Get javascript file list that will be included in the page.
      *
      * @return array
      */

@@ -1,7 +1,7 @@
 # admin_routes_product.yml
 admin_product_catalog:
     path:     /catalog/{offset}/{limit}/{orderBy}/{orderWay}
-    methods:  [GET]
+    methods:  [GET, POST]
     defaults:
         _legacy_path: AdminProducts
         _legacy_force: false

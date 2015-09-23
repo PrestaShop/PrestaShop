@@ -32,6 +32,14 @@ use PrestaShop\PrestaShop\Adapter\AbstractAdminDataProvider;
  */
 class AdminProductDataProvider extends AbstractAdminDataProvider
 {
+    public function getPersistedFilterParameters($prefix = '')
+    {
+        // TODO
+        return array(
+            $prefix.'filter_category' => '2',
+        );
+    }
+
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
@@ -40,10 +48,11 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array())
     {
+        // TODO: 'filter_category' a persister et recup
         $paramsOut = array();
 
         // retrieve persisted filter parameters
-        $persistedParams = array(); // TODO
+        $persistedParams = $this->getPersistedFilterParameters();
 
         // merge with new values
         $paramsOut = array_merge_recursive($persistedParams, (array)$paramsIn);
@@ -62,12 +71,12 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      * @param integer $limit
      * @param string $orderBy Field name to sort during SQL query
      * @param string $orderWay 'asc' or 'desc'
-     * @param array $get filter params values to take into acount (often comes from GET data).
+     * @param array $post filter params values to take into acount (often comes from POST data).
      * @return array A list of products, as a collection of legacy Product objects.
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $get = array())
+    public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $post = array())
     {
-        $filterParams = $this->combinePersistentCatalogProductFilter($get);
+        $filterParams = $this->combinePersistentCatalogProductFilter($post);
 
         $idShop = \Context::getContext()->shop->id;
         $idLang = \Context::getContext()->language->id;

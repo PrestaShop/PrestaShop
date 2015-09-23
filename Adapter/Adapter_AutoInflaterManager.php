@@ -138,7 +138,6 @@ class Adapter_AutoInflaterManager
                 throw new DevelopmentErrorException('An optional argument is missing to inflate a collection: '.$className.'->'.$method.'(), missing argument: '.$mp->name);
             }
         }
-
         return $method->invokeArgs(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $givenParameters);
     }
 }

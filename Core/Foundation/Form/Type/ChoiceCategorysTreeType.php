@@ -39,6 +39,7 @@ class ChoiceCategorysTreeType extends AbstractType
     private $label;
     private $list;
     private $validList;
+    private $multiple;
 
     /**
      * Constructor
@@ -46,10 +47,11 @@ class ChoiceCategorysTreeType extends AbstractType
      * @param string $label The field label
      * @param array $list The nested array categorys
      */
-    public function __construct($label = '', $list = array())
+    public function __construct($label = '', $list = array(), $multiple = true)
     {
         $this->label = $label;
         $this->list = $list;
+        $this->multiple = $multiple;
         $this->formatValidList($list);
     }
 
@@ -77,6 +79,7 @@ class ChoiceCategorysTreeType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['choices'] = $this->list;
+        $view->vars['multiple'] = $this->multiple;
     }
 
     /**
@@ -90,7 +93,7 @@ class ChoiceCategorysTreeType extends AbstractType
             'label' => false,
             'choices' => $this->validList,
             'required' => false,
-            'multiple'  => true,
+            'multiple'  => $this->multiple,
             'expanded'  => true,
             'error_bubbling'  => true,
         ));
