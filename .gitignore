@@ -75,3 +75,7 @@ themes/StarterTheme/
 
 *sitemap.xml
 robots.txt
+
+# StarterTheme
+
+themes/StarterTheme/_dev/node_modules
