@@ -249,35 +249,35 @@
                 </form>
               {/if}
             {/block}
-
-            {* StarterTheme: Content Only *}
-
-            {block name="product_discounts"}
-              {if $quantity_discounts}
-                <section class="product-discounts">
-                  <h3>{l s='Volume discounts'}</h3>
-                  <table class="table-product-discounts">
-                    <thead>
-                      <tr>
-                        <th>{l s='Quantity'}</th>
-                        <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
-                        <th>{l s='You Save'}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-                        <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
-                          <td>{$quantity_discount.quantity}</td>
-                          <td>{$quantity_discount.discount}</td>
-                          <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
-                        </tr>
-                      {/foreach}
-                    </tbody>
-                  </table>
-                </section>
-              {/if}
-            {/block}
           </div>
+
+          {* StarterTheme: Content Only *}
+
+          {block name="product_discounts"}
+            {if $quantity_discounts}
+              <section class="product-discounts">
+                <h3>{l s='Volume discounts'}</h3>
+                <table class="table-product-discounts">
+                  <thead>
+                    <tr>
+                      <th>{l s='Quantity'}</th>
+                      <th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
+                      <th>{l s='You Save'}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+                      <tr data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value}" data-discount-quantity="{$quantity_discount.quantity}">
+                        <td>{$quantity_discount.quantity}</td>
+                        <td>{$quantity_discount.discount}</td>
+                        <td>{l s='Up to %s' sprintf=$quantity_discount.save}</td>
+                      </tr>
+                    {/foreach}
+                  </tbody>
+                </table>
+              </section>
+            {/if}
+          {/block}
 
           {block name="product_features"}
             {if $product.features}
