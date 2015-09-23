@@ -1,0 +1,36 @@
+.menu
+  float left
+  a, a:visited
+    text-decoration none
+    color text-color
+    font-size 1.2em
+    padding small-padding
+    display block
+
+  a:hover, li.current > a
+    background-color highlighted-background-color
+    color highlighted-color
+
+  > ul > li // top level
+    display inline-block
+    vertical-align top
+    &:not(:first-child)
+      border-left 1px solid #ccc
+    > a
+      background-color background-color
+    > div
+      border 1px solid border-color
+      display none
+      position absolute
+      z-index 1337
+      background-color white
+    &:hover > div
+      display block
+
+  li
+    list-style none
+
+  ul
+    margin 0
+    &[data-depth="0"], &[data-depth="1"]
+      padding 0px
