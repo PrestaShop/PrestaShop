@@ -52,15 +52,13 @@
 			</span>
 		</label>
 		<div class="col-lg-8">
-			<div class="input-group">
-				{include file="controllers/products/textarea_lang.tpl"
-					languages=$languages
-					input_name='meta_description'
-					input_value=$product->meta_description
-					maxchar=160
-					maxlength=160
-				}
-			</div>
+			{include file="controllers/products/textarea_lang.tpl"
+				languages=$languages
+				input_name='meta_description'
+				input_value=$product->meta_description
+				maxchar=160
+				maxlength=160
+			}
 		</div>
 	</div>
 	{* Removed for simplicity *}
