@@ -437,7 +437,8 @@ abstract class PaymentModuleCore extends Module
                             }
                             $msg->message = $message;
                             $msg->id_cart = (int)$id_cart;
-                            $msg->id_order = intval($order->id);
+                            $msg->id_customer = (int)($order->id_customer);
+                            $msg->id_order = (int)$order->id;
                             $msg->private = 1;
                             $msg->add();
                         }
@@ -624,7 +625,7 @@ abstract class PaymentModuleCore extends Module
 
                     // Specify order id for message
                     $old_message = Message::getMessageByCartId((int)$this->context->cart->id);
-                    if ($old_message) {
+                    if ($old_message && !$old_message['private']) {
                         $update_message = new Message((int)$old_message['id_message']);
                         $update_message->id_order = (int)$order->id;
                         $update_message->update();
