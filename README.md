@@ -43,7 +43,7 @@ Once the files in the PrestaShop archive have been decompressed and uploaded on 
 If you get any PHP error, it might be that you do not have PHP 5 on your web server, or that you need to activate it. See [this page for explanations about PHP 5][3], or contact your web host directly.  
 If you do not find any solution to start the installer, please post about your issue on [the PrestaShop forums][5].
 
-If you installed PrestaShop from GitHug :
+If you installed PrestaShop from GitHub :
 
 * Install Composer ([https://getcomposer.org][22])
 * Install Node.js ([https://nodejs.org][23])
