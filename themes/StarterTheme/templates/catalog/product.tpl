@@ -216,15 +216,13 @@
                             {/if}
                           </div>
                         {/foreach}
+                        {block name="product_refresh"}
+                          <input type="submit" value="{l s='Refresh'}" />
+                        {/block}
                       {/block}
                     </div>
                   {/if}
                 {/block}
-
-                {block name="product_refresh"}
-                  <input type="submit" value="{l s='Refresh'}" />
-                {/block}
-
               </form>
             {/block}
 
