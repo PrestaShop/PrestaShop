@@ -780,7 +780,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             foreach ($this->product->getCustomizationFields($this->context->language->id) as $custom_field) {
                 if ($custom_field['required'] && !isset($customized_data[$product['id_product'].'_'.$custom_field['id_customization_field']])) {
                     $product_full['is_already_customized'] = false;
-                    p('ok');
                 }
             }
         }
