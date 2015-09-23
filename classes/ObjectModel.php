@@ -232,6 +232,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             $entity_mapper = Adapter_ServiceLocator::get("Adapter_EntityMapper");
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
+	
+	// @hook actionObject*Init
+	Hook::exec('actionObjectInit', array('object' => $this));
+	Hook::exec('actionObject'.get_class($this).'Init', array('object' => $this));
+
     }
 
     /**
