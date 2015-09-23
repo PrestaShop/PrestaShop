@@ -80,6 +80,11 @@ class ChoiceCategorysTreeType extends AbstractType
     {
         $view->vars['choices'] = $this->list;
         $view->vars['multiple'] = $this->multiple;
+
+        //if form is submitted, inject categorys values array to check or not each field
+        if (!empty($view->vars['value']) && !empty($view->vars['value']['tree'])) {
+            $view->vars['submitted_values'] = array_flip($view->vars['value']['tree']);
+        }
     }
 
     /**

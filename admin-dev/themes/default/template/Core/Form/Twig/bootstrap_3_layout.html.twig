@@ -148,14 +148,14 @@
 
 {% block choice_tree_item_widget -%}
     <li>
-        
+        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
         {% if multiple -%}
             <div class="checkbox">
-                <label><input type="checkbox" name="form[categorys][tree][]" value="{{ child.id_category }}">{{ child.name }}</label>
+                <label><input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" {{ checked }}>{{ child.name }}</label>
             </div>
         {%- else -%}
             <div class="radio">
-                <label><input type="radio" name="form[categorys][tree]" value="{{ child.id_category }}">{{ child.name }}</label>
+                <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}"  {{ checked }}>{{ child.name }}</label>
             </div>
         {%- endif %}
         {% if child.children %}
