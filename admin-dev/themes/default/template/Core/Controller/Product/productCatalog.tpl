@@ -9,7 +9,7 @@
 
 <div class="panel col-lg-12">
     <div class="panel-heading">
-        ## PRODUITS
+        ## PRODUITS {$ls_products_filter_category|default:''}
         <span class="badge">{$product_count}</span>
     </div>
 

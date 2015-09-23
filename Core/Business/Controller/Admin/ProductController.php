@@ -100,8 +100,8 @@ class ProductController extends AdminController
         $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', $formParams));
 
         // Alternative layout for empty list
-        $totalProductCount = $subResponse->getContentData('product_count');
-        if ($totalProductCount === 0) {
+        $totalProductCount = $subResponse->getContentData('product_count'); // total count of SQL query (filtered)
+        if ($totalProductCount === 0) { // FIXME : do not use this count (filtered query), but a count of products without filter!
             $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
         } else {
             $response->addContentData('product_count', $totalProductCount);

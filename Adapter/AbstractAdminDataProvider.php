@@ -33,6 +33,12 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
  */
 abstract class AbstractAdminDataProvider
 {
+    const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
+    const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
+    const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
+    const FILTERING_EQUAL_NUMERIC = '= %s';
+    const FILTERING_EQUAL_STRING = '= \'%s\'';
+
     final private function compileSqlWhere($whereArray)
     {
         $operator = 'AND';
