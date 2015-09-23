@@ -105,11 +105,7 @@ class ProductPresenter
     ) {
         $can_add_to_cart = $this->shouldShowPrice($settings, $product);
 
-        if ($product['customizable'] == 2) {
-            $can_add_to_cart = false;
-        }
-
-        if (!empty($product['customization_required'])) {
+        if (($product['customizable'] == 2 || !empty($product['customization_required'])) && !isset($product['is_already_customized']) || (isset($product['is_already_customized']) && !$product['is_already_customized'])) {
             $can_add_to_cart = false;
         }
 
@@ -131,14 +127,19 @@ class ProductPresenter
         );
     }
 
-    private function getProductURL(array $product, Language $language)
-    {
+    private function getProductURL(
+        array $product,
+        Language $language,
+        $canonical = false
+    ) {
         return $this->link->getProductLink(
             $product['id_product'],
-            null, null, null,
+            null,
+            null,
+            null,
             $language->id,
             null,
-            $product['id_product_attribute'],
+            (!$canonical) ? $product['id_product_attribute'] : null,
             false,
             false,
             true
@@ -292,6 +293,7 @@ class ProductPresenter
         );
 
         $presentedProduct['url'] = $this->getProductURL($product, $language);
+        $presentedProduct['canonical_url'] = $this->getProductURL($product, $language, true);
 
         $presentedProduct = $this->addPriceInformation(
             $presentedProduct,
