@@ -639,18 +639,26 @@ class ProductCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
-            UPDATE `'._DB_PREFIX_.'category_product`
-            SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-            WHERE `position`
+            UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = cp.`id_product`)
+            '.Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position`= `position` '.($way ? '- 1' : '+ 1').',
+            p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`position`
             '.($way
                 ? '> '.(int)$moved_product['position'].' AND `position` <= '.(int)$position
                 : '< '.(int)$moved_product['position'].' AND `position` >= '.(int)$position).'
             AND `id_category`='.(int)$moved_product['id_category'])
         && Db::getInstance()->execute('
-            UPDATE `'._DB_PREFIX_.'category_product`
-            SET `position` = '.(int)$position.'
-            WHERE `id_product` = '.(int)$moved_product['id_product'].'
-            AND `id_category`='.(int)$moved_product['id_category']));
+            UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = cp.`id_product`)
+            '.Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position` = '.(int)$position.',
+            p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`id_product` = '.(int)$moved_product['id_product'].'
+            AND cp.`id_category`='.(int)$moved_product['id_category'])
+
+        );
         Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this));
         return $result;
     }
@@ -680,10 +688,10 @@ class ProductCore extends ObjectModel
                     array('position' => $i),
                     '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']
                 );
-                $return &= Db::getInstance()->update(
-                    'product_shop',
-                    array('date_upd' => date('Y-m-d H:i:s')),
-                    '`id_product` = '.(int)$result[$i]['id_product']
+                $return &= Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'product` p'.Shop::addSqlAssociation('product', 'p').'
+                    SET p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+                    WHERE p.`id_product` = '.(int)$result[$i]['id_product']
                 );
             }
         } else {
@@ -694,7 +702,6 @@ class ProductCore extends ObjectModel
                 ORDER BY `position`
             ');
             $total = count($result);
-
             $return &= Db::getInstance()->update(
                 'category_product',
                 array('position' => array('type' => 'sql', 'value' => '`position`-1')),
@@ -702,10 +709,10 @@ class ProductCore extends ObjectModel
             );
 
             for ($i = 0; $i < $total; $i++) {
-                $return &= Db::getInstance()->update(
-                    'product_shop',
-                    array('date_upd' => date('Y-m-d H:i:s')),
-                    '`id_product` = '.(int)$result[$i]['id_product']
+                $return &= Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'product` p'.Shop::addSqlAssociation('product', 'p').'
+                    SET p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+                    WHERE p.`id_product` = '.(int)$result[$i]['id_product']
                 );
             }
         }
@@ -2338,7 +2345,7 @@ class ProductCore extends ObjectModel
         if (!$result) {
             return false;
         }
-        
+
         if ($order_by == 'price') {
             Tools::orderbyPrice($result, $order_way);
         }

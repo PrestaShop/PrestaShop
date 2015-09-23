@@ -1372,7 +1372,8 @@ class CategoryCore extends ObjectModel
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
             UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-            SET category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').',
+            SET c.`position`= c.`position` '.($way ? '- 1' : '+ 1').',
+            category_shop.`position`= category_shop.`position` '.($way ? '- 1' : '+ 1').',
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE category_shop.`position`
             '.($way
@@ -1381,7 +1382,8 @@ class CategoryCore extends ObjectModel
             AND c.`id_parent`='.(int)$moved_category['id_parent'])
         && Db::getInstance()->execute('
             UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-            SET category_shop.`position` = '.(int)$position.',
+            SET c.`position` = '.(int)$position.',
+            category_shop.`position` = '.(int)$position.',
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
             AND c.`id_category`='.(int)$moved_category['id_category']));
@@ -1414,7 +1416,8 @@ class CategoryCore extends ObjectModel
         for ($i = 0; $i < $count; $i++) {
             $return &= Db::getInstance()->execute('
             UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-            SET category_shop.`position` = '.(int)($i).',
+            SET c.`position` = '.(int)($i).',
+            category_shop.`position` = '.(int)($i).',
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
         }
@@ -1433,26 +1436,28 @@ class CategoryCore extends ObjectModel
         if ((int)Db::getInstance()->getValue('
 				SELECT COUNT(c.`id_category`)
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				WHERE c.`id_parent` = '.(int)$id_category_parent) === 1) {
             return 0;
         } else {
             return (1 + (int)Db::getInstance()->getValue('
 				SELECT MAX(cs.`position`)
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				WHERE c.`id_parent` = '.(int)$id_category_parent));
         }
     }
 
     public static function getUrlRewriteInformations($id_category)
     {
-        return Db::getInstance()->executeS('
-			SELECT l.`id_lang`, c.`link_rewrite`
-			FROM `'._DB_PREFIX_.'category_lang` AS c
-			LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
-			WHERE c.`id_category` = '.(int)$id_category.'
-			AND l.`active` = 1'
+        return Db::getInstance()->executeS(
+            'SELECT l.`id_lang`, c.`link_rewrite`
+            FROM `'._DB_PREFIX_.'category_lang` AS c
+            LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
+            WHERE c.`id_category` = '.(int)$id_category.'
+            AND l.`active` = 1'
         );
     }
 
