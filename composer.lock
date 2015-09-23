@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f5dd117fe835e2e1cd595753427413c9",
-    "content-hash": "23430892a910d27f35fef403637c55ed",
+    "hash": "5b9e226f66e01f45ba4ed17360595061",
     "packages": [
         {
             "name": "composer/installers",
@@ -635,16 +634,16 @@
         },
         {
             "name": "prestashop/blockcontactinfos",
-            "version": "dev-master",
+            "version": "dev-feat/starter-theme",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcontactinfos.git",
-                "reference": "fbcb052c5ca22265788f430903ef9e3f6fc3a21b"
+                "reference": "7e639ea0cb09b82da9868dde0f578be940744a58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/fbcb052c5ca22265788f430903ef9e3f6fc3a21b",
-                "reference": "fbcb052c5ca22265788f430903ef9e3f6fc3a21b",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/7e639ea0cb09b82da9868dde0f578be940744a58",
+                "reference": "7e639ea0cb09b82da9868dde0f578be940744a58",
                 "shasum": ""
             },
             "require": {
@@ -663,7 +662,7 @@
             ],
             "description": "PrestaShop module blockcontactinfos",
             "homepage": "https://github.com/PrestaShop/blockcontactinfos",
-            "time": "2015-08-28 15:03:23"
+            "time": "2015-08-28 14:58:35"
         },
         {
             "name": "prestashop/blockcurrencies",
