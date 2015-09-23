@@ -32,10 +32,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
-use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**
@@ -178,77 +175,7 @@ class ProductController extends AdminController
         ));
 
         $form = $builder
-            ->setAction('')
-            ->add('type_product', 'choice', array(
-                'choices'  => array(
-                    0 => 'Produit standard',
-                    1 => 'Pack de produits existants',
-                    2 => 'Produit dématérialisé (services, réservations, produits téléchargeables, etc.)',
-                ),
-                'required' => true,
-                'data' => 'both'
-            ))
-            ->add('name', new TranslateType(
-                'text',
-                array(
-                    'constraints' => array(
-                        new Assert\NotBlank(),
-                        new Assert\Length(array('min' => 3))
-                    )
-                )
-            ))
-            ->add('description', 'textarea', array(
-                'attr' => array('class' => 'autoload_rte')
-            ))
-            ->add('images', new DropFilesType('Images', $this->generateUrl('admin_tools_upload'), array(
-                'maxFiles' => '10',
-                'dictRemoveFile' => 'Supprimer'
-            )))
-            ->add('reference', 'text')
-            ->add('ean13', 'text')
-            ->add('upc', 'text')
-            ->add('active', 'choice', array(
-                'choices'  => array( 1 => 'Oui', 0 => 'Non'),
-                'expanded' => true,
-                'required' => true,
-                'multiple' => false,
-                'data' => 0
-            ))
-            ->add('visibility', 'choice', array(
-                'choices'  => array(
-                    'both' => 'Partout',
-                    'catalog' => 'Catalogue uniquement',
-                    'search' => 'Recherche uniquement',
-                    'none' => 'Nulle part',
-                ),
-                'required' => true,
-                'data' => 'both'
-            ))
-            ->add(
-                $builder->create('options', 'form')
-                    ->add('available_for_order', 'checkbox', array(
-                        'label'    => 'Disponible à la vente',
-                        'required' => false,
-                    ))
-                    ->add('show_price', 'checkbox', array(
-                        'label'    => 'Afficher le prix',
-                        'required' => false,
-                    ))
-                    ->add('online_only', 'checkbox', array(
-                        'label'    => 'Exclusivité web (non vendu en magasin)',
-                        'required' => false,
-                    ))
-            )
-            ->add('categorys', new ChoiceCategorysTreeType('Catégories', \Category::getNestedCategories()))
-            ->add('condition', 'choice', array(
-                'choices'  => array(
-                    'new' => 'Nouveau',
-                    'used' => 'Utilisé',
-                    'refurbished' => 'Reconditionné',
-                ),
-                'required' => true,
-                'data' => 'new'
-            ))
+            ->add('step1', new ProductForms\ProductStep1($this->container))
             ->getForm();
 
         $response->setEngineName('twig');
