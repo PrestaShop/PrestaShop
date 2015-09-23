@@ -227,7 +227,6 @@
 			<div id="oosHook"{if $product->quantity > 0} style="display: none;"{/if}>
 				{$HOOK_PRODUCT_OOS}
 			</div>
-			{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
 			{if !$content_only}
 				<!-- usefull links-->
 				<ul id="usefull_link_block" class="clearfix no-print">
@@ -397,6 +396,7 @@
 				</div> <!-- end box-info-product -->
 			</form>
 			{/if}
+			{if isset($HOOK_EXTRA_RIGHT) && $HOOK_EXTRA_RIGHT}{$HOOK_EXTRA_RIGHT}{/if}
 		</div> <!-- end pb-right-column-->
 	</div> <!-- end primary_block -->
 	{if !$content_only}
