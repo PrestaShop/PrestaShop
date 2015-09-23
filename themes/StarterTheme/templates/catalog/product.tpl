@@ -182,42 +182,40 @@
                   {/if}
                 {/block}
 
-                {block name="product_details"}
-                  <div class="product-details">
-                    {block name="product_attributes"}
-                      {foreach from=$groups key=id_attribute_group item=group}
-                        <div>
-                          <label for="group_{$id_attribute_group}">{$group.name}</label>
-                          {if $group.group_type == 'select'}
-                            <select name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
-                              {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <option value="{$id_attribute}" title="{$group_attribute.name}"{if $group_attribute.selected} selected="selected"{/if}>{$group_attribute.name}</option>
-                              {/foreach}
-                            </select>
-                          {else if $group.group_type == 'color'}
-                            <ul id="group_{$id_attribute_group}">
-                              {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <li>
-                                  <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                  <span style="background-color:{$group_attribute.html_color_code}">{$group_attribute.name}</span>
-                                </li>
-                              {/foreach}
-                            </ul>
-                          {else if $group.group_type == 'radio'}
-                            <ul id="group_{$id_attribute_group}">
-                              {foreach from=$group.attributes key=id_attribute item=group_attribute}
-                                <li>
-                                  <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
-                                  <span>{$group_attribute.name}</span>
-                                </li>
-                              {/foreach}
-                            </ul>
-                          {/if}
-                        </div>
-                      {/foreach}
-                      {block name="product_refresh"}
-                        <input type="submit" value="{l s='Refresh'}" />
-                      {/block}
+                {block name="product_variants"}
+                  <div class="product-variants">
+                    {foreach from=$groups key=id_attribute_group item=group}
+                      <div>
+                        <label for="group_{$id_attribute_group}">{$group.name}</label>
+                        {if $group.group_type == 'select'}
+                          <select name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
+                            {foreach from=$group.attributes key=id_attribute item=group_attribute}
+                              <option value="{$id_attribute}" title="{$group_attribute.name}"{if $group_attribute.selected} selected="selected"{/if}>{$group_attribute.name}</option>
+                            {/foreach}
+                          </select>
+                        {else if $group.group_type == 'color'}
+                          <ul id="group_{$id_attribute_group}">
+                            {foreach from=$group.attributes key=id_attribute item=group_attribute}
+                              <li>
+                                <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <span style="background-color:{$group_attribute.html_color_code}">{$group_attribute.name}</span>
+                              </li>
+                            {/foreach}
+                          </ul>
+                        {else if $group.group_type == 'radio'}
+                          <ul id="group_{$id_attribute_group}">
+                            {foreach from=$group.attributes key=id_attribute item=group_attribute}
+                              <li>
+                                <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <span>{$group_attribute.name}</span>
+                              </li>
+                            {/foreach}
+                          </ul>
+                        {/if}
+                      </div>
+                    {/foreach}
+                    {block name="product_refresh"}
+                      <input type="submit" value="{l s='Refresh'}" />
                     {/block}
                   </div>
                 {/block}
