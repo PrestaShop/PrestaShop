@@ -73,7 +73,7 @@ class Cart extends CartCore
     * date: 2015-07-13 15:56:34
     * version: 1
     */
-    public static function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
         $result = Hook::exec('ppbsDeleteCartProduct', array(
                 'id_product' => $id_product,
