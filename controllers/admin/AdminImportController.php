@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 @ini_set('max_execution_time', 0);
 /** No max line limit since the lines can be more than 4096. Performance impact is not significant. */
@@ -333,6 +333,7 @@ class AdminImportControllerCore extends AdminController
                     'firstname' => array('label' => $this->l('First Name *')),
                     'newsletter' => array('label' => $this->l('Newsletter (0/1)')),
                     'optin' => array('label' => $this->l('Opt-in (0/1)')),
+                    'date_add' => array('label' => $this->l('Registration date (yyyy-mm-dd)')),
                     'group' => array('label' => $this->l('Groups (x,y,z...)')),
                     'id_default_group' => array('label' => $this->l('Default group ID')),
                     'id_shop' => array(
@@ -665,7 +666,7 @@ class AdminImportControllerCore extends AdminController
             $_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
         }
 
-        die(Tools::jsonEncode($_FILES));
+        die(json_encode($_FILES));
     }
 
     public function renderView()
@@ -2465,6 +2466,7 @@ class AdminImportControllerCore extends AdminController
             }
 
             $customer_exist = false;
+            $autodate = true;
 
             if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer)) {
                 $current_id_customer = (int)$customer->id;
@@ -2512,6 +2514,10 @@ class AdminImportControllerCore extends AdminController
                 }
             } elseif (empty($info['group']) && isset($customer->id) && $customer->id) {
                 $customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
+            }
+
+            if (isset($info['date_add']) && !empty($info['date_add'])) {
+                $autodate = false;
             }
 
             AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
@@ -2575,7 +2581,7 @@ class AdminImportControllerCore extends AdminController
                                 $customer->id = (int)$current_id_customer;
                                 $res &= $customer->update();
                             } else {
-                                $res &= $customer->add();
+                                $res &= $customer->add($autodate);
                                 if (isset($addresses)) {
                                     foreach ($addresses as $address) {
                                         $address['id_customer'] = $customer->id;
@@ -2595,7 +2601,7 @@ class AdminImportControllerCore extends AdminController
                             $customer->id = (int)$current_id_customer;
                             $res &= $customer->update();
                         } else {
-                            $res &= $customer->add();
+                            $res &= $customer->add($autodate);
                             if (isset($addresses)) {
                                 foreach ($addresses as $address) {
                                     $address['id_customer'] = $customer->id;

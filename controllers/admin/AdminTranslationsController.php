@@ -1,28 +1,30 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -179,8 +181,7 @@ class AdminTranslationsControllerCore extends AdminController
         $file_name = $this->link_lang_pack.'?version='._PS_VERSION_;
         $array_stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 8)));
         if ($lang_packs = Tools::file_get_contents($file_name, false, $array_stream_context)) {
-            // Notice : for php < 5.2 compatibility, Tools::jsonDecode. The second parameter to true will set us
-            if ($lang_packs != '' && $lang_packs = Tools::jsonDecode($lang_packs, true)) {
+            if ($lang_packs != '' && $lang_packs = json_decode($lang_packs, true)) {
                 foreach ($lang_packs as $key => $lang_pack) {
                     if (!Language::isInstalled($lang_pack['iso_code'])) {
                         $packs_to_install[$key] = $lang_pack;
@@ -722,6 +723,7 @@ class AdminTranslationsControllerCore extends AdminController
             $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(array('.tar.gz', '.gzip'), '', $filename);
+
             if (Validate::isLangIsoCode($iso_code)) {
                 $themes_selected = Tools::getValue('theme', array(self::DEFAULT_THEME_NAME));
                 $files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
@@ -791,6 +793,13 @@ class AdminTranslationsControllerCore extends AdminController
                                 }
                             }
                         }
+
+                        //fetch cldr datas for the new imported locale
+                        $languageCode = explode('-', Language::getLanguageCodeByIso($iso_code));
+                        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                        $cldrUpdate->fetchLocale($languageCode[0].'-'.strtoupper($languageCode[1]));
+
+
                         $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
                 }
@@ -886,6 +895,11 @@ class AdminTranslationsControllerCore extends AdminController
                             if (!unlink($file)) {
                                 $this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
                             }
+
+                            //fetch cldr datas for the new imported locale
+                            $languageCode = explode('-', Language::getLanguageCodeByIso($arr_import_lang[0]));
+                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+                            $cldrUpdate->fetchLocale($languageCode[0].'-'.Tools::strtoupper($languageCode[1]));
 
                             $this->redirect(false, (isset($conf) ? $conf : '15'));
                         }

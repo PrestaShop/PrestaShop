@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 	PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2015 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -136,10 +136,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     {
         $query = new DbQuery();
         $query->select('
-			SUM(price_with_order_discount_te) as base_te,
-			tax_rate,
-			SUM(tax_value_with_order_discount) as total_tax_value
-		');
+            SUM(price_with_order_discount_te) as base_te,
+            tax_rate,
+            SUM(tax_value_with_order_discount) as total_tax_value
+        ');
         $query->from('supply_order_detail');
         $query->where('id_supply_order = '.(int)$this->supply_order->id);
         $query->groupBy('tax_rate');

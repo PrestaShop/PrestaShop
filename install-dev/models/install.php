@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 class InstallModelInstall extends InstallAbstractModel
 {
@@ -320,6 +320,7 @@ class InstallModelInstall extends InstallAbstractModel
 
         $languages_available = $this->language->getIsoList();
         $languages = array();
+
         foreach ($languages_list as $iso) {
             if (!in_array($iso, $languages_available)) {
                 continue;
@@ -341,14 +342,25 @@ class InstallModelInstall extends InstallAbstractModel
             if (InstallSession::getInstance()->safe_mode) {
                 Language::checkAndAddLanguage($iso, false, true, $params_lang);
             } else {
-                Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
+                if (file_exists(_PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip') == false) {
+                    $language = Language::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+
+                    if ($language == false) {
+                        throw new PrestashopInstallerException($this->language->l('Cannot download language pack "%s"', $iso));
+                    }
+                }
+
+                Language::installLanguagePack($iso, $params_lang, $errors);
             }
 
             Language::loadLanguages();
+
             Tools::clearCache();
+
             if (!$id_lang = Language::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
             }
+
             $languages[$id_lang] = $iso;
 
             // Copy language flag
@@ -459,11 +471,6 @@ class InstallModelInstall extends InstallAbstractModel
 
         Context::getContext()->shop = new Shop(1);
         Configuration::loadConfiguration();
-
-        // use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
-        if (InstallSession::getInstance()->safe_mode) {
-            Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
-        }
 
         $id_country = (int)Country::getByIso($data['shop_country']);
 
@@ -692,13 +699,12 @@ class InstallModelInstall extends InstallAbstractModel
     {
         $addons_modules = $module ? array($module) : $this->getAddonsModulesList();
         $modules = array();
-        if (!InstallSession::getInstance()->safe_mode) {
-            foreach ($addons_modules as $addons_module) {
-                if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
-                    if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
-                        $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
-                        unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
-                    }
+
+        foreach ($addons_modules as $addons_module) {
+            if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module'])))) {
+                if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_)) {
+                    $modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
+                    unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
                 }
             }
         }

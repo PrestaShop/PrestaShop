@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
 	<h3>
@@ -65,17 +65,20 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('.fancybox-quick-view').fancybox({
-			type: 'ajax',
-			autoDimensions: false,
-			autoSize: false,
-			width: 600,
-			height: 'auto',
-			helpers: {
-				overlay: {
-					locked: false
-				}
-			}
-		});
+		$('.fancybox-quick-view').each(function() {
+            $(this).fancybox({
+                type: 'ajax',
+                autoDimensions: false,
+                autoSize: false,
+                width: 600,
+                height: 'auto',
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                },
+                href: $(this).attr('href')+'&admin_list_from_source='+getControllerActionMap('read-more')
+            });
+        });
 	});
 </script>

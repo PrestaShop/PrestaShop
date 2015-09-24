@@ -1,28 +1,30 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2015 PrestaShop SA
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
 class InstallControllerHttpProcess extends InstallControllerHttp
 {
@@ -107,9 +109,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             if (Tools::getValue('restart')) {
                 $this->session->process_validated = array();
                 $this->session->database_clear = true;
-                if (Tools::getSafeModeStatus()) {
-                    $this->session->safe_mode = true;
-                }
             } elseif (!Tools::getValue('submitNext')) {
                 $this->session->step = 'configure';
                 $this->session->last_step = 'configure';
@@ -230,7 +229,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         $this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
         $this->ajaxJsonAnswer(true);
     }
-    
+
     /**
      * PROCESS : installModulesAddons
      * Install modules from addons
@@ -264,7 +263,26 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
+
+        $this->installCldrDatas();
+
         $this->ajaxJsonAnswer(true);
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+
+        //get each defined languages and fetch cldr datas
+        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $language_code = explode('-', $lang['language_code']);
+            $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
+        }
     }
 
     /**
@@ -331,7 +349,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
             }
         }
         $this->process_steps[] = $install_modules;
-        
+
         $install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
         $params = array(

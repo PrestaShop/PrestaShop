@@ -18,7 +18,7 @@ class Cart extends CartCore
     protected static $_attributesLists = array();
     protected static $_customer = null;
 
-    public static function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
+    public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
     {
         $result = Hook::exec('ppbsDeleteCartProduct', array(
                 'id_product' => $id_product,
@@ -45,7 +45,7 @@ class Cart extends CartCore
             }
         } else {
             $params = Hook::exec('ppbsGetProducts', array('products'=>$products), null);
-            $params = Tools::jsonDecode($params, true);
+            $params = json_decode($params, true);
             if (isset($params['products'])) {
                 return $params['products'];
             } else {

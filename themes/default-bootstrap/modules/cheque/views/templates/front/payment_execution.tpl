@@ -17,10 +17,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2015 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 *}
 
 {capture name=path}{l s='Check payment' mod='cheque'}{/capture}
@@ -77,7 +77,7 @@
 			<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" class="button-exclusive btn btn-default">
 				<i class="icon-chevron-left"></i>{l s='Other payment methods' mod='cheque'}
 			</a>
-			<button type="submit" class="button btn btn-default button-medium">
+			<button type="submit" class="button btn btn-default button-medium" data-trigger="disabled">
 				<span>{l s='I confirm my order' mod='cheque'}<i class="icon-chevron-right right"></i></span>
 			</button>
 		</p>
