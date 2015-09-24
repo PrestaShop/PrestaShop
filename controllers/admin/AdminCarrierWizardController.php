@@ -689,7 +689,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 }
                 $add_range = true;
                 if ($range_type == Carrier::SHIPPING_METHOD_WEIGHT) {
-                    if (!RangeWeight::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key])) {
+                    if (!RangeWeight::rangeExist(null, (float)$delimiter1, (float)$range_sup[$key], $carrier->id_reference)) {
                         $range = new RangeWeight();
                     } else {
                         $range = new RangeWeight((int)$key);
@@ -698,7 +698,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 }
 
                 if ($range_type == Carrier::SHIPPING_METHOD_PRICE) {
-                    if (!RangePrice::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key])) {
+                    if (!RangePrice::rangeExist(null, (float)$delimiter1, (float)$range_sup[$key], $carrier->id_reference)) {
                         $range = new RangePrice();
                     } else {
                         $range = new RangePrice((int)$key);

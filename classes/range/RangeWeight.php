@@ -69,7 +69,7 @@ class RangeWeightCore extends ObjectModel
         $price_list = array();
         foreach ($carrier->getZones() as $zone) {
             $price_list[] = array(
-                'id_range_price' => 0,
+                'id_range_price' => null,
                 'id_range_weight' => (int)$this->id,
                 'id_carrier' => (int)$this->id_carrier,
                 'id_zone' => (int)$zone['id_zone'],
@@ -95,13 +95,17 @@ class RangeWeightCore extends ObjectModel
 			ORDER BY `delimiter1` ASC');
     }
 
-    public static function rangeExist($id_carrier, $delimiter1, $delimiter2)
+    public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT count(*)
-			FROM `'._DB_PREFIX_.'range_weight`
-			WHERE `id_carrier` = '.(int)$id_carrier.'
-			AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2`='.(float)$delimiter2);
+            SELECT count(*)
+            FROM `'._DB_PREFIX_.'range_weight` rw'.
+            (is_null($id_carrier) && $id_reference ? '
+            INNER JOIN `'._DB_PREFIX_.'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '').'
+            WHERE'.
+            ($id_carrier ? ' `id_carrier` = '.(int)$id_carrier : '').
+            (is_null($id_carrier) && $id_reference ? ' c.`id_reference` = '.(int)$id_reference : '').'
+            AND `delimiter1` = '.(float)$delimiter1.' AND `delimiter2` = '.(float)$delimiter2);
     }
 
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
