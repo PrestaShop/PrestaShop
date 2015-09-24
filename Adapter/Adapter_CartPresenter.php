@@ -71,12 +71,10 @@ class Adapter_CartPresenter
                         foreach ($byAddress as $customizations) {
                             foreach ($customizations as $customization) {
                                 $presentedCustomization = [
-                                    'quantity' => $customization['quantity'],
-                                    'fields'   => [],
-                                    'id'       => null
+                                    'quantity'              => $customization['quantity'],
+                                    'fields'                => [],
+                                    'id_customization'      => null
                                 ];
-
-                                $id = [];
 
                                 foreach ($customization['datas'] as $byType) {
                                     $field = [];
@@ -96,11 +94,11 @@ class Adapter_CartPresenter
                                                 $field['type'] = null;
                                         }
                                         $field['label'] = $data['name'];
-                                        $id[] = $data['id_customization'];
+                                        $presentedCustomization['id_customization'] = $data['id_customization'];
                                     }
                                     $presentedCustomization['fields'][] = $field;
                                 }
-                                $presentedCustomization['id'] = implode('-', $id);
+
                                 $product['customizations'][] = $presentedCustomization;
                             }
                         }
@@ -112,7 +110,7 @@ class Adapter_CartPresenter
                 if (
                     $a['quantity'] > $b['quantity']
                     || count($a['fields']) > count($b['fields'])
-                    || $a['id'] > $b['id']
+                    || $a['id_customization'] > $b['id_customization']
                 ) {
                     return -1;
                 } else {
