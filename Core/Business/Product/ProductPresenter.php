@@ -118,12 +118,9 @@ class ProductPresenter
 
     private function getAddToCartURL(array $product)
     {
-        return $this->link->getPageLink(
-            'cart',
-            true,
-            null,
-            'add=1&id_product=' . $product['id_product'] . '&id_product_attribute=' . $product['id_product_attribute'],
-            false
+        return $this->link->getAddToCartURL(
+            $product['id_product'],
+            $product['id_product_attribute']
         );
     }
 
