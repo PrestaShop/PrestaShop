@@ -9,7 +9,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-{* StarterTheme: favicon.ico and apple icons *}
+<link rel="icon" type="image/vnd.microsoft.icon" href="{$shop.favicon}?{$shop.favicon_update_time}" />
+<link rel="shortcut icon" type="image/x-icon" href="{$shop.favicon}?{$shop.favicon_update_time}" />
 
 {if isset($css_files)}
   {foreach from=$css_files key=css_uri item=media}
