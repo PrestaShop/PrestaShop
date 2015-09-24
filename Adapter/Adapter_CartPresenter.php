@@ -25,7 +25,7 @@ class Adapter_CartPresenter
         return Configuration::get('PS_TAX_DISPLAY');
     }
 
-    private function getAddToCartURL(array $product)
+    private function getRemoveFromCartURL(array $product)
     {
         return $this->link->getPageLink(
             'cart',
@@ -48,7 +48,7 @@ class Adapter_CartPresenter
         $product['id_product_attribute'] = $rawProduct['id_product_attribute'];
         $product['id_product'] = $rawProduct['id_product'];
 
-        $product['remove_from_cart_url'] = $this->getAddToCartURL($rawProduct);
+        $product['remove_from_cart_url'] = $this->getRemoveFromCartURL($rawProduct);
 
         $product['quantity'] = $rawProduct['quantity'];
 
