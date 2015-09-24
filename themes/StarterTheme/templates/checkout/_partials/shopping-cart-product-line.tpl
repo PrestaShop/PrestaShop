@@ -8,6 +8,7 @@
             {foreach from=$product.customizations item="customization"}
                 <li>
                     <span class="product-quantity">{$customization.quantity}</span>
+                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
                     <ul>
                         {foreach from=$customization.fields item="field"}
                             <li>
