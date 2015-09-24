@@ -299,7 +299,7 @@ class OrderOpcControllerCore extends ParentOrderController
                                 $this->context->smarty->assign('address_list', array());
                             }
                             $this->context->smarty->assign('opc', true);
-                            $this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
+                            $this->setTemplate('checkout/cart.tpl');
                             $this->display();
                             $this->ajaxDie();
                             break;
@@ -431,7 +431,7 @@ class OrderOpcControllerCore extends ParentOrderController
             $this->addJS(_THEME_JS_DIR_ . 'advanced-payment-api.js');
             $this->setTemplate(_PS_THEME_DIR_ . 'order-opc-advanced.tpl');
         } else {
-            $this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
+            $this->setTemplate('checkout/opc.tpl');
         }
     }
 
