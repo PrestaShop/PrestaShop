@@ -25,17 +25,6 @@ class Adapter_CartPresenter
         return Configuration::get('PS_TAX_DISPLAY');
     }
 
-    private function getRemoveFromCartURL(array $product)
-    {
-        return $this->link->getPageLink(
-            'cart',
-            true,
-            null,
-            'delete=1&id_product=' . $product['id_product'] . '&id_product_attribute=' . $product['id_product_attribute'],
-            false
-        );
-    }
-
     protected function presentProduct(array $rawProduct)
     {
         $product['name'] = $rawProduct['name'];
@@ -48,7 +37,10 @@ class Adapter_CartPresenter
         $product['id_product_attribute'] = $rawProduct['id_product_attribute'];
         $product['id_product'] = $rawProduct['id_product'];
 
-        $product['remove_from_cart_url'] = $this->getRemoveFromCartURL($rawProduct);
+        $product['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+            $product['id_product'],
+            $product['id_product_attribute']
+        );
 
         $product['quantity'] = $rawProduct['quantity'];
 
