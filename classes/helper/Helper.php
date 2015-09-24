@@ -81,7 +81,10 @@ class HelperCore
     {
         if ($this->override_folder) {
             if ($this->context->controller instanceof ModuleAdminController) {
-                $override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
+                if(isset($this->context->controller->module->name) && file_exists(_PS_THEME_DIR_.'modules/'.$this->context->controller->module->name.'/views/templates/admin/'.$this->override_folder.$this->base_folder.$tpl_name))
+					$override_tpl_path = _PS_THEME_DIR_.'modules/'.$this->override_folder.'views/templates/admin/'.$this->override_folder.$this->base_folder.$tpl_name;
+				else
+                    $override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
             } elseif ($this->module) {
                 $override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->override_folder.$this->base_folder.$tpl_name;
             } else {
