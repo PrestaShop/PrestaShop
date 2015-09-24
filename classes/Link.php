@@ -159,22 +159,34 @@ class LinkCore
 
     public function getRemoveFromCartURL($id_product, $id_product_attribute)
     {
+        $params = [
+            'delete' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
         return $this->getPageLink(
             'cart',
             true,
             null,
-            'delete=1&id_product=' . $id_product . '&id_product_attribute=' . $id_product_attribute,
+            $params,
             false
         );
     }
 
     public function getAddToCartURL($id_product, $id_product_attribute)
     {
+        $params = [
+            'add' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
         return $this->getPageLink(
             'cart',
             true,
             null,
-            'add=1&id_product=' . $id_product . '&id_product_attribute=' . $id_product_attribute,
+            $params,
             false
         );
     }
