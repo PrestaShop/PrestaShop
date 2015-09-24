@@ -870,7 +870,6 @@ class FrontControllerCore extends Controller
         // Hooks are voluntary out the initialize array (need those variables already assigned)
         $this->context->smarty->assign(array(
             'time'                  => time(),
-            'img_update_time'       => Configuration::get('PS_IMG_UPDATE_TIME'),
             'static_token'          => Tools::getToken(false),
             'token'                 => Tools::getToken(),
             'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
@@ -1566,6 +1565,7 @@ class FrontControllerCore extends Controller
             'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_.Configuration::get('PS_LOGO') : '',
             'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_.Configuration::get('PS_STORES_ICON') : '',
             'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_.Configuration::get('PS_FAVICON') : '',
+            'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [
                 'formatted' => AddressFormat::generateAddress($address, array(), '<br />'),
