@@ -1,5 +1,6 @@
 # Cache, temp and personal files
 
+.htaccess
 *.log
 cache/*
 download/*
