@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
 
 /**
  * Admin controller for the Product pages:
@@ -59,67 +60,83 @@ class ProductController extends AdminController
      */
     public function productCatalogAction(Request &$request, Response &$response)
     {
-        
-        // FIXME: remove this redirection to legacy and develop catalog page when needed.
-//         $this->redirectToRoute(
-//             $request,
-//             'admin_product_catalog',
-//             array(
-//                 'productOrderby' => $request->attributes->get('orderBy'),
-//                 'productOrderway' => $request->attributes->get('orderWay')
-//             ),
-//             true, // force legacy URL
-//             false // temporary
-//         );
+        // Redirect to legacy controller (FIXME: temporary behavior)
+        if ($this->shouldUseLegacyPages()) {
+            $this->redirectToRoute(
+                $request,
+                'admin_product_catalog',
+                array(
+                    // do not tranmit limit & offset: go to the first page when
+                    'productOrderby' => $request->attributes->get('orderBy'),
+                    'productOrderway' => $request->attributes->get('orderWay')
+                ),
+                true, // force legacy URL
+                false // temporary
+            );
+        }
 
         // Retrieve persisted filter parameters
-        $persistedFilterParameters = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider')->getPersistedFilterParameters('ls_products_');
-
-        // Transmit persisted filter parameters updated by posted ones variables
+        $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
+        $persistedFilterParameters = $dataProvider->getPersistedFilterParameters('ls_products_');
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
         $response->addContentData(null, $persistedFilterParameters);
 
-        // get Product list from productListAction subcall
+        // Get Product list from productListAction subcall (this will update filter params in persistence)
         $productListParams = array(
             'ls_products_limit' => $request->attributes->get('limit'),
             'ls_products_offset' => $request->attributes->get('offset'),
             'ls_products_orderBy' => $request->attributes->get('orderBy'),
             'ls_products_orderWay' => $request->attributes->get('orderWay'),
-            '_layout_mode' => 'none_html',
+            '_layout_mode' => 'none_html'
         );
         $subResponse = $this->subcall('admin_product_list', $productListParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
         $response->addContentData('product_list', $subResponse->getContent());
+        $hasCategoryFilter = $dataProvider->isCategoryFiltered();
+        $hasColumnFilter = $dataProvider->isColumnFiltered();
+        $response->addContentData('has_filter', $hasCategoryFilter | $hasColumnFilter);
+        $response->addContentData('has_column_filter', $hasColumnFilter);
 
         // URL action form params
         $formParams = array(
             'limit' => $request->attributes->get('limit'),
-            'offset' => $request->attributes->get('offset'),
+            // No offset: filter & bulk action will post form and want to redirect to first page.
+            //'offset' => $request->attributes->get('offset'),
             'orderBy' => $request->attributes->get('orderBy'),
             'orderWay' => $request->attributes->get('orderWay')
         );
         $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', $formParams));
 
         // Alternative layout for empty list
-        $totalProductCount = $subResponse->getContentData('product_count'); // total count of SQL query (filtered)
-        if ($totalProductCount === 0) { // FIXME : do not use this count (filtered query), but a count of products without filter!
+        $totalFilteredProductCount = $subResponse->getContentData('product_count'); // total count of SQL query (filtered)
+        if (!$hasCategoryFilter && !$hasColumnFilter && $totalFilteredProductCount === 0) {
+            // no filter, total filtered gives 0, no need to query 'non filtered total' twice!
             $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
         } else {
-            $response->addContentData('product_count', $totalProductCount);
+            $totalProductCount = $dataProvider->countAllProducts();
+            if ($totalProductCount === 0) {
+                // total count == 0 too.
+                $response->setTemplate('Core/Controller/Product/productCatalogEmpty.tpl');
+            } else {
+                $response->addContentData('product_count_filtered', $totalFilteredProductCount);
+                $response->addContentData('product_count', $totalProductCount);
 
-            // Navigator
-            $navigator = $this->fetchNavigator($request, $totalProductCount);
-            $response->addContentData('navigator', $navigator);
+                // Navigator
+                $navigator = $this->fetchNavigator($request, $totalFilteredProductCount);
+                $response->addContentData('navigator', $navigator);
 
-            // Category tree
-            $formFactory = new FormFactory();
-            // FIXME: ajouter la selection par defaut, provenant de ls_products_category_filter OU
-            $form = $formFactory->create(new ChoiceCategorysTreeType('##Categories', \Category::getNestedCategories(), false));
-            $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
-            $response->addContentData(
-                'categories',
-                $engine->view->render('Core/Controller/Product/categoriesTreeSelector.html.twig', array('form' => $form->createView()))
-            );
-            $response->addJs(_PS_JS_DIR_.'Core/Admin/Categories.js');
+                // Category tree
+                $formFactory = new FormFactory();
+                $form = $formFactory->create(new ChoiceCategorysTreeType('categories', \Category::getNestedCategories(), false));
+                if (isset($persistedFilterParameters['ls_products_filter_category'])) {
+                    $form->setData(array('tree' => array(0 => $persistedFilterParameters['ls_products_filter_category'])));
+                }
+                $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
+                $response->addContentData(
+                    'categories',
+                    $engine->view->render('Core/Controller/Product/categoriesTreeSelector.html.twig', array('form' => $form->createView()))
+                );
+                $response->addJs(_PS_JS_DIR_.'Core/Admin/Product.js');
+            }
         }
 
         // Add layout top-right menu actions
@@ -165,6 +182,11 @@ class ProductController extends AdminController
 
     public function productFormAction(Request &$request, Response &$response, $product)
     {
+        // Redirect to legacy controller (FIXME: temporary behavior)
+        if ($this->shouldUseLegacyPages()) {
+            // TODO: by xavier
+        }
+
         $formFactory = new FormFactory();
         $builder = $formFactory->createBuilder();
 
@@ -184,5 +206,18 @@ class ProductController extends AdminController
         $response->setDisplayType('add');
 
         $response->addContentData('form', $form->createView());
+    }
+
+    /**
+     * Use it internally to know if we need to redirect to legacy Controllers.
+     *
+     * FIXME: This is a temporary behavior.
+     *
+     * @return boolean True to redirect to legacy.
+     */
+    private function shouldUseLegacyPages()
+    {
+        $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
+        return $dataProvider->getTemporaryShouldUseLegacyPages();
     }
 }

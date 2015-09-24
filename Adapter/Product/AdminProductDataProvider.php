@@ -55,8 +55,37 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             $prefix.'filter_column_name_category' => $legacyCookie->__get('productsproductFilter_cl!name'),
             $prefix.'filter_column_price' => $legacyCookie->__get('productsproductFilter_a!price'),
             $prefix.'filter_column_sav_quantity' => $legacyCookie->__get('productsproductFilter_sav!quantity'),
-            $prefix.'filter_column_active' => $legacyCookie->__get('productsproductFilter_active'),
+            $prefix.'filter_column_active' => $legacyCookie->__get('productsproductFilter_active')
         );
+    }
+
+    /**
+     * Is there a specific category selected to filter product?
+     *
+     * @return boolean True if a category is selected.
+     */
+    public function isCategoryFiltered()
+    {
+        $filters = $this->getPersistedFilterParameters();
+        return (isset($filters['filter_category']) && $filters['filter_category'] > 0);
+    }
+
+    /**
+     * Is there any column filter value?
+     *
+     * A filter with empty string '' is considered as not filtering, but 0 or '0' is a filter value!
+     *
+     * @return boolean True if at least one column is filtered (except categories)
+     */
+    public function isColumnFiltered()
+    {
+        $filters = $this->getPersistedFilterParameters();
+        foreach ($filters as $filterKey => $filterValue) {
+            if (strpos($filterKey, 'filter_column_') === 0 && $filterValue !== '') {
+                return true; // break at first column filter found
+            }
+        }
+        return false;
     }
 
     /**
@@ -121,16 +150,12 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     public function combinePersistentCatalogProductFilter($paramsIn = array())
     {
         $paramsOut = array();
-
         // retrieve persisted filter parameters
         $persistedParams = $this->getPersistedFilterParameters();
-
         // merge with new values
         $paramsOut = array_merge($persistedParams, (array)$paramsIn);
-
         // persist new values
         $this->persistFilterParameters($paramsOut);
-
         // return new values
         return $paramsOut;
     }
@@ -166,7 +191,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             'price_final' => '0',
             'nb_downloadable' => array('table' => 'pd', 'field' => 'nb_downloadable'),
             'sav_quantity' => array('table' => 'sav', 'field' => 'quantity', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
-            'badge_danger' => 'IF(sav.`quantity`<=0, 1, 0)'
+            'badge_danger' => array('select' => 'IF(sav.`quantity`<=0, 1, 0)', 'filtering' => 'IF(sav.`quantity`<=0, 1, 0) = %s')
         );
         $sqlTable = array(
             'p' => 'product',
@@ -178,7 +203,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             'sav' => array(
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
-                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0' // FIXME, +anomalie id_shop ?
+                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0' // FIXME, from legacy request, why these settings?
             ),
             'sa' => array(
                 'table' => 'product_shop',
@@ -203,7 +228,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             'image_shop' => array(
                 'table' => 'image_shop',
                 'join' => 'LEFT JOIN',
-                'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$idShop // FIXME: cover
+                'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$idShop
             ),
             'i' => array(
                 'table' => 'image',
@@ -219,35 +244,24 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         $sqlWhere = array(
              'AND', // opt
              1,
+//             array('OR', '2', '3'),
 //             array(
 //                 'AND', // opt
-//                 '1'
-//             ),
-//             array(
-//                 'OR',
-//                 '2',
-//                 '3'
-//             ),
-//             array(
-//                 'AND', // opt
-//                 array(
-//                     'OR',
-//                     '4',
-//                     '5'
-//                 ),
-//                 array(
-//                     '6',
-//                     '7'
-//                 )
+//                 array('OR', '4', '5'),
+//                 array('6', '7')
 //             )
         );
         foreach ($filterParams as $filterParam => $filterValue) {
-            if (!$filterValue) {
+            if (!$filterValue && $filterValue !== '0') {
                 continue;
             }
             if (strpos($filterParam, 'filter_column_') === 0) {
                 $field = substr($filterParam, 14); // 'filter_column_' takes 14 chars
-                $sqlWhere[] = $sqlSelect[$field]['table'].'.`'.$sqlSelect[$field]['field'].'` '.sprintf($sqlSelect[$field]['filtering'], $filterValue);
+                if (isset($sqlSelect[$field]['table'])) {
+                    $sqlWhere[] = $sqlSelect[$field]['table'].'.`'.$sqlSelect[$field]['field'].'` '.sprintf($sqlSelect[$field]['filtering'], $filterValue);
+                } else {
+                    $sqlWhere[] = '('.sprintf($sqlSelect[$field]['filtering'], $filterValue).')';
+                }
             } else {
                 if ($filterParam == 'filter_category') {
                     $sqlWhere[] = array(
@@ -280,6 +294,36 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     }
 
     /**
+     * Retrieve global product count (for the current shop).
+     *
+     * No filtering/limit/offset is applied to give this count.
+     *
+     * @return integer The product count on the current shop
+     */
+    public function countAllProducts()
+    {
+        $idShop = \Context::getContext()->shop->id;
+        $sqlSelect = array(
+            'id_product' => array('table' => 'p', 'field' => 'id_product')
+        );
+        $sqlTable = array(
+            'p' => 'product',
+            'sa' => array(
+                'table' => 'product_shop',
+                'join' => 'JOIN',
+                'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = '.$idShop
+            )
+        );
+
+        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable);
+        $products = \Db::getInstance()->executeS($sql, true, false);
+        $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
+        $total = $total[0]['FOUND_ROWS()'];
+
+        return $total;
+    }
+
+    /**
      * Translates new Core route parameters into their Legacy equivalent.
      *
      * @param array $coreParameters The new Core route parameters
@@ -295,5 +339,35 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             $params['id_product'] = $coreParameters['id_product'];
         }
         return $params;
+    }
+
+    /**
+     * Use it internally to know if we need to redirect to legacy Controllers.
+     *
+     * FIXME: This is a temporary behavior.
+     *
+     * @return boolean True to redirect to legacy.
+     */
+    public function getTemporaryShouldUseLegacyPages()
+    {
+        /** @var \CookieCore $legacyCookie */
+        $legacyCookie = \Context::getContext()->cookie;
+        return (isset($legacyCookie->should_use_legacy_page_for_product) && $legacyCookie->should_use_legacy_page_for_product == 1);
+    }
+
+    /**
+     * Set the temporary behavior of the new/old Product pages on Admin interface.
+     *
+     * FIXME: This is a temporary behavior.
+     *
+     * @param boolean $useLegacy True to redirect to old legacy pages for Product controller.
+     */
+    public function setTemporaryShouldUseLegacyPages($useLegacy)
+    {
+        if ($useLegacy) {
+            $legacyCookie->__set('should_use_legacy_page_for_product', 1);
+        } else {
+            $legacyCookie->__unset('should_use_legacy_page_for_product');
+        }
     }
 }

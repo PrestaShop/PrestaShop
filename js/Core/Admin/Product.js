@@ -24,7 +24,6 @@
  */
 
 $(document).ready(function() {
-	
 	// click on a radio button in the categories tree filter
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
 		if ($(this).is(':checked')) {
@@ -33,3 +32,23 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function productCategoryFilterReset(div) {
+	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').prop('checked', false);
+	$('form[name="product_catalog_list"] input[name="ls_products_filter_category"]').val('');
+	$('form[name="product_catalog_list"]').submit();
+}
+
+function productColumnFilterReset(tr) {
+	$('input:text', tr).val('');
+	$('select option:selected', tr).prop("selected", false);
+	$('form[name="product_catalog_list"]').submit();
+}
+
+function testBulkAction1(form) {
+	if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+		return false;
+	}
+	// TODO
+	console.log(form.serialize());
+}

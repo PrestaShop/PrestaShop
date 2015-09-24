@@ -71,7 +71,7 @@ abstract class AbstractAdminDataProvider
      * @throws DevelopmentErrorException if SQL elements cannot be joined.
      * @return string The SQL query ready to be executed.
      */
-    protected function compileSqlQuery(array $select, array $table, array $where, array $order, $limit = null)
+    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $order = array(), $limit = null)
     {
         $sql = array();
 
@@ -80,7 +80,11 @@ abstract class AbstractAdminDataProvider
         foreach ($select as $alias => $field) {
             $a = is_string($alias)? ' AS `'.$alias.'`' : '';
             if (is_array($field)) {
-                $s[] = ' '.$field['table'].'.`'.$field['field'].'` '.$a;
+                if (isset($field['table'])) {
+                    $s[] = ' '.$field['table'].'.`'.$field['field'].'` '.$a;
+                } elseif (isset($field['select'])) {
+                    $s[] = ' '.$field['select'].$a;
+                }
             } else {
                 $s[] = ' '.$field.$a;
             }

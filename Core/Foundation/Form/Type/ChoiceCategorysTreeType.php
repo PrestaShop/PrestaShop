@@ -98,7 +98,7 @@ class ChoiceCategorysTreeType extends AbstractType
             'label' => false,
             'choices' => $this->validList,
             'required' => false,
-            'multiple'  => $this->multiple,
+            'multiple'  => true,
             'expanded'  => true,
             'error_bubbling'  => true,
         ));
