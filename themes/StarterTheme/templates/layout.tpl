@@ -17,6 +17,10 @@
 
     {* StarterTheme: Manage columns *}
 
+    {block name="notifications"}
+      {include file="_partials/notifications.tpl"}
+    {/block}
+
     {block name="content"}
       <p>Hello world! This is HTML5 Boilerplate.</p>
     {/block}
