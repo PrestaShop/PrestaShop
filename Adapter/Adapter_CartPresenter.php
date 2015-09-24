@@ -72,8 +72,12 @@ class Adapter_CartPresenter
                             foreach ($customizations as $customization) {
                                 $presentedCustomization = [
                                     'quantity' => $customization['quantity'],
-                                    'fields'   => []
+                                    'fields'   => [],
+                                    'id'       => null
                                 ];
+
+                                $id = [];
+
                                 foreach ($customization['datas'] as $byType) {
                                     $field = [];
                                     foreach ($byType as $data) {
@@ -92,15 +96,29 @@ class Adapter_CartPresenter
                                                 $field['type'] = null;
                                         }
                                         $field['label'] = $data['name'];
+                                        $id[] = $data['id_customization'];
                                     }
                                     $presentedCustomization['fields'][] = $field;
                                 }
+                                $presentedCustomization['id'] = implode('-', $id);
                                 $product['customizations'][] = $presentedCustomization;
                             }
                         }
                     }
                 }
             }
+
+            usort($product['customizations'], function (array $a, array $b) {
+                if (
+                    $a['quantity'] > $b['quantity']
+                    || count($a['fields']) > count($b['fields'])
+                    || $a['id'] > $b['id']
+                ) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
 
             return $product;
         }, $products);
@@ -111,7 +129,6 @@ class Adapter_CartPresenter
         $rawProducts = $cart->getProducts(true);
 
         $products = array_map([$this, 'presentProduct'], $rawProducts);
-
         $products = $this->addCustomizedData($products, $cart);
         $totals = [];
 
