@@ -51,7 +51,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['price_tax_exc'] = null;
         $this->product['specific_prices'] = null;
         $this->product['customizable'] = false;
-        $this->product['quantity'] = 0;
+        $this->product['quantity'] = 1;
         $this->product['allow_oosp'] = false;
         $this->product['online_only'] = false;
         $this->product['reduction'] = false;
@@ -65,9 +65,12 @@ class ProductPresenterTest extends UnitTestCase
         $translator = Phake::mock('Adapter_Translator');
         Phake::when($translator)->l(Phake::anyParameters())->thenReturn('some label');
 
+        $link = Phake::mock('Link');
+        Phake::when($link)->getAddToCartURL(Phake::anyParameters())->thenReturn('http://add-to-cart.url');
+
         $presenter = new ProductPresenter(
             Phake::mock('Adapter_ImageRetriever'),
-            Phake::mock('Link'),
+            $link,
             new PricePresenter,
             Phake::mock('Adapter_ProductColorsRetriever'),
             $translator
@@ -138,9 +141,62 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
+    public function test_cannot_add_to_cart_if_not_customized()
+    {
+        $this->product['customization_required'] = true;
+        $this->assertNotEquals(
+            'http://add-to-cart.url',
+            $this->getPresentedProduct('add_to_cart_url')
+        );
+    }
+
+    public function test_can_add_to_cart_if_customized()
+    {
+        $this->product['customization_required'] = true;
+        $this->product['customizations'] = [
+            'fields' => [
+                ['is_customized' => true, 'required' => true]
+            ]
+        ];
+        $this->assertEquals(
+            'http://add-to-cart.url',
+            $this->getPresentedProduct('add_to_cart_url')
+        );
+    }
+
+    public function test_can_add_to_cart_if_customized_all_required_fields()
+    {
+        $this->product['customization_required'] = true;
+        $this->product['customizations'] = [
+            'fields' => [
+                ['is_customized' => true, 'required' => true],
+                ['is_customized' => false, 'required' => false]
+            ]
+        ];
+        $this->assertEquals(
+            'http://add-to-cart.url',
+            $this->getPresentedProduct('add_to_cart_url')
+        );
+    }
+
     public function test_cannot_add_to_cart_from_listing_if_variants()
     {
+        $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = false;
+        $this->assertEquals(
+            null,
+            $this->getPresentedProductForListing('add_to_cart_url')
+        );
+    }
+
+    public function test_cannot_add_to_cart_from_listing_even_when_customized()
+    {
+        $this->product['customization_required'] = true;
+        $this->product['customizations'] = [
+            'fields' => [
+                ['is_customized' => true, 'required' => true]
+            ]
+        ];
         $this->assertEquals(
             null,
             $this->getPresentedProductForListing('add_to_cart_url')
@@ -149,10 +205,10 @@ class ProductPresenterTest extends UnitTestCase
 
     public function test_can_add_to_cart_from_listing_if_variants()
     {
-        $this->product['add_to_cart_url'] = 'yay';
+        $this->product['id_product_attribute'] = 42;
         $this->settings->allow_add_variant_to_cart_from_listing = true;
-        $this->assertNotEquals(
-            'yay',
+        $this->assertEquals(
+            'http://add-to-cart.url',
             $this->getPresentedProductForListing('add_to_cart_url')
         );
     }
