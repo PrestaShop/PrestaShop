@@ -66,3 +66,30 @@
         border-bottom 1px solid border-color
   #product-quantities, #product-availability
     font-weight bold
+  .product-customization
+    background-color background-color
+    padding small-padding
+    padding-top 0
+    clear both
+    textarea
+      width "calc(100% - 200px - %s)" % (2 * small-padding)
+    ul
+      label-width = 200px
+      margin 0
+      padding 0
+      list-style none
+      li
+        margin-bottom small-padding
+      img
+        border 1px solid border-color
+      label
+        font-weight bold
+        width label-width
+        display inline-block
+        vertical-align top
+      input[type=file]
+        display block
+        margin-left label-width
+      .remove-image
+        remove-symbol()
+        vertical-align top
