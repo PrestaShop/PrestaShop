@@ -157,7 +157,7 @@ class OrderControllerCore extends ParentOrderController
 
             case OrderController::STEP_SUMMARY_EMPTY_CART:
                 $this->context->smarty->assign('empty', 1);
-                $this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
+                $this->setTemplate('checkout/cart.tpl');
             break;
 
             case OrderController::STEP_ADDRESSES:
@@ -166,9 +166,9 @@ class OrderControllerCore extends ParentOrderController
                 if (Tools::getValue('multi-shipping') == 1) {
                     $this->_assignSummaryInformations();
                     $this->context->smarty->assign('product_list', $this->context->cart->getProducts());
-                    $this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping.tpl');
+                    $this->setTemplate('checkout/order-address-multishipping.tpl');
                 } else {
-                    $this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
+                    $this->setTemplate('checkout/order-addresses.tpl');
                 }
             break;
 
@@ -178,7 +178,7 @@ class OrderControllerCore extends ParentOrderController
                 }
                 $this->autoStep();
                 $this->_assignCarrier();
-                $this->setTemplate(_PS_THEME_DIR_.'order-carrier.tpl');
+                $this->setTemplate('checkout/order-shipping.tpl');
             break;
 
             case OrderController::STEP_PAYMENT:
@@ -233,12 +233,12 @@ class OrderControllerCore extends ParentOrderController
 
                 // assign some informations to display cart
                 $this->_assignSummaryInformations();
-                $this->setTemplate(_PS_THEME_DIR_.'order-payment.tpl');
+                $this->setTemplate('checkout/order-payment.tpl');
             break;
 
             default:
                 $this->_assignSummaryInformations();
-                $this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
+                $this->setTemplate('checkout/cart.tpl');
             break;
         }
     }
