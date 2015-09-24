@@ -105,8 +105,17 @@ class ProductPresenter
     ) {
         $can_add_to_cart = $this->shouldShowPrice($settings, $product);
 
-        if (($product['customizable'] == 2 || !empty($product['customization_required'])) && !isset($product['is_already_customized']) || (isset($product['is_already_customized']) && !$product['is_already_customized'])) {
+        if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $can_add_to_cart = false;
+
+            if (isset($product['customizations'])) {
+                $can_add_to_cart = true;
+                foreach ($product['customizations']['fields'] as $field) {
+                    if ($field['required'] && !$field['is_customized']) {
+                        $can_add_to_cart = false;
+                    }
+                }
+            }
         }
 
         if ($product['quantity'] <= 0 && !$product['allow_oosp']) {
@@ -338,6 +347,10 @@ class ProductPresenter
         );
 
         if ($product['id_product_attribute'] != 0 && !$settings->allow_add_variant_to_cart_from_listing) {
+            $presentedProduct['add_to_cart_url'] = null;
+        }
+
+        if ($product['customizable'] == 2 || !empty($product['customization_required'])) {
             $presentedProduct['add_to_cart_url'] = null;
         }
 

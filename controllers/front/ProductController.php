@@ -768,28 +768,91 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
-        if ($product_full['customizable']) {
-            $product_full['is_already_customized'] = true;
-            $customized_data = array();
-            $product_customization = $this->context->cart->getProductCustomization($product['id_product'], null, true);
-
-            foreach ($product_customization as $customization) {
-                $customized_data[$product['id_product'].'_'.$customization['index']] = $customization;
-            }
-
-            foreach ($this->product->getCustomizationFields($this->context->language->id) as $custom_field) {
-                if ($custom_field['required'] && !isset($customized_data[$product['id_product'].'_'.$custom_field['id_customization_field']])) {
-                    $product_full['is_already_customized'] = false;
-                }
-            }
-        }
+        $product_full = $this->addProductCustomizationData($product_full);
 
         $presenter = $this->getProductPresenter();
 
-        return $presenter->presentForListing(
+        return $presenter->present(
             $this->getProductPresentationSettings(),
             $product_full,
             $this->context->language
         );
+    }
+
+    protected function addProductCustomizationData(array $product_full)
+    {
+        if ($product_full['customizable']) {
+            $customizationData = [
+                'fields' => [],
+            ];
+
+            $customized_data = [];
+
+            $already_customized = $this->context->cart->getProductCustomization(
+                $product_full['id_product'],
+                null,
+                true
+            );
+
+            foreach ($already_customized as $customization) {
+                $customized_data[$customization['index']] = $customization;
+            }
+
+            foreach ($this->product->getCustomizationFields($this->context->language->id) as $customization_field) {
+                // 'id_customization_field' maps to what is called 'index'
+                // in what Product::getProductCustomization() returns
+                $key = $customization_field['id_customization_field'];
+
+                $field['label'] = $customization_field['name'];
+                $field['id_customization_field'] = $customization_field['id_customization_field'];
+                $field['required'] = $customization_field['required'];
+
+                switch ($customization_field['type']) {
+                    case Product::CUSTOMIZE_FILE:
+                        $field['type'] = 'image';
+                        $field['image'] = null;
+                        $field['input_name'] = 'file' . $customization_field['id_customization_field'];
+                        break;
+                    case Product::CUSTOMIZE_TEXTFIELD:
+                        $field['type'] = 'text';
+                        $field['text'] = '';
+                        $field['input_name'] = 'textField' . $customization_field['id_customization_field'];
+                        break;
+                    default:
+                        $field['type'] = null;
+                }
+
+                if (array_key_exists($key, $customized_data)) {
+                    $data = $customized_data[$key];
+                    $field['is_customized'] = true;
+                    switch ($customization_field['type']) {
+                        case Product::CUSTOMIZE_FILE:
+                            $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+                            $field['image'] = $imageRetriever->getCustomizationImage(
+                                $data['value']
+                            );
+                            $field['remove_image_url'] = $this->context->link->getProductDeletePictureLink(
+                                $product_full,
+                                $customization_field['id_customization_field']
+                            );
+                            break;
+                        case Product::CUSTOMIZE_TEXTFIELD:
+                            $field['text'] = $data['value'];
+                            break;
+                    }
+                } else {
+                    $field['is_customized'] = false;
+                }
+
+                $customizationData['fields'][] = $field;
+            }
+            $product_full['customizations'] = $customizationData;
+            $product_full['is_customizable'] = true;
+        } else {
+            $product_full['customizations'] = [];
+            $product_full['is_customizable'] = false;
+        }
+
+        return $product_full;
     }
 }

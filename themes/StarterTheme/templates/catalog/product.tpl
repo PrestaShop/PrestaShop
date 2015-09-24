@@ -279,6 +279,33 @@
             {/if}
           {/block}
 
+          {block name="product_customization"}
+            {if $product.is_customizable}
+              <section class="product-customization">
+                <h3>{l s='Product customization'}</h3>
+                <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data">
+                  <ul>
+                    {foreach from=$product.customizations.fields item="field"}
+                      <li>
+                        <label>{$field.label}</label>
+                        {if $field.type == 'text'}
+                          <textarea {if $field.required} required {/if} name="{$field.input_name}">{$field.text}</textarea>
+                        {elseif $field.type == 'image'}
+                          {if $field.is_customized}
+                            <img src="{$field.image.small.url}">
+                            <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image'}</a>
+                          {/if}
+                          <input {if $field.required} required {/if} type="file" name="{$field.input_name}">
+                        {/if}
+                      </li>
+                    {/foreach}
+                  </ul>
+                  <button name="submitCustomizedDatas">{l s='Save Customization'}</button>
+                </form>
+              </section>
+            {/if}
+          {/block}
+
           {block name="product_features"}
             {if $product.features}
               <section class="product-features">
@@ -335,84 +362,6 @@
                     </a>
                   </div>
                 {/foreach}
-              </section>
-            {/if}
-          {/block}
-
-          {block name="product_customization"}
-            {if $product.customizable}
-              <section class="product-customization">
-                <h3>{l s='Product customization'}</h3>
-                <form method="post" action="{$customizationFormTarget}" enctype="multipart/form-data">
-                  <p>
-                    {l s='After saving your customized product, remember to add it to your cart.'}
-                    {if $product.uploadable_files}
-                      <br />{l s='Allowed file formats are: GIF, JPG, PNG'}
-                    {/if}
-                  </p>
-                  {if $product.uploadable_files}
-                    <div>
-                      <h5>{l s='Pictures'}</h5>
-                      <ul id="uploadable_files">
-                        {foreach from=$customizationFields item='field' name='customizationFields'}
-                          {if $field.type == 0}
-                            <li class="customizationUploadLine{if $field.required} required{/if}">
-                              {if isset($pictures.{$field.key})}
-                                <div class="customizationUploadBrowse">
-                                  <img src="{$urls.pic_url}{$pictures.{$field.key}}_small" alt="" />
-                                    <a href="{$link->getProductDeletePictureLink($product, $field.id_customization_field)}" title="{l s='Delete'}" >X</a>
-                                </div>
-                              {/if}
-                              <div class="customizationUploadBrowse">
-                                <label for="img{$smarty.foreach.customizationFields.index}" class="customizationUploadBrowseDescription">
-                                  {if !empty($field.name)}
-                                    {$field.name}
-                                  {else}
-                                    {l s='Please select an image file from your computer'}
-                                  {/if}
-                                  {if $field.required}<sup>*</sup>{/if}
-                                </label>
-                                <input type="file" name="file{$field.id_customization_field}" id="img{$smarty.foreach.customizationFields.index}" class="customization_block_input {if isset($pictures.{$field.key})}filled{/if}" />
-                              </div>
-                            </li>
-                          {/if}
-                        {/foreach}
-                      </ul>
-                    </div>
-                  {/if}
-                  {if $product.text_fields}
-                    <div class="customizableProductsText">
-                      <h5>{l s='Text'}</h5>
-                      <ul id="text_fields">
-                      {foreach from=$customizationFields item='field' name='customizationFields'}
-                        {if $field.type == 1}
-                          <li class="customizationUploadLine{if $field.required} required{/if}">
-                            <label for="textField{$smarty.foreach.customizationFields.index}">
-                              {if !empty($field.name)}
-                                {$field.name}
-                              {/if}
-                              {if $field.required}<sup>*</sup>{/if}
-                            </label>
-                            <textarea name="textField{$field.id_customization_field}" class="customization_block_input" id="textField{$smarty.foreach.customizationFields.index}" rows="3" cols="20">{strip}
-                              {if isset($textFields.{$field.key})}
-                                {$textFields.{$field.key}|stripslashes}
-                              {/if}
-                            {/strip}</textarea>
-                          </li>
-                        {/if}
-                      {/foreach}
-                      </ul>
-                    </div>
-                  {/if}
-                  <p id="customizedDatas">
-                    <input type="hidden" name="quantityBackup" id="quantityBackup" value="" />
-                    <input type="hidden" name="submitCustomizedDatas" value="1" />
-                    <button name="saveCustomization">
-                      <span>{l s='Save'}</span>
-                    </button>
-                  </p>
-                </form>
-                <p class="clear required"><sup>*</sup> {l s='required fields'}</p>
               </section>
             {/if}
           {/block}
