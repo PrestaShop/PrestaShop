@@ -157,13 +157,20 @@ class LinkCore
         return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
     }
 
-    public function getRemoveFromCartURL($id_product, $id_product_attribute)
-    {
+    public function getRemoveFromCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
         $params = [
             'delete' => 1,
             'id_product' => $id_product,
             'id_product_attribute' => $id_product_attribute
         ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
 
         return $this->getPageLink(
             'cart',
