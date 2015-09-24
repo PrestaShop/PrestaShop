@@ -389,6 +389,17 @@ class LinkCore
      */
     public function getAdminLink($controller, $with_token = true)
     {
+        global $container;
+        switch ($controller) {
+            case 'AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                $dataProvider = $container->make('CoreAdapter:Product\\AdminProductDataProvider');
+                $redirectLegacy = $dataProvider->getTemporaryShouldUseLegacyPages();
+                if (!$redirectLegacy) {
+                    return $container->make('Routing')->generateUrl('admin_product_catalog');
+                }
+                break;
+        }
         $id_lang = Context::getContext()->language->id;
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 

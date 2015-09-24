@@ -44,3 +44,13 @@ admin_product_form:
     options:
         legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         legacy_param_mapper_method: mapLegacyParametersProductForm
+
+admin_product_use_legacy_setter:
+    path:     /uselegacy/{use}
+    methods:  [GET, POST]
+    defaults:
+        _legacy_path: AdminProducts
+        _legacy_force: false
+        _controller: 'Admin\ProductController::shouldUseLegacyPagesAction'
+    requirements:
+        use: 0|1

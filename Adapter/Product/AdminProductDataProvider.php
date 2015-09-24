@@ -364,6 +364,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      */
     public function setTemporaryShouldUseLegacyPages($useLegacy)
     {
+        /** @var \CookieCore $legacyCookie */
+        $legacyCookie = \Context::getContext()->cookie;
         if ($useLegacy) {
             $legacyCookie->__set('should_use_legacy_page_for_product', 1);
         } else {

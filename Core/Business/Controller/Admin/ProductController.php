@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
  * Admin controller for the Product pages:
@@ -142,15 +143,16 @@ class ProductController extends AdminController
         // Add layout top-right menu actions
         $response->setHeaderToolbarBtn(
             array(
+                // TODO: conditionner l'affichage de ce switch si on est en mode 'migré -> 1.7' et encore en 1.7.0!
                 'legacy' => array(
-                    'href' => '#', // FIXME
-                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('##No! Give me the old page!', array(), 'AdminProducts'),
+                    'href' => $this->generateUrl('admin_product_use_legacy_setter', array('use' => 1), false),
+                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('Switch back to old Page', array(), 'AdminProducts'),
                     'icon' => 'process-icon-toggle-on',
-                    'help' => '##The new page cannot fit your needs now? Fallback to the old one, and tell us why!'
+                    'help' => $this->container->make('CoreAdapter:Translator')->trans('The new page cannot fit your needs now? Fallback to the old one, and tell us why!', array(), 'AdminProducts')
                 ),
                 'add' => array(
                     'href' => $this->generateUrl('admin_product_form'),
-                    'desc' => '##Add euh niou product',
+                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('Add new product', array(), 'AdminProducts'),
                     'icon' => 'process-icon-new'
                 ),
             )
@@ -219,5 +221,23 @@ class ProductController extends AdminController
     {
         $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
         return $dataProvider->getTemporaryShouldUseLegacyPages();
+    }
+
+    public function shouldUseLegacyPagesAction(Request &$request, Response &$response)
+    {
+        $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
+        $useLegacy = $request->attributes->get('use');
+        $dataProvider->setTemporaryShouldUseLegacyPages($useLegacy == 1);
+        $this->redirectToRoute(
+            $request,
+            'admin_product_catalog',
+            array(
+                // do not tranmit limit & offset: go to the first page when
+                'productOrderby' => $request->attributes->get('orderBy'),
+                'productOrderway' => $request->attributes->get('orderWay')
+            ),
+            $useLegacy, // force legacy URL
+            false // temporary
+        );
     }
 }

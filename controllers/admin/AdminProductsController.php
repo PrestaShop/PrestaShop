@@ -2688,14 +2688,22 @@ class AdminProductsControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $redirectLegacy = true;
+            // New architecture modification: temporary behavior to switch between old and new controllers.
             global $container;
-            // FIXME: en fonction d'une option, a aller chercher
+            $dataProvider = $container->make('CoreAdapter:Product\\AdminProductDataProvider');
+            $redirectLegacy = $dataProvider->getTemporaryShouldUseLegacyPages();
+
+            $this->page_header_toolbar_btn['legacy'] = array(
+                'href' => $container->make('Routing')->generateUrl('admin_product_use_legacy_setter', array('use' => 0), false),
+                'desc' => $this->l('Switch again to new Page', null, null, false),
+                'icon' => 'process-icon-toggle-off'
+            );
+
             $this->page_header_toolbar_btn['new_product'] = array(
-                    'href' => $container->make('Routing')->generateUrl('admin_product_form', array('id_product' => 'new'), $redirectLegacy),
-                    'desc' => $this->l('Add new product', null, null, false),
-                    'icon' => 'process-icon-new'
-                );
+                'href' => $container->make('Routing')->generateUrl('admin_product_form', array('id_product' => 'new'), $redirectLegacy),
+                'desc' => $this->l('Add new product', null, null, false),
+                'icon' => 'process-icon-new'
+            );
         }
         if ($this->display == 'edit') {
             if (($product = $this->loadObject(true)) && $product->isAssociatedToShop()) {
