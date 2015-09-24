@@ -55,6 +55,15 @@ class FrontControllerCore extends Controller
     /** @var array Controller errors */
     public $errors = array();
 
+    /** @var array Controller warning notifications */
+    public $warning = array();
+
+    /** @var array Controller success notifications */
+    public $success = array();
+
+    /** @var array Controller info notifications */
+    public $info = array();
+
     /** @var string Language ISO code */
     public $iso;
 
@@ -603,12 +612,19 @@ class FrontControllerCore extends Controller
             }
         }
 
+        $notifications = [
+            'error' => $this->errors,
+            'warning' => $this->warning,
+            'success' => $this->success,
+            'info' => $this->info,
+        ];
+
         $this->context->smarty->assign(array(
             'layout'         => $this->getLayout(),
             'css_files'      => $this->css_files,
             'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
-            'errors'         => $this->errors,
+            'notifications'  => $notifications,
             'display_header' => $this->display_header,
             'display_footer' => $this->display_footer,
         ));
