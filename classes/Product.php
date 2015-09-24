@@ -616,11 +616,11 @@ class ProductCore extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS('
-			SELECT cp.`id_product`, cp.`position`, cp.`id_category`
-			FROM `'._DB_PREFIX_.'category_product` cp
-			WHERE cp.`id_category` = '.(int)Tools::getValue('id_category', 1).'
-			ORDER BY cp.`position` ASC'
-        )) {
+            SELECT cp.`id_product`, cp.`position`, cp.`id_category`
+            FROM `'._DB_PREFIX_.'category_product` cp
+            WHERE cp.`id_category` = '.(int)Tools::getValue('id_category', 1).'
+            ORDER BY cp.`position` ASC')
+            ) {
             return false;
         }
 
@@ -636,19 +636,29 @@ class ProductCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
-			WHERE `position`
-			'.($way
+        $result = (Db::getInstance()->execute('
+            UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = cp.`id_product`)
+            '.Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position`= `position` '.($way ? '- 1' : '+ 1').',
+            p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`position`
+            '.($way
                 ? '> '.(int)$moved_product['position'].' AND `position` <= '.(int)$position
                 : '< '.(int)$moved_product['position'].' AND `position` >= '.(int)$position).'
-			AND `id_category`='.(int)$moved_product['id_category'])
+            AND `id_category`='.(int)$moved_product['id_category'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'category_product`
-			SET `position` = '.(int)$position.'
-			WHERE `id_product` = '.(int)$moved_product['id_product'].'
-			AND `id_category`='.(int)$moved_product['id_category']));
+            UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = cp.`id_product`)
+            '.Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position` = '.(int)$position.',
+            p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`id_product` = '.(int)$moved_product['id_product'].'
+            AND cp.`id_category`='.(int)$moved_product['id_category'])
+
+        );
+        Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this));
+        return $result;
     }
 
     /*
@@ -663,24 +673,47 @@ class ProductCore extends ObjectModel
 
         if (!(int)$position) {
             $result = Db::getInstance()->executeS('
-				SELECT `id_product`
-				FROM `'._DB_PREFIX_.'category_product`
-				WHERE `id_category` = '.(int)$id_category.'
-				ORDER BY `position`
-			');
+                SELECT `id_product`
+                FROM `'._DB_PREFIX_.'category_product`
+                WHERE `id_category` = '.(int)$id_category.'
+                ORDER BY `position`
+            ');
             $total = count($result);
 
             for ($i = 0; $i < $total; $i++) {
-                $return &= Db::getInstance()->update('category_product', array(
-                    'position' => $i,
-                ), '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']);
+                $return &= Db::getInstance()->update(
+                    'category_product',
+                    array('position' => $i),
+                    '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']
+                );
+                $return &= Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'product` p'.Shop::addSqlAssociation('product', 'p').'
+                    SET p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+                    WHERE p.`id_product` = '.(int)$result[$i]['id_product']
+                );
             }
         } else {
-            $return &= Db::getInstance()->update('category_product',
+            $result = Db::getInstance()->executeS('
+                SELECT `id_product`
+                FROM `'._DB_PREFIX_.'category_product`
+                WHERE `id_category` = '.(int)$id_category.' AND `position` > '.(int)$position.'
+                ORDER BY `position`
+            ');
+            $total = count($result);
+            $return &= Db::getInstance()->update(
+                'category_product',
                 array('position' => array('type' => 'sql', 'value' => '`position`-1')),
-                '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position);
-        }
+                '`id_category` = '.(int)$id_category.' AND `position` > '.(int)$position
+            );
 
+            for ($i = 0; $i < $total; $i++) {
+                $return &= Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'product` p'.Shop::addSqlAssociation('product', 'p').'
+                    SET p.`date_upd` = "'.date('Y-m-d H:i:s').'", product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+                    WHERE p.`id_product` = '.(int)$result[$i]['id_product']
+                );
+            }
+        }
         return $return;
     }
 
@@ -1438,7 +1471,7 @@ class ProductCore extends ObjectModel
 
     public static function updateDefaultAttribute($id_product)
     {
-        $id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+        $id_default_attribute = (int)Product::getDefaultAttribute($id_product, 0, true);
 
         $result = Db::getInstance()->update('product_shop', array(
             'cache_default_attribute' => $id_default_attribute,
@@ -2299,11 +2332,12 @@ class ProductCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-        if ($order_by == 'price') {
-            Tools::orderbyPrice($result, $order_way);
-        }
         if (!$result) {
             return false;
+        }
+
+        if ($order_by == 'price') {
+            Tools::orderbyPrice($result, $order_way);
         }
 
         $products_ids = array();
@@ -2388,6 +2422,8 @@ class ProductCore extends ObjectModel
 					ORDER BY RAND()';
 
             $result = Db::getInstance()->getRow($sql);
+
+            Db::getInstance()->execute('DROP TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions`', false);
 
             if (!$id_product = $result['id_product']) {
                 return false;
@@ -3130,9 +3166,8 @@ class ProductCore extends ObjectModel
     public function getPublicPrice($tax = true, $id_product_attribute = null, $decimals = 6,
             $divisor = null, $only_reduc = false, $usereduc = true, $quantity = 1)
     {
-        $specific_price_output = null;
         return Product::getPriceStatic((int)$this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity,
-            false, null, null, null, $specific_price_output, true, true, null, false);
+            false, null, null, null, null, true, true, null, false);
     }
 
     public function getIdProductAttributeMostExpensive()
@@ -3141,14 +3176,12 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT pa.`id_product_attribute`
 		FROM `'._DB_PREFIX_.'product_attribute` pa
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
 		WHERE pa.`id_product` = '.(int)$this->id.'
 		ORDER BY product_attribute_shop.`price` DESC');
-
-        return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
     }
 
     public function getDefaultIdProductAttribute()
@@ -3157,15 +3190,13 @@ class ProductCore extends ObjectModel
             return 0;
         }
 
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+        return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT pa.`id_product_attribute`
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product` = '.(int)$this->id.'
 			AND product_attribute_shop.default_on = 1'
         );
-
-        return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
     }
 
     public function getPriceWithoutReduct($notax = false, $id_product_attribute = false, $decimals = 6)
@@ -3472,7 +3503,7 @@ class ProductCore extends ObjectModel
      */
     public function deleteAccessories()
     {
-        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'accessory` WHERE `id_product_1` = '.(int)$this->id);
+    	return Db::getInstance()->delete('accessory', 'id_product_1 = '.(int)$this->id);
     }
 
     /**
@@ -3482,7 +3513,7 @@ class ProductCore extends ObjectModel
      */
     public function deleteFromAccessories()
     {
-        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'accessory` WHERE `id_product_2` = '.(int)$this->id);
+    	return Db::getInstance()->delete('accessory', 'id_product_2 = '.(int)$this->id);
     }
 
     /**
@@ -6077,9 +6108,18 @@ class ProductCore extends ObjectModel
         );
     }
 
-    public static function getColorsListCacheId($id_product)
+    public static function getColorsListCacheId($id_product, $full = true)
     {
-        return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
+        $cache_id = 'productlist_colors';
+        if ($id_product) {
+            $cache_id .= '|'.(int)$id_product;
+        }
+
+        if ($full) {
+            $cache_id .= '|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
+        }
+
+        return $cache_id;
     }
 
     public static function setPackStockType($id_product, $pack_stock_type)

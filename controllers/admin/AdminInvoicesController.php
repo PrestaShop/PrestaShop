@@ -62,6 +62,28 @@ class AdminInvoicesControllerCore extends AdminController
                         'size' => 6,
                         'type' => 'textLang'
                     ),
+                    'PS_INVOICE_USE_YEAR' => array(
+                        'title' => $this->l('Add current year to invoice number'),
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                    ),
+                    'PS_INVOICE_RESET' => array(
+                        'title' => $this->l('Reset Invoice progressive number at beginning of the year'),
+                        'cast' => 'intval',
+                        'type' => 'bool'
+                    ),
+                    'PS_INVOICE_YEAR_POS' => array(
+                        'title' => $this->l('Position of the year number'),
+                        'cast' => 'intval',
+                        'show' => true,
+                        'required' => false,
+                        'type' => 'radio',
+                        'validation' => 'isBool',
+                        'choices' => array(
+                            0 => $this->l('After the progressive number'),
+                            1 => $this->l('Before the progressive number')
+                        )
+                    ),
                     'PS_INVOICE_START_NUMBER' => array(
                         'title' => $this->l('Invoice number'),
                         'desc' => sprintf($this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%s).'), Order::getLastInvoiceNumber() + 1),
@@ -175,7 +197,7 @@ class AdminInvoicesControllerCore extends AdminController
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT COUNT( o.id_order ) AS nbOrders, o.current_state as id_order_state
 			FROM `'._DB_PREFIX_.'order_invoice` oi
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON oi.id_order = o.id_order
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
 			AND oi.number > 0
 			GROUP BY o.current_state

@@ -652,7 +652,7 @@ class CarrierCore extends ObjectModel
             $row['name'] = (strval($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int)$row['id_carrier'], false, null, null, $id_zone));
-            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier']).'.jpg' ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
+            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_.(int)$row['id_carrier'].'.jpg') ? _THEME_SHIP_DIR_.(int)$row['id_carrier'].'.jpg' : '';
 
             // If price is false, then the carrier is unavailable (carrier module)
             if ($row['price'] === false) {
@@ -1369,14 +1369,20 @@ class CarrierCore extends ObjectModel
         }
 
         $cart_quantity = 0;
+        $cart_weight = 0;
 
-        foreach ($cart->getProducts(false, $product->id) as $cart_product) {
+        foreach ($cart->getProducts(false, false) as $cart_product) {
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
+            if ($cart_product['weight_attribute'] > 0) { 
+                $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);            
+            } else {
+                $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);
+            }
         }
 
-        if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0) {
+        if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0 || $cart_weight > 0) {
             foreach ($carrier_list as $key => $id_carrier) {
                 $carrier = new Carrier($id_carrier);
 
@@ -1393,7 +1399,7 @@ class CarrierCore extends ObjectModel
                     unset($carrier_list[$key]);
                 }
 
-                if ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity) {
+                if ($carrier->max_weight > 0 && ($carrier->max_weight < $product->weight * $cart_quantity OR $carrier->max_weight < $cart_weight)) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($carrier_list[$key]);
                 }

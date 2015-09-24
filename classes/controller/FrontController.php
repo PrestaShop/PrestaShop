@@ -1098,7 +1098,7 @@ class FrontControllerCore extends Controller
         }
 
         // Remove the page parameter in order to get a clean URL for the pagination template
-        $current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
+        $current_url = preg_replace('/(?:(\?)|&amp;)p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
         if ($this->n != $default_products_per_page || isset($this->context->cookie->nb_item_per_page)) {
             $this->context->cookie->nb_item_per_page = $this->n;

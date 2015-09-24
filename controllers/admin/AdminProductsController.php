@@ -1142,7 +1142,7 @@ class AdminProductsControllerCore extends AdminController
 
         if (($price == '-1') && ((float)$reduction == '0')) {
             $this->errors[] = Tools::displayError('No reduction value has been submitted');
-        } elseif (strtotime($to) < strtotime($from)) {
+        }  elseif ($to != '0000-00-00 00:00:00' && strtotime($to) < strtotime($from)) {
             $this->errors[] = Tools::displayError('Invalid date range');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
@@ -2289,6 +2289,11 @@ class AdminProductsControllerCore extends AdminController
             return true;
         }
 
+        $def = ObjectModel::getDefinition($this->object);
+        if (!$this->object->isMultiShopField($field) && is_null($id_lang) && isset($def['fields'][$field])) {
+            return true;
+        }
+
         if (is_null($id_lang)) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
@@ -2340,7 +2345,7 @@ class AdminProductsControllerCore extends AdminController
 
             // Trick's
             if ($edit == 1) {
-                $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
+                $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id, false);
                 if (!$id_product_download) {
                     $id_product_download = (int)Tools::getValue('virtual_product_id');
                 }
@@ -2364,7 +2369,6 @@ class AdminProductsControllerCore extends AdminController
             $download->nb_downloadable = (int)$virtual_product_nb_downloable;
             $download->active = 1;
             $download->is_shareable = (int)$is_shareable;
-
             if ($download->save()) {
                 return true;
             }
@@ -2843,7 +2847,7 @@ class AdminProductsControllerCore extends AdminController
 
         $page = (int)Tools::getValue('page');
 
-        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
+        $this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'updateproduct&id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
         $this->tpl_form_vars['id_product'] = $id_product;
 
         // Transform configuration option 'upload_max_filesize' in octets
@@ -3221,7 +3225,7 @@ class AdminProductsControllerCore extends AdminController
         $tree = new HelperTreeCategories('associated-categories-tree', 'Associated categories');
         $tree->setTemplate('tree_associated_categories.tpl')
             ->setHeaderTemplate('tree_associated_header.tpl')
-            ->setRootCategory($root->id)
+            ->setRootCategory((int)$root->id)
             ->setUseCheckBox(true)
             ->setUseSearch(true)
             ->setSelectedCategories($categories);
