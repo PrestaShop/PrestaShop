@@ -156,6 +156,40 @@ class LinkCore
         return $url.$dispatcher->createUrl('product_rule', $id_lang, $params, $force_routes, $anchor, $id_shop);
     }
 
+    public function getRemoveFromCartURL($id_product, $id_product_attribute)
+    {
+        $params = [
+            'delete' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getAddToCartURL($id_product, $id_product_attribute)
+    {
+        $params = [
+            'add' => 1,
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
     /**
      * Create a link to a category
      *
