@@ -365,15 +365,22 @@ class AuthControllerCore extends FrontController
      */
     protected function processCustomerNewsletter(&$customer)
     {
+        $blocknewsletter = Module::isInstalled('blocknewsletter') && $module_newsletter = Module::getInstanceByName('blocknewsletter');
+        if ($blocknewsletter && $module_newsletter->active && !Tools::getValue('newsletter')) {
+            if (is_callable(array($module_newsletter, 'isNewsletterRegistered')) && $module_newsletter->isNewsletterRegistered(Tools::getValue('email')) == $module_newsletter::GUEST_REGISTERED) {
+
+                /* Force newsletter registration as customer as already registred as guest */
+                $_POST['newsletter'] = true;
+            }
+        }
+
         if (Tools::getValue('newsletter')) {
+            $customer->newsletter = true;
             $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
             $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-
-            if ($module_newsletter = Module::getInstanceByName('blocknewsletter')) {
-                /** @var Blocknewsletter $module_newsletter */
-                if ($module_newsletter->active) {
-                    $module_newsletter->confirmSubscription(Tools::getValue('email'));
-                }
+            /** @var Blocknewsletter $module_newsletter */
+            if ($blocknewsletter && $module_newsletter->active) {
+                $module_newsletter->confirmSubscription(Tools::getValue('email'));
             }
         }
     }
@@ -443,9 +450,8 @@ class AuthControllerCore extends FrontController
 
         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Tools::isSubmit('submitGuestAccount')) {
             if (!count($this->errors)) {
-                if (Tools::isSubmit('newsletter')) {
-                    $this->processCustomerNewsletter($customer);
-                }
+
+                $this->processCustomerNewsletter($customer);
 
                 $customer->firstname = Tools::ucwords($customer->firstname);
                 $customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
@@ -572,9 +578,8 @@ class AuthControllerCore extends FrontController
             if (Customer::customerExists(Tools::getValue('email'))) {
                 $this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
             }
-            if (Tools::isSubmit('newsletter')) {
-                $this->processCustomerNewsletter($customer);
-            }
+
+            $this->processCustomerNewsletter($customer);
 
             $customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
             if (!Validate::isBirthDate($customer->birthday)) {

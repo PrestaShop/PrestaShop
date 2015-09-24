@@ -788,7 +788,8 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        $definition = ObjectModel::getDefinition($this->className);
+        if (isset($this->className) && $this->className) 
+        	$definition = ObjectModel::getDefinition($this->className);
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */

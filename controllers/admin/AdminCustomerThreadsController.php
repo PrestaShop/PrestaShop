@@ -357,7 +357,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $params = array(
                         '{messages}' => Tools::nl2br(stripslashes($output)),
                         '{employee}' => $current_employee->firstname.' '.$current_employee->lastname,
-                        '{comment}' => stripslashes($_POST['message_forward'])
+                        '{comment}' => stripslashes($_POST['message_forward']),
+                        '{firstname}' => '',
+                        '{lastname}' => '',
                     );
 
                     if (Mail::Send(

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+@ini_set('max_execution_time', 0);
 /**
  * @property PrestaShopBackup $object
  */

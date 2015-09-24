@@ -723,7 +723,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                             'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
                             'id_carrier' => (int)$carrier->id,
                             'id_zone' => (int)$id_zone,
-                            'price' => isset($fee[$key]) ? (float)$fee[$key] : 0,
+                            'price' => isset($fee[$key]) ? (float)str_replace(',', '.', $fee[$key]) : 0,
                         );
                     }
                 }

@@ -117,6 +117,7 @@ class CombinationCore extends ObjectModel
 
         $this->deleteFromSupplier($this->id_product);
         Product::updateDefaultAttribute($this->id_product);
+        Tools::clearColorListCache((int)$this->id_product);
 
         return true;
     }

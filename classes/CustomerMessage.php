@@ -72,7 +72,7 @@ class CustomerMessageCore extends ObjectModel
     public static function getMessagesByOrderId($id_order, $private = true)
     {
         return Db::getInstance()->executeS('
-			SELECT ct.`id_customer`, cm.*,
+			SELECT cm.*,
 				c.`firstname` AS cfirstname,
 				c.`lastname` AS clastname,
 				e.`firstname` AS efirstname,

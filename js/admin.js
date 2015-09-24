@@ -1663,3 +1663,11 @@ function TogglePackage(detail)
     var pack = $('#pack_items_' + detail);
     pack.css('display', (pack.css('display') == 'block') ? "none" : "block");
 }
+function countDown($source, $target) {
+	var max = $source.attr("data-maxchar");
+	$target.html(max-$source.val().length);
+
+	$source.keyup(function(){
+		$target.html(max-$source.val().length);
+	});
+}

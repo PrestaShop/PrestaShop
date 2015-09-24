@@ -721,6 +721,11 @@ function updatePrice()
 		}
 	}
 
+	if (priceWithDiscountsDisplay < 0)
+	{
+		priceWithDiscountsDisplay = 0;
+	}
+
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
 	if (basePriceDisplay != priceWithDiscountsDisplay)
@@ -753,7 +758,14 @@ function updatePrice()
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
 
-	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay, currencyFormat, currencySign, currencyBlank)).trigger('change');
+	if (priceWithDiscountsDisplay > 0)
+	{
+		$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay, currencyFormat, currencySign, currencyBlank)).trigger('change');
+	}
+	else
+	{
+		$('#our_price_display').text(formatCurrency(0, currencyFormat, currencySign, currencyBlank)).trigger('change');
+	}
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through

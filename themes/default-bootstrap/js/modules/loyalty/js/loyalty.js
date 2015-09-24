@@ -27,13 +27,14 @@ $(document).ready(function() {
 	$(document).on('change', '#our_price_display', function(e){
 		updateLoyaltyView(parseInt($('#our_price_display').text()));
 	})
+	updateLoyaltyView(parseInt($('#our_price_display').text()));
 });
 
 function updateLoyaltyView(new_price) {
 	if (typeof(new_price) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
-			return;
+		return;
 
-	var points = Math.round(new_price / point_rate);
+	var points = Math.floor(new_price / point_rate);
 	var total_points = points_in_cart + points;
 	var voucher = total_points * point_value;
 

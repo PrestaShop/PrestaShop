@@ -295,12 +295,12 @@ class ContactControllerCore extends FrontController
             $orders = Order::getByReference($reference);
             if ($orders) {
                 foreach ($orders as $order) {
-                    $id_order = $order->id;
+                    $id_order = (int)$order->id;
                     break;
                 }
             }
-        } else {
-            $id_order = Tools::getValue('id_order');
+        } elseif (Order::getCartIdStatic((int)Tools::getValue('id_order'))) {
+            $id_order = (int)Tools::getValue('id_order');
         }
         return (int)$id_order;
     }

@@ -493,6 +493,7 @@
 				<table class="table">
 					<thead>
 					<tr>
+						<th><span class="title_box">{l s='ID'}</span></th>
 						<th><span class="title_box">{l s='Date'}</span></th>
 						<th><span class="title_box">{l s='Pages viewed'}</span></th>
 						<th><span class="title_box">{l s='Total time'}</span></th>
@@ -503,6 +504,7 @@
 					<tbody>
 					{foreach $connections as $connection}
 						<tr>
+							<td>{$connection['id_connections']}</td>
 							<td>{dateFormat date=$connection['date_add'] full=0}</td>
 							<td>{$connection['pages']}</td>
 							<td>{$connection['time']}</td>
