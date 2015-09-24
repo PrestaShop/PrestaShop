@@ -38,18 +38,7 @@ class AddressControllerCore extends FrontController
     protected $_address;
     protected $id_country;
 
-    /**
-     * Set default medias for this controller
-     */
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addJS(array(
-            _THEME_JS_DIR_.'tools/vatManagement.js',
-            _THEME_JS_DIR_.'tools/statesManagement.js',
-            _PS_JS_DIR_.'validate.js'
-        ));
-    }
+    public $form_errors = [];
 
     /**
      * Initialize address controller
@@ -118,7 +107,8 @@ class AddressControllerCore extends FrontController
     protected function processSubmitAddress()
     {
         $address = new Address();
-        $this->errors = $address->validateController();
+        $address->validateController();
+        $this->validateFormController();
         $address->id_customer = (int)$this->context->customer->id;
 
         // Check page token
@@ -128,7 +118,7 @@ class AddressControllerCore extends FrontController
 
         // Check phone
         if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile')) {
-            $this->errors[] = Tools::displayError('You must register at least one phone number.');
+            $this->form_errors['phone'][] = $this->form_errors['phone_mobile'][] = $this->l('You must register at least one phone number.');
         }
         if ($address->id_country) {
             // Check country
@@ -137,30 +127,33 @@ class AddressControllerCore extends FrontController
             }
 
             if ((int)$country->contains_states && !(int)$address->id_state) {
-                $this->errors[] = Tools::displayError('This country requires you to chose a State.');
+                $this->form_errors['state'][] = $this->l('This country requires you to chose a State.');
             }
 
             if (!$country->active) {
-                $this->errors[] = Tools::displayError('This country is not active.');
+                $this->form_errors['country'][] = $this->l('This country is not active.');
             }
 
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
+                $this->form_errors['postcode'][] = sprintf($this->l('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
             } elseif (empty($postcode) && $country->need_zip_code) {
-                $this->errors[] = Tools::displayError('A Zip/Postal code is required.');
+                $this->form_errors['postcode'][] = $this->l('A Zip/Postal code is required.');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
-                $this->errors[] = Tools::displayError('The Zip/Postal code is invalid.');
+                $this->form_errors['postcode'][] = $this->l('The Zip/Postal code is invalid.');
             }
 
             // Check country DNI
             if ($country->isNeedDni() && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni')))) {
-                $this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
+                $this->form_errors['dni'][] = $this->l('The identification number is incorrect or has already been used.');
             } elseif (!$country->isNeedDni()) {
                 $address->dni = null;
             }
+        } else {
+            $this->form_errors['country'][] = $this->l('This information is required.');
         }
+
         // Check if the alias exists
         if (!$this->context->customer->is_guest && !empty($_POST['alias']) && (int)$this->context->customer->id > 0) {
             $id_address = Tools::getValue('id_address');
@@ -169,15 +162,15 @@ class AddressControllerCore extends FrontController
             }
 
             if (Address::aliasExist(Tools::getValue('alias'), (int)$id_address, (int)$this->context->customer->id)) {
-                $this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));
+                $this->form_errors['alias'][] = sprintf($this->l('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));
             }
         }
 
         // Check the requires fields which are settings in the BO
-        $this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
+        $this->form_errors = array_merge($this->form_errors, $address->validateFieldsRequiredDatabase());
 
         // Don't continue this process if we have errors !
-        if ($this->errors && !$this->ajax) {
+        if (($this->form_errors || $this->errors) && !$this->ajax) {
             return;
         }
 
@@ -256,63 +249,55 @@ class AddressControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->assignCountries();
+        $this->id_country = (int)Tools::getCountry();
+
+        $address = $this->context->customer->getSimpleAddress(Tools::getValue('id_address'));
+        foreach ($address as $key => $value) {
+            if (isset($_POST[$key])) {
+                $address[$key] = $_POST[$key];
+            }
+        }
+
+        $countries = $this->getFormCountries();
         $this->assignVatNumber();
         $this->assignAddressFormat();
 
-        // Assign common vars
+        $back = Tools::getValue('back');
+        $mod = Tools::getValue('mod');
+
         $this->context->smarty->assign(array(
-            'address_validation' => Address::$definition['fields'],
-            'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
-            'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
-            'ajaxurl' => _MODULE_DIR_,
+            'form_validation' => Address::$definition['fields'],
             'errors' => $this->errors,
+            'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+            'ajaxurl' => _MODULE_DIR_,
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
-            'address' => $this->_address,
-            'id_address' => (Validate::isLoadedObject($this->_address)) ? $this->_address->id : 0
+            'address' => $address,
+            'countries' => $countries,
+            'back' => Tools::safeOutput($back),
+            'mod' => Tools::safeOutput($mod),
         ));
 
-        if ($back = Tools::getValue('back')) {
-            $this->context->smarty->assign('back', Tools::safeOutput($back));
-        }
-        if ($mod = Tools::getValue('mod')) {
-            $this->context->smarty->assign('mod', Tools::safeOutput($mod));
-        }
         if (isset($this->context->cookie->account_created)) {
             $this->context->smarty->assign('account_created', 1);
             unset($this->context->cookie->account_created);
         }
 
-        $this->setTemplate(_PS_THEME_DIR_.'address.tpl');
+        $this->setTemplate('customer/address.tpl');
     }
 
     /**
      * Assign template vars related to countries display
      */
-    protected function assignCountries()
+    protected function getFormCountries()
     {
-        $this->id_country = (int)Tools::getCountry($this->_address);
-        // Generate countries list
         if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
             $countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
         } else {
             $countries = Country::getCountries($this->context->language->id, true);
         }
 
-        // @todo use helper
-        $list = '';
-        foreach ($countries as $country) {
-            $selected = ((int)$country['id_country'] === $this->id_country) ? ' selected="selected"' : '';
-            $list .= '<option value="'.(int)$country['id_country'].'"'.$selected.'>'.htmlentities($country['name'], ENT_COMPAT, 'UTF-8').'</option>';
-        }
-
-        // Assign vars
-        $this->context->smarty->assign(array(
-            'countries_list' => $list,
-            'countries' => $countries,
-            'sl_country' => (int)$this->id_country,
-        ));
+        return $countries;
     }
 
     /**
@@ -322,12 +307,71 @@ class AddressControllerCore extends FrontController
     {
         $id_country = is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country;
         $requireFormFieldsList = AddressFormat::getFieldsRequired();
-        $ordered_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
-        $ordered_adr_fields = array_unique(array_merge($ordered_adr_fields, $requireFormFieldsList));
+        $ordered = AddressFormat::getOrderedAddressFields($id_country, true, true);
+        $ordered = array_unique(array_merge(['alias'], $ordered, $requireFormFieldsList));
+
+        $ordered_address_fields = [];
+        foreach ($ordered as $field) {
+            $ordered_address_fields[$field] = [
+                'required' => in_array($field, $requireFormFieldsList),
+            ];
+
+            if (isset($this->form_errors[$field])) {
+                $ordered_address_fields[$field]['errors'] = $this->form_errors[$field];
+            } else {
+                $ordered_address_fields[$field]['errors'] = [];
+            }
+
+            switch ($field) {
+                case 'alias':
+                    $ordered_address_fields[$field]['label'] = $this->l('Address alias');
+                    break;
+                case 'firstname':
+                    $ordered_address_fields[$field]['label'] = $this->l('First name');
+                    break;
+                case 'lastname':
+                    $ordered_address_fields[$field]['label'] = $this->l('Last name');
+                    break;
+                case 'address1':
+                case 'address2':
+                    $ordered_address_fields[$field]['label'] = $this->l('Address');
+                    break;
+                case 'postcode':
+                    $ordered_address_fields[$field]['label'] = $this->l('Zip/Postal Code');
+                    break;
+                case 'city':
+                    $ordered_address_fields[$field]['label'] = $this->l('City');
+                    break;
+                case 'Country:name':
+                    $ordered_address_fields[$field]['label'] = $this->l('Country');
+                    break;
+                case 'State:name':
+                    $ordered_address_fields[$field]['label'] = $this->l('State');
+                    break;
+                case 'phone':
+                    $ordered_address_fields[$field]['label'] = $this->l('Home phone');
+                    break;
+                case 'phone_mobile':
+                    $ordered_address_fields[$field]['label'] = $this->l('Mobile phone');
+                    break;
+                case 'company':
+                    $ordered_address_fields[$field]['label'] = $this->l('Company');
+                    break;
+                case 'vat_number':
+                    $ordered_address_fields[$field]['label'] = $this->l('VAT number');
+                    break;
+                case 'dni':
+                    $ordered_address_fields[$field]['label'] = $this->l('Identification number');
+                    break;
+                default:
+                    // StarterTheme: All EVERY address fields available in backoffice
+                    $ordered_address_fields[$field]['label'] = '';
+                    break;
+            }
+        }
 
         $this->context->smarty->assign(array(
-            'ordered_adr_fields' => $ordered_adr_fields,
-            'required_fields' => $requireFormFieldsList
+            'address_fields' => $ordered_address_fields,
         ));
     }
 
@@ -365,6 +409,17 @@ class AddressControllerCore extends FrontController
                 'errors' => $this->errors
             );
             $this->ajaxDie(json_encode($return));
+        }
+    }
+
+    public function validateFormController()
+    {
+        $requireFormFieldsList = AddressFormat::getFieldsRequired();
+
+        foreach ($_POST as $field_name => $val) {
+            if (in_array($field_name, $requireFormFieldsList) && empty($val)) {
+                $this->form_errors[$field_name][] = $this->l('This information is required.');
+            }
         }
     }
 }
