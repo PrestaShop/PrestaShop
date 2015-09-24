@@ -30,6 +30,10 @@
 						<div class="form-group bulk-actions">
 							<div class="col-lg-6">
 								<select id="select_submitBulk" name="select_submitBulk">
+									<option value="">{l s='Choose'}</option>
+ 									<option value="selectAll">{l s='Select all'}</option>
+	                                                      		<option value="unselectAll">{l s='Unselect all'}</option>
+        	                                               		<option value="" disabled="disabled" class="{$params.text|escape:'html':'UTF-8'}">--</option>
 									{foreach $bulk_actions as $key => $params}
 										{if $params.text == 'divider'}
 											<option value="" disabled="disabled" class="{$params.text|escape:'html':'UTF-8'}">--</option>
@@ -155,6 +159,11 @@
 					loadZones();
 				else if (loaded)
 					$('#zone_to_affect').fadeOut('slow');
+ 					
+ 				if ($(this).val() == 'selectAll')
+                                      	checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', true);
+	                        else if ($(this).val() == 'unselectAll')
+                                      	checkDelBoxes($(this).closest('form').get(0), '{$list_id}Box[]', false);
 			});
 		{/if}
 	});
