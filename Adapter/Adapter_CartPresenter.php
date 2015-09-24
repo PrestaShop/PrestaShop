@@ -91,6 +91,12 @@ class Adapter_CartPresenter
                                     $presentedCustomization['fields'][] = $field;
                                 }
 
+                                $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
                                 $product['customizations'][] = $presentedCustomization;
                             }
                         }
