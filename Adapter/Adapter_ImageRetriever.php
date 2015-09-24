@@ -82,4 +82,32 @@ class Adapter_ImageRetriever
             'legend' => $object->meta_title
         ];
     }
+
+    public function getCustomizationImage($imageHash)
+    {
+        $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
+        $small_image_url = $large_image_url . '_small';
+
+        $small = [
+            'url' => $small_image_url
+        ];
+
+        $large = [
+            'url' => $large_image_url
+        ];
+
+        $medium = $large;
+
+        return [
+            'bySize' => [
+                'small' => $small,
+                'medium' => $medium,
+                'large' => $large
+            ],
+            'small'  => $small,
+            'medium' => $medium,
+            'large'  => $large,
+            'legend' => ''
+        ];
+    }
 }
