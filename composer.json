@@ -8,7 +8,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blockcurrencies"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocklanguages"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"}
   ],
   "require": {
     "php": ">=5.4",
@@ -34,7 +35,7 @@
     "prestashop/blockcategories": "dev-master",
     "prestashop/blockcms": "dev-master",
     "prestashop/blockcmsinfo": "dev-master",
-    "prestashop/blockcontact": "dev-master",
+    "prestashop/blockcontact": "dev-feat/starter-theme",
     "prestashop/blockcontactinfos": "dev-feat/starter-theme",
     "prestashop/blockcurrencies": "dev-feat/starter-theme",
     "prestashop/blockcustomerprivacy": "dev-master",

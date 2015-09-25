@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cdffd7a6925ba96eca9936597fd3b403",
+    "hash": "16ef5a7eacc8ea4d06b659c5fec564ca",
     "packages": [
         {
             "name": "composer/installers",
@@ -1569,23 +1569,22 @@
         },
         {
             "name": "prestashop/blockcontact",
-            "version": "dev-master",
+            "version": "dev-feat/starter-theme",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcontact.git",
-                "reference": "95c2f47f5128941d3881f57c5f2637c5b31127e0"
+                "reference": "ad2125a2b2ed73a79864b46030034e858ee2ab2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/95c2f47f5128941d3881f57c5f2637c5b31127e0",
-                "reference": "95c2f47f5128941d3881f57c5f2637c5b31127e0",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/ad2125a2b2ed73a79864b46030034e858ee2ab2c",
+                "reference": "ad2125a2b2ed73a79864b46030034e858ee2ab2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -1597,7 +1596,10 @@
             ],
             "description": "PrestaShop module blockcontact",
             "homepage": "https://github.com/PrestaShop/blockcontact",
-            "time": "2015-08-28 15:03:16"
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcontact/tree/feat/starter-theme"
+            },
+            "time": "2015-10-08 09:56:00"
         },
         {
             "name": "prestashop/blockcontactinfos",
