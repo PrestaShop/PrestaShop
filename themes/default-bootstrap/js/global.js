@@ -240,6 +240,14 @@ function quick_view()
 
 function bindGrid()
 {
+	var storage = false;
+	if (typeof(getStorageAvailable) !== 'undefined') {
+		storage = getStorageAvailable();
+	}
+	if (!storage) {
+		return;
+	}
+
 	var view = $.totalStorage('display');
 
 	if (!view && (typeof displayList != 'undefined') && displayList)
