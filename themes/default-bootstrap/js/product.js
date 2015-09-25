@@ -35,15 +35,15 @@ var firstTime = true;
 if (typeof customizationFields !== 'undefined' && customizationFields)
 {
 	var customizationFieldsBk = customizationFields;
-    customizationFields = [];
+	customizationFields = [];
 	var j = 0;
 	for (var i = 0; i < customizationFieldsBk.length; ++i)
 	{
 		var key = 'pictures_' + parseInt(id_product) + '_' + parseInt(customizationFieldsBk[i]['id_customization_field']);
-        customizationFields[i] = [];
-        customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
-        customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
-    }
+		customizationFields[i] = [];
+		customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
+		customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
+	}
 }
 
 if (typeof combinationImages !== 'undefined' && combinationImages)
@@ -51,28 +51,28 @@ if (typeof combinationImages !== 'undefined' && combinationImages)
 	combinationImagesJS = [];
 	combinationImagesJS[0] = [];
 	var k = 0;
-    for (var i in combinationImages)
+	for (var i in combinationImages)
 	{
 		combinationImagesJS[i] = [];
-        for (var j in combinationImages[i])
-        {
-            var id_image = parseInt(combinationImages[i][j]['id_image']);
-         	if (id_image)
-            {
+		for (var j in combinationImages[i])
+		{
+			var id_image = parseInt(combinationImages[i][j]['id_image']);
+			if (id_image)
+			{
 				combinationImagesJS[0][k++] = id_image;
 				combinationImagesJS[i][j] = [];
 				combinationImagesJS[i][j] = id_image;
-            }
-        }
+			}
+		}
 	}
 
-    if (typeof combinationImagesJS[0] !== 'undefined' && combinationImagesJS[0])
-    {
-       var array_values = [];
-       for (var key in arrayUnique(combinationImagesJS[0]))
-           array_values.push(combinationImagesJS[0][key]);
-       combinationImagesJS[0] = array_values;
-    }
+	if (typeof combinationImagesJS[0] !== 'undefined' && combinationImagesJS[0])
+	{
+	   var array_values = [];
+	   for (var key in arrayUnique(combinationImagesJS[0]))
+		   array_values.push(combinationImagesJS[0][key]);
+	   combinationImagesJS[0] = array_values;
+	}
 	combinationImages = combinationImagesJS;
 }
 
@@ -106,8 +106,10 @@ if (typeof combinations !== 'undefined' && combinations)
 
 		combinationsJS[k]['reduction_type'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction_type']) ? combinations[i]['specific_price']['reduction_type'] : '';
 		combinationsJS[k]['id_product_attribute'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['id_product_attribute']) ? combinations[i]['specific_price']['id_product_attribute'] : 0;
+
 		var key = combinationsJS[k]['idsAttributes'].sort().join('-');
 		combinationsHashSet[key] = combinationsJS[k];
+
 		k++;
 	}
 	combinations = combinationsJS;
@@ -173,8 +175,8 @@ $(document).ready(function()
 		if (!!$.prototype.fancybox)
 			$('li:visible .fancybox, .fancybox.shown').fancybox({
 				'hideOnContentClick': true,
-				'openEffect'	: 'elastic',
-				'closeEffect'	: 'elastic'
+				'openEffect'    : 'elastic',
+				'closeEffect'   : 'elastic'
 			});
 	}
 	else if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
@@ -302,27 +304,27 @@ if (typeof(contentOnly) != 'undefined' && contentOnly)
 
 // The button to increment the product value
 $(document).on('click', '.product_quantity_up', function(e){
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name='+fieldName+']').val());
+	e.preventDefault();
+	fieldName = $(this).data('field-qty');
+	var currentVal = parseInt($('input[name='+fieldName+']').val());
 	if (!allowBuyWhenOutOfStock && quantityAvailable > 0)
 		quantityAvailableT = quantityAvailable;
 	else
 		quantityAvailableT = 100000000;
-    if (!isNaN(currentVal) && currentVal < quantityAvailableT)
-        $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
-    else
-        $('input[name='+fieldName+']').val(quantityAvailableT);
+	if (!isNaN(currentVal) && currentVal < quantityAvailableT)
+		$('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
+	else
+		$('input[name='+fieldName+']').val(quantityAvailableT);
 });
  // The button to decrement the product value
 $(document).on('click', '.product_quantity_down', function(e){
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name='+fieldName+']').val());
-    if (!isNaN(currentVal) && currentVal > 1)
-        $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
-    else
-        $('input[name='+fieldName+']').val(1);
+	e.preventDefault();
+	fieldName = $(this).data('field-qty');
+	var currentVal = parseInt($('input[name='+fieldName+']').val());
+	if (!isNaN(currentVal) && currentVal > 1)
+		$('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
+	else
+		$('input[name='+fieldName+']').val(1);
 });
 
 if (typeof minimalQuantity != 'undefined' && minimalQuantity)
@@ -335,11 +337,11 @@ if (typeof minimalQuantity != 'undefined' && minimalQuantity)
 
 function arrayUnique(a)
 {
-    return a.reduce(function(p, c){
-        if (p.indexOf(c) < 0)
+	return a.reduce(function(p, c){
+		if (p.indexOf(c) < 0)
 			p.push(c);
-        return p;
-    }, []);
+		return p;
+	}, []);
 };
 
 //check if a function exists
@@ -439,19 +441,18 @@ function findCombination()
 		//get available_date for combination product
 		selectedCombination['available_date'] = combination['available_date'];
 
-			//update the display
-			updateDisplay();
+		//update the display
+		updateDisplay();
 
-			if (firstTime)
-			{
-				refreshProductImages(0);
-				firstTime = false;
-			}
-			else
-				refreshProductImages(combinations[combination]['idCombination']);
-			//leave the function because combination has been found
-			return;
+		if (firstTime)
+		{
+			refreshProductImages(0);
+			firstTime = false;
 		}
+		else
+			refreshProductImages(combination['idCombination']);
+		//leave the function because combination has been found
+		return;
 	}
 
 	//this combination doesn't exist (not created in back office)
