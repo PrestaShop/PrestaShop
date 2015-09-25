@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategoriesTreeType;
+use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**

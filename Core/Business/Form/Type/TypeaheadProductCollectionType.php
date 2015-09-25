@@ -24,15 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Foundation\Form\Type;
+namespace PrestaShop\PrestaShop\Core\Business\Form\Type;
 
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is risponsible to create a product with attribute typeahed field
+ * This form class is risponsible to create a product with attribute without attribute field
  */
-class TypeaheadProductAttributeCollectionType extends \PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadCollectionType
+class TypeaheadProductCollectionType extends \PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadCollectionType
 {
     protected $productAdapter;
 
@@ -61,24 +61,11 @@ class TypeaheadProductAttributeCollectionType extends \PrestaShop\PrestaShop\Cor
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
             $collection = array();
 
-            foreach ($view->vars['value']['data'] as $item) {
-                $item_ids = explode(',', $item);
-                $product_id = $item_ids[0];
-                $product_id_attribute = isset($item_ids[1]) ? $item_ids[1] : null;
-
-                $product = $this->productAdapter->getProduct($product_id);
-                $product_name = $product->name[1];
-
-                if ($product_id_attribute) {
-                    $attributes = $product->getAttributeCombinationsById($product_id_attribute);
-                    foreach ($attributes as $attribute) {
-                        $product_name.= ' '.$attribute['group_name'].'-'.$attribute['attribute_name'];
-                    }
-                }
-
+            foreach ($view->vars['value']['data'] as $id) {
+                $product = $this->productAdapter->getProduct($id);
                 $collection[] = array(
-                    'id' => $item,
-                    'name' => $product_name,
+                    'id' => $id,
+                    'name' => $product->name[1],
                 );
             }
             $view->vars['collection'] = $collection;

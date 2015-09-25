@@ -31,8 +31,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategoriesTreeType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadProductCollectionType;
+use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
+use PrestaShop\PrestaShop\Core\Business\Form\Type\TypeaheadProductCollectionType;
 
 /**
  * This form class is risponsible to generate the basic product informations form
