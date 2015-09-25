@@ -133,6 +133,9 @@ class ProductInformation extends AbstractType
         ->add('ean13', 'text', array(
             'required' => false
         ))
+        ->add('isbn', 'text', array(
+            'required' => false
+        ))
         ->add('reference', 'text', array(
             'required' => false
         ))
