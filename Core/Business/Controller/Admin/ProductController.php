@@ -136,7 +136,7 @@ class ProductController extends AdminController
                 // Category tree
                 $formFactory = new FormFactory();
                 $form = $formFactory->create(new ChoiceCategoriesTreeType('categories', \Category::getNestedCategories(), false));
-                if (isset($persistedFilterParameters['ls_products_filter_category'])) {
+                if (!empty($persistedFilterParameters['ls_products_filter_category'])) {
                     $form->setData(array('tree' => array(0 => $persistedFilterParameters['ls_products_filter_category'])));
                 }
                 $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
