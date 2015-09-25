@@ -25,17 +25,6 @@ class Adapter_CartPresenter
         return Configuration::get('PS_TAX_DISPLAY');
     }
 
-    private function getAddToCartURL(array $product)
-    {
-        return $this->link->getPageLink(
-            'cart',
-            true,
-            null,
-            'delete=1&id_product=' . $product['id_product'] . '&id_product_attribute=' . $product['id_product_attribute'],
-            false
-        );
-    }
-
     protected function presentProduct(array $rawProduct)
     {
         $product['name'] = $rawProduct['name'];
@@ -48,7 +37,10 @@ class Adapter_CartPresenter
         $product['id_product_attribute'] = $rawProduct['id_product_attribute'];
         $product['id_product'] = $rawProduct['id_product'];
 
-        $product['remove_from_cart_url'] = $this->getAddToCartURL($rawProduct);
+        $product['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+            $product['id_product'],
+            $product['id_product_attribute']
+        );
 
         $product['quantity'] = $rawProduct['quantity'];
 
@@ -71,12 +63,10 @@ class Adapter_CartPresenter
                         foreach ($byAddress as $customizations) {
                             foreach ($customizations as $customization) {
                                 $presentedCustomization = [
-                                    'quantity' => $customization['quantity'],
-                                    'fields'   => [],
-                                    'id'       => null
+                                    'quantity'              => $customization['quantity'],
+                                    'fields'                => [],
+                                    'id_customization'      => null
                                 ];
-
-                                $id = [];
 
                                 foreach ($customization['datas'] as $byType) {
                                     $field = [];
@@ -96,11 +86,17 @@ class Adapter_CartPresenter
                                                 $field['type'] = null;
                                         }
                                         $field['label'] = $data['name'];
-                                        $id[] = $data['id_customization'];
+                                        $presentedCustomization['id_customization'] = $data['id_customization'];
                                     }
                                     $presentedCustomization['fields'][] = $field;
                                 }
-                                $presentedCustomization['id'] = implode('-', $id);
+
+                                $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
                                 $product['customizations'][] = $presentedCustomization;
                             }
                         }
@@ -112,7 +108,7 @@ class Adapter_CartPresenter
                 if (
                     $a['quantity'] > $b['quantity']
                     || count($a['fields']) > count($b['fields'])
-                    || $a['id'] > $b['id']
+                    || $a['id_customization'] > $b['id_customization']
                 ) {
                     return -1;
                 } else {
