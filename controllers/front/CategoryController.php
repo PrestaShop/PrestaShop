@@ -48,15 +48,6 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::setMedia();
 
-        if (!$this->useMobileTheme()) {
-            //TODO : check why cluetip css is include without js file
-            $this->addCSS(array(
-                _THEME_CSS_DIR_.'scenes.css'       => 'all',
-                _THEME_CSS_DIR_.'category.css'     => 'all',
-                _THEME_CSS_DIR_.'product_list.css' => 'all',
-            ));
-        }
-
         $scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
         if ($scenes && count($scenes)) {
             $this->addJS(_THEME_JS_DIR_.'scenes.js');
@@ -108,8 +99,7 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
 
         // Check if the category is active and return 404 error if is disable.
         if (!$this->category->active) {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
+            Tools::redirect('index.php?controller=404');
         }
 
         // Check if category can be accessible by current customer and return 403 if not
