@@ -252,6 +252,7 @@ class CurrencyCore extends ObjectModel
                     $currencies[$k]['name'] = ucfirst($currency['name']);
                     $currencies[$k]['iso_code_num'] = $currency['iso_code'];
                     $currencies[$k]['sign'] = $currency['symbol'];
+                    $currencies[$k]['format'] = '';
                 }
             }
         } else {
@@ -263,6 +264,7 @@ class CurrencyCore extends ObjectModel
                 $currencies['name'] = ucfirst($currency['name']);
                 $currencies['iso_code_num'] = $currency['iso_code'];
                 $currencies['sign'] = $currency['symbol'];
+                $currencies['format'] = '';
             }
         }
 
