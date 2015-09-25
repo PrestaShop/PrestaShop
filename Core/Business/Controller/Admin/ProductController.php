@@ -103,6 +103,7 @@ class ProductController extends AdminController
         $hasCategoryFilter = $dataProvider->isCategoryFiltered();
         $hasColumnFilter = $dataProvider->isColumnFiltered();
         $response->addContentData('has_filter', $hasCategoryFilter | $hasColumnFilter);
+        $response->addContentData('has_category_filter', $hasCategoryFilter);
         $response->addContentData('has_column_filter', $hasColumnFilter);
 
         // URL action form params

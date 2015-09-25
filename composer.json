@@ -94,7 +94,8 @@
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
     "fabpot/php-cs-fixer": "^1.10",
-    "phpdocumentor/phpdocumentor": "2.*"
+    "phpdocumentor/phpdocumentor": "2.*",
+    "symfony/var-dumper": "2.7.*"
   },
   "autoload-dev": {
     "psr-4": {

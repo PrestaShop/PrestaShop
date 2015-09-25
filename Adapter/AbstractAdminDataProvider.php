@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
  * Base class for data provider, to give common Adapter functions.
+ *
+ * Contains methods to compile SQL from parseable arrays of select, tables, joins, where, etc...
+ *
  */
 abstract class AbstractAdminDataProvider
 {

@@ -47,6 +47,11 @@
                     <td>
                         état
                     </td>
+                    {if $has_category_filter}
+                        <td>
+                            position
+                        </td>
+                    {/if}
                     <td>&nbsp;</td>
                 </tr>
                 <tr class="column-filters">
@@ -78,6 +83,9 @@
                             <option value="0" {if isset($ls_products_filter_column_active) && $ls_products_filter_column_active === '0'}selected="selected"{/if}>##Non</option>
                         </select>
                     </td>
+                    {if $has_category_filter}
+                        <td>&nbsp;</td>
+                    {/if}
                     <td>
                         <input type="submit" name="products_filter_submit" value="##Rechercher" />
                         <input type="button" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="##Réinitialiser" />

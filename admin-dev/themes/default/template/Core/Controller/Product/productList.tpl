@@ -8,7 +8,7 @@
                 {$product.id_product}
             </td>
             <td>
-                [IMAGE]
+                [image id#{$product.id_image}]
             </td>
             <td>
                 <a href="{$product.url}">{$product.name}</a>
@@ -23,7 +23,7 @@
                 {$product.price}
             </td>
             <td>
-                [prix final]
+                {$product.price_final}
             </td>
             <td>
                 {$product.sav_quantity}
@@ -31,6 +31,11 @@
             <td>
                 {$product.active}
             </td>
+            {if isset($product.position)}
+                <td>
+                    {$product.position}
+                </td>
+            {/if}
             <td>
                 [bouton d'action]<br/>
                 <a href="{$product.url}">Go to details</a><br/>

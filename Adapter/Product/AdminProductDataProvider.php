@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 /**
+ * Data provider for new Architecture, about Product object model.
+ *
  * This class will provide data from DB / ORM about Products for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
  *
@@ -173,6 +175,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $post = array())
     {
         $filterParams = $this->combinePersistentCatalogProductFilter($post);
+        $showPositionColumn = $this->isCategoryFiltered();
 
         $idShop = \Context::getContext()->shop->id;
         $idLang = \Context::getContext()->language->id;
@@ -274,9 +277,22 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
                 }
             }
         }
-        
+
         $sqlOrder = array($orderBy.' '.$orderWay);
         $sqlLimit = $offset.', '.$limit;
+
+        // Column 'position' added if filtering by category
+        if ($showPositionColumn) {
+            $sqlSelect['position'] = array('table' => 'cp', 'field' => 'position');
+            $sqlTable['cp'] = array(
+                'table' => 'category_product',
+                'join' => 'INNER JOIN',
+                'on' => 'cp.`id_product` = p.`id_product` AND cp.`id_category` = '.$filterParams['filter_category']
+            );
+        } elseif ($orderBy == 'position') {
+            // We do not show position column, so we do not join the table, so we do not order by position!
+            $sqlOrder = array('id_product ASC');
+        }
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlOrder, $sqlLimit);
         $products = \Db::getInstance()->executeS($sql, true, false);
@@ -286,9 +302,13 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         // post treatment
         foreach ($products as &$product) {
             $product['price'] = \Tools::displayPrice($product['price']);
-            $product['total'] = $total;
+            $product['total'] = $total; // total product count (filtered)
+            $product['price_final'] = \Product::getPriceStatic($product['id_product'], true, null,
+                    (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
+                    true, null, null, null, $nothing, true, true);
+            $product['price_final'] = \Tools::displayPrice($product['price_final']);
         }
-        // FIXME: format columns like CLDR and others
+        // FIXME: column "Position" apparait si category filtered. To ADD !
 
         return $products;
     }
