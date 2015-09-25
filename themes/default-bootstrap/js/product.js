@@ -79,6 +79,7 @@ if (typeof combinationImages !== 'undefined' && combinationImages)
 if (typeof combinations !== 'undefined' && combinations)
 {
 	combinationsJS = [];
+	combinationsHashSet = {};
 	var k = 0;
 	for (var i in combinations)
 	{
@@ -105,6 +106,8 @@ if (typeof combinations !== 'undefined' && combinations)
 
 		combinationsJS[k]['reduction_type'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction_type']) ? combinations[i]['specific_price']['reduction_type'] : '';
 		combinationsJS[k]['id_product_attribute'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['id_product_attribute']) ? combinations[i]['specific_price']['id_product_attribute'] : 0;
+		var key = combinationsJS[k]['idsAttributes'].sort().join('-');
+		combinationsHashSet[key] = combinationsJS[k];
 		k++;
 	}
 	combinations = combinationsJS;
@@ -400,53 +403,43 @@ function findCombination()
 		choice.push(parseInt($(this).val()));
 	});
 
-	if (typeof combinations == 'undefined' || !combinations)
-		combinations = [];
-	//testing every combination to find the conbination's attributes' case of the user
-	for (var combination = 0; combination < combinations.length; ++combination)
+	//verify if this combinaison is the same that the user's choice
+	var combination = combinationsHashSet[choice.sort().join('-')];
+
+	if (combination)
 	{
-		//verify if this combinaison is the same that the user's choice
-		var combinationMatchForm = true;
-		$.each(combinations[combination]['idsAttributes'], function(key, value)
+		if (combination['minimal_quantity'] > 1)
 		{
-			if (!in_array(parseInt(value), choice))
-				combinationMatchForm = false;
-		});
+			$('#minimal_quantity_label').html(combination['minimal_quantity']);
+			$('#minimal_quantity_wanted_p').fadeIn();
+			$('#quantity_wanted').val(combination['minimal_quantity']);
+			$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combination['minimal_quantity']);});
+		}
+		//combination of the user has been found in our specifications of combinations (created in back office)
+		selectedCombination['unavailable'] = false;
+		selectedCombination['reference'] = combination['reference'];
+		$('#idCombination').val(combination['idCombination']);
 
-		if (combinationMatchForm)
-		{
-			if (combinations[combination]['minimal_quantity'] > 1)
-			{
-				$('#minimal_quantity_label').html(combinations[combination]['minimal_quantity']);
-				$('#minimal_quantity_wanted_p').fadeIn();
-				$('#quantity_wanted').val(combinations[combination]['minimal_quantity']);
-				$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combinations[combination]['minimal_quantity']);});
-			}
-			//combination of the user has been found in our specifications of combinations (created in back office)
-			selectedCombination['unavailable'] = false;
-			selectedCombination['reference'] = combinations[combination]['reference'];
-			$('#idCombination').val(combinations[combination]['idCombination']);
+		//get the data of product with these attributes
+		quantityAvailable = combination['quantity'];
+		selectedCombination['price'] = combination['price'];
+		selectedCombination['unit_price'] = combination['unit_price'];
+		selectedCombination['specific_price'] = combination['specific_price'];
+		if (combination['ecotax'])
+			selectedCombination['ecotax'] = combination['ecotax'];
+		else
+			selectedCombination['ecotax'] = default_eco_tax;
 
-			//get the data of product with these attributes
-			quantityAvailable = combinations[combination]['quantity'];
-			selectedCombination['price'] = combinations[combination]['price'];
-			selectedCombination['unit_price'] = combinations[combination]['unit_price'];
-			selectedCombination['specific_price'] = combinations[combination]['specific_price'];
-			if (combinations[combination]['ecotax'])
-				selectedCombination['ecotax'] = combinations[combination]['ecotax'];
-			else
-				selectedCombination['ecotax'] = default_eco_tax;
+		//show the large image in relation to the selected combination
+		if (combination['image'] && combination['image'] != -1)
+			displayImage($('#thumb_' + combination['image']).parent());
 
-			//show the large image in relation to the selected combination
-			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage($('#thumb_' + combinations[combination]['image']).parent());
+		//show discounts values according to the selected combination
+		if (combination['idCombination'] && combination['idCombination'] > 0)
+			displayDiscounts(combination['idCombination']);
 
-			//show discounts values according to the selected combination
-			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
-				displayDiscounts(combinations[combination]['idCombination']);
-
-			//get available_date for combination product
-			selectedCombination['available_date'] = combinations[combination]['available_date'];
+		//get available_date for combination product
+		selectedCombination['available_date'] = combination['available_date'];
 
 			//update the display
 			updateDisplay();
@@ -954,27 +947,11 @@ function refreshProductImages(id_product_attribute)
 			choice.push(parseInt($(this).val()));
 		});
 
-		if (typeof combinations == 'undefined' || !combinations)
-			combinations = [];
-
-		//testing every combination to find the conbination's attributes' case of the user
-		for (var combination = 0; combination < combinations.length; ++combination)
-		{
-			//verify if this combinaison is the same that the user's choice
-			var combinationMatchForm = true;
-
-			$.each(combinations[combination]['idsAttributes'], function(key, value)
-			{
-				if (!in_array(parseInt(value), choice))
-					combinationMatchForm = false;
-			});
-
-			if (combinationMatchForm)
-			{
-				//show the large image in relation to the selected combination
-				if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-					displayImage($('#thumb_' + combinations[combination]['image']).parent());
-			}
+		var combination = combinationsHashSet[choice.sort().join('-')];
+		if(combination) {
+			//show the large image in relation to the selected combination
+			if (combination['image'] && combination['image'] != -1)
+				displayImage($('#thumb_' + combination['image']).parent());
 		}
 	}
 
