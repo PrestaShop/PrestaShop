@@ -69,7 +69,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (!Validate::isLoadedObject($this->product)) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
-            $this->errors[] = Tools::displayError('Product not found');
+            $this->errors[] = $this->l('Product not found');
         } else {
             $this->canonicalRedirection();
             /*
@@ -81,7 +81,23 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if (!$this->product->isAssociatedToShop() || !$this->product->active) {
                 if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
                     // If the product is not active, it's the admin preview mode
-                    $this->context->smarty->assign('adminActionDisplay', true);
+                    $this->info[] = $this->l('This product is not visible to your customers.');
+
+                    $draftLinks = [
+                        'publishLink' => array(
+                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&statusproduct&id_product='.$this->product->id,
+                            'title' => $this->l('Publish'),
+                            ),
+                        'backLink' => array(
+                            'url' => Tools::getValue('ad').'/'.$this->context->link->getAdminLink('AdminProducts', false).'&token='.Tools::getValue('adtoken').'&updateproduct&id_product='.$this->product->id,
+                            'title' => $this->l('Back'),
+                            ),
+                    ];
+
+                    $this->context->smarty->assign(array(
+                        'draftLinks' => $draftLinks,
+                        'adminActionDisplay' => true,
+                    ));
                 } else {
                     $this->context->smarty->assign('adminActionDisplay', false);
                     if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id) {
@@ -104,14 +120,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
-                            $this->errors[] = Tools::displayError('This product is no longer available.');
+                            $this->errors[] = $this->l('This product is no longer available.');
                         break;
                     }
                 }
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int)$this->context->customer->id : 0)) {
                 header('HTTP/1.1 403 Forbidden');
                 header('Status: 403 Forbidden');
-                $this->errors[] = Tools::displayError('You do not have access to this product.');
+                $this->errors[] = $this->l('You do not have access to this product.');
             } else {
                 // Load category
                 $id_category = false;
@@ -187,7 +203,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->textRecord();
                 $this->formTargetFormat();
             } elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture'))) {
-                $this->errors[] = Tools::displayError('An error occurred while deleting the selected picture.');
+                $this->errors[] = $this->l('An error occurred while deleting the selected picture.');
             }
 
             $pictures = array();
@@ -622,11 +638,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
                 /* Original file */
                 if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
-                    $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    $this->errors[] = $this->l('An error occurred during the image upload process.');
                 } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
-                    $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    $this->errors[] = $this->l('An error occurred during the image upload process.');
                 } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
-                    $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    $this->errors[] = $this->l('An error occurred during the image upload process.');
                 } else {
                     $this->context->cart->addPictureToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_FILE, $file_name);
                 }
@@ -653,7 +669,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         foreach ($_POST as $field_name => $value) {
             if (in_array($field_name, $authorized_text_fields) && $value != '') {
                 if (!Validate::isMessage($value)) {
-                    $this->errors[] = Tools::displayError('Invalid message');
+                    $this->errors[] = $this->l('Invalid message');
                 } else {
                     $this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
                 }

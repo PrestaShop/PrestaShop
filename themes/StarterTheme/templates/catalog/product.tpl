@@ -9,6 +9,10 @@
   <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
+    {block name="product-activation"}
+      {include 'catalog/_partials/product-activation.tpl'}
+    {/block}
+
     {block name="page_header_container"}
       <header class="page-header">
         {block name="page_header"}
