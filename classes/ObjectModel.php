@@ -234,9 +234,8 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         }
 	
 	// @hook actionObject*Init
-	Hook::exec('actionObjectInit', array('object' => $this));
-	Hook::exec('actionObject'.get_class($this).'Init', array('object' => $this));
-
+        Hook::exec('actionObjectInit', array('object' => $this));
+        Hook::exec('actionObject'.get_class($this).'Init', array('object' => $this));
     }
 
     /**
