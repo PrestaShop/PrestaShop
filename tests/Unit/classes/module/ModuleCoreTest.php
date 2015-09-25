@@ -30,8 +30,6 @@ use Media;
 use Module;
 use PHPUnit_Framework_TestCase;
 
-define('_PS_VERSION_', '1.6.1.0');
-
 class FakeModule extends Module
 {
 }
@@ -50,6 +48,13 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
 										<ul><li>Error 1</li><li>Error 2</li><li>Error 3</li></ul>
 									</div>
 								</div>';
+
+    public function setup()
+    {
+        if (!defined('_PS_VERSION_')) {
+            define('_PS_VERSION_', '1.6.1.0');
+        }
+    }
 
     public function testDisplayError_shouldReturnSimpleError()
     {
