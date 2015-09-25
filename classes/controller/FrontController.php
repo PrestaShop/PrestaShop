@@ -761,11 +761,7 @@ class FrontControllerCore extends Controller
                             if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
                                 $this->restrictedCountry = true;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
-                                $this->restricted_country_mode = true;
-                                $this->context->smarty->assign(array(
-                                    'restricted_country_mode' => true,
-                                    'geolocation_country'     => $record->country_name
-                                ));
+                                $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country_name);
                             }
                         } else {
                             $has_been_set = !isset($this->context->cookie->iso_code_country);
@@ -790,11 +786,7 @@ class FrontControllerCore extends Controller
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = true;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
-                    $this->restricted_country_mode = true;
-                    $this->context->smarty->assign(array(
-                        'restricted_country_mode' => true,
-                        'geolocation_country'     => isset($record->country_name) && $record->country_name ? $record->country_name : 'Undefined'
-                    ));
+                    $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country_name) && $record->country_name) ? $record->country_name : $this->l('Undefined'));
                 }
             }
         }
