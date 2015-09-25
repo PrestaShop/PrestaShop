@@ -912,6 +912,7 @@ class AdminProductsControllerCore extends AdminController
                 'supplier_reference' => 'isReference',
                 'location' => 'isReference',
                 'ean13' => 'isEan13',
+                'isbn' => 'isIsbn',
                 'upc' => 'isUpc',
                 'wholesale_price' => 'isPrice',
                 'price' => 'isPrice',
@@ -965,7 +966,10 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('attribute_location'),
                                 Tools::getValue('attribute_upc'),
                                 $this->isProductFieldUpdated('attribute_minimal_quantity') ? Tools::getValue('attribute_minimal_quantity') : null,
-                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null, false);
+                                $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
+                                false,
+                                array(),
+                                Tools::getValue('attribute_isbn'));
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
                         }
@@ -995,8 +999,10 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('attribute_upc'),
                                 Tools::getValue('attribute_minimal_quantity'),
                                 array(),
-                                Tools::getValue('available_date_attribute')
+                                Tools::getValue('available_date_attribute'),
+                                Tools::getValue('attribute_isbn')
                             );
+
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
                         }
@@ -3289,6 +3295,7 @@ class AdminProductsControllerCore extends AdminController
             foreach ($combinations as &$combination) {
                 $combination['attributes'] = rtrim($combination['attributes'], ' - ');
             }
+
             $data->assign('specificPriceModificationForm', $this->_displaySpecificPriceModificationForm(
                 $this->context->currency, $shops, $currencies, $countries, $groups)
             );
@@ -3967,7 +3974,7 @@ class AdminProductsControllerCore extends AdminController
 
         $product_props = array();
         // global informations
-        array_push($product_props, 'reference', 'ean13', 'upc',
+        array_push($product_props, 'reference', 'ean13', 'isbn', 'upc',
         'available_for_order', 'show_price', 'online_only',
         'id_manufacturer'
         );
@@ -4407,6 +4414,7 @@ class AdminProductsControllerCore extends AdminController
             'weight' => array('title' => $this->l('Impact on weight'), 'align' => 'left'),
             'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
             'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
+            'isbn' => array('title' => $this->l('ISBN'), 'align' => 'left'),
             'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
         );
 
@@ -4429,6 +4437,7 @@ class AdminProductsControllerCore extends AdminController
                     $comb_array[$combination['id_product_attribute']]['unit_impact'] = $combination['unit_price_impact'];
                     $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
                     $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
+                    $comb_array[$combination['id_product_attribute']]['isbn'] = $combination['isbn'];
                     $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
                     $comb_array[$combination['id_product_attribute']]['id_image'] = isset($combination_images[$combination['id_product_attribute']][0]['id_image']) ? $combination_images[$combination['id_product_attribute']][0]['id_image'] : 0;
                     $comb_array[$combination['id_product_attribute']]['available_date'] = strftime($combination['available_date']);
