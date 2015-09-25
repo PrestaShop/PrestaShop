@@ -1,6 +1,15 @@
 {
   "name": "PrestaShop/PrestaShop",
   "type": "project",
+  "repositories": [
+    {"type": "vcs", "url": "https://github.com/prestashop/blockbanner"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcart"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcontactinfos"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcurrencies"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blocklanguages"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"}
+  ],
   "require": {
     "php": ">=5.4",
     "symfony/symfony": "2.7.5",
