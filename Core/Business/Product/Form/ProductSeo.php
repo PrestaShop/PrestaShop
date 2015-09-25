@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This form class is risponsible to generate the product SEO form
@@ -42,9 +43,9 @@ class ProductSeo extends AbstractType
     /**
      * Constructor
      *
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      */
-    public function __construct(\Core_Foundation_IoC_Container $container)
+    public function __construct(Container $container)
     {
         $this->router = $container->make('Routing');
         $this->context = $container->make('Context');
