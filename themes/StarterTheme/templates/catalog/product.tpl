@@ -215,7 +215,7 @@
                       </div>
                     {/foreach}
                     {block name="product_refresh"}
-                      <input type="submit" value="{l s='Refresh'}" />
+                      <input class="product-refresh" type="submit" value="{l s='Refresh'}" />
                     {/block}
                   </div>
                 {/block}
@@ -224,7 +224,7 @@
 
             {block name="product_add_to_cart"}
               {if $product.add_to_cart_url}
-                <form action="{$urls.pages.cart}" method="post">
+                <form class="add-to-cart" action="{$urls.pages.cart}" method="post">
                   <input type="hidden" name="token" value="{$static_token}" />
                   <input type="hidden" name="add" value="1" />
                   <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id" />
