@@ -52,6 +52,10 @@ class AddressesControllerCore extends FrontController
     {
         parent::initContent();
 
+        if (count($this->context->customer->getSimpleAddresses()) <= 0) {
+            $this->warning[] = sprintf($this->l('No addresses are available. %s'), '<a href="'.$this->context->link->getPageLink('address', true).'">'.$this->l('Add a new address').'</a>');
+        }
+
         $this->setTemplate('customer/addresses.tpl');
     }
 }
