@@ -94,7 +94,7 @@ class BaseControllerTest extends UnitTestCase
         $response->setContentData(array('a' => 'AA', 'b' => 'BB'));
         $controller->formatResponse('json', $response);
         $this->assertJson($response->getContent());
-        $this->assertContains('"a": "AA"', $response->getContent());
+        $this->assertContains('"a":"AA"', $response->getContent());
 
         // test raw text (no transformation)
         $response->setContent('Hello Tom!');

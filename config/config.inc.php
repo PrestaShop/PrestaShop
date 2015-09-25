@@ -265,7 +265,7 @@ if (!defined('_MEDIA_SERVER_3_')) {
 }
 
 // bind & build context object here (because we need it to build smarty view very soon)
-$newContext = new \PrestaShop\PrestaShop\Core\Business\Context(new \Adapter_LegacyContext());
+$newContext = new \PrestaShop\PrestaShop\Core\Business\Context(new \Adapter_LegacyContext(), $container);
 $container->bind(get_class($newContext), $newContext, true);
 $container->bind('Context', $newContext, true);
 

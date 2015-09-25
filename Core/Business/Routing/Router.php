@@ -80,6 +80,12 @@ abstract class Router extends AbstractRouter
     private $forbiddenRedirection = null;
 
     /**
+     * FIXME: remove this!
+     * @var \Core_Business_ConfigurationInterface
+     */
+    protected $configuration;
+
+    /**
      * Instanciate a Router with a set of routes YML files.
      *
      * @throws DevelopmentErrorException If the Router has already been instantiated.
@@ -93,7 +99,13 @@ abstract class Router extends AbstractRouter
         }
         try {
             $this->container = $container;
-            parent::__construct($routingFilePattern);
+            $this->configuration = $this->container->make('Core_Business_ConfigurationInterface');
+            parent::__construct(
+                $routingFilePattern,
+                $this->configuration->get('_PS_ROOT_DIR_'),
+                $this->configuration->get('_PS_CACHE_DIR_'),
+                $this->configuration->get('_PS_MODE_DEV_')
+            );
 
             // EventDispatcher init
             BaseEventDispatcher::initBaseDispatchers($this->container);

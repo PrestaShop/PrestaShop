@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Business;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This context contains application global information as main parameters.
@@ -53,16 +54,20 @@ class Context extends ParameterBag
      * - suppress 'override with legacy context' step.
      *
      * @param \Adapter_LegacyContext $legacyContext Given by IoC
+     * @param Container $container The application container
      */
-    final public function __construct(\Adapter_LegacyContext $legacyContext)
+    final public function __construct(\Adapter_LegacyContext $legacyContext, Container $container)
     {
         if (self::$instantiated == true) {
             throw new DevelopmentErrorException('The Context cannot be instantiated twice. Please call it from container.');
         }
         self::$instantiated = true;
 
+        $configuration = $container->make('Core_Business_ConfigurationInterface');
+
         // Default values now.
         $this->set('app_entry_point', 'unknown'); // admin / front / unknown
+        $this->set('debug', $configuration->get('_PS_MODE_DEV_'));
 
         // While Legacy architecture is here, retrieve some data from it.
         $legacyContext->mergeContextWithLegacy($this);

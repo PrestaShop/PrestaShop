@@ -107,8 +107,7 @@ abstract class BaseController implements ControllerInterface
     final protected function formatJsonResponse(Response &$response)
     {
         $content = $response->getContentData();
-        $configuration = $this->container->make('Core_Business_ConfigurationInterface');
-        $response->setContent(json_encode($content, $configuration->get('_PS_MODE_DEV_') ? JSON_PRETTY_PRINT : 0));
+        $response->setContent(json_encode($content, $this->container->make('CoreBusiness:Context')->get('debug') ? JSON_PRETTY_PRINT : 0));
     }
 
     /* (non-PHPdoc)

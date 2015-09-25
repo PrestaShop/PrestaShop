@@ -46,7 +46,7 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     public function __construct($container, $routingFilePattern, $conf)
     {
         $this->container = $container;
-        parent::__construct($routingFilePattern);
+        parent::__construct($routingFilePattern, $conf->get('_PS_ROOT_DIR_'), $conf->get('_PS_CACHE_DIR_'), true);
         // EventDispatcher init
         BaseEventDispatcher::initDispatchers(
             $container,

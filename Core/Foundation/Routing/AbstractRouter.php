@@ -65,10 +65,9 @@ abstract class AbstractRouter implements RouterInterface
      */
     protected $container;
 
-    /**
-     * @var \Core_Business_ConfigurationInterface
-     */
-    protected $configuration;
+    private $configurationRootFolder;
+    private $configurationDebugMode;
+    private $configurationCacheFolder;
 
     /**
      * @var string
@@ -126,15 +125,21 @@ abstract class AbstractRouter implements RouterInterface
      * Instanciate a Router with a set of routes YML files.
      *
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
+     * @param string $rootDir The documentRoot directory of the application.
+     * @param string $cacheDir The cache directory of the application.
+     * @param boolean $debugMode True to use debug/dev mode (cache is not used).
      */
-    protected function __construct($routingFilePattern)
+    protected function __construct($routingFilePattern, $rootDir, $cacheDir, $debugMode)
     {
-        $this->configuration = $this->container->make('Core_Business_ConfigurationInterface');
+        $this->configurationRootFolder = rtrim($rootDir, '/');
+        $this->configurationCacheFolder = rtrim($cacheDir, '/');
+        $this->configurationDebugMode = $debugMode;
+
         $this->cacheFileName = explode('\\', get_class($this));
         $this->cacheFileName = $this->cacheFileName[count($this->cacheFileName)-1];
 
         // Yml file loaders
-        $locator = new FileLocator(array($this->configuration->get('_PS_ROOT_DIR_')));
+        $locator = new FileLocator(array($this->configurationRootFolder));
         $this->routeLoader = new YamlFileLoader($locator);
 
         // Register routing/settings extensions (modules)
@@ -198,8 +203,8 @@ abstract class AbstractRouter implements RouterInterface
         $this->sfRouter = new \Symfony\Component\Routing\Router(
             $this->routeLoader,
             (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
-            array('cache_dir' => $this->configuration->get('_PS_CACHE_DIR_').'routing',
-                  'debug' => $this->configuration->get('_PS_MODE_DEV_'),
+            array('cache_dir' => $this->configurationCacheFolder.'/routing',
+                  'debug' => $this->configurationDebugMode,
                   'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
             ),
             $requestContext
@@ -424,13 +429,13 @@ abstract class AbstractRouter implements RouterInterface
     {
         $triggerCacheGenerationFlag = &$this->triggerCacheGenerationFlag;
         $cache = $this->getConfigCacheFactory()->cache(
-            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$this->cacheFileName.'_setting_list.php',
+            $this->configurationCacheFolder.'/routing/'.$this->cacheFileName.'_setting_list.php',
             function (ConfigCacheInterface $cache) use (&$triggerCacheGenerationFlag) {
                 $routingFiles = $routingFilePaths = $routeIds = array();
 
                 // search for Core routes.yml files (base routes.yml is the first, then Core's others)
                 $routingFilesFinder = Finder::create()->files()->name('&'.$this->routingFilePattern.'&')->sortByName()->followLinks()
-                        ->in($this->configuration->get('_PS_ROOT_DIR_').'/CoreConfig/');
+                        ->in($this->configurationRootFolder.'/CoreConfig/');
                 foreach ($routingFilesFinder as $file) {
                     $path = $file->getRealpath();
                     $matches = array();
@@ -464,7 +469,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
     final protected function getConfigCacheFactory($forceDebug = false)
     {
         if (null === $this->configCacheFactory) {
-            $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configuration->get('_PS_MODE_DEV_'));
+            $this->configCacheFactory = new ConfigCacheFactory($forceDebug || $this->configurationDebugMode);
         }
         return $this->configCacheFactory;
     }
