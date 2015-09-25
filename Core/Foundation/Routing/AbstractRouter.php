@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
@@ -60,7 +61,7 @@ abstract class AbstractRouter implements RouterInterface
     const ABSOLUTE_ROUTE = 'absolute_route';
 
     /**
-     * @var \Core_Foundation_IoC_Container
+     * @var Container
      */
     protected $container;
 

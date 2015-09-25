@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\TypeaheadProductCollectionType;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This form class is risponsible to generate the basic product informations form
@@ -51,9 +52,9 @@ class ProductInformation extends AbstractType
     /**
      * Constructor
      *
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      */
-    public function __construct(\Core_Foundation_IoC_Container $container)
+    public function __construct(Container $container)
     {
         $this->router = $container->make('Routing');
         $this->context = $container->make('Context');

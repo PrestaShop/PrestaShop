@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Adapter\UrlGenerator;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * Administration interface's Router
@@ -41,9 +42,9 @@ class AdminRouter extends Router
     /**
      * Constructor. Instantiated from index.php files only.
      *
-     * @param \Core_Foundation_IoC_Container $container The Service Container
+     * @param Container $container The Service Container
      */
-    final public function __construct(\Core_Foundation_IoC_Container &$container = null)
+    final public function __construct(Container &$container = null)
     {
         parent::__construct($container, 'admin_routes(_(.*))?\.yml');
         $container->make('CoreBusiness:Context')->set('app_entry_point', 'admin');

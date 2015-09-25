@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * Second layer of the Router classes structure, to add Business specific behaviors (but common for Front/Admin).
@@ -82,10 +83,10 @@ abstract class Router extends AbstractRouter
      * Instanciate a Router with a set of routes YML files.
      *
      * @throws DevelopmentErrorException If the Router has already been instantiated.
-     * @param \Core_Foundation_IoC_Container $container The application Container instance
+     * @param Container $container The application Container instance
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    protected function __construct(\Core_Foundation_IoC_Container &$container, $routingFilePattern)
+    protected function __construct(Container &$container, $routingFilePattern)
     {
         if (self::$instantiated !== false) {
             throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.');
@@ -303,8 +304,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
-function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
+function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router, Container &$container)
 {
     $response = new Response();
     '.($pinResponse? '$response->pinAsLastRouterResponseInstance();':'').'

@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * Used to build the Container at the process starting (bootstrap.php)
@@ -54,12 +55,12 @@ class Core_Business_ContainerBuilder
     /**
      * Construct PrestaShop Core Service container.
      *
-     * @return Core_Foundation_IoC_Container
-     * @throws Core_Foundation_IoC_Exception
+     * @return Container
+     * @throws PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function build()
     {
-        $container = new Core_Foundation_IoC_Container;
+        $container = new Container();
 
         $container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
         $container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
@@ -77,7 +78,7 @@ class Core_Business_ContainerBuilder
     
     public function buildForTesting()
     {
-        $container = new Core_Foundation_IoC_Container;
+        $container = new Container();
 
         $container->aliasNamespace('CoreBusiness', 'PrestaShop\\PrestaShop\\Core\\Business');
         $container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');

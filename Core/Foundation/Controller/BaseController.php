@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * First layer of common implementation for controllers.
@@ -48,7 +49,7 @@ abstract class BaseController implements ControllerInterface
 
     
     /**
-     * @var \Core_Foundation_IoC_Container
+     * @var Container
      */
     protected $container;
 
@@ -56,9 +57,9 @@ abstract class BaseController implements ControllerInterface
      * Instantiate the Controller. Often made from a Router.
      *
      * @param AbstractRouter $router The Router instance that instantiated the Controller.
-     * @param \Core_Foundation_IoC_Container $container The application container.
+     * @param Container $container The application container.
      */
-    public function __construct(AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
+    public function __construct(AbstractRouter &$router, Container &$container)
     {
         $this->router = $router;
         $this->container = $container;

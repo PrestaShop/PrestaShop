@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Dispatcher;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This class extends EventDispatcher to add Business related listeners.
@@ -89,10 +90,10 @@ final class BaseEventDispatcher extends EventDispatcher
     /**
      * This method is called at the Router instantiation to initialize the base event listeners.
      *
-     * @param \Core_Foundation_IoC_Container $container The application service container.
+     * @param Container $container The application service container.
      * @param boolean $forceDebug True for debug mode.
      */
-    final public static function initBaseDispatchers(&$container, $forceDebug = false)
+    final public static function initBaseDispatchers(Container &$container, $forceDebug = false)
     {
         // complete registry with Business listeners, and then init
         EventDispatcher::$dispatcherRegistry = array_merge(EventDispatcher::$dispatcherRegistry, self::$baseDispatcherRegistry);

@@ -40,10 +40,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 class FakeRouter extends Router
 {
-    public function __construct(\Core_Foundation_IoC_Container $container)
+    public function __construct(Container $container)
     {
         parent::__construct($container, 'fake_test_routes(_(.*))?\.yml');
     }

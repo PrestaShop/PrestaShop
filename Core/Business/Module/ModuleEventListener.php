@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Module;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This is a event listener for dispatcher 'module', to manage cache cleaning.
@@ -41,9 +42,9 @@ class ModuleEventListener
     /**
      * Constructor
      *
-     * @param \Core_Foundation_IoC_Container $container Injected by services Container
+     * @param Container $container Injected by services Container
      */
-    public function __construct(\Core_Foundation_IoC_Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }

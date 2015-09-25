@@ -7,16 +7,16 @@ use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 use Core_Business_ContainerBuilder;
-use Core_Foundation_IoC_Container;
 use Adapter_ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Core_Foundation_IoC_Container
+     * @var Container
      */
     protected $container;
 

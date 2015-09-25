@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Routing\Route;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This class contains specific code for legacy URLs generation from new Architecture Router system.
@@ -41,11 +42,11 @@ class UrlGenerator
      * @param Route $routeParams
      * @param array $defaultParams
      * @param array $parameters
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      * @param \Link $link
      * @return string
      */
-    final public function generateAdminLegacyUrlForNewArchitecture(Route $routeParams, array $defaultParams, array $parameters, \Core_Foundation_IoC_Container $container, \Link $link)
+    final public function generateAdminLegacyUrlForNewArchitecture(Route $routeParams, array $defaultParams, array $parameters, Container $container, \Link $link)
     {
         $legacyPath = $defaultParams['_legacy_path'];
 
@@ -79,10 +80,10 @@ class UrlGenerator
      * Do not use this directly, but prefers to use *Router->generateUrl() and *Controller->generateUrl().
      *
      * @param array $defaultParams
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      * @return string
      */
-    final public function generateFrontLegacyUrlForNewArchitecture(array $defaultParams, \Core_Foundation_IoC_Container $container)
+    final public function generateFrontLegacyUrlForNewArchitecture(array $defaultParams, Container $container)
     {
         $legacyPath = $defaultParams['_legacy_path'];
         $legacyContext = $container->make('Adapter_LegacyContext');

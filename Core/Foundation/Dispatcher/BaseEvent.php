@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Dispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * The BaseEvent class will extend Symfony Event class, adding some specific elements.
@@ -132,10 +133,10 @@ class BaseEvent extends Event
      *
      * If you do this, the listener will have access to all the services!
      *
-     * @param \Core_Foundation_IoC_Container $container The application service container
+     * @param Container $container The application service container
      * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent $this, For fluid method chaining
      */
-    public function setContainer(\Core_Foundation_IoC_Container &$container)
+    public function setContainer(Container &$container)
     {
         $this->container = $container;
         return $this;
@@ -144,7 +145,9 @@ class BaseEvent extends Event
     /**
      * Gets the application service container.
      *
-     * @return \Core_Foundation_IoC_Container
+     * FIXME: should controll access to this instance!
+     *
+     * @return Container
      */
     public function getContainer()
     {

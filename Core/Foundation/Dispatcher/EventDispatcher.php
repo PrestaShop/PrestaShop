@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use Symfony\Component\EventDispatcher\Event;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * The current EventDispatcher is used to trigger a lot of event system widely.
@@ -114,14 +115,14 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      * are instanciated as singletons at the same time. Each singleton is indexed by its name.
      * Then use static registry $dispatcherRegistry to init all the registered listeners to event dispatchers.
      *
-     * @param \Core_Foundation_IoC_Container $container The initialized services container
+     * @param Container $container The initialized services container
      * @param string $rootDir The root directory path.
      * @param string $cacheDir The cache directory path.
      * @param string $moduleDir The module directory path to scan configuration files.
      * @param boolean $debug True to force debug mode (cache fil is generated each time).
      * @throws DevelopmentErrorException If a configuration file is malformed.
      */
-    final public static function initDispatchers(\Core_Foundation_IoC_Container &$container, $rootDir, $cacheDir, $moduleDir, $debug = false)
+    final public static function initDispatchers(Container &$container, $rootDir, $cacheDir, $moduleDir, $debug = false)
     {
         $cache = (new ConfigCacheFactory($debug))->cache(
             $cacheDir.'dispatcher/init_subscribers.php',
@@ -215,7 +216,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
 
     /**
      * Container instance, by reference. Optional.
-     * @var \Core_Foundation_IoC_Container
+     * @var Container
      */
     private $container = null;
 
@@ -227,11 +228,11 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
      * 'EventDispatcher/<$dispatcherName>'.
      *
      * @param string $dispatcherName The dispatcher name (must be unique).
-     * @param \Core_Foundation_IoC_Container $container Optional container to attach the dispatcher in (passed by reference).
+     * @param Container $container Optional container to attach the dispatcher in (passed by reference).
      * @throws DevelopmentErrorException If the eventDispatcher already exists (duplicated name).
      * @throws \Core_Foundation_IoC_Exception If the eventDispatcher already exists in the container (duplicated name).
      */
-    final public function __construct($dispatcherName, \Core_Foundation_IoC_Container &$container = null)
+    final public function __construct($dispatcherName, Container &$container = null)
     {
         if (array_key_exists($dispatcherName, self::$instances)) {
             throw new DevelopmentErrorException('The dispatcher name already exists in the system.');

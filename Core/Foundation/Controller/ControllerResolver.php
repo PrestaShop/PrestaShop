@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This override of the Symfony Content resolver will add some elements to inject in the controller during routing.
@@ -51,15 +52,15 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
     }
 
     /**
-     * @var \Core_Foundation_IoC_Container
+     * @var Container
      */
     private $container;
 
     /**
      * Keeps the Container object to allow injection of it (or another service that it provides) into action.
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      */
-    public function setContainer(\Core_Foundation_IoC_Container &$container)
+    public function setContainer(Container &$container)
     {
         $this->container = $container;
         $this->addInjection($this->container);

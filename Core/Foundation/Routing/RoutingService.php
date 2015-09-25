@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * This Router wrapper will offers public services that will be available from the main IoC Container provider.
@@ -57,9 +58,9 @@ class RoutingService
      * Do not call it by yourself.
      *
      * @param AbstractRouter $router
-     * @param \Core_Foundation_IoC_Container $container
+     * @param Container $container
      */
-    final public static function registerRoutingService(AbstractRouter &$router, \Core_Foundation_IoC_Container &$container)
+    final public static function registerRoutingService(AbstractRouter &$router, Container &$container)
     {
         if (self::$instanciated !== false) {
             return;

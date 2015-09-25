@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\View;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * View
@@ -42,9 +43,9 @@ class View
     /**
      * Constructor
      *
-     * @param  \Core_Foundation_IoC_Container $container
+     * @param  Container $container
      */
-    public function __construct(\Core_Foundation_IoC_Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->data = [];
