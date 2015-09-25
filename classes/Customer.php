@@ -499,8 +499,12 @@ class CustomerCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $sql = $this->getSimpleAddressSql(null, $id_lang);
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            $addresses = [];
+            foreach ($result as $addr) {
+                $addresses[$addr['id']] = $addr;
+            }
             Cache::store($cache_id, $result);
-            return $result;
+            return $addresses;
         }
         return Cache::retrieve($cache_id);
     }
