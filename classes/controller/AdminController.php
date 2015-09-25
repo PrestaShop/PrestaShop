@@ -2614,7 +2614,8 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/date.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/relative-time.js',
-            _PS_JS_DIR_.'vendor/node_modules/dropzone/dist/min/dropzone.min.js'
+            _PS_JS_DIR_.'vendor/node_modules/dropzone/dist/min/dropzone.min.js',
+            _PS_JS_DIR_.'vendor/node_modules/sprintf-js/dist/sprintf.min.js',
         ));
 
         //loads specific javascripts for the admin theme

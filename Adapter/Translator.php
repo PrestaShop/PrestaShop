@@ -70,6 +70,10 @@ class Translator implements TranslatorInterface
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        // Very speific case (Form error)
+        if ($domain == 'form_error') {
+            return \Tools::displayError($id, false);
+        }
         // Very specific cases (PDF)
         if ($domain == 'pdf') {
             // Does not support overriding the language for this adapter!
@@ -134,6 +138,6 @@ class Translator implements TranslatorInterface
      */
     public function getLocale()
     {
-        return $locale;
+        return $this->locale;
     }
 }

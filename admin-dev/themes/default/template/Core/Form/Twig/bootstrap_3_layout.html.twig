@@ -1,4 +1,5 @@
 {% use "form_div_layout.html.twig" %}
+{% use 'typeahead.html.twig' %}
 
 {# Widgets #}
 
@@ -172,7 +173,6 @@
 {% block translatefields_widget %}
     {{ form_errors(form) }}
     <div class="translations tabbable">
-
         {% if form|length > 1 %}
         <ul class="translationsLocales nav nav-tabs">
             {% for translationsFields in form %}
@@ -311,3 +311,4 @@
     {% if form.parent %}</span>{% else %}</div>{% endif %}
     {%- endif %}
 {%- endblock form_errors %}
+

@@ -204,11 +204,23 @@ class ProductController extends AdminController
             _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
             _PS_JS_DIR_.'admin/tinymce.inc.js',
             _PS_JS_DIR_.'admin/tinymce_loader.js',
+            _PS_JS_DIR_.'vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js',
+            _PS_JS_DIR_.'vendor/node_modules/typeahead.js/dist/bloodhound.min.js',
         ));
 
         $form = $builder
-            ->add('step1', new ProductForms\ProductStep1($this->container))
+            ->add('step1', new ProductForms\ProductInformation($this->container))
+            ->add('step2', new ProductForms\ProductQuantity($this->container))
+            ->add('step3', new ProductForms\ProductShipping($this->container))
+            ->add('step4', new ProductForms\ProductSeo($this->container))
+            ->add('step5', new ProductForms\ProductOptions($this->container))
             ->getForm();
+
+        $form->handleRequest($request);
+
+        /*foreach($form->getErrors() as $e){
+            var_dump($e);die;
+        }*/
 
         $response->setEngineName('twig');
         $response->setLegacyControllerName('AdminProducts');

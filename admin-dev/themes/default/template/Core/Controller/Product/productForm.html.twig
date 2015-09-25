@@ -4,7 +4,67 @@
     <div class="panel-heading">Ajouter un produit</div>
     {{ form_start(form) }}
     {{ form_errors(form) }}
-    {{ form_widget(form) }}
-    <input type="submit" />
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#step1" role="tab" data-toggle="tab">Your product</a></li>
+        <li><a href="#step2" role="tab" data-toggle="tab">Quantity</a></li>
+        <li><a href="#step3" role="tab" data-toggle="tab">Shipping</a></li>
+        <li><a href="#step4" role="tab" data-toggle="tab">SEO</a></li>
+        <li><a href="#step5" role="tab" data-toggle="tab">Options</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
+            {{ form_widget(form.step1) }}
+            <div class="text-right">
+                <a class="btn btn-primary btn-next">CONTINUE</a>
+                <input type="submit" value="SAVE" class="btn btn-warning" />
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
+            {{ form_widget(form.step2) }}
+            <div class="text-right">
+                <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                <a class="btn btn-primary btn-next">CONTINUE</a>
+                <input type="submit" value="SAVE" class="btn btn-warning" />
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
+            {{ form_widget(form.step3) }}
+            <div class="text-right">
+                <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                <a class="btn btn-primary btn-next">CONTINUE</a>
+                <input type="submit" value="SAVE" class="btn btn-warning" />
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
+            {{ form_widget(form.step4) }}
+            <div class="text-right">
+                <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                <a class="btn btn-primary btn-next">CONTINUE</a>
+                <input type="submit" value="SAVE" class="btn btn-warning" />
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
+            {{ form_widget(form.step5) }}
+            <div class="text-right">
+                <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                <input type="submit" value="SAVE" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
     {{ form_end(form) }}
 </div>
+
+<script>
+    $( document ).ready(function() {
+        $('.btn-next').click(function(){
+            $('.nav-tabs > .active').next('li').find('a').trigger('click');
+        });
+
+        $('.btn-prev').click(function(){
+            $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+        });
+    });
+
+</script>

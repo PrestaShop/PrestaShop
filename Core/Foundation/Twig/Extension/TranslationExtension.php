@@ -34,15 +34,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 class TranslationExtension extends \Twig_Extension
 {
     private $translator;
+    private $container;
 
     /**
      * Constructor : Inject Symfony\Component\Translation Translator
      *
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $container)
     {
         $this->translator = $translator;
+        $this->container = $container;
     }
 
     /**
@@ -67,8 +69,7 @@ class TranslationExtension extends \Twig_Extension
      */
     final private function getPrestaShopTranslation($message)
     {
-        return \Tools::displayError($message, false);
-        // FIXME: vers Adapter
+        return $this->container->make('CoreAdapter:Translator')->trans($message, array(), 'form_error');
     }
 
     /**

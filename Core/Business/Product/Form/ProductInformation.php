@@ -32,18 +32,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadProductCollectionType;
 
 /**
- * This form class is risponsible to generate the step1 product form
+ * This form class is risponsible to generate the basic product informations form
  */
-class ProductStep1 extends AbstractType
+class ProductInformation extends AbstractType
 {
     private $router;
     private $context;
     private $translator;
     private $tax_rules;
     private $manufacturers;
-    private $suppliers;
+    private $locales;
+    private $nested_categories;
+    private $productAdapter;
 
     /**
      * Constructor
@@ -55,9 +58,17 @@ class ProductStep1 extends AbstractType
         $this->router = $container->make('Routing');
         $this->context = $container->make('Context');
         $this->translator = $container->make('Translator');
-        $this->tax_rules = $this->formatDataChoicesList(\TaxRulesGroup::getTaxRulesGroups(true), 'id_tax_rules_group');
-        $this->manufacturers = $this->formatDataChoicesList(\Manufacturer::getManufacturers(false, 0, true, false, false, false, true), 'id_manufacturer');
-        $this->suppliers = $this->formatDataChoicesList(\Supplier::getSuppliers(), 'id_supplier');
+        $this->productAdapter = $container->make('CoreAdapter:Product\\ProductDataProvider');
+        $this->locales = $container->make('CoreAdapter:Language\\LanguageDataProvider')->getLanguages();
+        $this->nested_categories = $container->make('CoreAdapter:Category\\CategoryDataProvider')->getNestedCategories();
+        $this->tax_rules = $this->formatDataChoicesList(
+            $container->make('CoreAdapter:Tax\\TaxRuleDataProvider')->getTaxRulesGroups(true),
+            'id_tax_rules_group'
+        );
+        $this->manufacturers = $this->formatDataChoicesList(
+            $container->make('CoreAdapter:Manufacturer\\ManufacturerDataProvider')->getManufacturers(false, 0, true, false, false, false, true),
+            'id_manufacturer'
+        );
     }
 
     /**
@@ -100,18 +111,33 @@ class ProductStep1 extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3))
                 )
-            )
+            ),
+            $this->locales
         ))
-        ->add('description', 'textarea', array(
-            'attr' => array('class' => 'autoload_rte')
-        ))
+        ->add('description', new TranslateType(
+            'textarea',
+            array(
+                'attr' => array('class' => 'autoload_rte'),
+                'required' => false
+            ),
+            $this->locales
+        ), array('required' => false))
         ->add('images', new DropFilesType('Images', $this->router->generateUrl('admin_tools_upload'), array(
             'maxFiles' => '10',
             'dictRemoveFile' => 'Supprimer'
         )))
-        ->add('upc', 'text')
-        ->add('ean13', 'text')
-        ->add('reference', 'text')
+        ->add('upc', 'text', array(
+            'required' => false
+        ))
+        ->add('ean13', 'text', array(
+            'required' => false
+        ))
+        ->add('reference', 'text', array(
+            'required' => false
+        ))
+        ->add('isbn', 'text', array(
+            'required' => false
+        ))
         ->add('condition', 'choice', array(
             'choices'  => array(
                 'new' => 'Nouveau',
@@ -121,15 +147,20 @@ class ProductStep1 extends AbstractType
             'required' => true,
             'data' => 'new'
         ))
-        ->add('wholesale_price', 'number')
-        ->add('price', 'number')
+        ->add('price', 'number', array(
+            'required' => false
+        ))
         ->add('id_tax_rules_group', 'choice', array(
             'choices' =>  $this->tax_rules,
             'required' => true,
         ))
-        ->add('unit_price', 'number')
-        ->add('unity', 'text')
-        ->add('on_sale', 'checkbox')
+        ->add('price_ttc', 'number', array(
+            'required' => false,
+            'mapped' => false,
+        ))
+        ->add('on_sale', 'checkbox', array(
+            'required' => false
+        ))
 
         //RIGHT COL
         ->add('active', 'choice', array(
@@ -139,18 +170,8 @@ class ProductStep1 extends AbstractType
             'multiple' => false,
             'data' => 0
         ))
-        ->add('visibility', 'choice', array(
-            'choices'  => array(
-                'both' => 'Partout',
-                'catalog' => 'Catalogue uniquement',
-                'search' => 'Recherche uniquement',
-                'none' => 'Nulle part',
-            ),
-            'required' => true,
-            'data' => 'both'
-        ))
         ->add(
-            $builder->create('options', 'form')
+            $builder->create('options', 'form', array('required' => false))
                 ->add('available_for_order', 'checkbox', array(
                     'label'    => 'Disponible à la vente',
                     'required' => false,
@@ -164,15 +185,17 @@ class ProductStep1 extends AbstractType
                     'required' => false,
                 ))
         )
-        ->add('categorys', new ChoiceCategorysTreeType('Catégories', \Category::getNestedCategories()))
+        ->add('categorys', new ChoiceCategorysTreeType('Catégories', $this->nested_categories))
         ->add('id_manufacturer', 'choice', array(
             'choices' =>  $this->manufacturers
         ))
-        ->add('suppliers', 'choice', array(
-            'choices' =>  $this->suppliers,
-            'expanded' =>  true,
-            'multiple' =>  true,
-            'required' =>  false,
+        ->add('related_products', new TypeaheadProductCollectionType(
+            $this->context->link->getAdminLink('', false).'ajax_products_list.php?limit=20&q=%QUERY',
+            'id',
+            'name',
+            'search in catalog...',
+            '',
+            $this->productAdapter
         ));
     }
 

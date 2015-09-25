@@ -24,63 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Foundation\Form\Type;
+namespace PrestaShop\PrestaShop\Core\Business\Product\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadCollectionType;
 
 /**
- * This form class is risponsible to create a translatable form
+ * This form class is risponsible to generate the product SEO form
  */
-class TranslateType extends AbstractType
+class ProductSeo extends AbstractType
 {
-    private $type;
-    private $options;
-    private $locales;
+    private $router;
+    private $context;
+    private $translator;
 
     /**
      * Constructor
      *
-     * @param string $type The field type
-     * @param array $options The field options as constraints, attributes...
-     * @param array $locales The locales to render all fields
+     * @param \Core_Foundation_IoC_Container $container
      */
-    public function __construct($type, $options = array(), $locales = array())
+    public function __construct(\Core_Foundation_IoC_Container $container)
     {
-        $this->type = $type;
-        $this->options = $options;
-        $this->locales = $locales;
+        $this->router = $container->make('Routing');
+        $this->context = $container->make('Context');
+        $this->translator = $container->make('Translator');
     }
 
     /**
      * {@inheritdoc}
      *
-     * Builds form fields for each locales
+     * Builds form
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $i=0;
-        foreach ($this->locales as $locale) {
-            $this->options['label'] = $locale['iso_code'];
-            if ($i>0) {
-                $this->options['required'] = false;
-            }
-            $builder->add($locale['id_lang'], $this->type, $this->options);
-            $i++;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Add the var locales and defaultLocale to the view
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        $view->vars['locales'] = $this->locales;
-        $view->vars['defaultLocale'] = $this->locales[0];
     }
 
     /**
@@ -90,6 +71,6 @@ class TranslateType extends AbstractType
      */
     public function getName()
     {
-        return 'translatefields';
+        return 'product_seo';
     }
 }

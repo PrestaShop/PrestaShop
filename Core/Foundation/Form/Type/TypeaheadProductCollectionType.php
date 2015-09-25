@@ -26,61 +26,51 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is risponsible to create a translatable form
+ * This form class is risponsible to create a product with attribute without attribute field
  */
-class TranslateType extends AbstractType
+class TypeaheadProductCollectionType extends \PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadCollectionType
 {
-    private $type;
-    private $options;
-    private $locales;
+    protected $productAdapter;
 
     /**
-     * Constructor
+     * {@inheritdoc}
      *
-     * @param string $type The field type
-     * @param array $options The field options as constraints, attributes...
-     * @param array $locales The locales to render all fields
+     * @param : Object $productAdapter
      */
-    public function __construct($type, $options = array(), $locales = array())
+    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '', $productAdapter)
     {
-        $this->type = $type;
-        $this->options = $options;
-        $this->locales = $locales;
+        parent::__construct($remote_url, $mapping_value, $mapping_name, $placeholder, $template_collection);
+        $this->productAdapter = $productAdapter;
     }
 
     /**
      * {@inheritdoc}
      *
-     * Builds form fields for each locales
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $i=0;
-        foreach ($this->locales as $locale) {
-            $this->options['label'] = $locale['iso_code'];
-            if ($i>0) {
-                $this->options['required'] = false;
-            }
-            $builder->add($locale['id_lang'], $this->type, $this->options);
-            $i++;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Add the var locales and defaultLocale to the view
+     * Add the var choices to the view
+     * Inject collection products
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['locales'] = $this->locales;
-        $view->vars['defaultLocale'] = $this->locales[0];
+        parent::buildView($view, $form, $options);
+
+        //if form is submitted, inject datas to display collection
+        if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
+            $collection = array();
+
+            foreach ($view->vars['value']['data'] as $id) {
+                $product = $this->productAdapter->getProduct($id);
+                $collection[] = array(
+                    'id' => $id,
+                    'name' => $product->name[1],
+                );
+            }
+            $view->vars['collection'] = $collection;
+        }
     }
 
     /**
@@ -90,6 +80,6 @@ class TranslateType extends AbstractType
      */
     public function getName()
     {
-        return 'translatefields';
+        return 'typeahead_product_collection';
     }
 }

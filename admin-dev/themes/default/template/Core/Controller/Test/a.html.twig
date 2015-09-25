@@ -1,0 +1,83 @@
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+<!--
+SIMPLE WAY TO RENDER A FORM
+{#{ form_start(form) }#}
+	{#{ form_widget(form) }#}
+<input type="submit" />
+{#{ form_end(form) }#}
+-->
+
+<div class="panel">
+    <div class="panel-heading">My form</div>
+    <div class="form-wrapper">
+
+        {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        {{ form_row(form.lastName) }}
+
+        <div>
+            <div class="form-group">
+                {{ form_label(form.firstName, 'Nom') }}
+                {{ form_errors(form.firstName) }}
+                <div class="col-sm-10">{{ form_widget(form.firstName) }}</div>
+            </div>
+        </div>
+        <div>
+            {{ form_row(form.gender) }}
+        </div>
+        <div>
+            {{ form_row(form.newsletter) }}
+        </div>
+        <div>
+            {{ form_row(form.imageAttachment) }}
+        </div>
+        <div>
+            {{ form_row(form.fileAttachment) }}
+        </div>
+        <div>
+            {{ form_row(form.author) }}
+        </div>
+        <div>
+            <div class="form-group">
+                {{ form_errors(form.testSimpleCollection) }}
+                {{ form_label(form.testSimpleCollection) }}
+
+                <div class="col-sm-10">
+                    <ul class="testSimpleCollection" data-prototype="{{ form_widget(form.testSimpleCollection.vars.prototype)|e }}"></ul>
+                </div>
+                {{ form_widget(form.testSimpleCollection) }}
+            </div>
+        </div>
+
+        <input type="submit" />
+
+        {{ form_end(form) }}
+
+        <script>
+            var collectionHolder = $('ul.testSimpleCollection');
+            var $addTagLink = $('<a href="#" class="add_tag_link">Ajouter</a>');
+            var $newLinkLi = $('<li></li>').append($addTagLink);
+
+            jQuery(document).ready(function() {
+                collectionHolder.append($newLinkLi);
+                $addTagLink.on('click', function(e) {
+                    e.preventDefault();
+                    addtestSimpleCollection(collectionHolder, $newLinkLi);
+                });
+            });
+
+            function addtestSimpleCollection(collectionHolder, $newLinkLi) {
+                var prototype = collectionHolder.attr('data-prototype');
+                var newForm = prototype.replace(/__name__/g, collectionHolder.children().length);
+                var $newFormLi = $('<li></li>').append(newForm);
+                $newLinkLi.before($newFormLi);
+                addtestSimpleCollection($newFormLi);
+            }
+        </script>
+
+    </div>
+</div>

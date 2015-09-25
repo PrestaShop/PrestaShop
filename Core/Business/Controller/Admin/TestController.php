@@ -109,24 +109,12 @@ class TestController extends AdminController
                     ))
                 )
             ))
-            ->add('dropFiles', new DropFilesType('Images', $this->generateUrl('admin_tools_upload'), array(
-                'maxFiles' => '10',
-                'dictRemoveFile' => 'Supprimer'
-            )))
             ->add($simpleSubForm)
             ->add('testSimpleCollection', 'collection', array(
                 'type' => new TestType(),
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true))
-            ->add('title', new TranslateType(
-                'text',
-                array('constraints' => array(
-                    new Assert\NotBlank(),
-                    new Assert\Length(array('min' => 4)),
-                    new ContainsAlphanumeric())
-                )
-            ))
             ->setData($defaultData)
             ->getForm();
 
@@ -152,12 +140,8 @@ class TestController extends AdminController
             //do what you want, redirect...
         }
 
-
-        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($this->container, 'twig');
-        $response->addContentData(
-            'form',
-            $engine->view->render('Core/Controller/Test/form.html.twig', array('form' => $form->createView()))
-        );
+        $response->setEngineName('twig');
+        $response->addContentData('form', $form->createView());
 
         $response->setLegacyControllerName('AdminCustomers');
         $response->setHeaderToolbarBtn(array('add' => array('href' => 'sdfsdfdsf', 'desc' => 'sdffdsfd', 'icon' => 'process-icon-new')));
