@@ -51,6 +51,10 @@ class Adapter_CartPresenter
     {
         $data = Product::getAllCustomizedDatas($cart->id);
 
+        if (!$data) {
+            $data = [];
+        }
+
         return array_map(function (array $product) use ($data) {
 
             $product['customizations'] = [];
