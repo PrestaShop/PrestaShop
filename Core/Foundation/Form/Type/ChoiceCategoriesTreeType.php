@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormInterface;
 /**
  * This form class is risponsible to create a nested category selector
  */
-class ChoiceCategorysTreeType extends AbstractType
+class ChoiceCategoriesTreeType extends AbstractType
 {
     private $label;
     private $list;
@@ -45,7 +45,7 @@ class ChoiceCategorysTreeType extends AbstractType
      * Constructor
      *
      * @param string $label The field label
-     * @param array $list The nested array categorys
+     * @param array $list The nested array categories
      */
     public function __construct($label = '', $list = array(), $multiple = true)
     {
@@ -56,9 +56,9 @@ class ChoiceCategorysTreeType extends AbstractType
     }
 
     /**
-     * Create and format a valid array keys categorys that can be validate by the choice SF2 cform component
+     * Create and format a valid array keys categories that can be validate by the choice SF2 cform component
      *
-     * @param array $list The nested array categorys
+     * @param array $list The nested array categories
      */
     protected function formatValidList($list)
     {
@@ -81,7 +81,7 @@ class ChoiceCategorysTreeType extends AbstractType
         $view->vars['choices'] = $this->list;
         $view->vars['multiple'] = $this->multiple;
 
-        //if form is submitted, inject categorys values array to check or not each field
+        //if form is submitted, inject categories values array to check or not each field
         if (!empty($view->vars['value']) && !empty($view->vars['value']['tree'])) {
             $view->vars['submitted_values'] = array_flip($view->vars['value']['tree']);
         }

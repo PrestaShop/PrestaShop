@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadProductCollectionType;
 
 /**
@@ -185,7 +185,7 @@ class ProductInformation extends AbstractType
                     'required' => false,
                 ))
         )
-        ->add('categorys', new ChoiceCategorysTreeType('Catégories', $this->nested_categories))
+        ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories))
         ->add('id_manufacturer', 'choice', array(
             'choices' =>  $this->manufacturers
         ))

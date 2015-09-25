@@ -29,10 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TypeaheadCollectionType;
 
 /**
  * This form class is risponsible to generate the product shipping form

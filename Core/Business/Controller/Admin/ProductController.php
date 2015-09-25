@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
@@ -135,7 +135,7 @@ class ProductController extends AdminController
 
                 // Category tree
                 $formFactory = new FormFactory();
-                $form = $formFactory->create(new ChoiceCategorysTreeType('categories', \Category::getNestedCategories(), false));
+                $form = $formFactory->create(new ChoiceCategoriesTreeType('categories', \Category::getNestedCategories(), false));
                 if (isset($persistedFilterParameters['ls_products_filter_category'])) {
                     $form->setData(array('tree' => array(0 => $persistedFilterParameters['ls_products_filter_category'])));
                 }
