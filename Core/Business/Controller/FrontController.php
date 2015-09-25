@@ -29,7 +29,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 
 /**
- * Base class for all Front controllers. Others won't be accepted by FrontRouter.
+ * Base class for all Front controllers.
+ *
+ * Others won't be accepted by FrontRouter.
  * You must extends this one, and use traits that you need.
  * For more explanations about action functions normalization, please read:
  * @see PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController

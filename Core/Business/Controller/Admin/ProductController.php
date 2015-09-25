@@ -38,12 +38,20 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\Type\ChoiceCategorysTreeType;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
- * Admin controller for the Product pages:
+ * Admin controller for the Product pages using the Symfony architecture:
  * - categories
  * - product list
  * - product details
  * - product attributes
  * - ...
+ *
+ * This controller is the first one to be beta tested on the new Symfony Architecture.
+ * The retro-compatibility is dropped for the corresponding Admin pages.
+ * A set of hooks are integrated and an Adapter is made to wrap the new EventDispatcher
+ * component to the existing hook system. So existing hooks are always triggered, but from the new
+ * code (and so needs to be adapted on the module side ton comply on the new parameters formats, the new UI style, etc...).
+ *
+ * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see self::shouldUseLegacyPagesAction()).
  */
 class ProductController extends AdminController
 {
@@ -212,6 +220,7 @@ class ProductController extends AdminController
 
     /**
      * Use it internally to know if we need to redirect to legacy Controllers.
+     * @see self::shouldUseLegacyPagesAction() for more information.
      *
      * FIXME: This is a temporary behavior.
      *
@@ -223,6 +232,18 @@ class ProductController extends AdminController
         return $dataProvider->getTemporaryShouldUseLegacyPages();
     }
 
+    /**
+     * This action will persist user choice to use (or not) the legacy Product pages instead of the new one.
+     *
+     * This action will allow the merchant to switch between the new and the old pages for Catalog & Products pages.
+     * This is a temporary behavior, that will be removed in a futur minor release. This is here to let the modules
+     * adapting their hooks to the new controller behavior during a short time.
+     *
+     * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
+     *
+     * @param Request $request
+     * @param Response $response
+     */
     public function shouldUseLegacyPagesAction(Request &$request, Response &$response)
     {
         $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');

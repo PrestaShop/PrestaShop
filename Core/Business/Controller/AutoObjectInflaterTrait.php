@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 /**
+ * Trait that adds processes before action to auto-inflate object from the given route parameters.
+ *
  * This Trait will add convenience hooks before controller action execution,
  * and will try to inflate data from DB if the route contains parameters (if their name follow a specific norm)
  * and will insert them in $response->getContentData() set.

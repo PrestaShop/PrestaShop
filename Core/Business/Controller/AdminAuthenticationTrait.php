@@ -30,6 +30,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This Trait will add middleware functions to check authentication state.
+ *
+ * Reserved to the Admin interface (checks merchant/employees authentication, not the final customer).
+ * This Trait is used by AdminController (to be extended in all the subclasses).
+ * If the authentication failed, this is not the Trait's responsibility to display a login page:
+ * a redirection is done to the login controller.
  */
 trait AdminAuthenticationTrait
 {
@@ -61,7 +66,11 @@ trait AdminAuthenticationTrait
     }
     
     /**
+     * Is authentication required to use the corresponding actions?
+     *
      * Defined in AdminController class. Allow trait methods to call it directly.
+     *
+     * @return boolean True if authenticated user is needed. False if the controller can be called by anonymous users.
      */
     abstract protected function isAuthenticationNeeded();
 }

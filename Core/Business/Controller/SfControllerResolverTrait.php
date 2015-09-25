@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerResolver;
 
 /**
+ * Trait to add dependency injection to the controller's actions.
+ *
  * This Trait will add dependency injection in the controller action methods.
  * Can work in junction with AutoObjectInflaterTrait for example.
  */

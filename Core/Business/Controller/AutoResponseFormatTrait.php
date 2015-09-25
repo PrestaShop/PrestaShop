@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
+ * Trait to generate default action settings (template name, response format) depending on the request.
+ *
  * This Trait will add convenience hooks to search for data type to output, and the appropriate template engine
  * to use.
  */

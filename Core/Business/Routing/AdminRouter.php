@@ -31,6 +31,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Adapter\UrlGenerator;
 
 /**
+ * Administration interface's Router
+ *
  * This final layer supports URL generation for Administration interface, and
  * checks security parameters to execute only AdminController actions.
  */

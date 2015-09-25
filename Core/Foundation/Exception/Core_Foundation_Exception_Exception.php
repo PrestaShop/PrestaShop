@@ -158,4 +158,48 @@ class Core_Foundation_Exception_Exception extends Exception
         }
         return false;
     }
+
+    /**
+     * Returns information about the caller of the method in which this function is executed.
+     *
+     * Do use it to identify the method that thrown an Exception for example.
+     * For reporting use only, parsing these data to take a procedural decision in the PHP code is not recommended.
+     * @see http://php.net/manual/en/function.debug-backtrace.php
+     *
+     * @return string
+     */
+    final public static function getCallerInfo()
+    {
+        $c = '';
+        $file = '';
+        $func = '';
+        $class = '';
+        $trace = debug_backtrace();
+        if (isset($trace[2])) {
+            $file = $trace[1]['file'];
+            $func = $trace[2]['function'];
+            if ((substr($func, 0, 7) == 'include') || (substr($func, 0, 7) == 'require')) {
+                $func = '';
+            }
+        } elseif (isset($trace[1])) {
+            $file = $trace[1]['file'];
+            $func = '';
+        }
+        if (isset($trace[3]['class'])) {
+            $class = $trace[3]['class'];
+            $func = $trace[3]['function'];
+            $file = $trace[2]['file'];
+        } elseif (isset($trace[2]['class'])) {
+            $class = $trace[2]['class'];
+            $func = $trace[2]['function'];
+            $file = $trace[1]['file'];
+        }
+        if ($file != '') {
+            $file = basename($file);
+        }
+        $c = $file . ": ";
+        $c .= ($class != '') ? ":" . $class . "->" : "";
+        $c .= ($func != '') ? $func . "(): " : "";
+        return($c);
+    }
 }

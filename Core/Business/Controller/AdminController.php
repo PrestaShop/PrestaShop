@@ -29,20 +29,22 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 
 /**
- * Base class for all Admin controllers. Others won't be accepted by AdminRouter.
+ * Base class for all Admin controllers.
+ *
+ * Others won't be accepted by AdminRouter.
  * You must extends this one, and use traits that you need.
  * For more explanations about action functions normalization, please read:
  * @see PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController
  */
 class AdminController extends BaseController
 {
-    use AdminAuthenticationTrait;
-    use AdminCommonActionTrait;
+    use AdminAuthenticationTrait; // All AdminController subclasses should be protected by authentication middleware.
+    use AdminCommonActionTrait; // describe common actions for the Admin Interface
 
     /**
-     * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...)
-     * Implements it and use $response->getContent() to retrieve the main content.
-     * Once you encapsulated the content in the layout, use $response->setContent() to store the result.
+     * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...).
+     *
+     * {@inheritdoc}
      *
      * @param Response $response
      */
@@ -90,9 +92,9 @@ class AdminController extends BaseController
     }
 
     /**
-     * This function will format data in an HTML result. Most of the time, you should use a template engine to render
-     * the response. The data given by the controller action is available in $response->getContentData(), and once
-     * you rendered the HTML content, you should put it in $response->setContent().
+     * This function will format data in an HTML result.
+     *
+     * {@inheritdoc}
      *
      * @param Response $response
      */
@@ -103,8 +105,14 @@ class AdminController extends BaseController
     }
     
     /**
+     * Is authentication required to use the corresponding actions?
+     *
+     * {@inheritdoc}
+     *
      * Override this in your controller if you want to allow anonymous users to call it.
      * For example, for Login controllers, should be overriden to return false.
+     * Warning: if you return false on an Admin controller subclass, then the corresponding actions
+     * will be wide opened to anonymous connections.
      *
      * @return boolean True if authenticated user is needed. False if the controller can be called by anonymous users.
      */

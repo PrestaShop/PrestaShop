@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Adapter\Translator;
 
 /**
- * Second layer of the Router classes structure, to add Business specific behaviors.
+ * Second layer of the Router classes structure, to add Business specific behaviors (but common for Front/Admin).
  *
  * - Avoid double instantiation of a Router class,
  * - Generates the action execution sequence (with Traits methods),

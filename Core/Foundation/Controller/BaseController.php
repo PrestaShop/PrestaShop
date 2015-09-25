@@ -88,7 +88,9 @@ abstract class BaseController implements ControllerInterface
     }
 
     /**
-     * This function will format data in an HTML result. Most of the time, you should use a template engine to render
+     * This function will format data in an HTML result.
+     *
+     * Most of the time, you should use a template engine to render
      * the response. The data given by the controller action is available in $response->getContentData(), and once
      * you rendered the HTML content, you should put it in $response->setContent().
      *
@@ -128,8 +130,9 @@ abstract class BaseController implements ControllerInterface
     }
 
     /**
-     * This function will encapsulate an HTML content into a very smart HTML layout,
-     * with the minimum required to be valid HTML document.
+     * This function will encapsulate an HTML content.
+     *
+     * ...into a very smart HTML layout, with the minimum required to be valid HTML document.
      * If you need more HTML stuff in this mode, override this function in your extended class.
      *
      * @param Response $response
@@ -152,7 +155,8 @@ abstract class BaseController implements ControllerInterface
     }
 
     /**
-     * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...)
+     * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...).
+     *
      * Implements it and use $response->getContent() to retrieve the main content.
      * Once you encapsulated the content in the layout, use $response->setContent() to store the result.
      *

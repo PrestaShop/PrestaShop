@@ -180,24 +180,26 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                     $closure = function (ResponseEvent $event) use ($dispatcher, $listener, &$closure) {
                         if (isset($listener[5])) {
                             $listenerInstance = $listener[1]::$listener[5]();
-                        } elseif ($container->knows($listener[1])) {
-                            $listenerInstance = $container->make($listener[1]);
                         } else {
-                            $listenerInstance = new $listener[1]();
+                            if (!$container->knows($listener[1])) {
+                                $container->bind($listener[1], $listener[1]);
+                            }
+                            $listenerInstance = $container->make($listener[1]);
                         }
-                        
+
                         $listenerInstance->$listener[2]($event); // trigger event listener manually the first time
-                        $dispatcher->addListener($listener[0], array($listenerInstance, $listener[2]), $listener[3]); // for next event, use lazy instance
+                        $dispatcher->addListener($listener[0], array($listenerInstance, $listener[2]), $listener[3]); // for next event, use the created lazy instance
                         $dispatcher->removeListener($listener[0], $closure);
                     };
                     $dispatcher->addListener($listener[0], $closure, $listener[3]);
                 } else { // no lazy, so direct instantiation.
                     if (isset($listener[5])) {
                         $listenerInstance = $listener[1]::$listener[5]();
-                    } elseif ($container->knows($listener[1])) {
-                        $listenerInstance = $container->make($listener[1]);
                     } else {
-                        $listenerInstance = new $listener[1]();
+                        if (!$container->knows($listener[1])) {
+                            $container->bind($listener[1], $listener[1]);
+                        }
+                        $listenerInstance = $container->make($listener[1]);
                     }
                     $dispatcher->addListener($listener[0], array($listenerInstance, $listener[2]), $listener[3]);
                 }

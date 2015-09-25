@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Dispatcher;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 /**
  * A HookEvent is a more structured event, when complex operation must be done and could want a result.
@@ -37,6 +38,33 @@ class HookEvent extends BaseEvent
 {
     private $result = array();
     private $parameters = array();
+    private $canBeStopped = false;
+
+    /**
+     * Constructor.
+     *
+     * @param boolean $canBeStopped True to allow the hook event to be stopped during propagation, by listeners.
+     */
+    public function __construct($canBeStopped = false)
+    {
+        $this->canBeStopped = $canBeStopped;
+    }
+
+    /**
+     * Stops the propagation of the event to further event listeners.
+     *
+     * {@inheritdoc}
+     *
+     * For a HookEvent, we cannot stop the propagation if the event has been constructed with the option to avoid this.
+     */
+    public function stopPropagation()
+    {
+        if ($this->canBeStopped) {
+            parent::stopPropagation();
+        } else {
+            throw new WarningException('A hook listener tried to stop the propagation of a Hook event.', 'Listener: '.WarningException::getCallerInfo());
+        }
+    }
 
     /**
      * Sets the result of the event. This will replace the previous one if another listener has been called before.

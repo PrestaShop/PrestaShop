@@ -23,31 +23,53 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Business\Log;
+namespace PrestaShop\PrestaShop\Core\Business\Module;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
+/**
+ * This is a event listener for dispatcher 'module', to manage cache cleaning.
+ *
+ * FIXME: for now, this listener does nothing, since modules cannot complete/modify routes.
+ * Please come back later when modules will have acces to an API to add routes!
+ * This listener is for now an example of what we can do in the Core. For modules, the API is not ready yet.
+ */
 class ModuleEventListener
 {
-    private static $instance = null;
+    private $container;
 
-    public static function getInstance()
+    /**
+     * Constructor
+     *
+     * @param \Core_Foundation_IoC_Container $container Injected by services Container
+     */
+    public function __construct(\Core_Foundation_IoC_Container $container)
     {
-        if (self::$instance == null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        $this->container = $container;
     }
 
+    /**
+     * Triggered before a module modification, to ensure the field is clean.
+     *
+     * TODO
+     *
+     * @param BaseEvent $event
+     */
     public function onBefore(BaseEvent $event)
     {
         // TODO: clear routing/dispatchers caches, or maybe more!
     }
 
+    /**
+     * Triggered after a module modification (update, install, uninstall, etc...) to clean Routing cache
+     *
+     * TODO
+     *
+     * @param BaseEvent $event
+     */
     public function onAfter(BaseEvent $event)
     {
-        // FIXME: access to container should be added to allow Listeners to access services!
-        $cacheManager = \Adapter_ServiceLocator::get('Adapter_CacheManager');
+        $cacheManager = $this->container->make('Adapter_CacheManager');
         //$cacheManager->clean();
         // TODO: clear routing/dispatchers caches, or maybe more!
     }

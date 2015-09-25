@@ -32,13 +32,19 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
  * This class extends EventDispatcher to add Business related listeners.
  *
  * @see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
+ * {@inheritdoc}
+ *
+ * This subclass adds a hook trigger, that can be listened by modules.
+ * Listening a hook event is like other event listeners (Symfony2 way),
+ * except the Event instance is a HookEvent, and contains hook parameters,
+ * and can keep the listener response as attribute.
  *
  * Existing dispatchers:
  * The default ones: @see \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher
  * New ones are defined:
  *
  * - module         All events concerning modules manipulation: install, update, uninstall, etc...
- *                  FOR NOW, THESE EVENTS ARE NOT TRIGGERED. FOR FUTURE BEHAVIOR.
+ *                  FIXME: FOR NOW, THESE EVENTS ARE NOT TRIGGERED. FOR FUTURE BEHAVIOR.
  *      - before_install
  *      - after_install
  *      - before_update
@@ -61,16 +67,16 @@ final class BaseEventDispatcher extends EventDispatcher
      */
     private static $baseDispatcherRegistry = array(
         'module' => array(
-            array('before_install', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
-            array('before_update', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
-            array('before_uninstall', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
-            array('before_deactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
-            array('before_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onBefore', -255, false, 'getInstance'),
-            array('after_install', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
-            array('after_update', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
-            array('after_uninstall', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
-            array('after_deactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
-            array('after_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Log\\ModuleEventListener', 'onAfter', 128, false, 'getInstance'),
+            array('before_install', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onBefore', -255, false),
+            array('before_update', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onBefore', -255, false),
+            array('before_uninstall', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onBefore', -255, false),
+            array('before_deactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onBefore', -255, false),
+            array('before_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onBefore', -255, false),
+            array('after_install', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
+            array('after_update', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
+            array('after_uninstall', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
+            array('after_deactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
+            array('after_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
         ), // all events concerning modules manipulation: install, update, uninstall, etc...
         'hook' => array(
             array('legacy_actionProductAdd', 'Adapter_HookManager', 'onHook', 0, true),
@@ -107,9 +113,10 @@ final class BaseEventDispatcher extends EventDispatcher
      *
      * @param string $hookName
      * @param array $hookParameters An indexed array of parameters to send to the Hook listener.
+     * @param boolean $canBeStopped True to allow a listener to stop the event propagation (default to false, not recommended for most of hooks))
      * @return string|array The result of the hook(s) if there is any.
      */
-    final public static function hook($hookName, $hookParameters = array())
+    final public static function hook($hookName, $hookParameters = array(), $canBeStopped = false)
     {
         $dispatcher = self::$instances['hook'];
         $event = new HookEvent();

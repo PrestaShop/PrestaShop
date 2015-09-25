@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints\File;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**
- * This Trait will add common action such as upload, delete, change status and more...
+ * This Trait will add common action such as upload, delete (droping files on the interface like images), change status and more...
  */
 trait AdminCommonActionTrait
 {

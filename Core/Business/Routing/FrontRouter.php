@@ -30,8 +30,12 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
+ * Front interface's Router
+ *
  * This final layer supports URL generation for Front interface, and
  * checks security parameters to execute only FrontController actions.
+ *
+ * FIXME: for 1.7, not used yet.
  */
 class FrontRouter extends Router
 {
