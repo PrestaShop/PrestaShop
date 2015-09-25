@@ -257,13 +257,11 @@ $(document).on('click', '.color_pick', function(e){
 
 $(document).on('change', '.attribute_select', function(e){
 	e.preventDefault();
-	findCombination();
 	getProductAttribute();
 });
 
 $(document).on('click', '.attribute_radio', function(e){
 	e.preventDefault();
-	findCombination();
 	getProductAttribute();
 });
 
