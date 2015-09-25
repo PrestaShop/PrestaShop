@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5b9e226f66e01f45ba4ed17360595061",
+    "hash": "248de72f71240b2063357ca4c9c2087a",
+    "content-hash": "088a03a5b3bc4ca1d91a3b5171a15070",
     "packages": [
         {
             "name": "composer/installers",
@@ -478,19 +479,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcart.git",
-                "reference": "b33349a7a0563d31330bc641cb31612365ca7b0c"
+                "reference": "c677c5fd621a1e32e06e7db91b3ef918bffd4263"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/b33349a7a0563d31330bc641cb31612365ca7b0c",
-                "reference": "b33349a7a0563d31330bc641cb31612365ca7b0c",
+                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/c677c5fd621a1e32e06e7db91b3ef918bffd4263",
+                "reference": "c677c5fd621a1e32e06e7db91b3ef918bffd4263",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -502,7 +502,10 @@
             ],
             "description": "PrestaShop module blockcart",
             "homepage": "https://github.com/PrestaShop/blockcart",
-            "time": "2015-08-28 14:58:25"
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcart/tree/feat/starter-theme"
+            },
+            "time": "2015-09-21 12:33:20"
         },
         {
             "name": "prestashop/blockcategories",
@@ -638,19 +641,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcontactinfos.git",
-                "reference": "7e639ea0cb09b82da9868dde0f578be940744a58"
+                "reference": "c48bc5a7361358c88c71a0409bd00746f9e7b835"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/7e639ea0cb09b82da9868dde0f578be940744a58",
-                "reference": "7e639ea0cb09b82da9868dde0f578be940744a58",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/c48bc5a7361358c88c71a0409bd00746f9e7b835",
+                "reference": "c48bc5a7361358c88c71a0409bd00746f9e7b835",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -662,7 +664,10 @@
             ],
             "description": "PrestaShop module blockcontactinfos",
             "homepage": "https://github.com/PrestaShop/blockcontactinfos",
-            "time": "2015-08-28 14:58:35"
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcontactinfos/tree/feat/starter-theme"
+            },
+            "time": "2015-09-23 16:30:51"
         },
         {
             "name": "prestashop/blockcurrencies",
@@ -670,19 +675,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcurrencies.git",
-                "reference": "20a28942188ab9bc68610234cb84839142502a9b"
+                "reference": "d1a39c447a16956eea4afad7fc8b6cdebe112725"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcurrencies/zipball/20a28942188ab9bc68610234cb84839142502a9b",
-                "reference": "20a28942188ab9bc68610234cb84839142502a9b",
+                "url": "https://api.github.com/repos/PrestaShop/blockcurrencies/zipball/d1a39c447a16956eea4afad7fc8b6cdebe112725",
+                "reference": "d1a39c447a16956eea4afad7fc8b6cdebe112725",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -694,7 +698,10 @@
             ],
             "description": "PrestaShop module blockcurrencies",
             "homepage": "https://github.com/PrestaShop/blockcurrencies",
-            "time": "2015-08-28 14:58:37"
+            "support": {
+                "source": "https://github.com/PrestaShop/blockcurrencies/tree/feat/starter-theme"
+            },
+            "time": "2015-09-21 13:06:41"
         },
         {
             "name": "prestashop/blockcustomerprivacy",
