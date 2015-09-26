@@ -1119,7 +1119,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $id_product = Tools::getValue('id_product');
-        $id_product_attribute = Tools::getValue('sp_id_product_attribute');
+        $ids_product_attribute = Tools::getValue('sp_id_product_attribute');
         $id_shop = Tools::getValue('sp_id_shop');
         $id_currency = Tools::getValue('sp_id_currency');
         $id_country = Tools::getValue('sp_id_country');
@@ -1146,24 +1146,33 @@ class AdminProductsControllerCore extends AdminController
             $this->errors[] = Tools::displayError('Invalid date range');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
-        } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_product = (int)$id_product;
-            $specificPrice->id_product_attribute = (int)$id_product_attribute;
-            $specificPrice->id_shop = (int)$id_shop;
-            $specificPrice->id_currency = (int)($id_currency);
-            $specificPrice->id_country = (int)($id_country);
-            $specificPrice->id_group = (int)($id_group);
-            $specificPrice->id_customer = (int)$id_customer;
-            $specificPrice->price = (float)($price);
-            $specificPrice->from_quantity = (int)($from_quantity);
-            $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
-            $specificPrice->reduction_tax = $reduction_tax;
-            $specificPrice->reduction_type = $reduction_type;
-            $specificPrice->from = $from;
-            $specificPrice->to = $to;
-            if (!$specificPrice->add()) {
-                $this->errors[] = Tools::displayError('An error occurred while updating the specific price.');
+        } else {
+            //if ALL combinations was selected, reset ids array to 0
+            if (in_array(0, $ids_product_attribute)) {
+                $ids_product_attribute = array(0);
+            }
+
+            foreach($ids_product_attribute as $id_product_attribute) {
+                if ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
+                    $specificPrice = new SpecificPrice();
+                    $specificPrice->id_product = (int)$id_product;
+                    $specificPrice->id_product_attribute = (int)$id_product_attribute;
+                    $specificPrice->id_shop = (int)$id_shop;
+                    $specificPrice->id_currency = (int)($id_currency);
+                    $specificPrice->id_country = (int)($id_country);
+                    $specificPrice->id_group = (int)($id_group);
+                    $specificPrice->id_customer = (int)$id_customer;
+                    $specificPrice->price = (float)($price);
+                    $specificPrice->from_quantity = (int)($from_quantity);
+                    $specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+                    $specificPrice->reduction_tax = $reduction_tax;
+                    $specificPrice->reduction_type = $reduction_type;
+                    $specificPrice->from = $from;
+                    $specificPrice->to = $to;
+                    if (!$specificPrice->add()) {
+                        $this->errors[] = Tools::displayError('An error occurred while updating the specific price.');
+                    }
+                }
             }
         }
     }

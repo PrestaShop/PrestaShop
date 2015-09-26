@@ -355,7 +355,7 @@ $(document).ready(function () {
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_id_product_attribute">{l s='Combination:'}</label>
 				<div class="col-lg-4">
-					<select id="sp_id_product_attribute" name="sp_id_product_attribute">
+					<select id="sp_id_product_attribute" name="sp_id_product_attribute[]" multiple="multiple" size="{($combinations|@count >= 10)?10:5}">
 						<option value="0">{l s='Apply to all combinations'}</option>
 					{foreach from=$combinations item='combination'}
 						<option value="{$combination.id_product_attribute}">{$combination.attributes}</option>
