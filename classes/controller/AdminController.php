@@ -3616,7 +3616,7 @@ class AdminControllerCore extends Controller
         if (isset($field['validation'])) {
             $valid_method_exists = method_exists('Validate', $field['validation']);
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
-                if (!Validate::$field['validation']($value)) {
+                if ((PHP_MAJOR_VERSION < 7 && !Validate::$field['validation']($value)) || !Validate::{$field['validation']}($value)) {
                     $this->errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }
