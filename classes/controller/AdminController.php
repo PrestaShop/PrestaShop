@@ -1381,7 +1381,7 @@ class AdminControllerCore extends Controller
                         }
                     }
                 } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                    if (!Validate::$values['validation'](Tools::getValue($field))) {
+                    if ((PHP_MAJOR_VERSION < 7 && !Validate::$values['validation'](Tools::getValue($field))) || !Validate::{$values['validation']}(Tools::getValue($field))) {
                         $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                     }
                 }
