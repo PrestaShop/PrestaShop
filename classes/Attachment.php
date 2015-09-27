@@ -72,9 +72,9 @@ class AttachmentCore extends ObjectModel
         @unlink(_PS_DOWNLOAD_DIR_.$this->file);
 
         $products = Db::getInstance()->executeS('
-		SELECT id_product
-		FROM '._DB_PREFIX_.'product_attachment
-		WHERE id_attachment = '.(int)$this->id);
+        SELECT id_product
+        FROM '._DB_PREFIX_.'product_attachment
+        WHERE id_attachment = '.(int)$this->id);
 
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_attachment WHERE id_attachment = '.(int)$this->id);
 
@@ -97,16 +97,16 @@ class AttachmentCore extends ObjectModel
 
     public static function getAttachments($id_lang, $id_product, $include = true)
     {
-        return Db::getInstance()->executeS('
-			SELECT *
-			FROM '._DB_PREFIX_.'attachment a
-			LEFT JOIN '._DB_PREFIX_.'attachment_lang al
-				ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)$id_lang.')
-			WHERE a.id_attachment '.($include ? 'IN' : 'NOT IN').' (
-				SELECT pa.id_attachment
-				FROM '._DB_PREFIX_.'product_attachment pa
-				WHERE id_product = '.(int)$id_product.'
-			)'
+        return Db::getInstance()->executeS(
+            'SELECT *
+            FROM '._DB_PREFIX_.'attachment a
+            LEFT JOIN '._DB_PREFIX_.'attachment_lang al
+                ON (a.id_attachment = al.id_attachment AND al.id_lang = '.(int)$id_lang.')
+            WHERE a.id_attachment '.($include ? 'IN' : 'NOT IN').' (
+                SELECT pa.id_attachment
+                FROM '._DB_PREFIX_.'product_attachment pa
+                WHERE id_product = '.(int)$id_product.'
+            )'
         );
     }
 
@@ -119,8 +119,8 @@ class AttachmentCore extends ObjectModel
     public static function deleteProductAttachments($id_product)
     {
         $res = Db::getInstance()->execute('
-		DELETE FROM '._DB_PREFIX_.'product_attachment
-		WHERE id_product = '.(int)$id_product);
+        DELETE FROM '._DB_PREFIX_.'product_attachment
+        WHERE id_product = '.(int)$id_product);
 
         Product::updateCacheAttachment((int)$id_product);
 
@@ -136,9 +136,9 @@ class AttachmentCore extends ObjectModel
     public function attachProduct($id_product)
     {
         $res = Db::getInstance()->execute('
-			INSERT INTO '._DB_PREFIX_.'product_attachment
-				(id_attachment, id_product) VALUES
-				('.(int)$this->id.', '.(int)$id_product.')');
+            INSERT INTO '._DB_PREFIX_.'product_attachment
+                (id_attachment, id_product) VALUES
+                ('.(int)$this->id.', '.(int)$id_product.')');
 
         Product::updateCacheAttachment((int)$id_product);
 
@@ -187,9 +187,9 @@ class AttachmentCore extends ObjectModel
             }
 
             $sql = 'SELECT * FROM `'._DB_PREFIX_.'product_attachment` pa
-					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
-					WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).')
-						AND pl.`id_lang` = '.(int)$id_lang;
+                    LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pa.`id_product` = pl.`id_product`'.Shop::addSqlRestrictionOnLang('pl').')
+                    WHERE `id_attachment` IN ('.implode(',', array_map('intval', $ids_attachements)).')
+                        AND pl.`id_lang` = '.(int)$id_lang;
             $tmp = Db::getInstance()->executeS($sql);
             $product_attachements = array();
             foreach ($tmp as $t) {

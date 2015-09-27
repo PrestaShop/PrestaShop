@@ -553,9 +553,9 @@ class AddressFormatCore extends ObjectModel
     {
         if (!Cache::isStored('AddressFormat::_getFormatDB'.$id_country)) {
             $format = Db::getInstance()->getValue('
-			SELECT format
-			FROM `'._DB_PREFIX_.$this->def['table'].'`
-			WHERE `id_country` = '.(int)$id_country);
+            SELECT format
+            FROM `'._DB_PREFIX_.$this->def['table'].'`
+            WHERE `id_country` = '.(int)$id_country);
             $format = trim($format);
             Cache::store('AddressFormat::_getFormatDB'.$id_country, $format);
             return $format;
