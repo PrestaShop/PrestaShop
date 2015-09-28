@@ -851,11 +851,11 @@ class CarrierCore extends ObjectModel
             }
 
             if ($delete) {
-                Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'delivery`
-					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
-					AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
-					AND id_carrier='.(int)$values['id_carrier'].
+                Db::getInstance()->execute(
+                    'DELETE FROM `'._DB_PREFIX_.'delivery`
+                    WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
+                    AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
+                    AND id_carrier='.(int)$values['id_carrier'].
                     ($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)').
                     ($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)').'
 					AND id_zone='.(int)$values['id_zone']
@@ -1189,8 +1189,8 @@ class CarrierCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
-			SELECT `id_carrier`, `position`
+        if (!$res = Db::getInstance()->executeS(
+            'SELECT `id_carrier`, `position`
 			FROM `'._DB_PREFIX_.'carrier`
 			WHERE `deleted` = 0
 			ORDER BY `position` ASC'
@@ -1318,8 +1318,11 @@ class CarrierCore extends ObjectModel
             $query = new DbQuery();
             $query->select('id_carrier');
             $query->from('product_carrier', 'pc');
-            $query->innerJoin('carrier', 'c',
-                              'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1');
+            $query->innerJoin(
+                'carrier',
+                'c',
+                'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1'
+            );
             $query->where('pc.id_product = '.(int)$product->id);
             $query->where('pc.id_shop = '.(int)$id_shop);
 
@@ -1383,8 +1386,8 @@ class CarrierCore extends ObjectModel
             if ($cart_product['id_product'] == $product->id) {
                 $cart_quantity += $cart_product['cart_quantity'];
             }
-            if ($cart_product['weight_attribute'] > 0) { 
-                $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);            
+            if ($cart_product['weight_attribute'] > 0) {
+                $cart_weight += ($cart_product['weight_attribute'] * $cart_product['cart_quantity']);
             } else {
                 $cart_weight += ($cart_product['weight'] * $cart_product['cart_quantity']);
             }
@@ -1407,7 +1410,7 @@ class CarrierCore extends ObjectModel
                     unset($carrier_list[$key]);
                 }
 
-                if ($carrier->max_weight > 0 && ($carrier->max_weight < $product->weight * $cart_quantity OR $carrier->max_weight < $cart_weight)) {
+                if ($carrier->max_weight > 0 && ($carrier->max_weight < $product->weight * $cart_quantity || $carrier->max_weight < $cart_weight)) {
                     $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                     unset($carrier_list[$key]);
                 }
