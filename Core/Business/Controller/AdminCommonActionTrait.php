@@ -119,10 +119,14 @@ trait AdminCommonActionTrait
      * The navigator links (previous/next page...) will never tranfer POST and/or GET parameters
      * (only route parameters that are in the URL).
      *
+     * The navigator will add a javascript dependency, and will add a $navigator variable in the response Data array.
+     * So you just have to call this method and then use {$navigator} in your template.
+     *
      * @param Request $request The original request to retrieve route parameters (to generate links)
+     * @param Response $response The original response, to let the function add Javascript dependencies and the resulting navigator HTML part.
      * @param integer $totalCount The total count of elements to paginate (not the count of one page).
      */
-    final protected function fetchNavigator(Request &$request, $totalCount)
+    final protected function addNavigatorToResponse(Request &$request, Response &$response, $totalCount)
     {
         $navigatorParams = array_merge(
             $request->attributes->all(),
@@ -130,7 +134,11 @@ trait AdminCommonActionTrait
                 '_total' => $totalCount,
             )
         );
-        return $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW);
+        $navigator = $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW);
+        $response->addContentData('navigator', $navigator);
+        $response->addJs(_PS_JS_DIR_.'Core/Admin/Navigator.js');
+
+        return true; // success.
     }
 
     /**
@@ -195,6 +203,13 @@ trait AdminCommonActionTrait
                 'limit' => $limit
             )
         ));
+        $changeLimitUrl = $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => 0,
+                'limit' => '_limit'
+            )
+        ));
 
         $response->setContentData(array(
             'total' => $total,
@@ -207,7 +222,8 @@ trait AdminCommonActionTrait
             'next_url' => $nextPageUrl,
             'previous_url' => $previousPageUrl,
             'first_url' => $firstPageUrl,
-            'last_url' => $lastPageUrl
+            'last_url' => $lastPageUrl,
+            'changeLimitUrl' => $changeLimitUrl
         ));
         return self::RESPONSE_PARTIAL_VIEW;
     }

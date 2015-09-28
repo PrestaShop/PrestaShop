@@ -279,6 +279,9 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         }
 
         $sqlOrder = array($orderBy.' '.$orderWay);
+        if ($orderBy != 'id_product') {
+            $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
+        }
         $sqlLimit = $offset.', '.$limit;
 
         // Column 'position' added if filtering by category
@@ -308,7 +311,6 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
                     true, null, null, null, $nothing, true, true);
             $product['price_final'] = \Tools::displayPrice($product['price_final']);
         }
-        // FIXME: column "Position" apparait si category filtered. To ADD !
 
         return $products;
     }

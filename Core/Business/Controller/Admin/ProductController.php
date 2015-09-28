@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -107,15 +108,30 @@ class ProductController extends AdminController
         $response->addContentData('has_category_filter', $hasCategoryFilter);
         $response->addContentData('has_column_filter', $hasColumnFilter);
 
-        // URL action form params
-        $formParams = array(
+        // URLs injection
+        $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', array(
             'limit' => $request->attributes->get('limit'),
             // No offset: filter & bulk action will post form and want to redirect to first page.
             //'offset' => $request->attributes->get('offset'),
             'orderBy' => $request->attributes->get('orderBy'),
             'orderWay' => $request->attributes->get('orderWay')
-        );
-        $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', $formParams));
+        )));
+        $response->addContentData('ordering_url', $this->generateUrl('admin_product_catalog', array(
+            'limit' => $request->attributes->get('limit'),
+            // No offset: re-ordering action will use this url to redirect to first page.
+            //'offset' => $request->attributes->get('offset'),
+            'orderBy' => 'name', // will be replaced by JS. Must be non default value (see routes YML file)
+            'orderWay' => 'desc' // will be replaced by JS. Must be non default value (see routes YML file)
+        )));
+        $response->addContentData('bulk_url', $this->generateUrl('admin_product_bulk_action', array(
+            'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
+        )));
+        $response->addContentData('bulk_redirect_url', $this->generateUrl('admin_product_catalog', array(
+            'limit' => $request->attributes->get('limit'),
+            'offset' => $request->attributes->get('offset'),
+            'orderBy' => $request->attributes->get('orderBy'),
+            'orderWay' => $request->attributes->get('orderWay')
+        )));
 
         // Alternative layout for empty list
         $totalFilteredProductCount = $subResponse->getContentData('product_count'); // total count of SQL query (filtered)
@@ -132,8 +148,7 @@ class ProductController extends AdminController
                 $response->addContentData('product_count', $totalProductCount);
 
                 // Navigator
-                $navigator = $this->fetchNavigator($request, $totalFilteredProductCount);
-                $response->addContentData('navigator', $navigator);
+                $this->addNavigatorToResponse($request, $response, $totalFilteredProductCount);
 
                 // Category tree
                 $formFactory = new FormFactory();
@@ -190,6 +205,9 @@ class ProductController extends AdminController
 
         $response->replaceContentData('products', $products);
         $response->addContentData('product_count', $totalCount);
+
+        // ordering by drag&drop
+        $response->addContentData('activate_drag_and_drop', ('position' == $request->attributes->get('ls_products_orderBy') && 'asc' == $request->attributes->get('ls_products_orderWay')));
     }
 
     public function productFormAction(Request &$request, Response &$response, $product)
@@ -198,7 +216,15 @@ class ProductController extends AdminController
 
         // Redirect to legacy controller (FIXME: temporary behavior)
         if ($this->shouldUseLegacyPages()) {
-            // TODO: by xavier
+            $this->redirectToRoute(
+                $request,
+                'admin_product_form',
+                array(
+                    'id_product' => $request->attributes->get('id_product', 'new')
+                ),
+                true, // force legacy URL
+                false // temporary
+            );
         }
 
         $formFactory = new FormFactory();
@@ -244,6 +270,30 @@ class ProductController extends AdminController
         $response->setDisplayType('add');
 
         $response->addContentData('form', $form->createView());
+    }
+
+
+    public function bulkAction(Request &$request, Response &$response)
+    {
+        $action = $request->attributes->get('action');
+        $productIdList = $request->request->get('bulk_action_selected_products');
+
+        switch ($action) {
+            case 'activate_all':
+                // TODO
+                break;
+            case 'deactivate_all':
+                // TODO
+                break;
+            case 'delete_all':
+                // TODO: from $productIdList (id_product(s)), do a safe delete (ORM?)
+                break;
+            default:
+                throw new DevelopmentErrorException('Bad action received from AJAX call to ProductController::bulkAction.');
+        }
+
+        // redirect after success
+        $this->redirect($request->request->get('redirect_url'), false);
     }
 
     /**

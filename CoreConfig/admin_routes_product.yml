@@ -11,7 +11,7 @@ admin_product_catalog:
         orderBy: id_product
         orderWay: asc
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
         orderWay: asc|desc
 
 admin_product_list:
@@ -28,7 +28,7 @@ admin_product_list:
         ls_products_orderWay: asc
     requirements:
         _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
-        ls_products_orderBy: id_product|name|reference|name_category|price|sav_quantity
+        ls_products_orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
         ls_products_orderWay: asc|desc
 
 admin_product_form:
@@ -49,8 +49,14 @@ admin_product_use_legacy_setter:
     path:     /uselegacy/{use}
     methods:  [GET, POST]
     defaults:
-        _legacy_path: AdminProducts
-        _legacy_force: false
         _controller: 'Admin\ProductController::shouldUseLegacyPagesAction'
     requirements:
         use: 0|1
+
+admin_product_bulk_action:
+    path:     /bulk/{action}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::bulkAction'
+    requirements:
+        action: activate_all|deactivate_all|delete_all
