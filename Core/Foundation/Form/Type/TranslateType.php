@@ -63,11 +63,13 @@ class TranslateType extends AbstractType
     {
         $i=0;
         foreach ($this->locales as $locale) {
-            $this->options['label'] = $locale['iso_code'];
+            $locale_options = $this->options;
+            $locale_options['label'] = $locale['iso_code'];
             if ($i>0) {
-                $this->options['required'] = false;
+                $locale_options['required'] = false;
+                unset($locale_options['constraints']);
             }
-            $builder->add($locale['id_lang'], $this->type, $this->options);
+            $builder->add($locale['id_lang'], $this->type, $locale_options);
             $i++;
         }
     }
