@@ -2864,6 +2864,8 @@ class AdminThemesControllerCore extends AdminController
             $result = Db::getInstance()->execute($sql);
         }
 
+        $result .= Tools::clearSmartyCache();
+
         if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
         } else {
@@ -2901,6 +2903,8 @@ class AdminThemesControllerCore extends AdminController
             $sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET right_column='.(int)!(bool)$theme_meta['right_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
             $result = Db::getInstance()->execute($sql);
         }
+
+        $result .= Tools::clearSmartyCache();
 
         if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
