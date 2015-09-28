@@ -1367,12 +1367,20 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
+        $layout = 'layout/layout-full-width.tpl';
+
+        if ($this->display_column_left && $this->display_column_right) {
+            $layout = 'layout/layout-both-columns.tpl';
+        } elseif ($this->display_column_left) {
+            $layout = 'layout/layout-left-column.tpl';
+        } elseif ($this->display_column_right) {
+            $layout = 'layout/layout-right-column.tpl';
+        }
+
         $entity = $this->php_self;
         $id_item = (int)Tools::getValue('id_'.$entity);
 
         $layout_override_dir  = $this->getOverrideThemeDir();
-
-        $layout = false;
         if ($entity) {
             if ($id_item > 0 && file_exists($layout_override_dir.'layout-'.$entity.'-'.$id_item.'.tpl')) {
                 $layout = basename($layout_override_dir).'/layout-'.$entity.'-'.$id_item.'.tpl';
@@ -1381,7 +1389,7 @@ class FrontControllerCore extends Controller
             }
         }
 
-        return ($layout) ?: 'layout.tpl';
+        return $layout;
     }
 
     /**
