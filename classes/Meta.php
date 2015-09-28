@@ -280,18 +280,21 @@ class MetaCore extends ObjectModel
         if (!empty($title)) {
             $title = ' - '.$title;
         }
-        $page_number = (int)Tools::getValue('p');
-        $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
+
+        $cache_id = 'Meta::getCategoryMetas'.(int)$id_category.'-'.(int)$id_lang;
+        if (!Cache::isStored($cache_id)) {
+
+            $sql = 'SELECT `name`, `meta_title`, `meta_description`, `meta_keywords`, `description`
 				FROM `'._DB_PREFIX_.'category_lang` cl
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 					AND cl.`id_category` = '.(int)$id_category.Shop::addSqlRestrictionOnLang('cl');
 
-        $cache_id = 'Meta::getCategoryMetas'.(int)$id_category.'-'.(int)$id_lang;
-        if (!Cache::isStored($cache_id)) {
             if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql)) {
                 if (empty($row['meta_description'])) {
                     $row['meta_description'] = strip_tags($row['description']);
                 }
+
+                $page_number = (int)Tools::getValue('p');
 
                 // Paginate title
                 if (!empty($row['meta_title'])) {
