@@ -37,6 +37,9 @@ php-cs-fixer
 js/vendor/node_modules/*
 tests/js/node_modules/*
 tests/js/.grunt/*
+tests/StarterTheme/node_modules
+tests/StarterTheme/errorShots
+tests/StarterTheme/settings.js
 
 # Translations and emails templates
 
