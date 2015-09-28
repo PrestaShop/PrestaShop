@@ -16,7 +16,26 @@
     </header>
 
     {block name="content"}
-      <p>Hello world! This is HTML5 Boilerplate.</p>
+
+      {block name="opc_address"}
+        <section id="opc-addresses">
+          <header>
+            <h1 class="h3">{l s='Addresses'}</h1>
+          </header>
+
+          {* StarterTheme: Create new address (ajax) *}
+
+          <div class="addresses-container">
+
+            <article id="select-delivery-address" class="address-selector">
+              {include file="checkout/_partials/address-selector-block.tpl"}
+            </article>
+
+          </div>
+
+        </section>
+      {/block}
+
     {/block}
 
     <footer id="footer">
