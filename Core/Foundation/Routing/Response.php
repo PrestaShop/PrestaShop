@@ -111,6 +111,11 @@ class Response extends sfResponse
     protected $js = array();
 
     /**
+     * @var array
+     */
+    protected $css = array();
+
+    /**
      * Set data before formatting.
      *
      * @param mixed $data
@@ -370,5 +375,35 @@ class Response extends sfResponse
     public function getJs()
     {
         return $this->js;
+    }
+
+    /**
+     * Sets (and replace) css files list to include in the page.
+     *
+     * @param array $css
+     */
+    public function setCss($css)
+    {
+        $this->css = $css;
+    }
+
+    /**
+     * Add css file(s) to the list to include in the page.
+     *
+     * @param string|array $css
+     */
+    public function addCss($css)
+    {
+        $this->css = array_unique(array_merge($this->css, (array)$css));
+    }
+
+    /**
+     * Get css files list that will be included in the page.
+     *
+     * @return array
+     */
+    public function getCss()
+    {
+        return $this->css;
     }
 }

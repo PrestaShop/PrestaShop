@@ -194,6 +194,8 @@ class ProductController extends AdminController
 
     public function productFormAction(Request &$request, Response &$response, $product)
     {
+        $legacyContext = $this->container->make('Adapter_LegacyContext');
+
         // Redirect to legacy controller (FIXME: temporary behavior)
         if ($this->shouldUseLegacyPages()) {
             // TODO: by xavier
@@ -202,12 +204,16 @@ class ProductController extends AdminController
         $formFactory = new FormFactory();
         $builder = $formFactory->createBuilder();
 
-        $response->setJs(array(
+        $response->addJs(array(
             _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
             _PS_JS_DIR_.'admin/tinymce.inc.js',
             _PS_JS_DIR_.'admin/tinymce_loader.js',
             _PS_JS_DIR_.'vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js',
             _PS_JS_DIR_.'vendor/node_modules/typeahead.js/dist/bloodhound.min.js',
+        ));
+
+        $response->addCss(array(
+            $legacyContext->getAdminBaseUrl().'/themes/default/css/admin-core-theme.css'
         ));
 
         $form = $builder
