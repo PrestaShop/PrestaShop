@@ -10,5 +10,8 @@ module.exports = {
             '1': 3,
             '3': 14
         }
+    },
+    aCustomizableProduct: {
+      id: 1
     }
 };
