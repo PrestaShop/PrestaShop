@@ -712,11 +712,11 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitCreate()
     {
-        if (!Validate::isEmail($email = Tools::getValue('email_create')) || empty($email)) {
+        if (!Validate::isEmail($email = trim(Tools::getValue('email_create'))) || empty($email)) {
             $this->errors[] = Tools::displayError('Invalid email address.');
         } elseif (Customer::customerExists($email)) {
             $this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
-            $_POST['email'] = Tools::getValue('email_create');
+            $_POST['email'] = trim(Tools::getValue('email_create'));
             unset($_POST['email_create']);
         } else {
             $this->create_account = true;
