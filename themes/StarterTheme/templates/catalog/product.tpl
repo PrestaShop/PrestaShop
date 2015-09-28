@@ -1,4 +1,4 @@
-{extends "layout.tpl"}
+{extends $layout}
 
 {block name="head_seo" prepend}
   <link rel="canonical" href="{$product.canonical_url}" />
