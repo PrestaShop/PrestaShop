@@ -15,10 +15,16 @@
       {/block}
     </header>
 
-    {* StarterTheme: Manage columns *}
-
     {block name="notifications"}
       {include file="_partials/notifications.tpl"}
+    {/block}
+
+    {block name="left_column"}
+      {hook h="displayLeftColumn"}
+    {/block}
+
+    {block name="right_column"}
+      {hook h="displayRightColumn"}
     {/block}
 
     {block name="content"}

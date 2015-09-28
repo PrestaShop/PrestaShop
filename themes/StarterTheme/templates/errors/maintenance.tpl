@@ -1,4 +1,4 @@
-{extends "layout-error.tpl"}
+{extends "layout/layout-error.tpl"}
 
 {block name="content"}
 
