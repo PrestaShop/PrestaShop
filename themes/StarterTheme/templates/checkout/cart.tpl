@@ -1,4 +1,4 @@
-{extends "layout.tpl"}
+{extends $layout}
 
 {block name="content"}
   <section id="main">
