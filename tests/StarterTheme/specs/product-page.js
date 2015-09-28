@@ -1,4 +1,4 @@
-/* global describe, it, browser */
+/* global describe, it, browser, before */
 
 var fixtures = require('../fixtures');
 var _ = require('underscore');
@@ -67,6 +67,37 @@ describe('The product page', function () {
           return chooseVariant(variant);
         })
         .then(checkVariantIsSelected.bind(undefined, variant))
+      ;
+    });
+  });
+
+  describe('of a customizable product', function () {
+
+    before(function () {
+      return browser
+        .productPage(fixtures.aCustomizableProduct.id)
+      ;
+    });
+
+    it('should display customization fields', function () {
+      return browser.element('.product-customization');
+    });
+
+    it('should not display the add to cart button, because the product is not customized yet', function () {
+      return browser.element('form.add-to-cart')
+        .then(function () {
+          throw new Error('Add to cart button should not have been displayed until product is customized.');
+        })
+        .catch(function () {
+          // this is expected!
+        });
+    });
+
+    it('should display the add to cart button once the product is customized', function () {
+      return browser
+        .setValue('.product-customization textarea', 'a cool text')
+        .click('[name="submitCustomizedDatas"]')
+        .element('form.add-to-cart')
       ;
     });
   });
