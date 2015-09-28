@@ -131,7 +131,8 @@ class ProductInformation extends AbstractType
             'required' => false
         ))
         ->add('ean13', 'text', array(
-            'required' => false
+            'required' => false,
+            'error_bubbling' => true
         ))
         ->add('isbn', 'text', array(
             'required' => false
@@ -200,7 +201,7 @@ class ProductInformation extends AbstractType
             'search in catalog...',
             '',
             $this->productAdapter
-        ));
+        ), array('required' => false));
     }
 
     /**

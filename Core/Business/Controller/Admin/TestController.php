@@ -120,6 +120,10 @@ class TestController extends AdminController
 
         $form->handleRequest($request);
 
+        /*foreach($form->getErrors(true) as $e){
+            var_dump($e);die;
+        }*/
+
         if ($form->isValid()) {
             $data = $form->getData();
 

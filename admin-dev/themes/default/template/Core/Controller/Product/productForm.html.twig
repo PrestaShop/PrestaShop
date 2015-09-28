@@ -2,58 +2,61 @@
 
 <div class="panel">
     <div class="panel-heading">Ajouter un produit</div>
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
+    <form name="form" id="form" method="post" class="form-horizontal">
+        <div class="col-lg-12">
+            <div id="form_bubbling_errors">
+                {{ form_errors(form) }}
+            </div>
+        </div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#step1" role="tab" data-toggle="tab">Your product</a></li>
+            <li><a href="#step2" role="tab" data-toggle="tab">Quantity</a></li>
+            <li><a href="#step3" role="tab" data-toggle="tab">Shipping</a></li>
+            <li><a href="#step4" role="tab" data-toggle="tab">SEO</a></li>
+            <li><a href="#step5" role="tab" data-toggle="tab">Options</a></li>
+        </ul>
 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#step1" role="tab" data-toggle="tab">Your product</a></li>
-        <li><a href="#step2" role="tab" data-toggle="tab">Quantity</a></li>
-        <li><a href="#step3" role="tab" data-toggle="tab">Shipping</a></li>
-        <li><a href="#step4" role="tab" data-toggle="tab">SEO</a></li>
-        <li><a href="#step5" role="tab" data-toggle="tab">Options</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
-            {{ form_widget(form.step1) }}
-            <div class="text-right">
-                <a class="btn btn-primary btn-next">CONTINUE</a>
-                <input type="submit" value="SAVE" class="btn btn-warning" />
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
+                {{ form_widget(form.step1) }}
+                <div class="text-right">
+                    <a class="btn btn-primary btn-next">CONTINUE</a>
+                    <input type="submit" id="submit" value="SAVE" class="btn btn-warning" />
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
+                {{ form_widget(form.step2) }}
+                <div class="text-right">
+                    <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                    <a class="btn btn-primary btn-next">CONTINUE</a>
+                    <input type="submit" value="SAVE" class="btn btn-warning" />
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
+                {{ form_widget(form.step3) }}
+                <div class="text-right">
+                    <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                    <a class="btn btn-primary btn-next">CONTINUE</a>
+                    <input type="submit" id="submit" value="SAVE" class="btn btn-warning" />
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
+                {{ form_widget(form.step4) }}
+                <div class="text-right">
+                    <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                    <a class="btn btn-primary btn-next">CONTINUE</a>
+                    <input type="submit" id="submit" value="SAVE" class="btn btn-warning" />
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
+                {{ form_widget(form.step5) }}
+                <div class="text-right">
+                    <a class="btn btn-primary btn-prev">PREVIOUS</a>
+                    <input type="submit" id="submit" value="SAVE" class="btn btn-warning" />
+                </div>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
-            {{ form_widget(form.step2) }}
-            <div class="text-right">
-                <a class="btn btn-primary btn-prev">PREVIOUS</a>
-                <a class="btn btn-primary btn-next">CONTINUE</a>
-                <input type="submit" value="SAVE" class="btn btn-warning" />
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
-            {{ form_widget(form.step3) }}
-            <div class="text-right">
-                <a class="btn btn-primary btn-prev">PREVIOUS</a>
-                <a class="btn btn-primary btn-next">CONTINUE</a>
-                <input type="submit" value="SAVE" class="btn btn-warning" />
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
-            {{ form_widget(form.step4) }}
-            <div class="text-right">
-                <a class="btn btn-primary btn-prev">PREVIOUS</a>
-                <a class="btn btn-primary btn-next">CONTINUE</a>
-                <input type="submit" value="SAVE" class="btn btn-warning" />
-            </div>
-        </div>
-        <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
-            {{ form_widget(form.step5) }}
-            <div class="text-right">
-                <a class="btn btn-primary btn-prev">PREVIOUS</a>
-                <input type="submit" value="SAVE" class="btn btn-warning" />
-            </div>
-        </div>
-    </div>
-    {{ form_end(form) }}
+        {{ form_end(form) }}
 </div>
 
 <script>
@@ -65,6 +68,40 @@
         $('.btn-prev').click(function(){
             $('.nav-tabs > .active').prev('li').find('a').trigger('click');
         });
-    });
 
+        $("#form").submit(function( event ) {
+            event.preventDefault();
+            var data = $(this, 'input, textarea, select').not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                beforeSend: function() {
+                    $('#form #submit').attr("disabled", "disabled");
+                    $('.help-block').remove();
+                    $( "*.has-error" ).removeClass("has-error");
+                },
+                success: function(){
+                    showSuccessMessage('Form update success');
+                },
+                error: function(response){
+                    showErrorMessage('Form update errors');
+
+                    $.each(jQuery.parseJSON(response.responseText), function(key, errors){
+                        var html = '<span class="help-block"><ul class="list-unstyled">';
+                        $.each(errors, function(key, error){
+                            html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+                        });
+                        html += '</ul></span>';
+
+                        $('#form_'+key).parent().append(html);
+                        $('#form_'+key).parent().addClass('has-error');
+                    });
+                },
+                complete: function(){
+                    $('#form #submit').removeAttr("disabled");
+                }
+            });
+        });
+    });
 </script>

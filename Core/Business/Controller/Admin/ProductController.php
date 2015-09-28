@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
@@ -219,9 +220,17 @@ class ProductController extends AdminController
 
         $form->handleRequest($request);
 
-        /*foreach($form->getErrors() as $e){
-            var_dump($e);die;
-        }*/
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) { //Form OK
+                $data = $form->getData();
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    $response->setStatusCode(400);
+                    $response->setContentData($this->getFormErrorsForJS($form));
+                    return self::RESPONSE_JSON;
+                }
+            }
+        }
 
         $response->setEngineName('twig');
         $response->setLegacyControllerName('AdminProducts');

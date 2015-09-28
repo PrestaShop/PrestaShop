@@ -211,4 +211,36 @@ trait AdminCommonActionTrait
         ));
         return self::RESPONSE_PARTIAL_VIEW;
     }
+
+    /**
+     * This action return form errors for JS implementation
+     *
+     * Parse all errors mapped by id html field
+     *
+     * @param $form The form
+     *
+     * @return array Errors
+     */
+    protected function getFormErrorsForJS($form)
+    {
+        $errors = [];
+
+        if (empty($form)) {
+            return $errors;
+        }
+
+        foreach ($form->getErrors(true) as $error) {
+            if (!$error->getCause()) {
+                $form_id = 'bubbling_errors';
+            } else {
+                $form_id = str_replace(
+                    ['.', 'children[', ']', '_data'],
+                    ['_', '', '', ''],
+                    $error->getCause()->getPropertyPath()
+                );
+            }
+            $errors[$form_id][] = $error->getMessage();
+        }
+        return $errors;
+    }
 }
