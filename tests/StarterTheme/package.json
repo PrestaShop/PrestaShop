@@ -1,0 +1,20 @@
+{
+  "name": "prestashop-starter-theme-tests",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node_modules/.bin/selenium-standalone install",
+    "test": "node_modules/.bin/wdio wdio.conf.js",
+    "selenium": "node_modules/.bin/selenium-standalone start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^3.3.0",
+    "chai-as-promised": "^5.1.0",
+    "mocha": "^2.3.3",
+    "selenium-standalone": "^4.6.3",
+    "webdriverio": "^3.2.4"
+  }
+}
