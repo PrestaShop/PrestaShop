@@ -786,8 +786,9 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        if (isset($this->className) && $this->className) 
-        	$definition = ObjectModel::getDefinition($this->className);
+        if (isset($this->className) && $this->className) {
+            $definition = ObjectModel::getDefinition($this->className);
+        }
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */
@@ -845,7 +846,6 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-                            
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
