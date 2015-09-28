@@ -40,12 +40,12 @@ class ViewFactory
     /**
      * Constructor
      *
-     * @param Container $container
+     * @param null|Container $container (can be null cause of legacy instance)
      * @param string $engine_name
      *
      * @throws \Exception If the class defined by the engine name do not exists
      */
-    public function __construct(Container $container, $engine_name = 'smarty')
+    public function __construct(Container $container = null, $engine_name = 'smarty')
     {
         $class_view = '\\PrestaShop\\PrestaShop\\Core\\Foundation\\View\\Views\\'. ucfirst($engine_name);
         if (!class_exists($class_view)) {

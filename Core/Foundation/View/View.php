@@ -43,9 +43,9 @@ class View
     /**
      * Constructor
      *
-     * @param  Container $container
+     * @param  null|Container $container (can be null cause of legacy instance)
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container = null)
     {
         $this->container = $container;
         $this->data = [];
