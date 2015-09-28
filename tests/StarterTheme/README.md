@@ -4,6 +4,13 @@ Selenium tests for the PrestaShop Starter Theme.
 
 ## Setup
 
+Dependencies:
+
+- node.js
+- npm
+- java
+- firefox
+
 The usual:
 
 - `cd tests/StarterTheme`
