@@ -232,7 +232,7 @@ class CategoryCore extends ObjectModel
     public function toggleStatus()
     {
         $result = parent::toggleStatus();
-        Hook::exec('actionCategoryUpdate');
+        Hook::exec('actionCategoryUpdate', array('category' => $this));
         return $result;
     }
 
@@ -1387,7 +1387,7 @@ class CategoryCore extends ObjectModel
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
             AND c.`id_category`='.(int)$moved_category['id_category']));
-        Hook::exec('actionCategoryUpdate');
+        Hook::exec('actionCategoryUpdate', array('category' => $moved_category));
         return $result;
     }
 
