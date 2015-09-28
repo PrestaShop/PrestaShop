@@ -14,7 +14,9 @@
     "chai": "^3.3.0",
     "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.3",
+    "q": "^1.4.1",
     "selenium-standalone": "^4.6.3",
+    "underscore": "^1.8.3",
     "webdriverio": "^3.2.4"
   }
 }
