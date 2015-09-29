@@ -28,8 +28,10 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Module;
-use Context;
-use Employee;
+
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin-dev');
+}
 
 class ModulesInstallUninstallTest extends IntegrationTestCase
 {
@@ -37,9 +39,9 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
     {
         parent::setUpBeforeClass();
         Module::updateTranslationsAfterInstall(false);
-        Context::getContext()->employee = new Employee();
-        Context::getContext()->employee->id = 1;
-        Context::getContext()->employee->id_profile = _PS_ADMIN_PROFILE_;
+        \ContextCore::getContext()->employee = new \Employee();
+        \ContextCore::getContext()->employee->id = 1;
+        \ContextCore::getContext()->employee->id_profile = _PS_ADMIN_PROFILE_;
     }
 
     public function listModulesOnDisk()
@@ -63,7 +65,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
      */
     public function testInstallationAndUnInstallation($moduleName)
     {
-        $module = Module::getInstanceByName($moduleName);        
+        $module = Module::getInstanceByName($moduleName);
         if ($module->id) {
             $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
             $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
