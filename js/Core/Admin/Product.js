@@ -42,8 +42,7 @@ $(document).ready(function() {
 	$('[psorderby][psorderway]', form).click(function() {
 		var orderBy = $(this).attr('psorderby');
 		var orderWay = $(this).attr('psorderway');
-		var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/desc/, orderWay);
-		window.location.href = url;
+		productOrderTable(orderBy, orderWay);
 	});
 
 	/*
@@ -63,6 +62,12 @@ $(document).ready(function() {
 	updateBulkMenu();
 	updateFilterMenu();
 });
+
+function productOrderTable(orderBy, orderWay) {
+	var form = $('form#product_catalog_list');
+	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/desc/, orderWay);
+	window.location.href = url;
+}
 
 function updateBulkMenu() {
 	var selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').size();

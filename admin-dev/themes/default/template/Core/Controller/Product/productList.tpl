@@ -34,7 +34,7 @@
             {if isset($product.position)}
                 <td>
                     {if $activate_drag_and_drop}
-                        +MOVE!&nbsp;
+                        TODO: MOVE!&nbsp;
                     {/if}
                     {$product.position}
                 </td>
@@ -46,23 +46,23 @@
                         default_item=[
                             "href" => $product.url,
                             "icon" => "icon-pencil",
-                            "label" => "Modify"
+                            "label" => {l s="Edit"}
                         ]
                         items=[
                             [
                                 "href" => "#todo",
                                 "icon" => "icon-eye",
-                                "label" => "Preview"
+                                "label" => {l s="Preview"}
                             ],
                             [
                                 "href" => "#todo",
                                 "icon" => "icon-copy",
-                                "label" => "Duplicate"
+                                "label" => {l s="Duplicate"}
                             ],
                             [
                                 "href" => "#todo",
                                 "icon" => "icon-trash",
-                                "label" => "Delete"
+                                "label" => {l s="Delete"}
                             ]
                         ]}
                 </div>
@@ -70,7 +70,7 @@
         </tr>
     {foreachelse}
         <tr><td colspan="11">
-            EMPTY CASE !
+            {l s="There is no result for this search. You should remove some criteria."}
         </td></tr>
     {/foreach}
 </tbody>

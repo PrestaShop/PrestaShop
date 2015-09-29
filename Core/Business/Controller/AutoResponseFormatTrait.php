@@ -65,9 +65,11 @@ trait AutoResponseFormatTrait
         }
         $accepts = explode(',', $request->headers->get('accept'));
 
-        // Legacy controller used to set Layout title
+        // FIXME: Temporary behavior: Legacy controller used to set Layout title and setup smarty i18n ('l' function)
         if ($legacyController = $request->attributes->get('_legacy_path')) {
             $response->setLegacyControllerName($legacyController);
+            $legacyContext = $this->container->make('Adapter_LegacyContext');
+            $legacyContext->setupLegacyTranslationContext($legacyController);
         }
 
         // Order by HTTP accept values first, then by follwing switch cases order

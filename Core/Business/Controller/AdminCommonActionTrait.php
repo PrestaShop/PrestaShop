@@ -217,7 +217,7 @@ trait AdminCommonActionTrait
             'limit' => $limit,
             'current_page' => $currentPage,
             'page_count' => $pageCount,
-            'from' => $from + 1,
+            'from' => min($from + 1, min(array($to+1, $total))),
             'to' => min(array($to+1, $total)),
             'next_url' => $nextPageUrl,
             'previous_url' => $previousPageUrl,

@@ -1,7 +1,7 @@
 <!--## STATS BANNER TO REINTEGRATE SOON!-->
 
 <div id="product_catalog_category_tree_filter" class="panel">
-    CATEGORIES &nbsp;
+    {l s="Categories"} &nbsp;
     <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
         onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'))"
         class="pull-right btn" />
@@ -10,7 +10,7 @@
 
 <div class="panel col-lg-12">
     <div class="panel-heading">
-        PRODUCTS {if $has_filter} Filtered {/if}
+        {l s="Products"} {if $has_filter} {l s="(filtered)"} {/if}
         <span class="badge">{if $has_filter}{$product_count_filtered} / {/if}{$product_count}</span>
     </div>
 
@@ -23,49 +23,49 @@
                         <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
                     </th>
                     <th>
-                        ID
+                        {l s="ID"}
                         &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Image
+                        {l s="Image"}
                     </th>
                     <th>
-                        Name
+                        {l s="Name"}
                         &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Reference
+                        {l s="Reference"}
                         &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Category
+                        {l s="Category"}
                         &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Base price
+                        {l s="Base price"}
                         &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Final price
+                        {l s="Final price"}
                     </th>
                     <th>
-                        Quantity
+                        {l s="Quantity"}
                         &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     <th>
-                        Status
+                        {l s="Status"}
                         &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
                         &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
                     </th>
                     {if $has_category_filter}
                         <th>
-                            Position
+                            {l s="Position"}
                             &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down"></span>
                         </th>
@@ -75,24 +75,24 @@
                 <tr class="column-filters">
                     <td>&nbsp;</td>
                     <td>
-                        <input type="text" placeholder="Exact ID matching" name="ls_products_filter_column_id_product" value="{$ls_products_filter_column_id_product}" />
+                        <input type="text" placeholder="{l s="Exact ID matching"}" name="ls_products_filter_column_id_product" value="{$ls_products_filter_column_id_product}" />
                     </td>
                     <td>&nbsp;</td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_name" value="{$ls_products_filter_column_name}" />
+                        <input type="text" placeholder="{l s="Partial name allowed"}" name="ls_products_filter_column_name" value="{$ls_products_filter_column_name}" />
                     </td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_reference" value="{$ls_products_filter_column_reference}" />
+                        <input type="text" placeholder="{l s="Partial reference allowed"}" name="ls_products_filter_column_reference" value="{$ls_products_filter_column_reference}" />
                     </td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_name_category" value="{$ls_products_filter_column_name_category}" />
+                        <input type="text" placeholder="{l s="Partial category name allowed"}" name="ls_products_filter_column_name_category" value="{$ls_products_filter_column_name_category}" />
                     </td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_price" value="{$ls_products_filter_column_price}" />
+                        <input type="text" placeholder="{l s="Exact base price matching"}" name="ls_products_filter_column_price" value="{$ls_products_filter_column_price}" />
                     </td>
                     <td>&nbsp;</td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_sav_quantity" value="{$ls_products_filter_column_sav_quantity}" />
+                        <input type="text" placeholder="{l s="Exact quantity matching"}" name="ls_products_filter_column_sav_quantity" value="{$ls_products_filter_column_sav_quantity}" />
                     </td>
                     <td>
                         <select name="ls_products_filter_column_active">
@@ -103,12 +103,14 @@
                     </td>
                     {if $has_category_filter}
                         <td>
-                            TODO: tri ASC direct en bouton
+                            {if !$activate_drag_and_drop}
+                                <input type="button" class="btn" name="products_filter_position_asc" value="{l s="Sort on this category"}" onclick="productOrderTable('position', 'asc');" />
+                            {/if}
                         </td>
                     {/if}
                     <td>
-                        <input type="submit" class="btn btn-primary" name="products_filter_submit" value="Filter" />
-                        <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="Reset" />
+                        <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{l s="Filter"}" />
+                        <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{l s="Reset"}" />
                     </td>
                 </tr>
             </theader>
@@ -125,37 +127,37 @@
                     div_style="btn-group dropup"
                     button_id="product_bulk_menu"
                     disabled=true
-                    menu_label="Bulk actions"
+                    menu_label={l s="Bulk actions"}
                     menu_icon="icon-caret-up"
                     items=[
                         [
                             "onclick" => "bulkProductAction(this, 'activate_all');",
                             "icon" => "icon-power-off",
-                            "label" => "Activate selection"
+                            "label" => {l s="Activate selection"}
                         ],
                         [
                             "onclick" => "bulkProductAction(this, 'deactivate_all');",
                             "icon" => "icon-power-off",
-                            "label" => "Deactivate selection"
+                            "label" => {l s="Deactivate selection"}
                         ],
                         [
                             "onclick" => "bulkProductAction(this, 'delete_all');",
                             "icon" => "icon-trash",
-                            "label" => "Delete selection"
+                            "label" => {l s="Delete selection"}
                         ],
                         ["divider" => true],
                         [
                             "href" => "javascript:bulkProductEdition(this, 'quantity_edition');",
                             "icon" => "icon-pencil",
-                            "label" => "Edit quantities"
+                            "label" => {l s="Edit quantities"}
                         ]
                     ]}
                     
                 <div style="display: inline; margin-left: 2em;">
                     <span id="bulk_edition_toolbar" style="display: none;">
-                        <input type="button" class="btn" onclick="bulkProductAction(this, 'quantity_edition');" value="Save & refresh" />
-                        <input type="submit" class="btn btn-primary" onclick="bulkProductAction(this, 'quantity_edition_next');" value="Save & next page" />
-                        <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="Cancel" />
+                        <input type="button" class="btn" onclick="bulkProductAction(this, 'quantity_edition');" value="{l s="Save & refresh"}" />
+                        <input type="submit" class="btn btn-primary" onclick="bulkProductAction(this, 'quantity_edition_next');" value="{l s="Save & next page"}" />
+                        <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{l s="Cancel"}" />
                     </span>
                 </div>
             </div>

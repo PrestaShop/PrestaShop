@@ -80,7 +80,6 @@ trait FunctionsTrait
                 }
             }
         }
-
         return \Translate::smartyPostProcessTranslation(\Translate::getAdminTranslation($params['s'], $class, $addslashes, $htmlentities, $sprintf), $params);
     }
 
@@ -185,7 +184,7 @@ trait FunctionsTrait
         $string = trim($string);
 
         if (\Tools::strlen($string) > $length) {
-            $length -= min($length, Tools::strlen($etc));
+            $length -= min($length, \Tools::strlen($etc));
             if (!$break_words && !$middle) {
                 $string = preg_replace('/\s+?(\S+)?$/u', '', \Tools::substr($string, 0, $length+1, $charset));
             }

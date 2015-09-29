@@ -107,6 +107,7 @@ class ProductController extends AdminController
         $response->addContentData('has_filter', $hasCategoryFilter | $hasColumnFilter);
         $response->addContentData('has_category_filter', $hasCategoryFilter);
         $response->addContentData('has_column_filter', $hasColumnFilter);
+        $response->addContentData('activate_drag_and_drop', ('position' == $request->attributes->get('orderBy') && 'asc' == $request->attributes->get('orderWay')));
 
         // URLs injection
         $response->addContentData('post_url', $this->generateUrl('admin_product_catalog', array(

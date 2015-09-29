@@ -13,8 +13,7 @@
     |
     &nbsp; <a {if $previous_url}href="{$previous_url}"{else}nohref{/if}>&lt;</a> &nbsp;
     |
-    viewing {$from}-{$to} on {$total}
-    (page# {$current_page} / {$page_count})
+    {l s="Viewing $from-$to on $total (page # $current_page / $page_count)" from=$from to=$to total=$total current_page=$current_page page_count=$page_count}
     |
     &nbsp; <a {if $next_url}href="{$next_url}"{else}nohref{/if}>&gt;</a> &nbsp;
     |

@@ -114,4 +114,16 @@ class Adapter_LegacyContext
         $legacyContext = $this->getContext();
         return $legacyContext->link->getPageLink($controller);
     }
+
+    /**
+     * This fix is used to have a ready translation in the smarty 'l' function.
+     * Called by AutoResponseFormatTrait in beforeActionSuggestResponseFormat().
+     * So if you do not use this Trait, you must call this method by yourself in the action.
+     *
+     * @param string $legacyController
+     */
+    public function setupLegacyTranslationContext($legacyController = 'AdminTab')
+    {
+        \Context::getContext()->override_controller_name_for_translations = $legacyController;
+    }
 }
