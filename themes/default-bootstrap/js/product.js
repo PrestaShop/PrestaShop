@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 //global variables
 var serialScrollNbImagesDisplayed;
 var selectedCombination = [];
@@ -115,7 +114,6 @@ if (typeof combinations !== 'undefined' && combinations)
 	combinations = combinationsJS;
 }
 /* */
-
 $(document).ready(function()
 {
 	var url_found = checkUrl();
@@ -170,17 +168,19 @@ $(document).ready(function()
 		});
 
 	}
-	if (typeof(contentOnly) != 'undefined' && !contentOnly)
+	if (typeof(contentOnly) != 'undefined')
 	{
-		if (!!$.prototype.fancybox)
+		if (!contentOnly && !!$.prototype.fancybox) {
 			$('li:visible .fancybox, .fancybox.shown').fancybox({
 				'hideOnContentClick': true,
 				'openEffect'    : 'elastic',
 				'closeEffect'   : 'elastic'
 			});
+		}
+		else if (contentOnly) {
+			$('#buy_block').attr('target', '_top');
+		}
 	}
-	else if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
-		$('#buy_block').attr('target', '_top');
 
 	if ($('#bxslider li').length && !!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
