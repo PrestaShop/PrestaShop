@@ -155,6 +155,7 @@ class Smarty extends View
         $this->smartyRegisterFunction('block', 'addJsDefL', array('Media', 'addJsDefL'));
         $this->smartyRegisterFunction('modifier', 'boolval', array('Tools', 'boolval'));
         $this->smartyRegisterFunction('modifier', 'cleanHtml', [$this, 'smartyCleanHtml']);
+        $this->smartyRegisterFunction('modifier', 'htmlentitiesUTF8', [$this, 'smarty_modifier_htmlentitiesUTF8']);
     }
 
     /**
