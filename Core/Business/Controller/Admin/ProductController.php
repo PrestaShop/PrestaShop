@@ -166,22 +166,21 @@ class ProductController extends AdminController
         }
 
         // Add layout top-right menu actions
-        $response->setHeaderToolbarBtn(
-            array(
-                // TODO: conditionner l'affichage de ce switch si on est en mode 'migré -> 1.7' et encore en 1.7.0!
-                'legacy' => array(
-                    'href' => $this->generateUrl('admin_product_use_legacy_setter', array('use' => 1), false),
-                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('Switch back to old Page', array(), 'AdminProducts'),
-                    'icon' => 'process-icon-toggle-on',
-                    'help' => $this->container->make('CoreAdapter:Translator')->trans('The new page cannot fit your needs now? Fallback to the old one, and tell us why!', array(), 'AdminProducts')
-                ),
-                'add' => array(
-                    'href' => $this->generateUrl('admin_product_form'),
-                    'desc' => $this->container->make('CoreAdapter:Translator')->trans('Add new product', array(), 'AdminProducts'),
-                    'icon' => 'process-icon-new'
-                ),
-            )
+        $toolbarButtons = array();
+        if ($this->shouldDisplayUseLegacyOption()) {
+            $toolbarButtons['legacy'] = array(
+                'href' => $this->generateUrl('admin_product_use_legacy_setter', array('use' => 1), false),
+                'desc' => $this->container->make('CoreAdapter:Translator')->trans('Switch back to old Page', array(), 'AdminProducts'),
+                'icon' => 'process-icon-toggle-on',
+                'help' => $this->container->make('CoreAdapter:Translator')->trans('The new page cannot fit your needs now? Fallback to the old one, and tell us why!', array(), 'AdminProducts')
+            );
+        }
+        $toolbarButtons['add'] = array(
+            'href' => $this->generateUrl('admin_product_form'),
+            'desc' => $this->container->make('CoreAdapter:Translator')->trans('Add new product', array(), 'AdminProducts'),
+            'icon' => 'process-icon-new'
         );
+        $response->setHeaderToolbarBtn($toolbarButtons);
     }
 
     /**
@@ -304,10 +303,26 @@ class ProductController extends AdminController
      *
      * @return boolean True to redirect to legacy.
      */
-    private function shouldUseLegacyPages()
+    final private function shouldUseLegacyPages()
     {
         $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
         return $dataProvider->getTemporaryShouldUseLegacyPages();
+    }
+
+    /**
+     * Will allow switch button only if PrestaShop install comes from an upgrade from before 1.7.
+     * If the first install was made in 1.7, or the current version is >1.7.0.x, does not display switch.
+     *
+     * @see self::shouldUseLegacyPagesAction() for more information.
+     *
+     * FIXME: This is a temporary behavior.
+     *
+     * @return boolean True to show swtich button.
+     */
+    final private function shouldDisplayUseLegacyOption()
+    {
+        $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
+        return $dataProvider->getTemporaryShouldAllowUseLegacyPages();
     }
 
     /**

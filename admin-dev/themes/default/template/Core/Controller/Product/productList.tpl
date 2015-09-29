@@ -40,8 +40,32 @@
                 </td>
             {/if}
             <td>
-                <a href="{$product.url}">Go to details</a><br/>
-                <a href="#todo">Preview</a> | <a href="#todo">Duplicate</a> | <a href="#todo">Delete</a>
+                <div class="btn-group-action">
+                    {include file="../Admin/dropdown_menu.tpl"
+                        button_id="product_list_id_"|cat:$product.id_product|cat:"_menu"
+                        default_item=[
+                            "href" => $product.url,
+                            "icon" => "icon-pencil",
+                            "label" => "Modify"
+                        ]
+                        items=[
+                            [
+                                "href" => "#todo",
+                                "icon" => "icon-eye",
+                                "label" => "Preview"
+                            ],
+                            [
+                                "href" => "#todo",
+                                "icon" => "icon-copy",
+                                "label" => "Duplicate"
+                            ],
+                            [
+                                "href" => "#todo",
+                                "icon" => "icon-trash",
+                                "label" => "Delete"
+                            ]
+                        ]}
+                </div>
             </td>
         </tr>
     {foreachelse}

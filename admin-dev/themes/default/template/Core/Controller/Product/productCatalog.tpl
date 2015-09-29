@@ -75,7 +75,7 @@
                 <tr class="column-filters">
                     <td>&nbsp;</td>
                     <td>
-                        <input type="text" name="ls_products_filter_column_id_product" value="{$ls_products_filter_column_id_product}" />
+                        <input type="text" placeholder="Exact ID matching" name="ls_products_filter_column_id_product" value="{$ls_products_filter_column_id_product}" />
                     </td>
                     <td>&nbsp;</td>
                     <td>
@@ -120,41 +120,37 @@
         
         <div class="row">
             <div class="pull-left" bulkurl="{$bulk_url}" redirecturl="{$bulk_redirect_url}">
-                <div class="btn-group dropup">
-                    <button id="product_bulk_menu" class="btn btn-default dropdown-toggle" disabled="disabled" data-toggle="dropdown">
-                        Bulk actions
-                        <i class="icon-caret-up"></i>&nbsp;
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#" onclick="bulkProductAction(this, 'activate_all');">
-                                <i class="icon-power-off"></i>
-                                Activate selection
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="bulkProductAction(this, 'deactivate_all');">
-                                <i class="icon-power-off"></i>
-                                Deactivate selection
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#" onclick="bulkProductAction(this, 'delete_all');">
-                                <i class="icon-trash"></i>
-                                Delete selection
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="javascript:bulkProductEdition(this, 'quantity_edition');">
-                                <i class="icon-pencil"></i>
-                                Edit quantities
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
+            
+                {include file="../Admin/dropdown_menu.tpl"
+                    div_style="btn-group dropup"
+                    button_id="product_bulk_menu"
+                    disabled=true
+                    menu_label="Bulk actions"
+                    menu_icon="icon-caret-up"
+                    items=[
+                        [
+                            "onclick" => "bulkProductAction(this, 'activate_all');",
+                            "icon" => "icon-power-off",
+                            "label" => "Activate selection"
+                        ],
+                        [
+                            "onclick" => "bulkProductAction(this, 'deactivate_all');",
+                            "icon" => "icon-power-off",
+                            "label" => "Deactivate selection"
+                        ],
+                        [
+                            "onclick" => "bulkProductAction(this, 'delete_all');",
+                            "icon" => "icon-trash",
+                            "label" => "Delete selection"
+                        ],
+                        ["divider" => true],
+                        [
+                            "href" => "javascript:bulkProductEdition(this, 'quantity_edition');",
+                            "icon" => "icon-pencil",
+                            "label" => "Edit quantities"
+                        ]
+                    ]}
+                    
                 <div style="display: inline; margin-left: 2em;">
                     <span id="bulk_edition_toolbar" style="display: none;">
                         <input type="button" class="btn" onclick="bulkProductAction(this, 'quantity_edition');" value="Save & refresh" />

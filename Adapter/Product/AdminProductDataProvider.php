@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
  * This class will provide data from DB / ORM about Products for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
  *
- * TODO: rewrite presistence of filter parameters.
+ * TODO: rewrite persistence of filter parameters.
  */
 class AdminProductDataProvider extends AbstractAdminDataProvider
 {
@@ -361,6 +361,40 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             $params['id_product'] = $coreParameters['id_product'];
         }
         return $params;
+    }
+
+    /**
+     * Use it internally to know if we need to display the 'switch to legacy page' button or not.
+     * In debug mode, always shown.
+     *
+     * FIXME: This is a temporary behavior.
+     *
+     * @return boolean True to show the switch to legacy page button.
+     */
+    public function getTemporaryShouldAllowUseLegacyPages()
+    {
+        $version = \Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_INSTALL_VERSION"');
+        if (!$version) {
+            return false;
+        }
+        $installVersion = explode('.', $version);
+        $currentVersion = explode('.', _PS_VERSION_);
+
+        if (_PS_MODE_DEV_) {
+            return true;
+        }
+
+        // show only for 1.7.0
+        if ($currentVersion[0] != '1' || $currentVersion[1] != '7' || $currentVersion[2] != '0') {
+            return false;
+        }
+
+        // show only if upgrade from older version than 1.7
+        if ($installVersion[0] != '1' || $installVersion[1] >= '7') {
+            return false;
+        }
+
+        return true;
     }
 
     /**
