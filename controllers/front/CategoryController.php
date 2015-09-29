@@ -82,7 +82,7 @@ class CategoryControllerCore extends FrontController
             $this->redirect();
         }
 
-        if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category)) {
+        if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category) && $this->category->active) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
         }
     }
@@ -229,7 +229,7 @@ class CategoryControllerCore extends FrontController
             // Pagination must be call after "getProducts"
             $this->pagination($this->nbProducts);
         }
-        
+
         $this->addColorsToProductList($this->cat_products);
 
         Hook::exec('actionProductListModifier', array(
@@ -242,7 +242,7 @@ class CategoryControllerCore extends FrontController
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
         }
-        
+
         $this->context->smarty->assign('nb_products', $this->nbProducts);
     }
 
