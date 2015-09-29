@@ -1,35 +1,35 @@
 <?xml version="1.0"?>
 <entity_order_state>
   <order_state id="Awaiting_cheque_payment">
-    <name>Awaiting check payment</name>
+    <name>Čeká se na platbu šekem</name>
     <template>cheque</template>
   </order_state>
   <order_state id="Payment_accepted">
-    <name>Payment accepted</name>
+    <name>Platba byla přijata</name>
     <template>payment</template>
   </order_state>
   <order_state id="Preparation_in_progress">
-    <name>Processing in progress</name>
+    <name>Probíhá příprava</name>
     <template>preparation</template>
   </order_state>
   <order_state id="Shipped">
-    <name>Shipped</name>
+    <name>Odesláno</name>
     <template>shipped</template>
   </order_state>
   <order_state id="Delivered">
-    <name>Delivered</name>
+    <name>Dodáno</name>
     <template/>
   </order_state>
   <order_state id="Canceled">
-    <name>Canceled</name>
+    <name>Zrušeno</name>
     <template>order_canceled</template>
   </order_state>
   <order_state id="Refund">
-    <name>Refunded</name>
+    <name>Vracení produktů</name>
     <template>refund</template>
   </order_state>
   <order_state id="Payment_error">
-    <name>Payment error</name>
+    <name>Chyba platby</name>
     <template>payment_error</template>
   </order_state>
   <order_state id="On_backorder_paid">
