@@ -33,16 +33,40 @@ class BestSalesControllerCore extends FrontController
         if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             parent::initContent();
 
-            $this->productSort();
-            $nb_products = (int)ProductSale::getNbSales();
-            $this->pagination($nb_products);
-
             if (!Tools::getValue('orderby')) {
                 $this->orderBy = 'sales';
             }
 
-            $products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
+            $hook_executed = false;
+            $nb_products = 0;
+            $products = array();
+
+            Hook::exec('actionProductListOverride', array(
+                'nbProducts'   => &$nb_products,
+                'catProducts'  => &$products,
+                'hookExecuted' => &$hook_executed,
+            ));
+
+            // The hook was not executed, standard working
+            if (!$hook_executed) {
+                $this->productSort();
+
+                $nb_products = (int)ProductSale::getNbSales();
+                $this->pagination($nb_products);
+
+                $products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
+            } else {
+                // Hook executed, use the override
+                // Pagination must be call after "getProducts"
+                $this->pagination($nbProducts);
+            }
+
             $this->addColorsToProductList($products);
+
+            Hook::exec('actionProductListModifier', array(
+                'nb_products'  => &$nbProducts,
+                'cat_products' => &$products,
+            ));
 
             $this->context->smarty->assign(array(
                 'products' => $products,
