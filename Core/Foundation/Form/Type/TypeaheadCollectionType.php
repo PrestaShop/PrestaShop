@@ -58,7 +58,7 @@ class TypeaheadCollectionType extends AbstractType
         $this->mapping_value = $mapping_value;
         $this->mapping_name = $mapping_name;
         $this->placeholder = $placeholder;
-        $this->template_collection = $template_collection ? $template_collection : '<span>%s</span> - <a href="" class="delte">X</a>';
+        $this->template_collection = $template_collection ? $template_collection : '<span>%s</span> - <a href="" class="delete">X</a>';
     }
 
 

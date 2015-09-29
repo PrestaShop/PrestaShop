@@ -1,7 +1,6 @@
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 
 <div class="panel">
-    <div class="panel-heading">Ajouter un produit</div>
     <form name="form" id="form" method="post" class="form-horizontal">
         <div class="col-lg-12">
             <div id="form_bubbling_errors">
@@ -97,6 +96,11 @@
                         $('#form_'+key).parent().append(html);
                         $('#form_'+key).parent().addClass('has-error');
                     });
+
+                    //scroll to 1st error
+                    $('html, body').animate({
+                        scrollTop: $(".has-error").first().offset().top - $('.page-head').height() - $('.navbar-header').height()
+                    }, 500);
                 },
                 complete: function(){
                     $('#form #submit').removeAttr("disabled");

@@ -266,7 +266,7 @@ class ProductController extends AdminController
 
         $response->setEngineName('twig');
         $response->setLegacyControllerName('AdminProducts');
-        $response->setTitle('My custom title');
+        $response->setTitle('Ajouter un produit');
         $response->setDisplayType('add');
 
         $response->addContentData('form', $form->createView());
