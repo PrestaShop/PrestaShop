@@ -91,7 +91,8 @@ class CartControllerCore extends FrontController
                 if (isset($_SERVER['HTTP_REFERER'])) {
                     preg_match('!http(s?)://(.*)/(.*)!', $_SERVER['HTTP_REFERER'], $regs);
                     if (isset($regs[3]) && !Configuration::get('PS_CART_REDIRECT')) {
-                        Tools::redirect($_SERVER['HTTP_REFERER']);
+                        $url = preg_replace('/(\?)+content_only=1/', '', $_SERVER['HTTP_REFERER']);
+                        Tools::redirect($url);
                     }
                 }
 
@@ -117,7 +118,7 @@ class CartControllerCore extends FrontController
             } else {
                 $minimal_quantity = (int)$product->minimal_quantity;
             }
-            
+
             $total_quantity = 0;
             foreach ($customization_product as $custom) {
                 $total_quantity += $custom['quantity'];
