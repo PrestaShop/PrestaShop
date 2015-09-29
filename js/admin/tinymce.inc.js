@@ -1,6 +1,6 @@
 function tinySetup(config)
 {
-	if(!config)
+	if (!config)
 		config = {};
 
 	//var editor_selector = 'rte';
@@ -8,7 +8,7 @@ function tinySetup(config)
 	if (typeof config.editor_selector != 'undefined')
 		config.selector = '.'+config.editor_selector;
 
-	default_config = {
+	var default_config = {
 		selector: ".rte" ,
 		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor",
 		browser_spellcheck : true,
@@ -23,7 +23,7 @@ function tinySetup(config)
 		relative_urls : false,
 		convert_urls: false,
 		entity_encoding: "raw",
-		extended_valid_elements : "em[class|name|id]",
+		extended_valid_elements : "em[class|name|id],@[role|data-*|aria-*]",
 		valid_children : "+body[style], +style[type]",
 		menu: {
 			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
