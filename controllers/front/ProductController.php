@@ -67,9 +67,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         if (!Validate::isLoadedObject($this->product)) {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
-            $this->errors[] = $this->l('Product not found');
+            Tools::redirect('index.php?controller=404');
         } else {
             $this->canonicalRedirection();
             /*
