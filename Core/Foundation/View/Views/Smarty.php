@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\View\Views;
 
 use PrestaShop\PrestaShop\Core\Foundation\View\View;
+use PrestaShop\PrestaShop\Foundation\View\SmartyPlugins\FunctionsTrait;
+use PrestaShop\PrestaShop\Foundation\View\SmartyPlugins\SmartyLazyRegister;
 
 /**
  * Smarty view
@@ -35,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Foundation\View\View;
  */
 class Smarty extends View
 {
+    use FunctionsTrait;
+
     public $parserDirectory = null;
     public $parserCompileDirectory = null;
     public $parserCacheDirectory = null;
@@ -119,13 +123,70 @@ class Smarty extends View
 
         if (defined('_PS_ADMIN_DIR_')) {
             $this->setDefaultAdminOptions();
-            require_once(dirname(__FILE__).'/SmartyPlugins/SmartyAdminFunctions.php');
+            $this->smartyRegisterFunction('function', 'l', [$this, 'smartyTranslateAdmin'], false);
         } else {
             $this->setDefaultFrontOptions();
-            require_once(dirname(__FILE__).'/SmartyPlugins/SmartyFrontFunctions.php');
+            $this->smartyRegisterFunction('function', 'l', [$this, 'smartyTranslateFront'], false);
         }
 
-        require_once(dirname(__FILE__).'/SmartyPlugins/SmartyFunctions.php');
+        //register plugins
+        $this->smartyRegisterFunction('modifier', 'truncate', [$this, 'smarty_modifier_truncate']);
+        $this->smartyRegisterFunction('modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
+        $this->smartyRegisterFunction('function', 't', [$this, 'smartyTruncate']); // unused
+        $this->smartyRegisterFunction('function', 'm', [$this, 'smartyMaxWords']); // unused
+        $this->smartyRegisterFunction('function', 'p', [$this, 'smartyShowObject']); // Debug only
+        $this->smartyRegisterFunction('function', 'd', [$this, 'smartyDieObject']); // Debug only
+        $this->smartyRegisterFunction('function', 'hook', [$this, 'smartyHook']);
+        $this->smartyRegisterFunction('function', 'toolsConvertPrice', [$this, 'toolsConvertPrice']);
+        $this->smartyRegisterFunction('modifier', 'json_encode', array('Tools', 'jsonEncode'));
+        $this->smartyRegisterFunction('modifier', 'json_decode', array('Tools', 'jsonDecode'));
+        $this->smartyRegisterFunction('function', 'dateFormat', array('Tools', 'dateFormat'));
+        $this->smartyRegisterFunction('function', 'convertPrice', array('Product', 'convertPrice'));
+        $this->smartyRegisterFunction('function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
+        $this->smartyRegisterFunction('function', 'displayWtPrice', array('Product', 'displayWtPrice'));
+        $this->smartyRegisterFunction('function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
+        $this->smartyRegisterFunction('function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
+        $this->smartyRegisterFunction('modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
+        $this->smartyRegisterFunction('function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
+        $this->smartyRegisterFunction('function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
+        $this->smartyRegisterFunction('function', 'getWidthSize', array('Image', 'getWidth'));
+        $this->smartyRegisterFunction('function', 'getHeightSize', array('Image', 'getHeight'));
+        $this->smartyRegisterFunction('function', 'addJsDef', array('Media', 'addJsDef'));
+        $this->smartyRegisterFunction('block', 'addJsDefL', array('Media', 'addJsDefL'));
+        $this->smartyRegisterFunction('modifier', 'boolval', array('Tools', 'boolval'));
+        $this->smartyRegisterFunction('modifier', 'cleanHtml', [$this, 'smartyCleanHtml']);
+    }
+
+    /**
+     * Register a smarty function
+     *
+     * @param string $type
+     * @param string $function The function name
+     * @param array $params the callback method
+     * @param bool $lazy
+     *
+     * @return bool false if wrong $type
+     */
+    private function smartyRegisterFunction($type, $function, $params, $lazy = true)
+    {
+        if (!in_array($type, array('function', 'modifier', 'block'))) {
+            return false;
+        }
+
+        // lazy is better if the function is not called on every page
+        if ($lazy) {
+            $lazy_register = SmartyLazyRegister::getInstance();
+            $lazy_register->register($params);
+
+            if (is_array($params)) {
+                $params = $params[1];
+            }
+
+            // SmartyLazyRegister allows to only load external class when they are needed
+            $this->parserInstance->registerPlugin($type, $function, array($lazy_register, $params));
+        } else {
+            $this->parserInstance->registerPlugin($type, $function, $params);
+        }
     }
 
     /**
@@ -140,6 +201,7 @@ class Smarty extends View
 
         // Let user choose to force compilation
         $this->parserInstance->force_compile = (\Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+
         // But force compile_check since the performance impact is small and it is better for debugging
         $this->parserInstance->compile_check = true;
     }
@@ -154,6 +216,7 @@ class Smarty extends View
         if (\Configuration::get('PS_HTML_THEME_COMPRESSION')) {
             $this->parserInstance->registerFilter('output', 'smartyMinifyHTML');
         }
+
         if (\Configuration::get('PS_JS_HTML_THEME_COMPRESSION')) {
             $this->parserInstance->registerFilter('output', 'smartyPackJSinHTML');
         }
