@@ -494,6 +494,8 @@ class FrontControllerCore extends Controller
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
         ]);
+
+        Media::addJsDef(['prestashop' => []]);
     }
 
     /**
