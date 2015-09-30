@@ -29,9 +29,9 @@ use PrestaShop\PrestaShop\Adapter\AbstractAdminDataProvider;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
- * This class will provide data from DB / ORM about Product
+ * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
  */
-class ProductDataProvider extends AbstractAdminDataProvider
+class ProductDataProvider
 {
     /**
      * Get a product

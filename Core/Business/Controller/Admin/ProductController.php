@@ -277,16 +277,17 @@ class ProductController extends AdminController
     {
         $action = $request->attributes->get('action');
         $productIdList = $request->request->get('bulk_action_selected_products');
+        $updater = $this->container->make('CoreAdapter:ProductDataUpdater');
 
         switch ($action) {
             case 'activate_all':
-                // TODO
+                $success = $updater->activateProductIdList($productIdList);
                 break;
             case 'deactivate_all':
-                // TODO
+                $success = $updater->activateProductIdList($productIdList, false);
                 break;
             case 'delete_all':
-                // TODO: from $productIdList (id_product(s)), do a safe delete (ORM?)
+                $success = $updater->deleteProductIdList($productIdList);
                 break;
             default:
                 throw new DevelopmentErrorException('Bad action received from AJAX call to ProductController::bulkAction.');
