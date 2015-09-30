@@ -1641,7 +1641,7 @@ abstract class ModuleCore
         }
 
         $modules = array();
-        if (is_array($native_modules)) {
+        if (is_object($native_modules)) {
             foreach ($native_modules as $native_modules_type) {
                 if (in_array($native_modules_type['type'], array('native', 'partner'))) {
                     foreach ($native_modules_type->module as $module) {
