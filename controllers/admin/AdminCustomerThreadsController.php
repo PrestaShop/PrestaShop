@@ -1061,11 +1061,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = nl2br($message);
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        $cm->message = $message;
-
-                        if (!Validate::isCleanHtml($message)) {
+                        if (empty($message) || !Validate::isCleanHtml($message)) {
                             $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
                         } else {
+                            $cm->message = $message;
                             $cm->add();
                         }
                     }
