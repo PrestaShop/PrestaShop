@@ -14,6 +14,10 @@ rivets.formatters.propertyList = function(obj) {
   return _results;
 };
 
+rivets.formatters.customerAddress = function(obj) {
+  return prestashop["customer"]["addresses"][obj]["formatted"];
+};
+
 $(document).ready(function(){
   window.view = rivets.bind($('body'),{
 
