@@ -786,7 +786,7 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        if (isset($this->className) && $this->className) 
+        if (isset($this->className) && $this->className)
         	$definition = ObjectModel::getDefinition($this->className);
 
         foreach ($filters as $key => $value) {
@@ -845,7 +845,7 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-                            
+
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -887,6 +887,10 @@ class AdminControllerCore extends Controller
                 // Process list filtering
                 if ($this->filter && $this->action != 'reset_filters') {
                     $this->processFilter();
+                }
+
+                if ((int)Tools::getValue('submitFilter'.$this->list_id) || Tools::isSubmit('submitReset'.$this->list_id)) {
+                    $this->setRedirectAfter(self::$currentIndex.'&token='.$this->token);
                 }
 
                 // If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
