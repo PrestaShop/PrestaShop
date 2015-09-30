@@ -44,6 +44,12 @@
 
           </div>
 
+          <footer>
+            <a href="{url entity="address" params=['back' => $urls.pages.order_opc]}">
+              {l s='Create new address'}
+            </a>
+          </footer>
+
         </section>
       {/block}
 
