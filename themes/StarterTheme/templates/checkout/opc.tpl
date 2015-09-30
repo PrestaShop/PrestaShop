@@ -38,7 +38,7 @@
 
             <article id="select-delivery-address" class="address-selector">
               {block name="opc_delivery_address"}
-                {include file="checkout/_partials/address-selector-block.tpl" name="address_delivery"}
+                {* include file="checkout/_partials/address-selector-block.tpl" name="address_delivery" *}
               {/block}
             </article>
 
