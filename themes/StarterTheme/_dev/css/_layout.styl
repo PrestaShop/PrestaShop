@@ -1,17 +1,17 @@
 body
   background-color body-background-color
 
-#main, .header-nav, .header-top, a.logo
+#wrapper, .header-nav, .header-top, a.logo
   padding-left 10px
   padding-right 10px
 
 @media (min-width: breakpoint-medium)
-  #main, .header-nav, .header-top, a.logo, aside#notifications
+  #wrapper, .header-nav, .header-top, a.logo, aside#notifications
     padding-left 100px
     padding-right 100px
 
 @media (min-width: breakpoint-large)
-  #main, .header-nav, .header-top, a.logo, aside#notifications
+  #wrapper, .header-nav, .header-top, a.logo, aside#notifications
     padding-left: 350px;
     padding-right: 350px;
 
@@ -35,5 +35,19 @@ body
     clear both
     content "\00a0"
 
-#main
+#wrapper
   clear both
+
+#content-wrapper.left-column
+  margin-left 25%
+
+#content-wrapper.right-column
+  margin-right 25%
+
+#left-column
+  float left
+  width 25%
+
+#right-column
+  float right
+  width 25%
