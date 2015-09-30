@@ -27,13 +27,15 @@ body
   > *
     display inline-block
     font-size 1rem
+  then-clear-both()
 
 .header-top
   margin-top 10px
   margin-bottom 10px
-  &::after
-    clear both
-    content "\00a0"
+  then-clear-both()
+
+#header
+  then-clear-both()
 
 #wrapper
   clear both
