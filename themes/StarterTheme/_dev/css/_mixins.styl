@@ -20,3 +20,9 @@ remove-symbol()
     background-color #333
     color white
     float left
+
+then-clear-both()
+  &::after
+    clear both
+    content "\00a0"
+    font-size 0px
