@@ -483,19 +483,24 @@ class FrontControllerCore extends Controller
         $this->context->cart     = $cart;
         $this->context->currency = $currency;
 
+        $customer = $this->getTemplateVarCustomer();
+
         /**
          * Template vars assignation
          */
         $this->context->smarty->assign([
             'currency' => $this->getTemplateVarCurrency(),
-            'customer' => $this->getTemplateVarCustomer(),
+            'customer' => $customer,
             'language' => $this->objectSerializer->toArray($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
         ]);
 
-        Media::addJsDef(['prestashop' => []]);
+        Media::addJsDef(['prestashop' => [
+            'customer' => $customer,
+            'cart' => ['id_address_delivery' => 1],
+        ]]);
     }
 
     /**
