@@ -32,13 +32,13 @@
 
             <article id="select-invoice-address" class="address-selector">
               {block name="opc_invoice_address"}
-                {include file="checkout/_partials/address-selector-block.tpl" name="address_invoice"}
+                {include file="checkout/_partials/address-selector-block.tpl" value_id="prestashop.cart.id_address_invoice"}
               {/block}
             </article>
 
             <article id="select-delivery-address" class="address-selector">
               {block name="opc_delivery_address"}
-                {* include file="checkout/_partials/address-selector-block.tpl" name="address_delivery" *}
+                {include file="checkout/_partials/address-selector-block.tpl" value_id="prestashop.cart.id_address_delivery"}
               {/block}
             </article>
 
