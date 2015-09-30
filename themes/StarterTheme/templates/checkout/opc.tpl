@@ -63,22 +63,6 @@
         </section>
       {/block}
 
-      {block name="opc_legal_terms_section"}
-        <section id="opc-legal-terms">
-
-          <header>
-            <h1 class="h3">{l s='Terms and conditions'}</h1>
-          </header>
-
-          <div>
-            {block name="opc_legal_terms"}
-              {include file="checkout/_partials/terms.tpl" overridden_terms=$override_tos_display}
-            {/block}
-          </div>
-
-        </section>
-      {/block}
-
       {block name="opc_payment_section"}
         <section id="opc-payment">
 
@@ -88,7 +72,7 @@
 
           <div>
             {block name="opc_legal_terms"}
-              {include file="checkout/_partials/terms.tpl" overridden_terms=$override_tos_display}
+              {include file="checkout/_partials/terms.tpl"}
             {/block}
           </div>
 
