@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:

@@ -237,6 +237,7 @@ abstract class AbstractRouter implements RouterInterface
             if (php_sapi_name() == "cli") {
                 throw $e;
             }
+
             $this->tryToDisplayExceptions($e);
             return true; // do not bypass now!
         }
