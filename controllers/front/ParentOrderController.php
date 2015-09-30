@@ -424,7 +424,7 @@ class ParentOrderControllerCore extends FrontController
                         $params['multi-shipping'] = $multi;
                     }
 
-                    Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
+                    //Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
                 }
             }
             $this->context->smarty->assign(array(

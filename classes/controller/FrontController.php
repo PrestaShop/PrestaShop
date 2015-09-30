@@ -1541,6 +1541,10 @@ class FrontControllerCore extends Controller
         }
         $cust['addresses'] = $addresses;
 
+        Media::addJsDef(['prestashop' => [
+            'customer' => $cust,
+            'cart' => ['id_address_delivery' => 1],
+        ]]);
         return $cust;
     }
 
