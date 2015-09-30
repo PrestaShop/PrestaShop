@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <entity_cms>
   <cms id="Delivery">
-    <meta_title>Delivery</meta_title>
+    <meta_title>Dodání</meta_title>
     <meta_description>Our terms and conditions of delivery</meta_description>
     <meta_keywords>conditions, delivery, delay, shipment, pack</meta_keywords>
     <content>&lt;h2&gt;Shipments and returns&lt;/h2&gt;&lt;h3&gt;Your pack shipment&lt;/h3&gt;&lt;p&gt;Packages are generally dispatched within 2 days after receipt of payment and are shipped via UPS with tracking and drop-off without signature. If you prefer delivery by UPS Extra with required signature, an additional cost will be applied, so please contact us before choosing this method. Whichever shipment choice you make, we will provide you with a link to track your package online.&lt;/p&gt;&lt;p&gt;Shipping fees include handling and packing fees as well as postage costs. Handling fees are fixed, whereas transport fees vary according to total weight of the shipment. We advise you to group your items in one order. We cannot group two distinct orders placed separately, and shipping fees will apply to each of them. Your package will be dispatched at your own risk, but special care is taken to protect fragile objects.&lt;br /&gt;&lt;br /&gt;Boxes are amply sized and your items are well-protected.&lt;/p&gt;</content>
-    <link_rewrite>delivery</link_rewrite>
+    <link_rewrite>dodani</link_rewrite>
   </cms>
   <cms id="Legal_Notice">
-    <meta_title>Legal Notice</meta_title>
-    <meta_description>Legal notice</meta_description>
-    <meta_keywords>notice, legal, credits</meta_keywords>
+    <meta_title>Právní ustanovení</meta_title>
+    <meta_description>Právní ustanovení</meta_description>
+    <meta_keywords>Právní, ustanovení, credits</meta_keywords>
     <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Concept and production:&lt;/p&gt;&lt;p&gt;This Online store was created using &lt;a href="http://www.prestashop.com"&gt;Prestashop Shopping Cart Software&lt;/a&gt;,check out PrestaShop's &lt;a href="http://www.prestashop.com/blog/en/"&gt;ecommerce blog&lt;/a&gt; for news and advices about selling online and running your ecommerce website.&lt;/p&gt;</content>
     <link_rewrite>legal-notice</link_rewrite>
   </cms>

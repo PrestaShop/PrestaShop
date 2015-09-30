@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <entity_cms_category>
   <cms_category id="Home">
-    <name>Home</name>
+    <name>Domů</name>
     <description/>
-    <link_rewrite>home</link_rewrite>
+    <link_rewrite>domu</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
