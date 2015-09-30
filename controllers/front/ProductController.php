@@ -62,6 +62,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         parent::init();
 
+        $this->context->smarty->assign('adminActionDisplay', false);
+
         if ($id_product = (int)Tools::getValue('id_product')) {
             $this->product = new Product($id_product, true, $this->context->language->id, $this->context->shop->id);
         }
