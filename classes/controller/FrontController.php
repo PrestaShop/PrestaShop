@@ -499,7 +499,7 @@ class FrontControllerCore extends Controller
 
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
-            'cart' => ['id_address_delivery' => 1],
+            'cart' => ['id_address_delivery' => 1, 'id_address_invoice' => 1, ],
         ]]);
     }
 
