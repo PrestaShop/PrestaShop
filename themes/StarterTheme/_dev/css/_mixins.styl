@@ -26,3 +26,12 @@ then-clear-both()
     clear both
     content "\00a0"
     font-size 0px
+
+clearfix()
+  zoom 1
+  &:after
+  &:before
+    content ""
+    display table
+  &:after
+    clear both
