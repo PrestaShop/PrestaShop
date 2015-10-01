@@ -357,7 +357,7 @@ class ProductControllerCore extends FrontController
             'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
             'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
-            'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
+            'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group)
         ));
     }
 

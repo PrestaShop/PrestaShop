@@ -31,6 +31,7 @@ var colors = [];
 var original_url = window.location + '';
 var first_url_check = true;
 var firstTime = true;
+
 /* Retro compat from product.tpl */
 if (typeof customizationFields !== 'undefined' && customizationFields)
 {
@@ -210,6 +211,33 @@ $(document).ready(function()
 	}
 });
 
+//find a specific price rule, based on pre calculated dom display array
+function findSpecificPrice(){
+	var domData = $("#quantityDiscount table tbody tr").not( ":hidden" );
+	var nbProduct = $('#quantity_wanted').val();
+	var newPrice = false;
+
+	//construct current specific price for current combination
+	domData.each(function(i){
+		var dataDiscountQuantity = parseInt($(this).attr('data-discount-quantity'));
+		var dataDiscountNextQuantity = -1;
+
+		var nextQtDiscount = $(domData[i+1]);
+		if(nextQtDiscount.length){
+			dataDiscountNextQuantity = parseInt(nextQtDiscount.attr('data-discount-quantity'));
+		}
+		if(
+			(dataDiscountNextQuantity != -1 && nbProduct >= dataDiscountQuantity && nbProduct < dataDiscountNextQuantity) ||
+			(dataDiscountNextQuantity == -1 && nbProduct >= dataDiscountQuantity)
+		){
+			newPrice = $(this).attr('data-real-discount-value');
+			return false;
+		}
+	});
+
+	return newPrice;
+}
+
 $(window).resize(function(){
 	serialScrollSetNbImages();
 	$('#thumbs_list').trigger('goto', 0);
@@ -250,6 +278,21 @@ $(document).on('click', '.color_pick', function(e){
 	e.preventDefault();
 	colorPickerClick($(this));
 	getProductAttribute();
+});
+
+$(document).on('change', '#quantity_wanted', function(e){
+	e.preventDefault();
+	var specificPrice = findSpecificPrice();
+
+	if(false !== specificPrice){
+		$('#our_price_display').text(specificPrice);
+	}else{
+		if (typeof productHasAttributes != 'undefined' && productHasAttributes){
+			updateDisplay();
+		}else{
+			$('#our_price_display').text(formatCurrency(parseFloat($('#our_price_display').attr('content')), currencyFormat, currencySign, currencyBlank));
+		}
+	}
 });
 
 $(document).on('change', '.attribute_select', function(e){
@@ -312,6 +355,8 @@ $(document).on('click', '.product_quantity_up', function(e){
         $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
     else
         $('input[name='+fieldName+']').val(quantityAvailableT);
+
+	$('#quantity_wanted').change();
 });
  // The button to decrement the product value
 $(document).on('click', '.product_quantity_down', function(e){
@@ -322,6 +367,8 @@ $(document).on('click', '.product_quantity_down', function(e){
         $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
     else
         $('input[name='+fieldName+']').val(1);
+
+	$('#quantity_wanted').change();
 });
 
 if (typeof minimalQuantity != 'undefined' && minimalQuantity)
@@ -858,20 +905,17 @@ function displayImage(domAAroundImgThumb, no_animation)
 function displayDiscounts(combination)
 {
 	// Tables & rows selection
-	var quantityDiscountTable = $('#quantityDiscount').parent();
-	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
-	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
+	var quantityDiscountTable = $('#quantityDiscount');
+	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
 
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
 	if (combinationsSpecificQuantityDiscount.length != 0) {
-		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_'+combination).hide();
 		combinationsSpecificQuantityDiscount.show();
-		allQuantityDiscount.show();
-		quantityDiscountTable.show();
 	} else if(allQuantityDiscount.length != 0) {
-		$('tbody tr', quantityDiscountTable).not('.quantityDiscount_0').hide();
 		allQuantityDiscount.show();
+		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
 	} else {
 		quantityDiscountTable.hide();
