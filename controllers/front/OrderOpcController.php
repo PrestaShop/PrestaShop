@@ -50,10 +50,17 @@ class OrderOpcControllerCore extends FrontController
     {
         $advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
+        $all_conditions_approved = $this->checkWhetherAllConditionsAreApproved();
+
         if ($advanced_payment_api) {
-            $payment_options = Hook::exec('advancedPaymentOptions');
+            $payment_options = (new Adapter_AdvancedPaymentOptionsConverter)->getPaymentOptionsForTemplate();
+            $selected_payment_option = Tools::getValue('select_payment_option');
+            if ($selected_payment_option) {
+                $all_conditions_approved = true;
+            }
         } else {
             $payment_options = Hook::exec('displayPayment');
+            $selected_payment_option = null;
         }
 
         return $this->render('checkout/payment.tpl', [
@@ -61,7 +68,8 @@ class OrderOpcControllerCore extends FrontController
             'payment_options' => $payment_options,
             'conditions_to_approve' => $this->getConditionsToApprove(),
             'approved_conditions' => $this->getSubmittedConditionsApproval(),
-            'all_conditions_approved' => $this->checkWhetherAllConditionsAreApproved()
+            'all_conditions_approved' => $all_conditions_approved,
+            'selected_payment_option' => $selected_payment_option
         ]);
     }
 
