@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\File;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Twig\Extension\TranslationExtension as TwigTranslationExtension;
+use Symfony\Component\Translation\Translator;
 
 /**
  * This Trait will add common action such as upload, delete (droping files on the interface like images), change status and more...
@@ -245,6 +247,8 @@ trait AdminCommonActionTrait
             return $errors;
         }
 
+        $translator = new TwigTranslationExtension(new Translator(''), $this->container);
+
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
                 $form_id = 'bubbling_errors';
@@ -255,7 +259,21 @@ trait AdminCommonActionTrait
                     $error->getCause()->getPropertyPath()
                 );
             }
-            $errors[$form_id][] = $error->getMessage();
+
+            if ($error->getMessagePluralization()) {
+                $errors[$form_id][] = $translator->transchoice(
+                    $error->getMessageTemplate(),
+                    $error->getMessagePluralization(),
+                    $error->getMessageParameters(),
+                    'form_error'
+                );
+            } else {
+                $errors[$form_id][] = $translator->trans(
+                    $error->getMessageTemplate(),
+                    $error->getMessageParameters(),
+                    'form_error'
+                );
+            }
         }
         return $errors;
     }

@@ -40,6 +40,7 @@ class TranslationExtension extends \Twig_Extension
      * Constructor : Inject Symfony\Component\Translation Translator
      *
      * @param TranslatorInterface $translator
+     * @param object $container
      */
     public function __construct(TranslatorInterface $translator, $container)
     {
@@ -60,16 +61,26 @@ class TranslationExtension extends \Twig_Extension
         );
     }
 
+    public function getFunctions()
+    {
+        return array(
+            new \Twig_SimpleFunction('trans', array($this, 'trans')),
+            new \Twig_SimpleFunction('transchoice', array($this, 'transchoice'))
+        );
+    }
+
     /**
      * This method wrap the Tools::displayError legacy method
      *
      * @param string $message The string to translate
+     * @param array $arguments An array of parameters for the message
+     * @param string|null $domain The domain for the message or null to use the default
      *
      * @return string The translated string
      */
-    final private function getPrestaShopTranslation($message)
+    final private function getPrestaShopTranslation($message, $arguments = array(), $domain = null)
     {
-        return $this->container->make('CoreAdapter:Translator')->trans($message, array(), 'form_error');
+        return $this->container->make('CoreAdapter:Translator')->trans($message, $arguments, $domain);
     }
 
     /**
@@ -84,7 +95,12 @@ class TranslationExtension extends \Twig_Extension
      */
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)
     {
-        return $this->translator->trans($this->getPrestaShopTranslation($message), $arguments, $domain, $locale);
+        return $this->translator->trans(
+            $this->getPrestaShopTranslation($message, $arguments, $domain),
+            $arguments,
+            $domain,
+            $locale
+        );
     }
 
     /**
@@ -100,7 +116,13 @@ class TranslationExtension extends \Twig_Extension
      */
     public function transchoice($message, $count, array $arguments = array(), $domain = null, $locale = null)
     {
-        return $this->translator->transChoice($this->getPrestaShopTranslation($message), $count, array_merge(array('%count%' => $count), $arguments), $domain, $locale);
+        return $this->translator->transChoice(
+            $this->getPrestaShopTranslation($message, $arguments, $domain),
+            $count,
+            array_merge(array('%count%' => $count), $arguments),
+            $domain,
+            $locale
+        );
     }
 
     /**

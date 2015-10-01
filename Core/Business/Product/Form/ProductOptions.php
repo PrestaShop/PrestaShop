@@ -85,28 +85,33 @@ class ProductOptions extends AbstractType
 
         $builder->add('visibility', 'choice', array(
             'choices'  => array(
-                'both' => 'Partout',
-                'catalog' => 'Catalogue uniquement',
-                'search' => 'Recherche uniquement',
-                'none' => 'Nulle part',
+                'both' => $this->translator->trans('Everywhere', [], 'AdminProducts'),
+                'catalog' => $this->translator->trans('Catalog only', [], 'AdminProducts'),
+                'search' => $this->translator->trans('Search only', [], 'AdminProducts'),
+                'none' => $this->translator->trans('Nowhere', [], 'AdminProducts'),
             ),
             'required' => true,
+            'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
             'data' => 'both'
         ))
         ->add('wholesale_price', 'number', array(
-            'required' => false
+            'required' => false,
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
         ))
         ->add('unit_price', 'number', array(
-            'required' => false
+            'required' => false,
+            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts')
         ))
         ->add('unity', 'text', array(
-            'required' => false
+            'required' => false,
+            'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
+            'label' => $this->translator->trans('Suppliers', [], 'AdminProducts')
         ));
     }
 

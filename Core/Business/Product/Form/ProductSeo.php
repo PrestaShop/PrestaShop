@@ -30,6 +30,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 
 /**
  * This form class is risponsible to generate the product SEO form
@@ -50,6 +51,7 @@ class ProductSeo extends AbstractType
         $this->router = $container->make('Routing');
         $this->context = $container->make('Context');
         $this->translator = $container->make('Translator');
+        $this->locales = $container->make('CoreAdapter:Language\\LanguageDataProvider')->getLanguages();
     }
 
     /**
@@ -59,6 +61,11 @@ class ProductSeo extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('link_rewrite', new TranslateType(
+            'text',
+            array(),
+            $this->locales
+        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
     }
 
     /**

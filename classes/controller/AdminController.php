@@ -788,8 +788,9 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        if (isset($this->className) && $this->className) 
-        	$definition = ObjectModel::getDefinition($this->className);
+        if (isset($this->className) && $this->className) {
+            $definition = ObjectModel::getDefinition($this->className);
+        }
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */
@@ -4384,5 +4385,15 @@ class AdminControllerCore extends Controller
         if (is_array($this->meta_title)) {
             $this->meta_title[] = $entry;
         }
+    }
+
+    /**
+     * Set action
+     *
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
     }
 }

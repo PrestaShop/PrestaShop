@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
+use PrestaShop\PrestaShop\Core\Business\Product\ModelApdapter\Product as ProductModelAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
@@ -212,9 +213,10 @@ class ProductController extends AdminController
         $response->addContentData('activate_drag_and_drop', ('position' == $request->attributes->get('ls_products_orderBy') && 'asc' == $request->attributes->get('ls_products_orderWay')));
     }
 
-    public function productFormAction(Request &$request, Response &$response, $product)
+    public function productFormAction(Request $request, Response $response, $product)
     {
         $legacyContext = $this->container->make('Adapter_LegacyContext');
+        $locales = $this->container->make('CoreAdapter:Language\\LanguageDataProvider')->getLanguages();
 
         // Redirect to legacy controller (FIXME: temporary behavior)
         if ($this->shouldUseLegacyPages()) {
@@ -245,6 +247,7 @@ class ProductController extends AdminController
         ));
 
         $form = $builder
+            ->add('id', 'hidden', array('data' => 0))
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductQuantity($this->container))
             ->add('step3', new ProductForms\ProductShipping($this->container))
@@ -255,14 +258,23 @@ class ProductController extends AdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($form->isValid()) { //Form OK
-                $data = $form->getData();
-            } else {
+            if ($form->isValid()) {
+                $_POST = ProductModelAdapter::modelMapper($form->getData(), $this->container, $locales);
+
+                $adminProductController = $this->container->make('CoreAdapter:Product\\AdminProductControllerWrapper')->get();
+                $adminProductController->setAction('save');
+
+                if ($product = $adminProductController->postProcess()) {
+                    $response->setContentData(['product' => $product]);
+                }
+
                 if ($request->isXmlHttpRequest()) {
-                    $response->setStatusCode(400);
-                    $response->setContentData($this->getFormErrorsForJS($form));
                     return self::RESPONSE_JSON;
                 }
+            } elseif ($request->isXmlHttpRequest()) {
+                $response->setStatusCode(400);
+                $response->setContentData($this->getFormErrorsForJS($form));
+                return self::RESPONSE_JSON;
             }
         }
 

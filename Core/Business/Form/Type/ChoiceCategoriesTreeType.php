@@ -46,6 +46,7 @@ class ChoiceCategoriesTreeType extends AbstractType
      *
      * @param string $label The field label
      * @param array $list The nested array categories
+     * @param bool $multiple Display checkbox or radio button
      */
     public function __construct($label = '', $list = array(), $multiple = true)
     {
@@ -100,7 +101,7 @@ class ChoiceCategoriesTreeType extends AbstractType
             'required' => false,
             'multiple'  => true,
             'expanded'  => true,
-            'error_bubbling'  => true,
+            'error_bubbling'  => true
         ));
     }
 
