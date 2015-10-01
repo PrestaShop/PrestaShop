@@ -28,27 +28,31 @@
             <h1 class="h3">{l s='Addresses'}</h1>
           </header>
 
+          <ul class="actions">
+            <li>
+              <a href="{url entity="address" params=['back' => $urls.pages.order_opc]}">
+                {l s='Create new address'}
+              </a>
+            </li>
+          </ul>
+
           <div class="addresses-container">
 
-            <article id="select-invoice-address" class="address-selector">
-              {block name="opc_invoice_address"}
-                {include file="checkout/_partials/address-selector-block.tpl" value_id="prestashop.cart.id_address_invoice"}
-              {/block}
-            </article>
-
-            <article id="select-delivery-address" class="address-selector">
+            <div id="select-delivery-address" class="address-selector">
+              <h2 class="h3">{l s='Your delivery address'}</h2>
               {block name="opc_delivery_address"}
-                {include file="checkout/_partials/address-selector-block.tpl" value_id="prestashop.cart.id_address_delivery"}
+                {include file="checkout/_partials/address-selector-block.tpl" name="id_address_delivery" addresses=$customer.addresses}
               {/block}
-            </article>
+            </div>
+
+            <div id="select-invoice-address" class="address-selector">
+              <h2 class="h3">{l s='Your invoice address'}</h2>
+              {block name="opc_invoice_address"}
+                {include file="checkout/_partials/address-selector-block.tpl" name="id_address_invoice" addresses=$customer.addresses}
+              {/block}
+            </div>
 
           </div>
-
-          <footer>
-            <a href="{url entity="address" params=['back' => $urls.pages.order_opc]}">
-              {l s='Create new address'}
-            </a>
-          </footer>
 
         </section>
       {/block}
