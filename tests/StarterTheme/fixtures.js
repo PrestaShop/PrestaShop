@@ -13,5 +13,8 @@ module.exports = {
     },
     aCustomizableProduct: {
       id: 1
+    },
+    urls: {
+      opc: '/en/quick-order'
     }
 };
