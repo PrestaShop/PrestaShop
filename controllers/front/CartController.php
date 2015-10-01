@@ -73,8 +73,6 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
-            } elseif (Tools::getIsset('changeAddressDelivery')) {
-                $this->processChangeProductAddressDelivery();
             } elseif (Tools::getIsset('allowSeperatedPackage')) {
                 $this->processAllowSeperatedPackage();
             } elseif (Tools::getIsset('duplicate')) {
@@ -172,29 +170,6 @@ class CartControllerCore extends FrontController
         if (count($removed) && (int)Tools::getValue('allow_refresh')) {
             $this->ajax_refresh = true;
         }
-    }
-
-    protected function processChangeProductAddressDelivery()
-    {
-        if (!Configuration::get('PS_ALLOW_MULTISHIPPING')) {
-            return;
-        }
-
-        $old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
-        $new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
-
-        if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery))) {
-            $this->ajaxDie(json_encode(array(
-                'hasErrors' => true,
-                'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
-            )));
-        }
-
-        $this->context->cart->setProductAddressDelivery(
-            $this->id_product,
-            $this->id_product_attribute,
-            $old_id_address_delivery,
-            $new_id_address_delivery);
     }
 
     protected function processAllowSeperatedPackage()
