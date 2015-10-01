@@ -73,6 +73,8 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
+            } elseif (Tools::getIsset('changeAddresses')) {
+                $this->processChangeAddresses(Tools::getValue('id_address_delivery'), Tools::getValue('id_address_invoice'));
             } elseif (Tools::getIsset('allowSeperatedPackage')) {
                 $this->processAllowSeperatedPackage();
             } elseif (Tools::getIsset('duplicate')) {
@@ -82,6 +84,10 @@ class CartControllerCore extends FrontController
             }
             // Make redirection
             if (!$this->errors && !$this->ajax) {
+                if ($back = Tools::getValue('back')) {
+                    Tools::redirect(urldecode($back));
+                }
+
                 $queryString = Tools::safeOutput(Tools::getValue('query', null));
                 if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
                     Tools::redirect('index.php?controller=search&search='.$queryString);
@@ -170,6 +176,19 @@ class CartControllerCore extends FrontController
         if (count($removed) && (int)Tools::getValue('allow_refresh')) {
             $this->ajax_refresh = true;
         }
+    }
+
+    protected function processChangeAddresses($id_address_delivery, $id_address_invoice)
+    {
+        if ($id_address_delivery = (int)$id_address_delivery) {
+            $this->context->cart->id_address_delivery = $id_address_delivery;
+        }
+
+        if ($id_address_invoice = (int)$id_address_invoice) {
+            $this->context->cart->id_address_invoice = $id_address_invoice;
+        }
+
+        return $this->context->cart->update();
     }
 
     protected function processAllowSeperatedPackage()
