@@ -20,12 +20,28 @@ describe('The One Page Checkout', function () {
     });
 
     it('should display payment modules when all checkboxes are checked', function () {
-      return browser.elements('#conditions-to-approve label').then(function (elements) {
-        return q.all(elements.value.map(function (element) {
-          return browser.elementIdClick(element.ELEMENT);
-        })).then(function () {
-          return browser.waitForVisible('.payment_module');
-        });
+
+      // We cannot loop on the checkboxes to check them because the DOM
+      // updates everytime a checkbox is checked
+      // so instead we check them one by one and wait a bit before
+      // going to the next one.
+      function checkRemainingCheckboxes () {
+        return browser.elements('#conditions-to-approve input[type="checkbox"]:not(:checked)')
+          .then(function (elements) {
+            if (elements.value.length > 0) {
+              return browser
+                .elementIdClick(elements.value[0].ELEMENT)
+                .then(function () {
+                  return browser.pause(500);
+                })
+                .then(checkRemainingCheckboxes)
+              ;
+            }
+          });
+      }
+
+      return checkRemainingCheckboxes().then(function () {
+        return browser.waitForVisible('.payment_module');
       });
     });
   });
