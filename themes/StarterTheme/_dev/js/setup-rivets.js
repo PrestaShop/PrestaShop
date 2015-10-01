@@ -19,7 +19,12 @@ rivets.formatters.propertyList = function(obj) {
 };
 
 rivets.formatters.customerAddress = function(obj) {
-  return prestashop.customer.addresses[obj].formatted;
+  var address = prestashop.customer.addresses[obj];
+  if (address) {
+    return address.formatted;
+  } else {
+    return undefined;
+  }
 };
 
 $(document).ready(function(){
