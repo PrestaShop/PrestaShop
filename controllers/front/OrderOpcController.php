@@ -105,14 +105,4 @@ class OrderOpcControllerCore extends FrontController
 
         $this->setTemplate('checkout/opc.tpl');
     }
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addJS(array(
-            _THEME_JS_DIR_.'vendor/rivets.bundled.min.js',
-            _THEME_JS_DIR_.'theme.js',
-            _THEME_JS_DIR_.'opc.js'
-        ));
-    }
 }
