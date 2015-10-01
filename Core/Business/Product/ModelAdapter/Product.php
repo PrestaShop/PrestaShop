@@ -97,6 +97,16 @@ class Product
             $from_data['link_rewrite_'.$locales[0]['id_lang']] = \Tools::link_rewrite($from_data['name_'.$locales[0]['id_lang']]);
         }
 
+        //map inputAccessories
+        if (!empty($from_data['related_products']) && !empty($from_data['related_products']['data'])) {
+            $inputAccessories = '';
+            foreach ($from_data['related_products']['data'] as $accessoryIds) {
+                $accessoryIds = explode(',', $accessoryIds);
+                $inputAccessories .= $accessoryIds[0].'-';
+            }
+            $from_data['inputAccessories'] = $inputAccessories;
+        }
+
         //map all
         $new_form_data = [];
         foreach ($from_data as $k => $v) {
