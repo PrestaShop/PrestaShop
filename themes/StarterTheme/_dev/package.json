@@ -4,12 +4,18 @@
   "description": "Tools to help while developing the starter theme",
   "main": "index.js",
   "scripts": {
-    "build": "node_modules/.bin/stylus --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
-    "watch": "node_modules/.bin/stylus --watch --compress --sourcemap --include-css css/dev.styl -o ../assets/css"
+    "watch": "npm run watch-css & npm run watch-js",
+    "build-css": "stylus --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
+    "watch-css": "stylus --watch --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
+    "build-js": "webpack",
+    "watch-js": "webpack -w"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "stylus": "^0.52.4"
+  "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "rivets": "^0.8.1",
+    "stylus": "^0.52.4",
+    "webpack": "^1.12.2"
   }
 }
