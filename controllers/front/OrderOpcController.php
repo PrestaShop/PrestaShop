@@ -95,9 +95,19 @@ class OrderOpcControllerCore extends FrontController
         return true;
     }
 
+    public function getPaymentOptionsAction()
+    {
+        return $this->renderPaymentOptions();
+    }
+
     public function init()
     {
         parent::init();
+        if (($action = Tools::getValue('action'))) {
+            $result = $this->{$action . 'Action'}();
+            ob_end_clean();
+            die($result);
+        }
 
         $cart_presenter = new Adapter_CartPresenter;
         $this->context->smarty->assign([
