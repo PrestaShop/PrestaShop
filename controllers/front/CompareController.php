@@ -28,12 +28,6 @@ class CompareControllerCore extends FrontController
 {
     public $php_self = 'products-comparison';
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'comparator.css');
-    }
-
     /**
      * Display ajax content (this function is called instead of classic display, in ajax mode)
      */
