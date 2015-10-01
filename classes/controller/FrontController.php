@@ -216,6 +216,16 @@ class FrontControllerCore extends Controller
      */
     public function init()
     {
+        if (_PS_MODE_DEV_) {
+            $m = [];
+            foreach (Tools::getAllValues() as $key => $value) {
+                if (preg_match('/^debug-set-configuration-(.*)$/', $key, $m)) {
+                    $configurationKey = $m[1];
+                    Configuration::set($configurationKey, $value);
+                }
+            }
+        }
+
         /**
          * Globals are DEPRECATED as of version 1.5.0.1
          * Use the Context object to access objects instead.
