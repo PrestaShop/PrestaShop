@@ -38,6 +38,9 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  */
 class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
 {
+    /**
+     * @var Response
+     */
     private $response;
 
     /**
@@ -45,7 +48,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
      *
      * @param unknown $response
      */
-    public function setResponse(&$response)
+    public function setResponse(Response &$response)
     {
         $this->response = $response;
         $this->addInjection($this->response);
@@ -151,16 +154,5 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
             }
         }
         return $arguments;
-    }
-
-    /**
-     * Returns an instantiated controller
-     *
-     * @param string $class A class name
-     * @return object The controller instantiated with the router and container as arguments.
-     */
-    protected function instantiateController($class)
-    {
-        return new $class($this->router, $this->container);
     }
 }

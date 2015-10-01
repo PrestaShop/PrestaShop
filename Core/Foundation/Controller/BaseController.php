@@ -33,6 +33,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 
 /**
  * First layer of common implementation for controllers.
@@ -47,22 +48,51 @@ abstract class BaseController implements ControllerInterface
      */
     protected $router;
 
-    
     /**
      * @var Container
      */
     protected $container;
 
     /**
-     * Instantiate the Controller. Often made from a Router.
+     * @var boolean
+     */
+    private $constructorCalled = false;
+
+    /**
+     * Instantiate the Controller. Often made from the subclass.
      *
      * @param AbstractRouter $router The Router instance that instantiated the Controller.
      * @param Container $container The application container.
      */
-    public function __construct(AbstractRouter &$router, Container &$container)
+    public function __construct(AbstractRouter $router, Container $container)
     {
+        if ($this->constructorCalled) {
+            throw new DevelopmentErrorException('Cannot instantiate a controller twice in the same process.');
+        }
+
         $this->router = $router;
         $this->container = $container;
+
+        $this->constructorCalled = true;
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::isConstructionStrategyChecked()
+     */
+    public function isConstructionStrategyChecked()
+    {
+        return $this->constructorCalled;
+    }
+
+    /**
+     * Call this during construction of your controller to register a service into the
+     * execution sequence (pre-actions and post-actions).
+     *
+     * @param ExecutionSequenceServiceInterface $service
+     */
+    final protected function registerExecutionSequenceService(ExecutionSequenceServiceInterface $service)
+    {
+        $this->router->registerExecutionSequenceService($service);
     }
 
     /* (non-PHPdoc)

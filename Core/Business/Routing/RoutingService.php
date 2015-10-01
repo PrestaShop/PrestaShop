@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
+namespace PrestaShop\PrestaShop\Core\Business\Routing;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -42,31 +42,34 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 class RoutingService
 {
     /**
-     * @var AbstractRouter
+     * @var Router
      */
     private $router;
 
-    final private function __construct(AbstractRouter &$router)
+    final private function __construct(Router &$router)
     {
         $this->router = $router;
     }
 
+    /**
+     * @var boolean
+     */
     private static $instanciated = false;
 
     /**
      * Called by Router during start of the PHP process, to register this service in the Container.
      * Do not call it by yourself.
      *
-     * @param AbstractRouter $router
+     * @param Router $router
      * @param Container $container
      */
-    final public static function registerRoutingService(AbstractRouter &$router, Container &$container)
+    final public static function registerRoutingService(Router &$router, Container &$container)
     {
         if (self::$instanciated !== false) {
             return;
         }
         $service = new self($router);
-        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Routing\\RoutingService', $service, true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\RoutingService', $service, true);
         $container->bind('Routing', $service, true);
         self::$instanciated = true;
     }
@@ -95,5 +98,17 @@ class RoutingService
     final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         return $this->router->generateUrl($name, $parameters, $forceLegacyUrl, $referenceType);
+    }
+
+    /**
+     * Sets the URL/code to use if a forbidden redirection is called through setForbiddenRedirection().
+     *
+     * @see AbstractRouter::redirect()
+     *
+     * @param mixed $redirection Integer or String
+     */
+    final public function setForbiddenRedirection($redirection)
+    {
+        $this->router->setForbiddenRedirection($redirection);
     }
 }

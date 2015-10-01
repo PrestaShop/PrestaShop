@@ -149,7 +149,7 @@ function bulkProductEdition(element, action) {
 				$(this).html($input);
 				
 			});
-			// TODO !2: complete process for POSTING data (have a submit action when press ENTER, post action url, etc...)
+			// TODO !12: complete process for POSTING data (have a submit action when press ENTER, post action url, etc...)
 			$('td.product-sav-quantity input', form).first().focus();
 			break;
 		case 'cancel':

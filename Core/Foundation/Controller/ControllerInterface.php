@@ -50,6 +50,17 @@ interface ControllerInterface
     const RESPONSE_NONE = 'none_none'; // no auto response output: case when action want to dump a file for example
 
     /**
+     * Ensures the Controller constructor called its parent constructor.
+     * If not, the Router will throw an Exception to avoid using a controller that shortcuts
+     * the parent construction (for security reasons).
+     *
+     * Sub extended classes can finalize their override of this method to fix the minimal level of strategy checking.
+     *
+     * @return boolean True if the Controller has been constructed using all the parents' __construct methods.
+     */
+    public function isConstructionStrategyChecked();
+
+    /**
      * This function will transform the resulting controller action content into various formats.
      * If you need a new one, you can override this function in your extended class. Don't forget to call
      * parent::formatResponse() in your own switch/default case.

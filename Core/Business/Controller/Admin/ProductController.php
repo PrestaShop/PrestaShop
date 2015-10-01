@@ -41,6 +41,8 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
+use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -62,7 +64,17 @@ class ProductController extends AdminController
 {
     use AutoObjectInflaterTrait; // auto inflate objects if pattern found in the route format.
     use AutoResponseFormatTrait; // try to auto fill template engine parameters according to the current action.
-    use SfControllerResolverTrait; // dependency injection in sf way.
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     */
+    public function __construct(AdminRouter $router, Container $container)
+    {
+        parent::__construct($router, $container);
+
+        // TODO !2: $this->registerExecutionSequenceService(AutoObjectInflater)
+        // TODO !3: $this->registerExecutionSequenceService(AutoResponseFormatSetter)
+    }
 
     /**
      * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...
@@ -355,7 +367,7 @@ class ProductController extends AdminController
                     $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully deleted.'));
                     break;
                 case 'duplicate':
-                    // TODO !1: call duplicate on this product, and redirect to the edition page of the duplicate (not the original!)
+                    // TODO !11: call duplicate on this product, and redirect to the edition page of the duplicate (not the original!)
                     $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully duplicated.'));
                     break;
                 default:

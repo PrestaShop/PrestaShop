@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Core\Business\Routing\FrontRouter;
 
 /**
  * Base class for all Front controllers.
@@ -38,6 +39,28 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
  */
 class FrontController extends BaseController
 {
+    /**
+     * @var boolean
+     */
+    private $constructorCalled = false;
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     */
+    public function __construct(FrontRouter $router, Container $container)
+    {
+        parent::__construct($router, $container);
+        $this->constructorCalled = true;
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::isConstructionStrategyChecked()
+     */
+    final public function isConstructionStrategyChecked()
+    {
+        return parent::isConstructionStrategyChecked() && $this->constructorCalled;
+    }
+
     /**
      * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...)
      * Implements it and use $response->getContent() to retrieve the main content.

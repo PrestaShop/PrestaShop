@@ -27,6 +27,9 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
+use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 
 /**
  * Base class for all Admin controllers.
@@ -38,8 +41,28 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
  */
 class AdminController extends BaseController
 {
-    use AdminAuthenticationTrait; // All AdminController subclasses should be protected by authentication middleware.
-    use AdminCommonActionTrait; // describe common actions for the Admin Interface
+    /**
+     * @var boolean
+     */
+    private $constructorCalled = false;
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     */
+    public function __construct(AdminRouter $router, Container $container)
+    {
+        parent::__construct($router, $container);
+        $this->registerExecutionSequenceService($container->make('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\ExecutionSequenceService\\AuthenticationMiddleware'));
+        $this->constructorCalled = true;
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::isConstructionStrategyChecked()
+     */
+    final public function isConstructionStrategyChecked()
+    {
+        return parent::isConstructionStrategyChecked() && $this->constructorCalled;
+    }
 
     /**
      * This function should encapsulate the content to display into an HTML layout (menu, headers, footers, etc...).
@@ -102,22 +125,5 @@ class AdminController extends BaseController
     {
         $templateEngine = $response->getTemplateEngine($this->container);
         $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
-    }
-    
-    /**
-     * Is authentication required to use the corresponding actions?
-     *
-     * {@inheritdoc}
-     *
-     * Override this in your controller if you want to allow anonymous users to call it.
-     * For example, for Login controllers, should be overriden to return false.
-     * Warning: if you return false on an Admin controller subclass, then the corresponding actions
-     * will be wide opened to anonymous connections.
-     *
-     * @return boolean True if authenticated user is needed. False if the controller can be called by anonymous users.
-     */
-    protected function isAuthenticationNeeded()
-    {
-        return true;
     }
 }

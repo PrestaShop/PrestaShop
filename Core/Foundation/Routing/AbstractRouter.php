@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface;
 
 /**
  * This base Router class is extended for Front and Admin interfaces. The router
@@ -145,9 +146,6 @@ abstract class AbstractRouter implements RouterInterface
         // Register routing/settings extensions (modules)
         $this->routingFilePattern = $routingFilePattern;
         $this->registerSettingFiles();
-        
-        // Register a RouterService in the container
-        RoutingService::registerRoutingService($this, $this->container);
     }
 
     /**
@@ -572,7 +570,26 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::registerShutdownFunctionCallback()
      */
-    abstract public function registerShutdownFunctionCallback(Request &$request);
+    abstract public function registerShutdownFunctionCallback(Request $request);
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::registerExecutionSequenceService()
+     */
+    public function registerExecutionSequenceService(ExecutionSequenceServiceInterface $service)
+    {
+        foreach ($service->getInitListeners() as $priority => $callable) {
+            $this->routingDispatcher->addListener('init_action', $callable, $priority);
+        }
+        foreach ($service->getBeforeListeners() as $priority => $callable) {
+            $this->routingDispatcher->addListener('before_action', $callable, $priority);
+        }
+        foreach ($service->getAfterListeners() as $priority => $callable) {
+            $this->routingDispatcher->addListener('after_action', $callable, $priority);
+        }
+        foreach ($service->getCloseListeners() as $priority => $callable) {
+            $this->routingDispatcher->addListener('close_action', $callable, $priority);
+        }
+    }
 
     /**
      * Wrapper method to exit process. This will do an exit($i) except

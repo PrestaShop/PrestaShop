@@ -59,7 +59,7 @@ class Container
         return array_key_exists($alias, $this->namespaceAliases);
     }
 
-    public function bind($serviceName, $constructor, $shared = false)
+    public function bind($serviceName, $constructor, $shared = false, array $privateInjections = array())
     {
         if ($this->knows($serviceName)) {
             throw new Exception(
@@ -69,7 +69,8 @@ class Container
 
         $this->bindings[$serviceName] = array(
             'constructor' => $constructor,
-            'shared' => $shared
+            'shared' => $shared,
+            'private_injections' => $privateInjections
         );
 
         return $this;
@@ -106,7 +107,7 @@ class Container
         return $className;
     }
 
-    final private function makeInstanceFromClassName($className, array $alreadySeen)
+    final private function makeInstanceFromClassName($className, array $alreadySeen, array $privateInjections = array())
     {
         $className = $this->resolveClassName($className);
 
@@ -128,6 +129,12 @@ class Container
             foreach ($classConstructor->getParameters() as $param) {
                 $paramClass = $param->getClass();
                 if ($paramClass) {
+                    foreach ($privateInjections as $privateInjection) {
+                        if (get_class($privateInjection) == $param->getClass()->getName()) {
+                            $args[] = $privateInjection;
+                            continue 2;
+                        }
+                    }
                     $args[] = $this->doMake($param->getClass()->getName(), $alreadySeen);
                 } elseif ($param->isDefaultValueAvailable()) {
                     $args[] = $param->getDefaultValue();
@@ -180,7 +187,7 @@ class Container
                 $service = $constructor;
             } else {
                 // assume the $constructor is a class name
-                $service = $this->makeInstanceFromClassName($constructor, $alreadySeen);
+                $service = $this->makeInstanceFromClassName($constructor, $alreadySeen, $binding['private_injections']?:array());
             }
 
             if ($binding['shared']) {

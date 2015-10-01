@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
 use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface;
 
 /**
  * This interface gives minimal compliance for new Architecture Router/Controller/Actions mechanism.
@@ -176,5 +177,13 @@ interface RouterInterface
      *
      * @param Request $request
      */
-    public function registerShutdownFunctionCallback(Request &$request);
+    public function registerShutdownFunctionCallback(Request $request);
+
+    /**
+     * Allows a Controller to register a service that will add steps (pre-actions and post-actions)
+     * in the action execution sequence.
+     *
+     * @param ExecutionSequenceServiceInterface $service
+     */
+    public function registerExecutionSequenceService(ExecutionSequenceServiceInterface $service);
 }

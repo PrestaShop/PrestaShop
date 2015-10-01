@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerResolver;
+use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
 
 /**
  * Second layer of the Router classes structure, to add Business specific behaviors (but common for Front/Admin).
@@ -107,7 +110,11 @@ abstract class Router extends AbstractRouter
                 $this->configuration->get('_PS_MODE_DEV_')
             );
 
+            // Register a RouterService in the container, not the Router itself.
+            RoutingService::registerRoutingService($this, $this->container);
+        
             // EventDispatcher init
+            // FIXME: should be a private dispatcher?
             BaseEventDispatcher::initBaseDispatchers($this->container);
             $this->routingDispatcher = $this->container->make('final:EventDispatcher/routing');
             if ($this->triggerCacheGenerationFlag) {
@@ -259,8 +266,6 @@ abstract class Router extends AbstractRouter
      */
     final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false, $pinResponse = false)
     {
-        $warnings = 0;
-
         // Find right Controller and check security on it
         try {
             list($controllerClass, $module) = $this->getControllerClass($controllerName);
@@ -271,149 +276,110 @@ abstract class Router extends AbstractRouter
             $request->attributes->set('_controller_from_module', '/');
             $warnings++;
         }
-
         $class = new \ReflectionClass($controllerClass);
         try {
             $this->checkControllerAuthority($class);
         } catch (WarningException $we) {
-            $warnings++;
             /* Event dispatcher 'message' has already been triggered with event 'warning_message'. */
         }
         $method = $class->getMethod($controllerMethod);
-        
+
         // backup _controller value for PS Router way of work, and override original value by sf way of work.
         $request->attributes->set('_controller_short', $request->attributes->get('_controller'));
         $request->attributes->set('_controller', $controllerClass.'::'.$controllerMethod);
 
-        $routingDispatcher = $this->routingDispatcher;
-        $container = $this->container; // to pass it throught callback 'use' statement
-        $cacheFullName = $this->cacheFileName.'_'.str_replace('\\', '_', $controllerName).'_'.$controllerMethod.($returnView?'_subcall':'').($pinResponse?'_pinned':'');
-        $cache = $this->getConfigCacheFactory($warnings > 0)->cache(// force debug mode if warnings (to avoid keeping cache file)
-            $this->configuration->get('_PS_CACHE_DIR_').'routing/'.$cacheFullName.'.php',
-            function (ConfigCacheInterface $cache) use ($class, $controllerClass, $controllerMethod, &$routingDispatcher, &$request, $returnView, $cacheFullName, $pinResponse, &$container) {
+        // instantiate Controller, check construction integrity
+        if (!$this->container->knows($controllerClass)) {
+            $this->container->bind($controllerClass, $controllerClass, false, array($this, $this->container));
+        }
+        $controllerInstance = $this->container->make($controllerClass);
+        if (!$controllerInstance->isConstructionStrategyChecked()) {
+            throw new DevelopmentErrorException($controllerClass.'::__construct() did not call its parent __construct(). You must call it at first step of the construction.');
+        }
 
-                // find traits, classify them
-                $traits = $this->getAllTraits($class);
-                $initTraits = $this->filterTraits($traits, 'initAction');
-                $beforeActionTraits = $this->filterTraits($traits, 'beforeAction');
-                $controllerResolverTrait = $this->filterTraits($traits, 'controllerResolver'); // only 1 allowed!
-                if (count($controllerResolverTrait) > 1) {
-                    throw new DevelopmentErrorException('A controller cannot use multiple traits that define a controllerResolver function. Please choose one of them.');
-                }
-                if (count($controllerResolverTrait) === 1) {
-                    $controllerResolverTrait = $controllerResolverTrait[0];
-                } else {
-                    $controllerResolverTrait = null;
-                }
-                $afterActionTraits = $this->filterTraits($traits, 'afterAction');
-                $closeActionTraits = $this->filterTraits($traits, 'closeAction');
+        // New response
+        $response = new Response();
+        if ($pinResponse) {
+            $response->pinAsLastRouterResponseInstance();
+        }
+        $response->setResponseFormat($returnView? BaseController::RESPONSE_PARTIAL_VIEW : BaseController::RESPONSE_LAYOUT_HTML);
 
-                // generate cache
-                $phpCode = '<'.'?php
+        // Resolve controller action method injections
+        $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
+        $resolver->setContainer($this->container); // inject Container for Controller instantiation.
+        $resolver->setRouter($this); // inject Router for Controller instantiation.
+        $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
+        $actionArguments = $resolver->getArguments($request, array($controllerInstance, $controllerMethod));
 
-use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+        { // Start execution sequence
+            $routingDispatcher = $this->routingDispatcher;
 
-function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &$request, AbstractRouter &$router, Container &$container)
-{
-    $response = new Response();
-    '.($pinResponse? '$response->pinAsLastRouterResponseInstance();':'').'
-    $response->setResponseFormat(BaseController::'.($returnView?'RESPONSE_PARTIAL_VIEW':'RESPONSE_LAYOUT_HTML').');
-    $actionAllowed = true;
-
-    $controllerInstance = new '.$controllerClass.'($router, $container);
-';
-                foreach ($initTraits as $initTrait) {
-                    $phpCode .= '
-    $actionAllowed = $actionAllowed & $controllerInstance->'.$initTrait.'($request, $response);';
-                }
-                foreach ($beforeActionTraits as $beforeActionTrait) {
-                    $phpCode .= '
-    $actionAllowed = $actionAllowed & $controllerInstance->'.$beforeActionTrait.'($request, $response);';
-                }
-                if ($controllerResolverTrait) {
-                    $phpCode .= '
-
-    if ($actionAllowed) {
-        $controllerResolver = $controllerInstance->'.$controllerResolverTrait.'($request, $response);
-        if ($controllerResolver) {
-            $responseFormat = $controllerResolver($controllerInstance, $method);
-            if ($responseFormat) {
-                $response->setResponseFormat($responseFormat);
+            // init_action dispatch
+            $initEvent = new BaseEvent();
+            $initEvent->setRequest($request)->setResponse($response);
+            $routingDispatcher->dispatch('init_action', $initEvent);
+            $actionAllowed = !$initEvent->isPropagationStopped();
+            
+            // before_action dispatch
+            if ($actionAllowed) {
+                $beforeEvent = new BaseEvent();
+                $beforeEvent->setRequest($request)->setResponse($response);
+                $routingDispatcher->dispatch('before_action', $beforeEvent);
+                $actionAllowed = $actionAllowed & !$beforeEvent->isPropagationStopped();
             }
-        } else {
-            throw new DevelopmentErrorException(\'The controller uses a Trait controllerResolver that failed to return a controllerResolver!\');
-        }
-    }
-';
-                } else {
-                    $phpCode .= '
 
-    if ($actionAllowed) {
-        $responseFormat = $controllerInstance->'.$controllerMethod.'($request, $response);
-        if ($responseFormat) {
-            $response->setResponseFormat($responseFormat);
-        }
-    }
-';
+            // ACTION CALL
+            if ($actionAllowed) {
+                $responseFormat = $method->invokeArgs($controllerInstance, $actionArguments);
+                if ($responseFormat) {
+                    $response->setResponseFormat($responseFormat);
                 }
-                foreach ($afterActionTraits as $afterActionTrait) {
-                    $phpCode .= '
-    $actionAllowed = $actionAllowed & $controllerInstance->'.$afterActionTrait.'($request, $response);';
-                }
-                foreach ($closeActionTraits as $closeActionTrait) {
-                    $phpCode .= '
-    $actionAllowed = $actionAllowed & $controllerInstance->'.$closeActionTrait.'($request, $response);';
-                }
-                
-                $phpCode .= '
-
-    if ($actionAllowed && ($responseFormat = $response->getResponseFormat())) {
-        list($encapsulation, $format) = explode(\'_\', $responseFormat);
-        if ($format) {
-            $controllerInstance->formatResponse($format, $response);
-        }
-        if ($encapsulation) {
-            $controllerInstance->encapsulateResponse($encapsulation, $response);
-        }
-';
-                if ($returnView) {
-                    $phpCode .= '
-        // Do not use send (no output buffer tricks)
-        return $response;
-    }
-
-    if (!$actionAllowed) {
-        throw new \Core_Foundation_Exception_Exception(\'Action forbidden.\');
-    }
-}
-'; // Raw php code inside a string, do not indent please.
-                } else {
-                    $phpCode .= '
-        // Send response to output buffer
-        $response->send();
-    }
-
-    if (!$actionAllowed) {
-        $router->redirectToForbidden();
-    }
-    return true;
-}
-'; // Raw php code inside a string, do not indent please.
-                }
-
-                $cache->write($phpCode);
-                $routingDispatcher->dispatch('cache_generation', (new BaseEvent())->setRequest($request));
             }
-        );
+            
+            // after_action dispatch
+            if ($actionAllowed) {
+                $afterEvent = new BaseEvent();
+                $afterEvent->setRequest($request)->setResponse($response);
+                $routingDispatcher->dispatch('after_action', $afterEvent);
+                $actionAllowed = $actionAllowed & !$afterEvent->isPropagationStopped();
+            }
+            
+            // close_action dispatch
+            if ($actionAllowed) {
+                $closeEvent = new BaseEvent();
+                $closeEvent->setRequest($request)->setResponse($response);
+                $routingDispatcher->dispatch('close_action', $closeEvent);
+                $actionAllowed = $actionAllowed & !$closeEvent->isPropagationStopped();
+            }
+        } // end of execution sequence
 
-        include_once $cache->getPath();
-        $functionName = 'doDispatchCached'.$cacheFullName;
-        return $functionName($method, $request, $this, $container);
+        // Format and encapsulate response
+        if ($actionAllowed && ($responseFormat = $response->getResponseFormat())) {
+            list($encapsulation, $format) = explode('_', $responseFormat);
+            if ($format) {
+                $controllerInstance->formatResponse($format, $response);
+            }
+            if ($encapsulation) {
+                $controllerInstance->encapsulateResponse($encapsulation, $response);
+            }
+
+            if ($returnView) {
+                // Do not use send (no output buffer tricks)
+                return $response;
+            } else {
+                // Send response to output buffer
+                $response->send();
+            }
+        }
+
+        // Forbidden case.
+        if (!$actionAllowed) {
+            if ($returnView) {
+                throw new \Core_Foundation_Exception_Exception('Action forbidden.');
+            }
+            $router->redirectToForbidden();
+        }
+        return true;
     }
 
     /**
@@ -494,7 +460,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
      *
      * @param Request $request
      */
-    final public function registerShutdownFunctionCallback(Request &$request)
+    final public function registerShutdownFunctionCallback(Request $request)
     {
         $this->container->make('final:EventDispatcher/routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
