@@ -63,21 +63,7 @@
         </section>
       {/block}
 
-      {block name="opc_payment_section"}
-        <section id="opc-payment">
-
-          <header>
-            <h1 class="h3">{l s='Payment method'}</h1>
-          </header>
-
-          <div>
-            {block name="opc_legal_terms"}
-              {include file="checkout/_partials/terms.tpl"}
-            {/block}
-          </div>
-
-        </section>
-      {/block}
+      {$payment_options nofilter}
 
     {/block}
 
