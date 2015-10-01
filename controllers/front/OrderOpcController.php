@@ -28,9 +28,81 @@ class OrderOpcControllerCore extends FrontController
 {
     public $php_self = 'order-opc';
 
+    private function render($template, array $params)
+    {
+        $this->context->smarty->assign($params);
+        return $this->context->smarty->fetch($template);
+    }
+
+    private function getConditionsToApprove()
+    {
+        return [
+            'terms-and-conditions' => $this->l(
+                'I have read and agree to the terms and conditions.'
+            ),
+            'right-of-withdrawal' => $this->l(
+                'I have been informed about and agree with the conditions of exercise of my right of withdrawal for this order.'
+            )
+        ];
+    }
+
+    protected function renderPaymentOptions()
+    {
+        $advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
+
+        if ($advanced_payment_api) {
+            $payment_options = Hook::exec('advancedPaymentOptions');
+        } else {
+            $payment_options = Hook::exec('displayPayment');
+        }
+
+        return $this->render('checkout/payment.tpl', [
+            'advanced_payment_api' => $advanced_payment_api,
+            'payment_options' => $payment_options,
+            'conditions_to_approve' => $this->getConditionsToApprove(),
+            'approved_conditions' => $this->getSubmittedConditionsApproval(),
+            'all_conditions_approved' => $this->checkWhetherAllConditionsAreApproved()
+        ]);
+    }
+
+    /**
+     * Terms and conditions and other conditions are posted as an associative
+     * array with the condition identifier as key.
+     */
+    private function getSubmittedConditionsApproval()
+    {
+        $required  = $this->getConditionsToApprove();
+        $submitted = Tools::getValue('conditions_to_approve');
+        if (!is_array($submitted)) {
+            $submitted = [];
+        }
+
+        $approval = [];
+        foreach ($required as $requiredConditionName => $unused) {
+            $approval[$requiredConditionName] = !empty($submitted[$requiredConditionName]);
+        }
+
+        return $approval;
+    }
+
+    private function checkWhetherAllConditionsAreApproved()
+    {
+        foreach ($this->getSubmittedConditionsApproval() as $approved) {
+            if (!$approved) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function init()
     {
         parent::init();
+
+        $this->context->smarty->assign([
+            'payment_options' => $this->renderPaymentOptions()
+        ]);
+
         $this->setTemplate('checkout/opc.tpl');
     }
 
@@ -39,7 +111,8 @@ class OrderOpcControllerCore extends FrontController
         parent::setMedia();
         $this->addJS(array(
             _THEME_JS_DIR_.'vendor/rivets.bundled.min.js',
-            _THEME_JS_DIR_.'theme.js'
+            _THEME_JS_DIR_.'theme.js',
+            _THEME_JS_DIR_.'opc.js'
         ));
     }
 }
