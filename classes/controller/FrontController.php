@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Cldr;
+
 class FrontControllerCore extends Controller
 {
     /**
@@ -941,6 +943,9 @@ class FrontControllerCore extends Controller
         }
 
         Media::addJsDef(array('full_language_code' => $this->context->language->language_code));
+
+        $cldrRepository = new Cldr\Repository($this->context->language->language_code);
+        Media::addJsDef(array('full_cldr_language_code' => $cldrRepository->getCulture()));
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
