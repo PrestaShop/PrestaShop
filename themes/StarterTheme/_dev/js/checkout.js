@@ -1,16 +1,19 @@
 import $ from 'jquery';
 
 $(document).ready(function listenForTermsAndConditionsApprovalChange () {
-  var $conditionsForm = $('#conditions-to-approve');
-
-  if (!$conditionsForm) {
-    return;
+  function hideSubmitButton () {
+    $('#conditions-to-approve input[type="submit"]').hide();
   }
 
-  $conditionsForm.find('input[type="submit"]').hide();
-  $conditionsForm.find('input[type="checkbox"]').each((_, checkbox) => {
-    $(checkbox).on('change', () => {
-      $conditionsForm.submit();
+  function refreshPaymentOptions () {
+    let params = $('#conditions-to-approve').serialize() + '&action=getPaymentOptions';
+    $.post('', params).then(resp => {
+      $('#payment-options').replaceWith(resp);
+      hideSubmitButton();
     });
-  });
+  }
+
+  hideSubmitButton();
+  $('body').on('change', '#conditions-to-approve input[type="checkbox"]', refreshPaymentOptions);
+
 });
