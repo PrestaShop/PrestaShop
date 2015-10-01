@@ -652,7 +652,7 @@ class ToolsCore
 
         $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
 
-        return $cldr->getPrice($price, $currency->iso_code);
+        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
     /*
