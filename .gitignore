@@ -2,6 +2,7 @@
 
 .htaccess
 *.log
+npm-debug.log.*
 cache/*
 download/*
 img/*
