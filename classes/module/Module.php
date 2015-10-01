@@ -3100,10 +3100,10 @@ abstract class ModuleCore
     }
 
     /**
-    +	 * Retrieve an array of the override in the module
-    +	 *
-    +	 * @return array|null
-    +	 */
+     * Retrieve an array of the override in the module
+     *
+     * @return array|null
+     */
     public function getOverrides()
     {
         if (!is_dir($this->getLocalPath().'override'))
