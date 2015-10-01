@@ -57,10 +57,4 @@ class BestSalesControllerCore extends FrontController
             Tools::redirect('index.php?controller=404');
         }
     }
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-    }
 }
