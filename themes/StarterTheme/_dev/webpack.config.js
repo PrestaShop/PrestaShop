@@ -26,7 +26,8 @@ module.exports = {
         ]
     },
     externals: {
-        jquery: '$'
+        jquery: '$',
+        prestashop: 'prestashop'
     },
     devtool: 'source-map',
     plugins: plugins
