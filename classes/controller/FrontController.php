@@ -822,7 +822,7 @@ class FrontControllerCore extends Controller
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
             _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _THEME_JS_DIR_.'global.js'
+            _THEME_JS_DIR_.'theme.js'
         ));
 
         // Automatically add js files from js/autoload directory in the template
