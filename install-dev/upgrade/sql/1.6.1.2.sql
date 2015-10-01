@@ -24,5 +24,14 @@ REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 TRUNCATE TABLE `PREFIX_smarty_last_flush`;
 
 ALTER TABLE `PREFIX_search_index` ADD INDEX(`id_product`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX(`id_product_attribute`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX(`id_shop`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX(`id_customer`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX(`from`);
+ALTER TABLE `PREFIX_specific_price` ADD INDEX(`to`);
+ALTER TABLE `PREFIX_specific_price` DROP KEY `id_product_2`;
+ALTER TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`id_specific_price_rule`);
+ALTER TABLE `PREFIX_category_product` ADD INDEX(`id_category`, `position`);
+
 
 ALTER TABLE `PREFIX_address` CHANGE `company` `company` VARCHAR(64) NULL;

@@ -771,8 +771,7 @@ class CategoryCore extends ObjectModel
 					AND cp.`id_category` = '.(int)$this->id
                     .($active ? ' AND product_shop.`active` = 1' : '')
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
-                    .' GROUP BY cp.id_product';
+                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;

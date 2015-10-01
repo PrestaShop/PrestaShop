@@ -2269,7 +2269,7 @@ class ProductCore extends ObjectModel
             $order_way = 'DESC';
         }
         if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd') {
-            $order_by_prefix = 'p';
+            $order_by_prefix = 'product_shop';
         } elseif ($order_by == 'name') {
             $order_by_prefix = 'pl';
         }
@@ -2325,11 +2325,11 @@ class ProductCore extends ObjectModel
         }
         $sql->where('product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"');
         if (Group::isFeatureActive()) {
-            $sql->join('JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)');
-            $sql->join('JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = cp.id_category)');
-            $sql->where('cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1'));
+            $groups = FrontController::getCurrentCustomerGroups();
+            $sql->where('EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
+				WHERE cp.`id_product` = p.`id_product`)');
         }
-        $sql->groupBy('product_shop.id_product');
 
         $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
         $sql->limit($nb_products, $page_number * $nb_products);
@@ -2398,7 +2398,7 @@ class ProductCore extends ObjectModel
             $front = false;
         }
 
-        $current_date = date('Y-m-d H:i:s');
+        $current_date = date('Y-m-d H:i:00');
         $product_reductions = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context, true);
 
         if ($product_reductions) {
@@ -2502,14 +2502,14 @@ class ProductCore extends ObjectModel
             $order_way = 'DESC';
         }
         if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd') {
-            $order_by_prefix = 'p';
+            $order_by_prefix = 'product_shop';
         } elseif ($order_by == 'name') {
             $order_by_prefix = 'pl';
         }
         if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way)) {
             die(Tools::displayError());
         }
-        $current_date = date('Y-m-d H:i:s');
+        $current_date = date('Y-m-d H:i:00');
         $ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
         $tab_id_product = array();
@@ -2582,7 +2582,6 @@ class ProductCore extends ObjectModel
 		'.($front ? ' AND p.`visibility` IN ("both", "catalog")' : '').'
 		'.((!$beginning && !$ending) ? ' AND p.`id_product` IN ('.((is_array($tab_id_product) && count($tab_id_product)) ? implode(', ', $tab_id_product) : 0).')' : '').'
 		'.$sql_groups.'
-		GROUP BY p.id_product
 		ORDER BY '.(isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').pSQL($order_by).' '.pSQL($order_way).'
 		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
