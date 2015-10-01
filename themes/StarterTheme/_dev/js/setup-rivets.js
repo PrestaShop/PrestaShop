@@ -1,5 +1,6 @@
 import rivets from 'rivets';
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
 rivets.configure({
   prefix: 'ps',
