@@ -824,15 +824,7 @@ class FrontControllerCore extends Controller
         $this->addJquery();
         $this->addJqueryPlugin('easing');
         $this->addJS(array(
-            _PS_JS_DIR_.'cldr.js',
-            _PS_JS_DIR_.'tools.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _THEME_JS_DIR_.'theme.js'
+            _THEME_JS_DIR_.'theme.js',
         ));
 
         // Automatically add js files from js/autoload directory in the template
