@@ -367,7 +367,8 @@ CREATE TABLE `PREFIX_category_product` (
   `id_product` int(10) unsigned NOT NULL,
   `position` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_category`,`id_product`),
-  INDEX (`id_product`)
+  INDEX (`id_product`),
+  INDEX (`id_category`, `position`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cms` (
@@ -1800,7 +1801,12 @@ CREATE TABLE `PREFIX_specific_price` (
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`),
-  UNIQUE KEY `id_product_2` (`id_cart`, `id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`)
+  KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_shop` (`id_shop`),
+  KEY `id_customer` (`id_customer`),
+  KEY `from` (`from`),
+  KEY `to` (`to`),
+  UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`id_specific_price_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (
