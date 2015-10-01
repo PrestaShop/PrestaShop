@@ -60,3 +60,11 @@ admin_product_bulk_action:
         _controller: 'Admin\ProductController::bulkAction'
     requirements:
         action: activate_all|deactivate_all|delete_all
+
+admin_product_unit_action:
+    path:     /unit/{action}/{id_product}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::unitAction'
+    requirements:
+        action: delete|duplicate

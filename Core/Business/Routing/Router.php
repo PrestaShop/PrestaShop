@@ -449,8 +449,8 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
             throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.');
         }
         try {
+            $urlGenerator = $this->getUrlGenerator();
             if ($referenceType === self::ABSOLUTE_ROUTE) {
-                $urlGenerator = $this->getUrlGenerator();
                 $baseUrl = $urlGenerator->getContext()->getBaseUrl();
 
                 $url = $urlGenerator->generate($name, $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -463,7 +463,7 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
                 
                 return $path;
             }
-            return $this->getUrlGenerator()->generate($name, $parameters, $referenceType);
+            return $urlGenerator->generate($name, $parameters, $referenceType);
         } catch (RouteNotFoundException $rnfe) {
             return false;
         }
@@ -496,7 +496,6 @@ function doDispatchCached'.$cacheFullName.'(\ReflectionMethod $method, Request &
      */
     final public function registerShutdownFunctionCallback(Request &$request)
     {
-        $null = null;
         $this->container->make('final:EventDispatcher/routing')->dispatch('shutdown', (new BaseEvent())->setRequest($request));
     }
 }

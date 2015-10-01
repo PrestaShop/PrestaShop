@@ -16,7 +16,7 @@
 
     <form name="product_catalog_list" id="product_catalog_list" method="post" action="{$post_url}" orderingurl="{$ordering_url}" >
         <input type="hidden" name="ls_products_filter_category" value="{$ls_products_filter_category|default:''}" />
-        <table class="table product">
+        <table class="table product" redirecturl="{$unit_redirect_url}">
             <theader>
                 <tr class="column-headers">
                     <th>
@@ -127,7 +127,7 @@
                     div_style="btn-group dropup"
                     button_id="product_bulk_menu"
                     disabled=true
-                    menu_label={l s="Bulk actions"}
+                    menu_label={l s="Selection actions"}
                     menu_icon="icon-caret-up"
                     items=[
                         [
@@ -140,12 +140,19 @@
                             "icon" => "icon-power-off",
                             "label" => {l s="Deactivate selection"}
                         ],
+                        ["divider" => true],
                         [
                             "onclick" => "bulkProductAction(this, 'delete_all');",
                             "icon" => "icon-trash",
                             "label" => {l s="Delete selection"}
-                        ],
-                        ["divider" => true],
+                        ]
+                    ]}
+                {include file="../Admin/dropdown_menu.tpl"
+                    div_style="btn-group dropup"
+                    button_id="product_bulk_menu"
+                    menu_label={l s="Bulk actions"}
+                    menu_icon="icon-caret-up"
+                    items=[
                         [
                             "href" => "javascript:bulkProductEdition(this, 'quantity_edition');",
                             "icon" => "icon-pencil",

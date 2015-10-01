@@ -65,7 +65,7 @@ class ProductController extends AdminController
     use SfControllerResolverTrait; // dependency injection in sf way.
 
     /**
-     * Get the Catalog page with stats banner, product list, bulk actions, filters, search, etc...
+     * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
@@ -130,12 +130,14 @@ class ProductController extends AdminController
         $response->addContentData('bulk_url', $this->generateUrl('admin_product_bulk_action', array(
             'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
         )));
-        $response->addContentData('bulk_redirect_url', $this->generateUrl('admin_product_catalog', array(
+        $actionRedirectionUrl = $this->generateUrl('admin_product_catalog', array(
             'limit' => $request->attributes->get('limit'),
             'offset' => $request->attributes->get('offset'),
             'orderBy' => $request->attributes->get('orderBy'),
             'orderWay' => $request->attributes->get('orderWay')
-        )));
+        ));
+        $response->addContentData('bulk_redirect_url', $actionRedirectionUrl);
+        $response->addContentData('unit_redirect_url', $actionRedirectionUrl);
 
         // Alternative layout for empty list
         $totalFilteredProductCount = $subResponse->getContentData('product_count'); // total count of SQL query (filtered)
@@ -213,6 +215,14 @@ class ProductController extends AdminController
         $response->addContentData('activate_drag_and_drop', ('position' == $request->attributes->get('ls_products_orderBy') && 'asc' == $request->attributes->get('ls_products_orderWay')));
     }
 
+    /**
+     * TODO: Luc, mets un commentaire ici stp !
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param unknown $product
+     * @return string
+     */
     public function productFormAction(Request $request, Response $response, $product)
     {
         $legacyContext = $this->container->make('Adapter_LegacyContext');
@@ -287,24 +297,74 @@ class ProductController extends AdminController
     }
 
 
+    /**
+     * Do bulk action on a list of Products. Used with the 'bulk action' dropdown menu on the Catalog page.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @throws DevelopmentErrorException
+     */
     public function bulkAction(Request &$request, Response &$response)
     {
         $action = $request->attributes->get('action');
         $productIdList = $request->request->get('bulk_action_selected_products');
-        $updater = $this->container->make('CoreAdapter:ProductDataUpdater');
+        $updater = $this->container->make('CoreAdapter:Product\\ProductDataUpdater');
 
-        switch ($action) {
-            case 'activate_all':
-                $success = $updater->activateProductIdList($productIdList);
-                break;
-            case 'deactivate_all':
-                $success = $updater->activateProductIdList($productIdList, false);
-                break;
-            case 'delete_all':
-                $success = $updater->deleteProductIdList($productIdList);
-                break;
-            default:
-                throw new DevelopmentErrorException('Bad action received from AJAX call to ProductController::bulkAction.');
+        try {
+            switch ($action) {
+                case 'activate_all':
+                    $success = $updater->activateProductIdList($productIdList);
+                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully activated.'));
+                    break;
+                case 'deactivate_all':
+                    $success = $updater->activateProductIdList($productIdList, false);
+                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully deactivated.'));
+                    break;
+                case 'delete_all':
+                    $success = $updater->deleteProductIdList($productIdList);
+                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully deleted.'));
+                    break;
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new DevelopmentErrorException('Bad action received from call to ProductController::bulkAction.');
+            }
+        } catch (WarningException $we) {
+            /* Let the layout display the message... Continue execution */
+        }
+
+        // redirect after success
+        $this->redirect($request->request->get('redirect_url'), false);
+    }
+
+    /**
+     * Do action on one product at a time. Can be used at many places in the controller's page.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param unknown $product
+     * @throws DevelopmentErrorException
+     */
+    public function unitAction(Request &$request, Response &$response, $product)
+    {
+        $action = $request->attributes->get('action');
+        $updater = $this->container->make('CoreAdapter:Product\\ProductDataUpdater');
+
+        try {
+            switch ($action) {
+                case 'delete':
+                    $success = $updater->deleteProduct($product);
+                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully deleted.'));
+                    break;
+                case 'duplicate':
+                    // TODO !1: call duplicate on this product, and redirect to the edition page of the duplicate (not the original!)
+                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully duplicated.'));
+                    break;
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new DevelopmentErrorException('Bad action received from call to ProductController::unitAction.');
+            }
+        } catch (WarningException $we) {
+            /* Let the layout display the message... Continue execution */
         }
 
         // redirect after success

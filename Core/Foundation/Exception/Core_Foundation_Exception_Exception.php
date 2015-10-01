@@ -84,6 +84,9 @@ class Core_Foundation_Exception_Exception extends Exception
     {
         $data =  '<b>'.$this->message.'</b><br/>';
         if ($afterMessageContent = $this->getAfterMessageContent()) {
+            if (is_array($afterMessageContent)) {
+                $afterMessageContent = implode(', ', $afterMessageContent);
+            }
             $data .= '<i>Alternative used data given: "'.(string)$afterMessageContent.'"</i><br/>';
         }
         $data .= '<ul><li><b>Exception type:</b> '.get_class($this).'</li>';

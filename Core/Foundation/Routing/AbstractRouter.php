@@ -154,11 +154,14 @@ abstract class AbstractRouter implements RouterInterface
      * Gets the URL Generator instance, already set with routes.
      * Use it to generate HTML links from route names or parameters array.
      *
-     * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface An URL generator with Router routes loaded. NULL if router did never dispatch before.
+     * @return \Symfony\Component\Routing\Generator\UrlGeneratorInterface An URL generator with Router routes loaded.
      */
     final protected function getUrlGenerator()
     {
-        return (!isset($this->sfRouter))? null : $this->sfRouter->getGenerator();
+        if (!isset($this->sfRouter)) {
+            $this->instantiateSfRouter();
+        }
+        return $this->sfRouter->getGenerator();
     }
     
     /**
@@ -200,15 +203,7 @@ abstract class AbstractRouter implements RouterInterface
         register_shutdown_function(array($that, 'registerShutdownFunctionCallback'), $request);
 
         // Instantiate Sf Router
-        $this->sfRouter = new \Symfony\Component\Routing\Router(
-            $this->routeLoader,
-            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
-            array('cache_dir' => $this->configurationCacheFolder.'/routing',
-                  'debug' => $this->configurationDebugMode,
-                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
-            ),
-            $requestContext
-        );
+        $this->instantiateSfRouter($requestContext);
 
         // Add multiple routing files (prefixed or not)
         $this->aggregateRoutingExtensions($this->sfRouter);
@@ -476,6 +471,27 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
     }
 
     /**
+     * Instantiates the sfRouter at the right moment, with requestContext is available.
+     *
+     * @param RequestContext $requestContext
+     */
+    final private function instantiateSfRouter(RequestContext $requestContext = null)
+    {
+        if (isset($this->sfRouter)) {
+            return;
+        }
+        $this->sfRouter = new \Symfony\Component\Routing\Router(
+            $this->routeLoader,
+            (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
+            array('cache_dir' => $this->configurationCacheFolder.'/routing',
+                  'debug' => $this->configurationDebugMode,
+                  'matcher_cache_class' => $this->cacheFileName.'_url_matcher',
+            ),
+            $requestContext
+        );
+    }
+
+    /**
      * Adds YML files to complete routes with a prefix.
      *
      * @param Router $sfRouter
@@ -494,6 +510,9 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      */
     final public function getRouteParameters($route)
     {
+        if (!isset($this->sfRouter)) {
+            $this->instantiateSfRouter();
+        }
         return $this->sfRouter->getRouteCollection()->get($route);
     }
 

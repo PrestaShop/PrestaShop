@@ -1,6 +1,6 @@
 <tbody>
     {foreach key=rowid item=product from=$products}
-        <tr>
+        <tr uniturl="{$product.unit_action_url}" productid="{$product.id_product}">
             <td class="checkbox-column">
                 <input type="checkbox" name="bulk_action_selected_products[]" value="{$product.id_product}" />
             </td>
@@ -25,7 +25,7 @@
             <td>
                 {$product.price_final}
             </td>
-            <td>
+            <td class="product-sav-quantity" productquantityvalue="{$product.sav_quantity}">
                 {$product.sav_quantity}
             </td>
             <td>
@@ -52,15 +52,15 @@
                             [
                                 "href" => "#todo",
                                 "icon" => "icon-eye",
-                                "label" => {l s="Preview"}
+                                "label" => {l s="Preview TODO"}
                             ],
                             [
-                                "href" => "#todo",
+                                "onclick" => "unitProductAction(this, 'duplicate');",
                                 "icon" => "icon-copy",
                                 "label" => {l s="Duplicate"}
                             ],
                             [
-                                "href" => "#todo",
+                                "onclick" => "unitProductAction(this, 'delete');",
                                 "icon" => "icon-trash",
                                 "label" => {l s="Delete"}
                             ]

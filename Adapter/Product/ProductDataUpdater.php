@@ -43,9 +43,24 @@ class ProductDataUpdater
      */
     public function activateProductIdList(array $productListId, $activate = true)
     {
-        $failedIdList = $productListId; // since only one update is done, we cannot keep only fails for now.
-        // TODO
-        throw new WarningException('Cannot change activation state many requested products.', $failedIdList);
+        if (count($productListId) < 1) {
+            throw new DevelopmentErrorException('ProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.');
+        }
+
+        $failedIdList = array();
+        foreach ($productListId as $productId) {
+            $product = new \Product($productId);
+            if (!\Validate::isLoadedObject($product)) {
+                $failedIdList[] = $productId;
+                continue;
+            }
+            $product->active = ($activate?1:0);
+            $result = $product->update();
+        }
+
+        if (count($failedIdList) > 0) {
+            throw new WarningException('Cannot change activation state on many requested products.', $failedIdList);
+        }
         return true;
     }
 
@@ -53,14 +68,38 @@ class ProductDataUpdater
      * Do a safe delete on given product IDs
      *
      * @param array $productListId The ID list of products to delete
-     * @throws ErrorException If an error occured during deletion
+     * @throws WarningException If deletion failed (some normal cases can brings this, it's not a Development error)
      * @return boolean
      */
-    public function deleteProductIdList(array $productListId)
+    public function deleteProductIdList(array $productIdList)
     {
-        $failedIdList = $productListId; // since only one update is done, we cannot keep only fails for now.
-        // TODO: from $productIdList (id_product(s)), do a safe delete (ORM?)
-        throw new ErrorException('Cannot delete many requested products.', $failedIdList);
+        if (count($productIdList) < 1) {
+            throw new DevelopmentErrorException('ProductDataUpdater->deleteProductIdList() should always receive at least one ID. Zero given.');
+        }
+
+        $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
+        $result = (new \Product())->deleteSelection($productIdList);
+
+        if ($result === 0) {
+            throw new WarningException('Cannot delete many requested products.', $failedIdList);
+        }
+        return true;
+    }
+
+    /**
+     * Do a safe delete on given product object
+     * @param \Product $product The product to delete
+     * @throws WarningException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @return boolean
+     */
+    public function deleteProduct(\Product $product)
+    {
+        // dumb? no: delete() makes a lot of things, and can reject deletion in specific cases.
+        $result = $product->delete();
+
+        if ($result === 0) {
+            throw new WarningException('Cannot delete the requested product.', $productId);
+        }
         return true;
     }
 }

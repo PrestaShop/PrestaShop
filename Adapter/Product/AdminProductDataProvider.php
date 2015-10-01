@@ -303,6 +303,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
+        global $container;
+        
         foreach ($products as &$product) {
             $product['price'] = \Tools::displayPrice($product['price']);
             $product['total'] = $total; // total product count (filtered)
@@ -310,6 +312,10 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
                     (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                     true, null, null, null, $nothing, true, true);
             $product['price_final'] = \Tools::displayPrice($product['price_final']);
+            $product['unit_action_url'] = $container->make('Routing')->generateUrl(
+                'admin_product_unit_action',
+                array('action' => 'duplicate', 'id_product' => $product['id_product'])
+            );
         }
 
         return $products;

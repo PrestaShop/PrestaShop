@@ -44,4 +44,7 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
 // Retrocompatibility with 1.4
 $_REQUEST['ajaxMode'] = $_POST['ajaxMode'] = $_GET['ajaxMode'] = $_REQUEST['ajax'] = $_POST['ajax'] = $_GET['ajax'] = 1;
 
+// We construct new Router to init services (Routing and others) to let legacy code call these services.
+// But we do not use the new Router (ajax calls are made through index.php entry point).
+new PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter($container);
 Dispatcher::getInstance()->dispatch();

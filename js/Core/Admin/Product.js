@@ -116,18 +116,50 @@ function bulkProductAction(element, action) {
 	form.submit();
 }
 
+function unitProductAction(element, action) {
+	var form = $('form#product_catalog_list');
+	
+	// save action URL for redirection and update to post to bulk action instead
+	// using form action URL allow to get route attributes and stay on the same page & ordering.
+	var urlHandler = $(element).closest('[uniturl]');
+	var redirectUrlHandler = $(element).closest('[redirecturl]');
+	var redirectionInput = $('<input>')
+		.attr('type', 'hidden')
+		.attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
+	form.append($(redirectionInput));
+	var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
+	form.attr('action', url);
+	form.submit();
+}
+
 function bulkProductEdition(element, action) {
 	var form = $('form#product_catalog_list');
 	
 	switch (action) {
-	case 'quantity_edition':
-		$('#bulk_edition_toolbar').show();
-		$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
-		// TODO: boites de saisie!
-		break;
-	case 'cancel':
-		$('#bulk_edition_toolbar').hide();
-		$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
-		break;
+		case 'quantity_edition':
+			$('#bulk_edition_toolbar').show();
+			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
+
+			i = 1;
+			$('td.product-sav-quantity', form).each(function() {
+				$quantity = $(this).attr('productquantityvalue');
+				$product_id = $(this).closest('tr[productid]').attr('productid');
+				$input = $('<input>').attr('type', 'text').attr('name', 'bulk_action_edit_quantity['+$product_id+']')
+					.attr('tabindex', i++).val($quantity);
+				$(this).html($input);
+				
+			});
+			// TODO !2: complete process for POSTING data (have a submit action when press ENTER, post action url, etc...)
+			$('td.product-sav-quantity input', form).first().focus();
+			break;
+		case 'cancel':
+			// quantity inputs
+			$('td.product-sav-quantity', form).each(function() {
+				$(this).html($(this).attr('productquantityvalue'));
+			});
+
+			$('#bulk_edition_toolbar').hide();
+			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
+			break;
 	}
 }
