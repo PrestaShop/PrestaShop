@@ -414,7 +414,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     {
         /** @var \CookieCore $legacyCookie */
         $legacyCookie = \Context::getContext()->cookie;
-        return (isset($legacyCookie->should_use_legacy_page_for_product) && $legacyCookie->should_use_legacy_page_for_product == 1);
+        return (!empty($legacyCookie->should_use_legacy_page_for_product) && $legacyCookie->should_use_legacy_page_for_product == 1);
     }
 
     /**
