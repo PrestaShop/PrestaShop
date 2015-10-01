@@ -80,21 +80,7 @@
         </section>
       {/block}
 
-      {block name="opc_delivery_section"}
-        <section id="opc-delivery">
-
-          <header>
-            <h1 class="h3">{l s='Delivery options'}</h1>
-          </header>
-
-          <div class="delivery-option-list">
-
-            {* StarterTheme: Delivery option list *}
-
-          </div>
-
-        </section>
-      {/block}
+      {$delivery_options nofilter}
 
       {$payment_options nofilter}
 
