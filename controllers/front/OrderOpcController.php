@@ -99,8 +99,10 @@ class OrderOpcControllerCore extends FrontController
     {
         parent::init();
 
+        $cart_presenter = new Adapter_CartPresenter;
         $this->context->smarty->assign([
-            'payment_options' => $this->renderPaymentOptions()
+            'payment_options' => $this->renderPaymentOptions(),
+            'cart' => $cart_presenter->present($this->context->cart),
         ]);
 
         $this->setTemplate('checkout/opc.tpl');
