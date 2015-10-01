@@ -166,7 +166,9 @@ class Adapter_CartPresenter
             'products' => $products,
             'totals'   => $totals,
             'products_count' => $products_count,
-            'summary_string' => $summary_string
+            'summary_string' => $summary_string,
+            'id_address_delivery' => $cart->id_address_delivery,
+            'id_address_invoice' => $cart->id_address_invoice,
         ];
     }
 }
