@@ -42,22 +42,6 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
     protected $cat_products;
 
     /**
-     * Sets default medias for this controller
-     */
-    public function setMedia()
-    {
-        parent::setMedia();
-
-        $scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
-        if ($scenes && count($scenes)) {
-            $this->addJS(_THEME_JS_DIR_.'scenes.js');
-            $this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
-        }
-
-        $this->addJS(_THEME_JS_DIR_.'category.js');
-    }
-
-    /**
      * Redirects to canonical or "Not Found" URL
      *
      * @param string $canonical_url

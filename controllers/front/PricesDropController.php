@@ -28,12 +28,6 @@ class PricesDropControllerCore extends FrontController
 {
     public $php_self = 'prices-drop';
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
