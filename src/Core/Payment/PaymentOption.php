@@ -167,6 +167,18 @@ class PaymentOption
         return $this;
     }
 
+    public function toArray()
+    {
+        return [
+            'action' => $this->action,
+            'form' => $this->form,
+            'method' => $this->method,
+            'inputs' => $this->inputs,
+            'logo' => $this->logo,
+            'call_to_action_text' => $this->callToActionText
+        ];
+    }
+
     /**
      * Legacy options were specified this way:
      * - either an array with a top level property 'cta_text'
