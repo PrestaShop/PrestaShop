@@ -468,12 +468,4 @@ class OrderControllerCore extends ParentOrderController
 
         parent::_assignPayment();
     }
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        if ($this->step == 2) {
-            $this->addJS(_THEME_JS_DIR_.'order-carrier.js');
-        }
-    }
 }
