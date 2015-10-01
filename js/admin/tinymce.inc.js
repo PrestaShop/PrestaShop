@@ -10,9 +10,9 @@ function tinySetup(config)
 
 	default_config = {
 		selector: ".rte" ,
-		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor",
+		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor excerpt",
 		browser_spellcheck : true,
-		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,alignleft,aligncenter,alignright,alignfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,anchor,|,media,image",
+		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,alignleft,aligncenter,alignright,alignfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,anchor,|,media,image,|,excerpt",
 		toolbar2: "",
 		external_filemanager_path: baseAdminDir+"filemanager/",
 		filemanager_title: "File manager",
