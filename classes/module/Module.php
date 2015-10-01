@@ -733,6 +733,10 @@ abstract class ModuleCore
             }
         }
 
+        if ($this->getOverrides() != null) {
+            $this->installOverrides();
+        }
+
         // Enable module in the shop where it is not enabled yet
         foreach ($list as $id) {
             if (!in_array($id, $items)) {
@@ -801,6 +805,10 @@ abstract class ModuleCore
      */
     public function disable($force_all = false)
     {
+        if ($this->getOverrides() != null) {
+            $this->uninstallOverrides();
+        }
+
         // Disable module for all shops
         $sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$this->id.' '.((!$force_all) ? ' AND `id_shop` IN('.implode(', ', Shop::getContextListShopID()).')' : '');
         Db::getInstance()->execute($sql);
@@ -3089,6 +3097,26 @@ abstract class ModuleCore
         }
 
         return $possible_hooks_list;
+    }
+
+    /**
+    +	 * Retrieve an array of the override in the module
+    +	 *
+    +	 * @return array|null
+    +	 */
+    public function getOverrides()
+    {
+        if (!is_dir($this->getLocalPath().'override'))
+            return null;
+
+        $result = array();
+        foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
+        {
+            $class = basename($file, '.php');
+            if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core') || Module::getModuleIdByName($class))
+                $result[] = $class;
+        }
+        return $result;
     }
 }
 
