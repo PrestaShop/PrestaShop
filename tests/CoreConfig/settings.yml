@@ -1,0 +1,2 @@
+controllers:
+  override_namespace: PrestaShop\PrestaShop\Tests\Unit\Core\Business\Controller

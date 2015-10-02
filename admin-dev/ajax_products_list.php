@@ -46,6 +46,7 @@ if ($pos = strpos($query, ' (ref:')) {
     $query = substr($query, 0, $pos);
 }
 
+$forceJson = Tools::getValue('forceJson', false);
 $excludeIds = Tools::getValue('excludeIds', false);
 if ($excludeIds && $excludeIds != 'NaN') {
     $excludeIds = implode(',', array_map('intval', explode(',', $excludeIds)));
@@ -74,16 +75,33 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false)) {
+if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))) {
+    $results = [];
     foreach ($items as $item) {
-        echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
+        if (!$forceJson) {
+            $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
+        } else {
+            $item['name'] = ' '.str_replace("'", "", $item['name']);
+            $results[] = array(
+                'id' => $item['id_product'],
+                'name' => $item['name'].(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : ''),
+                'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+                'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+            );
+        }
+    }
+
+    if (!$forceJson) {
+        echo implode("\n", $results);
+    } else {
+        echo json_encode($results);
     }
 } elseif ($items) {
     // packs
     $results = array();
     foreach ($items as $item) {
         // check if product have combination
-        if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
+        if (!$excludeIds && Combination::isFeatureActive() && $item['cache_default_attribute']) {
             $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
 						a.`id_attribute`
 					FROM `'._DB_PREFIX_.'product_attribute` pa
@@ -115,26 +133,23 @@ if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !=
                     }
                 }
             } else {
-                $product = array(
-                    'id' => (int)($item['id_product']),
+                $results[] = array(
+                    'id' => $item['id_product'],
                     'name' => $item['name'],
                     'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                     'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
                 );
-                array_push($results, $product);
             }
         } else {
-            $product = array(
-                'id' => (int)($item['id_product']),
+            $results[] = array(
+                'id' => $item['id_product'],
                 'name' => $item['name'],
                 'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                 'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
             );
-            array_push($results, $product);
         }
     }
-    $results = array_values($results);
-    echo json_encode($results);
+    echo json_encode(array_values($results));
 } else {
-    json_encode(new stdClass);
+    echo json_encode([]);
 }

@@ -70,6 +70,8 @@ if (!defined('_PS_CORE_DIR_')) {
     define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 }
 
+define('VENDOR_DIR', _PS_ROOT_DIR_.'/vendor');
+
 define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');
 /* BO THEMES */
 if (defined('_PS_ADMIN_DIR_')) {

@@ -1,0 +1,70 @@
+# admin_routes_product.yml
+admin_product_catalog:
+    path:     /catalog/{offset}/{limit}/{orderBy}/{orderWay}
+    methods:  [GET, POST]
+    defaults:
+        _legacy_path: AdminProducts
+        _legacy_force: false
+        _controller: 'Admin\ProductController::productCatalogAction'
+        limit: 10
+        offset: 0
+        orderBy: id_product
+        orderWay: asc
+    requirements:
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderWay: asc|desc
+
+admin_product_list:
+    path:     /list/{_layout_mode}/{ls_products_offset}/{ls_products_limit}/{ls_products_orderBy}/{ls_products_orderWay}
+    methods:  [GET]
+    defaults:
+        _controller: 'Admin\ProductController::productListAction'
+        _layout_mode: layout_html
+        ls_products_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        ls_products_method: getCatalogProductList
+        ls_products_limit: 10
+        ls_products_offset: 0
+        ls_products_orderBy: id_product
+        ls_products_orderWay: asc
+    requirements:
+        _layout_mode: layout_html|nude_html|none_html|none_xml|none_json
+        ls_products_orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        ls_products_orderWay: asc|desc
+
+admin_product_form:
+    path:     /form/{id_product}
+    methods:  [GET, POST]
+    defaults:
+        _legacy_path: AdminProducts
+        _legacy_force: false
+        _controller: 'Admin\ProductController::productFormAction'
+        id_product: new
+    requirements:
+        id_product: new|\d+
+    options:
+        legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        legacy_param_mapper_method: mapLegacyParametersProductForm
+
+admin_product_use_legacy_setter:
+    path:     /uselegacy/{use}
+    methods:  [GET, POST]
+    defaults:
+        _controller: 'Admin\ProductController::shouldUseLegacyPagesAction'
+    requirements:
+        use: 0|1
+
+admin_product_bulk_action:
+    path:     /bulk/{action}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::bulkAction'
+    requirements:
+        action: activate_all|deactivate_all|delete_all
+
+admin_product_unit_action:
+    path:     /unit/{action}/{id_product}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::unitAction'
+    requirements:
+        action: delete|duplicate

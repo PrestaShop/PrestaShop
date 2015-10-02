@@ -68,9 +68,12 @@ class InstallControllerHttpProcess extends InstallControllerHttp
         Context::getContext()->cart = new Cart();
         Context::getContext()->employee = new Employee(1);
         define('_PS_SMARTY_FAST_LOAD_', true);
-        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+        /*require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
-        Context::getContext()->smarty = $smarty;
+        Context::getContext()->smarty = $smarty;*/
+
+        $engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
+        $smarty = Context::getContext()->smarty = $engine->view->getInstance();
     }
 
     public function process()

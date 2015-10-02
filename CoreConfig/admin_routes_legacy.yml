@@ -1,0 +1,7 @@
+# routes.yml for Legacy modules whithout new Core alternative.
+admin_product_categories:
+    path:     /product/categories
+    methods:  [GET]
+    defaults:
+        _legacy_path: AdminCategories
+        _legacy_force: true

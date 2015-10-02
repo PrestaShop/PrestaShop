@@ -24,10 +24,16 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
+
+/**
+ * This adapter will be registered as a EventDispatcher listener, on the 'hook' dispatcher,
+ * and will allow legacy modules/legacy hooks to be called by the new Architecture.
+ */
 class Adapter_HookManager
 {
     /**
-     * Execute modules for specified hook
+     * Execute modules for specified hook.
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
@@ -51,5 +57,24 @@ class Adapter_HookManager
         $id_shop = null
     ) {
         return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
+    }
+
+    /**
+     * Event listener registered statically from BaseEventDispatcher.
+     *
+     * This listener is only here to link new Architecture events to old Legacy hooks.
+     * Adaptations should be required in the legacy hook implementations (possible compatibility break).
+     *
+     * @param HookEvent $event An event extension that will contains hook parameters and its results.
+     * @param string $hookName The hook name (matching old legacy hook name)
+     */
+    public function onHook(HookEvent $event, $hookName)
+    {
+        // remove 'legacy_' prefix if present
+        $legacyHookName = (strpos($hookName, 'legacy_') === 0)? substr($hookName, 7) : $hookName;
+
+        $parameters = $event->getHookParameters();
+        $result = $this->exec($legacyHookName, $parameters, isset($parameters['id_module'])? $parameters['id_module'] : null, true);
+        $event->appendHookResult($result); // array append, or string concat, depending on $array_return exec parameter --^
     }
 }

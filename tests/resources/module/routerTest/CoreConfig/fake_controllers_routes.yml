@@ -1,0 +1,24 @@
+# routes.yml
+fake_controllers_route1:
+    path:     /a
+    defaults: { _controller: 'Test\RouterTestController::aAction' }
+
+fake_controllers_route2:
+    path:     /b
+    defaults: { _controller: 'Test\RouterTestControllerError::bAction' }
+
+fake_controllers_route3:
+    path:     /c
+    defaults: { _controller: 'Test\RouterTestControllerWarning::cAction' }
+
+fake_controllers_route4:
+    path:     /redirect
+    defaults: { _controller: 'Test\RouterTestController::redirectAction' }
+
+fake_controllers_route5:
+    path:     /subcall
+    defaults: { _controller: 'Test\RouterTestController::subcallAction' }
+
+fake_controllers_route6:
+    path:     /forward
+    defaults: { _controller: 'Test\RouterTestController::forwardAction' }

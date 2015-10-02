@@ -264,6 +264,11 @@ if (!defined('_MEDIA_SERVER_3_')) {
     define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 }
 
-/* Get smarty */
-require_once($currentDir.'/smarty.config.inc.php');
-$context->smarty = $smarty;
+// bind & build context object here (because we need it to build smarty view very soon)
+$newContext = new \PrestaShop\PrestaShop\Core\Business\Context(new \Adapter_LegacyContext(), $container);
+$container->bind(get_class($newContext), $newContext, true);
+$container->bind('Context', $newContext, true);
+
+/* View */
+$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory($container);
+$smarty = $context->smarty = $engine->view->getInstance();

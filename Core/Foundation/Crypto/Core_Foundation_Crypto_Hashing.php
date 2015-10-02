@@ -33,7 +33,7 @@ class Core_Foundation_Crypto_Hashing
      * Init $hash_methods
      * @return void
      */
-    private function initHashMethods()
+    final private function initHashMethods()
     {
         $this->hash_methods = [
                 'BCryptSHA256' => [

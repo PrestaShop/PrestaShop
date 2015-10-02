@@ -33,7 +33,6 @@ use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\Numbers;
 use ICanBoogie\CLDR\NumberFormatter;
 use ICanBoogie\CLDR\Repository as cldrRepository;
-use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
 
 class Repository
 {
@@ -99,7 +98,7 @@ class Repository
         $this->localeRepository = $this->repository->locales[$this->getCulture()];
     }
 
-    private function localeConversion($locale)
+    final private function localeConversion($locale)
     {
         $locale = explode('-', $locale);
         if (count($locale) == 3) {
@@ -287,7 +286,7 @@ class Repository
      *
      * @return bool
      */
-    private function isCurrencyValid($str)
+    final private function isCurrencyValid($str)
     {
         if ($str === 'XTS' || strlen($str) !==3 || empty($this->repository->supplemental['codeMappings'][$str])) {
             return false;

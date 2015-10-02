@@ -35,7 +35,7 @@ $engineType = 'ENGINE_TYPE';
 $memory_limit = ini_get('memory_limit');
 if (substr($memory_limit, -1) != 'G'
     and ((substr($memory_limit, -1) == 'M' and substr($memory_limit, 0, -1) < 128)
-    or is_numeric($memory_limit) and (intval($memory_limit) < 131072) and $memory_limit > 0)
+        or is_numeric($memory_limit) and (intval($memory_limit) < 131072) and $memory_limit > 0)
 ) {
     @ini_set('memory_limit', '128M');
 }
@@ -285,9 +285,9 @@ Context::getContext()->employee = new Employee(1);
 if (!defined('_PS_SMARTY_FAST_LOAD_')) {
     define('_PS_SMARTY_FAST_LOAD_', true);
 }
-require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
-Context::getContext()->smarty = $smarty;
+$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
+$smarty = Context::getContext()->smarty = $engine->view->getInstance();
 
 if (isset($_GET['customModule']) and $_GET['customModule'] == 'desactivate') {
     require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
@@ -378,7 +378,7 @@ if (empty($fail_result)) {
 			</request>'."\n";
                     } else {
                         $requests .=
-        '	<request result="ok" sqlfile="'.$version.'">
+                            '	<request result="ok" sqlfile="'.$version.'">
 				<sqlQuery><![CDATA['.htmlentities($query).']]></sqlQuery>
 			</request>'."\n";
                     }

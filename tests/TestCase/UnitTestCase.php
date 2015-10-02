@@ -1,5 +1,5 @@
 <?php
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Cache;
 use Configuration;
@@ -7,16 +7,16 @@ use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 use Core_Business_ContainerBuilder;
-use Core_Foundation_IoC_Container;
 use Adapter_ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Core_Foundation_IoC_Container
+     * @var Container
      */
     protected $container;
 
@@ -26,9 +26,14 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     public $entity_mapper;
 
     /**
-     * @var Context
+     * @var \Context The legacy Context
      */
     public $context;
+
+    /**
+     * @var Context The new Architecture Context
+     */
+    public $newContext;
 
     /**
      * @var Db
@@ -48,7 +53,8 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->container = new Core_Foundation_IoC_Container;
+        $container_builder = new \Core_Business_ContainerBuilder();
+        $this->container = $container_builder->buildForTesting();
         Adapter_ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->setupDatabaseMock();
@@ -57,15 +63,24 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
         $this->container->bind('Adapter_EntityMapper', $this->entity_mapper);
 
+        // Old legacy context
         $this->context = Phake::mock('Context');
-
         Phake::when($this->context)->cloneContext()->thenReturn($this->context);
-
         $this->context->shop = Phake::mock('Shop');
+        $this->context->link = Phake::mock('Link');
+        $this->context->language = Phake::mock('Language');
         Context::setInstanceForTesting($this->context);
 
+        // Cache mock
         $this->cache = Phake::mock('Cache');
         Cache::setInstanceForTesting($this->cache);
+
+        // Context mock
+        $this->newContext = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Business\\Context');
+        Phake::when($this->newContext)->cloneContext()->thenReturn($this->newContext);
+        $newContextMapper = $this->container->make('Adapter_LegacyContext');
+        $newContextMapper->mergeContextWithLegacy($this->newContext);
+        $this->container->bind('PrestaShop\\PrestaShop\\Core\\Business\\Context', $this->newContext);
     }
 
     public function setConfiguration(array $keys)

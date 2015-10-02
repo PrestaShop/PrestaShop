@@ -23,16 +23,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 class Adapter_ServiceLocator
 {
     /**
      * Set a service container Instance
-     * @var Core_Foundation_IoC_Container
+     * @var PrestaShop\PrestaShop\Core\Foundation\IoC\Container
      */
     private static $service_container;
 
-    public static function setServiceContainerInstance(Core_Foundation_IoC_Container $container)
+    public static function setServiceContainerInstance(Container $container)
     {
         self::$service_container = $container;
     }

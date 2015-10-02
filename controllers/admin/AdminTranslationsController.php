@@ -26,6 +26,13 @@
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
+use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Form\FormFactory;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use PrestaShop\PrestaShop\Form\Validator\ContainsAlphanumeric;
+
 class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
@@ -1271,6 +1278,11 @@ class AdminTranslationsControllerCore extends AdminController
                         $regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*pdf=\'true\')?\s*\}/U';
                     }
                 break;
+
+            case 'sf2_validator':
+                //Parsing Sf2 validator class
+                $regex = '/public \$message\s*=\s*([\'"])'._PS_TRANS_PATTERN_.'([\'"])/';
+                break;
         }
 
         if (!is_array($regex)) {
@@ -2122,6 +2134,47 @@ class AdminTranslationsControllerCore extends AdminController
                         $string_to_translate[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
                     }
                 }
+            }
+        }
+
+        //adding sf2 form translations
+        $sf2_loader = new Symfony\Component\Translation\Loader\XliffFileLoader();
+        try {
+            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/validator/Resources/translations/validators.'.$this->lang_selected->iso_code.'.xlf', $this->lang_selected->iso_code);
+        } catch(\Exception $e) {
+            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/validator/Resources/translations/validators.en.xlf', $this->lang_selected->iso_code);
+        }
+
+        foreach($sf2_trans->all()['messages'] as $k => $v){
+            if (array_key_exists(md5($k), $GLOBALS[$name_var])) {
+                $string_to_translate[$k]['trad'] = html_entity_decode($GLOBALS[$name_var][md5($k)], ENT_COMPAT, 'UTF-8');
+            } else {
+                $string_to_translate[$k]['trad'] = '';
+                if (!isset($count_empty[$k])) {
+                    $count_empty[$k] = 1;
+                }
+            }
+            $string_to_translate[$k]['use_sprintf'] = false;
+        }
+
+        //adding sf2 validator translations
+        $files = glob(_PS_ROOT_DIR_.'/Core/Foundation/Form/Validator/*.php');
+        foreach ($files as $file_path) {
+            if (strpos($file_path, 'Validator.php') !== false) {
+                continue;
+            }
+
+            $matches = $this->userParseFile(file_get_contents($file_path), 'sf2_validator');
+            if (!empty($matches[0])) {
+                if (array_key_exists(md5($matches[0]), $GLOBALS[$name_var])) {
+                    $string_to_translate[$matches[0]]['trad'] = html_entity_decode($GLOBALS[$name_var][md5($matches[0])], ENT_COMPAT, 'UTF-8');
+                } else {
+                    $string_to_translate[$matches[0]]['trad'] = '';
+                    if (!isset($count_empty[$matches[0]])) {
+                        $count_empty[$matches[0]] = 1;
+                    }
+                }
+                $string_to_translate[$matches[0]]['use_sprintf'] = false;
             }
         }
 

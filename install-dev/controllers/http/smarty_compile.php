@@ -35,7 +35,8 @@ if (Tools::getValue('bo')) {
     $directory = _PS_THEME_DIR_;
 }
 
-require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
+$engine = new \PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory();
+$smarty = $engine->view->getInstance();
 
 $smarty->setTemplateDir($directory);
 ob_start();

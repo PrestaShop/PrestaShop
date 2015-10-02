@@ -1,0 +1,22 @@
+# admin_routes.yml
+admin_tools_upload:
+    path:     /common/upload/{file_type}
+    methods:  [POST]
+    defaults: { _controller: 'Admin\CommonController::uploadAction', file_type: image }
+    requirements:
+        file_type:  image|file
+
+admin_tools_navigator:
+    path:     /common/navigator/{offset}/{limit}
+    methods:  [GET]
+    defaults: 
+        _controller: 'Admin\CommonController::navigatorAction'
+        offset: 0
+        limit: 10
+    requirements:
+        offset: \d+
+        limit: \d+
+
+admin_route1:
+    path:     /a
+    defaults: { _controller: 'Admin\TestController::aAction' }

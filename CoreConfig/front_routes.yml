@@ -1,0 +1,8 @@
+# routes.yml
+front_route1:
+    path:     /a
+    defaults: { _controller: 'Front\TestController::aAction' }
+
+front_route2:
+    path:     /b/{id_order}
+    defaults: { _controller: 'Front\TestController::bAction', id_order: 2 }
