@@ -4396,4 +4396,14 @@ class AdminControllerCore extends Controller
     {
         $this->action = $action;
     }
+
+    /**
+     * Set IdObject
+     *
+     * @param int $id_object
+     */
+    public function setIdObject($id_object)
+    {
+        $this->id_object = (int)$id_object;
+    }
 }

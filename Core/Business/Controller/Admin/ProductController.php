@@ -232,6 +232,8 @@ class ProductController extends AdminController
      */
     public function productFormAction(Request $request, Response $response, $product)
     {
+        $response->setContentData(['product' => $product]);
+
         $legacyContext = $this->container->make('Adapter_LegacyContext');
         $locales = $this->container->make('CoreAdapter:Language\\LanguageDataProvider')->getLanguages();
 
@@ -264,7 +266,7 @@ class ProductController extends AdminController
         ));
 
         $form = $builder
-            ->add('id', 'hidden', array('data' => 0))
+            ->add('id_product', 'hidden', array('data' => $product ? $product->id : 0))
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductQuantity($this->container))
             ->add('step3', new ProductForms\ProductShipping($this->container))
@@ -279,6 +281,7 @@ class ProductController extends AdminController
                 $_POST = ProductModelAdapter::modelMapper($form->getData(), $this->container, $locales);
 
                 $adminProductController = $this->container->make('CoreAdapter:Product\\AdminProductControllerWrapper')->get();
+                $adminProductController->setIdObject($form->getData()['id_product']);
                 $adminProductController->setAction('save');
 
                 if ($product = $adminProductController->postCoreProcess()) {

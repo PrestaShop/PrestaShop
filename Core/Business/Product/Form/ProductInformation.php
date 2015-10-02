@@ -191,10 +191,12 @@ class ProductInformation extends AbstractType
                 ->add('available_for_order', 'checkbox', array(
                     'label'    => $this->translator->trans('Available for order', [], 'AdminProducts'),
                     'required' => false,
+                    'data' => true
                 ))
                 ->add('show_price', 'checkbox', array(
                     'label'    => $this->translator->trans('Show price', [], 'AdminProducts'),
                     'required' => false,
+                    'data' => true
                 ))
                 ->add('online_only', 'checkbox', array(
                     'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),

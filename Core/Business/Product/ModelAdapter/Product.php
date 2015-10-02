@@ -54,7 +54,7 @@ class Product
         $context = $container->make('Context');
 
         //merge all form steps
-        $from_data = array_merge(['id' => $from_data['id']], $from_data['step1'], $from_data['step2'], $from_data['step3'], $from_data['step4'], $from_data['step5']);
+        $from_data = array_merge(['id_product' => $from_data['id_product']], $from_data['step1'], $from_data['step2'], $from_data['step3'], $from_data['step4'], $from_data['step5']);
 
         //extract description_short from description
         foreach ($locales as $locale) {
