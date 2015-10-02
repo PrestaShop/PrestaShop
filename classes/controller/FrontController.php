@@ -1266,6 +1266,9 @@ class FrontControllerCore extends Controller
      */
     public function addJS($js_uri, $check_path = true)
     {
+        if (_PS_MODE_DEV_ && Tools::getValue('debug-disable-javascript')) {
+            return;
+        }
         return Frontcontroller::addMedia($js_uri, null, null, false, $check_path);
     }
 
