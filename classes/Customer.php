@@ -490,6 +490,10 @@ class CustomerCore extends ObjectModel
 
     public function getSimpleAddresses($id_lang = null)
     {
+        if (!$this->id) {
+            return [];
+        }
+
         if (is_null($id_lang)) {
             $id_lang = Context::getContext()->language->id;
         }
@@ -511,7 +515,7 @@ class CustomerCore extends ObjectModel
 
     public function getSimpleAddress($id_address, $id_lang = null)
     {
-        if (!intval($id_address)) {
+        if (!$this->id ||!intval($id_address) || !$id_address) {
             return [
                 'id' => '',
                 'alias' => '',
