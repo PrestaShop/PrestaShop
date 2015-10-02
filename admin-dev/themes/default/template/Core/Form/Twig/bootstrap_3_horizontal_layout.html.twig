@@ -51,7 +51,7 @@
                             paramName: "form[file]",
                             addRemoveLinks: true,
                             success: function (file, response) {
-                                var input = $('<input type="hidden" name="form[{{ name }}][files]['+dropZoneElem.find('.dz-preview').length+']" />').val(response);
+                                var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files]['+dropZoneElem.find('.dz-preview').length+']" />').val(response);
                                 $(file.previewElement).append(input);
                             },
                             error: function (file, response) {
@@ -75,7 +75,7 @@
                                     this.options.addedfile.call(this, mockFile);
                                     this.options.thumbnail.call(this, mockFile, "{{file.file_url_tmp }}");
 
-                                    var input = $('<input type="hidden" name="form[{{ name }}][files][{{ loop.index }}]" />').val('{{ file|json_encode()|raw}}');
+                                    var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files][{{ loop.index }}]" />').val('{{ file|json_encode()|raw}}');
                                     $(mockFile.previewElement).append(input);
 
                                     this.emit("complete", mockFile);
