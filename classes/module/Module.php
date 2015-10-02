@@ -874,7 +874,6 @@ abstract class ModuleCore
             Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
             // Get hook id
             $id_hook = Hook::getIdByName($hook_name);
-            $live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
 
             // If hook does not exist, we create it
             if (!$id_hook) {
