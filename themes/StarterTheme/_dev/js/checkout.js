@@ -3,6 +3,7 @@ import $ from 'jquery';
 function setupRegularCheckout () {
   function hideSubmitButton () {
     $('#conditions-to-approve button').hide();
+    $('#delivery-method button').hide();
   }
 
   function refreshPaymentOptions () {
@@ -13,8 +14,17 @@ function setupRegularCheckout () {
     });
   }
 
+  function refreshDeliveryOptions () {
+    let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
+    $.post('', params).then(resp => {
+      $('#delivery-options').replaceWith(resp);
+      hideSubmitButton();
+    });
+  }
+
   hideSubmitButton();
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', refreshPaymentOptions);
+  $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
 }
 
 function setupAdvancedCheckout () {
