@@ -60,8 +60,10 @@ class Product
         foreach ($locales as $locale) {
             if ($from_data['description'][$locale['id_lang']] && false !== strpos($from_data['description'][$locale['id_lang']], '<p><!-- excerpt --></p>')) {
                 $description_full = explode('<p><!-- excerpt --></p>', $from_data['description'][$locale['id_lang']]);
-                $from_data['description'][$locale['id_lang']] = $description_full[1];
-                $from_data['description_short'][$locale['id_lang']] = $description_full[0];
+                $from_data['description'][$locale['id_lang']] = isset($description_full[1]) ? $description_full[1] : $description_full[0];
+                $from_data['description_short'][$locale['id_lang']] = isset($description_full[1]) ? $description_full[0] : '';
+            } else {
+                $from_data['description_short'][$locale['id_lang']] = '';
             }
         }
 

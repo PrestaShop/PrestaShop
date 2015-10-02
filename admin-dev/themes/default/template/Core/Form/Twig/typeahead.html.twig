@@ -31,6 +31,7 @@
                         if(!response){
                             return [];
                         }
+
                         return response;
                     }
                 }
@@ -80,9 +81,11 @@
 
             //define source
             this['{{ form.vars.id }}_source'] = new Bloodhound({
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
-                identify: function(obj) { return obj.{{ mapping_value }}; },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
                 remote: {
                     url: '{{ remote_url|raw }}',
                     wildcard: '%QUERY',
@@ -114,6 +117,7 @@
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';
                 $('#{{ form.vars.id }}-data').append(html);
+
             }).bind('typeahead:close', function(ev) {
                 $(ev.target).val('');
             });

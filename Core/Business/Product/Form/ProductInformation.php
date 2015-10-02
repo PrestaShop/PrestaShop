@@ -208,9 +208,13 @@ class ProductInformation extends AbstractType
             ),
             'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
         ))
-        ->add('id_manufacturer', 'choice', array('choices' => $this->manufacturers, 'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')))
+        ->add('id_manufacturer', 'choice', array(
+            'choices' => $this->manufacturers,
+            'required' => false,
+            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
+        ))
         ->add('related_products', new TypeaheadProductCollectionType(
-            $this->context->link->getAdminLink('', false).'ajax_products_list.php?limit=20&q=%QUERY',
+            $this->context->link->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),

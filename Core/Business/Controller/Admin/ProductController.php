@@ -274,7 +274,7 @@ class ProductController extends AdminController
                 $adminProductController = $this->container->make('CoreAdapter:Product\\AdminProductControllerWrapper')->get();
                 $adminProductController->setAction('save');
 
-                if ($product = $adminProductController->postProcess()) {
+                if ($product = $adminProductController->postCoreProcess()) {
                     $response->setContentData(['product' => $product]);
                 }
 

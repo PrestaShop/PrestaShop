@@ -50,7 +50,7 @@ class TypeaheadProductCollectionType extends \PrestaShop\PrestaShop\Core\Foundat
     /**
      * {@inheritdoc}
      *
-     * Add the var choices to the view
+     * Add the vars to the view
      * Inject collection products
      */
     public function buildView(FormView $view, FormInterface $form, array $options)

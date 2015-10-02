@@ -1438,6 +1438,16 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
+     * postProcess for new form archi (need object return)
+     *
+     * @return void
+     */
+    public function postCoreProcess()
+    {
+        return parent::postProcess();
+    }
+
+    /**
      * postProcess handle every checks before saving products information
      *
      * @return void
@@ -1445,7 +1455,7 @@ class AdminProductsControllerCore extends AdminController
     public function postProcess()
     {
         if (!$this->redirect_after) {
-            return parent::postProcess();
+            parent::postProcess();
         }
 
         if ($this->display == 'edit' || $this->display == 'add') {
