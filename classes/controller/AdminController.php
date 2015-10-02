@@ -385,13 +385,10 @@ class AdminControllerCore extends Controller
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
+    public static $timer_start;
+
     public function __construct()
     {
-        global $timer_start;
-        $this->timer_start = $timer_start;
-        // Has to be remove for the next Prestashop version
-        global $token;
-
         $this->controller_type = 'admin';
         $this->controller_name = get_class($this);
         if (strpos($this->controller_name, 'Controller')) {
@@ -431,8 +428,6 @@ class AdminControllerCore extends Controller
 
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
-
-        $token = $this->token;
 
         $this->_conf = array(
             1 => $this->l('Successful deletion'),
@@ -788,7 +783,7 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        if (isset($this->className) && $this->className) 
+        if (isset($this->className) && $this->className)
         	$definition = ObjectModel::getDefinition($this->className);
 
         foreach ($filters as $key => $value) {
@@ -2186,7 +2181,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign(array(
             'ps_version' => _PS_VERSION_,
-            'timer_start' => $this->timer_start,
+            'timer_start' => self::$timer_start,
             'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
             'modals' => $this->renderModal(),
         ));
@@ -2668,9 +2663,6 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
-        // Has to be removed for the next Prestashop version
-        global $currentIndex;
-
         parent::init();
 
         if (Tools::getValue('ajax')) {
@@ -2714,7 +2706,6 @@ class AdminControllerCore extends Controller
             $current_index .= '&back='.urlencode($back);
         }
         self::$currentIndex = $current_index;
-        $currentIndex = $current_index;
 
         if ((int)Tools::getValue('liteDisplaying')) {
             $this->display_header = false;

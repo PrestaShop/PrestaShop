@@ -32,14 +32,14 @@ class OrderControllerCore extends ParentOrderController
     const STEP_DELIVERY = 2;
     const STEP_PAYMENT = 3;
 
+    private $orderTotal;
+
     /**
      * Initialize order controller
      * @see FrontController::init()
      */
     public function init()
     {
-        global $orderTotal;
-
         parent::init();
 
         $this->step = (int)Tools::getValue('step');
@@ -63,7 +63,7 @@ class OrderControllerCore extends ParentOrderController
         // Check minimal amount
         $currency = Currency::getCurrency((int)$this->context->cart->id_currency);
 
-        $orderTotal = $this->context->cart->getOrderTotal();
+        $this->orderTotal = $this->context->cart->getOrderTotal();
         $minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
         if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase && $this->step > 0) {
             $_GET['step'] = $this->step = 0;
@@ -389,7 +389,6 @@ class OrderControllerCore extends ParentOrderController
      */
     protected function processCarrier()
     {
-        global $orderTotal;
         parent::_processCarrier();
 
         if (count($this->errors)) {
@@ -398,7 +397,7 @@ class OrderControllerCore extends ParentOrderController
             $this->step = 2;
             $this->displayContent();
         }
-        $orderTotal = $this->context->cart->getOrderTotal();
+        $this->orderTotal = $this->context->cart->getOrderTotal();
     }
 
     /**
@@ -439,8 +438,6 @@ class OrderControllerCore extends ParentOrderController
      */
     protected function _assignPayment()
     {
-        global $orderTotal;
-
         // Redirect instead of displaying payment modules if any module are grefted on
         Hook::exec('displayBeforePayment', array('module' => 'order.php?step=3'));
 
@@ -457,7 +454,7 @@ class OrderControllerCore extends ParentOrderController
         $hook_override_tos_display = Hook::exec('overrideTOSDisplay');
 
         $this->context->smarty->assign(array(
-            'total_price' => (float)$orderTotal,
+            'total_price' => (float)$this->orderTotal,
             'taxes_enabled' => (int)Configuration::get('PS_TAX'),
             'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
             'conditions' => (int)Configuration::get('PS_CONDITIONS'),
