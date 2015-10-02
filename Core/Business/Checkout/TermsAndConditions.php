@@ -8,8 +8,11 @@ class TermsAndConditions
     private $links;
     private $rawText;
 
-    public function setText($rawText, ...$links)
+    public function setText($rawText)
     {
+        $links = func_get_args();
+        array_shift($links);
+
         $this->links = $links;
         $this->rawText = $rawText;
         return $this;
