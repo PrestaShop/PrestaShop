@@ -1690,8 +1690,6 @@ abstract class ModuleCore
 
         $context = Context::getContext();
 
-        $module_name = Tools::strtolower($module_name);
-
         // If the xml file exist, isn't empty, isn't too old
         // and if the theme hadn't change
         // we use the file, otherwise we regenerate it
@@ -1723,17 +1721,17 @@ abstract class ModuleCore
 
         // If the module is trusted, which includes both partner modules and modules bought on Addons
 
-        if (strpos($trusted_modules_list_content, $module_name) !== false) {
+        if (stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
-            if (strpos($modules_list_content, '<module name="'.$module_name.'"/>') == false) {
+            if (stripos($modules_list_content, '<module name="'.$module_name.'"/>') == false) {
                 return 1;
-            } elseif (strpos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false) {
+            } elseif (stripos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false) {
                 // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
             return 2;
-        } elseif (strpos($untrusted_modules_list_content, $module_name) !== false) {
+        } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
