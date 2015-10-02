@@ -73,8 +73,8 @@ class CartControllerCore extends FrontController
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
-            } elseif (Tools::getIsset('changeAddressDelivery')) {
-                $this->processChangeProductAddressDelivery();
+            } elseif (Tools::getIsset('changeAddresses')) {
+                $this->processChangeAddresses(Tools::getValue('id_address_delivery'), Tools::getValue('id_address_invoice'));
             } elseif (Tools::getIsset('allowSeperatedPackage')) {
                 $this->processAllowSeperatedPackage();
             } elseif (Tools::getIsset('duplicate')) {
@@ -84,6 +84,10 @@ class CartControllerCore extends FrontController
             }
             // Make redirection
             if (!$this->errors && !$this->ajax) {
+                if ($back = Tools::getValue('back')) {
+                    Tools::redirect(urldecode($back));
+                }
+
                 $queryString = Tools::safeOutput(Tools::getValue('query', null));
                 if ($queryString && !Configuration::get('PS_CART_REDIRECT')) {
                     Tools::redirect('index.php?controller=search&search='.$queryString);
@@ -173,27 +177,17 @@ class CartControllerCore extends FrontController
         }
     }
 
-    protected function processChangeProductAddressDelivery()
+    protected function processChangeAddresses($id_address_delivery, $id_address_invoice)
     {
-        if (!Configuration::get('PS_ALLOW_MULTISHIPPING')) {
-            return;
+        if ($id_address_delivery = (int)$id_address_delivery) {
+            $this->context->cart->id_address_delivery = $id_address_delivery;
         }
 
-        $old_id_address_delivery = (int)Tools::getValue('old_id_address_delivery');
-        $new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
-
-        if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery))) {
-            $this->ajaxDie(json_encode(array(
-                'hasErrors' => true,
-                'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
-            )));
+        if ($id_address_invoice = (int)$id_address_invoice) {
+            $this->context->cart->id_address_invoice = $id_address_invoice;
         }
 
-        $this->context->cart->setProductAddressDelivery(
-            $this->id_product,
-            $this->id_product_attribute,
-            $old_id_address_delivery,
-            $new_id_address_delivery);
+        return $this->context->cart->update();
     }
 
     protected function processAllowSeperatedPackage()
