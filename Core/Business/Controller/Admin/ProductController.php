@@ -62,18 +62,14 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  */
 class ProductController extends AdminController
 {
-    use AutoObjectInflaterTrait; // auto inflate objects if pattern found in the route format.
-    use AutoResponseFormatTrait; // try to auto fill template engine parameters according to the current action.
-
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
      */
     public function __construct(AdminRouter $router, Container $container)
     {
         parent::__construct($router, $container);
-
-        // TODO !2: $this->registerExecutionSequenceService(AutoObjectInflater)
-        // TODO !3: $this->registerExecutionSequenceService(AutoResponseFormatSetter)
+        $this->registerExecutionSequenceService('CoreBusiness:Controller\\ExecutionSequenceService\\AutoResponseFormatSetter');
+        $this->registerExecutionSequenceService('CoreBusiness:Controller\\ExecutionSequenceService\\AutoObjectInflater');
     }
 
     /**
@@ -116,6 +112,7 @@ class ProductController extends AdminController
             '_layout_mode' => 'none_html'
         );
         $subResponse = $this->subcall('admin_product_list', $productListParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
+
         $response->addContentData('product_list', $subResponse->getContent());
         $hasCategoryFilter = $dataProvider->isCategoryFiltered();
         $hasColumnFilter = $dataProvider->isColumnFiltered();

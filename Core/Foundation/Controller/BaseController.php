@@ -88,10 +88,42 @@ abstract class BaseController implements ControllerInterface
      * Call this during construction of your controller to register a service into the
      * execution sequence (pre-actions and post-actions).
      *
-     * @param ExecutionSequenceServiceInterface $service
+     * @throws DevelopmentErrorException If the service does not implement ExecutionSequenceServiceInterface or is null.
+     * @throws ErrorException the service is provided as a string, and resolution failed.
+     * @param string|ExecutionSequenceServiceInterface $service
      */
-    final protected function registerExecutionSequenceService(ExecutionSequenceServiceInterface $service)
+    final protected function registerExecutionSequenceService($service)
     {
+        if ($service === null) {
+            throw new DevelopmentErrorException('Null service given.');
+        }
+
+        // try to resolve service name
+        if (is_string($service)) {
+            $tryPrefixes = array(
+                '',
+                'CoreBusiness:Controller\\ExecutionSequenceService\\',
+                'CoreFoundation:Controller\\ExecutionSequenceService\\',
+                'CoreBusiness:',
+                'CoreFoundation:'
+            );
+            foreach ($tryPrefixes as $prefix) {
+                $fullServiceName = $this->container->resolveClassName($prefix.$service);
+                try {
+                    $service = $this->container->make($fullServiceName);
+                    break;
+                } catch (\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception $ioce) {
+                    continue;
+                }
+            }
+        }
+
+        if (is_string($service)) {
+            throw new ErrorException('The given service ('.$service.') cannot be found (or instantiated) to be registered in the execution sequence.');
+        }
+        if (!$service instanceof ExecutionSequenceServiceInterface) {
+            throw new DevelopmentErrorException('The given service does not implements ExecutionSequenceServiceInterface.');
+        }
         $this->router->registerExecutionSequenceService($service);
     }
 

@@ -23,32 +23,48 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Business\Controller;
+namespace PrestaShop\PrestaShop\Core\Business\Controller\ExecutionSequenceService;
 
-use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceWrapper;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 
 /**
- * Trait that adds processes before action to auto-inflate object from the given route parameters.
+ * This service will add helpers to try to inflate objects from ORM.
  *
- * This Trait will add convenience hooks before controller action execution,
- * and will try to inflate data from DB if the route contains parameters (if their name follow a specific norm)
- * and will insert them in $response->getContentData() set.
- *
- * The route.yml should indicate an object id and its class to be detected by this Trait like this:
- * 'id_<RepositoryName>'
- * example:
- * my_route:
- *   path:     /my_path/{id_order}/{id_product}/{id_customer}/view
- *   defaults: { _controller: 'Admin\TestController::bAction', id_order: 1 }
- *
+ * When request attributes matches some specific format, the helpers will call ORM
+ * objects and inject them into the response->getContentData() array
  */
-trait AutoObjectInflaterTrait
+final class AutoObjectInflater extends ExecutionSequenceServiceWrapper
 {
     /**
-     * This trait helper will try to identify some elements in the uri parameters (if well set in the routes*.yml files,
+     * @var \Adapter_AutoInflaterManager
+     */
+    private $autoInflaterManager;
+
+    /**
+     * Constructor.
+     *
+     * @param \Adapter_AutoInflaterManager $autoInflaterManager
+     */
+    public function __construct(\Adapter_AutoInflaterManager $autoInflaterManager)
+    {
+        $this->autoInflaterManager = $autoInflaterManager;
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface::getInitListeners()
+     */
+    public function getBeforeListeners()
+    {
+        return array(
+            0 => array($this, 'inflateRequestedObjects'),
+            1 => array($this, 'inflateRequestedCollection')
+        );
+    }
+
+    /**
+     * This helper will try to identify some elements in the uri parameters (if well set in the routes*.yml files,
      * and in the right syntax), to query them in the database, and to complete $response->getContentData with the
      * found object.
      *
@@ -56,35 +72,33 @@ trait AutoObjectInflaterTrait
      * path:     /path/to/route/{id_order}/rest/of/the/path
      * This will try to Inflate a Order object by instantiation with the value of the route parameter as the unique constructor parameter.
      *
-     * @param Request $request
-     * @param Response $response
-     * @return boolean True if success; False to forbid action execution
+     * @param BaseEvent $event
      */
-    public function beforeActionInflateRequestedObjects(Request &$request, Response &$response)
+    public function inflateRequestedObjects(BaseEvent $event)
     {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
         foreach ($request->attributes->all() as $key => $value) {
             // Find parameters that begins with id_ to try to inflate corresponding object
             if (strpos($key, 'id_') === 0) {
                 $className = substr($key, 3);
-                $autoInflaterManager = $this->container->make('Adapter_AutoInflaterManager');
-                $object = $autoInflaterManager->inflateObject($className, $value);
+                $object = $this->autoInflaterManager->inflateObject($className, $value);
 
                 if ($object === false) {
                     continue;
                 }
                 if ($object === null) {
-                    $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object.'));
                     $response->addContentData($className, null);
                     continue;
                 }
                 $response->addContentData($className, $object);
             }
         }
-        return true;
     }
 
     /**
-     * This trait helper will try to identify some elements in the uri parameters (if well set in the routes*.yml files,
+     * This helper will try to identify some elements in the uri parameters (if well set in the routes*.yml files,
      * and in the right syntax), to query them in the database, and to complete $response->getContentData with the
      * found collections.
      *
@@ -101,12 +115,13 @@ trait AutoObjectInflaterTrait
      * All these route parameters will be completed by query (GETs) and request (POSTs) parameters that
      * starts with 'ls_mykey_' prefix
      *
-     * @param Request $request
-     * @param Response $response
-     * @return boolean True if success; False to forbid action execution
+     * @param BaseEvent $event
      */
-    public function beforeActionInflateRequestedCollection(Request &$request, Response &$response)
+    public function inflateRequestedCollection(BaseEvent $event)
     {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
         // fetch parameters from route attributes
         $collectionParameters = array();
         foreach ($request->attributes->all() as $key => $value) {
@@ -146,13 +161,12 @@ trait AutoObjectInflaterTrait
             $collectionRequestParameters[$subKeys[1]][$subKeys[2]] = $value;
         }
 
-        $autoInflaterManager = $this->container->make('Adapter_AutoInflaterManager');
         foreach ($collectionParameters as $key => $parameters) {
             try {
                 $method = $parameters['method'];
                 $class = $parameters['class'];
 
-                $collection = $autoInflaterManager->inflateCollection(
+                $collection = $this->autoInflaterManager->inflateCollection(
                     $class,
                     $method,
                     $parameters,
@@ -164,16 +178,14 @@ trait AutoObjectInflaterTrait
                     continue;
                 }
                 if ($collection === null) {
-                    $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
+                    // To indicate we tried, but failed.
                     $response->addContentData($key, null);
                 }
                 $response->addContentData($key, $collection);
             } catch (\Exception $e) {
                 // To indicate we tried, but failed.
-                $this->container->make('final:EventDispatcher/log')->dispatch('AutoObjectInflaterTrait', new BaseEvent('Cannot load required object list.'));
                 $response->addContentData($key, null);
             }
         }
-        return true;
     }
 }

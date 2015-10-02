@@ -304,13 +304,6 @@ abstract class Router extends AbstractRouter
         }
         $response->setResponseFormat($returnView? BaseController::RESPONSE_PARTIAL_VIEW : BaseController::RESPONSE_LAYOUT_HTML);
 
-        // Resolve controller action method injections
-        $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
-        $resolver->setContainer($this->container); // inject Container for Controller instantiation.
-        $resolver->setRouter($this); // inject Router for Controller instantiation.
-        $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
-        $actionArguments = $resolver->getArguments($request, array($controllerInstance, $controllerMethod));
-
         { // Start execution sequence
             $routingDispatcher = $this->routingDispatcher;
 
@@ -319,7 +312,7 @@ abstract class Router extends AbstractRouter
             $initEvent->setRequest($request)->setResponse($response);
             $routingDispatcher->dispatch('init_action', $initEvent);
             $actionAllowed = !$initEvent->isPropagationStopped();
-            
+
             // before_action dispatch
             if ($actionAllowed) {
                 $beforeEvent = new BaseEvent();
@@ -327,6 +320,13 @@ abstract class Router extends AbstractRouter
                 $routingDispatcher->dispatch('before_action', $beforeEvent);
                 $actionAllowed = $actionAllowed & !$beforeEvent->isPropagationStopped();
             }
+
+            // Resolve controller action method injections
+            $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
+            $resolver->setContainer($this->container); // inject Container for Controller instantiation.
+            $resolver->setRouter($this); // inject Router for Controller instantiation.
+            $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
+            $actionArguments = $resolver->getArguments($request, array($controllerInstance, $controllerMethod));
 
             // ACTION CALL
             if ($actionAllowed) {

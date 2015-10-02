@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
  * If the authentication failed, this is not its responsibility to display a login page:
  * a redirection is done to the login controller.
  */
-class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
+final class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
 {
     /**
      * @var \Adapter_AuthenticationManager
@@ -51,6 +51,12 @@ class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
      */
     private $routingService;
 
+    /**
+     * Constructor
+     *
+     * @param \Adapter_AuthenticationManager $authenticationManager
+     * @param RoutingService $routing
+     */
     public function __construct(\Adapter_AuthenticationManager $authenticationManager, RoutingService $routing)
     {
         $this->authenticationManager = $authenticationManager;

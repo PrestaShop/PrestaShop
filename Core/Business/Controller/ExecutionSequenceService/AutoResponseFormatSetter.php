@@ -23,53 +23,92 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Core\Business\Controller;
+namespace PrestaShop\PrestaShop\Core\Business\Controller\ExecutionSequenceService;
 
-use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceWrapper;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 
 /**
- * Trait to generate default action settings (template name, response format) depending on the request.
+ * This generates default action settings (template name, response format) depending on the request.
  *
- * This Trait will add convenience hooks to search for data type to output, and the appropriate template engine
- * to use.
+ * This will add convenience hooks to search for data type to output, and the appropriate template engine
+ * to use. The developer can always override these settings in the action code.
  */
-trait AutoResponseFormatTrait
+final class AutoResponseFormatSetter extends ExecutionSequenceServiceWrapper
 {
     /**
-     * This trait helper will try to identify needed output format (HTML, w/o layout, xml, json, ...) via
+     * @var RoutingService
+     */
+    private $routingService;
+
+    /**
+     * @var \Adapter_LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * Constructor.
+     *
+     * @param \Adapter_LegacyContext $legacyContext
+     * @param RoutingService $routing
+     */
+    public function __construct(\Adapter_LegacyContext $legacyContext, RoutingService $routing)
+    {
+        $this->legacyContext = $legacyContext;
+        $this->routingService = $routing;
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface::getInitListeners()
+     */
+    public function getBeforeListeners()
+    {
+        return array(0 => array($this, 'suggestResponseFormat'));
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface::getCloseListeners()
+     */
+    public function getAfterListeners()
+    {
+        return array(0 => array($this, 'suggestTemplateFormat'));
+    }
+
+    /**
+     * This helper will try to identify needed output format (HTML, w/o layout, xml, json, ...) via
      * HTTP request.
      *
-     * @param Request $request
-     * @param Response $response
-     * @return boolean True if success; False to forbid action execution
+     * @param BaseEvent $event
      */
-    public function beforeActionSuggestResponseFormat(Request &$request, Response &$response)
+    public function suggestResponseFormat(BaseEvent $event)
     {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
         // layout-mode is prior to accept header. Used by subcall for example, to force response mode
         if (isset($request->headers) && $request->headers->has('layout-mode')) {
             $response->setResponseFormat($request->headers->get('layout-mode'));
-            return true;
+            return;
         }
 
         // layout-mode is prior to accept header. Used by subcall for example, to force response mode
         if (isset($request->attributes) && $request->attributes->has('_layout_mode')) {
             $response->setResponseFormat($request->attributes->get('_layout_mode'));
-            return true;
+            return;
         }
 
         if (!isset($request->headers) || !$request->headers->has('accept')) {
-            return true; // non blocking fail
+            return;
         }
         $accepts = explode(',', $request->headers->get('accept'));
 
         // FIXME: Temporary behavior: Legacy controller used to set Layout title and setup smarty i18n ('l' function)
         if ($legacyController = $request->attributes->get('_legacy_path')) {
             $response->setLegacyControllerName($legacyController);
-            $legacyContext = $this->container->make('Adapter_LegacyContext');
-            $legacyContext->setupLegacyTranslationContext($legacyController);
+            $this->legacyContext->setupLegacyTranslationContext($legacyController);
         }
 
         // Order by HTTP accept values first, then by follwing switch cases order
@@ -79,39 +118,39 @@ trait AutoResponseFormatTrait
                 case 'application/json':
                 case 'text/javascript':
                     $response->setResponseFormat(BaseController::RESPONSE_JSON);
-                    return true;
+                    return;
 
                 case 'text/html':
                 case 'application/xhtml+xml':
                     $isXhr = $request->headers->has('x-requested-with') && ($request->headers->get('x-requested-with') == 'XMLHttpRequest');
                     $response->setResponseFormat($isXhr ? BaseController::RESPONSE_AJAX_HTML : BaseController::RESPONSE_LAYOUT_HTML);
-                    return true;
+                    return;
 
                 case 'text/plain':
-                    $response->setResponseFormat(Basecontroller::RESPONSE_RAW_TEXT);
-                    return true;
+                    $response->setResponseFormat(BaseController::RESPONSE_RAW_TEXT);
+                    return;
 
                 case 'application/xml':
                     $response->setResponseFormat(Basecontroller::RESPONSE_XML);
-                    return true;
+                    return;
 
                 default:
                     continue; // try next accept value given by HTTP request
             }
         }
-        return true; // non blocking fail
     }
 
     /**
      * This trait helper will try to identify needed output format (HTML, w/o layout, xml, json, ...) via
      * HTTP request. If $response->getTemplateEngine() has already been set, then the helper do nothing.
      *
-     * @param Request $request
-     * @param Response $response
-     * @return boolean True if success; False to forbid action execution
+     * @param BaseEvent $event
      */
-    public function afterActionSuggestTemplateFormat(Request &$request, Response &$response)
+    public function suggestTemplateFormat(BaseEvent $event)
     {
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
         // no template if no HTML output!
         if (strpos($response->getResponseFormat(), 'html') !== false
             && isset($request->attributes)
@@ -120,7 +159,7 @@ trait AutoResponseFormatTrait
             $controllerString = $request->attributes->get('_controller_short');
             $path = explode('\\', $controllerString);
             if (count($path) < 2) {
-                return true; // not enough info to suggest template
+                return;
             }
 
             $classMethod = array_pop($path); // extract last element (Class::method part)
@@ -129,15 +168,15 @@ trait AutoResponseFormatTrait
 
             $className = preg_replace('/Controller$/', '', $className, 1, $matchCount);
             if ($matchCount !== 1) {
-                return true; // Controller does not follow standard name pattern
+                return; // Controller does not follow standard name pattern
             }
 
             $methodName = preg_replace('/Action$/', '', $methodName, 1, $matchCount);
             if ($matchCount !== 1) {
-                return true; // Action method does not follow standard name pattern
+                return; // Action method does not follow standard name pattern
             }
 
-            //If template was not defined, try to find it dynamically
+            // if template was not defined, try to find it dynamically
             if (!$response->getTemplate()) {
                 $templatePath = 'Core'.DIRECTORY_SEPARATOR.'Controller'.
                     DIRECTORY_SEPARATOR.$className.DIRECTORY_SEPARATOR. $methodName . '.' .
@@ -149,13 +188,12 @@ trait AutoResponseFormatTrait
                 }
 
                 if (!file_exists($rootTemplatePath.DIRECTORY_SEPARATOR.$templatePath)) {
+                    // The action did not set the template name, and we could not find it either...
                     throw new DevelopmentErrorException('Template "'.$templatePath.'" could not be found');
                 }
 
                 $response->setTemplate($templatePath);
             }
         }
-
-        return true; // non blocking fail
     }
 }

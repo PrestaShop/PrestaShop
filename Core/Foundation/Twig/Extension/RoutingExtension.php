@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Twig\Extension;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Routing\RoutingService;
+use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template

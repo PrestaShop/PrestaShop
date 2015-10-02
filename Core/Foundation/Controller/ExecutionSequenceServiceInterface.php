@@ -38,7 +38,7 @@ interface ExecutionSequenceServiceInterface
      * Gets an indexed array of callables for the init_action event.
      * The index is the priority of the callable.
      *
-     * TODO: how to return the result of the callable (false to disallow action)
+     * If at least one listener calls $event->stopPropagation(), the action execution will be forbidden.
      *
      * @return array[callable]
      */
@@ -48,7 +48,7 @@ interface ExecutionSequenceServiceInterface
      * Gets an indexed array of callables for the before_action event.
      * The index is the priority of the callable.
      *
-     * TODO: how to return the result of the callable (false to disallow action)
+     * If at least one listener calls $event->stopPropagation(), the action execution will be forbidden.
      *
      * @return array[callable]
      */
@@ -57,6 +57,10 @@ interface ExecutionSequenceServiceInterface
     /**
      * Gets an indexed array of callables for the after_action event.
      * The index is the priority of the callable.
+     *
+     * If at least one listener calls $event->stopPropagation(), a redirection to a forbidden URL will be
+     * done (but the action was executed before in all cases).
+     *
      * @return array[callable]
      */
     public function getAfterListeners();
@@ -64,6 +68,10 @@ interface ExecutionSequenceServiceInterface
     /**
      * Gets an indexed array of callables for the close_action event.
      * The index is the priority of the callable.
+     *
+     * If at least one listener calls $event->stopPropagation(), a redirection to a forbidden URL will be
+     * done (but the action was executed before in all cases).
+     *
      * @return array[callable]
      */
     public function getCloseListeners();

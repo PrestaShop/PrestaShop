@@ -63,6 +63,10 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  *      - redirection_failed    The redirection failed due to a bad parameter given or headers already sent.
  *      - forward_succeed
  *      - forward_failed
+ *      - init_action
+ *      - before_action
+ *      - after_action
+ *      - close_action
  *
  * - log            All events triggered when a log is dumped into the logger.
  *                  WARNING: this could become very slow if you listen to many log event!
