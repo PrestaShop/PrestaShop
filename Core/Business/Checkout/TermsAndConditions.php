@@ -28,7 +28,7 @@ class TermsAndConditions
                 return $match[1];
             }
 
-            $replacement = '<a target="_blank" href="' . $this->links[$index] . '">' . $match[1] . '</a>';
+            $replacement = '<a href="' . $this->links[$index] . '">' . $match[1] . '</a>';
             ++$index;
             return $replacement;
         }, $this->rawText);
