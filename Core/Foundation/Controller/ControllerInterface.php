@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
-use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;

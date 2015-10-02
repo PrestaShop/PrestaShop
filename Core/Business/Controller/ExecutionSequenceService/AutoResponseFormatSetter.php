@@ -27,7 +27,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller\ExecutionSequenceServic
 
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceWrapper;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
-use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 

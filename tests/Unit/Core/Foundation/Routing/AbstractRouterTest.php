@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FakeAbstractRouterNotAbstract extends AbstractRouter
 {
@@ -70,15 +71,15 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->calledWithResquest = $request;
     }
 
-    protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
+    protected function doRedirect($route, array $parameters, $forceLegacyUrl = false, $permanent = false)
     {
     }
 
-    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
     }
     
-    public function registerShutdownFunctionCallback(Request &$request)
+    public function registerShutdownFunctionCallback(Request $request)
     {
     }
 

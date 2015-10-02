@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\TypeaheadProductCollectionType;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\ContainsAlphanumeric;
 
 /**
  * This form class is risponsible to generate the basic product informations form

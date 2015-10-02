@@ -12,8 +12,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\ContainsAlphanumeric;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TestType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
-use PrestaShop\PrestaShop\Core\Foundation\Form\Type\DropFilesType;
 
 class TestController extends AdminController
 {

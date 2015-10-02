@@ -27,18 +27,13 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Business\Controller\AdminController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
-use PrestaShop\PrestaShop\Core\Business\Controller\AutoResponseFormatTrait;
-use PrestaShop\PrestaShop\Core\Business\Controller\SfControllerResolverTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Core\Business\Product\ModelApdapter\Product as ProductModelAdapter;
-use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;

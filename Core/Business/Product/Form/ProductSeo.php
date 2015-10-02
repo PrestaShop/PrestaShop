@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TranslateType;
 

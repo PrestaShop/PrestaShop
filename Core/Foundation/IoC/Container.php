@@ -41,8 +41,6 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
-use PrestaShop\PrestaShop\Core\Foundation\IoC\Exception;
-
 class Container
 {
     private $bindings = array();

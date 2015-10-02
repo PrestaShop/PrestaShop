@@ -27,7 +27,6 @@ namespace PrestaShop\PrestaShop\Core\Business\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Config\ConfigCacheInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
@@ -39,9 +38,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerResolver;
-use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
 
 /**
  * Second layer of the Router classes structure, to add Business specific behaviors (but common for Front/Admin).

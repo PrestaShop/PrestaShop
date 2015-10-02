@@ -26,22 +26,11 @@
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Config\ConfigCacheInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
-use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\Event;
-use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use Symfony\Component\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Core\Foundation\Log\MessageStackManager;
-use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceInterface;
 
