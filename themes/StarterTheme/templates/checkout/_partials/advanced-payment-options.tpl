@@ -36,7 +36,7 @@
 <div id="payment-confirmation">
   {if $selected_payment_option}
     {* Case for Javascript disabled *}
-    <label for="pay-with-{$option.id}">{l s='Order with an obligation to pay'}</label>
+    <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay'}</label>
   {else}
     {* Case for Javascript enabled *}
     <div class='ps-shown-by-js'>
