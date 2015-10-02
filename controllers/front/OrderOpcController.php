@@ -81,55 +81,62 @@ class OrderOpcControllerCore extends FrontController
 
         $carriers_available = array();
 
-        foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $carriers_list) {
-            foreach ($carriers_list as $carriers) {
-                if (is_array($carriers)) {
-                    foreach ($carriers as $id_carrier => $carrier) {
-                        $carrier = array_merge($carrier, $this->objectSerializer->toArray($carrier['instance']));
-                        $delay = $carrier['delay'][$this->context->language->id];
-                        unset($carrier['instance'], $carrier['delay']);
-                        $carrier['delay'] = $delay;
-                        if ($this->isFreeShipping($this->context->cart, $carrier)) {
-                            $carrier['price'] = $this->l('Free');
-                        } else {
-                            if ($include_taxes) {
-                                $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_with_tax']);
-                                if ($display_taxes_label) {
-                                    $carrier['price'] = sprintf($this->l('%s tax incl.'), $carrier['price']);
-                                }
+        if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
+            $delivery_option = $delivery_option_list[$this->context->cart->id_address_delivery];
+            foreach ($delivery_option as $carriers_list) {
+                foreach ($carriers_list as $carriers) {
+                    if (is_array($carriers)) {
+                        foreach ($carriers as $id_carrier => $carrier) {
+                            $carrier = array_merge($carrier, $this->objectSerializer->toArray($carrier['instance']));
+                            $delay = $carrier['delay'][$this->context->language->id];
+                            unset($carrier['instance'], $carrier['delay']);
+                            $carrier['delay'] = $delay;
+                            if ($this->isFreeShipping($this->context->cart, $carrier)) {
+                                $carrier['price'] = $this->l('Free');
                             } else {
-                                $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_without_tax']);
-                                if ($display_taxes_label) {
-                                    $carrier['price'] = sprintf($this->l('%s tax excl.'), $carrier['price']);
+                                if ($include_taxes) {
+                                    $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_with_tax']);
+                                    if ($display_taxes_label) {
+                                        $carrier['price'] = sprintf($this->l('%s tax incl.'), $carrier['price']);
+                                    }
+                                } else {
+                                    $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_without_tax']);
+                                    if ($display_taxes_label) {
+                                        $carrier['price'] = sprintf($this->l('%s tax excl.'), $carrier['price']);
+                                    }
                                 }
                             }
-                        }
 
-                        if (!$carrier['logo']) {
-                            $carrier['logo'] = _PS_IMG_.'404.gif';
-                        }
+                            if (!$carrier['logo']) {
+                                $carrier['logo'] = _PS_IMG_.'404.gif';
+                            }
 
-                        $carriers_available[$id_carrier.','] = $carrier;
+                            $carriers_available[$id_carrier.','] = $carrier;
+                        }
                     }
                 }
             }
-        }
 
-        $vars = [
-            'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', [
-                'delivery_option_list' => $delivery_option_list,
-                'delivery_option' => $delivery_option
-            ]),
-            'advanced_payment_api' => $this->advanced_payment_api
-        ];
+            $vars = [
+                'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', [
+                    'delivery_option_list' => $delivery_option_list,
+                    'delivery_option' => $delivery_option
+                ]),
+                'advanced_payment_api' => $this->advanced_payment_api
+            ];
 
-        Cart::addExtraCarriers($vars);
-
-        return $this->render('checkout/delivery.tpl', array_merge([
-            'carriers_available' => $carriers_available,
-            'id_address' => $this->context->cart->id_address_delivery,
+            Cart::addExtraCarriers($vars);
+            return $this->render('checkout/delivery.tpl', array_merge([
+                'carriers_available' => $carriers_available,
+                'id_address' => $this->context->cart->id_address_delivery,
                 'delivery_option' => current($delivery_option),
-        ], $vars));
+            ], $vars));
+        } else {
+            return $this->render('checkout/delivery.tpl', [
+                'HOOK_BEFORECARRIER' => null,
+                'carriers_available' => []
+            ]);
+        }
     }
 
     protected function selectDeliveryOptionAction()
