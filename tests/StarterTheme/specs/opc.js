@@ -39,18 +39,14 @@ describe('The One Page Checkout', function () {
             if (elements.value.length > 0) {
               return browser
                 .elementIdClick(elements.value[0].ELEMENT)
-                .then(function () {
-                  return browser.pause(500);
-                })
+                .pause(500)
                 .then(checkRemainingCheckboxes)
               ;
             }
           });
       }
 
-      return checkRemainingCheckboxes().then(function () {
-        return browser.waitForVisible('.payment_module');
-      });
+      return checkRemainingCheckboxes().waitForVisible('.payment_module');
     });
   });
 
@@ -78,12 +74,8 @@ describe('The One Page Checkout', function () {
 
     it('should enable the order confirmation button when all the checkboxes are checked', function () {
       return toggleAllTermsCheckboxes()
-        .then(function () {
-          return browser.click('.advanced-payment-option:first-of-type label');
-        })
-        .then(function () {
-          return browser.waitForEnabled('#payment-confirmation button');
-        })
+        .click('.advanced-payment-option:first-of-type label')
+        .waitForEnabled('#payment-confirmation button')
       ;
     });
   });
