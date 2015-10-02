@@ -82,8 +82,7 @@ class OrderOpcControllerCore extends FrontController
         $carriers_available = array();
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
-            $delivery_option = $delivery_option_list[$this->context->cart->id_address_delivery];
-            foreach ($delivery_option as $carriers_list) {
+            foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $carriers_list) {
                 foreach ($carriers_list as $carriers) {
                     if (is_array($carriers)) {
                         foreach ($carriers as $id_carrier => $carrier) {
