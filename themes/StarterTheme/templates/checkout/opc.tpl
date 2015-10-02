@@ -18,7 +18,16 @@
     {block name="content"}
 
       {block name="shopping_cart_summary_section"}
-        {* include 'checkout/_partials/shopping-cart-summary.tpl' cart=$cart *}
+        <section id="opc-cart-summary">
+          <header>
+            <h1 class="h3">{l s='Your order'}</h1>
+          </header>
+
+          {block name="shopping_cart_summary"}
+            {include 'checkout/_partials/shopping-cart-summary.tpl' cart=$cart}
+          {/block}
+
+        </section>
       {/block}
 
       {block name="opc_address_section"}
