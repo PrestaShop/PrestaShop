@@ -145,7 +145,7 @@ interface ControllerInterface
      *                                             it does not match the requirement
      * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
      */
-    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
+    public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
 
     /**
      * You can call a Controller/action directly from another Controller/action by calling this.
@@ -162,7 +162,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException If the route is not found.
      * @return string|Response The action result, after template/transformations depending on $layoutMode and $fullResponse values.
      */
-    public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
+    public function subcall($name, array $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
 
     /**
      * This method will forward the Router into another Controller/action without any redirection instruction to the browser.
@@ -178,7 +178,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException if the forward is made from a subcall action.
      * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
      */
-    public function forward(Request &$oldRequest, $routeName, $routeParameters = array());
+    public function forward(Request &$oldRequest, $routeName, array $routeParameters = array());
 
     /**
      * The redirect call take a route and its parameters, to send a redirection header to the browser.
@@ -195,7 +195,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException if the redirect is made from a subcall action.
      * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
      */
-    public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false);
+    public function redirectToRoute(Request &$oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false);
 
     /**
      * The redirect call take several values in parameter:

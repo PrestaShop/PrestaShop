@@ -202,17 +202,19 @@ abstract class BaseController implements ControllerInterface
     protected function encapsulateNudeHtml(Response &$response)
     {
         $content = $response->getContent();
-        $content = '<!DOCTYPE html>
+        $content = <<<EOT
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="robots" content="index, follow, all" />
-        <title>Carrément a voir !</title>
+        <title></title>
     </head>
     <body>
-'.$content.'
+$content
     </body>
-</html>';
+</html>
+EOT;
         $response->setContent($content);
     }
 
@@ -269,7 +271,7 @@ abstract class BaseController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::generateUrl()
      */
-    final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    final public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         return $this->getRouter()->generateUrl($name, $parameters, $forceLegacyUrl, $referenceType);
     }
@@ -277,7 +279,7 @@ abstract class BaseController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::subcall()
      */
-    final public function subcall($name, $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
+    final public function subcall($name, array $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
         return $this->getRouter()->subcall($name, $parameters, $layoutMode, $fullResponse);
     }
@@ -285,7 +287,7 @@ abstract class BaseController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::forward()
      */
-    final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
+    final public function forward(Request &$oldRequest, $routeName, array $routeParameters = array())
     {
         return $this->getRouter()->forward($oldRequest, $routeName, $routeParameters);
     }
@@ -293,7 +295,7 @@ abstract class BaseController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::redirectToRoute()
      */
-    final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
+    final public function redirectToRoute(Request &$oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
         $this->getRouter()->redirectToRoute($oldRequest, $routeName, $routeParameters, $forceLegacyUrl, $permanent);
     }

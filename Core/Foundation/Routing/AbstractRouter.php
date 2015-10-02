@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 
+use Symfony\Component\Routing\Router as SfRouter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Config\FileLocator;
@@ -171,7 +172,7 @@ abstract class AbstractRouter implements RouterInterface
      * but also adds a legacy URL generation support.
      *
      * @param string      $name             The name of the route
-     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param array       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
      * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
      *                                      You must override the method in a Controller subclass in order to use this option.
      * @param bool|string $referenceType The type of reference to be generated (one of the constants)
@@ -184,7 +185,7 @@ abstract class AbstractRouter implements RouterInterface
      *                                             it does not match the requirement
      * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
      */
-    abstract public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
+    abstract public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
 
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::dispatch()
@@ -410,11 +411,11 @@ abstract class AbstractRouter implements RouterInterface
      * This function will generate a URL and will send a redirection to it to the browser.
      *
      * @param string $route The route name
-     * @param array $parameters The route parameters
+     * @param array[string] $parameters The route parameters
      * @param boolean $forceLegacyUrl True to use alternative URL to reach legacy dispatcher.
      * @param boolean $permanent True to send 'Permanently moved' header code. False to send 'Temporary redirection' header code.
      */
-    abstract protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false);
+    abstract protected function doRedirect($route, array $parameters, $forceLegacyUrl = false, $permanent = false);
 
     /**
      * Search for setting files (routes*.yml, and others).
@@ -478,7 +479,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
         if (isset($this->sfRouter)) {
             return;
         }
-        $this->sfRouter = new \Symfony\Component\Routing\Router(
+        $this->sfRouter = new SfRouter(
             $this->routeLoader,
             (array_key_exists('/', $this->routingFiles)) ? $this->routingFiles['/'] : $this->routingFiles[array_keys($this->routingFiles)[0]],
             array('cache_dir' => $this->configurationCacheFolder.'/routing',

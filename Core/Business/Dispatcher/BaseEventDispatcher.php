@@ -113,11 +113,11 @@ final class BaseEventDispatcher extends EventDispatcher
      * to allow Hook parameters and Hook results to pass through the event object, and to return the result.
      *
      * @param string $hookName
-     * @param array $hookParameters An indexed array of parameters to send to the Hook listener.
+     * @param array[undefined] $hookParameters An indexed array of parameters to send to the Hook listener.
      * @param boolean $canBeStopped True to allow a listener to stop the event propagation (default to false, not recommended for most of hooks))
-     * @return string|array The result of the hook(s) if there is any.
+     * @return string|array[undefined] The result of the hook(s) if there is any.
      */
-    final public static function hook($hookName, $hookParameters = array(), $canBeStopped = false)
+    final public static function hook($hookName, array $hookParameters = array(), $canBeStopped = false)
     {
         $dispatcher = self::$instances['hook'];
         $event = new HookEvent();

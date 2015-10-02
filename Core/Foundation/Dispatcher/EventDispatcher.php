@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Dispatcher;
 
+use Symfony\Component\EventDispatcher\EventDispatcher as SfEventDispatcher;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
@@ -87,7 +88,7 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  * - $container->make('final:EventDispatcher/message');
  * - $container->make('final:EventDispatcher/log');
  */
-class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
+class EventDispatcher extends SfEventDispatcher
 {
     /**
      * Indexed array of dispatchers, to avoid duplicated names (and to allow Core code to access them all :))

@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Foundation\Controller;
 
+use Symfony\Component\HttpKernel\Controller\ControllerResolver as SfControllerResolver;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
@@ -36,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  *
  * We also modify response and request objects injection to allow injection by reference directly.
  */
-class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
+class ControllerResolver extends SfControllerResolver
 {
     /**
      * @var Response

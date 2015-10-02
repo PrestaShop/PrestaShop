@@ -290,9 +290,9 @@ class Response extends sfResponse
     /**
      * Set headerToolbarBtn
      *
-     * @param array $headerToolbarBtn
+     * @param array[array] $headerToolbarBtn
      */
-    public function setHeaderToolbarBtn($headerToolbarBtn)
+    public function setHeaderToolbarBtn(array $headerToolbarBtn)
     {
         $this->headerToolbarBtn = $headerToolbarBtn;
     }
@@ -300,7 +300,7 @@ class Response extends sfResponse
     /**
      * Get headerToolbarBtn
      *
-     * @return string
+     * @return array[array]
      */
     public function getHeaderToolbarBtn()
     {
@@ -352,7 +352,7 @@ class Response extends sfResponse
      *
      * @param array $js
      */
-    public function setJs($js)
+    public function setJs(array $js)
     {
         $this->js = $js;
     }
@@ -382,7 +382,7 @@ class Response extends sfResponse
      *
      * @param array $css
      */
-    public function setCss($css)
+    public function setCss(array $css)
     {
         $this->css = $css;
     }

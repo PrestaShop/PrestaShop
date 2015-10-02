@@ -139,65 +139,6 @@ abstract class Router extends AbstractRouter
         }
         self::$instantiated = true; // avoid another instance during process (from third part code).
     }
-    
-    /**
-     * Because getTraits() from ReflectionClass does not return traits from ancestors classes, we must use recursive scan.
-     *
-     * @param \ReflectionClass $class The class to scan
-     * @return array:ReflectionClass All traits from the givben class, even from the ancestors classes.
-     */
-    final private function getAllTraits(\ReflectionClass $class)
-    {
-        $traits = array();
-        
-        $classes = array($class);
-        $parent = $class;
-        while ($parent = $parent->getParentClass()) {
-            $classes[] = $parent;
-        }
-
-        foreach (array_reverse($classes) as $c) {
-            foreach ($c->getTraits() as $trait) {
-                $traits[$trait->name] = $trait; // unicity check :) Children prior
-            }
-        }
-        return array_values($traits);
-    }
-
-    /**
-     * Check and filter trait methods. The result will be put in cache.
-     *
-     * @param array:\ReflectioClass $allTraits The traits used in the controller
-     * @param string $startsWith Filter methods names that starts with this parameter.
-     * @throws DevelopmentErrorException If a method is not compliant (parameters)
-     * @return array:string Methods names that matches the filter and belongs to the controller.
-     */
-    final private function filterTraits($allTraits, $startsWith)
-    {
-        $traitFunctions = array();
-        foreach ($allTraits as $trait) {
-            $methods = $trait->getMethods(\ReflectionMethod::IS_PUBLIC);
-            foreach ($methods as $method) {
-                $parameters = $method->getParameters();
-                if (count($parameters) < 2) {
-                    throw new DevelopmentErrorException('A trait method should always accept at least 2 parameters (&$request, &$response). The Trait method '
-                        .$method->name.' wants '.$method->getNumberOfParameters());
-                }
-                if (!$parameters[0]->isPassedByReference() || !$parameters[1]->isPassedByReference()) {
-                    throw new DevelopmentErrorException('A trait method should always accept both first parameters by reference only (&$request, &$response).');
-                }
-                for ($i = 2; $i < count($parameters); $i++) {
-                    if (!$parameters[$i]->isDefaultValueAvailable()) {
-                        throw new DevelopmentErrorException('A trait method can accept more than 2 parameters for specific cases, but always optional & with default values.');
-                    }
-                }
-                if (strpos($method->name, $startsWith) === 0) {
-                    $traitFunctions[] = $method->name;
-                }
-            }
-        }
-        return $traitFunctions;
-    }
 
     /**
      * Will find the finally used controller.
@@ -408,7 +349,7 @@ abstract class Router extends AbstractRouter
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::generateUrl()
      */
-    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         if ($forceLegacyUrl == true) {
             // This feature is made in AdminController and FrontController subclasses only.
@@ -438,7 +379,7 @@ abstract class Router extends AbstractRouter
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doRedirect()
      */
-    final protected function doRedirect($route, $parameters, $forceLegacyUrl = false, $permanent = false)
+    final protected function doRedirect($route, array $parameters, $forceLegacyUrl = false, $permanent = false)
     {
         $url = $this->generateUrl($route, $parameters, $forceLegacyUrl, UrlGeneratorInterface::ABSOLUTE_URL);
         $this->routingDispatcher->dispatch('redirection_sent', new BaseEvent($url));

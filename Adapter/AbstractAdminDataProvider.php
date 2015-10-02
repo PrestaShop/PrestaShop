@@ -42,7 +42,7 @@ abstract class AbstractAdminDataProvider
     const FILTERING_EQUAL_NUMERIC = '= %s';
     const FILTERING_EQUAL_STRING = '= \'%s\'';
 
-    final private function compileSqlWhere($whereArray)
+    final private function compileSqlWhere(array $whereArray)
     {
         $operator = 'AND';
         $s = array();
@@ -66,10 +66,50 @@ abstract class AbstractAdminDataProvider
      *
      * @see AdminProductDataProvider::getCatalogProductList() for an example.
      *
-     * @param array $select
-     * @param array $table
-     * @param array $where
-     * @param array $order
+     * Format example for $table:
+     *   $table = array(
+     *      'p' => 'product',                 // First table: a simple name
+     *      'pl' => array(                    // Next: arrays to set join properly
+     *          'table' => 'product_lang',
+     *          'join' => 'LEFT JOIN',
+     *          'on' => 'pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.$idLang.' AND pl.`id_shop` = '.$idShop
+     *      ),
+     *      'sav' => array(
+     *          'table' => 'stock_available',
+     *          'join' => 'LEFT JOIN',
+     *          'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0'
+     *      ),
+     *      ...
+     *   );
+     *
+     * Format example for $select:
+     *   $select = array(
+     *      'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
+     *      'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
+     *      ...
+     *   );
+     *
+     * Format example for $where:
+     *   $where = array(
+     *       'AND',                      // optional if AND, mandatory if OR.
+     *       1,                          // First condition: let 1 here if there is no condition, then "WHERE 1;" will work better than "WHERE ;"
+     *       array('OR', '2', '3'),
+     *       array(
+     *           'AND',
+     *           array('OR', '4', '5'),
+     *           array('6', '7')
+     *       )
+     *   );
+     * In the WHERE, it's up to you to build each condition string. You can use the 'filtering' data in the $select array to help you:
+     * $where[] = $select[$field]['table'].'.`'.$select[$field]['field'].'` '.sprintf($select[$field]['filtering'], $filterValue);
+     *
+     * Format example for $order:
+     * $order = array('name ASC', 'id_product DESC');
+     *
+     * @param array[array[mixed]] $select
+     * @param array[mixed] $table
+     * @param array[mixed] $where
+     * @param array[string] $order
      * @param string $limit
      * @throws DevelopmentErrorException if SQL elements cannot be joined.
      * @return string The SQL query ready to be executed.

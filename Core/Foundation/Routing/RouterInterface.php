@@ -63,7 +63,7 @@ interface RouterInterface
      * In the other case, the application Container should contains a service called 'Routing' in which you can call the same method.
      *
      * @param string      $name             The name of the route
-     * @param mixed       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
+     * @param array       $parameters       An array of parameters (to use in route matching, or to add as GET values if $forceLegacyUrl is True)
      * @param bool        $forceLegacyUrl   True to use alternative URL to reach another dispatcher.
      *                                      You must override the method in a Controller subclass in order to use this option.
      * @param bool|string $referenceType The type of reference to be generated (one of the constants)
@@ -76,7 +76,7 @@ interface RouterInterface
      *                                             it does not match the requirement
      * @throws DevelopmentErrorException           If $forceLegacyUrl True, without proper method override.
      */
-    public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
+    public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL);
 
     /**
      * Dispatcher entry point. Called in entry point files (index.php).

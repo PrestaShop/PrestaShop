@@ -74,7 +74,7 @@ class HookEvent extends BaseEvent
      * If you set a string here, then the appendHookResult() will concat elements in a string
      * instead of adding element in the default array.
      *
-     * @param string|array $result
+     * @param string|array[undefined] $result
      */
     final public function setHookResult($result)
     {
@@ -87,7 +87,7 @@ class HookEvent extends BaseEvent
      * This will complete the result if it's an array (by default), or will concat if it's a string.
      * If the $append is already an array, its content will be merged into the result's event. Else it will be appended.
      *
-     * @param string|array $append
+     * @param string|array[undefined] $append
      */
     final public function appendHookResult($append)
     {
@@ -101,7 +101,7 @@ class HookEvent extends BaseEvent
     /**
      * Gets the Hook results. Most of the time in an array, but can be a concatened string in specific cases.
      *
-     * @return string|array
+     * @return string|array[undefined]
      */
     final public function getHookResult()
     {
@@ -113,9 +113,9 @@ class HookEvent extends BaseEvent
      *
      * The listener will retreive these parameters if needed.
      *
-     * @param array $parameters
+     * @param array[undefined] $parameters
      */
-    final public function setHookParameters($parameters)
+    final public function setHookParameters(array $parameters)
     {
         $this->parameters = $parameters;
     }
@@ -123,9 +123,9 @@ class HookEvent extends BaseEvent
     /**
      * Append parameters in the existing indexed array by merging arrays.
      *
-     * @param array $append
+     * @param array[undefined] $append
      */
-    final public function appendHookParameters($append)
+    final public function appendHookParameters(array $append)
     {
         $this->parameters = array_merge($this->parameters, (array)$append);
     }
@@ -144,7 +144,7 @@ class HookEvent extends BaseEvent
     /**
      * Gets the hook parameters as an indexed array.
      *
-     * @return array An indexed array with Hook parameters.
+     * @return array[undefined] An indexed array with Hook parameters.
      */
     final public function getHookParameters()
     {

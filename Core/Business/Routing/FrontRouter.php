@@ -70,7 +70,7 @@ class FrontRouter extends Router
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Business\Routing\Router::generateUrl()
      */
-    final public function generateUrl($name, $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
+    final public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         if (($routeParams = $this->getRouteParameters($name)) &&
             ($defaultParams = $routeParams->getDefaults()) &&

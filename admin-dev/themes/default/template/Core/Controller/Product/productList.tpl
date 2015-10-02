@@ -1,6 +1,6 @@
 <tbody>
     {foreach key=rowid item=product from=$products}
-        <tr uniturl="{$product.unit_action_url}" productid="{$product.id_product}">
+        <tr uniturl="{$product.unit_action_url|default:'#'}" productid="{$product.id_product}">
             <td class="checkbox-column">
                 <input type="checkbox" name="bulk_action_selected_products[]" value="{$product.id_product}" />
             </td>
@@ -8,28 +8,28 @@
                 {$product.id_product}
             </td>
             <td>
-                [im#{$product.id_image}]
+                [im#{$product.id_image|default:''}]
             </td>
             <td>
-                <a href="{$product.url}">{$product.name}</a>
+                <a href="{$product.url|default:'#'}">{$product.name|default:'???'}</a>
             </td>
             <td>
-                {$product.reference}
+                {$product.reference|default:'???'}
             </td>
             <td>
-                {$product.name_category}
+                {$product.name_category|default:''}
             </td>
             <td>
-                {$product.price}
+                {$product.price|default:'???'}
             </td>
             <td>
-                {$product.price_final}
+                {$product.price_final|default:'???'}
             </td>
-            <td class="product-sav-quantity" productquantityvalue="{$product.sav_quantity}">
-                {$product.sav_quantity}
+            <td class="product-sav-quantity" productquantityvalue="{$product.sav_quantity|default:''}">
+                {$product.sav_quantity|default:'???'}
             </td>
             <td>
-                {$product.active}
+                {$product.active|default:0}
             </td>
             {if isset($product.position)}
                 <td>
@@ -44,7 +44,7 @@
                     {include file="../Admin/dropdown_menu.tpl"
                         button_id="product_list_id_"|cat:$product.id_product|cat:"_menu"
                         default_item=[
-                            "href" => $product.url,
+                            "href" => $product.url|default:'#',
                             "icon" => "icon-pencil",
                             "label" => {l s="Edit"}
                         ]

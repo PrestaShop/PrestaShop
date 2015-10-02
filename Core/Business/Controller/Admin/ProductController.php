@@ -99,8 +99,11 @@ class ProductController extends AdminController
 
         // Retrieve persisted filter parameters
         $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
+        // get old values from persistence (before the current update)
         $persistedFilterParameters = $dataProvider->getPersistedFilterParameters('ls_products_');
+        // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
+        // calling addContentData with null key to insert many values at once.
         $response->addContentData(null, $persistedFilterParameters);
 
         // Get Product list from productListAction subcall (this will update filter params in persistence)
@@ -213,7 +216,7 @@ class ProductController extends AdminController
         $totalCount = 0;
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
-            $totalCount = $product['total'];
+            $totalCount = isset($product['total'])? $product['total'] : $totalCount;
             $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
         }
 

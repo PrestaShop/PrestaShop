@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2015 PrestaShop
  *
@@ -24,7 +23,10 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
+use PrestaShop\PrestaShop\Core\Business\Context as NewContext;
+use \Context as OldContext;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -41,7 +43,7 @@ class Adapter_LegacyContext
      */
     public function getContext()
     {
-        $legacyContext = \Context::getContext();
+        $legacyContext = OldContext::getContext();
         if (!isset($legacyContext->shop) ||
             !isset($legacyContext->language) ||
             !isset($legacyContext->link)
@@ -54,9 +56,9 @@ class Adapter_LegacyContext
     /**
      * Will merge the legacy Context values inside the new Context object.
      *
-     * @param PrestaShop\PrestaShop\Core\Business\Context $newContext
+     * @param NewContext $newContext
      */
-    public function mergeContextWithLegacy(PrestaShop\PrestaShop\Core\Business\Context &$newContext)
+    public function mergeContextWithLegacy(NewContext &$newContext)
     {
         $legacyContext = $this->getContext();
 
@@ -91,12 +93,12 @@ class Adapter_LegacyContext
      *
      * @param string $controller the controller name
      * @param string $withToken
-     * @param array $extraParams
+     * @param array[string] $extraParams
      * @return string
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = \Context::getContext()->language->id;
+        $id_lang = OldContext::getContext()->language->id;
         $params = $extraParams;
         if ($withToken) {
             $params['token'] = \Tools::getAdminTokenLite($controller);
@@ -124,6 +126,6 @@ class Adapter_LegacyContext
      */
     public function setupLegacyTranslationContext($legacyController = 'AdminTab')
     {
-        \Context::getContext()->override_controller_name_for_translations = $legacyController;
+        OldContext::getContext()->override_controller_name_for_translations = $legacyController;
     }
 }

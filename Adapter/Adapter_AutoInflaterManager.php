@@ -41,7 +41,10 @@ class Adapter_AutoInflaterManager
     private $context;
 
     /**
-     * Constructor. Keeps the context
+     * Constructor.
+     *
+     * Keeps the context.
+     *
      * @param Context $context The Context, given from IoC
      */
     public function __construct(Context $context)
@@ -93,9 +96,9 @@ class Adapter_AutoInflaterManager
      *
      * @param string $className
      * @param string $method
-     * @param array $parameters The route attributes
-     * @param array $queryParameters The GETS parameters
-     * @param array $requestParameters The POSTs parameters
+     * @param array[string] $parameters The route attributes
+     * @param array[string] $queryParameters The GETS parameters
+     * @param array[string] $requestParameters The POSTs parameters
      * @return boolean|object|NULL False if conditions are not satisfied (calssName not found, mandatory params mmissing). Null if the ID is not in the DB.
      */
     public function inflateCollection($className, $method, $parameters, $queryParameters, $requestParameters)

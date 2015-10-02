@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use Symfony\Component\Form\Form;
 
 /**
  * Base class for all Admin controllers.
@@ -158,5 +160,52 @@ class AdminController extends BaseController
         $response->addJs(_PS_JS_DIR_.'Core/Admin/Navigator.js');
 
         return true; // success.
+    }
+
+    /**
+     * This function returns form errors for JS implementation
+     *
+     * Parse all errors mapped by id html field
+     *
+     * @param Form $form The form
+     * @return array[array[string]] Errors
+     */
+    final protected function getFormErrorsForJS(Form $form)
+    {
+        $errors = [];
+
+        if (empty($form)) {
+            return $errors;
+        }
+
+        $translator = new TwigTranslationExtension(new Translator(''), $this->container);
+
+        foreach ($form->getErrors(true) as $error) {
+            if (!$error->getCause()) {
+                $form_id = 'bubbling_errors';
+            } else {
+                $form_id = str_replace(
+                    ['.', 'children[', ']', '_data'],
+                    ['_', '', '', ''],
+                    $error->getCause()->getPropertyPath()
+                );
+            }
+
+            if ($error->getMessagePluralization()) {
+                $errors[$form_id][] = $translator->transchoice(
+                    $error->getMessageTemplate(),
+                    $error->getMessagePluralization(),
+                    $error->getMessageParameters(),
+                    'form_error'
+                );
+            } else {
+                $errors[$form_id][] = $translator->trans(
+                    $error->getMessageTemplate(),
+                    $error->getMessageParameters(),
+                    'form_error'
+                );
+            }
+        }
+        return $errors;
     }
 }

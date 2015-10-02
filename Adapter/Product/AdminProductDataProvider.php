@@ -43,7 +43,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      * Will retrieve set of parameters from persistence, for product filters.
      *
      * @param string $prefix
-     * @return array
+     * @return array[string] The old filter parameters values
      */
     public function getPersistedFilterParameters($prefix = '')
     {
@@ -93,8 +93,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     /**
      * Will persist set of parameters for product filters.
      *
-     * @param array $parameters
-     * @return array
+     * @param array[string] $parameters
      */
     public function persistFilterParameters(array $parameters)
     {
@@ -146,8 +145,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
     /**
      * Combines new filter values with old ones (persisted), then persists the combination and returns it.
      *
-     * @param array $paramsIn New filter params values to take into acount. If not given, the method will simply return persisted values.
-     * @return array The new filter params values
+     * @param array[string]|null $paramsIn New filter params values to take into acount. If not given, the method will simply return persisted values.
+     * @return array[string] The new filter params values
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array())
     {
@@ -169,8 +168,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
      * @param integer $limit
      * @param string $orderBy Field name to sort during SQL query
      * @param string $orderWay 'asc' or 'desc'
-     * @param array $post filter params values to take into acount (often comes from POST data).
-     * @return array A list of products, as a collection of legacy Product objects.
+     * @param array[string] $post filter params values to take into acount (often comes from POST data).
+     * @return array[array[mixed]] A list of products, as an array of arrays of raw data.
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $post = array())
     {
@@ -244,16 +243,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
                 'on' => 'pd.`id_product` = p.`id_product`'
             )
         );
-        $sqlWhere = array(
-             'AND', // opt
-             1,
-//             array('OR', '2', '3'),
-//             array(
-//                 'AND', // opt
-//                 array('OR', '4', '5'),
-//                 array('6', '7')
-//             )
-        );
+        $sqlWhere = array('AND', 1);
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
@@ -304,7 +294,6 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
 
         // post treatment
         global $container;
-        
         foreach ($products as &$product) {
             $product['price'] = \Tools::displayPrice($product['price']);
             $product['total'] = $total; // total product count (filtered)
@@ -347,15 +336,14 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         $products = \Db::getInstance()->executeS($sql, true, false);
         $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];
-
         return $total;
     }
 
     /**
      * Translates new Core route parameters into their Legacy equivalent.
      *
-     * @param array $coreParameters The new Core route parameters
-     * @return array The URL parameters for Legacy URL (GETs)
+     * @param array[string] $coreParameters The new Core route parameters
+     * @return array[string] The URL parameters for Legacy URL (GETs)
      */
     public function mapLegacyParametersProductForm($coreParameters = array())
     {

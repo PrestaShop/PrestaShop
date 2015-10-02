@@ -63,13 +63,7 @@ class UrlGenerator
             $legacyParameters = $parameters;
         }
 
-//         switch ($referenceType) {
-//             case UrlGeneratorInterface::ABSOLUTE_URL:
-//                 return $basePath.$link->getAdminLink($legacyPath);
-//             case UrlGeneratorInterface::ABSOLUTE_PATH:
-//             default:
-           return $basePath.$legacyContext->getAdminLink($legacyPath, true, $legacyParameters);
-//         }
+        return $basePath.$legacyContext->getAdminLink($legacyPath, true, $legacyParameters);
     }
 
     /**
