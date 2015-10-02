@@ -31,7 +31,9 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Adapter\Translator;
+use Symfony\Component\Translation\Translator as SfTranslator;
 use Symfony\Component\Form\Form;
+use PrestaShop\PrestaShop\Core\Foundation\Twig\Extension\TranslationExtension as TwigTranslationExtension;
 
 /**
  * Base class for all Admin controllers.
@@ -177,7 +179,7 @@ class AdminController extends BaseController
             return $errors;
         }
 
-        $translator = new TwigTranslationExtension(new Translator(''), $this->container);
+        $translator = new TwigTranslationExtension(new SfTranslator(''), $this->container);
 
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
