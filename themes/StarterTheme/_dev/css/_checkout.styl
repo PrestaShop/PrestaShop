@@ -1,0 +1,61 @@
+#conditions-to-approve
+  margin-top small-padding
+  ul
+    margin 0
+    padding 0
+    list-style none
+    li
+      padding 2*small-padding
+      background-color background-color
+      border-bottom 1px solid border-color
+      margin-bottom small-padding
+      width 50%
+      label
+        cursor pointer
+  button
+    padding small-padding
+    margin small-padding
+
+.advanced-payment-options
+  max-width 50%
+
+.advanced-payment-option
+  border-bottom 1px solid border-color
+  padding-left 2*small-padding
+  margin-top small-padding
+  background-color background-color
+  label
+    cursor pointer
+  label span
+    text-align center
+    margin 2*small-padding
+.advanced-payment-option, .advanced-payment-option label
+  display flex
+  flex-direction row
+  align-items center
+.advanced-payment-option label
+  flex-grow 1
+  span
+    flex-grow 1
+#payment-confirmation
+  button, label
+    margin small-padding
+    display inline-block
+    cursor pointer
+    padding 3*small-padding
+    margin-top 3*small-padding
+    background-color cta-background-color
+    border 1px solid cta-color
+    color cta-color
+    &:disabled
+      background-color disabled-cta-background-color
+      cursor default
+.advanced-payment-options
+  .warning
+    color orange
+.selected-payment-option, [name="select_payment_option"]
+  min-width 80px
+.selected-payment-option
+  background-color cta-background-color
+  border 1px solid cta-color
+  color cta-color
