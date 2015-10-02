@@ -65,8 +65,16 @@ class OrderOpcControllerCore extends FrontController
 
     protected function renderDeliveryOptions()
     {
+        if (Tools::getValue('delivery_option')) {
+            $this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
+
+            if (!$this->context->cart->update()) {
+                return false;
+            }
+        }
+
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
-        $delivery_option = $this->context->cart->getDeliveryOption(null, false);
+        $delivery_option = $this->context->cart->getDeliveryOption(null, false, false);
         $include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX');
         $display_taxes_label = ((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value);
         $pricePresenter = new Adapter_PricePresenter();
@@ -92,7 +100,7 @@ class OrderOpcControllerCore extends FrontController
                             } else {
                                 $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_without_tax']);
                                 if ($display_taxes_label) {
-                                    $carrier['price'] = sprintf($this->l('%s tax excl.'),  $carrier['price']);
+                                    $carrier['price'] = sprintf($this->l('%s tax excl.'), $carrier['price']);
                                 }
                             }
                         }
@@ -101,7 +109,7 @@ class OrderOpcControllerCore extends FrontController
                             $carrier['logo'] = _PS_IMG_.'404.gif';
                         }
 
-                        $carriers_available[$id_carrier] = $carrier;
+                        $carriers_available[$id_carrier.','] = $carrier;
                     }
                 }
             }
@@ -119,7 +127,14 @@ class OrderOpcControllerCore extends FrontController
 
         return $this->render('checkout/delivery.tpl', array_merge([
             'carriers_available' => $carriers_available,
+            'id_address' => $this->context->cart->id_address_delivery,
+                'delivery_option' => current($delivery_option),
         ], $vars));
+    }
+
+    protected function selectDeliveryOptionAction()
+    {
+        return $this->renderDeliveryOptions();
     }
 
     protected function isFreeShipping($cart, array $carrier)
@@ -145,7 +160,7 @@ class OrderOpcControllerCore extends FrontController
         $all_conditions_approved = $this->checkWhetherAllConditionsAreApproved();
 
         if ($this->advanced_payment_api) {
-            $payment_options = Hook::exec('advancedPaymentOptions');
+            $payment_options = (new Adapter_AdvancedPaymentOptionsConverter)->getPaymentOptionsForTemplate();
             $selected_payment_option = Tools::getValue('select_payment_option');
             if ($selected_payment_option) {
                 $all_conditions_approved = true;
