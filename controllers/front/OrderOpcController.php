@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Checkout\TermsAndConditions;
+
 class OrderOpcControllerCore extends FrontController
 {
     public $php_self = 'order-opc';
@@ -38,14 +40,27 @@ class OrderOpcControllerCore extends FrontController
 
     private function getConditionsToApprove()
     {
-        return [
-            'terms-and-conditions' => $this->l(
-                'I have read and agree to the terms and conditions.'
-            ),
-            'right-of-withdrawal' => $this->l(
-                'I have been informed about and agree with the conditions of exercise of my right of withdrawal for this order.'
+        $cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+        $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool)Configuration::get('PS_SSL_ENABLED'));
+
+        $termsAndConditions = new TermsAndConditions;
+        $termsAndConditions
+            ->setText(
+                $this->l('I agree to the [terms of service] and will adhere to them unconditionally.'),
+                $link
             )
-        ];
+            ->setIdentifier('terms-and-conditions')
+        ;
+
+        $allConditions = Hook::exec('termsAndConditions', [], null, true);
+        if (!is_array($allConditions)) {
+            $allConditions = [];
+        }
+
+        array_unshift($allConditions, $termsAndConditions);
+
+        // TODO StarterTheme : currently we don't handle opening the link inside a modal.
+        return TermsAndConditions::formatForTemplate($allConditions);
     }
 
     protected function renderDeliveryOptions()
