@@ -294,7 +294,6 @@ class DispatcherCore
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
                         if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php'))
                             include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/controllers/front'.'/'.$this->controller.'.php');
-                        include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
 
                         $controller_class = $module_name.$this->controller.'ModuleFrontController';
 
