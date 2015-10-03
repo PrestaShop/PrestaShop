@@ -936,6 +936,10 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             // If the object has not been loaded in multilanguage, then the value is the one for the current language of the object
             if (!is_array($values)) {
                 $values = array($this->id_lang => $values);
+                $id_lang_default = Configuration::get('PS_LANG_DEFAULT');
+                if ($this->id_lang != $id_lang_default) {
+                        $values[$id_lang_default] = $this->getFieldByLang($field, $id_lang_default);
+                }
             }
 
             // The value for the default must always be set, so we put an empty string if it does not exists
