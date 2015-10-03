@@ -26,16 +26,16 @@
 
 class Adapter_AddressForm
 {
-    private $country;
+    private $address_formatter;
     private $translator;
     private $ordered_address_fields = [];
     private $required_fields = [];
 
-    public function __construct(Country $country, Adapter_Translator $translator)
+    public function __construct(Adapter_AddressFormatter $address_formatter, Adapter_Translator $translator)
     {
-        $this->country = $country;
+        $this->address_formatter = $address_formatter;
         $this->translator = $translator;
-        $this->required_fields = AddressFormat::getFieldsRequired();
+        $this->required_fields = $this->address_formatter->getRequired();
     }
 
     public function getAddressFormat()
@@ -46,7 +46,7 @@ class Adapter_AddressForm
 
     protected function setOrderedFields()
     {
-        $ordered = AddressFormat::getOrderedAddressFields($this->country->id, true, true);
+        $ordered = $this->address_formatter->getFormat();
         $ordered = array_unique(array_merge(['alias'], $ordered, $this->required_fields));
 
         $ordered_address_fields = [];
@@ -60,7 +60,7 @@ class Adapter_AddressForm
 
     protected function addRequired()
     {
-        $required = AddressFormat::getFieldsRequired();
+        $required = $this->address_formatter->getRequired();
         foreach ($this->ordered_address_fields as $field => $null) {
             $this->ordered_address_fields[$field]['required'] = in_array($field, $required);
         }
