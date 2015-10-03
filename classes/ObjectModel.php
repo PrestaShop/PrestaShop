@@ -899,7 +899,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 continue;
             }
 
-            if (is_array($this->update_fields) && empty($this->update_fields[$field])) {
+            if (is_array($this->update_fields) && empty($this->update_fields[$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']) {
                 continue;
             }
 

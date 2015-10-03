@@ -67,15 +67,6 @@
 {/foreach}
 {if isset($maxchar)}
 <script type="text/javascript">
-function countDown($source, $target) {
-	var max = $source.attr("data-maxchar");
-	$target.html(max-$source.val().length);
-
-	$source.keyup(function(){
-		$target.html(max-$source.val().length);
-	});
-}
-
 $(document).ready(function(){
 {foreach from=$languages item=language}
 	countDown($("#{$input_name}_{$language.id_lang}"), $("#{$input_name}_{$language.id_lang}_counter"));
