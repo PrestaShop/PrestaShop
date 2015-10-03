@@ -263,8 +263,9 @@ class AddressControllerCore extends FrontController
 
         $back = Tools::getValue('back');
         $mod = Tools::getValue('mod');
-        $addressForm = new Adapter_AddressForm(
-            new Country(is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country),
+        $address_formatter = new Adapter_AddressFormatter(new Country(is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country));
+        $address_form = new Adapter_AddressForm(
+            $address_formatter,
             new Adapter_Translator()
         );
 
@@ -277,7 +278,7 @@ class AddressControllerCore extends FrontController
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
             'countries' => $countries,
-            'address_fields' => $addressForm->getAddressFormat(),
+            'address_fields' => $address_form->getAddressFormat(),
             'back' => Tools::safeOutput($back),
             'mod' => Tools::safeOutput($mod),
         ));
