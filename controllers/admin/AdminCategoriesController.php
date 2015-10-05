@@ -939,8 +939,6 @@ class AdminCategoriesControllerCore extends AdminController
         $category = new Category($id_category_to_move);
         if (Validate::isLoadedObject($category)) {
             if (isset($position) && $category->updatePosition($way, $position)) {
-                Hook::exec('actionCategoryUpdate');
-
                 /* Position '0' was not found in given positions so try to reorder parent category*/
                 if (!$found_first) {
                     $category->cleanPositions((int)$category->id_parent);

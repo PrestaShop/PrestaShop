@@ -111,6 +111,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'tmpTableFilter' => true,
                 'maxlength' => 40,
             ),
+            'private' => array(
+                'title' => $this->l('Private'),
+                'type' => 'select',
+                'filter_key' => 'private',
+                'align' => 'center',
+                'cast' => 'intval',
+                'callback' => 'printOptinIcon',
+                'list' => array(
+                    '0' => $this->l('No'),
+                    '1' => $this->l('Yes')
+                )
+            ),
             'date_upd' => array(
                 'title' => $this->l('Last message'),
                 'havingFilter' => true,
@@ -227,7 +239,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `'._DB_PREFIX_.'customer_message` cm2
@@ -282,6 +294,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         parent::initToolbar();
         unset($this->toolbar_btn['new']);
+    }
+
+    public function printOptinIcon($value, $customer)
+    {
+        return ($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>');
     }
 
     public function postProcess()
@@ -705,7 +722,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $product = new Product((int)$message['id_product'], false, $this->context->language->id);
             $link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$product->id;
 
-            $content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+            $content = '';
+            if (!$message['private']) {
+                $content .= $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+            }
             if (Validate::isLoadedObject($product)) {
                 $content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
             }
@@ -1061,11 +1081,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = nl2br($message);
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        $cm->message = $message;
-
-                        if (!Validate::isCleanHtml($message)) {
+                        if (empty($message) || !Validate::isCleanHtml($message)) {
                             $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
                         } else {
+                            $cm->message = $message;
                             $cm->add();
                         }
                     }

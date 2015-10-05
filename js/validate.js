@@ -56,7 +56,7 @@ var unicode_hack = (function() {
 
 	/* Gets a regex written in a dialect that supports unicode categories and
 	   translates it to a dialect supported by JavaScript. */
-	return function(regexpString, classes) 
+	return function(regexpString, classes)
 	{
 		var modifiers = "";
 		if ( regexpString instanceof RegExp ) {
@@ -122,7 +122,7 @@ function validate_isPostCode(s, pattern, iso_code)
 	if (typeof iso_code === 'undefined' || iso_code == '')
 		iso_code = '[A-Z]{2}';
 	if (typeof(pattern) == 'undefined' || pattern.length == 0)
-		pattern = '[a-z 0-9-]+';
+		pattern = '[a-zA-Z 0-9-]+';
 	else
 	{
 		var replacements = {
@@ -167,7 +167,7 @@ function validate_isDniLite(s)
 function validate_isEmail(s)
 {
 	var reg = unicode_hack(/^[a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z\p{L}0-9]+$/i, false);
-	return reg.test(s);	
+	return reg.test(s);
 }
 
 function validate_isPasswd(s)

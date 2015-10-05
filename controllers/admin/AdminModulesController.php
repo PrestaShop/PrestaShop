@@ -307,6 +307,7 @@ class AdminModulesControllerCore extends AdminController
 			'currentIndex' => self::$currentIndex,
 			'tab_modules_list' => $modules_list_sort,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
+            'lang_iso' => $this->context->language->iso_code
 		));
 
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {

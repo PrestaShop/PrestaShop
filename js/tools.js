@@ -637,6 +637,19 @@ function sleep(milliseconds)
 	}
 }
 
+function getStorageAvailable() {
+	test = 'foo';
+	storage =  window.localStorage || window.sessionStorage;
+	try {
+		storage.setItem(test, test);
+		storage.removeItem(test);
+		return storage;
+	}
+	catch (error) {
+		return null;
+	}
+}
+
 $(document).ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit

@@ -258,7 +258,7 @@ class SmartyCustomCore extends Smarty
             $compile_id = md5($compile_id);
         }
         $sql .= ',"'.pSQL((string)$compile_id).'"';
-        $sql .= ',"'.date('Y-m-d H:i:s').'")';
+        $sql .= ', FROM_UNIXTIME('.time().'))';
 
         return Db::getInstance()->execute($sql, false);
     }

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <entity_stock_mvt_reason>
   <stock_mvt_reason id="Increase">
-    <name>Increase</name>
+    <name>Zvýšení</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Decrease">
-    <name>Decrease</name>
+    <name>Snížení</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Customer_Order">
     <name>Customer Order</name>
@@ -22,6 +22,6 @@
     <name>Transfer from another warehouse</name>
   </stock_mvt_reason>
   <stock_mvt_reason id="Supply_Order">
-    <name>Supply Order</name>
+    <name>Objednávky dodavatelům</name>
   </stock_mvt_reason>
 </entity_stock_mvt_reason>

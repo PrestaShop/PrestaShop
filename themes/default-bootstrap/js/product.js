@@ -35,15 +35,15 @@ var firstTime = true;
 if (typeof customizationFields !== 'undefined' && customizationFields)
 {
 	var customizationFieldsBk = customizationFields;
-    customizationFields = [];
+	customizationFields = [];
 	var j = 0;
 	for (var i = 0; i < customizationFieldsBk.length; ++i)
 	{
 		var key = 'pictures_' + parseInt(id_product) + '_' + parseInt(customizationFieldsBk[i]['id_customization_field']);
-        customizationFields[i] = [];
-        customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
-        customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
-    }
+		customizationFields[i] = [];
+		customizationFields[i][0] = (parseInt(customizationFieldsBk[i]['type']) == 0) ? 'img' + i : 'textField' + j++;
+		customizationFields[i][1] = (parseInt(customizationFieldsBk[i]['type']) == 0 && customizationFieldsBk[i][key]) ? 2 : parseInt(customizationFieldsBk[i]['required']);
+	}
 }
 
 if (typeof combinationImages !== 'undefined' && combinationImages)
@@ -51,34 +51,35 @@ if (typeof combinationImages !== 'undefined' && combinationImages)
 	combinationImagesJS = [];
 	combinationImagesJS[0] = [];
 	var k = 0;
-    for (var i in combinationImages)
+	for (var i in combinationImages)
 	{
 		combinationImagesJS[i] = [];
-        for (var j in combinationImages[i])
-        {
-            var id_image = parseInt(combinationImages[i][j]['id_image']);
-         	if (id_image)
-            {
+		for (var j in combinationImages[i])
+		{
+			var id_image = parseInt(combinationImages[i][j]['id_image']);
+			if (id_image)
+			{
 				combinationImagesJS[0][k++] = id_image;
 				combinationImagesJS[i][j] = [];
 				combinationImagesJS[i][j] = id_image;
-            }
-        }
+			}
+		}
 	}
 
-    if (typeof combinationImagesJS[0] !== 'undefined' && combinationImagesJS[0])
-    {
-       var array_values = [];
-       for (var key in arrayUnique(combinationImagesJS[0]))
-           array_values.push(combinationImagesJS[0][key]);
-       combinationImagesJS[0] = array_values;
-    }
+	if (typeof combinationImagesJS[0] !== 'undefined' && combinationImagesJS[0])
+	{
+	   var array_values = [];
+	   for (var key in arrayUnique(combinationImagesJS[0]))
+		   array_values.push(combinationImagesJS[0][key]);
+	   combinationImagesJS[0] = array_values;
+	}
 	combinationImages = combinationImagesJS;
 }
 
 if (typeof combinations !== 'undefined' && combinations)
 {
 	combinationsJS = [];
+	combinationsHashSet = {};
 	var k = 0;
 	for (var i in combinations)
 	{
@@ -105,12 +106,15 @@ if (typeof combinations !== 'undefined' && combinations)
 
 		combinationsJS[k]['reduction_type'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['reduction_type']) ? combinations[i]['specific_price']['reduction_type'] : '';
 		combinationsJS[k]['id_product_attribute'] = (combinations[i]['specific_price'] && combinations[i]['specific_price']['id_product_attribute']) ? combinations[i]['specific_price']['id_product_attribute'] : 0;
+
+		var key = combinationsJS[k]['idsAttributes'].sort().join('-');
+		combinationsHashSet[key] = combinationsJS[k];
+
 		k++;
 	}
 	combinations = combinationsJS;
 }
 /* */
-
 $(document).ready(function()
 {
 	var url_found = checkUrl();
@@ -165,17 +169,19 @@ $(document).ready(function()
 		});
 
 	}
-	if (typeof(contentOnly) != 'undefined' && !contentOnly)
+	if (typeof(contentOnly) != 'undefined')
 	{
-		if (!!$.prototype.fancybox)
+		if (!contentOnly && !!$.prototype.fancybox) {
 			$('li:visible .fancybox, .fancybox.shown').fancybox({
 				'hideOnContentClick': true,
-				'openEffect'	: 'elastic',
-				'closeEffect'	: 'elastic'
+				'openEffect'    : 'elastic',
+				'closeEffect'   : 'elastic'
 			});
+		}
+		else if (contentOnly) {
+			$('#buy_block').attr('target', '_top');
+		}
 	}
-	else if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
-		$('#buy_block').attr('target', '_top');
 
 	if ($('#bxslider li').length && !!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
@@ -254,13 +260,11 @@ $(document).on('click', '.color_pick', function(e){
 
 $(document).on('change', '.attribute_select', function(e){
 	e.preventDefault();
-	findCombination();
 	getProductAttribute();
 });
 
 $(document).on('click', '.attribute_radio', function(e){
 	e.preventDefault();
-	findCombination();
 	getProductAttribute();
 });
 
@@ -301,27 +305,27 @@ if (typeof(contentOnly) != 'undefined' && contentOnly)
 
 // The button to increment the product value
 $(document).on('click', '.product_quantity_up', function(e){
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name='+fieldName+']').val());
+	e.preventDefault();
+	fieldName = $(this).data('field-qty');
+	var currentVal = parseInt($('input[name='+fieldName+']').val());
 	if (!allowBuyWhenOutOfStock && quantityAvailable > 0)
 		quantityAvailableT = quantityAvailable;
 	else
 		quantityAvailableT = 100000000;
-    if (!isNaN(currentVal) && currentVal < quantityAvailableT)
-        $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
-    else
-        $('input[name='+fieldName+']').val(quantityAvailableT);
+	if (!isNaN(currentVal) && currentVal < quantityAvailableT)
+		$('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
+	else
+		$('input[name='+fieldName+']').val(quantityAvailableT);
 });
  // The button to decrement the product value
 $(document).on('click', '.product_quantity_down', function(e){
-    e.preventDefault();
-    fieldName = $(this).data('field-qty');
-    var currentVal = parseInt($('input[name='+fieldName+']').val());
-    if (!isNaN(currentVal) && currentVal > 1)
-        $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
-    else
-        $('input[name='+fieldName+']').val(1);
+	e.preventDefault();
+	fieldName = $(this).data('field-qty');
+	var currentVal = parseInt($('input[name='+fieldName+']').val());
+	if (!isNaN(currentVal) && currentVal > 1)
+		$('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
+	else
+		$('input[name='+fieldName+']').val(1);
 });
 
 if (typeof minimalQuantity != 'undefined' && minimalQuantity)
@@ -334,11 +338,11 @@ if (typeof minimalQuantity != 'undefined' && minimalQuantity)
 
 function arrayUnique(a)
 {
-    return a.reduce(function(p, c){
-        if (p.indexOf(c) < 0)
+	return a.reduce(function(p, c){
+		if (p.indexOf(c) < 0)
 			p.push(c);
-        return p;
-    }, []);
+		return p;
+	}, []);
 };
 
 //check if a function exists
@@ -400,67 +404,56 @@ function findCombination()
 		choice.push(parseInt($(this).val()));
 	});
 
-	if (typeof combinations == 'undefined' || !combinations)
-		combinations = [];
-	//testing every combination to find the conbination's attributes' case of the user
-	for (var combination = 0; combination < combinations.length; ++combination)
+	//verify if this combinaison is the same that the user's choice
+	var combination = combinationsHashSet[choice.sort().join('-')];
+
+	if (combination)
 	{
-		//verify if this combinaison is the same that the user's choice
-		var combinationMatchForm = true;
-		$.each(combinations[combination]['idsAttributes'], function(key, value)
+		if (combination['minimal_quantity'] > 1)
 		{
-			if (!in_array(parseInt(value), choice))
-				combinationMatchForm = false;
-		});
-
-		if (combinationMatchForm)
-		{
-			if (combinations[combination]['minimal_quantity'] > 1)
-			{
-				$('#minimal_quantity_label').html(combinations[combination]['minimal_quantity']);
-				$('#minimal_quantity_wanted_p').fadeIn();
-				$('#quantity_wanted').val(combinations[combination]['minimal_quantity']);
-				$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combinations[combination]['minimal_quantity']);});
-			}
-			//combination of the user has been found in our specifications of combinations (created in back office)
-			selectedCombination['unavailable'] = false;
-			selectedCombination['reference'] = combinations[combination]['reference'];
-			$('#idCombination').val(combinations[combination]['idCombination']);
-
-			//get the data of product with these attributes
-			quantityAvailable = combinations[combination]['quantity'];
-			selectedCombination['price'] = combinations[combination]['price'];
-			selectedCombination['unit_price'] = combinations[combination]['unit_price'];
-			selectedCombination['specific_price'] = combinations[combination]['specific_price'];
-			if (combinations[combination]['ecotax'])
-				selectedCombination['ecotax'] = combinations[combination]['ecotax'];
-			else
-				selectedCombination['ecotax'] = default_eco_tax;
-
-			//show the large image in relation to the selected combination
-			if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-				displayImage($('#thumb_' + combinations[combination]['image']).parent());
-
-			//show discounts values according to the selected combination
-			if (combinations[combination]['idCombination'] && combinations[combination]['idCombination'] > 0)
-				displayDiscounts(combinations[combination]['idCombination']);
-
-			//get available_date for combination product
-			selectedCombination['available_date'] = combinations[combination]['available_date'];
-
-			//update the display
-			updateDisplay();
-
-			if (firstTime)
-			{
-				refreshProductImages(0);
-				firstTime = false;
-			}
-			else
-				refreshProductImages(combinations[combination]['idCombination']);
-			//leave the function because combination has been found
-			return;
+			$('#minimal_quantity_label').html(combination['minimal_quantity']);
+			$('#minimal_quantity_wanted_p').fadeIn();
+			$('#quantity_wanted').val(combination['minimal_quantity']);
+			$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combination['minimal_quantity']);});
 		}
+		//combination of the user has been found in our specifications of combinations (created in back office)
+		selectedCombination['unavailable'] = false;
+		selectedCombination['reference'] = combination['reference'];
+		$('#idCombination').val(combination['idCombination']);
+
+		//get the data of product with these attributes
+		quantityAvailable = combination['quantity'];
+		selectedCombination['price'] = combination['price'];
+		selectedCombination['unit_price'] = combination['unit_price'];
+		selectedCombination['specific_price'] = combination['specific_price'];
+		if (combination['ecotax'])
+			selectedCombination['ecotax'] = combination['ecotax'];
+		else
+			selectedCombination['ecotax'] = default_eco_tax;
+
+		//show the large image in relation to the selected combination
+		if (combination['image'] && combination['image'] != -1)
+			displayImage($('#thumb_' + combination['image']).parent());
+
+		//show discounts values according to the selected combination
+		if (combination['idCombination'] && combination['idCombination'] > 0)
+			displayDiscounts(combination['idCombination']);
+
+		//get available_date for combination product
+		selectedCombination['available_date'] = combination['available_date'];
+
+		//update the display
+		updateDisplay();
+
+		if (firstTime)
+		{
+			refreshProductImages(0);
+			firstTime = false;
+		}
+		else
+			refreshProductImages(combination['idCombination']);
+		//leave the function because combination has been found
+		return;
 	}
 
 	//this combination doesn't exist (not created in back office)
@@ -954,27 +947,11 @@ function refreshProductImages(id_product_attribute)
 			choice.push(parseInt($(this).val()));
 		});
 
-		if (typeof combinations == 'undefined' || !combinations)
-			combinations = [];
-
-		//testing every combination to find the conbination's attributes' case of the user
-		for (var combination = 0; combination < combinations.length; ++combination)
-		{
-			//verify if this combinaison is the same that the user's choice
-			var combinationMatchForm = true;
-
-			$.each(combinations[combination]['idsAttributes'], function(key, value)
-			{
-				if (!in_array(parseInt(value), choice))
-					combinationMatchForm = false;
-			});
-
-			if (combinationMatchForm)
-			{
-				//show the large image in relation to the selected combination
-				if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
-					displayImage($('#thumb_' + combinations[combination]['image']).parent());
-			}
+		var combination = combinationsHashSet[choice.sort().join('-')];
+		if(combination) {
+			//show the large image in relation to the selected combination
+			if (combination['image'] && combination['image'] != -1)
+				displayImage($('#thumb_' + combination['image']).parent());
 		}
 	}
 

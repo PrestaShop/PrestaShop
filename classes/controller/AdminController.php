@@ -788,8 +788,10 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        if (isset($this->className) && $this->className) 
-        	$definition = ObjectModel::getDefinition($this->className);
+
+        if (isset($this->className) && $this->className) {
+            $definition = ObjectModel::getDefinition($this->className);
+        }
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */
@@ -888,6 +890,10 @@ class AdminControllerCore extends Controller
                 // Process list filtering
                 if ($this->filter && $this->action != 'reset_filters') {
                     $this->processFilter();
+                }
+
+                if ((int)Tools::getValue('submitFilter'.$this->list_id) || Tools::isSubmit('submitReset'.$this->list_id)) {
+                    $this->setRedirectAfter(self::$currentIndex.'&token='.$this->token);
                 }
 
                 // If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -1644,10 +1650,6 @@ class AdminControllerCore extends Controller
             return $this->fields_list[$filter];
         }
         return false;
-    }
-
-    public function displayNoSmarty()
-    {
     }
 
     /**
