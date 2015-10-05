@@ -11,6 +11,7 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockmyaccount"},
     {"type": "vcs", "url": "https://github.com/prestashop/bankwire"}
   ],
   "require": {
@@ -46,6 +47,7 @@
     "prestashop/blocklayered": "dev-master",
     "prestashop/blocklink": "dev-master",
     "prestashop/blockmanufacturer": "dev-master",
+    "prestashop/blockmyaccount": "dev-feat/starter-theme",
     "prestashop/blockmyaccountfooter": "dev-master",
     "prestashop/blocknewproducts": "dev-master",
     "prestashop/blocknewsletter": "dev-master",
