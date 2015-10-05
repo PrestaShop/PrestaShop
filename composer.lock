@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "16ef5a7eacc8ea4d06b659c5fec564ca",
+    "hash": "b939a39e52d75c6d4316a576029e928c",
     "packages": [
         {
             "name": "composer/installers",
@@ -1313,23 +1313,22 @@
         },
         {
             "name": "prestashop/bankwire",
-            "version": "dev-master",
+            "version": "dev-feat/starter-theme",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/bankwire.git",
-                "reference": "d4df9efe228440e7f7bad213cb0575a7652af8b9"
+                "reference": "7e7df440892cf433aef203e92222b134d947c524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/bankwire/zipball/d4df9efe228440e7f7bad213cb0575a7652af8b9",
-                "reference": "d4df9efe228440e7f7bad213cb0575a7652af8b9",
+                "url": "https://api.github.com/repos/PrestaShop/bankwire/zipball/7e7df440892cf433aef203e92222b134d947c524",
+                "reference": "7e7df440892cf433aef203e92222b134d947c524",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -1341,7 +1340,10 @@
             ],
             "description": "PrestaShop module bankwire",
             "homepage": "https://github.com/PrestaShop/bankwire",
-            "time": "2015-08-28 15:02:12"
+            "support": {
+                "source": "https://github.com/PrestaShop/bankwire/tree/feat/starter-theme"
+            },
+            "time": "2015-10-05 10:30:09"
         },
         {
             "name": "prestashop/blockadvertising",
