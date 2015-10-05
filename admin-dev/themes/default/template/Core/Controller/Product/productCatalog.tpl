@@ -162,8 +162,8 @@
                     
                 <div style="display: inline; margin-left: 2em;">
                     <span id="bulk_edition_toolbar" style="display: none;">
-                        <input type="button" class="btn" onclick="bulkProductAction(this, 'quantity_edition');" value="{l s="Save & refresh"}" />
-                        <input type="submit" class="btn btn-primary" onclick="bulkProductAction(this, 'quantity_edition_next');" value="{l s="Save & next page"}" />
+                        <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{l s="Save & refresh"}" />
+                        <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{l s="Save & next page"}" />
                         <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{l s="Cancel"}" />
                     </span>
                 </div>

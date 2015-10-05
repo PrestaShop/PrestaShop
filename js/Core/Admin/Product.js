@@ -100,20 +100,47 @@ function productColumnFilterReset(tr) {
 
 function bulkProductAction(element, action) {
 	var form = $('form#product_catalog_list');
-	if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
-		return false;
+	var postUrl = '';
+	var redirectUrl = '';
+
+	switch (action) {
+		// these cases needs checkboxes to be checked.
+		case 'activate_all':
+		case 'deactivate_all':
+		case 'delete_all':
+			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+				return false;
+			}
+			var urlHandler = $(element).closest('[bulkurl]');
+			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+			redirectUrl = urlHandler.attr('redirecturl');
+			break;
+		// this case will brings to the next page
+		case 'edition_next':
+			alert('+1 page !');
+			// TODO: add 1 page at offset for redirection (go to next page in redirecturl)
+		// this case will post inline edition command
+		case 'edition':
+			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
+			alert(editionAction);
+			// TODO: specific work here: submit form with another URL (different than bulkurl...
+			break;
+		// unknown cases...
+		default:
+			return false;
 	}
 
-	// save action URL for redirection and update to post to bulk action instead
-	// using form action URL allow to get route attributes and stay on the same page & ordering.
-	var urlHandler = $(element).closest('[bulkurl]');
-	var redirectionInput = $('<input>')
-		.attr('type', 'hidden')
-		.attr('name', 'redirect_url').val(urlHandler.attr('redirecturl'));
-	form.append($(redirectionInput));
-	var url = urlHandler.attr('bulkurl').replace(/activate_all/, action);
-	form.attr('action', url);
-	form.submit();
+	if (postUrl != '' && redirectUrl != '') {
+		// save action URL for redirection and update to post to bulk action instead
+		// using form action URL allow to get route attributes and stay on the same page & ordering.
+		var redirectionInput = $('<input>')
+			.attr('type', 'hidden')
+			.attr('name', 'redirect_url').val(redirectUrl);
+		form.append($(redirectionInput));
+		form.attr('action', url);
+		form.submit();
+	}
+	return false;
 }
 
 function unitProductAction(element, action) {
@@ -145,11 +172,16 @@ function bulkProductEdition(element, action) {
 				$quantity = $(this).attr('productquantityvalue');
 				$product_id = $(this).closest('tr[productid]').attr('productid');
 				$input = $('<input>').attr('type', 'text').attr('name', 'bulk_action_edit_quantity['+$product_id+']')
-					.attr('tabindex', i++).val($quantity);
+					.attr('tabindex', i++)
+					.attr('onkeydown', 'if (event.keyCode == 13) return bulkProductAction(this, "edition_next"); if (event.keyCode == 27) return bulkProductEdition(this, "cancel");')
+					.val($quantity);
 				$(this).html($input);
 				
 			});
-			// TODO !12: complete process for POSTING data (have a submit action when press ENTER, post action url, etc...)
+			$('#bulk_edition_toolbar input:submit').attr('tabindex', i++);
+			$('#bulk_edition_toolbar input:button').attr('tabindex', i++);
+			$('#bulk_edition_toolbar input:submit').attr('editionaction', action);
+
 			$('td.product-sav-quantity input', form).first().focus();
 			break;
 		case 'cancel':
@@ -158,6 +190,7 @@ function bulkProductEdition(element, action) {
 				$(this).html($(this).attr('productquantityvalue'));
 			});
 
+			$('#bulk_edition_toolbar input:submit').removeAttr('editionaction');
 			$('#bulk_edition_toolbar').hide();
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
 			break;

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Translator;
 use Symfony\Component\Translation\Translator as SfTranslator;
 use Symfony\Component\Form\Form;
 use PrestaShop\PrestaShop\Core\Foundation\Twig\Extension\TranslationExtension as TwigTranslationExtension;
+use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
 
 /**
  * Base class for all Admin controllers.
@@ -77,10 +78,13 @@ class AdminController extends BaseController
      */
     protected function encapsulateLayout(Response &$response)
     {
+        // Use smarty to render messages
+        $smartyEngine = new ViewFactory($this->container);
+
         // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
         $warningBlock = '';
         if (count($warnings = $this->dequeueAllWarnings()) > 0) {
-            $warningBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/system_messages.tpl', array(
+            $warningBlock = $smartyEngine->view->fetch('Core/system_messages.tpl', array(
                 'exceptions' => $warnings,
                 'color' => 'orange'
             ));
@@ -88,13 +92,13 @@ class AdminController extends BaseController
         // Display notices and success messages
         $noticeBlock = '';
         if (count($infos = $this->dequeueAllInfos()) > 0) {
-            $noticeBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
+            $noticeBlock = $smartyEngine->view->fetch('Core/user_messages.tpl', array(
                 'messages' => $infos,
                 'color' => 'blue'
             ));
         }
         if (count($successes = $this->dequeueAllSuccesses()) > 0) {
-            $noticeBlock .= $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
+            $noticeBlock .= $smartyEngine->view->fetch('Core/user_messages.tpl', array(
                 'messages' => $successes,
                 'color' => 'green'
             ));

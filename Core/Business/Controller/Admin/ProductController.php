@@ -324,15 +324,15 @@ class ProductController extends AdminController
             switch ($action) {
                 case 'activate_all':
                     $success = $updater->activateProductIdList($productIdList);
-                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully activated.'));
+                    $this->enqueueMessage($this->container->make('Translator')->trans('Product(s) successfully activated.'), true);
                     break;
                 case 'deactivate_all':
                     $success = $updater->activateProductIdList($productIdList, false);
-                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully deactivated.'));
+                    $this->enqueueMessage($this->container->make('Translator')->trans('Product(s) successfully deactivated.'), true);
                     break;
                 case 'delete_all':
                     $success = $updater->deleteProductIdList($productIdList);
-                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product(s) successfully deleted.'));
+                    $this->enqueueMessage($this->container->make('Translator')->trans('Product(s) successfully deleted.'), true);
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
@@ -363,12 +363,13 @@ class ProductController extends AdminController
             switch ($action) {
                 case 'delete':
                     $success = $updater->deleteProduct($product);
-                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully deleted.'));
+                    $this->enqueueMessage($this->container->make('Translator')->trans('Product successfully deleted.'), true);
                     break;
                 case 'duplicate':
-                    // TODO !11: call duplicate on this product, and redirect to the edition page of the duplicate (not the original!)
-                    $this->getSuccessIterator()->enqueue($this->container->make('Translator')->trans('Product successfully duplicated.'));
-                    break;
+                    $duplicateProductId = $updater->duplicateProduct($product);
+                    $this->enqueueMessage($this->container->make('Translator')->trans('Product successfully duplicated.'), true);
+                    // stops here and redirect to the new product's page.
+                    $this->redirectToRoute($request, 'admin_product_form', array('id_product' => $duplicateProductId), false, false);
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     throw new DevelopmentErrorException('Bad action received from call to ProductController::unitAction.');
