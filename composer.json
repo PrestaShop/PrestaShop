@@ -7,7 +7,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blocklanguages"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"},
+    {"type": "vcs", "url": "https://github.com/prestashop/bankwire"}
   ],
   "require": {
     "composer/installers": "~1.0",
@@ -15,7 +16,7 @@
     "icanboogie/cldr": "1.3.9",
     "curl/curl": "^1.2",
     "ircmaxell/password-compat": "1.0.*",
-    "prestashop/bankwire": "dev-master",
+    "prestashop/bankwire": "dev-feat/starter-theme",
     "prestashop/blockadvertising": "dev-master",
     "prestashop/blockbanner": "dev-feat/starter-theme",
     "prestashop/blockbestsellers": "dev-master",
