@@ -67,10 +67,12 @@ class OrderOpcControllerCore extends FrontController
     {
         if (Tools::getValue('delivery_option')) {
             $this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
+        } else {
+            $this->setDefaultCarrierSelection();
+        }
 
-            if (!$this->context->cart->update()) {
-                return false;
-            }
+        if (!$this->context->cart->update()) {
+            return false;
         }
 
         $delivery_option_list = $this->context->cart->getDeliveryOptionList();
@@ -135,6 +137,13 @@ class OrderOpcControllerCore extends FrontController
                 'HOOK_BEFORECARRIER' => null,
                 'carriers_available' => []
             ]);
+        }
+    }
+
+    protected function setDefaultCarrierSelection()
+    {
+        if (!$this->context->cart->getDeliveryOption(null, true)) {
+            $this->context->cart->setDeliveryOption($this->context->cart->getDeliveryOption());
         }
     }
 
