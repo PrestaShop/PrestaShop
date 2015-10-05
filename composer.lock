@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e81fe696cf1dac6e94a87aac0072bee8",
+    "hash": "11e970c021d669481e62effe8a25912b",
     "packages": [
         {
             "name": "composer/installers",
@@ -1892,38 +1892,6 @@
                 "source": "https://github.com/PrestaShop/blockmyaccount/tree/feat/starter-theme"
             },
             "time": "2015-10-06 08:56:45"
-        },
-        {
-            "name": "prestashop/blockmyaccountfooter",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/blockmyaccountfooter.git",
-                "reference": "b44308af98ceb7881d030432f79937109dbb3b12"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockmyaccountfooter/zipball/b44308af98ceb7881d030432f79937109dbb3b12",
-                "reference": "b44308af98ceb7881d030432f79937109dbb3b12",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "prestashop-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module blockmyaccountfooter",
-            "homepage": "https://github.com/PrestaShop/blockmyaccountfooter",
-            "time": "2015-08-28 15:04:30"
         },
         {
             "name": "prestashop/blocknewproducts",
@@ -7205,7 +7173,6 @@
         "prestashop/blocklink": 20,
         "prestashop/blockmanufacturer": 20,
         "prestashop/blockmyaccount": 20,
-        "prestashop/blockmyaccountfooter": 20,
         "prestashop/blocknewproducts": 20,
         "prestashop/blocknewsletter": 20,
         "prestashop/blockpaymentlogo": 20,
