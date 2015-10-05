@@ -25,7 +25,7 @@
  */
 
 /**
- * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
+ * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, etc.
  * @since 1.5.0
  */
 abstract class ControllerCore
@@ -522,11 +522,6 @@ abstract class ControllerCore
         $html = trim($html);
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
-            $live_edit_content = '';
-            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
-                $live_edit_content = $this->getLiveEditFooter();
-            }
-
             $dom_available = extension_loaded('dom') ? true : false;
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
@@ -546,7 +541,7 @@ abstract class ControllerCore
             if ($defer) {
                 echo $html.$javascript;
             } else {
-                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+                echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
             }
         } else {
             echo $html;

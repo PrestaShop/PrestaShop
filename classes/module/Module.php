@@ -874,15 +874,12 @@ abstract class ModuleCore
             Hook::exec('actionModuleRegisterHookBefore', array('object' => $this, 'hook_name' => $hook_name));
             // Get hook id
             $id_hook = Hook::getIdByName($hook_name);
-            $live_edit = Hook::getLiveEditById((int)Hook::getIdByName($hook_name_bak));
 
             // If hook does not exist, we create it
             if (!$id_hook) {
                 $new_hook = new Hook();
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
-                $new_hook->live_edit = (bool)preg_match('/^display/i', $new_hook->name);
-                $new_hook->position = (bool)$new_hook->live_edit;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
                 if (!$id_hook) {
@@ -2266,7 +2263,7 @@ abstract class ModuleCore
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
             return Tools::displayError('No template found for module').' '.basename($file, '.php');
         } else {
-            if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
+            if (Tools::getIsset('live_configurator_token')) {
                 $cache_id = null;
             }
 
@@ -2350,7 +2347,7 @@ abstract class ModuleCore
 
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
-        if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
+        if (Tools::getIsset('live_configurator_token')) {
             return false;
         }
         Tools::enableCache();
