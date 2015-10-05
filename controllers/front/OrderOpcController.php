@@ -84,35 +84,42 @@ class OrderOpcControllerCore extends FrontController
         $carriers_available = array();
 
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
-            foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $carriers_list) {
+            foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
                 foreach ($carriers_list as $carriers) {
                     if (is_array($carriers)) {
-                        foreach ($carriers as $id_carrier => $carrier) {
+                        foreach ($carriers as $carrier) {
                             $carrier = array_merge($carrier, $this->objectSerializer->toArray($carrier['instance']));
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
-                            if ($this->isFreeShipping($this->context->cart, $carrier)) {
+                            if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->l('Free');
                             } else {
                                 if ($include_taxes) {
-                                    $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_with_tax']);
+                                    $carrier['price'] = $pricePresenter->convertAndFormat($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf($this->l('%s tax incl.'), $carrier['price']);
                                     }
                                 } else {
-                                    $carrier['price'] = $pricePresenter->convertAndFormat($carrier['price_without_tax']);
+                                    $carrier['price'] = $pricePresenter->convertAndFormat($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = sprintf($this->l('%s tax excl.'), $carrier['price']);
                                     }
                                 }
                             }
 
+                            if (count($carriers) > 1) {
+                                $carrier['label'] = $carrier['price'];
+                                $carrier['logo'] = _PS_IMG_.'404.gif';
+                            } else {
+                                $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
+                            }
+
                             if (!$carrier['logo']) {
                                 $carrier['logo'] = _PS_IMG_.'404.gif';
                             }
 
-                            $carriers_available[$id_carrier.','] = $carrier;
+                            $carriers_available[$id_carriers_list] = $carrier;
                         }
                     }
                 }
