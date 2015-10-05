@@ -166,6 +166,7 @@ class ProductInformation extends AbstractType
             'choices' =>  $this->tax_rules,
             'required' => true,
             'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
+            'data' => $this->productAdapter->getIdTaxRulesGroup()
         ))
         ->add('price_ttc', 'number', array(
             'required' => false,

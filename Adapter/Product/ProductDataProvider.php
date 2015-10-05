@@ -54,4 +54,15 @@ class ProductDataProvider
 
         return new \Product($id_product, $full, $id_lang, $id_shop, $context);
     }
+
+    /**
+     * Get default taxe rate product
+     *
+     * @return int id tax rule group
+     */
+    public function getIdTaxRulesGroup()
+    {
+        $product = new \Product();
+        return $product->getIdTaxRulesGroup();
+    }
 }
