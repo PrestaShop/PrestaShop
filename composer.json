@@ -9,7 +9,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blocklanguages"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"},
+    {"type": "vcs", "url": "https://github.com/prestashop/bankwire"}
   ],
   "require": {
     "php": ">=5.4",
@@ -27,7 +28,7 @@
     "curl/curl": "1.2.1",
     "ircmaxell/password-compat": "1.0.4",
     "prestashop/smarty": "dev-master",
-    "prestashop/bankwire": "dev-master",
+    "prestashop/bankwire": "dev-feat/starter-theme",
     "prestashop/blockadvertising": "dev-master",
     "prestashop/blockbanner": "dev-feat/starter-theme",
     "prestashop/blockbestsellers": "dev-master",
