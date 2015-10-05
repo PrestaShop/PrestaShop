@@ -69,7 +69,7 @@ class Core_Business_ContainerBuilder
         $container->bind('Core_Business_ConfigurationInterface', 'Adapter_Configuration', true);
         $container->bind('Core_Foundation_Database_DatabaseInterface', 'Adapter_Database', true);
         
-        $messageStackManager = new MessageStackManager();
+        $messageStackManager = new MessageStackManager($container->make('Core_Business_ConfigurationInterface'));
         $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', $messageStackManager, true);
         $container->bind('MessageStack', $messageStackManager, true);
 
@@ -84,11 +84,7 @@ class Core_Business_ContainerBuilder
         $container->aliasNamespace('CoreFoundation', 'PrestaShop\\PrestaShop\\Core\\Foundation');
         $container->aliasNamespace('CoreAdapter', 'PrestaShop\\PrestaShop\\Adapter');
 
-        // No ConfigurationInterface, neither DB (mocked)
-
-        $messageStackManager = new MessageStackManager();
-        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', $messageStackManager, true);
-        $container->bind('MessageStack', $messageStackManager, true);
+        // No ConfigurationInterface, neither DB, neigther MessageStackManager (mocked)
 
         return $container;
     }

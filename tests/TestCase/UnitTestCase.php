@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Tests\Fake\FakeMessageStackManager;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
      * @var Db
      */
     public $database;
+
+    /**
+     * @var Adapter_Configuration
+     */
+    public $configuration;
 
     /**
      * @var Cache
@@ -90,6 +96,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
             'Core_Business_ConfigurationInterface',
             $fakeConfiguration
         );
+        
+        $messageStackManager = new FakeMessageStackManager($fakeConfiguration);
+        $this->container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Log\\MessageStackManager', $messageStackManager, true);
+        $this->container->bind('MessageStack', $messageStackManager, true);
+        
         return $fakeConfiguration;
     }
 

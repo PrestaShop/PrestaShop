@@ -79,23 +79,23 @@ class AdminController extends BaseController
     {
         // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
         $warningBlock = '';
-        if ($this->getWarningIterator() && $this->getWarningIterator()->count()) {
+        if (count($warnings = $this->dequeueAllWarnings()) > 0) {
             $warningBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/system_messages.tpl', array(
-                'exceptions' => $this->getWarningIterator(),
+                'exceptions' => $warnings,
                 'color' => 'orange'
             ));
         }
         // Display notices and success messages
         $noticeBlock = '';
-        if ($this->getInfoIterator() && $this->getInfoIterator()->count()) {
+        if (count($infos = $this->dequeueAllInfos()) > 0) {
             $noticeBlock = $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
-                'messages' => $this->getInfoIterator(),
+                'messages' => $infos,
                 'color' => 'blue'
             ));
         }
-        if ($this->getSuccessIterator() && $this->getSuccessIterator()->count()) {
+        if (count($successes = $this->dequeueAllSuccesses()) > 0) {
             $noticeBlock .= $response->getTemplateEngine($this->container)->view->fetch('Core/user_messages.tpl', array(
-                'messages' => $this->getSuccessIterator(),
+                'messages' => $successes,
                 'color' => 'green'
             ));
         }

@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 /**
  * First layer of common implementation for controllers.
@@ -227,35 +228,47 @@ EOT;
     abstract protected function encapsulateLayout(Response &$response);
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getErrorIterator()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::dequeueAllErrors()
      */
-    final public function getErrorIterator()
+    final public function dequeueAllErrors()
     {
-        return $this->container->make('MessageStack')->getErrorIterator();
+        return $this->container->make('MessageStack')->dequeueAllErrors();
     }
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getWarningIterator()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::dequeueAllWarnings()
      */
-    final public function getWarningIterator()
+    final public function dequeueAllWarnings()
     {
-        return $this->container->make('MessageStack')->getWarningIterator();
+        return $this->container->make('MessageStack')->dequeueAllWarnings();
     }
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getInfoIterator()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::dequeueAllInfos()
      */
-    final public function getInfoIterator()
+    final public function dequeueAllInfos()
     {
-        return $this->container->make('MessageStack')->getInfoIterator();
+        return $this->container->make('MessageStack')->dequeueAllInfos();
     }
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getSuccessIterator()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::dequeueAllSuccesses()
      */
-    final public function getSuccessIterator()
+    final public function dequeueAllSuccesses()
     {
-        return $this->container->make('MessageStack')->getSuccessIterator();
+        return $this->container->make('MessageStack')->dequeueAllSuccesses();
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::enqueueMessage()
+     */
+    final public function enqueueMessage($message, $isSuccess = false)
+    {
+        $messageManagerDispatcher = $this->container->make('final:EventDispatcher/message');
+        if (!$messageManagerDispatcher) {
+            throw new DevelopmentErrorException('Cannot enqueue a message before the message manager is ready.');
+        }
+        $messageManagerDispatcher->dispatch($isSuccess?'success_message':'info_message', new BaseEvent($message));
     }
 
     /* (non-PHPdoc)

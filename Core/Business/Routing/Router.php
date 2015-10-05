@@ -121,6 +121,9 @@ abstract class Router extends AbstractRouter
             // Exception dispatching handling
             \Core_Foundation_Exception_Exception::setMessageDispatcher($this->container->make('final:EventDispatcher/message'));
 
+            // Restore MessageStack values from persistence
+            $this->container->make('MessageStack')->restoreQueues();
+
             // Translator service init
             $translator = new Translator($this->container->make('CoreBusiness:Context'));
             $this->container->bind(get_class($translator), $translator, true);

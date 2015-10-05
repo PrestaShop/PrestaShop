@@ -68,6 +68,7 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
  *      - before_action
  *      - after_action
  *      - close_action
+ *      - shutdown
  *
  * - log            All events triggered when a log is dumped into the logger.
  *                  WARNING: this could become very slow if you listen to many log event!

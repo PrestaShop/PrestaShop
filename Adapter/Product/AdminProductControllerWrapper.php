@@ -23,7 +23,6 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use AdminProductsControllerCore;
@@ -33,6 +32,11 @@ use AdminProductsControllerCore;
  */
 class AdminProductControllerWrapper
 {
+    /**
+     * TODO: Luke, your PHPDoc please...
+     *
+     * @return \AdminProductsControllerCore
+     */
     public function get()
     {
         return new AdminProductsControllerCore();

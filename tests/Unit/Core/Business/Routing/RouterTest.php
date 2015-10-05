@@ -41,38 +41,7 @@ use PrestaShop\PrestaShop\Core\Business\Context;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\BaseEventDispatcher;
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-
-class FakeRouter extends Router
-{
-    public function __construct(Container $container)
-    {
-        parent::__construct($container, 'fake_test_routes(_(.*))?\.yml');
-    }
-    public $calledcheckControllerAuthority = null;
-    protected function checkControllerAuthority(\ReflectionClass $class)
-    {
-        $this->calledcheckControllerAuthority = $class->name;
-        if ($class->name == 'PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\RouterTestControllerError') {
-            throw new \ErrorException('FakeControllerError stops!');
-        }
-        if ($class->name == 'PrestaShop\\PrestaShop\\Tests\\RouterTest\\Test\\RouterTestControllerWarning') {
-            throw new WarningException('FakeControllerWarning does not stop!', 'alternateText');
-        }
-    }
-
-    public static $calledExitNow = false;
-    public function exitNow($i = 0)
-    {
-        self::$calledExitNow = true;
-    }
-}
-
-class FakeControllerError extends FrontController
-{
-}
-class FakeControllerWarning extends FrontController
-{
-}
+use PrestaShop\PrestaShop\Tests\Fake\FakeRouter;
 
 class Fake_Adapter_HookManager extends \Adapter_HookManager
 {
@@ -96,13 +65,6 @@ class RouterTest extends UnitTestCase
         $fakeRoot = dirname(dirname(dirname(dirname(__DIR__)))); // to tests folder
         $this->assertEquals('tests', substr($fakeRoot, -5));
 
-        $this->setConfiguration(array(
-            '_PS_ROOT_DIR_' => $fakeRoot,
-            '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
-            '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
-            '_PS_MODE_DEV_' => true
-        ));
-
         // Router instance clean
         $routerClass = new \ReflectionClass('PrestaShop\\PrestaShop\\Core\\Business\\Routing\\Router');
         $instantiated = $routerClass->getProperty('instantiated');
@@ -114,6 +76,13 @@ class RouterTest extends UnitTestCase
         $instances = $dispatcherClass->getProperty('instances');
         $instances->setAccessible(true);
         $instances->setValue(null, array());
+
+        $this->setConfiguration(array(
+            '_PS_ROOT_DIR_' => $fakeRoot,
+            '_PS_CACHE_DIR_' => $fakeRoot.'/cache/',
+            '_PS_MODULE_DIR_' => $fakeRoot.'/resources/module/',
+            '_PS_MODE_DEV_' => true
+        ));
     }
 
     private $warningReceived = false;

@@ -83,38 +83,46 @@ interface ControllerInterface
 
     /**
      * Get error(s) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager->getErrorIterator()
+     * This is a wrapper method for MessageStackManager->dequeueAllErrors()
      *
      * @return SplQueue The Error queue to dequeue messages.
      */
-    public function getErrorIterator();
+    public function dequeueAllErrors();
 
     /**
      * get warning(s) to the controller, to be displayed in the screen.
      * This warnings are generally important malfunction of the software that must
      * be fixed. But these warnings will not throw an error and stop execution to let the user
      * fix settings in the admin interface.
-     * This is a wrapper method for MessageStackManager->getWarningIterator()
+     * This is a wrapper method for MessageStackManager->dequeueAllWarnings()
      *
      * @return SplQueue The Warning queue to dequeue messages.
      */
-    public function getWarningIterator();
+    public function dequeueAllWarnings();
 
     /**
      * Get info(s) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager->getInfoIterator()
+     * This is a wrapper method for MessageStackManager->dequeueAllInfos()
      *
      * @return SplQueue The Info queue to dequeue messages.
      */
-    public function getInfoIterator();
+    public function dequeueAllInfos();
 
     /**
      * Get success(es) to the controller, to be displayed in the screen.
-     * This is a wrapper method for MessageStackManager->getSuccessIterator()
+     * This is a wrapper method for MessageStackManager->dequeueAllSuccesses()
      *
      * @return SplQueue The Success queue to dequeue messages.
      */
-    public function getSuccessIterator();
+    public function dequeueAllSuccesses();
+
+    /**
+     * Enqueues a message in the Info message stack (or Success message stack), to be displayed on the next rendered HTML layout.
+     *
+     * @param string $message The message to enqueue in the right stack.
+     * @param string $isSuccess True to enqueue on the success stack, false (by default) to enqueue on ther info stack.
+     */
+    public function enqueueMessage($message, $isSuccess = false);
 
     /**
      * Gets the Router singleton that has instantiated the Controller.

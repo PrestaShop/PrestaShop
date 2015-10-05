@@ -27,4 +27,8 @@
 interface Core_Business_ConfigurationInterface
 {
     public function get($key);
+
+    public function persistUserData($key, $value);
+
+    public function getPersistedUserData($key);
 }

@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 
 class Adapter_Configuration implements Core_Business_ConfigurationInterface
 {
@@ -39,5 +40,41 @@ class Adapter_Configuration implements Core_Business_ConfigurationInterface
         } else {
             return Configuration::get($key);
         }
+    }
+
+    /**
+     * Set a data in the persistence layer (Cookie for now...)
+     *
+     * @param string $key
+     * @param mixed $value
+     * @throws Core_Foundation_Exception_Exception If the size exceeds 3kB weight after json_encode.
+     * @return Adapter_Configuration $this, for fluent chaining setter.
+     */
+    public function persistUserData($key, $value)
+    {
+        $legacyCookie = \Context::getContext()->cookie;
+        if ($value !== null && strlen($value) > 3072) {
+            $legacyCookie->__unset('user_persistence_'.$key);
+            throw new Core_Foundation_Exception_Exception('The value to persist take more than 3kB to store in the Cookie.');
+        }
+
+        if ($value === null) {
+            $legacyCookie->__unset('user_persistence_'.$key);
+        } else {
+            $legacyCookie->__set('user_persistence_'.$key, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Get user data persisted in the Cookie. Null if no data known for the key.
+     *
+     * @param string $key
+     * @return mixed|null Null if the key has no value.
+     */
+    public function getPersistedUserData($key)
+    {
+        $legacyCookie = \Context::getContext()->cookie;
+        return $legacyCookie->__isset('user_persistence_'.$key) ? $legacyCookie->__get('user_persistence_'.$key) : null;
     }
 }

@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:

@@ -23,7 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Dispatcher;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Business\Dispatcher;
 
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;

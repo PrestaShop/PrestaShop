@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
 /**
  * The application container. Used to retrieve/locate services, and instantiate them.
@@ -36,11 +37,9 @@
  * - a full namespaced class name (to allow injection of its instance into other services)
  * - a 'final:' prefixed service name to avoid injection. In this case the service is only accessible through explicit make() call, not through dependency injection.
  *
- * To hav a full list of available services and final instances, please see:
+ * To have a full list of available services and final instances, please see:
  * @see Core_Business_ContainerBuilder
  */
-namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
-
 class Container
 {
     private $bindings = array();

@@ -527,22 +527,22 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
             $viewEngine = null;
             $messages = '';
 
-            if ($messageStackManager->getErrorIterator() && $messageStackManager->getErrorIterator()->count()) {
+            if (count($errors = $messageStackManager->dequeueAllErrors()) > 0) {
                 if ($viewEngine == null) {
                     $viewEngine = new ViewFactory($this->container, 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
-                    'exceptions' => $messageStackManager->getErrorIterator(),
+                    'exceptions' => $errors,
                     'color' => 'red'
                 ));
             }
 
-            if ($messageStackManager->getWarningIterator() && $messageStackManager->getWarningIterator()->count()) {
+            if (count($warnings = $messageStackManager->dequeueAllWarnings()) > 0) {
                 if ($viewEngine == null) {
                     $viewEngine = new ViewFactory($this->container, 'smarty');
                 }
                 $messages .= $viewEngine->view->fetch('Core/system_messages.tpl', array(
-                    'exceptions' => $messageStackManager->getWarningIterator(),
+                    'exceptions' => $warnings,
                     'color' => 'orange'
                 ));
             }

@@ -123,7 +123,9 @@ class Core_Foundation_Exception_Exception extends Exception
         } catch (\Exception $e) {
         }
         $data .= '<li><b>File #</b> '.md5_file($this->file).'</li>';
-        $data .= '<li><b>URL:</b> <a href="http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'">http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'</a></li>';
+        if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
+            $data .= '<li><b>URL:</b> <a href="http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'">http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'</a></li>';
+        }
         $data .= '<li><b>Stack trace:</b> '.parent::getTraceAsString().'</li>';
         if ($e = $this->getPrevious()) {
             $data .= '<li><b>Previous Exception:</b> '.$e->__toString().'</li>';
