@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Business\Controller\FrontController;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Routing\FakeRouter;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 
 class RouterTestController extends FrontController
 {
@@ -46,7 +46,7 @@ class RouterTestController extends FrontController
 
     public function subcallAction(Request &$request, Response &$response)
     {
-        $response->addContentData('sub_a', $this->subcall('fake_controllers_route1', array(), BaseController::RESPONSE_PARTIAL_VIEW));
+        $response->addContentData('sub_a', $this->subcall('fake_controllers_route1', array(), AbstractController::RESPONSE_PARTIAL_VIEW));
     }
 
     public function forwardAction(Request &$request, Response &$response)

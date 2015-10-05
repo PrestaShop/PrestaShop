@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\WarningException;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerResolver;
+use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventFactory;
 
 /**
  * Second layer of the Router classes structure, to add Business specific behaviors (but common for Front/Admin).
@@ -80,7 +81,6 @@ abstract class Router extends AbstractRouter
     private $forbiddenRedirection = null;
 
     /**
-     * FIXME: remove this!
      * @var \Core_Business_ConfigurationInterface
      */
     protected $configuration;
@@ -215,7 +215,6 @@ abstract class Router extends AbstractRouter
             // degraded mode, many module overrides canceled.
             $controllerClass = $we->alternative;
             $request->attributes->set('_controller_from_module', '/');
-            $warnings++;
         }
         $class = new \ReflectionClass($controllerClass);
         try {
@@ -243,56 +242,52 @@ abstract class Router extends AbstractRouter
         if ($pinResponse) {
             $response->pinAsLastRouterResponseInstance();
         }
-        $response->setResponseFormat($returnView? BaseController::RESPONSE_PARTIAL_VIEW : BaseController::RESPONSE_LAYOUT_HTML);
+        $response->setResponseFormat($returnView? AbstractController::RESPONSE_PARTIAL_VIEW : AbstractController::RESPONSE_LAYOUT_HTML);
 
-        { // Start execution sequence
-            $routingDispatcher = $this->routingDispatcher;
+        // Execution sequence starts here
+        $routingDispatcher = $this->routingDispatcher;
+        $eventFactory = new EventFactory();
 
-            // init_action dispatch
-            $initEvent = new BaseEvent();
-            $initEvent->setRequest($request)->setResponse($response);
-            $routingDispatcher->dispatch('init_action', $initEvent);
-            $actionAllowed = !$initEvent->isPropagationStopped();
+        // init_action dispatch
+        $initEvent = $eventFactory->getRoutingEvent($request, $response);
+        $routingDispatcher->dispatch('init_action', $initEvent);
+        $actionAllowed = !$initEvent->isPropagationStopped();
 
-            // before_action dispatch
-            if ($actionAllowed) {
-                $beforeEvent = new BaseEvent();
-                $beforeEvent->setRequest($request)->setResponse($response);
-                $routingDispatcher->dispatch('before_action', $beforeEvent);
-                $actionAllowed = $actionAllowed & !$beforeEvent->isPropagationStopped();
+        // before_action dispatch
+        if ($actionAllowed) {
+            $beforeEvent = $eventFactory->getRoutingEvent($request, $response);
+            $routingDispatcher->dispatch('before_action', $beforeEvent);
+            $actionAllowed = $actionAllowed & !$beforeEvent->isPropagationStopped();
+        }
+
+        // Resolve controller action method injections
+        $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
+        $resolver->setContainer($this->container); // inject Container for Controller instantiation.
+        $resolver->setRouter($this); // inject Router for Controller instantiation.
+        $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
+        $actionArguments = $resolver->getArguments($request, array($controllerInstance, $controllerMethod));
+
+        // ACTION CALL
+        if ($actionAllowed) {
+            $responseFormat = $method->invokeArgs($controllerInstance, $actionArguments);
+            if ($responseFormat) {
+                $response->setResponseFormat($responseFormat);
             }
+        }
 
-            // Resolve controller action method injections
-            $resolver = new ControllerResolver(); // Prestashop resolver, not sf!
-            $resolver->setContainer($this->container); // inject Container for Controller instantiation.
-            $resolver->setRouter($this); // inject Router for Controller instantiation.
-            $resolver->setResponse($response); // inject response for its contentData array (scanned for injections)
-            $actionArguments = $resolver->getArguments($request, array($controllerInstance, $controllerMethod));
+        // after_action dispatch
+        if ($actionAllowed) {
+            $afterEvent = $eventFactory->getRoutingEvent($request, $response);
+            $routingDispatcher->dispatch('after_action', $afterEvent);
+            $actionAllowed = $actionAllowed & !$afterEvent->isPropagationStopped();
+        }
 
-            // ACTION CALL
-            if ($actionAllowed) {
-                $responseFormat = $method->invokeArgs($controllerInstance, $actionArguments);
-                if ($responseFormat) {
-                    $response->setResponseFormat($responseFormat);
-                }
-            }
-            
-            // after_action dispatch
-            if ($actionAllowed) {
-                $afterEvent = new BaseEvent();
-                $afterEvent->setRequest($request)->setResponse($response);
-                $routingDispatcher->dispatch('after_action', $afterEvent);
-                $actionAllowed = $actionAllowed & !$afterEvent->isPropagationStopped();
-            }
-            
-            // close_action dispatch
-            if ($actionAllowed) {
-                $closeEvent = new BaseEvent();
-                $closeEvent->setRequest($request)->setResponse($response);
-                $routingDispatcher->dispatch('close_action', $closeEvent);
-                $actionAllowed = $actionAllowed & !$closeEvent->isPropagationStopped();
-            }
-        } // end of execution sequence
+        // close_action dispatch
+        if ($actionAllowed) {
+            $closeEvent = $eventFactory->getRoutingEvent($request, $response);
+            $routingDispatcher->dispatch('close_action', $closeEvent);
+            $actionAllowed = $actionAllowed & !$closeEvent->isPropagationStopped();
+        }
 
         // Format and encapsulate response
         if ($actionAllowed && ($responseFormat = $response->getResponseFormat())) {
@@ -318,7 +313,7 @@ abstract class Router extends AbstractRouter
             if ($returnView) {
                 throw new \Core_Foundation_Exception_Exception('Action forbidden.');
             }
-            $router->redirectToForbidden();
+            $this->redirectToForbidden();
         }
         return true;
     }

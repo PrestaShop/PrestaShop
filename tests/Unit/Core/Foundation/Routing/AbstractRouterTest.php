@@ -30,7 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Core_Business_Stock_StockManager;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;

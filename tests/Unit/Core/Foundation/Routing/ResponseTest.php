@@ -30,7 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Core_Business_Stock_StockManager;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 
 class ResponseTest extends UnitTestCase
 {
@@ -74,8 +74,8 @@ class ResponseTest extends UnitTestCase
     {
         $response = new Response('base content');
         $this->assertFalse($response->getResponseFormat(), 'Initial response format must be False.');
-        $response->setResponseFormat(BaseController::RESPONSE_AJAX_HTML);
-        $this->assertEquals(BaseController::RESPONSE_AJAX_HTML, $response->getResponseFormat());
+        $response->setResponseFormat(AbstractController::RESPONSE_AJAX_HTML);
+        $this->assertEquals(AbstractController::RESPONSE_AJAX_HTML, $response->getResponseFormat());
         $this->assertAttributeContains('base content', 'content', $response, 'The content attribute should never be modified by any responseFormat operation.');
     }
     

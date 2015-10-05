@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Finder\Finder;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
@@ -294,7 +294,7 @@ abstract class AbstractRouter implements RouterInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::subcall()
      */
-    final public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
+    final public function subcall($routeName, $routeParameters = array(), $layoutMode = AbstractController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
         $this->isSubcalling = true;
         $subRequest = new Request();

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Business\Routing\AdminRouter;
@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Core\Foundation\View\ViewFactory;
  * Others won't be accepted by AdminRouter.
  * You must extends this one, and use traits that you need.
  * For more explanations about action functions normalization, please read:
- * @see PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController
+ * @see PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController
  */
-class AdminController extends BaseController
+class AdminController extends AbstractController
 {
     /**
      * @var boolean
@@ -52,7 +52,7 @@ class AdminController extends BaseController
     private $constructorCalled = false;
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController::__construct()
      */
     public function __construct(AdminRouter $router, Container $container)
     {
@@ -160,7 +160,7 @@ class AdminController extends BaseController
                 '_total' => $totalCount,
             )
         );
-        $navigator = $this->subcall('admin_tools_navigator', $navigatorParams, BaseController::RESPONSE_PARTIAL_VIEW);
+        $navigator = $this->subcall('admin_tools_navigator', $navigatorParams, AbstractController::RESPONSE_PARTIAL_VIEW);
         $response->addContentData('navigator', $navigator);
         $response->addJs(_PS_JS_DIR_.'Core/Admin/Navigator.js');
 

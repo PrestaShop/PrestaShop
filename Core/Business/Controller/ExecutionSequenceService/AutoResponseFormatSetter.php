@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Controller\ExecutionSequenceServic
 use PrestaShop\PrestaShop\Core\Foundation\Controller\ExecutionSequenceServiceWrapper;
 use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 
 /**
  * This generates default action settings (template name, response format) depending on the request.
@@ -116,21 +116,21 @@ final class AutoResponseFormatSetter extends ExecutionSequenceServiceWrapper
 
                 case 'application/json':
                 case 'text/javascript':
-                    $response->setResponseFormat(BaseController::RESPONSE_JSON);
+                    $response->setResponseFormat(AbstractController::RESPONSE_JSON);
                     return;
 
                 case 'text/html':
                 case 'application/xhtml+xml':
                     $isXhr = $request->headers->has('x-requested-with') && ($request->headers->get('x-requested-with') == 'XMLHttpRequest');
-                    $response->setResponseFormat($isXhr ? BaseController::RESPONSE_AJAX_HTML : BaseController::RESPONSE_LAYOUT_HTML);
+                    $response->setResponseFormat($isXhr ? AbstractController::RESPONSE_AJAX_HTML : AbstractController::RESPONSE_LAYOUT_HTML);
                     return;
 
                 case 'text/plain':
-                    $response->setResponseFormat(BaseController::RESPONSE_RAW_TEXT);
+                    $response->setResponseFormat(AbstractController::RESPONSE_RAW_TEXT);
                     return;
 
                 case 'application/xml':
-                    $response->setResponseFormat(Basecontroller::RESPONSE_XML);
+                    $response->setResponseFormat(AbstractController::RESPONSE_XML);
                     return;
 
                 default:

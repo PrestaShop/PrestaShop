@@ -169,7 +169,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException If the route is not found.
      * @return string|Response The action result, after template/transformations depending on $layoutMode and $fullResponse values.
      */
-    public function subcall($name, array $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
+    public function subcall($name, array $parameters = array(), $layoutMode = AbstractController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
 
     /**
      * This method will forward the Router into another Controller/action without any redirection instruction to the browser.

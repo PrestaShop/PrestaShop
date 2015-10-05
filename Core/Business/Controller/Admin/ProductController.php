@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Business\Controller\AutoObjectInflaterTrait;
 use PrestaShop\PrestaShop\Core\Foundation\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Business\Product\Form as ProductForms;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Business\Form\Type\ChoiceCategoriesTreeType;
 use PrestaShop\PrestaShop\Core\Business\Product\ModelApdapter\Product as ProductModelAdapter;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
@@ -59,7 +59,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
 class ProductController extends AdminController
 {
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController::__construct()
      */
     public function __construct(AdminRouter $router, Container $container)
     {
@@ -110,7 +110,7 @@ class ProductController extends AdminController
             'ls_products_orderWay' => $request->attributes->get('orderWay'),
             '_layout_mode' => 'none_html'
         );
-        $subResponse = $this->subcall('admin_product_list', $productListParams, BaseController::RESPONSE_PARTIAL_VIEW, true);
+        $subResponse = $this->subcall('admin_product_list', $productListParams, AbstractController::RESPONSE_PARTIAL_VIEW, true);
 
         $response->addContentData('product_list', $subResponse->getContent());
         $hasCategoryFilter = $dataProvider->isCategoryFiltered();

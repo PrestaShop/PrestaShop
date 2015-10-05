@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\Controller;
 
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use PrestaShop\PrestaShop\Core\Foundation\Routing\Response;
 use PrestaShop\PrestaShop\Core\Business\Routing\FrontRouter;
 
@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Business\Routing\FrontRouter;
  * Others won't be accepted by FrontRouter.
  * You must extends this one, and use traits that you need.
  * For more explanations about action functions normalization, please read:
- * @see PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController
+ * @see PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController
  */
-class FrontController extends BaseController
+class FrontController extends AbstractController
 {
     /**
      * @var boolean
@@ -45,7 +45,7 @@ class FrontController extends BaseController
     private $constructorCalled = false;
 
     /* (non-PHPdoc)
-     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController::__construct()
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController::__construct()
      */
     public function __construct(FrontRouter $router, Container $container)
     {

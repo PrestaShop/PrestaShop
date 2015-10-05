@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Routing;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Yaml\Yaml;
-use PrestaShop\PrestaShop\Core\Foundation\Controller\BaseController;
+use PrestaShop\PrestaShop\Core\Foundation\Controller\AbstractController;
 use Symfony\Component\Routing\Router;
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -110,7 +110,7 @@ interface RouterInterface
      * @throws ResourceNotFoundException if no route is found for the request.
      * @return string|Response data/view returned by matching controller (not sent through output buffer)
      */
-    public function subcall($routeName, $routeParameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
+    public function subcall($routeName, $routeParameters = array(), $layoutMode = AbstractController::RESPONSE_PARTIAL_VIEW, $fullResponse = false);
 
     /**
      * The redirect call take a route and its parameters, to send a redirection header to the browser.

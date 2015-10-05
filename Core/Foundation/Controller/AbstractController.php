@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent;
  * Standard formats and encapsulations are managed, but some of them requires
  * abstract methods to be implemented in subclasses.
  */
-abstract class BaseController implements ControllerInterface
+abstract class AbstractController implements ControllerInterface
 {
     /**
      * @var AbstractRouter
@@ -290,7 +290,7 @@ EOT;
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::subcall()
      */
-    final public function subcall($name, array $parameters = array(), $layoutMode = BaseController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
+    final public function subcall($name, array $parameters = array(), $layoutMode = AbstractController::RESPONSE_PARTIAL_VIEW, $fullResponse = false)
     {
         return $this->getRouter()->subcall($name, $parameters, $layoutMode, $fullResponse);
     }
