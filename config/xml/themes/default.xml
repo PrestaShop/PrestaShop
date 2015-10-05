@@ -308,22 +308,18 @@
     </modules>
     <images>
         <image name="cart_default" width="80" height="80" products="true" categories="false" manufacturers="false"
-               suppliers="false" scenes="false"/>
+               suppliers="false"/>
         <image name="small_default" width="98" height="98" products="true" categories="false" manufacturers="true"
-               suppliers="true" scenes="false"/>
+               suppliers="true"/>
         <image name="medium_default" width="125" height="125" products="true" categories="true" manufacturers="true"
-               suppliers="true" scenes="false"/>
+               suppliers="true"/>
         <image name="home_default" width="250" height="250" products="true" categories="false" manufacturers="false"
-               suppliers="false" scenes="false"/>
+               suppliers="false"/>
         <image name="large_default" width="458" height="458" products="true" categories="false" manufacturers="true"
-               suppliers="true" scenes="false"/>
+               suppliers="true"/>
         <image name="thickbox_default" width="800" height="800" products="true" categories="false" manufacturers="false"
-               suppliers="false" scenes="false"/>
+               suppliers="false"/>
         <image name="category_default" width="870" height="217" products="false" categories="true" manufacturers="false"
-               suppliers="false" scenes="false"/>
-        <image name="scene_default" width="870" height="270" products="false" categories="false" manufacturers="false"
-               suppliers="false" scenes="true"/>
-        <image name="m_scene_default" width="161" height="58" products="false" categories="false" manufacturers="false"
-               suppliers="false" scenes="true"/>
+               suppliers="false"/>
     </images>
 </theme>

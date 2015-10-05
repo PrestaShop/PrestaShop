@@ -849,8 +849,7 @@ class LanguageCore extends ObjectModel
             '/en-default-'.ImageType::getFormatedName('home').'.jpg',
             '/en-default-'.ImageType::getFormatedName('large').'.jpg',
             '/en-default-'.ImageType::getFormatedName('medium').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('small').'.jpg',
-            '/en-default-'.ImageType::getFormatedName('scene').'.jpg'
+            '/en-default-'.ImageType::getFormatedName('small').'.jpg'
         );
 
         foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {

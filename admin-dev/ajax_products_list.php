@@ -74,7 +74,7 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false)) {
+if ($items && ($excludeIds !== false)) {
     foreach ($items as $item) {
         echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
     }

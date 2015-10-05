@@ -773,10 +773,6 @@ abstract class AdminTabCore
                                 if ($back = Tools::getValue('back')) {
                                     Tools::redirectAdmin(urldecode($back).'&conf=4');
                                 }
-                                // Specific scene feature
-                                if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1') {
-                                    Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
-                                }
                                 // Save and stay on same form
                                 if (Tools::isSubmit('submitAdd'.$this->table.'AndStay')) {
                                     Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);

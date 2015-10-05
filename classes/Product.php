@@ -877,7 +877,7 @@ class ProductCore extends ObjectModel
 
         // Removes the product from StockAvailable, for the current shop
         StockAvailable::removeProductFromStockAvailable($this->id);
-        $result &= ($this->deleteProductAttributes() && $this->deleteImages() && $this->deleteSceneProducts());
+        $result &= ($this->deleteProductAttributes() && $this->deleteImages());
         // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
             return true;
@@ -1823,19 +1823,6 @@ class ProductCore extends ObjectModel
     {
         return Db::getInstance()->execute(
             'DELETE FROM `'._DB_PREFIX_.'product_sale`
-			WHERE `id_product` = '.(int)$this->id
-        );
-    }
-
-    /**
-    * Delete product in its scenes
-    *
-    * @return array Deletion result
-    */
-    public function deleteSceneProducts()
-    {
-        return Db::getInstance()->execute(
-            'DELETE FROM `'._DB_PREFIX_.'scene_products`
 			WHERE `id_product` = '.(int)$this->id
         );
     }

@@ -49,9 +49,6 @@ class ImageTypeCore extends ObjectModel
     /** @var int Apply to suppliers */
     public $suppliers;
 
-    /** @var int Apply to scenes */
-    public $scenes;
-
     /** @var int Apply to store */
     public $stores;
 
@@ -69,7 +66,6 @@ class ImageTypeCore extends ObjectModel
             'products' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'manufacturers' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'suppliers' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'scenes' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'stores' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
@@ -142,7 +138,7 @@ class ImageTypeCore extends ObjectModel
         if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed) {
             $results = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
 
-            $types = array('products', 'categories', 'manufacturers', 'suppliers', 'scenes', 'stores');
+            $types = array('products', 'categories', 'manufacturers', 'suppliers', 'stores');
             $total = count($types);
 
             foreach ($results as $result) {

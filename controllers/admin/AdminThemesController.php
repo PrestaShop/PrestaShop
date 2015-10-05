@@ -1009,7 +1009,6 @@ class AdminThemesControllerCore extends AdminController
             $image->addAttribute('categories', $array[4]);
             $image->addAttribute('manufacturers', $array[5]);
             $image->addAttribute('suppliers', $array[6]);
-            $image->addAttribute('scenes', $array[7]);
         }
         $this->xml_file = $theme->asXML();
     }
@@ -1024,7 +1023,7 @@ class AdminThemesControllerCore extends AdminController
 
 
                 $table = Db::getInstance()->executeS('
-			SELECT name, width, height, products, categories, manufacturers, suppliers, scenes
+			SELECT name, width, height, products, categories, manufacturers, suppliers
 			FROM `'._DB_PREFIX_.'image_type`');
 
                 $this->image_list = array();
@@ -1033,8 +1032,7 @@ class AdminThemesControllerCore extends AdminController
                         ($row['products'] == 1 ? 'true' : 'false').';'.
                         ($row['categories'] == 1 ? 'true' : 'false').';'.
                         ($row['manufacturers'] == 1 ? 'true' : 'false').';'.
-                        ($row['suppliers'] == 1 ? 'true' : 'false').';'.
-                        ($row['scenes'] == 1 ? 'true' : 'false');
+                        ($row['suppliers'] == 1 ? 'true' : 'false');
                 }
 
                 $id_shop = Db::getInstance()->getValue('SELECT `id_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_theme` = '.(int)Tools::getValue('id_theme_export'));
@@ -2370,15 +2368,14 @@ class AdminThemesControllerCore extends AdminController
             foreach ($xml->images->image as $row) {
                 Db::getInstance()->delete('image_type', '`name` = \''.pSQL($row['name']).'\'');
                 Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
+					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`)
 					VALUES (\''.pSQL($row['name']).'\',
 						'.(int)$row['width'].',
 						'.(int)$row['height'].',
 						'.($row['products'] == 'true' ? 1 : 0).',
 						'.($row['categories'] == 'true' ? 1 : 0).',
 						'.($row['manufacturers'] == 'true' ? 1 : 0).',
-						'.($row['suppliers'] == 'true' ? 1 : 0).',
-						'.($row['scenes'] == 'true' ? 1 : 0).')');
+						'.($row['suppliers'] == 'true' ? 1 : 0).')');
 
                 $return['ok'][] = array(
                         'name' => strval($row['name']),

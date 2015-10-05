@@ -51,16 +51,9 @@ class CategoryControllerCore extends FrontController
         if (!$this->useMobileTheme()) {
             //TODO : check why cluetip css is include without js file
             $this->addCSS(array(
-                _THEME_CSS_DIR_.'scenes.css'       => 'all',
                 _THEME_CSS_DIR_.'category.css'     => 'all',
                 _THEME_CSS_DIR_.'product_list.css' => 'all',
             ));
-        }
-
-        $scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
-        if ($scenes && count($scenes)) {
-            $this->addJS(_THEME_JS_DIR_.'scenes.js');
-            $this->addJqueryPlugin(array('scrollTo', 'serialScroll'));
         }
 
         $this->addJS(_THEME_JS_DIR_.'category.js');
@@ -141,7 +134,6 @@ class CategoryControllerCore extends FrontController
         // Product sort must be called before assignProductList()
         $this->productSort();
 
-        $this->assignScenes();
         $this->assignSubcategories();
         $this->assignProductList();
 
@@ -156,38 +148,11 @@ class CategoryControllerCore extends FrontController
             'add_prod_display'     => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             'categorySize'         => Image::getSize(ImageType::getFormatedName('category')),
             'mediumSize'           => Image::getSize(ImageType::getFormatedName('medium')),
-            'thumbSceneSize'       => Image::getSize(ImageType::getFormatedName('m_scene')),
             'homeSize'             => Image::getSize(ImageType::getFormatedName('home')),
             'allow_oosp'           => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
             'comparator_max_item'  => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
             'body_classes'         => array($this->php_self.'-'.$this->category->id, $this->php_self.'-'.$this->category->link_rewrite)
         ));
-    }
-
-    /**
-     * Assigns scenes template variables
-     */
-    protected function assignScenes()
-    {
-        // Scenes (could be externalised to another controller if you need them)
-        $scenes = Scene::getScenes($this->category->id, $this->context->language->id, true, false);
-        $this->context->smarty->assign('scenes', $scenes);
-
-        // Scenes images formats
-        if ($scenes && ($scene_image_types = ImageType::getImagesTypes('scenes'))) {
-            foreach ($scene_image_types as $scene_image_type) {
-                if ($scene_image_type['name'] == ImageType::getFormatedName('m_scene')) {
-                    $thumb_scene_image_type = $scene_image_type;
-                } elseif ($scene_image_type['name'] == ImageType::getFormatedName('scene')) {
-                    $large_scene_image_type = $scene_image_type;
-                }
-            }
-
-            $this->context->smarty->assign(array(
-                'thumbSceneImageType' => isset($thumb_scene_image_type) ? $thumb_scene_image_type : null,
-                'largeSceneImageType' => isset($large_scene_image_type) ? $large_scene_image_type : null,
-            ));
-        }
     }
 
     /**
