@@ -105,7 +105,6 @@ class ProductInformation extends AbstractType
             ),
             'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
             'required' => true,
-            'data' => 'both'
         ))
         ->add('name', new TranslateType('text', array(
                 'constraints' => array(
@@ -128,12 +127,18 @@ class ProductInformation extends AbstractType
         )))
         ->add('upc', 'text', array(
             'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts')
+            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,12}$/"),
+            )
         ))
         ->add('ean13', 'text', array(
             'required' => false,
             'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts')
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,13}$/"),
+            )
         ))
         ->add('isbn', 'text', array(
             'required' => false,
@@ -150,13 +155,11 @@ class ProductInformation extends AbstractType
                 'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
             ),
             'required' => true,
-            'data' => 'new',
             'label' => $this->translator->trans('Condition', [], 'AdminProducts')
         ))
         ->add('price', 'number', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
-            'data' => 0,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -166,7 +169,6 @@ class ProductInformation extends AbstractType
             'choices' =>  $this->tax_rules,
             'required' => true,
             'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
-            'data' => $this->productAdapter->getIdTaxRulesGroup()
         ))
         ->add('price_ttc', 'number', array(
             'required' => false,
@@ -185,19 +187,16 @@ class ProductInformation extends AbstractType
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => true,
             'multiple' => false,
-            'data' => 0
         ))
         ->add(
             $builder->create('options', 'form', array('required' => false, 'label' => $this->translator->trans('Options', [], 'AdminProducts')))
                 ->add('available_for_order', 'checkbox', array(
                     'label'    => $this->translator->trans('Available for order', [], 'AdminProducts'),
                     'required' => false,
-                    'data' => true
                 ))
                 ->add('show_price', 'checkbox', array(
                     'label'    => $this->translator->trans('Show price', [], 'AdminProducts'),
                     'required' => false,
-                    'data' => true
                 ))
                 ->add('online_only', 'checkbox', array(
                     'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),
@@ -205,11 +204,9 @@ class ProductInformation extends AbstractType
                 ))
         )
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories), array(
-            'data' => array(
-                'tree' => [$this->context->shop->id_category]
-            ),
             'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
         ))
+        //TODO : Add selector for default category ?
         ->add('id_manufacturer', 'choice', array(
             'choices' => $this->manufacturers,
             'required' => false,

@@ -81,7 +81,6 @@ if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVE
         if (!$forceJson) {
             $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
         } else {
-            $item['name'] = ' '.str_replace("'", "", $item['name']);
             $results[] = array(
                 'id' => $item['id_product'],
                 'name' => $item['name'].(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : ''),

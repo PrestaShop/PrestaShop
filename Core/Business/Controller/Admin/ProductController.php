@@ -231,7 +231,7 @@ class ProductController extends AdminController
      * @param unknown $product
      * @return string
      */
-    public function productFormAction(Request $request, Response $response, $product)
+    public function productFormAction(Response $response, Request $request, $product)
     {
         $response->setContentData(['product' => $product]);
 
@@ -252,7 +252,7 @@ class ProductController extends AdminController
         }
 
         $formFactory = new FormFactory();
-        $builder = $formFactory->createBuilder();
+        $builder = $formFactory->createBuilder('form', ProductModelAdapter::formMapper($product, $this->container, $locales));
 
         $response->addJs(array(
             _PS_JS_DIR_.'tiny_mce/tiny_mce.js',
@@ -267,7 +267,7 @@ class ProductController extends AdminController
         ));
 
         $form = $builder
-            ->add('id_product', 'hidden', array('data' => $product ? $product->id : 0))
+            ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductQuantity($this->container))
             ->add('step3', new ProductForms\ProductShipping($this->container))
@@ -286,6 +286,7 @@ class ProductController extends AdminController
                 $adminProductController->setAction('save');
 
                 if ($product = $adminProductController->postCoreProcess()) {
+                    $adminProductController->processSuppliers($product->id);
                     $response->setContentData(['product' => $product]);
                 }
 

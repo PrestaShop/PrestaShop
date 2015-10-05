@@ -48,4 +48,17 @@ class SupplierDataProvider extends AbstractAdminDataProvider
     {
         return \Supplier::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
     }
+
+    /**
+     * Get product suppliers
+     *
+     * @param int $id_product
+     *
+     * @return array Suppliers
+     */
+    public function getProductSuppliers($id_product)
+    {
+        $suppliersCollection = \ProductSupplier::getSupplierCollection($id_product);
+        return $suppliersCollection->getResults();
+    }
 }

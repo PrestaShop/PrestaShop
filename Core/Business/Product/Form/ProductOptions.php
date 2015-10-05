@@ -91,7 +91,6 @@ class ProductOptions extends AbstractType
             ),
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
-            'data' => 'both'
         ))
         ->add('wholesale_price', 'number', array(
             'required' => false,
@@ -111,6 +110,11 @@ class ProductOptions extends AbstractType
             'multiple' =>  true,
             'required' =>  false,
             'label' => $this->translator->trans('Suppliers', [], 'AdminProducts')
+        ))
+        ->add('default_supplier', 'choice', array(
+            'choices' =>  $this->suppliers,
+            'required' =>  true,
+            'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
         ));
     }
 
