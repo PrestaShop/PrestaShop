@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b9ac26388dbfc094e32df0996ea71273",
-    "content-hash": "654cd2b41daa14dc9f67befdc4c9ec8e",
+    "hash": "9068b28cdb0fbd78a4031b30cea77c9c",
     "packages": [
         {
             "name": "composer/installers",
@@ -449,12 +448,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockbestsellers.git",
-                "reference": "00144984571d2b763b3623b3298a2f96177309e7"
+                "reference": "bd5dcf81818c9fe00d9818f711e9d0df041d6a29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockbestsellers/zipball/00144984571d2b763b3623b3298a2f96177309e7",
-                "reference": "00144984571d2b763b3623b3298a2f96177309e7",
+                "url": "https://api.github.com/repos/PrestaShop/blockbestsellers/zipball/bd5dcf81818c9fe00d9818f711e9d0df041d6a29",
+                "reference": "bd5dcf81818c9fe00d9818f711e9d0df041d6a29",
                 "shasum": ""
             },
             "require": {
@@ -473,7 +472,7 @@
             ],
             "description": "PrestaShop module blockbestsellers",
             "homepage": "https://github.com/PrestaShop/blockbestsellers",
-            "time": "2015-09-28 08:05:35"
+            "time": "2015-08-28 15:02:32"
         },
         {
             "name": "prestashop/blockcart",
@@ -481,12 +480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcart.git",
-                "reference": "866739cc5a05e2c2b841f9b68a9009c6b77a3664"
+                "reference": "634035390d4a71530b3247e2be4b9a6538c77bb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/866739cc5a05e2c2b841f9b68a9009c6b77a3664",
-                "reference": "866739cc5a05e2c2b841f9b68a9009c6b77a3664",
+                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/634035390d4a71530b3247e2be4b9a6538c77bb0",
+                "reference": "634035390d4a71530b3247e2be4b9a6538c77bb0",
                 "shasum": ""
             },
             "require": {
@@ -507,7 +506,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blockcart/tree/feat/starter-theme"
             },
-            "time": "2015-10-05 10:30:36"
+            "time": "2015-09-25 12:04:50"
         },
         {
             "name": "prestashop/blockcategories",
@@ -611,18 +610,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcontact.git",
-                "reference": "e24a29b0274f19afd475b33c1195ce2ff0c0f729"
+                "reference": "95c2f47f5128941d3881f57c5f2637c5b31127e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/e24a29b0274f19afd475b33c1195ce2ff0c0f729",
-                "reference": "e24a29b0274f19afd475b33c1195ce2ff0c0f729",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/95c2f47f5128941d3881f57c5f2637c5b31127e0",
+                "reference": "95c2f47f5128941d3881f57c5f2637c5b31127e0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
             ],
@@ -634,10 +634,7 @@
             ],
             "description": "PrestaShop module blockcontact",
             "homepage": "https://github.com/PrestaShop/blockcontact",
-            "support": {
-                "source": "https://github.com/PrestaShop/blockcontact/tree/feat/starter-theme"
-            },
-            "time": "2015-09-25 15:13:04"
+            "time": "2015-08-28 15:03:16"
         },
         {
             "name": "prestashop/blockcontactinfos",
@@ -898,6 +895,40 @@
             "description": "PrestaShop module blockmanufacturer",
             "homepage": "https://github.com/PrestaShop/blockmanufacturer",
             "time": "2015-08-28 15:04:15"
+        },
+        {
+            "name": "prestashop/blockmyaccount",
+            "version": "dev-feat/starter-theme",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockmyaccount.git",
+                "reference": "b5c1174fc9d41ee110f51b4db851139901124b19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockmyaccount/zipball/b5c1174fc9d41ee110f51b4db851139901124b19",
+                "reference": "b5c1174fc9d41ee110f51b4db851139901124b19",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockmyaccount",
+            "homepage": "https://github.com/PrestaShop/blockmyaccount",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockmyaccount/tree/dev"
+            },
+            "time": "2015-08-28 14:58:52"
         },
         {
             "name": "prestashop/blockmyaccountfooter",
@@ -2924,16 +2955,16 @@
         },
         {
             "name": "phake/phake",
-            "version": "v2.1.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlively/Phake.git",
-                "reference": "260553214c4b1a8796bcf28c7b8db24a2b15840b"
+                "reference": "20d76de0ec09f219d548752847835c256526d22d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlively/Phake/zipball/260553214c4b1a8796bcf28c7b8db24a2b15840b",
-                "reference": "260553214c4b1a8796bcf28c7b8db24a2b15840b",
+                "url": "https://api.github.com/repos/mlively/Phake/zipball/20d76de0ec09f219d548752847835c256526d22d",
+                "reference": "20d76de0ec09f219d548752847835c256526d22d",
                 "shasum": ""
             },
             "require": {
@@ -2941,7 +2972,6 @@
                 "sebastian/comparator": "~1.1"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "dev-master",
                 "doctrine/common": "2.3.*",
                 "ext-soap": "*",
                 "hamcrest/hamcrest-php": "1.1.*",
@@ -2952,11 +2982,6 @@
                 "hamcrest/hamcrest-php": "Use Hamcrest matchers."
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.0.0-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Phake": "src/"
@@ -2978,7 +3003,7 @@
                 "mock",
                 "testing"
             ],
-            "time": "2015-09-03 13:05:57"
+            "time": "2015-05-09 13:58:15"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -3331,16 +3356,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.10",
+            "version": "4.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8"
+                "reference": "73fad41adb5b7bc3a494bb930d90648df1d5e74b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/463163747474815c5ccd4ae12b5b355ec12158e8",
-                "reference": "463163747474815c5ccd4ae12b5b355ec12158e8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/73fad41adb5b7bc3a494bb930d90648df1d5e74b",
+                "reference": "73fad41adb5b7bc3a494bb930d90648df1d5e74b",
                 "shasum": ""
             },
             "require": {
@@ -3399,7 +3424,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-01 09:14:30"
+            "time": "2015-09-20 12:56:44"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4209,6 +4234,7 @@
         "prestashop/blocklayered": 20,
         "prestashop/blocklink": 20,
         "prestashop/blockmanufacturer": 20,
+        "prestashop/blockmyaccount": 20,
         "prestashop/blockmyaccountfooter": 20,
         "prestashop/blocknewproducts": 20,
         "prestashop/blocknewsletter": 20,
