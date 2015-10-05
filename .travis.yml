@@ -24,6 +24,7 @@ before_script:
   - sudo cp -Rf . /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
   - sudo service apache2 restart
+  - find . -name "*.php" ! -path "./vendor/*" -exec php -l {} \; | if grep "parse error"; then exit 1; fi;
 
 notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
