@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b939a39e52d75c6d4316a576029e928c",
+    "hash": "e81fe696cf1dac6e94a87aac0072bee8",
     "packages": [
         {
             "name": "composer/installers",
@@ -1858,6 +1858,40 @@
             "description": "PrestaShop module blockmanufacturer",
             "homepage": "https://github.com/PrestaShop/blockmanufacturer",
             "time": "2015-08-28 15:04:15"
+        },
+        {
+            "name": "prestashop/blockmyaccount",
+            "version": "dev-feat/starter-theme",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockmyaccount.git",
+                "reference": "47404d87c2284a055c231ae98555f15db4d4bac6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockmyaccount/zipball/47404d87c2284a055c231ae98555f15db4d4bac6",
+                "reference": "47404d87c2284a055c231ae98555f15db4d4bac6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "prestashop-module",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockmyaccount",
+            "homepage": "https://github.com/PrestaShop/blockmyaccount",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockmyaccount/tree/feat/starter-theme"
+            },
+            "time": "2015-10-06 08:56:45"
         },
         {
             "name": "prestashop/blockmyaccountfooter",
@@ -7170,6 +7204,7 @@
         "prestashop/blocklayered": 20,
         "prestashop/blocklink": 20,
         "prestashop/blockmanufacturer": 20,
+        "prestashop/blockmyaccount": 20,
         "prestashop/blockmyaccountfooter": 20,
         "prestashop/blocknewproducts": 20,
         "prestashop/blocknewsletter": 20,
