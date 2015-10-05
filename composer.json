@@ -48,7 +48,6 @@
     "prestashop/blocklink": "dev-master",
     "prestashop/blockmanufacturer": "dev-master",
     "prestashop/blockmyaccount": "dev-feat/starter-theme",
-    "prestashop/blockmyaccountfooter": "dev-master",
     "prestashop/blocknewproducts": "dev-master",
     "prestashop/blocknewsletter": "dev-master",
     "prestashop/blockpaymentlogo": "dev-master",
