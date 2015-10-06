@@ -88,6 +88,22 @@ class MailCore extends ObjectModel
         $to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
         $template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null)
     {
+    	$skip=false;
+	
+    	# enables us to skip email sending; 'template' we can use to identify the email to send
+    	Hook::exec(
+    	
+    	    'actionEmailSendPre', 
+    	    array(
+    	        'template' => &$template,
+    	        'skip' => &$skip
+    	    )
+    	);
+    	
+    	if ($skip) {
+    		return true;
+    	}
+
         if (!$id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
