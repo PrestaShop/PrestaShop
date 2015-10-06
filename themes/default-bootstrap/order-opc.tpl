@@ -49,7 +49,7 @@
 		<!-- Carrier -->
 		{include file="$tpl_dir./order-carrier.tpl"}
 		<!-- END Carrier -->
-	
+
 		<!-- Payment -->
 		{include file="$tpl_dir./order-payment.tpl"}
 		<!-- END Payment -->
@@ -74,7 +74,9 @@
 {addJsDef vat_management=$vat_management|intval}
 {addJsDef errorCarrier=$errorCarrier|@addcslashes:'\''}
 {addJsDef errorTOS=$errorTOS|@addcslashes:'\''}
-{addJsDef checkedCarrier=$checked|intval}
+{if isset($checked)}
+	{addJsDef checkedCarrier=$checked|intval}
+{/if}
 {addJsDef addresses=array()}
 {addJsDef isVirtualCart=$isVirtualCart|intval}
 {addJsDef isPaymentStep=$isPaymentStep|intval}

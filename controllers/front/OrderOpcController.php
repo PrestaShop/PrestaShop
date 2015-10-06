@@ -364,6 +364,8 @@ class OrderOpcControllerCore extends ParentOrderController
 
         // SHOPPING CART
         $this->_assignSummaryInformations();
+        // CARRIER
+        $this->_assignCarrier();
         // WRAPPING AND TOS
         $this->_assignWrappingAndTOS();
 
@@ -413,8 +415,7 @@ class OrderOpcControllerCore extends ParentOrderController
         if ($this->isLogged) {
             $this->_assignAddress();
         }
-        // CARRIER
-        $this->_assignCarrier();
+
         // PAYMENT
         $this->_assignPayment();
         Tools::safePostVars();
