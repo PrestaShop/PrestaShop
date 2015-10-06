@@ -24,7 +24,9 @@
           </header>
 
           {block name="shopping_cart_summary"}
-            {include 'checkout/_partials/shopping-cart-summary.tpl' cart=$cart}
+            <div id="cart-summary">
+              {$cart_summary nofilter}
+            </div>
           {/block}
 
         </section>
