@@ -57,7 +57,13 @@ class AdminController extends AbstractController
     public function __construct(AdminRouter $router, Container $container)
     {
         parent::__construct($router, $container);
-        $this->registerExecutionSequenceService($container->make('CoreBusiness:Controller\\ExecutionSequenceService\\AuthenticationMiddleware'));
+
+        // Map \Adapter_AuthenticationManager instance into AuthenticationMiddlewareInterface
+        if (!$container->knows('CoreBusiness:Controller\\ExecutionSequenceService\\AuthenticationMiddlewareInterface')) {
+            $container->bind('CoreBusiness:Controller\\ExecutionSequenceService\\AuthenticationMiddlewareInterface',
+                new \Adapter_AuthenticationManager(), true);
+        }
+        $this->registerExecutionSequenceService($container->make('CoreBusiness:Controller\\ExecutionSequenceService\\CredentialsAuthenticationMiddleware'));
         $this->constructorCalled = true;
     }
 

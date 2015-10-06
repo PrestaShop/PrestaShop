@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Business\Routing\RoutingService;
  * If the authentication failed, this is not its responsibility to display a login page:
  * a redirection is done to the login controller.
  */
-final class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
+final class CredentialsAuthenticationMiddleware extends ExecutionSequenceServiceWrapper
 {
     /**
-     * @var \Adapter_AuthenticationManager
+     * @var AuthenticationMiddlewareInterface
      */
-    private $authenticationManager;
+    private $authenticationMiddleware;
 
     /**
      * @var RoutingService
@@ -52,12 +52,12 @@ final class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
     /**
      * Constructor
      *
-     * @param \Adapter_AuthenticationManager $authenticationManager
+     * @param AuthenticationMiddlewareInterface $authenticationMiddleware
      * @param RoutingService $routing
      */
-    public function __construct(\Adapter_AuthenticationManager $authenticationManager, RoutingService $routing)
+    public function __construct(AuthenticationMiddlewareInterface $authenticationMiddleware, RoutingService $routing)
     {
-        $this->authenticationManager = $authenticationManager;
+        $this->authenticationMiddleware = $authenticationMiddleware;
         $this->routingService = $routing;
     }
 
@@ -84,7 +84,7 @@ final class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
      */
     public function checkAuthentication(BaseEvent $event)
     {
-        if (!$this->authenticationManager->isAdminAuthenticated()) {
+        if (!$this->authenticationMiddleware->isAuthenticated()) {
             $event->stopPropagation();
         }
     }
@@ -98,6 +98,6 @@ final class AuthenticationMiddleware extends ExecutionSequenceServiceWrapper
      */
     public function checkRedirection(BaseEvent $event)
     {
-        $this->routingService->setForbiddenRedirection($this->authenticationManager->getAdminLoginUrl());
+        $this->routingService->setForbiddenRedirection($this->authenticationMiddleware->getAuthenticationUrl());
     }
 }

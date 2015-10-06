@@ -23,9 +23,11 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-class Adapter_AuthenticationManager
+use PrestaShop\PrestaShop\Core\Business\Controller\ExecutionSequenceService\AuthenticationMiddlewareInterface;
+
+class Adapter_AuthenticationManager implements AuthenticationMiddlewareInterface
 {
-    public function getAdminLoginUrl()
+    public function getAuthenticationUrl()
     {
         $legacyContext = Adapter_ServiceLocator::get('Adapter_LegacyContext');
         return $this->getAdminBaseUrl().$legacyContext->getContext()->link->getAdminLink('AdminLogin');
@@ -36,7 +38,7 @@ class Adapter_AuthenticationManager
         return __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/';
     }
     
-    public function isAdminAuthenticated()
+    public function isAuthenticated()
     {
         $legacyContext = Adapter_ServiceLocator::get('Adapter_LegacyContext');
         try {

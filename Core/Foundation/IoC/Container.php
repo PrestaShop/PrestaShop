@@ -48,6 +48,11 @@ class Container
 
     public function knows($serviceName)
     {
+        return $this->knowsBinding($this->resolveClassName($serviceName));
+    }
+
+    final private function knowsBinding($serviceName)
+    {
         return array_key_exists($serviceName, $this->bindings);
     }
 
@@ -58,7 +63,8 @@ class Container
 
     public function bind($serviceName, $constructor, $shared = false, array $privateInjections = array())
     {
-        if ($this->knows($serviceName)) {
+        $serviceName = $this->resolveClassName($serviceName);
+        if ($this->knowsBinding($serviceName)) {
             throw new Exception(
                 sprintf('Cannot bind `%s` again. A service name can only be bound once.', $serviceName)
             );
@@ -94,7 +100,7 @@ class Container
         if (0 !== $colonPos) {
             $alias = substr($className, 0, $colonPos);
             if ($alias == 'final') {
-                throw new Exception(sprintf('This final service is unknown: `%s`.', $className));
+                return $className;
             }
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(substr($className, $colonPos + 1), '\\');
@@ -161,12 +167,10 @@ class Container
 
         $alreadySeen[$serviceName] = true;
 
-        if (!$this->knows($serviceName)) {
-            $serviceNameAlias = $this->resolveClassName($serviceName);
-            if (!$this->knows($serviceNameAlias)) {
+        if (!$this->knowsBinding($serviceName)) {
+            $serviceName = $this->resolveClassName($serviceName);
+            if (!$this->knowsBinding($serviceName)) {
                 $this->bind($serviceName, $serviceName);
-            } else {
-                $serviceName = $serviceNameAlias;
             }
         }
 
