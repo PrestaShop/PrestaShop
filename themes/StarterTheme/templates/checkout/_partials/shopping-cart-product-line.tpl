@@ -1,7 +1,16 @@
 <span class="product-quantity">{$product.quantity}</span>
 <span class="product-name">{$product.name}</span>
 <span class="product-price">{$product.price}</span>
-<a class="remove-from-cart" rel="nofollow" href="{$product.remove_from_cart_url}">{l s="Remove" mod="blockcart"}</a>
+<a
+  class                       = "remove-from-cart"
+  rel                         = "nofollow"
+  href                        = "{$product.remove_from_cart_url}"
+  data-link-action            = "remove-from-cart"
+  data-id-product             = "{$product.id_product|escape:'javascript'}"
+  data-id-product-attribute   = "{$product.id_product_attribute|escape:'javascript'}"
+ >
+  {l s="Remove" mod="blockcart"}
+</a>
 {if $product.customizations|count}
     <div class="customizations">
         <ul>
