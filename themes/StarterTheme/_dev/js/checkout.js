@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
 function setupRegularCheckout () {
   function hideSubmitButton () {
@@ -18,6 +19,7 @@ function setupRegularCheckout () {
     let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
     $.post('', params).then(resp => {
       $('#delivery-options').replaceWith(resp);
+      prestashop.emit('cart updated');
       hideSubmitButton();
     });
   }
@@ -25,6 +27,8 @@ function setupRegularCheckout () {
   hideSubmitButton();
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', refreshPaymentOptions);
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
+
+
 }
 
 function setupAdvancedCheckout () {
@@ -65,6 +69,18 @@ function setupAdvancedCheckout () {
 }
 
 $(document).ready(function setupCheckoutScripts () {
+  if (!$('body#order-opc')) {
+    return;
+  }
+
+  prestashop.on('cart updated', function () {
+    $.get('', {
+      action: 'getCartSummary'
+    }).then(resp => {
+      $('#cart-summary').html(resp);
+    });
+  });
+
   if ($('#payment-options').data('uses-advanced-payment-api')) {
     setupAdvancedCheckout();
   } else {
