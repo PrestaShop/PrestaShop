@@ -237,6 +237,19 @@ class OrderOpcControllerCore extends FrontController
         return $this->renderPaymentOptions();
     }
 
+    public function renderCartSummary()
+    {
+        $cart_presenter = new Adapter_CartPresenter;
+        return $this->render('checkout/_partials/shopping-cart-summary.tpl', [
+            'cart' => $cart_presenter->present($this->context->cart)
+        ]);
+    }
+
+    public function getCartSummaryAction()
+    {
+        return $this->renderCartSummary();
+    }
+
     public function init()
     {
         parent::init();
@@ -246,12 +259,11 @@ class OrderOpcControllerCore extends FrontController
             die($result);
         }
 
-        $cart_presenter = new Adapter_CartPresenter;
         $this->advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
         $this->context->smarty->assign([
             'payment_options' => $this->renderPaymentOptions(),
-            'cart' => $cart_presenter->present($this->context->cart),
+            'cart_summary' => $this->renderCartSummary(),
             'delivery_options' => $this->renderDeliveryOptions(),
         ]);
 
