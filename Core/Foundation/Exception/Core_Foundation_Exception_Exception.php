@@ -115,7 +115,7 @@ class Core_Foundation_Exception_Exception extends Exception
             onclick="$(this).next(\'.technical_block\').toggle();">[+] <b>Technical data</b></a>
             <span class="technical_block" style="display: none;">: <br/><ul>';
         try {
-            $request = Router::getLastRouterRequestInstance();
+            $request = Router::getInitialRequest();
             if ($request !== null) {
                 $data .= '<li><b>Route from module tracking:</b> '.$request->attributes->get('_route_from_module').'</li>';
                 $data .= '<li><b>Controller from module tracking:</b> '.$request->attributes->get('_controller_from_module').'</li>';

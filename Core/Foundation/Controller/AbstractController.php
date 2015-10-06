@@ -318,4 +318,20 @@ EOT;
     {
         $this->getRouter()->redirect($to, $permanent);
     }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getCurrentRequest()
+     */
+    final public function getCurrentRequest()
+    {
+        return $this->getRouter()->getCurrentRequest();
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::getCurrentResponse()
+     */
+    final public function getCurrentResponse()
+    {
+        return $this->getRouter()->getCurrentResponse();
+    }
 }

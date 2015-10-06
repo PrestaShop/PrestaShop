@@ -78,9 +78,24 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
     public function generateUrl($name, array $parameters = array(), $forceLegacyUrl = false, $referenceType = UrlGeneratorInterface::ABSOLUTE_URL)
     {
     }
-    
+
     public function registerShutdownFunctionCallback(Request $request)
     {
+    }
+
+    public static function getInitialRequest()
+    {
+        return null;
+    }
+
+    public function getCurrentRequest()
+    {
+        return null;
+    }
+
+    public function getCurrentResponse()
+    {
+        return null;
     }
 
     public function exitNow($i = 0)

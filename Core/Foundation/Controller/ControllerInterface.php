@@ -221,4 +221,24 @@ interface ControllerInterface
      * @return false if headers already sent (cannot redirect, it's too late).
      */
     public function redirect($to, $permanent = false);
+
+    /**
+     * Gets the current Request for use in the action.
+     *
+     * This is a wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::getCurrentRequest()
+     *
+     * @return Request The current request for the current action.
+     */
+    public function getCurrentRequest();
+
+    /**
+     * Gets the current Response for use in the action.
+     *
+     * This is a wrapper for the method:
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::getCurrentResponse()
+     *
+     * @return Response The current response for the current action.
+     */
+    public function getCurrentResponse();
 }

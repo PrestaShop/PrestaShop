@@ -565,6 +565,24 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
             throw $lastException;
         }
     }
+    
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getInitialRequest()
+     * Nothing to implement here, and a static method cannot be abstracted in an abstract class.
+     * Still to implement in the sublcasses to follow interface requirements.
+     */
+    //abstract public static function getInitialRequest();
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getCurrentRequest()
+     */
+    abstract public function getCurrentRequest();
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getCurrentResponse()
+     */
+    abstract public function getCurrentResponse();
 
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::registerShutdownFunctionCallback()

@@ -159,6 +159,36 @@ interface RouterInterface
     public function getRouteParameters($route);
 
     /**
+     * Returns the initial Request received from HTTP
+     *
+     * (means the Request made during dispatch(), not during subcalls).
+     * This object is filled during 'dispatch()' method only.
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
+    public static function getInitialRequest();
+
+    /**
+     * Returns the current Request instance.
+     *
+     * This could be the Request:
+     * - received from HTTP (during disptaching or after a forward),
+     * - made for the current subcall.
+     *
+     * @return null|\Symfony\Component\HttpFoundation\Request
+     */
+    public function getCurrentRequest();
+
+    /**
+     * Returns the current Response instance.
+     *
+     * This is the Response from the current subcall if currently in a subcalled action, or from the dispatch.
+     *
+     * @return null|\PrestaShop\PrestaShop\Core\Foundation\Routing\Response
+     */
+    public function getCurrentResponse();
+
+    /**
      * This method is called by PHP process to register a listener when the process is about to shutdown.
      *
      * This is used to have a last chance of operating a fatal error for example.

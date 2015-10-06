@@ -58,21 +58,16 @@ abstract class Router extends AbstractRouter
     private static $instantiated = false;
 
     /**
-     * This singleton is filled during 'dispatch()' method only.
-     * @var Request
+     * This stack is filled during dispatch, forwards, subcalls.
+     * @var Request[]
      */
-    private static $lastRouterRequestInstance = null;
+    private static $requestStack = array();
 
     /**
-     * Returns the last Request received from HTTP.
-     * This singleton is filled during 'dispatch()' method only.
-     *
-     * @return \Symfony\Component\HttpFoundation\Request
+     * This stack is filled during dispatch, forwards, subcalls.
+     * @var Response[]
      */
-    public static function getLastRouterRequestInstance()
-    {
-        return self::$lastRouterRequestInstance;
-    }
+    private static $responseStack = array();
 
     /**
      * An URL, or an array of elements to generate an URL for HTTP 500 code.
@@ -175,8 +170,12 @@ abstract class Router extends AbstractRouter
      */
     final protected function doDispatch($controllerName, $controllerMethod, Request $request)
     {
-        self::$lastRouterRequestInstance = $request;
-        return $this->doCall($controllerName, $controllerMethod, $request, false, true);
+        self::$requestStack['dispatch'] = $request;
+
+        $result =  $this->doCall($controllerName, $controllerMethod, $request, false, true);
+
+        array_pop(self::$requestStack);
+        return $result;
     }
 
     /* (non-PHPdoc)
@@ -184,13 +183,18 @@ abstract class Router extends AbstractRouter
      */
     final protected function doSubcall($controllerName, $controllerMethod, Request $request)
     {
+        self::$requestStack['subcall_'.count(self::$requestStack)] = $request;
+
         // merge query and request subparts from caller's Request
-        $callerRequest = $this->getLastRouterRequestInstance();
-        $request->query = $callerRequest->query;
-        $request->request = $callerRequest->request;
+        $dispatchRequest = self::$requestStack['dispatch'];
+        $request->query = $dispatchRequest->query;
+        $request->request = $dispatchRequest->request;
         // FIXME: maybe more? (files, cookies, headers parameterBags)
 
-        return $this->doCall($controllerName, $controllerMethod, $request, true);
+        $result = $this->doCall($controllerName, $controllerMethod, $request, true);
+
+        array_pop(self::$requestStack);
+        return $result;
     }
 
     /**
@@ -239,9 +243,7 @@ abstract class Router extends AbstractRouter
 
         // New response
         $response = new Response();
-        if ($pinResponse) {
-            $response->pinAsLastRouterResponseInstance();
-        }
+        self::$responseStack[] = $response;
         $response->setResponseFormat($returnView? AbstractController::RESPONSE_PARTIAL_VIEW : AbstractController::RESPONSE_LAYOUT_HTML);
 
         // Execution sequence starts here
@@ -301,8 +303,9 @@ abstract class Router extends AbstractRouter
 
             if ($returnView) {
                 // Do not use send (no output buffer tricks)
-                return $response;
+                return array_pop(self::$responseStack);
             } else {
+                array_pop(self::$responseStack);
                 // Send response to output buffer
                 $response->send();
             }
@@ -369,6 +372,42 @@ abstract class Router extends AbstractRouter
         } catch (RouteNotFoundException $rnfe) {
             return false;
         }
+    }
+    
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getInitialRequest()
+     */
+    final public static function getInitialRequest()
+    {
+        if (!isset(self::$requestStack['dispatch'])) {
+            return null;
+        }
+        return self::$requestStack['dispatch'];
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getCurrentRequest()
+     */
+    final public function getCurrentRequest()
+    {
+        // last element in the stack.
+        if (count(self::$requestStack) == 0) {
+            return null;
+        }
+        return self::$requestStack[count(self::$requestStack) - 1];
+    }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::getCurrentResponse()
+     */
+    final public function getCurrentResponse()
+    {
+        // last element in the stack.
+        if (count(self::$responseStack) == 0) {
+            return null;
+        }
+        return self::$responseStack[count(self::$responseStack) - 1];
     }
 
     /* (non-PHPdoc)
