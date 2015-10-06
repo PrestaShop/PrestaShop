@@ -45,7 +45,7 @@ class FrontRouter extends Router
      *
      * @param Container $container The Service Container
      */
-    final public function __construct(Container &$container = null)
+    final public function __construct(Container $container = null)
     {
         parent::__construct($container, 'admin_routes(_(.*))?\.yml');
         $container->make('CoreBusiness:Context')->set('app_entry_point', 'front');

@@ -45,7 +45,7 @@ class CommonController extends AdminController
      * @param Response $response
      * @return string
      */
-    public function uploadAction(Request &$request, Response &$response)
+    public function uploadAction(Request $request, Response $response)
     {
         /*$formFactory = new FormFactory(null, array('csrf_protection' => false));
         $builder = $formFactory->create();*/
@@ -119,7 +119,7 @@ class CommonController extends AdminController
      * @param Request $request
      * @param Response $response
      */
-    public function navigatorAction(Request &$request, Response &$response)
+    public function navigatorAction(Request $request, Response $response)
     {
         $response->setTemplate('Core/Controller/Admin/navigator.tpl');
 

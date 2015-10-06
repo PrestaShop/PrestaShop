@@ -128,7 +128,7 @@ class EventDispatcher extends SfEventDispatcher
      * @param boolean $debug True to force debug mode (cache fil is generated each time).
      * @throws DevelopmentErrorException If a configuration file is malformed.
      */
-    final public static function initDispatchers(Container &$container, $rootDir, $cacheDir, $moduleDir, $debug = false)
+    final public static function initDispatchers(Container $container, $rootDir, $cacheDir, $moduleDir, $debug = false)
     {
         $cache = (new ConfigCacheFactory($debug))->cache(
             $cacheDir.'dispatcher/init_subscribers.php',
@@ -238,7 +238,7 @@ class EventDispatcher extends SfEventDispatcher
      * @throws DevelopmentErrorException If the eventDispatcher already exists (duplicated name).
      * @throws \Core_Foundation_IoC_Exception If the eventDispatcher already exists in the container (duplicated name).
      */
-    final public function __construct($dispatcherName, Container &$container = null)
+    final public function __construct($dispatcherName, Container $container = null)
     {
         if (array_key_exists($dispatcherName, self::$instances)) {
             throw new DevelopmentErrorException('The dispatcher name already exists in the system.');

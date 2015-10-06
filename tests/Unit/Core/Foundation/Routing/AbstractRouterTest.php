@@ -57,14 +57,14 @@ class FakeAbstractRouterNotAbstract extends AbstractRouter
         $this->routingDispatcher = $this->container->make('final:EventDispatcher/routing');
     }
 
-    protected function doDispatch($controllerName, $controllerMethod, Request &$request)
+    protected function doDispatch($controllerName, $controllerMethod, Request $request)
     {
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;
         $this->calledWithResquest = $request;
     }
 
-    protected function doSubcall($controllerName, $controllerMethod, Request &$request)
+    protected function doSubcall($controllerName, $controllerMethod, Request $request)
     {
         $this->calledControllerName = $controllerName;
         $this->calledControllerMethod = $controllerMethod;

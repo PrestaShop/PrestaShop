@@ -43,12 +43,12 @@ class FakeBaseController extends AbstractController
     public $formatHtmlCalledWith = false;
     public $encapsulateCalledWith = false;
     
-    protected function formatHtmlResponse(Response &$response)
+    protected function formatHtmlResponse(Response $response)
     {
         $this->formatHtmlCalledWith = $response;
     }
     
-    protected function encapsulateLayout(Response &$response)
+    protected function encapsulateLayout(Response $response)
     {
         $this->encapsulateCalledWith = $response;
     }

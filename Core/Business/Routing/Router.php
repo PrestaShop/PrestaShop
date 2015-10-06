@@ -92,7 +92,7 @@ abstract class Router extends AbstractRouter
      * @param Container $container The application Container instance
      * @param string $routingFilePattern a regex to indicate routes YML files to include.
      */
-    protected function __construct(Container &$container, $routingFilePattern)
+    protected function __construct(Container $container, $routingFilePattern)
     {
         if (self::$instantiated !== false) {
             throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.');
@@ -173,7 +173,7 @@ abstract class Router extends AbstractRouter
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doDispatch()
      */
-    final protected function doDispatch($controllerName, $controllerMethod, Request &$request)
+    final protected function doDispatch($controllerName, $controllerMethod, Request $request)
     {
         self::$lastRouterRequestInstance = $request;
         return $this->doCall($controllerName, $controllerMethod, $request, false, true);
@@ -182,7 +182,7 @@ abstract class Router extends AbstractRouter
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Routing\AbstractRouter::doSubcall()
      */
-    final protected function doSubcall($controllerName, $controllerMethod, Request &$request)
+    final protected function doSubcall($controllerName, $controllerMethod, Request $request)
     {
         // merge query and request subparts from caller's Request
         $callerRequest = $this->getLastRouterRequestInstance();
@@ -205,7 +205,7 @@ abstract class Router extends AbstractRouter
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return string|boolean True for success, false if fail, or the resulting content if $returnView is true.
      */
-    final private function doCall($controllerName, $controllerMethod, Request &$request, $returnView = false, $pinResponse = false)
+    final private function doCall($controllerName, $controllerMethod, Request $request, $returnView = false, $pinResponse = false)
     {
         // Find right Controller and check security on it
         try {

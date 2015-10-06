@@ -76,7 +76,7 @@ class ProductController extends AdminController
      * @param Request $request
      * @param Response $response
      */
-    public function productCatalogAction(Request &$request, Response &$response)
+    public function productCatalogAction(Request $request, Response $response)
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         if ($this->shouldUseLegacyPages()) {
@@ -207,7 +207,7 @@ class ProductController extends AdminController
      * @param Product[] $products The collection of products requested. Filled by AutoObjectInflaterTrait.
      * @return void The response format is automatically placed by the Router through _layout_mode attribute
      */
-    public function productListAction(Request &$request, Response &$response, array $products)
+    public function productListAction(Request $request, Response $response, array &$products)
     {
         $totalCount = 0;
         // Adds controller info (URLs, etc...) to product list
@@ -312,10 +312,9 @@ class ProductController extends AdminController
      * Do bulk action on a list of Products. Used with the 'bulk action' dropdown menu on the Catalog page.
      *
      * @param Request $request
-     * @param Response $response
      * @throws DevelopmentErrorException
      */
-    public function bulkAction(Request &$request, Response &$response)
+    public function bulkAction(Request $request)
     {
         $action = $request->attributes->get('action');
         $productIdList = $request->request->get('bulk_action_selected_products');
@@ -351,11 +350,10 @@ class ProductController extends AdminController
      * Do action on one product at a time. Can be used at many places in the controller's page.
      *
      * @param Request $request
-     * @param Response $response
      * @param unknown $product
      * @throws DevelopmentErrorException
      */
-    public function unitAction(Request &$request, Response &$response, $product)
+    public function unitAction(Request $request, $product)
     {
         $action = $request->attributes->get('action');
         $updater = $this->container->make('CoreAdapter:Product\\ProductDataUpdater');
@@ -423,9 +421,8 @@ class ProductController extends AdminController
      * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
      *
      * @param Request $request
-     * @param Response $response
      */
-    public function shouldUseLegacyPagesAction(Request &$request, Response &$response)
+    public function shouldUseLegacyPagesAction(Request $request)
     {
         $dataProvider = $this->container->make('CoreAdapter:Product\\AdminProductDataProvider');
         $useLegacy = $request->attributes->get('use');

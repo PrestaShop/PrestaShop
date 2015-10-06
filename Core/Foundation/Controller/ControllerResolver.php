@@ -49,7 +49,7 @@ class ControllerResolver extends SfControllerResolver
      *
      * @param unknown $response
      */
-    public function setResponse(Response &$response)
+    public function setResponse(Response $response)
     {
         $this->response = $response;
         $this->addInjection($this->response);
@@ -64,7 +64,7 @@ class ControllerResolver extends SfControllerResolver
      * Keeps the Container object to allow injection of it (or another service that it provides) into action.
      * @param Container $container
      */
-    public function setContainer(Container &$container)
+    public function setContainer(Container $container)
     {
         $this->container = $container;
         $this->addInjection($this->container);
@@ -80,7 +80,7 @@ class ControllerResolver extends SfControllerResolver
      *
      * @param AbstractRouter $router
      */
-    public function setRouter(AbstractRouter &$router)
+    public function setRouter(AbstractRouter $router)
     {
         $this->router = $router;
     }
@@ -118,6 +118,22 @@ class ControllerResolver extends SfControllerResolver
         return false; // Not found
     }
 
+    final private function injectByRefAndLetterCase(array &$target, array &$source, \ReflectionParameter $param)
+    {
+        // try by name and with different letter cases
+        foreach (array($param->name, lcfirst($param->name), ucfirst($param->name)) as $name) {
+            if (array_key_exists($name, $source)) {
+                if ($param->isPassedByReference()) {
+                    $target[] = &$source[$name];
+                } else {
+                    $target[] = $source[$name];
+                }
+                return true;
+            }
+        }
+        return false; // Not found
+    }
+
     /* (non-PHPdoc)
      * @see \Symfony\Component\HttpKernel\Controller\ControllerResolver::doGetArguments()
      */
@@ -126,20 +142,23 @@ class ControllerResolver extends SfControllerResolver
         $attributes = $request->attributes->all();
         $contentData = $this->response->getContentData();
         $arguments = array();
-        $injection = array();
+        $additionalInjection = array(); // let an array do the trick since we can use refs.
         foreach ($parameters as $param) {
-            if (array_key_exists($param->name, $attributes)) {
-                $arguments[] = $attributes[$param->name];
-            } elseif (array_key_exists($param->name, $contentData)) {
-                $arguments[] = $contentData[$param->name];
-            } elseif (array_key_exists(lcfirst($param->name), $contentData)) {
-                $arguments[] = $contentData[lcfirst($param->name)];
-            } elseif (array_key_exists(ucfirst($param->name), $contentData)) {
-                $arguments[] = $contentData[ucfirst($param->name)];
+            if ($this->injectByRefAndLetterCase($arguments, $attributes, $param)
+                || $this->injectByRefAndLetterCase($arguments, $contentData, $param)) {
+                continue;
             } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
-                $arguments[] = &$request; // by ref
-            } elseif ($param->getClass() && ($injection[] = $this->checkAdditionalInjections($param->getClass()))) {
-                $arguments[] = &$injection[count($injection)-1]; // by ref
+                if ($param->isPassedByReference()) {
+                    $arguments[] = &$request; // by ref
+                } else {
+                    $arguments[] = $request;
+                }
+            } elseif ($param->getClass() && ($additionalInjection[] = $this->checkAdditionalInjections($param->getClass()))) {
+                if ($param->isPassedByReference()) {
+                    $arguments[] = &$additionalInjection[count($additionalInjection)-1]; // by ref
+                } else {
+                    $arguments[] = $additionalInjection[count($additionalInjection)-1];
+                }
             } elseif ($param->isDefaultValueAvailable()) {
                 $arguments[] = $param->getDefaultValue();
             } else {

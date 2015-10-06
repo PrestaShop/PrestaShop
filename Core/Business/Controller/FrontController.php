@@ -68,7 +68,7 @@ class FrontController extends AbstractController
      *
      * @param Response $response
      */
-    protected function encapsulateLayout(Response &$response)
+    protected function encapsulateLayout(Response $response)
     {
         // Display catched WarningExceptions (not catched one will fail display and will be catched by Router->dispatch())
         $warningBlock = '';
@@ -103,7 +103,7 @@ class FrontController extends AbstractController
      *
      * @param Response $response
      */
-    protected function formatHtmlResponse(Response &$response)
+    protected function formatHtmlResponse(Response $response)
     {
         $templateEngine = $response->getTemplateEngine($this->container);
         $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));

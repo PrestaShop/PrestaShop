@@ -13,13 +13,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Validator\ContainsAlphanumeric;
 use PrestaShop\PrestaShop\Core\Foundation\Form\Type\TestType;
 
+/**
+ * FIXME: This class is intended to disappear before 1.7 release!
+ */
 class TestController extends AdminController
 {
     use AutoObjectInflaterTrait; // auto inflate objects if pattern found in the route format.
     use AutoResponseFormatTrait; // try to auto fill template engine parameters according to the current action.
     use SfControllerResolverTrait; // dependency injection in sf way.
 
-    public function aAction(Request &$request, Response &$response)
+    public function aAction(Request $request, Response $response)
     {
         /*
         VIEW EXAMPLE
@@ -149,19 +152,19 @@ class TestController extends AdminController
         $response->setHeaderToolbarBtn(array('add' => array('href' => 'sdfsdfdsf', 'desc' => 'sdffdsfd', 'icon' => 'process-icon-new')));
     }
 
-    public function bAction(Request &$request, Response &$response)
+    public function bAction(Request $request, Response $response)
     {
         $response->addContentData('b', 'à bas (de la part du Back, en JSON)');
         return self::RESPONSE_JSON;
     }
 
-    public function cAction(Request &$request, Response &$response, \Order $order)
+    public function cAction(Request $request, Response $response, \Order $order)
     {
         $response->addContentData('c', 'cédille (de la part du Back, format auto, selon la requete HTTP)');
         //return ??? // --> auto, with AutoResponseFormatTrait magic!
     }
 
-    public function dAction(Request &$request, Response &$response, Context $context)
+    public function dAction(Request $request, Response $response, Context $context)
     {
         echo 'D pité, on ejecte la sortie direct depuis le controller.';
         var_dump($this->generateUrl('admin_route2', array(
@@ -172,7 +175,7 @@ class TestController extends AdminController
         return self::RESPONSE_NONE; // declenche un exit(0) au lieu de send la response
     }
     
-    public function listAction(Request &$request, Response &$response, Context $context, $mykey)
+    public function listAction(Request $request, Response $response, Context $context, $mykey)
     {
         var_dump($mykey);
         return self::RESPONSE_NUDE_HTML;

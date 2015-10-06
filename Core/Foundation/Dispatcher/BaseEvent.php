@@ -68,7 +68,7 @@ class BaseEvent extends Event
      * @param Response $response
      * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent $this, For fluid method chaining
      */
-    public function setResponse(Response &$response)
+    public function setResponse(Response $response)
     {
         $this->response = $response;
         return $this;
@@ -90,7 +90,7 @@ class BaseEvent extends Event
      * @param Request $request
      * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent $this, For fluid method chaining
      */
-    public function setRequest(Request &$request)
+    public function setRequest(Request $request)
     {
         $this->request = $request;
         return $this;
@@ -136,7 +136,7 @@ class BaseEvent extends Event
      * @param Container $container The application service container
      * @return \PrestaShop\PrestaShop\Core\Foundation\Dispatcher\BaseEvent $this, For fluid method chaining
      */
-    public function setContainer(Container &$container)
+    public function setContainer(Container $container)
     {
         $this->container = $container;
         return $this;

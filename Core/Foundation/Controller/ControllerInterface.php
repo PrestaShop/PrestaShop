@@ -68,7 +68,7 @@ interface ControllerInterface
      * @param Response $response
      * @throws DevelopmentErrorException in case of unknown formatting method.
      */
-    public function formatResponse($format, Response &$response);
+    public function formatResponse($format, Response $response);
 
     /**
      * This will choose the encapsulation function to execute.
@@ -79,7 +79,7 @@ interface ControllerInterface
      * @param Response $response
      * @throws DevelopmentErrorException in case of unknown encapsulation method.
      */
-    public function encapsulateResponse($encapsulation, Response &$response);
+    public function encapsulateResponse($encapsulation, Response $response);
 
     /**
      * Get error(s) to the controller, to be displayed in the screen.
@@ -185,7 +185,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException if the forward is made from a subcall action.
      * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
      */
-    public function forward(Request &$oldRequest, $routeName, array $routeParameters = array());
+    public function forward(Request $oldRequest, $routeName, array $routeParameters = array());
 
     /**
      * The redirect call take a route and its parameters, to send a redirection header to the browser.
@@ -202,7 +202,7 @@ interface ControllerInterface
      * @throws DevelopmentErrorException if the redirect is made from a subcall action.
      * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
      */
-    public function redirectToRoute(Request &$oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false);
+    public function redirectToRoute(Request $oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false);
 
     /**
      * The redirect call take several values in parameter:

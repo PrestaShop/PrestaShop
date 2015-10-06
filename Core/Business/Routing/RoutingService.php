@@ -46,7 +46,7 @@ class RoutingService
      */
     private $router;
 
-    final private function __construct(Router &$router)
+    final private function __construct(Router $router)
     {
         $this->router = $router;
     }
@@ -63,7 +63,7 @@ class RoutingService
      * @param Router $router
      * @param Container $container
      */
-    final public static function registerRoutingService(Router &$router, Container &$container)
+    final public static function registerRoutingService(Router $router, Container $container)
     {
         if (self::$instanciated !== false) {
             return;

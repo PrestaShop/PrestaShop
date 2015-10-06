@@ -76,7 +76,7 @@ class AdminController extends AbstractController
      *
      * @param Response $response
      */
-    protected function encapsulateLayout(Response &$response)
+    protected function encapsulateLayout(Response $response)
     {
         // Use smarty to render messages
         $smartyEngine = new ViewFactory($this->container);
@@ -129,7 +129,7 @@ class AdminController extends AbstractController
      *
      * @param Response $response
      */
-    protected function formatHtmlResponse(Response &$response)
+    protected function formatHtmlResponse(Response $response)
     {
         $templateEngine = $response->getTemplateEngine($this->container);
         $response->setContent($templateEngine->view->fetch($response->getTemplate(), $response->getContentData()));
@@ -152,7 +152,7 @@ class AdminController extends AbstractController
      * @param Response $response The original response, to let the function add Javascript dependencies and the resulting navigator HTML part.
      * @param integer $totalCount The total count of elements to paginate (not the count of one page).
      */
-    final protected function addNavigatorToResponse(Request &$request, Response &$response, $totalCount)
+    final protected function addNavigatorToResponse(Request $request, Response $response, $totalCount)
     {
         $navigatorParams = array_merge(
             $request->attributes->all(),

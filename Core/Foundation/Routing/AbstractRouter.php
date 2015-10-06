@@ -246,12 +246,12 @@ abstract class AbstractRouter implements RouterInterface
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return boolean True for success, false if the router should pass through for the next Router (legacy Dispatcher).
      */
-    abstract protected function doDispatch($controllerName, $controllerMethod, Request &$request);
+    abstract protected function doDispatch($controllerName, $controllerMethod, Request $request);
 
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::forward()
      */
-    final public function forward(Request &$oldRequest, $routeName, $routeParameters = array())
+    final public function forward(Request $oldRequest, $routeName, $routeParameters = array())
     {
         if (!$oldRequest || !$this->canForward()) {
             throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1005);
@@ -260,7 +260,7 @@ abstract class AbstractRouter implements RouterInterface
         $attributes = $oldRequest->attributes;
         $attributes->set('_previous_controller', $attributes->get('_controller'));
         $attributes->set('_previous_route_from_module', $attributes->get('_route_from_module'));
-        $attributes->add($routeParameters); // FIXME: needed here?
+        $attributes->add($routeParameters);
         $path = $this->generateUrl($routeName, $routeParameters, false, self::ABSOLUTE_ROUTE);
         try {
             // Resolve route
@@ -340,12 +340,12 @@ abstract class AbstractRouter implements RouterInterface
      * @throws ResourceNotFoundException if controller action failed (not found)
      * @return Response Data/view returned by matching controller (not sent through output buffer).
      */
-    abstract protected function doSubcall($controllerName, $controllerMethod, Request &$request);
+    abstract protected function doSubcall($controllerName, $controllerMethod, Request $request);
 
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Router\RouterInterface::redirectToRoute()
      */
-    final public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
+    final public function redirectToRoute(Request $oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
         if (!$oldRequest || !$this->canRedirect()) {
             throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
@@ -493,7 +493,7 @@ $this->routingFiles = array('.implode(', ', array_reverse($routingFiles)).');
      *
      * @param Router $sfRouter
      */
-    final private function aggregateRoutingExtensions(Router &$sfRouter)
+    final private function aggregateRoutingExtensions(Router $sfRouter)
     {
         foreach ($this->routingFiles as $prefix => $routingFile) {
             $collection = $this->routeLoader->load($routingFile);

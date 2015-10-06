@@ -88,7 +88,7 @@ interface RouterInterface
      * @throws DevelopmentErrorException if the forward is made from a subcall action.
      * @return boolean true if a route is found; false if $noRoutePassThrough is set to true and no route found.
      */
-    public function forward(Request &$oldRequest, $routeName, $routeParameters = array());
+    public function forward(Request $oldRequest, $routeName, $routeParameters = array());
 
     /**
      * Check if a forward is possible at the moment.
@@ -125,7 +125,7 @@ interface RouterInterface
      * @throws DevelopmentErrorException if the redirect is made from a subcall action.
      * @return false if headers already sent (cannot redirect, it's too late). Does not returns if redirect succeed.
      */
-    public function redirectToRoute(Request &$oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false);
+    public function redirectToRoute(Request $oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false);
 
     /**
      * The redirect call take several values in parameter:

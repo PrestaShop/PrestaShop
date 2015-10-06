@@ -93,7 +93,7 @@ final class BaseEventDispatcher extends EventDispatcher
      * @param Container $container The application service container.
      * @param boolean $forceDebug True for debug mode.
      */
-    final public static function initBaseDispatchers(Container &$container, $forceDebug = false)
+    final public static function initBaseDispatchers(Container $container, $forceDebug = false)
     {
         // complete registry with Business listeners, and then init
         EventDispatcher::$dispatcherRegistry = array_merge(EventDispatcher::$dispatcherRegistry, self::$baseDispatcherRegistry);

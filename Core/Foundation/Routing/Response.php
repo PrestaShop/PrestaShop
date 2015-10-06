@@ -218,7 +218,7 @@ class Response extends sfResponse
      * @param Container &$container The Container needed to call ViewFactory
      * @return object
      */
-    final public function getTemplateEngine(Container &$container)
+    final public function getTemplateEngine(Container $container)
     {
         if (!$this->templateEngine) {
             $this->setTemplateEngine(new ViewFactory($container, $this->getEngineName()));

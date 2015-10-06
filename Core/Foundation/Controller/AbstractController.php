@@ -129,7 +129,7 @@ abstract class AbstractController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::formatResponse()
      */
-    public function formatResponse($format, Response &$response)
+    public function formatResponse($format, Response $response)
     {
         switch ($format) {
             case 'html':
@@ -158,14 +158,14 @@ abstract class AbstractController implements ControllerInterface
      *
      * @param Response $response
      */
-    abstract protected function formatHtmlResponse(Response &$response);
+    abstract protected function formatHtmlResponse(Response $response);
 
     /**
      * This will format data from $response->getContentData() into JSON format.
      *
      * @param Response $response
      */
-    final protected function formatJsonResponse(Response &$response)
+    final protected function formatJsonResponse(Response $response)
     {
         $content = $response->getContentData();
         $response->setContent(json_encode($content, $this->container->make('CoreBusiness:Context')->get('debug') ? JSON_PRETTY_PRINT : 0));
@@ -174,7 +174,7 @@ abstract class AbstractController implements ControllerInterface
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::encapsulateResponse()
      */
-    public function encapsulateResponse($encapsulation, Response &$response)
+    public function encapsulateResponse($encapsulation, Response $response)
     {
         switch ($encapsulation) {
             case 'layout':
@@ -198,7 +198,7 @@ abstract class AbstractController implements ControllerInterface
      *
      * @param Response $response
      */
-    protected function encapsulateNudeHtml(Response &$response)
+    protected function encapsulateNudeHtml(Response $response)
     {
         $content = $response->getContent();
         $content = <<<EOT
@@ -225,7 +225,7 @@ EOT;
      *
      * @param Response $response
      */
-    abstract protected function encapsulateLayout(Response &$response);
+    abstract protected function encapsulateLayout(Response $response);
 
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::dequeueAllErrors()
@@ -298,7 +298,7 @@ EOT;
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::forward()
      */
-    final public function forward(Request &$oldRequest, $routeName, array $routeParameters = array())
+    final public function forward(Request $oldRequest, $routeName, array $routeParameters = array())
     {
         return $this->getRouter()->forward($oldRequest, $routeName, $routeParameters);
     }
@@ -306,7 +306,7 @@ EOT;
     /* (non-PHPdoc)
      * @see \PrestaShop\PrestaShop\Core\Foundation\Controller\ControllerInterface::redirectToRoute()
      */
-    final public function redirectToRoute(Request &$oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false)
+    final public function redirectToRoute(Request $oldRequest, $routeName, array $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
         $this->getRouter()->redirectToRoute($oldRequest, $routeName, $routeParameters, $forceLegacyUrl, $permanent);
     }
