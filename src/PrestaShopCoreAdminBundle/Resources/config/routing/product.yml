@@ -1,0 +1,5 @@
+# All the Product related routes
+admin_product_catalog:
+    path: /catalog
+    defaults:
+        _controller: PrestaShopCoreAdminBundle:Product:catalog
