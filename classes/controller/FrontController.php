@@ -823,9 +823,15 @@ class FrontControllerCore extends Controller
         $this->addCSS(_THEME_CSS_DIR_ . DIRECTORY_SEPARATOR . 'theme.css');
         $this->addJquery();
         $this->addJqueryPlugin('easing');
-        $this->addJS(array(
+        $this->addCSS([
+            _THEME_CSS_DIR_ . 'theme.css',
+            _THEME_CSS_DIR_ . 'custom.css',
+        ]);
+
+        $this->addJS([
             _THEME_JS_DIR_.'theme.js',
-        ));
+            _THEME_JS_DIR_.'custom.js',
+        ]);
 
         if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
             $this->addJqueryUI('ui.sortable');
