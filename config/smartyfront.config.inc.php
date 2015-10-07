@@ -38,6 +38,23 @@ if (Configuration::get('PS_JS_HTML_THEME_COMPRESSION')) {
     $smarty->registerFilter('output', 'smartyPackJSinHTML');
 }
 
+$smarty->escape_html = true;
+smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
+
+function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
+{
+    require_once implode(DIRECTORY_SEPARATOR, [
+        _PS_VENDOR_DIR_, 'smarty', 'smarty', 'libs', 'plugins',
+        'modifier.escape.php'
+    ]);
+    global $smarty;
+    if ($esc_type === 'html' && $smarty->escape_html) {
+        return $string;
+    } else {
+        return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
+    }
+}
+
 function smartyTranslate($params, &$smarty)
 {
     global $_LANG;
