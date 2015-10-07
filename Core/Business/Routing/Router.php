@@ -90,7 +90,7 @@ abstract class Router extends AbstractRouter
     protected function __construct(Container $container, $routingFilePattern)
     {
         if (self::$instantiated !== false) {
-            throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.');
+            throw new DevelopmentErrorException('You should never instantiate the Router twice in the same process.', get_class($this), 2006);
         }
         try {
             $this->container = $container;
@@ -150,7 +150,7 @@ abstract class Router extends AbstractRouter
     {
         $className = '\\PrestaShop\\PrestaShop\\Core\\Business\\Controller\\'.$controllerName;
         if (!class_exists($className)) {
-            throw new DevelopmentErrorException('Default Controller is not found for: '.$className);
+            throw new DevelopmentErrorException('Default Controller is not found for: '.$className, null, 2007);
         }
 
         return array($className, '/');
@@ -238,7 +238,7 @@ abstract class Router extends AbstractRouter
         }
         $controllerInstance = $this->container->make($controllerClass);
         if (!$controllerInstance->isConstructionStrategyChecked()) {
-            throw new DevelopmentErrorException($controllerClass.'::__construct() did not call its parent __construct(). You must call it at first step of the construction.');
+            throw new DevelopmentErrorException($controllerClass.'::__construct() did not call its parent __construct(). You must call it at first step of the construction.', null, 2008);
         }
 
         // New response
@@ -314,7 +314,7 @@ abstract class Router extends AbstractRouter
         // Forbidden case.
         if (!$actionAllowed) {
             if ($returnView) {
-                throw new \Core_Foundation_Exception_Exception('Action forbidden.');
+                throw new \Core_Foundation_Exception_Exception('Action forbidden.', 2009);
             }
             $this->redirectToForbidden();
         }
@@ -351,7 +351,7 @@ abstract class Router extends AbstractRouter
     {
         if ($forceLegacyUrl == true) {
             // This feature is made in AdminController and FrontController subclasses only.
-            throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.');
+            throw new DevelopmentErrorException('You cannot ask for legacy URL without overriding the generateUrl() method.', $name, 2010);
         }
         try {
             $urlGenerator = $this->getUrlGenerator();

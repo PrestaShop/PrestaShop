@@ -188,7 +188,7 @@ final class AutoResponseFormatSetter extends ExecutionSequenceServiceWrapper
 
                 if (!file_exists($rootTemplatePath.DIRECTORY_SEPARATOR.$templatePath)) {
                     // The action did not set the template name, and we could not find it either...
-                    throw new DevelopmentErrorException('Template "'.$templatePath.'" could not be found');
+                    throw new DevelopmentErrorException('Template "'.$templatePath.'" could not be found', $rootTemplatePath.DIRECTORY_SEPARATOR.$templatePath, 2003);
                 }
 
                 $response->setTemplate($templatePath);

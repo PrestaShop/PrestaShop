@@ -63,7 +63,7 @@ class FrontRouter extends Router
         if ((!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\FrontController')
                 && (!$class->getName() == 'PrestaShop\PrestaShop\Core\Business\Controller\FrontController'))
             || $class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')) {
-            throw new DevelopmentErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.', null, 1004);
+            throw new DevelopmentErrorException('Front router tried to call a non-front controller ('.$class->name.'). Please verify your routes Settings, and controllers.', null, 2005);
         }
     }
 

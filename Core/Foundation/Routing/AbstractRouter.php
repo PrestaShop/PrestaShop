@@ -206,30 +206,26 @@ abstract class AbstractRouter implements RouterInterface
         $this->aggregateRoutingExtensions($this->sfRouter);
 
         try {
-            try {
-                // Resolve route
-                $parameters = $this->sfRouter->match($requestContext->getPathInfo());
-                $request->attributes->add($parameters);
-    
-                // Call Controller/Action
-                list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
-                $res = $this->doDispatch($controllerName, $controllerMethod, $request);
-                $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
-                $this->exitNow();
-            } catch (ResourceNotFoundException $e) {
+            // Resolve route
+            $parameters = $this->sfRouter->match($requestContext->getPathInfo());
+            $request->attributes->add($parameters);
+
+            // Call Controller/Action
+            list($controllerName, $controllerMethod) = explode('::', $parameters['_controller']);
+            $res = $this->doDispatch($controllerName, $controllerMethod, $request);
+            $this->routingDispatcher->dispatch('dispatch'.($res?'_succeed':'_failed'), new BaseEvent('Dispatched on '.$parameters['_controller'].'.'));
+            $this->exitNow();
+        } catch (\Exception $e) {
+            if ($e instanceof ResourceNotFoundException) {
                 $this->routingDispatcher->dispatch('dispatch_failed', new BaseEvent('Failed to resolve route from HTTP request.', $e));
                 if ($noRoutePassThrough) {
                     // Allow legacy code to handle request if not found in this dispatcher
                     return false;
-                } else {
-                    throw $e;
                 }
             }
-        } catch (\Exception $e) {
             if (php_sapi_name() == "cli") {
                 throw $e;
             }
-
             $this->tryToDisplayExceptions($e);
             return true; // do not bypass now!
         }
@@ -254,7 +250,7 @@ abstract class AbstractRouter implements RouterInterface
     final public function forward(Request $oldRequest, $routeName, $routeParameters = array())
     {
         if (!$oldRequest || !$this->canForward()) {
-            throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1005);
+            throw new DevelopmentErrorException('You cannot make a forward into a subcall!', null, 1010);
         }
 
         $attributes = $oldRequest->attributes;
@@ -274,7 +270,7 @@ abstract class AbstractRouter implements RouterInterface
             $this->exitNow();
         } catch (ResourceNotFoundException $e) {
             $this->routingDispatcher->dispatch('forward_failed', new BaseEvent('Failed to resolve route from forward request.', $e));
-            throw new DevelopmentErrorException('A forward failed due to unresolved route.', $oldRequest, 1002, $e);
+            throw new DevelopmentErrorException('A forward failed due to unresolved route.', $oldRequest, 1011, $e);
         }
     }
 
@@ -325,7 +321,7 @@ abstract class AbstractRouter implements RouterInterface
         } catch (ResourceNotFoundException $e) {
             $this->routingDispatcher->dispatch('subcall_failed', new BaseEvent('Failed to resolve route from subcall request.', $e));
             $this->isSubcalling = false;
-            throw new DevelopmentErrorException('A subcall failed due to unresolved route.', $oldRequest, 1002, $e);
+            throw new DevelopmentErrorException('A subcall failed due to unresolved route.', $routeName, 1012, $e);
         }
     }
 
@@ -348,7 +344,7 @@ abstract class AbstractRouter implements RouterInterface
     final public function redirectToRoute(Request $oldRequest, $routeName, $routeParameters, $forceLegacyUrl = false, $permanent = false)
     {
         if (!$oldRequest || !$this->canRedirect()) {
-            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
+            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1013);
         }
 
         if (headers_sent() !== false) {
@@ -366,7 +362,7 @@ abstract class AbstractRouter implements RouterInterface
     final public function redirect($to, $permanent = false)
     {
         if (!$this->canRedirect()) {
-            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1004);
+            throw new DevelopmentErrorException('You cannot make a redirection into a subcall!', null, 1014);
         }
         if (headers_sent() !== false) {
             $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent('Too late to redirect: headers already sent.'));
@@ -387,7 +383,7 @@ abstract class AbstractRouter implements RouterInterface
             // TODO: default error page for this code. Howto? redirect to custom error pages (500, etc...).
         }
 
-        $e = new DevelopmentErrorException('Bad parameters format given to redirect().');
+        $e = new DevelopmentErrorException('Bad parameters format given to redirect().', $to, 1015);
         $this->routingDispatcher->dispatch('redirection_failed', new BaseEvent($to, $e));
         throw $e;
     }

@@ -44,7 +44,7 @@ class ProductDataUpdater
     public function activateProductIdList(array $productListId, $activate = true)
     {
         if (count($productListId) < 1) {
-            throw new DevelopmentErrorException('ProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.');
+            throw new DevelopmentErrorException('ProductDataUpdater->activateProductIdList() should always receive at least one ID. Zero given.', null, 5003);
         }
 
         $failedIdList = array();
@@ -59,7 +59,7 @@ class ProductDataUpdater
         }
 
         if (count($failedIdList) > 0) {
-            throw new WarningException('Cannot change activation state on many requested products.', $failedIdList);
+            throw new WarningException('Cannot change activation state on many requested products.', $failedIdList, 5004);
         }
         return true;
     }
@@ -74,14 +74,14 @@ class ProductDataUpdater
     public function deleteProductIdList(array $productIdList)
     {
         if (count($productIdList) < 1) {
-            throw new DevelopmentErrorException('ProductDataUpdater->deleteProductIdList() should always receive at least one ID. Zero given.');
+            throw new DevelopmentErrorException('ProductDataUpdater->deleteProductIdList() should always receive at least one ID. Zero given.', null, 5005);
         }
 
         $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
         $result = (new \Product())->deleteSelection($productIdList);
 
         if ($result === 0) {
-            throw new WarningException('Cannot delete many requested products.', $failedIdList);
+            throw new WarningException('Cannot delete many requested products.', $failedIdList, null, 5006);
         }
         return true;
     }
@@ -99,7 +99,7 @@ class ProductDataUpdater
         $result = $product->delete();
 
         if ($result === 0) {
-            throw new WarningException('Cannot delete the requested product.', $productId);
+            throw new WarningException('Cannot delete the requested product.', $productId, null, 5007);
         }
         return true;
     }
@@ -147,7 +147,7 @@ class ProductDataUpdater
             }
 
             if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
-                throw new WarningException('An error occurred while copying images.');
+                throw new WarningException('An error occurred while copying images.', $id_product_old, null, 5008);
             } else {
                 \Hook::exec('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && \Configuration::get('PS_SEARCH_INDEXATION')) {
@@ -156,7 +156,7 @@ class ProductDataUpdater
                 return $product->id;
             }
         } else {
-            throw new ErrorException('An error occurred while creating an object.');
+            throw new ErrorException('An error occurred while creating an object.', null, 5009);
         }
     }
 }

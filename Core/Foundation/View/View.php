@@ -181,7 +181,7 @@ class View
     {
         $templatePathname = $this->getTemplatePathname($template);
         if (!is_file($templatePathname)) {
-            throw new DevelopmentErrorException("View cannot render `$template` because the template does not exist");
+            throw new DevelopmentErrorException("View cannot render `$template` because the template does not exist", $templatePathname, 1016);
         }
 
         $data = array_merge($this->data, (array) $data);

@@ -59,7 +59,7 @@ class Context extends ParameterBag
     final public function __construct(\Adapter_LegacyContext $legacyContext, Container $container)
     {
         if (self::$instantiated == true) {
-            throw new DevelopmentErrorException('The Context cannot be instantiated twice. Please call it from container.');
+            throw new DevelopmentErrorException('The Context cannot be instantiated twice. Please call it from container.', get_class($this), 2011);
         }
         self::$instantiated = true;
 

@@ -171,7 +171,7 @@ class EventDispatcher extends SfEventDispatcher
                             $e);
                         // FIXME: retrieve moduleDir/Name, to insert into ErrorException to auto-deactivate the module.
                     } catch (\Exception $e) {
-                        throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e->getCode());
+                        throw new DevelopmentErrorException('The following settings file is not well structured: '.$file->getRealPath(), $e, $e->getCode());
                     }
                 }
                 $cache->write($phpCode);
@@ -241,7 +241,7 @@ class EventDispatcher extends SfEventDispatcher
     final public function __construct($dispatcherName, Container $container = null)
     {
         if (array_key_exists($dispatcherName, self::$instances)) {
-            throw new DevelopmentErrorException('The dispatcher name already exists in the system.');
+            throw new DevelopmentErrorException('The dispatcher name already exists in the system.', $dispatcherName, 1009);
         }
         $this->name = $dispatcherName;
         if ($container !== null) {

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Core\Foundation\Exception\ErrorException;
+use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
@@ -133,7 +133,7 @@ abstract class AbstractAdminDataProvider
             }
         }
         if (count($s) === 0) {
-            throw new DevelopmentErrorException('Compile SQL failed: No field to SELECT!');
+            throw new DevelopmentErrorException('Compile SQL failed: No field to SELECT!', null, 5010);
         }
         $sql[] = 'SELECT SQL_CALC_FOUND_ROWS'.implode(','.PHP_EOL, $s);
 
@@ -142,18 +142,18 @@ abstract class AbstractAdminDataProvider
         foreach ($table as $alias => $join) {
             if (!is_array($join)) {
                 if (count($s) > 0) {
-                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table '.$join.' into SQL query without JOIN sepcs.');
+                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table '.$join.' into SQL query without JOIN sepcs.', null, 5013);
                 }
                 $s[0] = ' `'._DB_PREFIX_.$join.'` '.$alias;
             } else {
                 if (count($s) === 0) {
-                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.');
+                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.', null, 5011);
                 }
                 $s[] = ' '.$join['join'].' `'._DB_PREFIX_.$join['table'].'` '.$alias.((isset($join['on']))?' ON ('.$join['on'].')':'');
             }
         }
         if (count($s) === 0) {
-            throw new DevelopmentErrorException('Compile SQL failed: No table to insert into FROM!');
+            throw new DevelopmentErrorException('Compile SQL failed: No table to insert into FROM!', null, 5012);
         }
         $sql[] = 'FROM '.implode(' '.PHP_EOL, $s);
 

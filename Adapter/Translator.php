@@ -97,7 +97,7 @@ class Translator implements TranslatorInterface
             throw new DevelopmentErrorException('Module & Front translation is not yet implemented. Please contact the Architect team.');
         }
 
-        throw new DevelopmentErrorException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.');
+        throw new DevelopmentErrorException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', $id, 5016);
     }
 
     /**

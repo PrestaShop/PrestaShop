@@ -61,7 +61,7 @@ class AdminRouter extends Router
     {
         if (!$class->isSubclassOf('PrestaShop\\PrestaShop\\Core\\Business\\Controller\\AdminController')
             && (!$class->getName() == 'PrestaShop\PrestaShop\Core\Business\Controller\AdminController')) {
-            throw new DevelopmentErrorException('Admin router tried to call a non-admin controller ('.$class->name.'). Please verify your routes Settings, and controllers.', null, 1003);
+            throw new DevelopmentErrorException('Admin router tried to call a non-admin controller ('.$class->name.'). Please verify your routes Settings, and controllers.', null, 2004);
         }
     }
 

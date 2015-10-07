@@ -138,7 +138,7 @@ class Adapter_AutoInflaterManager
                 }
             }
             if (!$mp->isOptional()) {
-                throw new DevelopmentErrorException('An optional argument is missing to inflate a collection: '.$className.'->'.$method.'(), missing argument: '.$mp->name);
+                throw new DevelopmentErrorException('An optional argument is missing to inflate a collection: '.$className.'->'.$method.'(), missing argument: '.$mp->name, null, 5014);
             }
         }
         return $method->invokeArgs(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $givenParameters);

@@ -66,7 +66,7 @@ abstract class AbstractController implements ControllerInterface
     public function __construct(AbstractRouter $router, Container $container)
     {
         if ($this->constructorCalled) {
-            throw new DevelopmentErrorException('Cannot instantiate a controller twice in the same process.');
+            throw new DevelopmentErrorException('Cannot instantiate a controller twice in the same process.', get_class($this), 1001);
         }
 
         $this->router = $router;
@@ -94,7 +94,7 @@ abstract class AbstractController implements ControllerInterface
     final protected function registerExecutionSequenceService($service)
     {
         if ($service === null) {
-            throw new DevelopmentErrorException('Null service given.');
+            throw new DevelopmentErrorException('Null service given.', get_class($this), 1002);
         }
 
         // try to resolve service name
@@ -118,10 +118,10 @@ abstract class AbstractController implements ControllerInterface
         }
 
         if (is_string($service)) {
-            throw new ErrorException('The given service ('.$service.') cannot be found (or instantiated) to be registered in the execution sequence.');
+            throw new ErrorException('The given service cannot be found (or instantiated) to be registered in the execution sequence.', $service, 1003);
         }
         if (!$service instanceof ExecutionSequenceServiceInterface) {
-            throw new DevelopmentErrorException('The given service does not implements ExecutionSequenceServiceInterface.');
+            throw new DevelopmentErrorException('The given service does not implements ExecutionSequenceServiceInterface.', get_class($service), 1004);
         }
         $this->router->registerExecutionSequenceService($service);
     }
@@ -145,7 +145,7 @@ abstract class AbstractController implements ControllerInterface
             case 'none':
                 $this->router->exitNow(); // Break PHP process! Controller action should have already sent its result by itself (file, binary, etc...)
             default:
-                throw new DevelopmentErrorException('Unknown format.');
+                throw new DevelopmentErrorException('Unknown format.', $format, 1005);
         }
     }
 
@@ -186,7 +186,7 @@ abstract class AbstractController implements ControllerInterface
             case 'none':
                 return;
             default:
-                throw new DevelopmentErrorException('Unknown encapsulation.');
+                throw new DevelopmentErrorException('Unknown encapsulation.', $encapsulation, 1006);
         }
     }
 
@@ -266,7 +266,7 @@ EOT;
     {
         $messageManagerDispatcher = $this->container->make('final:EventDispatcher/message');
         if (!$messageManagerDispatcher) {
-            throw new DevelopmentErrorException('Cannot enqueue a message before the message manager is ready.');
+            throw new DevelopmentErrorException('Cannot enqueue a message before the message manager is ready.', $message, 1007);
         }
         $messageManagerDispatcher->dispatch($isSuccess?'success_message':'info_message', new BaseEvent($message));
     }

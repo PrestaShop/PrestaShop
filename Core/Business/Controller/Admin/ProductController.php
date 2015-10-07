@@ -336,7 +336,7 @@ class ProductController extends AdminController
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
-                    throw new DevelopmentErrorException('Bad action received from call to ProductController::bulkAction.');
+                    throw new DevelopmentErrorException('Bad action received from call to ProductController::bulkAction.', $action, 2001);
             }
         } catch (WarningException $we) {
             /* Let the layout display the message... Continue execution */
@@ -371,7 +371,7 @@ class ProductController extends AdminController
                     $this->redirectToRoute($request, 'admin_product_form', array('id_product' => $duplicateProductId), false, false);
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
-                    throw new DevelopmentErrorException('Bad action received from call to ProductController::unitAction.');
+                    throw new DevelopmentErrorException('Bad action received from call to ProductController::unitAction.', $action, 2002);
             }
         } catch (WarningException $we) {
             /* Let the layout display the message... Continue execution */

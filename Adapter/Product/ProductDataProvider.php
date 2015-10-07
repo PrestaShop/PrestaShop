@@ -49,7 +49,7 @@ class ProductDataProvider
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {
         if (!$id_product) {
-            throw new DevelopmentErrorException('You need to provide a product id');
+            throw new DevelopmentErrorException('You need to provide a product id', null, 5002);
         }
 
         return new \Product($id_product, $full, $id_lang, $id_shop, $context);

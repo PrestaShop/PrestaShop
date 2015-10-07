@@ -48,7 +48,7 @@ class Adapter_LegacyContext
             !isset($legacyContext->language) ||
             !isset($legacyContext->link)
         ) {
-            throw new DevelopmentErrorException('Legacy context is not set properly. Cannot use it to merge with Context structure.');
+            throw new DevelopmentErrorException('Legacy context is not set properly. Cannot use it to merge with Context structure.', null, 5015);
         }
         return $legacyContext;
     }
