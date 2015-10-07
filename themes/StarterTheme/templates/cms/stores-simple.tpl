@@ -18,7 +18,7 @@
             <img src="" alt="">
           </div>
           <ul>
-            <li>{$store.address.formatted}</li>
+            <li>{$store.address.formatted nofilter}</li>
             {if $store.phone}
               <li>{l s='Phone:'} {$store.phone}</li>
             {/if}
