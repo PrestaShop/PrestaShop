@@ -6,7 +6,7 @@
 
     <label class="radio-block">
         <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
-        {$address.formatted}
+        {$address.formatted nofilter}
     </label>
 
     <footer>
