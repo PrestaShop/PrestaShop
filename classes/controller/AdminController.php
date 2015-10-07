@@ -786,7 +786,7 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-
+        $definition = false;
         if (isset($this->className) && $this->className) {
             $definition = ObjectModel::getDefinition($this->className);
         }
