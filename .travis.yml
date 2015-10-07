@@ -18,6 +18,7 @@ before_install:
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16"
 
 before_script:
+  - sudo apt-get install firefox
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
