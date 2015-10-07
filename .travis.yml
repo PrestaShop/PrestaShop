@@ -19,6 +19,7 @@ before_install:
 
 before_script:
   - phpenv config-rm xdebug.ini
+  - sudo apt-get install firefox
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
