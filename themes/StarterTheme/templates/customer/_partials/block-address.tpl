@@ -3,7 +3,7 @@
     <h1 class="h4">{$address.alias}</h1>
   </header>
 
-  <p>{$address.formatted}</p>
+  <p>{$address.formatted nofilter}</p>
 
   <footer class="actions address-actions">
     <ul class="action-list">
