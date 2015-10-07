@@ -15,7 +15,7 @@ function toggleAllTermsCheckboxes () {
 describe('The One Page Checkout', function () {
   describe('The customer is already logged in', function () {
     before(function () {
-      return browser.loginDefaultCustomer();
+      return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]') && browser.loginDefaultCustomer();
     });
 
     after(function () {
@@ -81,6 +81,67 @@ describe('The One Page Checkout', function () {
         .click('#checkout-addresses button[type="submit"]')
       ;
     }
+
+    describe('Delivery options', function () {
+
+      describe('with JS', function () {
+        before(function () {
+          return browser.url(fixtures.urls.checkout);
+        });
+
+        it('should display carriers', function () {
+          return browser.element('#delivery-method');
+        });
+
+        it('should have one and only one carrier selected', function () {
+          return browser.elements('#delivery-method input:checked').then(function (elements) {
+            elements.value.length.should.equal(1);
+          });
+        });
+
+        it('should remember carrier selected after reload', function () {
+          return browser.click('#delivery-method input:not(:checked)').then(function () {
+            browser.getAttribute('#delivery-method input:checked', 'id').then(function (firstattr) {
+              browser.refresh().then(function () {
+                browser.getAttribute('#delivery-method input:checked', 'id').then(function (secondattr) {
+                  secondattr.should.equal(firstattr);
+                });
+              });
+            });
+          });
+        });
+      });
+
+      describe('without JS', function () {
+        before(function () {
+          return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1');
+        });
+
+        it('should display carriers', function () {
+          return browser.element('#delivery-method');
+        });
+
+        it('should have one and only one carrier selected', function () {
+          return browser.elements('#delivery-method input:checked').then(function (elements) {
+            elements.value.length.should.equal(1);
+          });
+        });
+
+        it('should remember carrier selected after reload', function () {
+          return browser.click('#delivery-method input:not(:checked)').then(function () {
+            browser.getAttribute('#delivery-method input:checked', 'id').then(function (firstattr) {
+              browser.click('#delivery-method button[type="submit"]').then(function () {
+                browser.refresh().then(function () {
+                  browser.getAttribute('#delivery-method input:checked', 'id').then(function (secondattr) {
+                    secondattr.should.equal(firstattr);
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
 
     describe('payment and conditions with JS', function () {
       before(function () {
