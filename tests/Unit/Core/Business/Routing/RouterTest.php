@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Tests\Fake\FakeRouter;
 
-class Fake_Adapter_HookManager extends \Adapter_HookManager
+class Fake_Adapter_HookManager extends \PrestaShop\PrestaShop\Adapter\EventToHookBridge
 {
     public function exec(
         $hook_name,

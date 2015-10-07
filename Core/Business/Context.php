@@ -54,16 +54,14 @@ class Context extends ParameterBag
      * - suppress 'override with legacy context' step.
      *
      * @param \Adapter_LegacyContext $legacyContext Given by IoC
-     * @param Container $container The application container
+     * @param \Core_Business_ConfigurationInterface $configuration The application configuration manager
      */
-    final public function __construct(\Adapter_LegacyContext $legacyContext, Container $container)
+    final public function __construct(\Adapter_LegacyContext $legacyContext, \Core_Business_ConfigurationInterface $configuration)
     {
         if (self::$instantiated == true) {
             throw new DevelopmentErrorException('The Context cannot be instantiated twice. Please call it from container.', get_class($this), 2011);
         }
         self::$instantiated = true;
-
-        $configuration = $container->make('Core_Business_ConfigurationInterface');
 
         // Default values now.
         $this->set('app_entry_point', 'unknown'); // admin / front / unknown
