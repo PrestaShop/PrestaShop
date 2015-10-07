@@ -80,9 +80,9 @@ final class BaseEventDispatcher extends EventDispatcher
             array('after_reactivate', 'PrestaShop\\PrestaShop\\Core\\Business\\Module\\ModuleEventListener', 'onAfter', 128, false),
         ), // all events concerning modules manipulation: install, update, uninstall, etc...
         'hook' => array(
-            array('legacy_actionProductAdd', 'Adapter_HookManager', 'onHook', 0, true),
-            array('legacy_actionProductUpdate', 'Adapter_HookManager', 'onHook', 0, true),
-            array('legacy_actionCategoryUpdate', 'Adapter_HookManager', 'onHook', 0, true),
+            array('legacy_actionProductAdd', 'PrestaShop\\PrestaShop\\Adapter\\EventToHookBridge', 'onHook', 0, true),
+            array('legacy_actionProductUpdate', 'PrestaShop\\PrestaShop\\Adapter\\EventToHookBridge', 'onHook', 0, true),
+            array('legacy_actionCategoryUpdate', 'PrestaShop\\PrestaShop\\Adapter\\EventToHookBridge', 'onHook', 0, true),
             // TODO: complete this list for Admin Product page
         ) // hooks
     );

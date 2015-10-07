@@ -76,7 +76,7 @@ class Core_Business_Stock_StockManager
         $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
         $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
-        foreach($packs as $pack) {
+        foreach ($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
             if (!((int)$pack->pack_stock_type == 2) &&
                 !((int)$pack->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') == 2)
@@ -115,7 +115,7 @@ class Core_Business_Stock_StockManager
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
         $packItemsManager = Adapter_ServiceLocator::get('Adapter_PackItemsManager');
         $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
-        $hookManager = Adapter_ServiceLocator::get('Adapter_HookManager');
+        $hookManager = Adapter_ServiceLocator::get('PrestaShop\\PrestaShop\\Adapter\\EventToHookBridge');
 
         // Update quantity of the pack products
         if ($packItemsManager->isPack($product)) {
@@ -146,6 +146,4 @@ class Core_Business_Stock_StockManager
             )
         );
     }
-
-
 }

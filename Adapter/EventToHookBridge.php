@@ -23,6 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
 
@@ -30,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Business\Dispatcher\HookEvent;
  * This adapter will be registered as a EventDispatcher listener, on the 'hook' dispatcher,
  * and will allow legacy modules/legacy hooks to be called by the new Architecture.
  */
-class Adapter_HookManager
+class EventToHookBridge
 {
     /**
      * Execute modules for specified hook.
