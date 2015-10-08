@@ -4,8 +4,58 @@ require '../../config/config.inc.php';
 
 // useful variables
 
-$language = Context::getContext()->language;
-$shop     = Context::getContext()->shop;
+$language   = Context::getContext()->language;
+$shop       = Context::getContext()->shop;
+$dbPrefix   = _DB_PREFIX_;
+
+// Enable the StarterTheme
+
+Db::getInstance()->execute("REPLACE INTO {$dbPrefix}theme (
+    id_theme,
+    name,
+    directory,
+    responsive,
+    default_left_column,
+    default_right_column,
+    product_per_page
+) VALUES (2, 'StarterTheme', 'StarterTheme', 1, 0, 0, 12)");
+
+Db::getInstance()->execute("UPDATE {$dbPrefix}shop SET id_theme=2");
+
+// Enable URL rewriting
+
+function enableURLRewriting() {
+    Configuration::updateValue('PS_REWRITING_SETTINGS', 1);
+    Tools::generateHtaccess();
+}
+
+if (!Configuration::get('PS_REWRITING_SETTINGS')) {
+    enableURLRewriting();
+}
+
+echo "- URL rewriting enabled\n";
+
+// Setup modules
+
+function disableModule ($moduleName) {
+    $module = Module::getInstanceByName($moduleName);
+    $module->disable();
+    echo "- module `$moduleName` disabled\n";
+}
+
+function hookModule ($moduleName, $hookName) {
+    $dbPrefix   = _DB_PREFIX_;
+    $module     = Module::getInstanceByName($moduleName);
+    $moduleId   = $module->id;
+    Db::getInstance()->execute(
+        "DELETE FROM {$dbPrefix}hook_module WHERE id_module=$moduleId"
+    );
+    $module->registerHook($hookName);
+    echo "- module `$moduleName` hooked to `$hookName`\n";
+}
+
+disableModule('blocklayered');
+hookModule('blocktopmenu', 'displayTop');
 
 // We need a customizable product: we add a single required text field to the product with id 1.
 
@@ -31,5 +81,16 @@ $customizableProduct->save();
 $_POST[implode('_', ['label', 1, $id_customization_field, $language->id, $shop->id])] = 'my field';
 $_POST[implode('_', ['require', 1, $id_customization_field])] = true;
 $customizableProduct->updateLabels();
+
+echo "- added a required customizable text field to product #1\n";
+
+// Enable OPC
+
+Configuration::updateValue('PS_ORDER_PROCESS_TYPE', PS_ORDER_PROCESS_OPC);
+echo "- order process type set to OPC\n";
+
+// We need 2 languages for some tests
+Language::checkAndAddLanguage('fr');
+echo "- added French language just so that we have 2\n";
 
 echo "Shop fixtures prepared for tests!\n";
