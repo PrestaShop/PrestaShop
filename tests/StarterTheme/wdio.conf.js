@@ -1,5 +1,6 @@
 exports.config = {
-
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
     //
     // ==================
     // Specify Test Files
@@ -30,7 +31,8 @@ exports.config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
-        browserName: 'firefox'
+        browserName: 'firefox',
+        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
     }],
     //
     // ===================
