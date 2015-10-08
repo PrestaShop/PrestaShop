@@ -28,7 +28,7 @@ before_script:
   - sudo apt-get install firefox
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
-  version-name)/etc/php-fpm.conf
+    version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
@@ -50,6 +50,9 @@ script:
   --db_create=1 --name=prestashop.unit.test --password=123456789
   - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
   - cd /var/www/prestashop.unit.test && php bin/phpunit -c admin-dev/
+  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
+    --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
+    --db_create=1 --name=prestashop.unit.test --password=123456789
   - cd /var/www/prestashop.unit.test/tests/StarterTheme
   - curl http://localhost/prestashop.unit.test
   - mv settings.travis.js settings.js
