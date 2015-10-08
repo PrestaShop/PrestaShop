@@ -26,7 +26,7 @@
 {if isset($controller) && !empty($controller) && $controller != 'adminnotfound'}
 	<h1>{l s='The controller %s is missing or invalid.' sprintf=$controller}</h1>
 {/if}
-<a class="btn btn-default" href="javascript:window.history.back();">
+<a class="btn btn-default js-back" href="#">
 	<i class="icon-arrow-left"></i>
 	{l s='Back to the previous page'}
 </a>
