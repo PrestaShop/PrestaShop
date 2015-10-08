@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ba7a329fefcf09a9b70a1f8f25368a0c",
-    "content-hash": "cc8bd90741e6b10dda0cc94b53cf43b3",
+    "hash": "75c2db90e8dab414175c5bc1971d9821",
+    "content-hash": "d09ebed3ae67c6433650bcdc10a042fa",
     "packages": [
         {
             "name": "composer/installers",
@@ -611,12 +611,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcontact.git",
-                "reference": "e24a29b0274f19afd475b33c1195ce2ff0c0f729"
+                "reference": "ad2125a2b2ed73a79864b46030034e858ee2ab2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/e24a29b0274f19afd475b33c1195ce2ff0c0f729",
-                "reference": "e24a29b0274f19afd475b33c1195ce2ff0c0f729",
+                "url": "https://api.github.com/repos/PrestaShop/blockcontact/zipball/ad2125a2b2ed73a79864b46030034e858ee2ab2c",
+                "reference": "ad2125a2b2ed73a79864b46030034e858ee2ab2c",
                 "shasum": ""
             },
             "require": {
@@ -637,41 +637,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blockcontact/tree/feat/starter-theme"
             },
-            "time": "2015-09-25 15:13:04"
-        },
-        {
-            "name": "prestashop/blockcontactinfos",
-            "version": "dev-feat/starter-theme",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/blockcontactinfos.git",
-                "reference": "c48bc5a7361358c88c71a0409bd00746f9e7b835"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcontactinfos/zipball/c48bc5a7361358c88c71a0409bd00746f9e7b835",
-                "reference": "c48bc5a7361358c88c71a0409bd00746f9e7b835",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "type": "prestashop-module",
-            "license": [
-                "AFL - Academic Free License (AFL 3.0)"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop module blockcontactinfos",
-            "homepage": "https://github.com/PrestaShop/blockcontactinfos",
-            "support": {
-                "source": "https://github.com/PrestaShop/blockcontactinfos/tree/feat/starter-theme"
-            },
-            "time": "2015-09-23 16:30:51"
+            "time": "2015-10-08 09:56:00"
         },
         {
             "name": "prestashop/blockcurrencies",
@@ -1131,12 +1097,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blocksearch.git",
-                "reference": "beb60924d1a8f8b984ba7f6603d796935f794f63"
+                "reference": "f13f684e2678356875c6292833a361a833231a8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blocksearch/zipball/beb60924d1a8f8b984ba7f6603d796935f794f63",
-                "reference": "beb60924d1a8f8b984ba7f6603d796935f794f63",
+                "url": "https://api.github.com/repos/PrestaShop/blocksearch/zipball/f13f684e2678356875c6292833a361a833231a8f",
+                "reference": "f13f684e2678356875c6292833a361a833231a8f",
                 "shasum": ""
             },
             "require": {
@@ -1155,7 +1121,7 @@
             ],
             "description": "PrestaShop module blocksearch",
             "homepage": "https://github.com/PrestaShop/blocksearch",
-            "time": "2015-08-28 15:05:16"
+            "time": "2015-10-02 06:44:41"
         },
         {
             "name": "prestashop/blocksharefb",
@@ -1984,12 +1950,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/socialsharing.git",
-                "reference": "b15d3d73823d55652a8c601512cf14a0fab3982d"
+                "reference": "7c59ed31112836d030d47c6e46c8f965b9feef3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/socialsharing/zipball/b15d3d73823d55652a8c601512cf14a0fab3982d",
-                "reference": "b15d3d73823d55652a8c601512cf14a0fab3982d",
+                "url": "https://api.github.com/repos/PrestaShop/socialsharing/zipball/7c59ed31112836d030d47c6e46c8f965b9feef3a",
+                "reference": "7c59ed31112836d030d47c6e46c8f965b9feef3a",
                 "shasum": ""
             },
             "require": {
@@ -2008,7 +1974,7 @@
             ],
             "description": "PrestaShop module socialsharing",
             "homepage": "https://github.com/PrestaShop/socialsharing",
-            "time": "2015-08-28 15:10:20"
+            "time": "2015-10-01 14:40:11"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -2720,12 +2686,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/themeconfigurator.git",
-                "reference": "a2711159c27c1a610b40ddae0510ccb482260c63"
+                "reference": "260c72c6b87536e727ddb5b8e6afd9f4bbab45e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/themeconfigurator/zipball/a2711159c27c1a610b40ddae0510ccb482260c63",
-                "reference": "a2711159c27c1a610b40ddae0510ccb482260c63",
+                "url": "https://api.github.com/repos/PrestaShop/themeconfigurator/zipball/260c72c6b87536e727ddb5b8e6afd9f4bbab45e0",
+                "reference": "260c72c6b87536e727ddb5b8e6afd9f4bbab45e0",
                 "shasum": ""
             },
             "require": {
@@ -2744,7 +2710,7 @@
             ],
             "description": "PrestaShop module themeconfigurator",
             "homepage": "https://github.com/PrestaShop/themeconfigurator",
-            "time": "2015-08-28 15:12:53"
+            "time": "2015-10-02 06:45:32"
         },
         {
             "name": "prestashop/trackingfront",
@@ -4200,7 +4166,6 @@
         "prestashop/blockcms": 20,
         "prestashop/blockcmsinfo": 20,
         "prestashop/blockcontact": 20,
-        "prestashop/blockcontactinfos": 20,
         "prestashop/blockcurrencies": 20,
         "prestashop/blockcustomerprivacy": 20,
         "prestashop/blockfacebook": 20,
