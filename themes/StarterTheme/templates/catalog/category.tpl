@@ -10,8 +10,9 @@
       </div>
       <div id="category-description">{$category.description nofilter}</div>
     {/block}
-    <aside>
-      {block name="category_subcategories"}
+
+    {block name="category_subcategories"}
+      <aside>
         {if $subcategories|count}
           <nav class="subcategories">
             <ul class="category-miniature">
@@ -25,8 +26,9 @@
             </ul>
           </nav>
         {/if}
-      {/block}
-    </aside>
+      </aside>
+    {/block}
+
   </header>
   {block name="category_products"}
     {if $products|count}
