@@ -24,24 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class SupplierControllerCore extends FrontController
+class SupplierControllerCore extends ProductPresentingFrontControllerCore
 {
     public $php_self = 'supplier';
 
     /** @var Supplier */
     protected $supplier;
-
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-    }
+    protected $supplier_products;
+    protected $nbProducts;
 
     public function canonicalRedirection($canonicalURL = '')
     {
-        if (Tools::getValue('live_edit')) {
-            return;
-        }
         if (Validate::isLoadedObject($this->supplier)) {
             parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
         }
@@ -59,9 +52,8 @@ class SupplierControllerCore extends FrontController
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
             if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active) {
-                header('HTTP/1.1 404 Not Found');
-                header('Status: 404 Not Found');
-                $this->errors[] = Tools::displayError('The chosen supplier does not exist.');
+                $this->redirect_after = '404';
+                $this->redirect();
             } else {
                 $this->canonicalRedirection();
             }
@@ -74,15 +66,20 @@ class SupplierControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
 
-        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
-            $this->productSort(); // productSort must be called before assignOne
-            $this->assignOne();
-            $this->setTemplate(_PS_THEME_DIR_.'supplier.tpl');
+            if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+                $this->productSort();
+                $this->assignOne();
+                $this->setTemplate('catalog/supplier.tpl');
+            } else {
+                $this->assignAll();
+                $this->setTemplate('catalog/suppliers.tpl');
+            }
         } else {
-            $this->assignAll();
-            $this->setTemplate(_PS_THEME_DIR_.'supplier-list.tpl');
+            $this->redirect_after = '404';
+            $this->redirect();
         }
     }
 
@@ -91,30 +88,22 @@ class SupplierControllerCore extends FrontController
      */
     protected function assignOne()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
-            $this->supplier->description = Tools::nl2br(trim($this->supplier->description));
-            $nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
-            $this->pagination((int)$nbProducts);
+        $this->productSort();
+        $this->assignSortOptions();
+        $this->assignProductList();
 
-            $products = $this->supplier->getProducts($this->supplier->id, $this->context->cookie->id_lang, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
-            $this->addColorsToProductList($products);
+        $products = array_map(function (array $product) {
+            return $this->prepareProductForTemplate($product);
+        }, $this->supplier_products);
 
-            $this->context->smarty->assign(
-                array(
-                    'nb_products' => $nbProducts,
-                    'products' => $products,
-                    'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
-                    'supplier' => $this->supplier,
-                    'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'),
-                    'body_classes' => array(
-                        $this->php_self.'-'.$this->supplier->id,
-                        $this->php_self.'-'.$this->supplier->link_rewrite
-                    )
-                )
-            );
-        } else {
-            Tools::redirect('index.php?controller=404');
+        if ($this->nbProducts <= 0) {
+            $this->warning[] = $this->l('No products for this supplier.');
         }
+
+        $this->context->smarty->assign([
+            'supplier' => $this->objectSerializer->toArray($this->supplier),
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -122,33 +111,94 @@ class SupplierControllerCore extends FrontController
      */
     protected function assignAll()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
-            $result = Supplier::getSuppliers(true, $this->context->language->id, true);
-            $nbProducts = count($result);
-            $this->pagination($nbProducts);
+        $this->context->smarty->assign([
+            'suppliers' => $this->getTemplateVarSuppliers(),
+        ]);
+    }
 
-            $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true, $this->p, $this->n);
-            foreach ($suppliers as &$row) {
-                $row['image'] = (!file_exists(_PS_SUPP_IMG_DIR_.'/'.$row['id_supplier'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $row['id_supplier'];
+    public function assignProductList()
+    {
+        $this->nbProducts = $this->supplier->getProducts($this->supplier->id, null, null, null, $this->orderBy, $this->orderWay, true);
+        $this->pagination((int)$this->nbProducts);
+        $this->supplier_products = $this->supplier->getProducts($this->supplier->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
+
+        $this->addColorsToProductList($this->supplier_products);
+
+        foreach ($this->supplier_products as &$product) {
+            if (isset($product['id_product_attribute']) && $product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity'])) {
+                $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
-
-            $this->context->smarty->assign(array(
-                'pages_nb' => ceil($nbProducts / (int)$this->n),
-                'nbSuppliers' => $nbProducts,
-                'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
-                'suppliers_list' => $suppliers,
-                'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            ));
-        } else {
-            Tools::redirect('index.php?controller=404');
         }
     }
-    
-    /**
-    * Get instance of current supplier
-    */
-    public function getSupplier()
+
+    protected function getSortOptions()
     {
-        return $this->supplier;
+        $settings = $this->getProductPresentationSettings();
+
+        if ($settings->catalog_mode) {
+            $options = [];
+        } else {
+            $options = [
+                ['orderBy' => 'price', 'sortOrder' => 'asc', 'label' => $this->l('Increasing price')],
+                ['orderBy' => 'price', 'sortOrder' => 'desc', 'label' => $this->l('Decreasing price')],
+            ];
+        }
+
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'asc', 'label' => $this->l('Product name, A to Z')];
+        $options[] = ['orderBy' => 'name', 'sortOrder' => 'desc', 'label' => $this->l('Product name, Z to A')];
+
+        if (!$settings->catalog_mode && $settings->stock_management_enabled) {
+            $options[] = ['orderBy' => 'quantity', 'sortOrder' => 'desc', 'label' => $this->l('In stock')];
+        }
+
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'asc', 'label' => $this->l('Product reference, A to Z')];
+        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'desc', 'label' => $this->l('Product reference, Z to A')];
+
+        $pageURL = $this->context->link->getSupplierLink(
+            $this->supplier
+        );
+
+        $options = array_map(function ($option) use ($pageURL) {
+            $option['url'] = $pageURL . '?orderby=' . $option['orderBy'] . '&orderway=' . $option['sortOrder'];
+            $option['current'] = ($option['orderBy'] === Tools::getValue('orderby')) &&
+                                 ($option['sortOrder'] === Tools::getValue('orderway'))
+            ;
+            return $option;
+        }, $options);
+
+        return $options;
+    }
+
+    public function assignSortOptions()
+    {
+        $this->context->smarty->assign('sort_options', $this->getSortOptions());
+    }
+
+    public function prepareProductForTemplate(array $product)
+    {
+        $presenter = $this->getProductPresenter();
+        $settings = $this->getProductPresentationSettings();
+
+        return $presenter->presentForListing(
+            $settings,
+            $product,
+            $this->context->language
+        );
+    }
+
+    public function getTemplateVarSuppliers()
+    {
+        $suppliers = Supplier::getSuppliers(true, $this->context->language->id, true);
+        $suppliers_for_display = [];
+
+        foreach ($suppliers as $supplier) {
+            $suppliers_for_display[$supplier['id_supplier']] = $supplier;
+            $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
+            $suppliers_for_display[$supplier['id_supplier']]['image'] = _THEME_SUP_DIR_.$supplier['id_supplier'].'-medium_default.jpg';
+            $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
+            $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1 ? sprintf($this->l('%s products'), $supplier['nb_products']) : sprintf($this->l('% product'), $supplier['nb_products']);
+        }
+
+        return $suppliers_for_display;
     }
 }
