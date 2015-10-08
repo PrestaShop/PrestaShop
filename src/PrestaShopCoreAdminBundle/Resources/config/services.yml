@@ -1,0 +1,13 @@
+parameters:
+    prestashop.core.admin.page_preference_interface: \PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+
+services:
+    # Interfaced services
+    prestashop.core.admin.page_preference_interface:
+        class: PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface
+
+    # Adapter services that decorates interfaced services
+    prestashop.adapter.admin.page_preference:
+        class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+        decorates: prestashop.core.admin.page_preference_interface
+        public: false
