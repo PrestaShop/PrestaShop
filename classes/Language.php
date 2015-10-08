@@ -266,13 +266,16 @@ class LanguageCore extends ObjectModel
         $lPath_from = _PS_TRANSLATIONS_DIR_.(string)$iso_from.'/';
         $tPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/';
         $pPath_from = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/pdf/';
-        $mPath_from = _PS_MAIL_DIR_.(string)$iso_from.'/';
+        $mPath_from_array[] = _PS_MAIL_DIR_.(string)$iso_from.'/';
+        if (!$copy) {
+            $mPath_from_array[] = _PS_ROOT_DIR_.'/themes/'.(string)$theme_from.'/mails/'.(string)$iso_from.'/';
+        }
 
         if ($copy) {
             $lPath_to = _PS_TRANSLATIONS_DIR_.(string)$iso_to.'/';
             $tPath_to = _PS_ROOT_DIR_.'/themes/'.(string)$theme_to.'/';
             $pPath_to = _PS_ROOT_DIR_.'/themes/'.(string)$theme_to.'/pdf/';
-            $mPath_to = _PS_MAIL_DIR_.(string)$iso_to.'/';
+            $mPath_to_array[] = _PS_MAIL_DIR_.(string)$iso_to.'/';
         }
 
         $lFiles = array('admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php');
@@ -323,10 +326,10 @@ class LanguageCore extends ObjectModel
         $files_mail = array();
         $files_modules = array();
 
-        // When a copy is made from a theme in specific language
+        // When a copy is made from a theme in a specific language
         // to an other theme for the same language,
-        // it's avoid to copy Translations, Mails files
-        // and modules files which are not override by theme.
+        // it avoids to copy Translations, Mails files
+        // and modules files which are not overriden by theme.
         if (!$copy || $iso_from != $iso_to) {
             // Translations files
             if (!$check || ($check && (string)$iso_from != 'en')) {
@@ -340,11 +343,15 @@ class LanguageCore extends ObjectModel
             $files = array_merge($files, $files_tr);
 
             // Mail files
-            if (!$check || ($check && (string)$iso_from != 'en')) {
-                $files_mail[$mPath_from.'lang.php'] = ($copy ? $mPath_to.'lang.php' : ++$number);
-            }
-            foreach ($mFiles as $file) {
-                $files_mail[$mPath_from.$file] = ($copy ? $mPath_to.$file : ++$number);
+            if (is_array($mPath_from_array) && count($mPath_from_array)) {
+                foreach ($mPath_from_array as $key => $mPath_from) {
+                    if (!$check || ($check && (string)$iso_from != 'en')) {
+                        $files_mail[$mPath_from.'lang.php'] = ($copy && isset($mPath_to[$key])? $mPath_to_array[$key].'lang.php' : ++$number);
+                    }
+                    foreach ($mFiles as $file) {
+                        $files_mail[$mPath_from.$file] = ($copy && isset($mPath_to[$key])? $mPath_to_array[$key].$file : ++$number);
+                    }
+                }
             }
             if ($select == 'mail') {
                 return $files_mail;
