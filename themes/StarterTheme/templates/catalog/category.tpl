@@ -12,15 +12,21 @@
     {/block}
 
     {block name="category_subcategories"}
-      {if $subcategories|count}
-        <div class="subcategories">
-            {foreach from=$subcategories item="subcategory"}
-              {block name="category_miniature"}
-                {include './category-miniature.tpl' category=$subcategory}
-              {/block}
-            {/foreach}
-          </div>
-      {/if}
+      <aside>
+        {if $subcategories|count}
+          <nav class="subcategories">
+            <ul class="category-miniature">
+              <li>
+                {foreach from=$subcategories item="subcategory"}
+                  {block name="category_miniature"}
+                    {include './category-miniature.tpl' category=$subcategory}
+                  {/block}
+                {/foreach}
+              </li>
+            </ul>
+          </nav>
+        {/if}
+      </aside>
     {/block}
 
     {block name="category_products"}
@@ -28,4 +34,5 @@
     {/block}
 
   </section>
+
 {/block}
