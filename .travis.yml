@@ -38,6 +38,9 @@ script:
   --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
   --db_create=1 --name=prestashop.unit.test --password=123456789
 - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
+- php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
+  --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
+  --db_create=1 --name=prestashop.unit.test --password=123456789
 - cd /var/www/prestashop.unit.test/tests/StarterTheme
 - curl http://localhost/prestashop.unit.test
 - mv settings.travis.js settings.js
