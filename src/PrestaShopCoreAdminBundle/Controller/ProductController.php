@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * TODO !2
@@ -63,5 +64,23 @@ class ProductController extends Controller
         return $this->render('default/index.html.twig', array(
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
         ));
+    }
+
+    /**
+     * @Template
+     *
+     * Product form
+     *
+     * @param int $id The product ID
+     *
+     * @return array Send datas to view
+     */
+    public function formAction($id)
+    {
+        $request = $this->get('request'); //example call request service
+
+        return array(
+            'title' => $id ? 'Modifier' : 'Ajouter',
+        );
     }
 }

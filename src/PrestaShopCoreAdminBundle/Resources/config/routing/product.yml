@@ -3,3 +3,13 @@ admin_product_catalog:
     path: /catalog
     defaults:
         _controller: PrestaShopCoreAdminBundle:Product:catalog
+
+admin_product_form:
+    path: /form/{id}
+    methods:  [GET, POST]
+    defaults:
+        id: 0
+        _legacy_path: AdminProducts
+        _controller: PrestaShopCoreAdminBundle:Product:form
+    requirements:
+        id: \d+
