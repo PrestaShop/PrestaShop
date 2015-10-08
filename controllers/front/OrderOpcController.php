@@ -267,6 +267,23 @@ class OrderOpcControllerCore extends FrontController
             'delivery_options' => $this->renderDeliveryOptions(),
         ]);
 
+        if (!$this->context->customer->isLogged()) {
+            $id_country = Tools::getValue('id_country');
+            if (!$id_country) {
+                $id_country = Tools::getCountry();
+            }
+
+            $address_formatter = new Adapter_AddressFormatter(new Country($id_country));
+            $address_form = new Adapter_AddressForm(
+                $address_formatter,
+                new Adapter_Translator()
+            );
+
+            $this->context->smarty->assign([
+                'address_fields' => $address_form->getAddressFormat(),
+            ]);
+        }
+
         $this->setTemplate('checkout/opc.tpl');
     }
 }
