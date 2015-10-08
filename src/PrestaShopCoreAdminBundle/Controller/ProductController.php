@@ -29,28 +29,36 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * TODO !2
+ */
 class ProductController extends Controller
 {
+    /**
+     * TODO !3
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function catalogAction(Request $request)
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
         if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
-            // TODO: legacy URL generator.
-//             $this->redirectToRoute(
-//                 'admin_product_catalog',
-//                 array(
-//                     // do not tranmit limit & offset: go to the first page when
-//                     'productOrderby' => $request->attributes->get('orderBy'),
-//                     'productOrderway' => $request->attributes->get('orderWay')
-//                 ),
-//                 true, // force legacy URL
-//                 false // temporary
-//             );
+            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            /* @var $legacyUrlGenerator UrlGeneratorInterface */
+            $redirectionParams = array(
+                // do not tranmit limit & offset: go to the first page when
+                'productOrderby' => $request->attributes->get('orderBy'),
+                'productOrderway' => $request->attributes->get('orderWay')
+            );
+            $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
+        // TODO !9: continue
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', array(
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),

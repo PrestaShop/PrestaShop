@@ -25,6 +25,9 @@
  */
 namespace PrestaShopCoreAdminBundle\TransitionalBehavior;
 
+/**
+ * TODO !5: PHPDoc
+ */
 interface AdminPagePreferenceInterface
 {
     /**
@@ -51,4 +54,6 @@ interface AdminPagePreferenceInterface
      * @return boolean True to show the switch to legacy page button.
      */
     public function getTemporaryShouldAllowUseLegacyPage($page = null);
+    
+    // TODO !6: TU
 }

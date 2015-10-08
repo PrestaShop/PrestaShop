@@ -23,24 +23,19 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopCoreAdminBundle\DependencyInjection;
+namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\FileLoader;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CoreAdminExtension extends Extension
+/**
+ * TODO !1 : PHPDoc
+ */
+class UrlGenerator implements UrlGeneratorInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        // TODO !1 : voir dans l'ancienne archi le code pour ca !
     }
-
-    public function getAlias()
-    {
-        return 'prestashop_core_admin';
-    }
+    
+    // TODO !4: TU
 }

@@ -2,7 +2,19 @@ parameters:
     prestashop.core.admin.page_preference_interface: \PrestaShop\PrestaShop\Adapter\Admin\PagePreference
 
 services:
-    # Interfaced services
+    # URL generation
+    prestashop.core.admin.url_generator_factory:
+        class: PrestaShopCoreAdminBundle\TransitionalBehavior\AdminUrlGeneratorFactory
+        arguments:
+            - @router
+    prestashop.core.admin.url_generator_legacy:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: [@prestashop.core.admin.url_generator_factory, forLegacy]
+    prestashop.core.admin.url_generator:
+        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+        factory: [@prestashop.core.admin.url_generator_factory, forSymfony]
+    
+    # Interfaced services to decorate
     prestashop.core.admin.page_preference_interface:
         class: PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface
 
