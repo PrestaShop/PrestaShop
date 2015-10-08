@@ -23,3 +23,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         decorates: prestashop.core.admin.page_preference_interface
         public: false
+
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\Adapter_LegacyContext

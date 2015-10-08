@@ -78,6 +78,7 @@ class ProductController extends Controller
     public function formAction($id)
     {
         $request = $this->get('request'); //example call request service
+        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
 
         return array(
             'title' => $id ? 'Modifier' : 'Ajouter',
