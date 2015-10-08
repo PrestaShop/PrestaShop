@@ -38,6 +38,9 @@ class AddressControllerCore extends FrontController
     protected $_address;
     protected $id_country;
 
+    protected $address_form;
+    protected $address_formatter;
+
     public $form_errors = [];
 
     /**
@@ -84,6 +87,14 @@ class AddressControllerCore extends FrontController
                 Tools::redirect('index.php?controller=addresses');
             }
         }
+
+        $this->address_formatter = new Adapter_AddressFormatter(new Country(is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country));
+        $this->address_form = new Adapter_AddressForm(
+            $this->address_formatter,
+            Tools::getAllValues(),
+            $this->context->customer,
+            new Adapter_Translator()
+        );
     }
 
     /**
@@ -263,11 +274,6 @@ class AddressControllerCore extends FrontController
 
         $back = Tools::getValue('back');
         $mod = Tools::getValue('mod');
-        $address_formatter = new Adapter_AddressFormatter(new Country(is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country));
-        $address_form = new Adapter_AddressForm(
-            $address_formatter,
-            new Adapter_Translator()
-        );
 
         $this->context->smarty->assign(array(
             'form_validation' => Address::$definition['fields'],
@@ -278,7 +284,7 @@ class AddressControllerCore extends FrontController
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
             'countries' => $countries,
-            'address_fields' => $address_form->getAddressFormat(),
+            'address_fields' => $this->address_form->getAddressFormat(),
             'back' => Tools::safeOutput($back),
             'mod' => Tools::safeOutput($mod),
         ));
