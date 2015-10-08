@@ -27,21 +27,43 @@
 class Adapter_AddressForm
 {
     private $address_formatter;
+    private $customer;
+    private $fields_value = [];
     private $translator;
+
     private $ordered_address_fields = [];
     private $required_fields = [];
 
-    public function __construct(Adapter_AddressFormatter $address_formatter, Adapter_Translator $translator)
+    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, Customer $customer, Adapter_Translator $translator)
     {
         $this->address_formatter = $address_formatter;
+        $this->customer = $customer;
         $this->translator = $translator;
         $this->required_fields = $this->address_formatter->getRequired();
+        $this->fields_value = $fields_value;
     }
 
     public function getAddressFormat()
     {
-        $this->setOrderedFields()->addLabelTranslation()->addRequired();
+        $this->setOrderedFields()->addLabelTranslation()->addRequired()->addEmptyErrors();
         return $this->ordered_address_fields;
+    }
+
+    public function getAddressFormatWithErrors()
+    {
+        $this->setOrderedFields()->addLabelTranslation()->addRequired()->addEmptyErrors()->checkErrors();
+        return $this->ordered_address_fields;
+    }
+
+    public function hasErrors()
+    {
+        $this->setOrderedFields()->checkErrors();
+        foreach ($this->ordered_address_fields as $item) {
+            if (!empty($item['errors'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function setOrderedFields()
@@ -116,6 +138,80 @@ class Adapter_AddressForm
                     $this->ordered_address_fields[$field]['label'] = '';
                     break;
             }
+        }
+
+        return $this;
+    }
+
+    protected function checkErrors()
+    {
+        $form_errors = [];
+
+        // Validate required fields
+        foreach ($this->fields_value as $field_name => $val) {
+            if (in_array($field_name, $this->required_fields) && empty($val)) {
+                $form_errors[$field_name][] = $this->translator->l('This information is required.', 'Address');
+            }
+        }
+
+        // Check phone
+        if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !$this->fields_value['phone'] && !$this->fields_value['phone_mobile']) {
+            $form_errors['phone'][] = $form_errors['phone_mobile'][] = $this->translator->l('You must register at least one phone number.', 'Address');
+        }
+
+        if ($this->fields_value['id_country']) {
+            // Check country
+            if (!($country = new Country($this->fields_value['id_country'])) || !Validate::isLoadedObject($country)) {
+                throw new PrestaShopException('Country cannot be loaded with '.$this->fields_value['id_country']);
+            }
+
+            if ((int)$country->contains_states && !(int)$this->fields_value['id_state']) {
+                $form_errors['state'][] = $this->translator->l('This country requires you to chose a State.', 'Address');
+            }
+
+            if (!$country->active) {
+                $form_errors['country'][] = $this->translator->l('This country is not active.', 'Address');
+            }
+
+            $postcode = $this->fields_value['postcode'];
+            /* Check zip code format */
+            if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
+                $form_errors['postcode'][] = sprintf($this->translator->l('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s', 'Address'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
+            } elseif (empty($postcode) && $country->need_zip_code) {
+                $form_errors['postcode'][] = $this->translator->l('A Zip/Postal code is required.', 'Address');
+            } elseif ($postcode && !Validate::isPostCode($postcode)) {
+                $form_errors['postcode'][] = $this->translator->l('The Zip/Postal code is invalid.', 'Address');
+            }
+
+            // Check country DNI
+            if ($country->isNeedDni() && (!$this->fields_value['dni'] || !Validate::isDniLite($this->fields_value['dni']))) {
+                $form_errors['dni'][] = $this->translator->l('The identification number is incorrect or has already been used.', 'Address');
+            }
+        } else {
+            $form_errors['country'][] = $this->translator->l('This information is required.', 'Address');
+        }
+
+        // Check if the alias exists
+        if (((int)$this->customer->id > 0) && !empty($this->fields_value['alias'])) {
+            if (Address::aliasExist($this->fields_value['alias'], (int)$this->fields_value['id_address'], (int)$this->customer->id)) {
+                $form_errors['alias'][] = sprintf($this->translator->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($this->fields_value['alias']));
+            }
+        }
+
+        // Add errors to address fields
+        foreach ($this->ordered_address_fields as $field => $null) {
+            if (isset($form_errors[$field])) {
+                $this->ordered_address_fields[$field]['errors'] = $form_errors[$field];
+            }
+        }
+
+        return $this;
+    }
+
+    protected function addEmptyErrors()
+    {
+        foreach ($this->ordered_address_fields as $field => $null) {
+            $this->ordered_address_fields[$field]['errors'] = [];
         }
 
         return $this;
