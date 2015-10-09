@@ -29,15 +29,17 @@ class Adapter_AddressForm
     private $address_formatter;
     private $customer;
     private $fields_value = [];
+    private $language;
     private $translator;
 
     private $ordered_address_fields = [];
     private $required_fields = [];
 
-    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, Customer $customer, Adapter_Translator $translator)
+    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, Customer $customer, language $language, Adapter_Translator $translator)
     {
         $this->address_formatter = $address_formatter;
         $this->customer = $customer;
+        $this->language = $language;
         $this->translator = $translator;
         $this->required_fields = $this->address_formatter->getRequired();
         $this->fields_value = $fields_value;
@@ -64,6 +66,17 @@ class Adapter_AddressForm
             }
         }
         return false;
+    }
+
+    public function getCountryList()
+    {
+        if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
+            $countries = Carrier::getDeliveredCountries($this->language->id, true, true);
+        } else {
+            $countries = Country::getCountries($this->language->id, true);
+        }
+
+        return $countries;
     }
 
     protected function setOrderedFields()
