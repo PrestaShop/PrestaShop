@@ -80,7 +80,6 @@ class AddressControllerCore extends FrontController
         $this->address_form = new Adapter_AddressForm(
             $this->address_formatter,
             Tools::getAllValues(),
-            $this->context->customer,
             $this->context->language,
             new Adapter_Translator()
         );
