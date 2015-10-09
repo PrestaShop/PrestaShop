@@ -15,7 +15,7 @@
   {/block}
 
   {block name="product_description_short"}
-    <div class="product-description-short" itemprop="description">{$product.description_short}</div>
+    <div class="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
   {/block}
 
   {block name="product_list_actions"}
