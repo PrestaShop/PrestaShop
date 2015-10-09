@@ -2,7 +2,7 @@
 
 .htaccess
 *.log
-cache/*
+/cache/*
 download/*
 img/*
 log/*
