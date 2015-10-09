@@ -379,8 +379,8 @@ class AddressCore extends ObjectModel
     public static function initialize($id_address = null, $with_geoloc = false)
     {
         $context = Context::getContext();
-
-        if ($id_address) {
+        $exists = (int)$id_address && (bool)Address::addressExists($id_address);
+        if ($exists) {
             $context_hash = (int)$id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
             $context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
@@ -394,7 +394,7 @@ class AddressCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             // if an id_address has been specified retrieve the address
-            if ($id_address) {
+            if ($exists) {
                 $address = new Address((int)$id_address);
 
                 if (!Validate::isLoadedObject($address)) {
@@ -415,7 +415,6 @@ class AddressCore extends ObjectModel
             Cache::store($cache_id, $address);
             return $address;
         }
-
         return Cache::retrieve($cache_id);
     }
 
