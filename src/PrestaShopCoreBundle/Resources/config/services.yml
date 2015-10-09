@@ -1,0 +1,10 @@
+services:
+    # CORE (prestashop.core.*)
+
+
+
+    # ADAPTERS (prestashop.adapter.*)
+
+    # Legacy context service, transitional
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext

@@ -23,7 +23,6 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
@@ -35,7 +34,7 @@ use \Context as OldContext;
  * A merge is done, but the legacy values will be transfered to the new Context
  * during legacy refactoring.
  */
-class Adapter_LegacyContext
+class LegacyContext
 {
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\Business\context class,

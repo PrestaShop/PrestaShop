@@ -1,8 +1,20 @@
 # All the Product related routes
 admin_product_catalog:
-    path: /catalog
+    path: /catalog/{offset}/{limit}/{orderBy}/{orderWay}
+    methods:  [GET, POST]
     defaults:
         _controller: PrestaShopCoreAdminBundle:Product:catalog
+        limit: 10
+        offset: 0
+        orderBy: id_product
+        orderWay: asc
+    requirements:
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderWay: asc|desc
+    options:
+        _legacy_controller: AdminProducts
+        _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        _legacy_param_mapper_method: mapLegacyParametersProductForm
 
 admin_product_form:
     path: /form/{id}

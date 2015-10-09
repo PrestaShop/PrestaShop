@@ -41,20 +41,22 @@ class ProductController extends Controller
      * TODO !3
      *
      * @param Request $request
+     * @param string $orderBy To order product list
+     * @param string $orderWay To order product list
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function catalogAction(Request $request)
+    public function catalogAction(Request $request, $orderBy = 'id_product', $orderWay = 'asc')
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
-        if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
+        if (!$pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
             $redirectionParams = array(
-                // do not tranmit limit & offset: go to the first page when
-                'productOrderby' => $request->attributes->get('orderBy'),
-                'productOrderway' => $request->attributes->get('orderWay')
+                // do not tranmit limit & offset: go to the first page when redirecting
+                'productOrderby' => $orderBy,
+                'productOrderway' => $orderWay
             );
             $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }

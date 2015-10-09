@@ -28,6 +28,7 @@ namespace PrestaShopCoreAdminBundle\TransitionalBehavior;
 use Symfony\Component\Routing\Router;
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator as LegacyUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
  * Factory to return a UrlGeneratorInterface.
@@ -54,15 +55,12 @@ class AdminUrlGeneratorFactory
     /**
      * Gets the UrlGeneratorInterface subclass for Legacy Admin controllers.
      *
-     * If you provides the $legacy parameter, you can inverse behavior
-     * and so forLegacy(false) == forSymfony()
-     *
-     * @param boolean $legacy False for inverse behavior (so, forSymfony !)
+     * @param LegacyContext $legacyContext The legacy context needed by Legacy UrlGenerator
      * @return UrlGeneratorInterface The UrlGenerator instance for Admin legacy controllers.
      */
-    public function forLegacy($legacy = true)
+    public function forLegacy(LegacyContext $legacyContext)
     {
-        return $legacy? new LegacyUrlGenerator() : $this->forSymfony();
+        return new LegacyUrlGenerator($legacyContext, $this->router);
     }
 
     /**
@@ -72,6 +70,6 @@ class AdminUrlGeneratorFactory
      */
     public function forSymfony()
     {
-        return $this->router;
+        return $this->container->get('router');
     }
 }
