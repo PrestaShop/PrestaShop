@@ -82,7 +82,6 @@ class Adapter_AddressForm
     protected function setOrderedFields()
     {
         $ordered = $this->address_formatter->getFormat();
-        $ordered = array_unique(array_merge(['alias'], $ordered, $this->required_fields));
 
         $ordered_address_fields = [];
         foreach ($ordered as $f) {
@@ -106,9 +105,6 @@ class Adapter_AddressForm
     {
         foreach ($this->ordered_address_fields as $field => $null) {
             switch ($field) {
-                case 'alias':
-                    $this->ordered_address_fields[$field]['label'] = $this->translator->l('Address alias', 'Address');
-                    break;
                 case 'firstname':
                     $this->ordered_address_fields[$field]['label'] = $this->translator->l('First name', 'Address');
                     break;
@@ -202,13 +198,6 @@ class Adapter_AddressForm
             }
         } else {
             $form_errors['country'][] = $this->translator->l('This information is required.', 'Address');
-        }
-
-        // Check if the alias exists
-        if (((int)$this->customer->id > 0) && !empty($this->fields_value['alias'])) {
-            if (Address::aliasExist($this->fields_value['alias'], (int)$this->fields_value['id_address'], (int)$this->customer->id)) {
-                $form_errors['alias'][] = sprintf($this->translator->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($this->fields_value['alias']));
-            }
         }
 
         // Add errors to address fields
