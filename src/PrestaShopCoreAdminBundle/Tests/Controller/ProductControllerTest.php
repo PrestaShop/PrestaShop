@@ -11,8 +11,21 @@ class ProductControllerTest extends WebTestCase
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/product/catalog');
-
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        //$this->assertContains('Welcome to Symfony', $crawler->filter('#container h1')->text());
+
+        $crawler = $client->request('POST', '/product/catalog');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        // TODO !9 : add check of HTML listing table, OR empty case
+    }
+
+    public function testCatalogParams()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/product/catalog/1/2/id_product/asc');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('GET', '/product/catalog/a/b/toto/titi');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 }

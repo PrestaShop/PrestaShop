@@ -27,9 +27,9 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShop\PrestaShop\Adapter\Adapter_LegacyContext;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Routing\RequestContext;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\Routing\Route;
 
 /**
  * This UrlGeneratorInterface implementation (in a Sf service) will provides Legacy URLs.
@@ -76,8 +76,27 @@ class UrlGenerator implements UrlGeneratorInterface
         // Base path contains admin directory ('admin-dev' or random 'admin-xxxx')
         $basePath = $this->legacyContext->getAdminBaseUrl();
 
-        // Try to get controller & parameters with mapping options
-        $route = $this->router->getRouteCollection()->get($name);
+        // resolve route & legacy mapping
+        list($legacyController, $legacyParameters) = $this->getLegacyOptions($name, $parameters);
+
+        return $basePath.$this->legacyContext->getAdminLink($legacyController, true, $legacyParameters);
+    }
+
+    /**
+     * Try to get controller & parameters with mapping options.
+     *
+     * If failed to find options, then return the input values.
+     *
+     * @param string $routeName
+     * @param string[] $parameters The route parameters to convert
+     * @return array[] An array with: the legacy controller name, then the parameters array
+     */
+    final public function getLegacyOptions($routeName, $parameters = array())
+    {
+        $legacyController = $routeName;
+        $legacyParameters = $parameters;
+
+        $route = $this->router->getRouteCollection()->get($routeName);
         if ($route) {
             if ($route->hasOption('_legacy_controller')) {
                 $legacyController = $route->getOption('_legacy_controller');
@@ -89,11 +108,8 @@ class UrlGenerator implements UrlGeneratorInterface
                 }
             }
         }
-
-        return $basePath.$this->legacyContext->getAdminLink($legacyController, true, $legacyParameters);
+        return array($legacyController, $legacyParameters);
     }
-    
-    // TODO !4: TU
 
     /* (non-PHPdoc)
      * @see \Symfony\Component\Routing\RequestContextAwareInterface::setContext()

@@ -26,7 +26,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Core\Business\Context as NewContext;
 use \Context as OldContext;
 
 /**
@@ -52,32 +51,6 @@ class LegacyContext
             throw new DevelopmentErrorException('Legacy context is not set properly. Cannot use it to merge with Context structure.', null, 5015);
         }
         return $legacyContext;
-    }
-
-    /**
-     * Will merge the legacy Context values inside the new Context object.
-     *
-     * @param NewContext $newContext
-     */
-    public function mergeContextWithLegacy(NewContext &$newContext)
-    {
-        $legacyContext = $this->getContext();
-
-        // inject from Legacy to new Context
-        foreach (get_object_vars($legacyContext) as $key => $value) { // gets public attributes.
-            if ($value !== null) {
-                $newContext->$key = $value;
-            }
-        }
-
-        // simulate a controller object in legacy Context
-        $legacyContext->controller = new stdClass();
-        $legacyContext->controller->controller_type = 'unknown';
-
-        // add a default currency
-        if (!$legacyContext->currency) {
-            $legacyContext->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-        }
     }
 
     /**
