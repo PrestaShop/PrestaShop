@@ -4,6 +4,9 @@ namespace PrestaShopCoreBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * FIXME: example, to remove
+ */
 class DefaultControllerTest extends WebTestCase
 {
     public function testIndex()

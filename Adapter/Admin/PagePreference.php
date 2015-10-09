@@ -27,6 +27,15 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 
+/**
+ * Adapter to know which page's version to display.
+ *
+ * This implementation gives methods to use to take decision:
+ * - if we should display the new refactored page, or the old legacy one.
+ * - if we should display the switch on the admin layout to change this setting.
+ *
+ * Data is stored in the cookie, as legacy does.
+ */
 class PagePreference implements AdminPagePreferenceInterface
 {
     /* (non-PHPdoc)

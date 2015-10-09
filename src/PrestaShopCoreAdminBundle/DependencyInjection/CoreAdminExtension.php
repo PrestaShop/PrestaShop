@@ -31,14 +31,23 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\FileLoader;
 
+/**
+ * Adds Admin PrestaShop core services to the Symfony container.
+ */
 class CoreAdminExtension extends Extension
 {
+    /* (non-PHPdoc)
+     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
 
+    /* (non-PHPdoc)
+     * @see \Symfony\Component\DependencyInjection\Extension\Extension::getAlias()
+     */
     public function getAlias()
     {
         return 'prestashop_core_admin';

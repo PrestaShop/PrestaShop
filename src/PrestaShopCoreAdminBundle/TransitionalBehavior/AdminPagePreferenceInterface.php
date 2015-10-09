@@ -26,7 +26,11 @@
 namespace PrestaShopCoreAdminBundle\TransitionalBehavior;
 
 /**
- * TODO !5: PHPDoc
+ * Contract to know which page's version to display.
+ *
+ * This interface gives methods to use to take decision:
+ * - if we should display the new refactored page, or the old legacy one.
+ * - if we should display the switch on the admin layout to change this setting.
  */
 interface AdminPagePreferenceInterface
 {
@@ -54,6 +58,4 @@ interface AdminPagePreferenceInterface
      * @return boolean True to show the switch to legacy page button.
      */
     public function getTemporaryShouldAllowUseLegacyPage($page = null);
-    
-    // TODO !6: TU
 }

@@ -4,6 +4,9 @@ namespace PrestaShopCoreAdminBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Tests about admin ProductController and its actions.
+ */
 class ProductControllerTest extends WebTestCase
 {
     public function testCatalog()
