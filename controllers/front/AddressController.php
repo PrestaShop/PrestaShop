@@ -41,6 +41,7 @@ class AddressControllerCore extends FrontController
     protected $address_form;
     protected $address_formatter;
     protected $address_fields = [];
+    protected $address_field_alias;
 
     public $form_errors = [];
 
@@ -83,6 +84,11 @@ class AddressControllerCore extends FrontController
             $this->context->language,
             new Adapter_Translator()
         );
+        $this->address_field_alias = [
+            'label' => $this->l('Address alias'),
+            'errors' => [],
+            'required' => true,
+        ];
     }
 
     /**
@@ -111,8 +117,16 @@ class AddressControllerCore extends FrontController
             return false;
         }
 
-        if ($this->address_form->hasErrors()) {
-            $this->address_fields = $this->address_form->getAddressFormatWithErrors();
+        $this->address_fields = $this->address_form->getAddressFormatWithErrors();
+        // Check if the alias exists
+        $alias = Tools::getValue('alias');
+        if (((int)$this->customer->id > 0) && !empty($alias)) {
+            if (Address::aliasExist($alias, (int)$this->fields_value['id_address'], (int)$this->customer->id)) {
+                $this->address_field_alias['errors'][] = sprintf($this->translator->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($alias));
+            }
+        }
+
+        if ($this->address_form->hasErrors() || !empty($this->address_field_alias['errors'])) {
             return false;
         }
 
@@ -171,6 +185,7 @@ class AddressControllerCore extends FrontController
         if (empty($this->address_fields)) {
             $this->address_fields = $this->address_form->getAddressFormat();
         }
+        $this->address_fields['alias'] = $this->address_field_alias;
 
         $this->context->smarty->assign(array(
             'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
