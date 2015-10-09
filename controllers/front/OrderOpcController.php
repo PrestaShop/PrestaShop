@@ -29,7 +29,11 @@ use PrestaShop\PrestaShop\Core\Business\Checkout\TermsAndConditions;
 class OrderOpcControllerCore extends FrontController
 {
     public $php_self = 'order-opc';
+    public $address;
 
+    private $address_formatter;
+    private $address_form;
+    private $address_fields;
     private $advanced_payment_api;
 
     private function render($template, array $params)
@@ -253,11 +257,31 @@ class OrderOpcControllerCore extends FrontController
     public function init()
     {
         parent::init();
+
+        $id_country = Tools::getValue('id_country');
+        if (!$id_country) {
+            $id_country = Tools::getCountry();
+        }
+
+        $this->address_formatter = new Adapter_AddressFormatter(new Country($id_country));
+        $this->address_form = new Adapter_AddressForm(
+            $this->address_formatter,
+            Tools::getAllValues(),
+            $this->context->customer,
+            $this->context->language,
+            new Adapter_Translator()
+        );
+
         if (($action = Tools::getValue('action'))) {
             $result = $this->{$action . 'Action'}();
             ob_end_clean();
             die($result);
         }
+    }
+
+    public function initContent()
+    {
+        parent::initContent();
 
         $this->advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
@@ -268,22 +292,49 @@ class OrderOpcControllerCore extends FrontController
         ]);
 
         if (!$this->context->customer->isLogged()) {
-            $id_country = Tools::getValue('id_country');
-            if (!$id_country) {
-                $id_country = Tools::getCountry();
+            if (empty($this->address_fields)) {
+                $this->address_fields = $this->address_form->getAddressFormat();
+            }
+            if (empty($this->address)) {
+                $this->address = $this->context->customer->getSimpleAddress(0);
             }
 
-            $address_formatter = new Adapter_AddressFormatter(new Country($id_country));
-            $address_form = new Adapter_AddressForm(
-                $address_formatter,
-                new Adapter_Translator()
-            );
-
             $this->context->smarty->assign([
-                'address_fields' => $address_form->getAddressFormat(),
+                'address_fields' => $this->address_fields,
+                'address' => $this->address,
+                'countries' => $this->address_form->getCountryList(),
+                'back' => $this->context->link->getPageLink('order-opc'),
+                'mod' => false,
             ]);
         }
 
         $this->setTemplate('checkout/opc.tpl');
+    }
+
+    public function postProcess()
+    {
+        parent::postProcess();
+
+        // StarterTheme: Better submit
+        if (Tools::isSubmit('submitAddress')) {
+            $this->processAddressRegistration();
+        }
+    }
+
+    public function processAddressRegistration()
+    {
+        if ($this->address_form->hasErrors()) {
+            $this->address_fields = $this->address_form->getAddressFormatWithErrors();
+            $this->address = [
+                'id' => 0,
+                'id_country' => Tools::getValue('id_country'),
+                'id_state' => Tools::getValue('id_state'),
+            ];
+            foreach ($this->address_fields as $key => $value) {
+                $this->address[$key] = Tools::getValue($key);
+            }
+        } else {
+            // StarterTheme: Save address !
+        }
     }
 }
