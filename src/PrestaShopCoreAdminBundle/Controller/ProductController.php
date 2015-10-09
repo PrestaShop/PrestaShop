@@ -33,12 +33,27 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * TODO !2
+ * Admin controller for the Product pages using the Symfony architecture:
+ * - categories
+ * - product list
+ * - product details
+ * - product attributes
+ * - ...
+ *
+ * This controller is the first one to be refactored to the new Symfony Architecture.
+ * The retro-compatibility is dropped for the corresponding Admin pages.
+ * A set of hooks are integrated and an Adapter is made to wrap the new EventDispatcher
+ * component to the existing hook system. So existing hooks are always triggered, but from the new
+ * code (and so needs to be adapted on the module side ton comply on the new parameters formats, the new UI style, etc...).
+ *
+ * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
  */
 class ProductController extends Controller
 {
     /**
-     * TODO !3
+     * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...
+     *
+     * URL example: /product/catalog/40/20/id_product/asc
      *
      * @param Request $request
      * @param string $orderBy To order product list
@@ -50,7 +65,7 @@ class ProductController extends Controller
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
-        if (!$pagePreference->getTemporaryShouldUseLegacyPage('product')) {
+        if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
             $redirectionParams = array(
@@ -58,7 +73,7 @@ class ProductController extends Controller
                 'productOrderby' => $orderBy,
                 'productOrderway' => $orderWay
             );
-            $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
+            return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
         // TODO !9: continue

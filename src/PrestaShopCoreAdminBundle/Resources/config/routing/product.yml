@@ -13,8 +13,8 @@ admin_product_catalog:
         orderWay: asc|desc
     options:
         _legacy_controller: AdminProducts
-        _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
-        _legacy_param_mapper_method: mapLegacyParametersProductForm
+        #_legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        #_legacy_param_mapper_method: mapLegacyParametersProductForm
 
 admin_product_form:
     path: /form/{id}

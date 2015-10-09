@@ -32,7 +32,13 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Routing\RequestContext;
 
 /**
- * TODO !1 : PHPDoc
+ * This UrlGeneratorInterface implementation (in a Sf service) will provides Legacy URLs.
+ *
+ * To be used by Symfony controllers, to generate a link to a Legacy page.
+ * Call an instance of it through the Symfony container:
+ * $container->get('prestashop.core.admin.url_generator_legacy');
+ * Or via the UrlGeneratorFactory (as Sf service):
+ * $container->get('prestashop.core.admin.url_generator_factory')->forLegacy();
  */
 class UrlGenerator implements UrlGeneratorInterface
 {
