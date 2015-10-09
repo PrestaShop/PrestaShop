@@ -15,7 +15,9 @@ function toggleAllTermsCheckboxes () {
 describe('The One Page Checkout', function () {
   describe('The customer is already logged in', function () {
     before(function () {
-      return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]').pause(500) && browser.loginDefaultCustomer();
+      return browser.loginDefaultCustomer().then(function () {
+        return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]').pause(500);
+      });
     });
 
     describe('Addresses management', function () {
@@ -82,7 +84,7 @@ describe('The One Page Checkout', function () {
 
       describe('with JS', function () {
         before(function () {
-          return browser.url(fixtures.urls.checkout);
+          return browser.url(fixtures.urls.checkout).then(selectAddressesForOrder);
         });
 
         it('should display carriers', function () {
@@ -96,21 +98,26 @@ describe('The One Page Checkout', function () {
         });
 
         it('should remember carrier selected after reload', function () {
-          return browser.click('#delivery-method input:not(:checked)').then(function () {
-            browser.getAttribute('#delivery-method input:checked', 'id').then(function (firstattr) {
-              browser.refresh().then(function () {
-                browser.getAttribute('#delivery-method input:checked', 'id').then(function (secondattr) {
-                  secondattr.should.equal(firstattr);
-                });
-              });
-            });
-          });
+          var firstDeliveryMethodSelected;
+          return browser
+            .click('#delivery-method input:not(:checked)')
+            .getAttribute('#delivery-method input:checked', 'id')
+            .then(function (deliveryMethodSelected) {
+              firstDeliveryMethodSelected = deliveryMethodSelected;
+            })
+            .pause(1000)
+            .refresh()
+            .getAttribute('#delivery-method input:checked', 'id')
+            .then(function (deliveryMethodSelected) {
+              deliveryMethodSelected.should.equal(firstDeliveryMethodSelected);
+            })
+          ;
         });
       });
 
       describe('without JS', function () {
         before(function () {
-          return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1');
+          return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1').then(selectAddressesForOrder);
         });
 
         it('should display carriers', function () {
@@ -124,17 +131,20 @@ describe('The One Page Checkout', function () {
         });
 
         it('should remember carrier selected after reload', function () {
-          return browser.click('#delivery-method input:not(:checked)').then(function () {
-            browser.getAttribute('#delivery-method input:checked', 'id').then(function (firstattr) {
-              browser.click('#delivery-method button[type="submit"]').then(function () {
-                browser.refresh().then(function () {
-                  browser.getAttribute('#delivery-method input:checked', 'id').then(function (secondattr) {
-                    secondattr.should.equal(firstattr);
-                  });
-                });
-              });
-            });
-          });
+          var firstDeliveryMethodSelected;
+          return browser
+            .click('#delivery-method input:not(:checked)')
+            .getAttribute('#delivery-method input:checked', 'id')
+            .then(function (deliveryMethodSelected) {
+              firstDeliveryMethodSelected = deliveryMethodSelected;
+            })
+            .submitForm('#delivery-method')
+            .url(browser.url) // reload with a GET
+            .getAttribute('#delivery-method input:checked', 'id')
+            .then(function (deliveryMethodSelected) {
+              deliveryMethodSelected.should.equal(firstDeliveryMethodSelected);
+            })
+          ;
         });
       });
     });
