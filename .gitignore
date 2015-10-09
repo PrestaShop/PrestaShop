@@ -8,6 +8,7 @@ download/*
 /log/*
 upload/*
 vendor/*
+docs/phpdoc-sf/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*

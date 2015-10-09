@@ -96,7 +96,9 @@
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
     "fabpot/php-cs-fixer": "^1.10",
-    "sensio/generator-bundle": "~2.3"
+    "sensio/generator-bundle": "~2.3",
+    "phpdocumentor/phpdocumentor": "2.*",
+    "symfony/var-dumper": "2.7.*"
   },
   "autoload-dev": {
     "psr-4": {
@@ -129,9 +131,11 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "git-hook-install" : "bash tools/contrib/install.sh",
-    "git-hook-uninstall" : "bash tools/contrib/uninstall.sh",
-    "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+    "git-hook-install": "bash tools/contrib/install.sh",
+    "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
+    "cldr-init": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "phpunit-sf": "phpunit -c app/",
+    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
   },
   "config": {
     "bin-dir": "bin"
