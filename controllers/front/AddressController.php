@@ -80,6 +80,7 @@ class AddressControllerCore extends FrontController
             $this->address_formatter,
             Tools::getAllValues(),
             $this->context->customer,
+            $this->context->language,
             new Adapter_Translator()
         );
     }
@@ -159,7 +160,6 @@ class AddressControllerCore extends FrontController
             }
         }
 
-        $countries = $this->getFormCountries();
         $this->assignVatNumber();
 
         $back = Tools::getValue('back');
@@ -174,7 +174,7 @@ class AddressControllerCore extends FrontController
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
-            'countries' => $countries,
+            'countries' => $this->address_form->getCountryList(),
             'address_fields' => $this->address_fields,
             'back' => Tools::safeOutput($back),
             'mod' => Tools::safeOutput($mod),
@@ -186,20 +186,6 @@ class AddressControllerCore extends FrontController
         }
 
         $this->setTemplate('customer/address.tpl');
-    }
-
-    /**
-     * Assign template vars related to countries display
-     */
-    protected function getFormCountries()
-    {
-        if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
-            $countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
-        } else {
-            $countries = Country::getCountries($this->context->language->id, true);
-        }
-
-        return $countries;
     }
 
     /**
