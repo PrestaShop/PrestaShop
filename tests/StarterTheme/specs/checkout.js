@@ -15,11 +15,7 @@ function toggleAllTermsCheckboxes () {
 describe('The One Page Checkout', function () {
   describe('The customer is already logged in', function () {
     before(function () {
-      return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]') && browser.loginDefaultCustomer();
-    });
-
-    after(function () {
-      return browser.logout();
+      return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]').pause(500) && browser.loginDefaultCustomer();
     });
 
     describe('Addresses management', function () {
