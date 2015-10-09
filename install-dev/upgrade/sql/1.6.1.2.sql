@@ -24,3 +24,5 @@ REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 TRUNCATE TABLE `PREFIX_smarty_last_flush`;
 
 ALTER TABLE `PREFIX_search_index` ADD INDEX(`id_product`);
+
+ALTER TABLE `PREFIX_address` CHANGE `company` `company` VARCHAR(64) NULL;
