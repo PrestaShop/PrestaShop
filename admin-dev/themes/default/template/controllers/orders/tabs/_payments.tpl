@@ -1,4 +1,4 @@
-<!-- Payments block -->
+    <!-- Payments block -->
             <div id="formAddPaymentPanel" class="">
                 <div class="panel-heading">
                     <i class="icon-money"></i>
