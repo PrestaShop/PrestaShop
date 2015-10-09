@@ -505,12 +505,16 @@ class AdminMetaControllerCore extends AdminController
 
             // Files
             if (count($this->rb_data['Files'])) {
-                $language_ids = Language::getIDs();
+                $activeLanguageCount = count(Language::getIDs());
                 fwrite($write_fd, "# Files\n");
                 foreach ($this->rb_data['Files'] as $iso_code => $files) {
                     foreach ($files as $file) {
-                        if (!empty($language_ids)) {
-                            fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+                        if ($activeLanguageCount > 1) {
+                            // Friendly URLs have language ISO code when multiple languages are active
+                            fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . "\n");
+                        } elseif ($activeLanguageCount == 1) {
+                            // Friendly URL does not have language ISO when only one language is active
+                            fwrite($write_fd, 'Disallow: /*' . $file . "\n");
                         } else {
                             fwrite($write_fd, 'Disallow: /'.$file."\n");
                         }
