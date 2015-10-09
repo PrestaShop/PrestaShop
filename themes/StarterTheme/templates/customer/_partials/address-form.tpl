@@ -1,5 +1,5 @@
 <section class="login-form">
-  <form action="{$urls.pages.address}" method="post">
+  <form action="{$form_action}" method="post">
 
     <section class="form-fields">
 
@@ -14,7 +14,7 @@
                 {block name="required_field"}{include file="_partials/form-required-field.tpl"}{/block}
               {/if}
               {block name="form_item_country"}
-                {include file="customer/_partials/form-item-country.tpl" countries=$countries sl_country=$address.id required=$data.required}
+                {include file="customer/_partials/form-item-country.tpl" countries=$countries sl_country=$address.id_country required=$data.required}
               {/block}
               {block name="form_field_error"}{include file="_partials/form-field-errors.tpl" errors=$data.errors}{/block}
             </label>
