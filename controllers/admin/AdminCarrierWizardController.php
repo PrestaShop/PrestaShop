@@ -691,6 +691,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         $range = new RangeWeight();
                     } else {
                         $range = new RangeWeight((int)$key);
+                        $range->id_carrier = (int)$carrier->id;
+                        $range->save();
                         $add_range = false;
                     }
                 }
@@ -700,6 +702,8 @@ class AdminCarrierWizardControllerCore extends AdminController
                         $range = new RangePrice();
                     } else {
                         $range = new RangePrice((int)$key);
+                        $range->id_carrier = (int)$carrier->id;
+                        $range->save();
                         $add_range = false;
                     }
                 }
