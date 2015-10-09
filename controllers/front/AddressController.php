@@ -26,7 +26,7 @@
 
 class AddressControllerCore extends FrontController
 {
-    public $auth = true;
+    public $auth = false;
     public $guestAllowed = true;
     public $php_self = 'address';
     public $authRedirection = 'addresses';
@@ -55,7 +55,7 @@ class AddressControllerCore extends FrontController
         $id_address = (int)Tools::getValue('id_address', 0);
         $this->_address = new Address($id_address);
 
-        if (!Validate::isLoadedObject($this->_address) || !Customer::customerHasAddress($this->context->customer->id, $id_address)) {
+        if (Validate::isLoadedObject($this->_address) && !Customer::customerHasAddress($this->context->customer->id, $id_address)) {
             Tools::redirect('index.php?controller=addresses');
         }
 
@@ -120,13 +120,16 @@ class AddressControllerCore extends FrontController
         $errors = $this->_address->validateController();
         $this->errors = array_merge($this->errors, $errors);
 
-        if (empty($this->errors)) {
-            $saved = $this->_address->save();
+        if (!empty($this->errors)) {
+            return false;
+        }
 
-            if (!$saved) {
-                $this->errors[] = $this->l('An error occurred while updating your address.');
-                return false;
-            }
+        $this->_address->id_customer = $this->context->customer->id;
+        $saved = $this->_address->save();
+
+        if (!$saved) {
+            $this->errors[] = $this->l('An error occurred while updating your address.');
+            return false;
         }
 
         // StarterTheme: Handle ajax for address validation !
