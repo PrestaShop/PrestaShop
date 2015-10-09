@@ -9,6 +9,7 @@ download/*
 upload/*
 vendor/*
 docs/phpdoc-sf/
+/composer.lock
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
