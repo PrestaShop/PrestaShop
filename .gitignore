@@ -4,8 +4,8 @@
 *.log
 /cache/*
 download/*
-img/*
-log/*
+/img/*
+/log/*
 upload/*
 vendor/*
 
