@@ -342,13 +342,10 @@ class OrderOpcControllerCore extends FrontController
             if (!$address_ok) {
                 return true;
             } else {
-                $this->success[] = $this->l('Address saved');
-                if (!$this->context->customer->is_guest) {
-                    Tools::redirect(
-                        $this->context->link->getPageLink('order-opc')
-                        // StarterTheme: Add redirect for 5 steps
-                    );
-                }
+                Tools::redirect(
+                    $this->context->link->getPageLink('order-opc')
+                    // StarterTheme: Add redirect for 5 steps
+                );
             }
         }
     }
@@ -359,7 +356,7 @@ class OrderOpcControllerCore extends FrontController
 
         if ($this->address_form->hasErrors()) {
             $this->address = [
-                'id' => 0,
+                'id' => Tools::getValue('id_address'),
                 'id_country' => Tools::getValue('id_country'),
                 'id_state' => Tools::getValue('id_state'),
                 'email' => Tools::getValue('email'),
@@ -373,8 +370,8 @@ class OrderOpcControllerCore extends FrontController
         }
 
         $guest = new Guest($this->context->cookie->id_guest);
-        if ($guest->id_customer) {
-            $new_customer = new Customer($guest->id_customer);
+        if ($this->context->cookie->id_customer) {
+            $new_customer = new Customer($this->context->cookie->id_customer);
             if ($pwd = Tools::getValue('passwd')) {
                 $crypto = new Core_Foundation_Crypto_Hashing();
                 $pwd = $crypto->encrypt($pwd, _COOKIE_KEY_);
@@ -410,12 +407,12 @@ class OrderOpcControllerCore extends FrontController
         }
 
         // Save address
-        $addr = new Address();
+        $addr = new Address(Tools::getValue('id_address'));
         $addr->alias = $this->l('My address');
         $addr->id_customer = $new_customer->id;
         $addr->validateController();
 
-        if ($addr->add()) {
+        if ($addr->save()) {
             $this->context->cart->id_address_delivery = $addr->id;
             $this->context->cart->id_address_invoice = $addr->id;
             $this->context->cart->update();
