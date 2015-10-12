@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Admin;
  *
  * Contains methods to compile SQL from parseable arrays of select, tables, joins, where, etc...
  */
-abstract class AbstractAdminDataProvider
+abstract class AbstractAdminQueryBuilder
 {
     const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
     const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';

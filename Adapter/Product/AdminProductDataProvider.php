@@ -25,7 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminDataProvider;
+use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
+use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -33,15 +34,12 @@ use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminDataProvider;
  * This class will provide data from DB / ORM about Products for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
  *
- * FIXME: rewrite persistence of filter parameters.
+ * FIXME: rewrite persistence of filter parameters -> into DB
  */
-class AdminProductDataProvider extends AbstractAdminDataProvider
+class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
-    /**
-     * Will retrieve set of parameters from persistence, for product filters.
-     *
-     * @param string $prefix
-     * @return string[] The old filter parameters values
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getPersistedFilterParameters()
      */
     public function getPersistedFilterParameters($prefix = '')
     {
@@ -59,10 +57,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         );
     }
 
-    /**
-     * Is there a specific category selected to filter product?
-     *
-     * @return boolean True if a category is selected.
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::isCategoryFiltered()
      */
     public function isCategoryFiltered()
     {
@@ -70,12 +66,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         return (isset($filters['filter_category']) && $filters['filter_category'] > 0);
     }
 
-    /**
-     * Is there any column filter value?
-     *
-     * A filter with empty string '' is considered as not filtering, but 0 or '0' is a filter value!
-     *
-     * @return boolean True if at least one column is filtered (except categories)
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::isColumnFiltered()
      */
     public function isColumnFiltered()
     {
@@ -88,10 +80,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         return false;
     }
 
-    /**
-     * Will persist set of parameters for product filters.
-     *
-     * @param string[] $parameters
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::persistFilterParameters()
      */
     public function persistFilterParameters(array $parameters)
     {
@@ -140,11 +130,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         }
     }
 
-    /**
-     * Combines new filter values with old ones (persisted), then persists the combination and returns it.
-     *
-     * @param string[]|null $paramsIn New filter params values to take into acount. If not given, the method will simply return persisted values.
-     * @return string[] The new filter params values
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::combinePersistentCatalogProductFilter()
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array())
     {
@@ -159,17 +146,10 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         return $paramsOut;
     }
 
-    /**
-     * Returns a collection of products, using default language, currency and others, from Context.
-     *
-     * @param integer $offset
-     * @param integer $limit
-     * @param string $orderBy Field name to sort during SQL query
-     * @param string $orderWay 'asc' or 'desc'
-     * @param string[] $post filter params values to take into acount (often comes from POST data).
-     * @return array[mixed[]] A list of products, as an array of arrays of raw data.
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getCatalogProductList()
      */
-    public function getCatalogProductList($offset, $limit, $orderBy, $orderWay, $post = array())
+    public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array())
     {
         $filterParams = $this->combinePersistentCatalogProductFilter($post);
         $showPositionColumn = $this->isCategoryFiltered();
@@ -266,7 +246,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
             }
         }
 
-        $sqlOrder = array($orderBy.' '.$orderWay);
+        $sqlOrder = array($orderBy.' '.$sortOrder);
         if ($orderBy != 'id_product') {
             $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
         }
@@ -308,12 +288,8 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
         return $products;
     }
 
-    /**
-     * Retrieve global product count (for the current shop).
-     *
-     * No filtering/limit/offset is applied to give this count.
-     *
-     * @return integer The product count on the current shop
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::countAllProducts()
      */
     public function countAllProducts()
     {

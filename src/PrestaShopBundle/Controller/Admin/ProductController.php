@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
+use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -57,10 +58,10 @@ class ProductController extends Controller
      *
      * @param Request $request
      * @param string $orderBy To order product list
-     * @param string $orderWay To order product list
+     * @param string $sortOrder To order product list
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function catalogAction(Request $request, $orderBy = 'id_product', $orderWay = 'asc')
+    public function catalogAction(Request $request, $orderBy = 'id_product', $sortOrder = 'asc')
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
@@ -69,14 +70,25 @@ class ProductController extends Controller
             $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
             /* @var $legacyUrlGenerator UrlGeneratorInterface */
             $redirectionParams = array(
-                // do not tranmit limit & offset: go to the first page when redirecting
+                // do not transmit limit & offset: go to the first page when redirecting
                 'productOrderby' => $orderBy,
-                'productOrderway' => $orderWay
+                'productOrderway' => $sortOrder
             );
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
-        $productDataProvider = $this->container->get('prestashop.core.admin.data_provider.factory')->forProduct();
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterface */
+        
+        // get old values from persistence (before the current update)
+        $persistedFilterParameters = $dataProvider->getPersistedFilterParameters('ls_products_');
+        // override the old values with the new ones.
+        $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
+        // calling addContentData with null key to insert many values at once.
+        // FIXME: $response->addContentData(null, $persistedFilterParameters);
+
+        
+        
         // TODO !1: continue
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', array(

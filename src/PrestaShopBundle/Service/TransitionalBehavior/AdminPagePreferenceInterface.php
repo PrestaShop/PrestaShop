@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\TransitionalBehavior;
+namespace PrestaShopBundle\Service\TransitionalBehavior;
 
 /**
  * Contract to know which page's version to display.

@@ -1,31 +1,9 @@
-parameters:
-# ADMIN
-    prestashop.core.admin.page_preference_interface: \PrestaShop\PrestaShop\Adapter\Admin\PagePreference
+imports:
+    - { resource: admin/services.yml }
 
 services:
 # CORE (prestashop.core.*)
-    prestashop.core.data_provider.factory:
-        class: PrestaShopBundle\DataProviderFactory
-    # URL generation
-    prestashop.core.admin.url_generator_factory:
-        class: PrestaShopBundle\TransitionalBehavior\AdminUrlGeneratorFactory
-        arguments:
-            - @router
-    prestashop.core.admin.url_generator_legacy:
-        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
-        factory: [@prestashop.core.admin.url_generator_factory, forLegacy]
-        arguments:
-            - @prestashop.adapter.legacy.context
-    prestashop.core.admin.url_generator:
-        class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
-        factory: [@prestashop.core.admin.url_generator_factory, forSymfony]
 
-# CORE ADMIN (prestashop.core.admin.*)
-    prestashop.core.admin.data_provider.factory:
-        class: PrestaShopBundle\AdminDataProviderFactory
-    # Interfaced services to decorate
-    prestashop.core.admin.page_preference_interface:
-        class: PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface
 
 # ADAPTERS (prestashop.adapter.*)
     # Legacy context service, transitional
