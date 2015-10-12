@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class OrderDetailControllerCore extends FrontController
+class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
 {
     public $php_self = 'order-detail';
 
@@ -39,8 +39,6 @@ class OrderDetailControllerCore extends FrontController
     public function init()
     {
         parent::init();
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
     }
 
     /**
@@ -54,11 +52,11 @@ class OrderDetailControllerCore extends FrontController
             $msgText = Tools::getValue('msgText');
 
             if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
-                $this->errors[] = Tools::displayError('The order is no longer valid.');
+                $this->errors[] = $this->l('The order is no longer valid.');
             } elseif (empty($msgText)) {
-                $this->errors[] = Tools::displayError('The message cannot be blank.');
+                $this->errors[] = $this->l('The message cannot be blank.');
             } elseif (!Validate::isMessage($msgText)) {
-                $this->errors[] = Tools::displayError('This message is invalid (HTML is not allowed).');
+                $this->errors[] = $this->l('This message is invalid (HTML is not allowed).');
             }
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
@@ -108,34 +106,32 @@ class OrderDetailControllerCore extends FrontController
                     }
 
                     if (Validate::isLoadedObject($customer)) {
-                        Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
-                        array(
-                            '{lastname}' => $customer->lastname,
-                            '{firstname}' => $customer->firstname,
-                            '{email}' => $customer->email,
-                            '{id_order}' => (int)$order->id,
-                            '{order_name}' => $order->getUniqReference(),
-                            '{message}' => Tools::nl2br($msgText),
-                            '{product_name}' => $product_name
-                        ),
-                        $to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
+                        Mail::Send(
+                            $this->context->language->id,
+                            'order_customer_comment',
+                            Mail::l('Message from a customer'),
+                            array(
+                                '{lastname}' => $customer->lastname,
+                                '{firstname}' => $customer->firstname,
+                                '{email}' => $customer->email,
+                                '{id_order}' => (int)$order->id,
+                                '{order_name}' => $order->getUniqReference(),
+                                '{message}' => Tools::nl2br($msgText),
+                                '{product_name}' => $product_name
+                            ),
+                            $to,
+                            $toName,
+                            $customer->email,
+                            $customer->firstname.' '.$customer->lastname
+                        );
                     }
 
-                    if (Tools::getValue('ajax') != 'true') {
-                        Tools::redirect('index.php?controller=order-detail&id_order='.(int)$idOrder);
-                    }
-
-                    $this->context->smarty->assign('message_confirmation', true);
+                    $this->success[] = $this->l('Message successfully sent');
                 } else {
-                    $this->errors[] = Tools::displayError('Order not found');
+                    $this->errors[] = $this->l('Order not found');
                 }
             }
         }
-    }
-
-    public function displayAjax()
-    {
-        $this->display();
     }
 
     /**
@@ -147,90 +143,220 @@ class OrderDetailControllerCore extends FrontController
         parent::initContent();
 
         if (!($id_order = (int)Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order)) {
-            $this->errors[] = Tools::displayError('Order ID required');
+            $this->errors[] = $this->l('Order ID required');
         } else {
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                $id_order_state = (int)$order->getCurrentState();
-                $carrier = new Carrier((int)$order->id_carrier, (int)$order->id_lang);
-                $addressInvoice = new Address((int)$order->id_address_invoice);
-                $addressDelivery = new Address((int)$order->id_address_delivery);
+                $carrier = $this->getTemplateVarCarrier($order);
 
-                $inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
-                $dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
-
-                $invoiceAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressInvoice, $inv_adr_fields);
-                $deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
-
-                if ($order->total_discounts > 0) {
-                    $this->context->smarty->assign('total_old', (float)$order->total_paid - $order->total_discounts);
+                $followup = '';
+                if ($carrier['url'] && $order->shipping_number) {
+                    $followup = str_replace('@', $order->shipping_number, $carrier->url);
                 }
-                $products = $order->getProducts();
 
-                /* DEPRECATED: customizedDatas @since 1.5 */
-                $customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
-                Product::addCustomizationPrice($products, $customizedDatas);
-
-                OrderReturn::addReturnedQuantity($products, $order->id);
-                $order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
-
-                $customer = new Customer($order->id_customer);
-                $this->context->smarty->assign(array(
-                    'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
-                    'order' => $order,
-                    'return_allowed' => (int)$order->isReturnable(),
-                    'currency' => new Currency($order->id_currency),
-                    'order_state' => (int)$id_order_state,
-                    'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
-                    'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
-                    'logable' => (bool)$order_status->logable,
-                    'order_history' => $order->getHistory($this->context->language->id, false, true),
-                    'products' => $products,
-                    'discounts' => $order->getCartRules(),
+                $this->context->smarty->assign([
+                    'order' => $this->getTemplateVarOrder($order),
+                    'products' => $this->getTemplateVarProducts($order),
+                    'order_history' => $this->getTemplateVarOrderHistory($order),
+                    'addresses' => $this->getTemplateVarAddresses($order),
+                    'shipping' => $this->getTemplateVarShipping($order),
                     'carrier' => $carrier,
-                    'address_invoice' => $addressInvoice,
-                    'invoiceState' => (Validate::isLoadedObject($addressInvoice) && $addressInvoice->id_state) ? new State($addressInvoice->id_state) : false,
-                    'address_delivery' => $addressDelivery,
-                    'inv_adr_fields' => $inv_adr_fields,
-                    'dlv_adr_fields' => $dlv_adr_fields,
-                    'invoiceAddressFormatedValues' => $invoiceAddressFormatedValues,
-                    'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
-                    'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
-                    'is_guest' => false,
-                    'messages' => CustomerMessage::getMessagesByOrderId((int)$order->id, false),
-                    'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
-                    'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
-                    'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
+                    'return_allowed' => (int)$order->isReturnable(),
+                    'followup' => $followup,
+                    'messages' => $this->getTemplateVarMessages($order),
+                    'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', ['order' => $order]),
                     'use_tax' => Configuration::get('PS_TAX'),
-                    'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-                    /* DEPRECATED: customizedDatas @since 1.5 */
-                    'customizedDatas' => $customizedDatas,
-                    /* DEPRECATED: customizedDatas @since 1.5 */
-                    'reorderingAllowed' => !(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
-                ));
+                ]);
 
-                if ($carrier->url && $order->shipping_number) {
-                    $this->context->smarty->assign('followup', str_replace('@', $order->shipping_number, $carrier->url));
-                }
-                $this->context->smarty->assign('HOOK_ORDERDETAILDISPLAYED', Hook::exec('displayOrderDetail', array('order' => $order)));
-                Hook::exec('actionOrderDetail', array('carrier' => $carrier, 'order' => $order));
-
-                unset($carrier, $addressInvoice, $addressDelivery);
+                unset($carrier);
             } else {
-                $this->errors[] = Tools::displayError('This order cannot be found.');
+                $this->errors[] = $this->l('This order cannot be found.');
             }
             unset($order);
         }
 
-        $this->setTemplate(_PS_THEME_DIR_.'order-detail.tpl');
+        $this->setTemplate('customer/order-detail.tpl');
     }
 
-    public function setMedia()
+    public function getTemplateVarOrder($order_object)
     {
-        if (Tools::getValue('ajax') != 'true') {
-            parent::setMedia();
-            $this->addCSS(_THEME_CSS_DIR_.'history.css');
-            $this->addCSS(_THEME_CSS_DIR_.'addresses.css');
+        $order = $this->objectSerializer->toArray($order_object);
+        $pricePresenter = new Adapter_PricePresenter();
+
+        $order['id_order'] = $order['id'];
+        $order['reference'] = Order::getUniqReferenceOf($order_object->id);
+        $order['order_date'] = Tools::displayDate($order_object->date_add, null, false);
+        $order['url_to_reorder'] = HistoryController::getUrlToReorder((int)$order_object->id, $this->context);
+        $order['url_to_invoice'] = HistoryController::getUrlToInvoice($order_object, $this->context);
+        $order['gift_message'] = nl2br($order['gift_message']);
+        $order['total_products'] = $pricePresenter->convertAndFormat($order['total_products']);
+        $order['total_products_wt'] = $pricePresenter->convertAndFormat($order['total_products_wt']);
+        $order['total_discounts'] = ($order['total_discounts'] > 0) ? $pricePresenter->convertAndFormat($order['total_discounts']) : 0;
+        $order['total_shipping'] = ($order['total_shipping'] > 0) ? $pricePresenter->convertAndFormat($order['total_shipping']) : $this->l('Free !');
+        $order['total_wrapping'] = ($order['total_wrapping'] > 0) ? $pricePresenter->convertAndFormat($order['total_wrapping']) : 0;
+        $order['total_paid'] = $pricePresenter->convertAndFormat($order['total_paid']);
+
+        return $order;
+    }
+
+    public function getTemplateVarProducts($order_object)
+    {
+        $products = [];
+        $pricePresenter = new Adapter_PricePresenter();
+        $customer = new Customer($order_object->id_customer);
+        $include_taxes = (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC);
+        $order_products = $order_object->getProducts();
+        OrderReturn::addReturnedQuantity($order_products, $order_object->id);
+
+        foreach ($order_products as $id_order_product => $order_product) {
+            if (!isset($order_product['deleted'])) {
+                $products[$id_order_product] = $order_product;
+                $products[$id_order_product]['unit_price'] = $pricePresenter->convertAndFormat($include_taxes ? $order_product['unit_price_tax_incl'] : $order_product['unit_price_tax_excl']);
+                $products[$id_order_product]['total_price'] = $pricePresenter->convertAndFormat($include_taxes ? $order_product['total_price_tax_incl'] : $order_product['total_price_tax_excl']);
+                $products[$id_order_product]['customizations'] = ($order_product['customizedDatas']) ? $this->getTemplateVarCustomization($order_product) : [];
+            }
         }
+
+        return $products;
+    }
+
+    public function getTemplateVarCustomization(array $product)
+    {
+        $product_customizations = [];
+        $imageRetriever = new Adapter_ImageRetriever($this->context->link);
+
+        foreach ($product['customizedDatas'] as $byAddress) {
+            foreach ($byAddress as $customization) {
+                $presentedCustomization = [
+                    'quantity'              => $customization['quantity'],
+                    'fields'                => [],
+                    'id_customization'      => null
+                ];
+
+                foreach ($customization['datas'] as $byType) {
+                    $field = [];
+                    foreach ($byType as $data) {
+                        switch ($data['type']) {
+                            case Product::CUSTOMIZE_FILE:
+                                $field['type'] = 'image';
+                                $field['image'] = $imageRetriever->getCustomizationImage(
+                                    $data['value']
+                                );
+                                break;
+                            case Product::CUSTOMIZE_TEXTFIELD:
+                                $field['type'] = 'text';
+                                $field['text'] = $data['value'];
+                                break;
+                            default:
+                                $field['type'] = null;
+                        }
+                        $field['label'] = $data['name'];
+                        $presentedCustomization['id_customization'] = $data['id_customization'];
+                    }
+                    $presentedCustomization['fields'][] = $field;
+                }
+
+                $product_customizations[] = $presentedCustomization;
+            }
+        }
+
+        return $product_customizations;
+    }
+
+    public function getTemplateVarCarrier($order_object)
+    {
+        $carrier_object = new Carrier((int)$order_object->id_carrier, (int)$order_object->id_lang);
+        $carrier = $this->objectSerializer->toArray($carrier_object);
+
+        $carrier['name'] = ($carrier_object->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier_object->name;
+
+        return $carrier;
+    }
+
+    public function getTemplateVarOrderHistory($order_object)
+    {
+        $history = [];
+        $order_histories = $order_object->getHistory($this->context->language->id, false, true);
+
+        foreach ($order_histories as $id_order_history => $order_history) {
+            $history[$id_order_history] = $order_history;
+            $history[$id_order_history]['history_date'] = Tools::displayDate($order_history['date_add'], null, false);
+            $history[$id_order_history]['contrast'] = (Tools::getBrightness($order_history['color']) > 128) ? 'dark' : 'bright';
+        }
+
+        return $history;
+    }
+
+    public function getTemplateVarAddresses($order_object)
+    {
+        $addresses = [
+            'delivery' => [],
+            'invoice' => []
+        ];
+
+        $addressDelivery = new Address((int)$order_object->id_address_delivery);
+        $addressInvoice = new Address((int)$order_object->id_address_invoice);
+
+        if (!$order_object->isVirtual()) {
+            $addresses['delivery'] = $this->objectSerializer->toArray($addressDelivery);
+            $addresses['delivery']['formatted'] = AddressFormat::generateAddress($addressDelivery, array(), '<br />');
+        }
+
+        $addresses['invoice'] = $this->objectSerializer->toArray($addressInvoice);
+        $addresses['invoice']['formatted'] = AddressFormat::generateAddress($addressInvoice, array(), '<br />');
+
+        return $addresses;
+    }
+
+    public function getTemplateVarShipping($order_object)
+    {
+        $shipping = [];
+        $include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX');
+        $pricePresenter = new Adapter_PricePresenter();
+        $order_shippings = $order_object->getShipping();
+
+        foreach ($order_shippings as $id_order_shipping => $order_shipping) {
+            if (isset($order_shipping['carrier_name']) && $order_shipping['carrier_name']) {
+                $shipping[$id_order_shipping] = $order_shipping;
+                $shipping[$id_order_shipping]['shipping_date'] = Tools::displayDate($order_shipping['date_add'], null, false);
+                $shipping[$id_order_shipping]['shipping_weight'] = ($order_shipping['weight'] > 0) ? sprintf('%.3f', $order_shipping['weight']).' '.Configuration::get('PS_WEIGHT_UNIT') : '-';
+                $shipping_cost = (!$order_object->getTaxCalculationMethod()) ? $order_shipping['shipping_cost_tax_excl'] : $order_shipping['shipping_cost_tax_incl'];
+                $shipping[$id_order_shipping]['shipping_cost'] = ($shipping_cost > 0) ? $pricePresenter->convertAndFormat($shipping_cost) : $this->l('Free !');
+
+                $tracking_line = '-';
+                if ($order_shipping['tracking_number']) {
+                    if ($order_shipping['url'] && $order_shipping['tracking_number']) {
+                        $tracking_line = '<a href="'.str_replace('@', $order_shipping['tracking_number'], $order_shipping['url']).'">'.$order_shipping['tracking_number'].'</a>';
+                    } else {
+                        $tracking_line = $order_shipping['tracking_number'];
+                    }
+                }
+
+                $shipping[$id_order_shipping]['tracking'] = $tracking_line;
+            }
+        }
+
+        return $shipping;
+    }
+
+    public function getTemplateVarMessages($order_object)
+    {
+        $messages = [];
+        $customer_messages = CustomerMessage::getMessagesByOrderId((int)$order_object->id, false);
+
+        foreach ($customer_messages as $id_customer_message => $customer_message) {
+            $messages[$id_customer_message] = $customer_message;
+            $messages[$id_customer_message]['message'] = nl2br($customer_message['message']);
+            $messages[$id_customer_message]['message_date'] = Tools::displayDate($customer_message['date_add'], null, true);
+            if (isset($customer_message['elastname']) && $customer_message['elastname']) {
+                $messages[$id_customer_message]['name'] = $customer_message['efirstname'].' '.$customer_message['elastname'];
+            } elseif ($customer_message['clastname']) {
+                $messages[$id_customer_message]['name'] = $customer_message['cfirstname'].' '.$customer_message['clastname'];
+            } else {
+                $messages[$id_customer_message]['name'] = Configuration::get('PS_SHOP_NAME');
+            }
+        }
+
+        return $messages;
     }
 }
