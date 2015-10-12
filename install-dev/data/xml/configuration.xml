@@ -324,7 +324,7 @@
 		<value>cm</value>
 	</configuration>
 	<configuration id="PS_GUEST_CHECKOUT_ENABLED" name="PS_GUEST_CHECKOUT_ENABLED">
-		<value>0</value>
+		<value>1</value>
 	</configuration>
 	<configuration id="PS_DISPLAY_SUPPLIERS" name="PS_DISPLAY_SUPPLIERS">
 		<value>1</value>
