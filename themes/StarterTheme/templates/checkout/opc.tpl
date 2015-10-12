@@ -15,6 +15,12 @@
       {/block}
     </header>
 
+    {block name="notifications"}
+      {block name="notifications"}
+        {include file="_partials/notifications.tpl"}
+      {/block}
+    {/block}
+
     {block name="content"}
 
       {block name="shopping_cart_summary_section"}
