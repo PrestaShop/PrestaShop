@@ -48,6 +48,7 @@ If you installed PrestaShop from GitHub :
 * Install Composer ([https://getcomposer.org][22])
 * Install Node.js ([https://nodejs.org][23])
 * Install Grunt-cli globally ([http://gruntjs.com][24])
+* Copy/rename app/config/parameters.yml.dist file to parameters.yml
 * Then run :
 
 >
