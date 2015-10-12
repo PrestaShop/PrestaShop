@@ -43,6 +43,10 @@ class LegacyContext
      */
     public function getContext()
     {
+        //init real legacy shop context
+        $adminController = new \AdminController();
+        $adminController->initShopContext();
+
         $legacyContext = OldContext::getContext();
         if (!isset($legacyContext->shop) ||
             !isset($legacyContext->language) ||
