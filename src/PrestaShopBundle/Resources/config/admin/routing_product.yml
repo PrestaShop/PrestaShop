@@ -3,7 +3,7 @@ admin_product_catalog:
     path: /catalog/{offset}/{limit}/{orderBy}/{orderWay}
     methods:  [GET, POST]
     defaults:
-        _controller: PrestaShopCoreAdminBundle:Product:catalog
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         limit: 10
         offset: 0
         orderBy: id_product
@@ -22,6 +22,6 @@ admin_product_form:
     defaults:
         id: 0
         _legacy_path: AdminProducts
-        _controller: PrestaShopCoreAdminBundle:Product:form
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
     requirements:
         id: \d+

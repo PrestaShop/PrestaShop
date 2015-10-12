@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShopCoreBundle\Tests\Controller;
+namespace PrestaShopBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

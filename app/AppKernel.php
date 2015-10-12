@@ -16,9 +16,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            // PrestaShop Core bundles
-            new PrestaShopCoreBundle\PrestaShopCoreBundle(),
-            new PrestaShopCoreAdminBundle\PrestaShopCoreAdminBundle(),
+            // PrestaShop Core bundle
+            new PrestaShopBundle\PrestaShopBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

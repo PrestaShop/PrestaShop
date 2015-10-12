@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShopCoreBundle\Controller;
+namespace PrestaShopBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

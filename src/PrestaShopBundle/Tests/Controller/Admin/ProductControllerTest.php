@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShopCoreAdminBundle\Tests\Controller;
+namespace PrestaShopBundle\Tests\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

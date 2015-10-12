@@ -23,21 +23,33 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopCoreBundle;
+namespace PrestaShopBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopCoreBundle\DependencyInjection\CoreExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\FileLoader;
 
 /**
- * Symfony entry point: adds Extension, that will add other stuff.
+ * Adds main PrestaShop core services to the Symfony container.
  */
-class PrestaShopCoreBundle extends Bundle
+class CoreExtension extends Extension
 {
     /* (non-PHPdoc)
-     * @see \Symfony\Component\HttpKernel\Bundle\Bundle::getContainerExtension()
+     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
      */
-    public function getContainerExtension()
+    public function load(array $configs, ContainerBuilder $container)
     {
-        return new CoreExtension();
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
+    }
+
+    /* (non-PHPdoc)
+     * @see \Symfony\Component\DependencyInjection\Extension\Extension::getAlias()
+     */
+    public function getAlias()
+    {
+        return 'prestashop_core';
     }
 }

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface;
+use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 
 /**
  * Adapter to know which page's version to display.

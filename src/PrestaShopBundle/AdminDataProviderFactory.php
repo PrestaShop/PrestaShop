@@ -23,14 +23,14 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopCoreAdminBundle;
+namespace PrestaShopBundle;
 
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
  * Factory to deliver data providers specialized on each data entity, for Admin interface only.
  */
-class DataProviderFactory
+class AdminDataProviderFactory
 {
     private $adapterInstance = array();
 
