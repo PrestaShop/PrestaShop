@@ -31,20 +31,6 @@ class HistoryControllerCore extends FrontController
     public $authRedirection = 'history';
     public $ssl = true;
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(array(
-            _THEME_CSS_DIR_.'history.css',
-            _THEME_CSS_DIR_.'addresses.css'
-        ));
-        $this->addJS(array(
-            _THEME_JS_DIR_.'history.js',
-            _THEME_JS_DIR_.'tools.js' // retro compat themes 1.5
-        ));
-        $this->addJqueryPlugin(array('scrollTo', 'footable', 'footable-sort'));
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -53,21 +39,67 @@ class HistoryControllerCore extends FrontController
     {
         parent::initContent();
 
-        if ($orders = Order::getCustomerOrders($this->context->customer->id)) {
-            foreach ($orders as &$order) {
-                $myOrder = new Order((int)$order['id_order']);
-                if (Validate::isLoadedObject($myOrder)) {
-                    $order['virtual'] = $myOrder->isVirtual(false);
-                }
+        if (Tools::isSubmit('slowvalidation')) {
+            $this->warning[] = $this->l('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.');
+        }
+
+        $orders = $this->getTemplateVarOrders();
+
+        if (count($orders) <= 0) {
+            $this->warning[] = $this->l('You have not placed any orders.');
+        }
+
+        $this->context->smarty->assign([
+            'orders' => $orders,
+        ]);
+
+        $this->setTemplate('customer/history.tpl');
+    }
+
+    public function getTemplateVarOrders()
+    {
+        $orders = [];
+        $customer_orders = Order::getCustomerOrders($this->context->customer->id);
+        foreach ($customer_orders as $customer_order) {
+            $myOrder = new Order((int)$customer_order['id_order']);
+            if (Validate::isLoadedObject($myOrder)) {
+                $orders[$customer_order['id_order']] = $customer_order;
+                $orders[$customer_order['id_order']]['virtual'] = $myOrder->isVirtual(false);
+                $orders[$customer_order['id_order']]['reference'] = Order::getUniqReferenceOf($customer_order['id_order']);
+                $orders[$customer_order['id_order']]['order_date'] = Tools::displayDate($customer_order['date_add'], null, false);
+                $orders[$customer_order['id_order']]['total_price'] = Tools::displayPrice($customer_order['total_paid']);
+                $orders[$customer_order['id_order']]['contrast'] = (Tools::getBrightness($customer_order['order_state_color']) > 128) ? 'dark' : 'bright';
+                $orders[$customer_order['id_order']]['url_to_invoice'] = $this->getUrlToInvoice($customer_order);
+                $orders[$customer_order['id_order']]['url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$customer_order['id_order']);
+                $orders[$customer_order['id_order']]['url_to_reorder'] = $this->getUrlToReorder((int)$customer_order['id_order']);
             }
         }
-        $this->context->smarty->assign(array(
-            'orders' => $orders,
-            'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
-            'reorderingAllowed' => !(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING'),
-            'slowValidation' => Tools::isSubmit('slowvalidation')
-        ));
 
-        $this->setTemplate(_PS_THEME_DIR_.'history.tpl');
+        return $orders;
+    }
+
+    public function getUrlToInvoice($order)
+    {
+        $url_to_invoice = '';
+
+        if ((bool)Configuration::get('PS_INVOICE') && isset($order['invoice']) && $order['invoice']) {
+            $url_to_invoice = $this->context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order['id_order']);
+        }
+
+        return $url_to_invoice;
+    }
+
+    public function getUrlToReorder($id_order)
+    {
+        $url_to_reorder = '';
+        if (!(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
+            if ((bool)Configuration::get('PS_ORDER_PROCESS_TYPE')) {
+                $url_to_reorder = $this->context->link->getPageLink('order-opc', true, null, 'submitReorder&id_order='.(int)$id_order);
+            } else {
+                $url_to_reorder = $this->context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
+            }
+        }
+
+        return $url_to_reorder;
     }
 }
