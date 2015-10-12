@@ -26,7 +26,7 @@
 namespace PrestaShopBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopBundle\DependencyInjection\CoreExtension;
+use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 
 /**
  * Symfony entry point: adds Extension, that will add other stuff.
@@ -38,6 +38,6 @@ class PrestaShopBundle extends Bundle
      */
     public function getContainerExtension()
     {
-        return new CoreExtension();
+        return new PrestaShopExtension();
     }
 }

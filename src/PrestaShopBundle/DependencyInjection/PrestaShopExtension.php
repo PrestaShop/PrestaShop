@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\Loader\FileLoader;
 /**
  * Adds main PrestaShop core services to the Symfony container.
  */
-class CoreExtension extends Extension
+class PrestaShopExtension extends Extension
 {
     /* (non-PHPdoc)
      * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
