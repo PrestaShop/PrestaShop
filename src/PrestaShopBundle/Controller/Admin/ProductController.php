@@ -165,9 +165,10 @@ class ProductController extends Controller
 
         $request = $this->get('request'); //example call request service
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
+        $translator = $this->container->get('prestashop.adapter.translator');
 
         return array(
-            'title' => $id ? 'Modifier' : 'Ajouter',
+            'title' => $id ? $translator->trans('Update', [], 'AdminProducts') : $translator->trans('Add', [], 'AdminProducts'),
         );
     }
 }

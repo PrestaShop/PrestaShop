@@ -2,15 +2,27 @@ imports:
     - { resource: admin/services.yml }
 
 services:
-# CORE (prestashop.core.*)
-
-
-# ADAPTERS (prestashop.adapter.*)
+    # ADAPTERS (prestashop.adapter.*)
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
+
+    # Legacy context service, transitional
+    prestashop.adapter.translator:
+        class: PrestaShop\PrestaShop\Adapter\Translator
+        arguments: ["@prestashop.adapter.legacy.context"]
+
+
     # Adapter services that decorates interfaced services
     prestashop.adapter.admin.page_preference:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         decorates: prestashop.core.admin.page_preference_interface
         public: false
+
+    #TWIG EXTENSIONS
+    prestashop.twig_translation_extension:
+            class: PrestaShopBundle\Twig\TranslationExtension
+            arguments: ["@translator", "@prestashop.adapter.translator"]
+            public: false
+            tags:
+                - { name: twig.extension }
