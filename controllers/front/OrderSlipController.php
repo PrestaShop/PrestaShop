@@ -31,17 +31,6 @@ class OrderSlipControllerCore extends FrontController
     public $authRedirection = 'order-slip';
     public $ssl = true;
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
-        $this->addJqueryPlugin(array('scrollTo', 'footable', 'footable-sort'));
-        $this->addJS(array(
-            _THEME_JS_DIR_.'history.js',
-            _THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
-        );
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -50,7 +39,31 @@ class OrderSlipControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->context->smarty->assign('ordersSlip', OrderSlip::getOrdersSlip((int)$this->context->cookie->id_customer));
-        $this->setTemplate(_PS_THEME_DIR_.'order-slip.tpl');
+        $credit_slips = $this->getTemplateVarCreditSlips();
+
+        if (count($credit_slips) <= 0) {
+            $this->warning[] = $this->l('You have not received any credit slips.');
+        }
+
+        $this->context->smarty->assign([
+            'credit_slips' => $credit_slips,
+        ]);
+        $this->setTemplate('customer/order-slip.tpl');
+    }
+
+    public function getTemplateVarCreditSlips()
+    {
+        $credit_slips = [];
+        $orders_slip = OrderSlip::getOrdersSlip(((int)$this->context->cookie->id_customer));
+
+        foreach ($orders_slip as $order_slip) {
+            $credit_slips[$order_slip['id_order_slip']] = $order_slip;
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->l('#%06d'), $order_slip['id_order_slip']);
+            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->l('#%06d'), $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], null, false);
+            $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip='.(int)$order_slip['id_order_slip']);
+        }
+
+        return $credit_slips;
     }
 }
