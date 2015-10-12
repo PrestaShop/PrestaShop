@@ -1,9 +1,9 @@
-Hi {firstname} {lastname},
+Hej {firstname} {lastname},
 
-Here is your personal login information for {shop_name}:
+Här är dina personliga inloggningsuppgifter för {shop_name}:
 
 Password: {passwd}
-E-mail address: {email}
+E-postadress: {email}
 
 {shop_name} - {shop_url}
 
