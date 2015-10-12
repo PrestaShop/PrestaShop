@@ -2,7 +2,9 @@ parameters:
     prestashop.core.admin.page_preference_interface: \PrestaShop\PrestaShop\Adapter\Admin\PagePreference
 
 services:
-    # CORE ADMIN (prestashop.core.admin.*)
+# CORE ADMIN (prestashop.core.admin.*)
+    prestashop.core.admin.data_provider.factory:
+        class: PrestaShopCoreAdminBundle\DataProviderFactory
 
     # URL generation
     prestashop.core.admin.url_generator_factory:
@@ -23,7 +25,7 @@ services:
         class: PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface
 
 
-    # ADAPTERS (prestashop.adapter.*)
+# ADAPTERS (prestashop.adapter.*)
 
     # Adapter services that decorates interfaced services
     prestashop.adapter.admin.page_preference:

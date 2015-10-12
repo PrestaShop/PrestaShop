@@ -1,9 +1,10 @@
 services:
-    # CORE (prestashop.core.*)
+# CORE (prestashop.core.*)
+    prestashop.core.data_provider.factory:
+        class: PrestaShopCoreBundle\DataProviderFactory
 
 
-
-    # ADAPTERS (prestashop.adapter.*)
+# ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:

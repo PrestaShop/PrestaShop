@@ -261,7 +261,7 @@ class AdminProductDataProvider extends AbstractAdminDataProvider
                         'c.`nright` <= (SELECT `nright` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.$filterValue.')'
                     );
                 } else {
-                    throw new DevelopmentErrorException('The filter \''.$filterParam.'\' is not known for Products!', null, 5001);
+                    throw new \Exception('The filter \''.$filterParam.'\' is not known for Products!', null, 5001);
                 }
             }
         }

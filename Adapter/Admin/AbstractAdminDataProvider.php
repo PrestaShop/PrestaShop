@@ -25,9 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use PrestaShop\PrestaShop\Core\Foundation\Exception\DevelopmentErrorException;
-use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
-
 /**
  * Base class for data provider, to give common Adapter functions.
  *
@@ -63,7 +60,7 @@ abstract class AbstractAdminDataProvider
     /**
      * Compiles a SQL query (SELECT), from a group of associative arrays.
      *
-     * @see AdminProductDataProvider::getCatalogProductList() for an example.
+     * @see PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider::getCatalogProductList() for an example.
      *
      * Format example for $table:
      *   $table = array(

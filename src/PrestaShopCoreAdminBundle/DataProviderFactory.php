@@ -23,21 +23,22 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopCoreBundle;
+namespace PrestaShopCoreAdminBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopCoreBundle\DependencyInjection\CoreExtension;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider;
 
 /**
- * Symfony entry point: adds Extension, that will add other stuff.
+ * Factory to deliver data providers specialized on each data entity, for Admin interface only.
  */
-class PrestaShopCoreBundle extends Bundle
+class DataProviderFactory
 {
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\HttpKernel\Bundle\Bundle::getContainerExtension()
-     */
-    public function getContainerExtension()
+    private $adapterInstance = array();
+
+    public function forProduct()
     {
-        return new CoreExtension();
+        if (!isset($this->adapterInstance['product'])) {
+            $this->adapterInstance['product'] = new AdminProductDataProvider();
+        }
+        return $this->adapterInstance['product'];
     }
 }

@@ -25,19 +25,20 @@
  */
 namespace PrestaShopCoreBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use PrestaShopCoreBundle\DependencyInjection\CoreExtension;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 
 /**
- * Symfony entry point: adds Extension, that will add other stuff.
+ * Factory to deliver data providers specialized on each data entity.
  */
-class PrestaShopCoreBundle extends Bundle
+class DataProviderFactory
 {
-    /* (non-PHPdoc)
-     * @see \Symfony\Component\HttpKernel\Bundle\Bundle::getContainerExtension()
-     */
-    public function getContainerExtension()
+    private $adapterInstance = array();
+
+    public function forProduct()
     {
-        return new CoreExtension();
+        if (!isset($this->adapterInstance['product'])) {
+            $this->adapterInstance['product'] = new ProductDataProvider();
+        }
+        return $this->adapterInstance['product'];
     }
 }

@@ -76,7 +76,8 @@ class ProductController extends Controller
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
-        // TODO !9: continue
+        $productDataProvider = $this->container->get('prestashop.core.admin.data_provider.factory')->forProduct();
+        // TODO !1: continue
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', array(
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
@@ -94,6 +95,8 @@ class ProductController extends Controller
      */
     public function formAction($id)
     {
+        // TODO !2: add legacy should redirect or not. (xgouley)
+        // TODO !3: add legacy options on route
         $request = $this->get('request'); //example call request service
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
 
