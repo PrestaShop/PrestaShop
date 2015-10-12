@@ -294,8 +294,30 @@ class OrderOpcControllerCore extends FrontController
             if (empty($this->address_fields)) {
                 $this->address_fields = $this->address_form->getAddressFormat();
             }
+
+            $this->address_fields = array_merge(
+                    ['email' => [
+                        'label' => $this->l('Email Address'),
+                        'required' => true,
+                        'errors' => [],
+                    ]],
+                    $this->address_fields,
+                    ['passwd' => [
+                        'label' => $this->l('Set a password to create a full account'),
+                        'required' => !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
+                        'errors' => [],
+                    ]]
+                );
+
             if (empty($this->address)) {
-                $this->address = $this->context->customer->getSimpleAddress(0);
+                if (Validate::isLoadedObject($this->context->customer) && $this->context->customer->is_guest) {
+                    $this->address = array_values($this->context->customer->getSimpleAddresses())[0];
+                    $this->address['email'] = $this->context->customer->email;
+                } else {
+                    $this->address = $this->context->customer->getSimpleAddress(0);
+                    $this->address['email'] = Tools::getValue('email');
+                }
+                $this->address['passwd'] = '';
             }
 
             $this->context->smarty->assign([
@@ -316,24 +338,91 @@ class OrderOpcControllerCore extends FrontController
 
         // StarterTheme: Better submit
         if (Tools::isSubmit('submitAddress')) {
-            $this->processAddressRegistration();
+            $address_ok = $this->processAddressRegistration();
+            if (!$address_ok) {
+                return true;
+            } else {
+                $this->success[] = $this->l('Address saved');
+                if (!$this->context->customer->is_guest) {
+                    Tools::redirect(
+                        $this->context->link->getPageLink('order-opc')
+                        // StarterTheme: Add redirect for 5 steps
+                    );
+                }
+            }
         }
     }
 
     public function processAddressRegistration()
     {
+        $this->address_fields = $this->address_form->getAddressFormatWithErrors();
+
         if ($this->address_form->hasErrors()) {
-            $this->address_fields = $this->address_form->getAddressFormatWithErrors();
             $this->address = [
                 'id' => 0,
                 'id_country' => Tools::getValue('id_country'),
                 'id_state' => Tools::getValue('id_state'),
+                'email' => Tools::getValue('email'),
+                'passwd' => '',
             ];
             foreach ($this->address_fields as $key => $value) {
                 $this->address[$key] = Tools::getValue($key);
             }
-        } else {
-            // StarterTheme: Save address !
+
+            return false;
         }
+
+        $guest = new Guest($this->context->cookie->id_guest);
+        if ($guest->id_customer) {
+            $new_customer = new Customer($guest->id_customer);
+            if ($pwd = Tools::getValue('passwd')) {
+                $crypto = new Core_Foundation_Crypto_Hashing();
+                $pwd = $crypto->encrypt($pwd, _COOKIE_KEY_);
+                $new_customer->passwd = $pwd;
+                $new_customer->is_guest = 0;
+                if ($new_customer->update()) {
+                    $guest->delete();
+                }
+            }
+        } else {
+            $new_customer = new Customer();
+            $new_customer->firstname = Tools::getValue('firstname');
+            $new_customer->lastname = Tools::getValue('lastname');
+            $new_customer->email = Tools::getValue('email');
+
+            $pwd = Tools::getValue('passwd');
+            if (!$pwd) {
+                $pwd = Tools::passwdGen(16);
+                $new_customer->is_guest = 1;
+            }
+            $crypto = new Core_Foundation_Crypto_Hashing();
+            $pwd = $crypto->encrypt($pwd, _COOKIE_KEY_);
+            $new_customer->passwd = $pwd;
+
+            if ($new_customer->add()) {
+                $this->context->cookie->id_customer = $new_customer->id;
+                $this->context->cookie->write();
+                $this->context->customer = $new_customer;
+            } else {
+                $this->errors['unexpected'] = $this->l('An unexpected error occured while saving your data');
+                return false;
+            }
+        }
+
+        // Save address
+        $addr = new Address();
+        $addr->alias = $this->l('My address');
+        $addr->id_customer = $new_customer->id;
+        $addr->validateController();
+
+        if ($addr->add()) {
+            $this->context->cart->id_address_delivery = $addr->id;
+            $this->context->cart->id_address_invoice = $addr->id;
+            $this->context->cart->update();
+            return true;
+        }
+
+        $this->errors['unexpected'] = $this->l('An unexpected error occured while saving your data');
+        return false;
     }
 }
