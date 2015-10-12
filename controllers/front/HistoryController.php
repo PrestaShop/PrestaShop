@@ -69,34 +69,37 @@ class HistoryControllerCore extends FrontController
                 $orders[$customer_order['id_order']]['order_date'] = Tools::displayDate($customer_order['date_add'], null, false);
                 $orders[$customer_order['id_order']]['total_price'] = Tools::displayPrice($customer_order['total_paid']);
                 $orders[$customer_order['id_order']]['contrast'] = (Tools::getBrightness($customer_order['order_state_color']) > 128) ? 'dark' : 'bright';
-                $orders[$customer_order['id_order']]['url_to_invoice'] = $this->getUrlToInvoice($customer_order);
+                $orders[$customer_order['id_order']]['url_to_invoice'] = HistoryController::getUrlToInvoice($myOrder, $this->context);
                 $orders[$customer_order['id_order']]['url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$customer_order['id_order']);
-                $orders[$customer_order['id_order']]['url_to_reorder'] = $this->getUrlToReorder((int)$customer_order['id_order']);
+                $orders[$customer_order['id_order']]['url_to_reorder'] = HistoryController::getUrlToReorder((int)$customer_order['id_order'], $this->context);
             }
         }
 
         return $orders;
     }
 
-    public function getUrlToInvoice($order)
+    public static function getUrlToInvoice($order, $context)
     {
         $url_to_invoice = '';
 
-        if ((bool)Configuration::get('PS_INVOICE') && isset($order['invoice']) && $order['invoice']) {
-            $url_to_invoice = $this->context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order['id_order']);
+        if ((bool)Configuration::get('PS_INVOICE') && OrderState::invoiceAvailable($order->current_state) && count($order->getInvoicesCollection())) {
+            $url_to_invoice = $context->link->getPageLink('pdf-invoice', true, null, 'id_order='.$order->id);
+            if ($context->cookie->is_guest) {
+                $url_to_invoice .= '&amp;secure_key='.$order->secure_key;
+            }
         }
 
         return $url_to_invoice;
     }
 
-    public function getUrlToReorder($id_order)
+    public static function getUrlToReorder($id_order, $context)
     {
         $url_to_reorder = '';
         if (!(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
             if ((bool)Configuration::get('PS_ORDER_PROCESS_TYPE')) {
-                $url_to_reorder = $this->context->link->getPageLink('order-opc', true, null, 'submitReorder&id_order='.(int)$id_order);
+                $url_to_reorder = $context->link->getPageLink('order-opc', true, null, 'submitReorder&id_order='.(int)$id_order);
             } else {
-                $url_to_reorder = $this->context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
+                $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
             }
         }
 
