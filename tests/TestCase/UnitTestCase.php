@@ -1,5 +1,5 @@
 <?php
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShop\PrestaShop\tests\TestCase;
 
 use Cache;
 use Configuration;
@@ -12,6 +12,7 @@ use Adapter_ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
+use Symfony\Component\HttpKernel\Kernel;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
      * @var Cache
      */
     public $cache;
+
+    /**
+     * @var Kernel
+     */
+    public $sfKernel;
 
     public function setupDatabaseMock()
     {
@@ -76,6 +82,17 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
             $fakeConfiguration
         );
         return $fakeConfiguration;
+    }
+
+    public function setupSfKernel()
+    {
+        // Prepare Symfony kernel to resolve route.
+        $loader = require_once __DIR__.'/../../app/bootstrap.php.cache';
+        require_once __DIR__.'/../../app/AppKernel.php';
+        $this->sfKernel = new \AppKernel('test', true);
+        $this->sfKernel->loadClassCache();
+        $this->sfKernel->boot();
+        return $this->sfKernel;
     }
 
     public function teardown()

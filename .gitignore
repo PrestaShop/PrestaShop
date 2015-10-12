@@ -1,6 +1,6 @@
 # Cache, temp and personal files
 
-.htaccess
+/.htaccess
 *.log
 /cache/*
 download/*
@@ -8,6 +8,8 @@ download/*
 /log/*
 upload/*
 vendor/*
+docs/phpdoc-sf/
+/composer.lock
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
@@ -30,7 +32,7 @@ override/*
 # Vendors and dependencies
 
 bower_components
-vendor/*
+vendor/
 themes/StarterTheme/_dev/node_modules
 /composer.phar
 php-cs-fixer
@@ -53,7 +55,19 @@ themes/default-bootstrap/modules/*/mails/*
 # MISC
 
 *sitemap.xml
-robots.txt
+/robots.txt
+
+# Symfony
+
+/app/bootstrap.php.cache
+/app/cache/*
+!app/cache/.gitkeep
+/app/config/parameters.yml
+/app/logs/*
+!app/logs/.gitkeep
+/app/phpunit.xml
+/bin/
+/web/bundles/
 
 
 
@@ -172,3 +186,9 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 .nb-gradle/
+
+### Eclipse ###
+.buildpath
+.project
+.settings/
+.externalToolBuilders/

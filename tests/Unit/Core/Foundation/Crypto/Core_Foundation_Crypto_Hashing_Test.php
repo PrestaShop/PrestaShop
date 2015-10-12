@@ -23,16 +23,14 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
 
 use Exception;
-
 use PHPUnit_Framework_TestCase;
-
 use Core_Foundation_Crypto_Hashing as Hashing;
 
-define('_COOKIE_KEY_', '2349123849231-4123');
+// FIXME: Defining this here will break all other Unit tests using UnitTestCase class!
+//define('_COOKIE_KEY_', '2349123849231-4123');
 
 class Core_Foundation_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 {

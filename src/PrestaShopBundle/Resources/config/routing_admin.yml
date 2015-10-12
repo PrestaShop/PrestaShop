@@ -1,0 +1,6 @@
+# include subparts of the Admin interface
+_admin_product_routing:
+    resource: "admin/routing_product.yml"
+    prefix: /product
+
+# include common routes for Admin interface

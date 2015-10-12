@@ -1,9 +1,20 @@
 {
+  "name": "PrestaShop/PrestaShop",
+  "type": "project",
   "require": {
-    "composer/installers": "~1.0",
+    "php": ">=5.4",
+    "symfony/symfony": "2.7.5",
+    "doctrine/orm": "2.5.1",
+    "doctrine/doctrine-bundle": "1.5.2",
+    "symfony/assetic-bundle": "2.7.0",
+    "symfony/swiftmailer-bundle": "2.3.8",
+    "symfony/monolog-bundle": "2.8.1",
+    "sensio/distribution-bundle": "4.0.1",
+    "sensio/framework-extra-bundle": "3.0.10",
+    "composer/installers": "1.0.21",
     "icanboogie/cldr": "1.3.9",
-    "curl/curl": "^1.2",
-    "ircmaxell/password-compat": "1.0.*",
+    "curl/curl": "1.2.1",
+    "ircmaxell/password-compat": "1.0.4",
     "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-master",
     "prestashop/blockadvertising": "dev-master",
@@ -84,7 +95,10 @@
   "require-dev": {
     "phpunit/phpunit": "~4.5",
     "phake/phake": "@stable",
-    "fabpot/php-cs-fixer": "^1.10"
+    "fabpot/php-cs-fixer": "^1.10",
+    "sensio/generator-bundle": "~2.3",
+    "phpdocumentor/phpdocumentor": "2.*",
+    "symfony/var-dumper": "2.7.*"
   },
   "autoload-dev": {
     "psr-4": {
@@ -95,17 +109,40 @@
     "psr-4": {
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
       "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/",
-      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/"
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Compression\\": "Core/Foundation/Compression/",
+      "": "src/"
     },
     "classmap": ["Core/", "Adapter/"]
   },
   "scripts": {
     "post-install-cmd": [
       "bash tools/contrib/install.sh",
-      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
-    "git-hook-install" : "bash tools/contrib/install.sh",
-    "git-hook-uninstall" : "bash tools/contrib/uninstall.sh",
-    "cldr-init" : "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init"
+    "post-update-cmd": [
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+    ],
+    "git-hook-install": "bash tools/contrib/install.sh",
+    "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
+    "cldr-init": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
+    "phpunit-sf": "phpunit -c app/",
+    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "extra": {
+    "symfony-app-dir": "app",
+    "symfony-web-dir": "web",
+    "symfony-assets-install": "relative"
   }
 }

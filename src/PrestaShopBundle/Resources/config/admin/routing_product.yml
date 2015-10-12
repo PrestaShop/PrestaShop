@@ -1,0 +1,39 @@
+# All the Product related routes
+admin_product_catalog:
+    path: /catalog/{offset}/{limit}/{orderBy}/{sortOrder}
+    methods:  [GET, POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
+        _legacy_controller: AdminProducts
+        #_legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        #_legacy_param_mapper_method: mapLegacyParametersProductForm
+        limit: 10
+        offset: 0
+        orderBy: id_product
+        sortOrder: asc
+    requirements:
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        sortOrder: asc|desc
+
+admin_product_list:
+    path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
+        limit: 10
+        offset: 0
+        orderBy: id_product
+        sortOrder: asc
+    requirements:
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        sortOrder: asc|desc
+
+admin_product_form:
+    path: /form/{id}
+    methods:  [GET, POST]
+    defaults:
+        id: 0
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
+        _legacy_controller: AdminProducts
+    requirements:
+        id: \d+
