@@ -56,12 +56,15 @@ class ProductController extends Controller
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
+     * @Template
      * @param Request $request
+     * @param integer $limit The size of the listing
+     * @param integer $offset The offset of the listing
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array Template vars
      */
-    public function catalogAction(Request $request, $orderBy = 'id_product', $sortOrder = 'asc')
+    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
@@ -81,34 +84,85 @@ class ProductController extends Controller
         /* @var $productProvider ProductInterface */
         
         // get old values from persistence (before the current update)
-        $persistedFilterParameters = $dataProvider->getPersistedFilterParameters('ls_products_');
+        $persistedFilterParameters = $productProvider->getPersistedFilterParameters('ls_products_');
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
-        // calling addContentData with null key to insert many values at once.
-        // FIXME: $response->addContentData(null, $persistedFilterParameters);
+        $hasCategoryFilter = $productProvider->isCategoryFiltered();
+        $hasColumnFilter = $productProvider->isColumnFiltered();
 
-        
-        
-        // TODO !1: continue
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', array(
-            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
-        ));
+        // URLs injection
+// TODO !1: continue
+
+
+        // Alternative layout for empty list
+// TODO !1: continue
+
+        // Template vars injection
+        return array_merge(
+            $persistedFilterParameters,
+            array(
+                'transDomain' => $request->attributes->get('_legacy_controller'),
+                'limit' => $limit,
+                'offset' => $offset,
+                'orderBy' => $orderBy,
+                'sortOrder' => $sortOrder,
+                'has_filter' => ($hasCategoryFilter | $hasColumnFilter),
+                'has_category_filter' => $hasCategoryFilter,
+                'has_column_filter' => $hasColumnFilter,
+                'activate_drag_and_drop', ('position' == $orderBy && 'asc' == $sortOrder)
+            )
+        );
     }
 
     /**
-     * @Template
+     * Get only the list of products to display on the main Admin Product page.
+     * The full page that shows products list will subcall this action (from catalogAction).
+     * URL example: /product/list/html/40/20/id_product/asc
      *
+     * @Template
+     * @param Request $request
+     * @param integer $limit The size of the listing
+     * @param integer $offset The offset of the listing
+     * @param string $orderBy To order product list
+     * @param string $sortOrder To order product list
+     * @return array Template vars
+     */
+    public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
+    {
+        $totalCount = 0;
+        $products = array();
+//         // Adds controller info (URLs, etc...) to product list
+//         foreach ($products as &$product) {
+//             $totalCount = isset($product['total'])? $product['total'] : $totalCount;
+//             $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
+//         }
+        return array(
+            'transDomain' => $request->attributes->get('_legacy_controller', $request->attributes->get('transDomain')),
+            'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
+            'products' => $products,
+            'product_count' => $totalCount
+        );
+    }
+
+    /**
      * Product form
      *
+     * @Template
      * @param int $id The product ID
-     *
-     * @return array Send datas to view
+     * @return array Template vars
      */
     public function formAction($id)
     {
-        // TODO !2: add legacy should redirect or not. (xgouley)
-        // TODO !3: add legacy options on route
+        // Redirect to legacy controller (FIXME: temporary behavior)
+        $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
+        /* @var $pagePreference AdminPagePreferenceInterface */
+        if ($pagePreference->getTemporaryShouldUseLegacyPage('product')) {
+            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            /* @var $legacyUrlGenerator UrlGeneratorInterface */
+            // TODO !2: add legacy should redirect or not. (xgouley)
+            // TODO !3: add legacy options on route
+        }
+
         $request = $this->get('request'); //example call request service
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
 

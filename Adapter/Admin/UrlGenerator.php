@@ -98,11 +98,11 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $route = $this->router->getRouteCollection()->get($routeName);
         if ($route) {
-            if ($route->hasOption('_legacy_controller')) {
-                $legacyController = $route->getOption('_legacy_controller');
-                if ($route->hasOption('_legacy_param_mapper_class') && $route->hasOption('_legacy_param_mapper_method')) {
-                    $class = $route->getOption('_legacy_param_mapper_class');
-                    $method = $route->getOption('_legacy_param_mapper_method');
+            if ($route->hasDefault('_legacy_controller')) {
+                $legacyController = $route->getDefault('_legacy_controller');
+                if ($route->hasDefault('_legacy_param_mapper_class') && $route->hasDefault('_legacy_param_mapper_method')) {
+                    $class = $route->getDefault('_legacy_param_mapper_class');
+                    $method = $route->getDefault('_legacy_param_mapper_method');
                     $method = (new \ReflectionClass('\\'.$class))->getMethod($method);
                     $legacyParameters = $method->invoke(($method->isStatic())?null:$method->getDeclaringClass()->newInstance(), $parameters);
                 }
