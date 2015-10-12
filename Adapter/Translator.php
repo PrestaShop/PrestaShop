@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Translation\TranslatorInterface;
-use ErrorException as Exception;
+use Symfony\Component\Process\Exception\LogicException;
 
 /**
  * This Adapter implements Symfony2 TranslatorInterface, and calls Legacy functions
@@ -61,7 +61,7 @@ class Translator implements TranslatorInterface
      * @param string|null $module The domain: Legacy Admin controller name, module name or null to use the Core. Other special value: 'pdf'.
      * @param string|null $locale The locale or null to use the default
      *
-     * @throws Exception If no domain set
+     * @throws LogicException If no domain set
      *
      * @return string The translated string
      *
@@ -95,7 +95,7 @@ class Translator implements TranslatorInterface
             //TODO: 'Module & Front translation is not yet implemented. Please contact the Architect team
         }
 
-        throw new Exception('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', $id, 5016);
+        throw new LogicException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', $id, 5016);
     }
 
     /**
@@ -107,7 +107,7 @@ class Translator implements TranslatorInterface
      * @param string|null $domain     The domain for the message or null to use the default
      * @param string|null $locale     The locale or null to use the default
      *
-     * @throws Exception If the locale contains invalid characters
+     * @throws LogicException If the locale contains invalid characters
      *
      * @return string The translated string
      *
@@ -116,7 +116,7 @@ class Translator implements TranslatorInterface
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
         // TODO: to be done when legacy will accept this (or will be replaced).
-        throw new Exception('transChoice method is not yet implemented. Please contact the Architect team.');
+        throw new LogicException('transChoice method is not yet implemented. Please contact the Architect team.');
     }
 
     /**

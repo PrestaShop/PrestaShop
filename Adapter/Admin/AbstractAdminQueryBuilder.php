@@ -25,6 +25,8 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
+use Symfony\Component\Process\Exception\LogicException;
+
 /**
  * Base class for data provider, to give common Adapter functions.
  *
@@ -107,7 +109,7 @@ abstract class AbstractAdminQueryBuilder
      * @param array[mixed] $where
      * @param array[string] $order
      * @param string $limit
-     * @throws DevelopmentErrorException if SQL elements cannot be joined.
+     * @throws LogicException if SQL elements cannot be joined.
      * @return string The SQL query ready to be executed.
      */
     protected function compileSqlQuery(array $select, array $table, array $where = array(), array $order = array(), $limit = null)
@@ -129,7 +131,7 @@ abstract class AbstractAdminQueryBuilder
             }
         }
         if (count($s) === 0) {
-            throw new DevelopmentErrorException('Compile SQL failed: No field to SELECT!', null, 5010);
+            throw new LogicException('Compile SQL failed: No field to SELECT!');
         }
         $sql[] = 'SELECT SQL_CALC_FOUND_ROWS'.implode(','.PHP_EOL, $s);
 
@@ -138,18 +140,18 @@ abstract class AbstractAdminQueryBuilder
         foreach ($table as $alias => $join) {
             if (!is_array($join)) {
                 if (count($s) > 0) {
-                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table '.$join.' into SQL query without JOIN sepcs.', null, 5013);
+                    throw new LogicException('Compile SQL failed: cannot join the table '.$join.' into SQL query without JOIN sepcs.');
                 }
                 $s[0] = ' `'._DB_PREFIX_.$join.'` '.$alias;
             } else {
                 if (count($s) === 0) {
-                    throw new DevelopmentErrorException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.', null, 5011);
+                    throw new LogicException('Compile SQL failed: cannot join the table alias '.$alias.' into SQL query before to insert initial table.');
                 }
                 $s[] = ' '.$join['join'].' `'._DB_PREFIX_.$join['table'].'` '.$alias.((isset($join['on']))?' ON ('.$join['on'].')':'');
             }
         }
         if (count($s) === 0) {
-            throw new DevelopmentErrorException('Compile SQL failed: No table to insert into FROM!', null, 5012);
+            throw new LogicException('Compile SQL failed: No table to insert into FROM!');
         }
         $sql[] = 'FROM '.implode(' '.PHP_EOL, $s);
 

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use ErrorException as Exception;
+use Symfony\Component\Process\Exception\LogicException;
 use \Context as OldContext;
 
 /**
@@ -39,7 +39,7 @@ class LegacyContext
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\Business\context class,
      * that will contains all you need in the Core architecture
      *
-     * @throws Exception If legacy context is not set properly
+     * @throws LogicException If legacy context is not set properly
      *
      * @return Context The Legacy context, for Adapter use only.
      */
@@ -54,7 +54,7 @@ class LegacyContext
             !isset($legacyContext->language) ||
             !isset($legacyContext->link)
         ) {
-            throw new Exception('Legacy context is not set properly. Cannot use it to merge with Context structure.');
+            throw new LogicException('Legacy context is not set properly. Cannot use it to merge with Context structure.');
         }
         return $legacyContext;
     }

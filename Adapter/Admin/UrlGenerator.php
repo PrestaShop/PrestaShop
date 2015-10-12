@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -116,7 +117,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function setContext(RequestContext $context)
     {
-        throw new \BadMethodCallException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
+        throw new LogicException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
     }
 
     /* (non-PHPdoc)
@@ -124,6 +125,6 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     public function getContext()
     {
-        throw new \BadMethodCallException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
+        throw new LogicException('Cannot use this UrlGeneratorInterface implementation with a Symfony context. Please call AdminUrlGeneratorFactory::forLegacy() to reach the right instance.');
     }
 }
