@@ -81,7 +81,12 @@ class ConnectionsSourceCore extends ObjectModel
             // If the referrer is internal (i.e. from your own website), then we drop the connection
             $parsed = parse_url($_SERVER['HTTP_REFERER']);
             $parsed_host = parse_url(Tools::getProtocol().Tools::getHttpHost(false, false).__PS_BASE_URI__);
-            if ((!isset($parsed['path']) || !isset($parsed_host['path'])) || (preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__))) {
+
+            if (!isset($parsed['host']) || (!isset($parsed['path']) || !isset($parsed_host['path']))) {
+                return false;
+            }
+
+            if ((preg_replace('/^www./', '', $parsed['host']) == preg_replace('/^www./', '', Tools::getHttpHost(false, false))) && !strncmp($parsed['path'], $parsed_host['path'], strlen(__PS_BASE_URI__))) {
                 return false;
             }
 

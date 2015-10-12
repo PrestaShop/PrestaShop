@@ -1695,7 +1695,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
             // if the current stock requires a warning
-            if ($product['current_stock'] == 0 && $display_out_of_stock_warning) {
+            if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
                 $this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
             }
             if ($product['id_warehouse'] != 0) {

@@ -1100,6 +1100,14 @@ class AdminImportControllerCore extends AdminController
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {
                             $path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
                         }
+                        if ($entity == 'products') {
+                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'.jpg')) {
+                               unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'.jpg');
+                            }
+                            if (is_file(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'_'.(int)Context::getContext()->shop->id.'.jpg')) {
+                               unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$id_entity.'_'.(int)Context::getContext()->shop->id.'.jpg');
+                            }
+                        }
                     }
                     if (in_array($image_type['id_image_type'], $watermark_types)) {
                         Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
@@ -1532,7 +1540,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
                 $product->id_category = array_values(array_unique($product->id_category));
-                
+
                 // Will update default category if category column is not ignored AND if there is categories that are set in the import file row.
                 if (isset($product->id_category[0])) {
                     $product->id_category_default = (int)$product->id_category[0];
@@ -1738,7 +1746,8 @@ class AdminImportControllerCore extends AdminController
                         $specific_price->price = -1;
                         $specific_price->id_customer = 0;
                         $specific_price->from_quantity = 1;
-                        $specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
+
+                        $specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? (float)str_replace(',', '.', $info['reduction_price']) : $info['reduction_percent'] / 100;
                         $specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
                         $specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
                         $specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
