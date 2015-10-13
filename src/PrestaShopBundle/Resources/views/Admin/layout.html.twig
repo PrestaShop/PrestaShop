@@ -1,0 +1,21 @@
+{% extends(template_from_string(
+    getLegacyLayout(
+        app.request.attributes.get('_legacy_controller'),
+        layoutTitle is defined ? layoutTitle : '',
+        layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
+        layoutDisplayType is defined ? layoutDisplayType : ''
+    )
+)) %}
+
+
+{% block stylesheets %}
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

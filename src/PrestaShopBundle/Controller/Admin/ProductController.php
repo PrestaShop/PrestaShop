@@ -163,7 +163,8 @@ class ProductController extends Controller
             // TODO !3: add legacy options on route
         }
 
-        $request = $this->get('request'); //example call request service
+        //$request = $this->get('request'); //example call request service
+        $request = Request::createFromGlobals();
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
         $translator = $this->container->get('prestashop.adapter.translator');
 

@@ -557,14 +557,14 @@ class AdminControllerCore extends Controller
         if (isset($tabs[0])) {
             $this->addMetaTitle($tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
+            $breadcrumbs2['tab']['href'] = $this->context->link->getAdminLink($tabs[0]['class_name']);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-'.$tabs[0]['class_name'];
             }
         }
         if (isset($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink($tabs[1]['class_name']);
+            $breadcrumbs2['container']['href'] = $this->context->link->getAdminLink($tabs[1]['class_name']);
             $breadcrumbs2['container']['icon'] = 'icon-'.$tabs[1]['class_name'];
         }
 
@@ -1748,6 +1748,8 @@ class AdminControllerCore extends Controller
             );
         }
 
+        $this->context->smarty->assign('baseAdminUrl', _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/');
+
         $this->context->smarty->assign(
             array(
                 'page' =>  $this->json ? json_encode($page) : $page,
@@ -1816,7 +1818,7 @@ class AdminControllerCore extends Controller
 
         // Tab list
         $tabs = Tab::getTabs($this->context->language->id, 0);
-        $current_id = Tab::getCurrentParentId();
+        $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
@@ -2211,6 +2213,7 @@ class AdminControllerCore extends Controller
         $iso_code_caps = strtoupper($this->context->language->iso_code);
 
         $this->context->smarty->assign(array(
+            'img_base_path' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
             'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
             'add_permission' => 1,
@@ -2589,6 +2592,7 @@ class AdminControllerCore extends Controller
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
+        Media::addJsDef(array('baseAdminDir' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
 
         Media::addJsDef(array('currency' => array(
             'iso_code' => Context::getContext()->currency->iso_code,
@@ -2770,7 +2774,8 @@ class AdminControllerCore extends Controller
             $query = (isset($url['query'])) ? $url['query'] : '';
             parse_str($query, $parse_query);
             unset($parse_query['setShopContext'], $parse_query['conf']);
-            $this->redirect_after = $url['path'].'?'.http_build_query($parse_query, '', '&');
+            $http_build_query = http_build_query($parse_query, '', '&');
+            $this->redirect_after = $url['path'].($http_build_query ? '?'.$http_build_query : '');
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-'.(int)Configuration::get('PS_SHOP_DEFAULT');
         } elseif (Shop::getTotalShops(false, null) < 2) {
@@ -4048,6 +4053,10 @@ class AdminControllerCore extends Controller
 
         if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0) {
             unset($obj);
+        }
+
+        if (!empty($module->image) && false !== strpos($module->image, '../img')) {
+            $module->image_absolute = str_replace('../', _PS_BASE_URL_.__PS_BASE_URI__, $module->image);
         }
     }
 

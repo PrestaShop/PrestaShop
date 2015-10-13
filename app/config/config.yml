@@ -21,7 +21,7 @@ framework:
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
-        #assets_version: SomeVersionScheme
+        assets_version: 1.7.0
     default_locale:  "%locale%"
     trusted_hosts:   ~
     trusted_proxies: ~
@@ -40,7 +40,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        ["PrestaShopBundle"]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~

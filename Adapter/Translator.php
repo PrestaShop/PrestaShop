@@ -50,7 +50,9 @@ class Translator implements TranslatorInterface
     public function __construct(LegacyContext $context)
     {
         $this->context = $context->getContext();
-        $this->setLocale($this->context->language->iso_code); // from legacy value
+        if (!empty($this->context->language)) {
+            $this->setLocale($this->context->language->iso_code);
+        }
     }
 
     /**
@@ -115,7 +117,6 @@ class Translator implements TranslatorInterface
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
     {
-        // TODO: to be done when legacy will accept this (or will be replaced).
         throw new LogicException('transChoice method is not yet implemented. Please contact the Architect team.');
     }
 
