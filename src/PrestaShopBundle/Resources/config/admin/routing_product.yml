@@ -42,7 +42,7 @@ admin_product_use_legacy_setter:
     path:     /uselegacy/{use}
     methods:  [GET, POST]
     defaults:
-        _controller: 'Admin\ProductController::shouldUseLegacyPagesAction'
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::shouldUseLegacyPagesAction
     requirements:
         use: 0|1
 
@@ -50,7 +50,7 @@ admin_product_bulk_action:
     path:     /bulk/{action}
     methods:  [POST]
     defaults:
-        _controller: 'Admin\ProductController::bulkAction'
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::bulkAction
     requirements:
         action: activate_all|deactivate_all|delete_all
 
@@ -58,7 +58,7 @@ admin_product_unit_action:
     path:     /unit/{action}/{id}
     methods:  [POST]
     defaults:
-        _controller: 'Admin\ProductController::unitAction'
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::unitAction
     requirements:
         action: delete|duplicate
         id: \d+

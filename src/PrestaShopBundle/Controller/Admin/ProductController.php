@@ -82,6 +82,8 @@ class ProductController extends Controller
 
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterface */
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
 
         // get old values from persistence (before the current update)
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -120,7 +122,20 @@ class ProductController extends Controller
         );
 
         // Add layout top-right menu actions
-// TODO !1: continue : layout and its options. Needs layout
+        $toolbarButtons = array();
+        if ($pagePreference->getTemporaryShouldAllowUseLegacyPage('product')) {
+            $toolbarButtons['legacy'] = array(
+                'href' => $this->generateUrl('admin_product_use_legacy_setter', array('use' => 1)),
+                'desc' => $translator->trans('Switch back to old Page', array(), $request->attributes->get('_legacy_controller')),
+                'icon' => 'process-icon-toggle-on',
+                'help' => $translator->trans('The new page cannot fit your needs now? Fallback to the old one, and tell us why!', array(), $request->attributes->get('_legacy_controller'))
+            );
+        }
+        $toolbarButtons['add'] = array(
+            'href' => $this->generateUrl('admin_product_form'),
+            'desc' => $translator->trans('Add new product', array(), $request->attributes->get('_legacy_controller')),
+            'icon' => 'process-icon-new'
+        );
 
         // Fetch product list (and cache it into view subcall to listAction)
         $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
@@ -136,12 +151,9 @@ class ProductController extends Controller
             // Paginator
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
-// TODO !1: continue: add admin/pagination.js. Needs layout
 
             // Category tree
 // TODO !2: continue: needs category tree form helper
-
-// TODO !1: continue: add admin/extra-js/product/catalog.js. Needs layout
         }
 
         // Template vars injection
@@ -161,7 +173,8 @@ class ProductController extends Controller
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
                 'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
-                'pagination_parameters' => $paginationParameters
+                'pagination_parameters' => $paginationParameters,
+                'layoutHeaderToolbarBtn' => $toolbarButtons
             )
         );
     }
@@ -234,5 +247,20 @@ class ProductController extends Controller
         return array(
             'title' => $id ? $translator->trans('Update', [], 'AdminProducts') : $translator->trans('Add', [], 'AdminProducts'),
         );
+    }
+
+    public function bulkAction(Request $request, $action)
+    {
+        // TODO !1
+    }
+
+    public function unitAction(Request $request, $action, $id)
+    {
+        // TODO !1
+    }
+
+    public function shouldUseLegacyPagesAction(Request $request, $use)
+    {
+        // TODO !0
     }
 }
