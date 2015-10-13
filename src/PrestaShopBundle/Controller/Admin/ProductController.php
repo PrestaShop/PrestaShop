@@ -141,7 +141,7 @@ class ProductController extends Controller
             // Category tree
 // TODO !2: continue: needs category tree form helper
 
-// TODO !1: continue: add admin/product/catalog.js. Needs layout
+// TODO !1: continue: add admin/extra-js/product/catalog.js. Needs layout
         }
 
         // Template vars injection
