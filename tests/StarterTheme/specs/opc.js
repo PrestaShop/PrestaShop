@@ -2,6 +2,7 @@
 
 var fixtures = require('../fixtures');
 var q        = require('q');
+var _        = require('underscore');
 
 function toggleAllTermsCheckboxes () {
   return browser.elements('#conditions-to-approve label').then(function (elements) {
@@ -12,6 +13,62 @@ function toggleAllTermsCheckboxes () {
 }
 
 describe('The One Page Checkout', function () {
+
+  describe('The customer is already logged in', function () {
+    before(function () {
+      return browser
+              .url(fixtures.urls.login)
+              .setValue('.login-form input[name=email]', 'pub@prestashop.com')
+              .setValue('.login-form input[name=passwd]', '123456789')
+              .submitForm('.login-form form')
+              .pause(500);
+    });
+
+    describe('Addresses management', function () {
+      var initialAddressesCount = 0;
+      var idAddressCreated = 0;
+
+      it('should display customer addresses', function () {
+        return browser
+                .url(fixtures.urls.opc)
+                .elements('.address-selector .address-item')
+                .then(function (elements) {
+                  initialAddressesCount = elements.value.length;
+                  initialAddressesCount.should.be.greaterThan(0);
+                });
+      });
+
+      it('should allow customer to create a new address', function () {
+        return browser
+                .click('a[data-link-action="add-new-address"]')
+                .pause(500)
+                .setValue('.address-form input[name=address1]', '12 rue d\'Amsterdam')
+                .setValue('.address-form input[name=city]', 'Paris City')
+                .setValue('.address-form input[name=postcode]', '75009')
+                .setValue('.address-form input[name=phone]', '1234567890')
+                .setValue('.address-form input[name=alias]', 'Selenium address '+_.now())
+                .submitForm('.address-form form')
+                .elements('.address-selector .address-item')
+                .then(function (elements) {
+                  var newAddressesCount = elements.value.length;
+                  newAddressesCount.should.be.greaterThan(initialAddressesCount);
+                });
+      });
+
+      it('should save the new selected address', function () {
+        return browser
+                .click('#id-address-delivery-address-4 label')
+                .submitForm('#opc-addresses form')
+                .url(fixtures.urls.opc)
+                .getValue('input[name="id_address_delivery"]:checked')
+                .then(function (value) {
+                  value.should.equal('4');
+                });
+      });
+
+    });
+  });
+
   describe('without the Advanced payment API', function () {
     before(function () {
       return browser.url(fixtures.urls.opc + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=0');
