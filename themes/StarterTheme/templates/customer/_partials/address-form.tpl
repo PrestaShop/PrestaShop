@@ -1,4 +1,4 @@
-<section class="login-form">
+<section class="address-form">
   <form action="{$form_action}" method="post">
 
     <section class="form-fields">
@@ -43,7 +43,7 @@
               {if $data.required}
                 {block name="required_field"}{include file="_partials/form-required-field.tpl"}{/block}
               {/if}
-              <input type="text" name="phone_mobile" id="phone_mobile" value="{$address.phone_mobile}" {if $data.required}required{/if} />
+              <input type="text" name="phone_mobile" id="phone_mobile" value="{$address.phone_mobile}" {if $data.required}required{/if}>
               {block name="form_field_error"}{include file="_partials/form-field-errors.tpl" errors=$data.errors}{/block}
             </label>
           {/block}
@@ -56,7 +56,7 @@
               {if $data.required}
                 {block name="required_field"}{include file="_partials/form-required-field.tpl"}{/block}
               {/if}
-              <input type="text" name="{$field_name}" id="{$field_name}" value="{$address.$field_name}" {if $data.required}required{/if} />
+              <input type="text" name="{$field_name}" id="{$field_name}" value="{$address.$field_name}" {if $data.required}required{/if}>
               {block name="form_field_error"}{include file="_partials/form-field-errors.tpl" errors=$data.errors}{/block}
             </label>
           {/block}
@@ -68,12 +68,13 @@
     </section>
 
     <footer class="form-footer">
-      <input type="hidden" class="hidden" name="id_address" value="{$address.id}" />
-      <input type="hidden" class="hidden" name="back" value="{$back}" />
-      <input type="hidden" class="hidden" name="mod" value="{$mod}" />
-      <input type="hidden" name="token" value="{$token}" />
+      <input type="hidden" class="hidden" name="id_address" value="{$address.id}">
+      <input type="hidden" class="hidden" name="back" value="{$back}">
+      <input type="hidden" class="hidden" name="mod" value="{$mod}">
+      <input type="hidden" name="token" value="{$token}">
+      <input type="hidden" name="submitAddress" value="1">
 
-      <button type="submit" id="submitAddress" name="submitAddress">
+      <button type="submit" id="submitAddress">
         {l s='Save'}
       </button>
     </footer>
