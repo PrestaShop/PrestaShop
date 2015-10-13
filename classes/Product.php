@@ -2974,6 +2974,8 @@ class ProductCore extends ObjectModel
         );
 
         if (isset(self::$_prices[$cache_id])) {
+            /* Affect reference before returning cache */
+            $specific_price['price'] = self::$_prices[$cache_id];
             return self::$_prices[$cache_id];
         }
 
@@ -3024,6 +3026,9 @@ class ProductCore extends ObjectModel
         // convert only if the specific price is in the default currency (id_currency = 0)
         if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency'])) {
             $price = Tools::convertPrice($price, $id_currency);
+            if (isset($specific_price['price'])) {
+                $specific_price['price'] = $price;
+            }
         }
 
         // Attribute price
