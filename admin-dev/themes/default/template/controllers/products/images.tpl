@@ -205,7 +205,7 @@
 				}
 				else
 					assoc = false;
-				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|@addcslashes:'\"'}");
+				imageLine({$image->id}, "{$image->getExistingImgPath()}", {$image->position}, "{if $image->cover}icon-check-sign{else}icon-check-empty{/if}", assoc, "{$image->legend[$default_language]|escape:'htmlall'}");
 			{/foreach}
 			{literal}
 			var originalOrder = false;
