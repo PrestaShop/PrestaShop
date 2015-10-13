@@ -2975,7 +2975,9 @@ class ProductCore extends ObjectModel
 
         if (isset(self::$_prices[$cache_id])) {
             /* Affect reference before returning cache */
-            $specific_price['price'] = self::$_prices[$cache_id];
+            if (isset($specific_price['price']) && $specific_price['price'] > 0) {
+                $specific_price['price'] = self::$_prices[$cache_id];
+            }
             return self::$_prices[$cache_id];
         }
 
@@ -3088,11 +3090,11 @@ class ProductCore extends ObjectModel
 
                 $specific_price_reduction = $reduction_amount;
 
-                    // Adjust taxes if required
+                // Adjust taxes if required
 
-                    if (!$use_tax && $specific_price['reduction_tax']) {
-                        $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
-                    }
+                if (!$use_tax && $specific_price['reduction_tax']) {
+                    $specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
+                }
                 if ($use_tax && !$specific_price['reduction_tax']) {
                     $specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
                 }
