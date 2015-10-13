@@ -182,7 +182,7 @@ function displaySummary()
         delay_text = $('#delay_' + id_default_lang).val();
 
 	// Carrier name
-	$('#summary_name').html($('#name').val());
+	$('#summary_name').text($('#name').val());
 
 	// Delay and pricing
 	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + delay_text + '</strong>');
@@ -190,7 +190,7 @@ function displaySummary()
 		tmp = tmp.replace('@s1', summary_translation_free);
 	else
 		tmp = tmp.replace('@s1', summary_translation_paid);
-	$('#summary_meta_informations').html(tmp);
+	$('#summary_meta_informations').text(tmp);
 
 	// Tax and calculation mode for the shipping cost
 	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
