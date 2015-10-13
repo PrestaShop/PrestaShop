@@ -892,7 +892,7 @@ class AdminCategoriesControllerCore extends AdminController
                                 (int)$image_type['width'],
                                 (int)$image_type['height']
                             )) {
-                                $this->errors = Tools::displayError('An error occurred while uploading thumb image.');
+                                $this->errors = Tools::displayError('An error occurred while uploading thumbnail image.');
                             } elseif (($infos = getimagesize($tmpName)) && is_array($infos)) {
                                 ImageManager::resize(
                                     $tmpName,
