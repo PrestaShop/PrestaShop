@@ -41,31 +41,31 @@
             {% endif %}
             <td>
                 <div class="btn-group-action">
-                    ### TODO !
-                    {# include file="../Admin/dropdown_menu.tpl"
-                        button_id="product_list_id_"|cat:$product.id_product|cat:"_menu"
-                        default_item=[
-                            "href" => $product.url|default:'#',
-                            "icon" => "icon-pencil",
-                            "label" => {l s="Edit"}
+                    {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+                        'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
+                        'default_item': {
+                            "href": product.url|default('#'),
+                            "icon": "icon-pencil",
+                            "label": "Edit"|trans({}, 'AdminTab')
+                        },
+                        items: [
+                            {
+                                "href": "#todo",
+                                "icon": "icon-eye",
+                                "label": "Preview TODO"|trans({}, 'AdminTab')
+                            },
+                            {
+                                "onclick": "unitProductAction(this, 'duplicate');",
+                                "icon": "icon-copy",
+                                "label": "Duplicate"|trans({}, 'AdminTab')
+                            },
+                            {
+                                "onclick": "unitProductAction(this, 'delete');",
+                                "icon": "icon-trash",
+                                "label": "Delete"|trans({}, 'AdminTab')
+                            }
                         ]
-                        items=[
-                            [
-                                "href" => "#todo",
-                                "icon" => "icon-eye",
-                                "label" => {l s="Preview TODO"}
-                            ],
-                            [
-                                "onclick" => "unitProductAction(this, 'duplicate');",
-                                "icon" => "icon-copy",
-                                "label" => {l s="Duplicate"}
-                            ],
-                            [
-                                "onclick" => "unitProductAction(this, 'delete');",
-                                "icon" => "icon-trash",
-                                "label" => {l s="Delete"}
-                            ]
-                        ] #}
+                    } %}
                 </div>
             </td>
         </tr>

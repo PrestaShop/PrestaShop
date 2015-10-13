@@ -240,8 +240,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                         'c.`nleft` >= (SELECT `nleft` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.$filterValue.')',
                         'c.`nright` <= (SELECT `nright` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.$filterValue.')'
                     );
-                } else {
-                    throw new \Exception('The filter \''.$filterParam.'\' is not known for Products!', null, 5001);
                 }
             }
         }
@@ -271,18 +269,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        global $container;
+        $currency = new \Currency(\Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
-            $product['price'] = \Tools::displayPrice($product['price']);
+            $product['price'] = \Tools::displayPrice($product['price'], $currency);
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = \Product::getPriceStatic($product['id_product'], true, null,
                     (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                     true, null, null, null, $nothing, true, true);
-            $product['price_final'] = \Tools::displayPrice($product['price_final']);
-            $product['unit_action_url'] = $container->make('Routing')->generateUrl(
-                'admin_product_unit_action',
-                array('action' => 'duplicate', 'id_product' => $product['id_product'])
-            );
+            $product['price_final'] = \Tools::displayPrice($product['price_final'], $currency);
         }
 
         return $products;
@@ -322,11 +316,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function mapLegacyParametersProductForm($coreParameters = array())
     {
         $params = array();
-        if ($coreParameters['id_product'] == 'new') {
+        if ($coreParameters['id'] == '0') {
             $params['addproduct'] = 1;
         } else {
             $params['updateproduct'] = 1;
-            $params['id_product'] = $coreParameters['id_product'];
+            $params['id_product'] = $coreParameters['id'];
         }
         return $params;
     }

@@ -4,3 +4,15 @@ _admin_product_routing:
     prefix: /product
 
 # include common routes for Admin interface
+admin_common_pagination:
+    path:     /common/pagination/{offset}/{limit}/{total}
+    methods:  [GET]
+    defaults: 
+        _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
+        offset: 0
+        limit: 10
+        total: 0
+    requirements:
+        offset: \d+
+        limit: \d+
+        total: \d+
