@@ -5,8 +5,6 @@ admin_product_catalog:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         _legacy_controller: AdminProducts
-        #_legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
-        #_legacy_param_mapper_method: mapLegacyParametersProductForm
         limit: 10
         offset: 0
         orderBy: id_product
@@ -35,5 +33,32 @@ admin_product_form:
         id: 0
         _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
         _legacy_controller: AdminProducts
+        _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+        _legacy_param_mapper_method: mapLegacyParametersProductForm
     requirements:
+        id: \d+
+
+admin_product_use_legacy_setter:
+    path:     /uselegacy/{use}
+    methods:  [GET, POST]
+    defaults:
+        _controller: 'Admin\ProductController::shouldUseLegacyPagesAction'
+    requirements:
+        use: 0|1
+
+admin_product_bulk_action:
+    path:     /bulk/{action}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::bulkAction'
+    requirements:
+        action: activate_all|deactivate_all|delete_all
+
+admin_product_unit_action:
+    path:     /unit/{action}/{id}
+    methods:  [POST]
+    defaults:
+        _controller: 'Admin\ProductController::unitAction'
+    requirements:
+        action: delete|duplicate
         id: \d+
