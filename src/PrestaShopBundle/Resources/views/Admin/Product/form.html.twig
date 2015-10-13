@@ -1,4 +1,8 @@
-{{ title }}
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-<!-- translation example-->
-{{ trans('Quantity', [], 'AdminProducts') }}
+{% block content %}
+    {{ title }}
+
+    <!-- translation example-->
+    {{ trans('Quantity', [], app.request.attributes.get('_legacy_controller')) }}
+{% endblock %}

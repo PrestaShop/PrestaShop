@@ -45,17 +45,14 @@ class LegacyContext
      */
     public function getContext()
     {
-        //init real legacy shop context
-        $adminController = new \AdminController();
-        $adminController->initShopContext();
-
         $legacyContext = OldContext::getContext();
-        if (!isset($legacyContext->shop) ||
-            !isset($legacyContext->language) ||
-            !isset($legacyContext->link)
-        ) {
-            throw new LogicException('Legacy context is not set properly. Cannot use it to merge with Context structure.');
+
+        if ($legacyContext && !empty($legacyContext->shop)) {
+            //init real legacy shop context
+            $adminController = new \AdminControllerCore();
+            $adminController->initShopContext();
         }
+
         return $legacyContext;
     }
 
@@ -72,7 +69,7 @@ class LegacyContext
      * Adapter to get Admin HTTP link.
      *
      * @param string $controller the controller name
-     * @param string $withToken
+     * @param bool $withToken
      * @param array[string] $extraParams
      * @return string
      */
@@ -83,7 +80,7 @@ class LegacyContext
         if ($withToken) {
             $params['token'] = \Tools::getAdminTokenLite($controller);
         }
-        return \Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.\Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -107,5 +104,23 @@ class LegacyContext
     public function setupLegacyTranslationContext($legacyController = 'AdminTab')
     {
         OldContext::getContext()->override_controller_name_for_translations = $legacyController;
+    }
+
+    /**
+     * Adapter to get admin legacy layout into old controller context
+     *
+     * @param string $controllerName The legacy controller name
+     * @param string $title The page title to override default one
+     * @param array $headerToolbarBtn The header toolbar to override
+     * @param string $displayType The legacy display type variable
+     *
+     * @return string The html layout
+     */
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "")
+    {
+        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType);
+        $originCtrl->run();
+
+        return $originCtrl->outPutHtml;
     }
 }

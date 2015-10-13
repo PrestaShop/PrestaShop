@@ -20,9 +20,25 @@ services:
         public: false
 
     #TWIG EXTENSIONS
-    prestashop.twig_translation_extension:
-            class: PrestaShopBundle\Twig\TranslationExtension
-            arguments: ["@translator", "@prestashop.adapter.translator"]
-            public: false
-            tags:
-                - { name: twig.extension }
+    prestashop.twig.extension.translation:
+        class: PrestaShopBundle\Twig\TranslationExtension
+        arguments: ["@translator", "@prestashop.adapter.translator"]
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.stringloader:
+        class: Twig_Extension_StringLoader
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.layout:
+        class: PrestaShopBundle\Twig\LayoutExtension
+        arguments: ["@prestashop.adapter.legacy.context"]
+        tags:
+            - { name: twig.extension }
+
+
+
+
+
