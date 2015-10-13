@@ -6,7 +6,8 @@
 
   <ul class="actions">
     <li>
-      <a href="{url entity="address" params=['back' => $urls.pages.order_opc]}">
+      <a  href="{url entity="address" params=['back' => $urls.pages.order_opc]}"
+          data-link-action="add-new-address">
         {l s='Create new address'}
       </a>
     </li>
@@ -37,10 +38,12 @@
 
     </div>
 
-    <input type="hidden" name="token" value="{$static_token}" />
-    <input type="hidden" name="back" value="{$urls.pages.order_opc|urlencode}" />
-    <button type="submit" name="changeAddresses" value="1">
-      save
+    <input type="hidden" name="token" value="{$static_token}">
+    <input type="hidden" name="back" value="{$urls.pages.order_opc|urlencode}">
+    <input type="hidden" name="changeAddresses" value="1">
+
+    <button type="submit">
+      {l s='Save'}
     </button>
   </form>
 
