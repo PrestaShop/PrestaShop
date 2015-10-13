@@ -88,6 +88,7 @@ smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval')
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
 
@@ -308,12 +309,18 @@ function smartyWidgetBlock($params, $content, &$smarty)
     }
 }
 
+function smartyClassname($classname)
+{
+    $classname = str_replace('_', '-', $classname);
+    return $classname;
+}
+
 function smartyClassnames(array $classnames)
 {
     $enabled_classes = [];
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
-            $enabled_classes[] = $classname;
+            $enabled_classes[] = smartyClassname($classname);
         }
     }
     return implode(' ', $enabled_classes);
