@@ -15,6 +15,8 @@ module.exports = {
       id: 1
     },
     urls: {
-      opc: '/en/quick-order'
+      opc: '/en/quick-order',
+      login: '/en/login',
+      address: 'en/address'
     }
 };

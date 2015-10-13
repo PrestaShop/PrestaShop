@@ -1,5 +1,5 @@
 {foreach $addresses as $address}
-  <article id="address-{$address.id}" class="address-item">
+  <article id="{$name|classname}-address-{$address.id}" class="address-item">
     <header class="h4">
       {$address.alias}
     </header>
