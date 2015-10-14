@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "cldrjs": "0.4.1",
-    "globalize": "1.0.0"
+    "globalize": "1.0.0",
+    "sprintf-js": "^1.0.3",
+    "typeahead.js": "^0.11.1",
+    "dropzone": "^4.0.1"
   }
 }

@@ -95,6 +95,16 @@ class LegacyContext
     }
 
     /**
+     * Adapter to get Root Url
+     *
+     * @return string The lagacy root URL
+     */
+    public function getRootUrl()
+    {
+        return __PS_BASE_URI__;
+    }
+
+    /**
      * This fix is used to have a ready translation in the smarty 'l' function.
      * Called by AutoResponseFormatTrait in beforeActionSuggestResponseFormat().
      * So if you do not use this Trait, you must call this method by yourself in the action.
@@ -122,5 +132,19 @@ class LegacyContext
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
+    }
+
+    /**
+     * Returns available languages
+     *
+     * @param bool     $active   Select only active languages
+     * @param int|bool $id_shop  Shop ID
+     * @param bool     $ids_only If true, returns an array of language IDs
+     *
+     * @return array Languages
+     */
+    public function getLanguages($active = true, $id_shop = false, $ids_only = false)
+    {
+        return \Language::getLanguages($active, $id_shop, $ids_only);
     }
 }

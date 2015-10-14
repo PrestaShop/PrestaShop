@@ -32,6 +32,7 @@ use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Form\Admin\Product as ProductForms;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -239,13 +240,17 @@ class ProductController extends Controller
             return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)), 302);
         }
 
-        //$request = $this->get('request'); //example call request service
-        $request = Request::createFromGlobals();
-        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $form = $this->createFormBuilder()
+            ->add('id_product', 'hidden')
+            ->add('step1', new ProductForms\ProductInformation($this->container))
+            ->add('step2', new ProductForms\ProductQuantity())
+            ->add('step3', new ProductForms\ProductShipping())
+            ->add('step4', new ProductForms\ProductSeo($this->container))
+            ->add('step5', new ProductForms\ProductOptions($this->container))
+            ->getForm();
 
         return array(
-            'title' => $id ? $translator->trans('Update', [], 'AdminProducts') : $translator->trans('Add', [], 'AdminProducts'),
+            'form' => $form->createView(),
         );
     }
 

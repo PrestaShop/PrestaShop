@@ -23,45 +23,41 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Symfony\Component\Process\Exception\LogicException;
+namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 /**
- * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
+ * This class will provide data from DB / ORM about Supplier
  */
-class ProductDataProvider
+class SupplierDataProvider
 {
     /**
-     * Get a product
+     * Get all suppliers
      *
-     * @param int $id_product
-     * @param bool $full
-     * @param int|null $id_lang
-     * @param int|null $id_shop
-     * @param object|null $context
+     * @param bool $get_nb_products
+     * @param int $id_lang
+     * @param bool $active
+     * @param bool $p
+     * @param bool $n
+     * @param bool $all_groups
      *
-     * @throws LogicException If the product id is not set
-     *
-     * @return object product
+     * @return array Suppliers
      */
-    public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
+    public function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
     {
-        if (!$id_product) {
-            throw new LogicException('You need to provide a product id', null, 5002);
-        }
-
-        return new \Product($id_product, $full, $id_lang, $id_shop, $context);
+        return \Supplier::getSuppliers($get_nb_products, $id_lang, $active, $p, $n, $all_groups);
     }
 
     /**
-     * Get default taxe rate product
+     * Get product suppliers
      *
-     * @return int id tax rule group
+     * @param int $id_product
+     *
+     * @return array Suppliers
      */
-    public function getIdTaxRulesGroup()
+    public function getProductSuppliers($id_product)
     {
-        $product = new \Product();
-        return $product->getIdTaxRulesGroup();
+        $suppliersCollection = \ProductSupplier::getSupplierCollection($id_product);
+        return $suppliersCollection->getResults();
     }
 }
