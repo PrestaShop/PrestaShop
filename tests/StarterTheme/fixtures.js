@@ -15,9 +15,12 @@ module.exports = {
       id: 1
     },
     urls: {
-      opc: '/en/quick-order',
       login: '/en/login',
-      address: 'en/address'
+      myAccount: '/en/my-account',
+      myAddresses: '/en/addresses',
+      address: 'en/address',
+      opc: '/en/quick-order',
+      logout: '/en/logout'
     },
     customer: {
       email: 'pub@prestashop.com',
