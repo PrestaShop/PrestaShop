@@ -151,7 +151,7 @@ class CompareProductCore extends ObjectModel
         if ($interval != null) {
             Db::getInstance()->execute('
 			DELETE cp, c FROM `'._DB_PREFIX_.'compare_product` cp, `'._DB_PREFIX_.'compare` c
-			WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL 1 WEEK) AND c.`id_compare`=cp.`id_compare`');
+			WHERE cp.date_upd < DATE_SUB(NOW(), INTERVAL '.$interval.') AND c.`id_compare`=cp.`id_compare`');
         }
     }
 
