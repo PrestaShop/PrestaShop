@@ -45,6 +45,9 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         /* @var $legacyCookie \CookieCore */
         $legacyCookie = \Context::getContext()->cookie;
+        if (!$legacyCookie) {
+            return array();
+        }
         return array(
             $prefix.'filter_category' => $legacyCookie->id_category_products_filter,
             $prefix.'filter_column_id_product' => $legacyCookie->productsproductFilter_id_product,
