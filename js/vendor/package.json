@@ -2,6 +2,7 @@
   "name": "prestashop-common-js",
   "version": "1.0.0",
   "dependencies": {
+    "bootstrap-slider": "^5.2.3",
     "cldrjs": "0.4.1",
     "globalize": "1.0.0",
     "sprintf-js": "^1.0.3",

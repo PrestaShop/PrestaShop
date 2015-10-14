@@ -31,7 +31,7 @@ $(document).ready(function() {
 	 */
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
 		if ($(this).is(':checked')) {
-			$('form#product_catalog_list input[name="ls_products_filter_category"]').val($(this).val());
+			$('form#product_catalog_list input[name="filter_category"]').val($(this).val());
 			$('form#product_catalog_list').submit();
 		}
 	});
@@ -51,14 +51,25 @@ $(document).ready(function() {
 	$('input:checkbox[name="bulk_action_selected_products[]"]', form).change(function() {
 		updateBulkMenu();
 	});
-	
+
 	/*
 	 * Filter columns buttons behavior
 	 */
 	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
 		updateFilterMenu();
 	});
-	
+
+	/*
+	 * Form submit pre action
+	 */
+	form.submit(function(e) {
+	    e.preventDefault();
+	    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
+	    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
+	    this.submit();
+	    return false;
+	});
+
 	updateBulkMenu();
 	updateFilterMenu();
 });
@@ -88,13 +99,17 @@ function updateFilterMenu() {
 
 function productCategoryFilterReset(div) {
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').prop('checked', false);
-	$('form#product_catalog_list input[name="ls_products_filter_category"]').val('');
+	$('form#product_catalog_list input[name="filter_category"]').val('');
 	$('form#product_catalog_list').submit();
 }
 
 function productColumnFilterReset(tr) {
 	$('input:text', tr).val('');
 	$('select option:selected', tr).prop("selected", false);
+	$('input#filter_column_price', tr).bootstrapSlider('setValue', [
+	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'min'),
+	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'max')
+	]);
 	$('form#product_catalog_list').submit();
 }
 
@@ -137,7 +152,7 @@ function bulkProductAction(element, action) {
 			.attr('type', 'hidden')
 			.attr('name', 'redirect_url').val(redirectUrl);
 		form.append($(redirectionInput));
-		form.attr('action', url);
+		form.attr('action', postUrl);
 		form.submit();
 	}
 	return false;

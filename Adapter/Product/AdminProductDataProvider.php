@@ -45,6 +45,9 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         /* @var $legacyCookie \CookieCore */
         $legacyCookie = \Context::getContext()->cookie;
+        if (!$legacyCookie) {
+            return array();
+        }
         return array(
             $prefix.'filter_category' => $legacyCookie->id_category_products_filter,
             $prefix.'filter_column_id_product' => $legacyCookie->productsproductFilter_id_product,
@@ -160,7 +163,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
             'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'price' => array('table' => 'p', 'field' => 'price', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
+            'price' => array('table' => 'p', 'field' => 'price', 'filtering' => ' %s '),
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
             'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
             'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
@@ -170,7 +173,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'name_category' => array('table' => 'cl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
             'price_final' => '0',
             'nb_downloadable' => array('table' => 'pd', 'field' => 'nb_downloadable'),
-            'sav_quantity' => array('table' => 'sav', 'field' => 'quantity', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
+            'sav_quantity' => array('table' => 'sav', 'field' => 'quantity', 'filtering' => ' %s '),
             'badge_danger' => array('select' => 'IF(sav.`quantity`<=0, 1, 0)', 'filtering' => 'IF(sav.`quantity`<=0, 1, 0) = %s')
         );
         $sqlTable = array(

@@ -81,8 +81,7 @@ class Translator implements TranslatorInterface
         }
 
         // Search for Admin case
-        $isAdmin = ((isset($this->context->controller) && $this->context->controller->controller_type == 'admin')
-                    || $this->context->get('app_entry_point', 'unknown') === 'admin');
+        $isAdmin = ((isset($this->context->controller) && $this->context->controller->controller_type == 'admin'));
         if ($isAdmin && $domain == null) {
             $domain = 'AdminTab'; // default class value for legacy Admin translation
         }
@@ -97,7 +96,7 @@ class Translator implements TranslatorInterface
             //TODO: 'Module & Front translation is not yet implemented. Please contact the Architect team
         }
 
-        throw new LogicException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', $id, 5016);
+        throw new LogicException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', 5016);
     }
 
     /**

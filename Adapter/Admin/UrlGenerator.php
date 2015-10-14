@@ -74,13 +74,10 @@ class UrlGenerator implements UrlGeneratorInterface
         $legacyController = $name;
         $legacyParameters = $parameters;
 
-        // Base path contains admin directory ('admin-dev' or random 'admin-xxxx')
-        $basePath = $this->legacyContext->getAdminBaseUrl();
-
         // resolve route & legacy mapping
         list($legacyController, $legacyParameters) = $this->getLegacyOptions($name, $parameters);
 
-        return $basePath.$this->legacyContext->getAdminLink($legacyController, true, $legacyParameters);
+        return $this->legacyContext->getAdminLink($legacyController, true, $legacyParameters);
     }
 
     /**
