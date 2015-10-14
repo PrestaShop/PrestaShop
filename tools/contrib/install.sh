@@ -4,7 +4,7 @@
 if [ -f .git/hooks/pre-commit ]
   then
     cp .git/hooks/pre-commit .git/hooks/pre-commit.back
-    echo -e "\033[0;31mA Git precommit file was found, a backup was created.\e[0;m"
+    echo "A Git precommit file was found, a backup was created."
 fi
 
 cp tools/contrib/pre-commit .git/hooks/pre-commit
