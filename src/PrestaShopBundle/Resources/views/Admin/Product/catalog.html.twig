@@ -1,6 +1,7 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-{% block extra_javascripts %}
+{% block javascripts %}
+    {{ parent() }}
 	{% javascripts
 		'@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
 	    '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js' %}
@@ -23,8 +24,8 @@
     
     <div class="panel col-lg-12">
         <div class="panel-heading">
-            {{ "Products"|trans({}, transDomain) }} {% if has_filter %} {{ "(filtered)"|trans({}, transDomain) }} {% endif %}
-            <span class="badge">{% if has_filter %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
+            {{ "Products"|trans({}, transDomain) }} {% if has_filter == true %} {{ "(filtered)"|trans({}, transDomain) }} {% endif %}
+            <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
         </div>
     
         <form name="product_catalog_list" id="product_catalog_list" method="post" action="{{ post_url }}" orderingurl="{{ ordering_url }}" >
@@ -76,7 +77,7 @@
                             &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
                         </th>
-                        {% if has_category_filter %}
+                        {% if has_category_filter == true %}
                             <th>
                                 {{ "Position"|trans({}, transDomain) }}
                                 &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
@@ -101,11 +102,23 @@
                             <input type="text" placeholder="{{ "Partial category name allowed"|trans({}, transDomain) }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
                         </td>
                         <td>
-                            <input type="text" placeholder="{{ "Exact base price matching"|trans({}, transDomain) }}" name="filter_column_price" value="{{ filter_column_price }}" />
+                            {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
+                                'input_name': "filter_column_price",
+                                'min': '0',
+                                'max': '5000',
+                                'scale': 'logarithmic',
+                                'value': filter_column_price,
+                            } %}
                         </td>
                         <td>&nbsp;</td>
                         <td>
-                            <input type="text" placeholder="{{ "Exact quantity matching"|trans({}, transDomain) }}" name="filter_column_sav_quantity" value="{{ filter_column_sav_quantity }}" />
+                            {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
+                                'input_name': "filter_column_sav_quantity",
+                                'min': '0',
+                                'max': '1000',
+                                'scale': 'logarithmic',
+                                'value': filter_column_sav_quantity,
+                            } %}
                         </td>
                         <td>
                             <select name="filter_column_active">
@@ -114,7 +127,7 @@
                                 <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
                             </select>
                         </td>
-                        {% if has_category_filter %}
+                        {% if has_category_filter == true %}
                             <td>
                                 {% if not(activate_drag_and_drop) %}
                                     <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans({}, transDomain) }}" onclick="productOrderTable('position', 'asc');" />
@@ -179,8 +192,8 @@
                         
                     <div style="display: inline; margin-left: 2em;">
                         <span id="bulk_edition_toolbar" style="display: none;">
-                            <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, transDomain) }}" />
-                            <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, transDomain) }}" />
+                            <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, transDomain)|raw }}" />
+                            <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, transDomain)|raw }}" />
                             <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans({}, transDomain) }}" />
                         </span>
                     </div>

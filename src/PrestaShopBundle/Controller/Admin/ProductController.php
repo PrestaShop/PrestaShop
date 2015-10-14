@@ -89,8 +89,6 @@ class ProductController extends Controller
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
-        $hasCategoryFilter = $productProvider->isCategoryFiltered();
-        $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // URLs injection
         $actionRedirectionUrl = $this->generateUrl('admin_product_catalog', array(
@@ -139,6 +137,8 @@ class ProductController extends Controller
 
         // Fetch product list (and cache it into view subcall to listAction)
         $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $hasCategoryFilter = $productProvider->isCategoryFiltered();
+        $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Alternative layout for empty list
         $totalFilteredProductCount = count($products);
@@ -259,8 +259,26 @@ class ProductController extends Controller
         // TODO !1
     }
 
+    /**
+     * This action will persist user choice to use (or not) the legacy Product pages instead of the new one.
+     *
+     * This action will allow the merchant to switch between the new and the old pages for Catalog & Products pages.
+     * This is a temporary behavior, that will be removed in a futur minor release. This is here to let the modules
+     * adapting their hooks to the new controller behavior during a short time.
+     *
+     * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
+     *
+     * @param Request $request
+     * @param boolean $use True to use legacy version. False for refactored page.
+     */
     public function shouldUseLegacyPagesAction(Request $request, $use)
     {
-        // TODO !0
+        $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
+        /* @var $pagePreference AdminPagePreferenceInterface */
+        $pagePreference->setTemporaryShouldUseLegacyPage('product', $use);
+        // Then redirect
+        $urlGenerator = $this->container->get($use?'prestashop.core.admin.url_generator_legacy':'prestashop.core.admin.url_generator');
+        /* @var $urlGenerator UrlGeneratorInterface */
+        return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
     }
 }
