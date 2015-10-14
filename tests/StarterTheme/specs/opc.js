@@ -18,8 +18,8 @@ describe('The One Page Checkout', function () {
     before(function () {
       return browser
               .url(fixtures.urls.login)
-              .setValue('.login-form input[name=email]', 'pub@prestashop.com')
-              .setValue('.login-form input[name=passwd]', '123456789')
+              .setValue('.login-form input[name=email]', fixtures.customer.email)
+              .setValue('.login-form input[name=passwd]', fixtures.customer.password)
               .submitForm('.login-form form')
               .pause(500);
     });
