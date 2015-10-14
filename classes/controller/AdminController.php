@@ -1748,7 +1748,7 @@ class AdminControllerCore extends Controller
             );
         }
 
-        $this->context->smarty->assign('baseAdminUrl', _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/');
+        $this->context->smarty->assign('baseAdminUrl', __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/');
 
         $this->context->smarty->assign(
             array(
@@ -2213,7 +2213,7 @@ class AdminControllerCore extends Controller
         $iso_code_caps = strtoupper($this->context->language->iso_code);
 
         $this->context->smarty->assign(array(
-            'img_base_path' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
+            'img_base_path' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/',
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
             'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
             'add_permission' => 1,
@@ -2591,8 +2591,8 @@ class AdminControllerCore extends Controller
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
-        Media::addJsDef(array('baseDir' => _PS_BASE_URL_.__PS_BASE_URI__));
-        Media::addJsDef(array('baseAdminDir' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
+        Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
+        Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'));
 
         Media::addJsDef(array('currency' => array(
             'iso_code' => Context::getContext()->currency->iso_code,
