@@ -46,7 +46,10 @@ class TranslationExtension extends \Twig_Extension
      */
     public function __construct(TranslatorInterface $translator, $prestashopTranslator, $serviceContainer)
     {
-        $this->transDomain = $serviceContainer->get('request')->attributes->get('_legacy_controller');
+        $this->transDomain = null;
+        if ($serviceContainer->isScopeActive('request')) {
+            $this->transDomain = $serviceContainer->get('request')->attributes->get('_legacy_controller');
+        }
         $this->translator = $translator;
         $this->prestashopTranslator = $prestashopTranslator;
     }
