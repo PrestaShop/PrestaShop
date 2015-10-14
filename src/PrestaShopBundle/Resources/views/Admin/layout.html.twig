@@ -19,3 +19,9 @@
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
+
+{% block translate_javascripts %}
+    <script>
+        var translate_javascripts = {{ js_translatable|json_encode()|raw }}
+    </script>
+{% endblock %}

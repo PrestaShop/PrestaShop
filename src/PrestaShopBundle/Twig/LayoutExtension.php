@@ -47,6 +47,14 @@ class LayoutExtension extends \Twig_Extension
         $this->context = $context;
     }
 
+    public function getGlobals()
+    {
+        return array(
+            "root_url" => $this->context->getRootUrl(),
+            "js_translatable" => [],
+        );
+    }
+
     /**
      * Returns a list of functions to add to the existing list.
      *
@@ -85,7 +93,7 @@ class LayoutExtension extends \Twig_Extension
                 '{% block content %}{% endblock %}',
                 'var currentIndex = \''.$this->context->getAdminLink($controllerName).'\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
-                '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}</body>',
+                '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
             ),
             $this->context->getLegacyLayout($controllerName, $title, $headerToolbarBtn, $displayType)
         );

@@ -35,15 +35,18 @@ class TranslationExtension extends \Twig_Extension
 {
     private $translator;
     private $prestashopTranslator;
+    private $transDomain;
 
     /**
      * Constructor : Inject Symfony\Component\Translation Translator
      *
      * @param TranslatorInterface $translator
-     * @param object $container
+     * @param object $prestashopTranslator
+     * @param object $serviceContainer The SF2 service container
      */
-    public function __construct(TranslatorInterface $translator, $prestashopTranslator)
+    public function __construct(TranslatorInterface $translator, $prestashopTranslator, $serviceContainer)
     {
+        $this->transDomain = $serviceContainer->get('request')->attributes->get('_legacy_controller');
         $this->translator = $translator;
         $this->prestashopTranslator = $prestashopTranslator;
     }
@@ -96,9 +99,9 @@ class TranslationExtension extends \Twig_Extension
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)
     {
         return $this->translator->trans(
-            $this->getPrestaShopTranslation($message, $arguments, $domain),
+            $this->getPrestaShopTranslation($message, $arguments, $domain ? $domain : $this->transDomain),
             $arguments,
-            $domain,
+            $domain ? $domain : $this->transDomain,
             $locale
         );
     }
@@ -120,7 +123,7 @@ class TranslationExtension extends \Twig_Extension
             $this->getPrestaShopTranslation($message, $arguments, $domain),
             $count,
             array_merge(array('%count%' => $count), $arguments),
-            $domain,
+            $domain ? $domain : $this->transDomain,
             $locale
         );
     }

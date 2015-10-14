@@ -12,6 +12,21 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Translator
         arguments: ["@prestashop.adapter.legacy.context"]
 
+    # Data providers service
+    prestashop.adapter.data_provider.supplier:
+        class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
+
+    prestashop.adapter.data_provider.category:
+        class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
+
+    prestashop.adapter.data_provider.tax:
+        class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
+
+    prestashop.adapter.data_provider.manufacturer:
+        class: PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider
+
+    prestashop.adapter.data_provider.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
 
     # Adapter services that decorates interfaced services
     prestashop.adapter.admin.page_preference:
@@ -22,7 +37,7 @@ services:
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationExtension
-        arguments: ["@translator", "@prestashop.adapter.translator"]
+        arguments: ["@translator", "@prestashop.adapter.translator", "@service_container"]
         public: false
         tags:
             - { name: twig.extension }

@@ -23,45 +23,23 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Symfony\Component\Process\Exception\LogicException;
+namespace PrestaShop\PrestaShop\Adapter\Tax;
 
 /**
- * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
+ * This class will provide data from DB / ORM about tax rules
  */
-class ProductDataProvider
+class TaxRuleDataProvider
 {
     /**
-     * Get a product
+     * Get all Tax Rules Groups
      *
-     * @param int $id_product
-     * @param bool $full
-     * @param int|null $id_lang
-     * @param int|null $id_shop
-     * @param object|null $context
+     * @param bool $only_active
      *
-     * @throws LogicException If the product id is not set
-     *
-     * @return object product
+     * @return array TaxRulesGroup
      */
-    public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
+    public function getTaxRulesGroups($only_active = true)
     {
-        if (!$id_product) {
-            throw new LogicException('You need to provide a product id', null, 5002);
-        }
-
-        return new \Product($id_product, $full, $id_lang, $id_shop, $context);
-    }
-
-    /**
-     * Get default taxe rate product
-     *
-     * @return int id tax rule group
-     */
-    public function getIdTaxRulesGroup()
-    {
-        $product = new \Product();
-        return $product->getIdTaxRulesGroup();
+        return \TaxRulesGroup::getTaxRulesGroups($only_active);
     }
 }

@@ -3,6 +3,10 @@ _admin_product_routing:
     resource: "admin/routing_product.yml"
     prefix: /product
 
+_admin_category_routing:
+    resource: "admin/routing_category.yml"
+    prefix: /category
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}
@@ -16,3 +20,10 @@ admin_common_pagination:
         offset: \d+
         limit: \d+
         total: \d+
+
+admin_tools_upload:
+    path:     /common/upload/{file_type}
+    methods:  [POST]
+    defaults: { _controller: 'Admin\CommonController::uploadAction', file_type: image }
+    requirements:
+        file_type:  image|file
