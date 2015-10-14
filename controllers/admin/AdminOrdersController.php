@@ -493,9 +493,9 @@ class AdminOrdersControllerCore extends AdminController
 							$customer = new Customer((int)$order->id_customer);
 							$carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
 							if (!Validate::isLoadedObject($customer))
-								throw new PrestaShopException('Can\'t load Customer object');
+								throw new PrestaShopException('Cannot load Customer object');
 							if (!Validate::isLoadedObject($carrier))
-								throw new PrestaShopException('Can\'t load Carrier object');
+								throw new PrestaShopException('Cannot load Carrier object');
 							$templateVars = array(
 								'{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
 								'{firstname}' => $customer->firstname,

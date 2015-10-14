@@ -85,7 +85,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close'}"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">{l s='Shipping update'}</h4>
+						<h4 class="modal-title">{l s='Edit shipping details'}</h4>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
@@ -94,7 +94,7 @@
 								<div class="col-lg-7"><input type="text" name="shipping_tracking_number" id="shipping_tracking_number" /></div>
 							</div>
 							<div class="form-group">
-								<div class="col-lg-5">{l s='Change carrier'}</div>
+								<div class="col-lg-5">{l s='Carrier'}</div>
 								<div class="col-lg-7">
 									<select name="shipping_carrier" id="shipping_carrier">
 										{foreach from=$carrier_list item=carrier}
@@ -106,8 +106,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Close'}</button>
-						<button type="submit" class="btn btn-primary">{l s='Save'}</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Cancel'}</button>
+						<button type="submit" class="btn btn-primary">{l s='Update'}</button>
 					</div>
 				</div>
 			</form>
