@@ -249,8 +249,8 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
-                }
                     $this->toolbar_title[] = sprintf($this->l('Information about Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                }
                 break;
             case 'add':
             case 'edit':
