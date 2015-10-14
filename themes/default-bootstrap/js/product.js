@@ -121,7 +121,7 @@ $(document).ready(function()
 	//init the price in relation of the selected attributes
 	if (!url_found)
 	{
-		if (typeof productHasAttributes != 'undefined' && productHasAttributes)
+		if (typeof productHasAttributes !== 'undefined' && productHasAttributes)
 			findCombination();
 		else
 			refreshProductImages(0);
@@ -150,7 +150,7 @@ $(document).ready(function()
 	$('#thumbs_list').trigger('goto', 0);
 
 	//set jqZoom parameters if needed
-	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+	if (typeof(jqZoomEnabled) !== 'undefined' && jqZoomEnabled)
 	{
 		if ($('#thumbs_list .shown img').length)
 		{
@@ -169,7 +169,7 @@ $(document).ready(function()
 		});
 
 	}
-	if (typeof(contentOnly) != 'undefined')
+	if (typeof(contentOnly) !== 'undefined')
 	{
 		if (!contentOnly && !!$.prototype.fancybox) {
 			$('li:visible .fancybox, .fancybox.shown').fancybox({
@@ -284,7 +284,7 @@ if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken
 	});
 }
 
-if (typeof(contentOnly) != 'undefined' && contentOnly)
+if (typeof(contentOnly) !== 'undefined' && contentOnly)
 {
 	$(document).on('click', '.fancybox', function(e){
 		e.preventDefault();
@@ -328,7 +328,7 @@ $(document).on('click', '.product_quantity_down', function(e){
 		$('input[name='+fieldName+']').val(1);
 });
 
-if (typeof minimalQuantity != 'undefined' && minimalQuantity)
+if (typeof minimalQuantity !== 'undefined' && minimalQuantity)
 {
 	checkMinimalQuantity();
 	$(document).on('keyup', 'input[name=qty]', function(e){
@@ -405,60 +405,62 @@ function findCombination()
 	});
 
 	//verify if this combinaison is the same that the user's choice
-	var combination = combinationsHashSet[choice.sort().join('-')];
+	if (typeof combinationsHashSet !== 'undefined') {
+		var combination = combinationsHashSet[choice.sort().join('-')];
 
-	if (combination)
-	{
-		if (combination['minimal_quantity'] > 1)
+		if (combination)
 		{
-			$('#minimal_quantity_label').html(combination['minimal_quantity']);
-			$('#minimal_quantity_wanted_p').fadeIn();
-			$('#quantity_wanted').val(combination['minimal_quantity']);
-			$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combination['minimal_quantity']);});
+			if (combination['minimal_quantity'] > 1)
+			{
+				$('#minimal_quantity_label').html(combination['minimal_quantity']);
+				$('#minimal_quantity_wanted_p').fadeIn();
+				$('#quantity_wanted').val(combination['minimal_quantity']);
+				$('#quantity_wanted').bind('keyup', function() {checkMinimalQuantity(combination['minimal_quantity']);});
+			}
+			//combination of the user has been found in our specifications of combinations (created in back office)
+			selectedCombination['unavailable'] = false;
+			selectedCombination['reference'] = combination['reference'];
+			$('#idCombination').val(combination['idCombination']);
+
+			//get the data of product with these attributes
+			quantityAvailable = combination['quantity'];
+			selectedCombination['price'] = combination['price'];
+			selectedCombination['unit_price'] = combination['unit_price'];
+			selectedCombination['specific_price'] = combination['specific_price'];
+			if (combination['ecotax'])
+				selectedCombination['ecotax'] = combination['ecotax'];
+			else
+				selectedCombination['ecotax'] = default_eco_tax;
+
+			//show the large image in relation to the selected combination
+			if (combination['image'] && combination['image'] != -1)
+				displayImage($('#thumb_' + combination['image']).parent());
+
+			//show discounts values according to the selected combination
+			if (combination['idCombination'] && combination['idCombination'] > 0)
+				displayDiscounts(combination['idCombination']);
+
+			//get available_date for combination product
+			selectedCombination['available_date'] = combination['available_date'];
+
+			//update the display
+			updateDisplay();
+
+			if (firstTime)
+			{
+				refreshProductImages(0);
+				firstTime = false;
+			}
+			else
+				refreshProductImages(combination['idCombination']);
+			//leave the function because combination has been found
+			return;
 		}
-		//combination of the user has been found in our specifications of combinations (created in back office)
-		selectedCombination['unavailable'] = false;
-		selectedCombination['reference'] = combination['reference'];
-		$('#idCombination').val(combination['idCombination']);
-
-		//get the data of product with these attributes
-		quantityAvailable = combination['quantity'];
-		selectedCombination['price'] = combination['price'];
-		selectedCombination['unit_price'] = combination['unit_price'];
-		selectedCombination['specific_price'] = combination['specific_price'];
-		if (combination['ecotax'])
-			selectedCombination['ecotax'] = combination['ecotax'];
-		else
-			selectedCombination['ecotax'] = default_eco_tax;
-
-		//show the large image in relation to the selected combination
-		if (combination['image'] && combination['image'] != -1)
-			displayImage($('#thumb_' + combination['image']).parent());
-
-		//show discounts values according to the selected combination
-		if (combination['idCombination'] && combination['idCombination'] > 0)
-			displayDiscounts(combination['idCombination']);
-
-		//get available_date for combination product
-		selectedCombination['available_date'] = combination['available_date'];
-
-		//update the display
-		updateDisplay();
-
-		if (firstTime)
-		{
-			refreshProductImages(0);
-			firstTime = false;
-		}
-		else
-			refreshProductImages(combination['idCombination']);
-		//leave the function because combination has been found
-		return;
 	}
 
 	//this combination doesn't exist (not created in back office)
 	selectedCombination['unavailable'] = true;
-	if (typeof(selectedCombination['available_date']) != 'undefined')
+	if (typeof(selectedCombination['available_date']) !== 'undefined')
 		delete selectedCombination['available_date'];
 
 	updateDisplay();
@@ -554,7 +556,7 @@ function updateDisplay()
 		if ((stock_management == 1 && !allowBuyWhenOutOfStock) || (!stock_management && selectedCombination['unavailable']))
 			$('#availability_statut:hidden').show();
 
-		if (typeof(selectedCombination['available_date']) != 'undefined' && typeof(selectedCombination['available_date']['date_formatted']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
+		if (typeof(selectedCombination['available_date']) !== 'undefined' && typeof(selectedCombination['available_date']['date_formatted']) !== 'undefined' && selectedCombination['available_date']['date'].length != 0)
 		{
 			var available_date = selectedCombination['available_date']['date'];
 			var tab_date = available_date.split('-');
@@ -835,7 +837,7 @@ function displayImage(domAAroundImgThumb, no_animation)
 				'alt' : new_title,
 				'title' : new_title
 			}).load(function(){
-				if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+				if (typeof(jqZoomEnabled) !== 'undefined' && jqZoomEnabled)
 					$(this).attr('rel', new_href);
 			});
 		}
@@ -923,11 +925,11 @@ function refreshProductImages(id_product_attribute)
 {
 	id_product_attribute = parseInt(id_product_attribute);
 
-	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
+	if (id_product_attribute > 0 && typeof(combinationImages) !== 'undefined' && typeof(combinationImages[id_product_attribute]) !== 'undefined')
 	{
 		$('#thumbs_list li').hide();
 		for (var i = 0; i < combinationImages[id_product_attribute].length; i++)
-			if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+			if (typeof(jqZoomEnabled) !== 'undefined' && jqZoomEnabled)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show().children('a.shown').trigger('click');
 			else
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
@@ -947,11 +949,13 @@ function refreshProductImages(id_product_attribute)
 			choice.push(parseInt($(this).val()));
 		});
 
-		var combination = combinationsHashSet[choice.sort().join('-')];
-		if(combination) {
-			//show the large image in relation to the selected combination
-			if (combination['image'] && combination['image'] != -1)
-				displayImage($('#thumb_' + combination['image']).parent());
+		if (typeof combinationsHashSet !== 'undefined') {
+			var combination = combinationsHashSet[choice.sort().join('-')];
+			if(combination) {
+				//show the large image in relation to the selected combination
+				if (combination['image'] && combination['image'] != -1)
+					displayImage($('#thumb_' + combination['image']).parent());
+			}
 		}
 	}
 
