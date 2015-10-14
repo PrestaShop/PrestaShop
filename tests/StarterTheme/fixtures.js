@@ -18,5 +18,9 @@ module.exports = {
       opc: '/en/quick-order',
       login: '/en/login',
       address: 'en/address'
+    },
+    customer: {
+      email: 'pub@prestashop.com',
+      password: '123456789'
     }
 };
