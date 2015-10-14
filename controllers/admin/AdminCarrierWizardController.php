@@ -214,7 +214,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'label' => $this->l('Tracking URL'),
                         'name' => 'url',
                         'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.'),
-                        'desc' => $this->l('For example: \'http://exampl.com/track.php?num=@\' with \'@\' where the tracking number should appear.')
+                        'desc' => $this->l('For example: \'http://example.com/track.php?num=@\' with \'@\' where the tracking number should appear.')
                     )
                 )
             )
