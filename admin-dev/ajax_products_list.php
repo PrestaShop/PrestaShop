@@ -54,6 +54,7 @@ if ($excludeIds && $excludeIds != 'NaN') {
 }
 
 // Excluding downloadable products from packs because download from pack is not supported
+$forceJson = Tools::getValue('forceJson', false);
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', true);
 
@@ -74,9 +75,25 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false)) {
+if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))) {
+    $results = [];
     foreach ($items as $item) {
-        echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
+        if (!$forceJson) {
+            $results[] = trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product']);
+        } else {
+            $results[] = array(
+                'id' => $item['id_product'],
+                'name' => $item['name'].(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : ''),
+                'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+                'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+            );
+        }
+    }
+
+    if (!$forceJson) {
+        echo implode("\n", $results);
+    } else {
+        echo json_encode($results);
     }
 } elseif ($items) {
     // packs
@@ -115,26 +132,23 @@ if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !=
                     }
                 }
             } else {
-                $product = array(
-                    'id' => (int)($item['id_product']),
+                $results[] = array(
+                    'id' => $item['id_product'],
                     'name' => $item['name'],
                     'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                     'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
                 );
-                array_push($results, $product);
             }
         } else {
-            $product = array(
-                'id' => (int)($item['id_product']),
+            $results[] = array(
+                'id' => $item['id_product'],
                 'name' => $item['name'],
                 'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
                 'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
             );
-            array_push($results, $product);
         }
     }
-    $results = array_values($results);
-    echo json_encode($results);
+    echo json_encode(array_values($results));
 } else {
-    json_encode(new stdClass);
+    echo json_encode([]);
 }
