@@ -123,7 +123,7 @@ class ProductInformation extends AbstractType
                 'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
                 'required' => false
             ))
-        ->add('images', new DropFilesType($this->translator->trans('Images', [], 'AdminProducts'), $this->router->generate('admin_tools_upload'), array(
+        ->add('images', new DropFilesType($this->translator->trans('Images', [], 'AdminProducts'), $this->router->generate('admin_common_upload'), array(
             'maxFiles' => '10',
             'dictRemoveFile' => $this->translator->trans('Delete', [], 'AdminProducts')
         )))

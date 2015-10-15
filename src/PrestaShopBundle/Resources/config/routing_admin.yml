@@ -21,9 +21,9 @@ admin_common_pagination:
         limit: \d+
         total: \d+
 
-admin_tools_upload:
+admin_common_upload:
     path:     /common/upload/{file_type}
     methods:  [POST]
-    defaults: { _controller: 'Admin\CommonController::uploadAction', file_type: image }
+    defaults: { _controller: 'PrestaShopBundle\Controller\Admin\CommonController::uploadAction', file_type: image }
     requirements:
         file_type:  image|file

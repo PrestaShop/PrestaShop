@@ -32,6 +32,7 @@ use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -131,5 +132,71 @@ class CommonController extends FrameworkBundleAdminController
             'next_url' => $nextPageUrl,
             'last_url' => $lastPageUrl
         );
+    }
+
+    /**
+     * Used by Dropfiles plugin to upload files asynchronously.
+     *
+     * @param Request $request
+     *
+     * @return json encoded array data informations of uploaded file
+     */
+    public function uploadAction(Request $request)
+    {
+        $response = new Response();
+        $return_data = [];
+        $constraints = [];
+
+        if ($request->get('file_type') == 'image') {
+            $constraints = array(new \Symfony\Component\Validator\Constraints\Image(array(
+                'maxSize' => '1024k',
+                'mimeTypes' => array(
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'image/gif'
+                )
+            )));
+        } elseif ($request->get('file_type') == 'file') {
+            $constraints = array( new \Symfony\Component\Validator\Constraints\File(array(
+                'maxSize' => '1024k'
+            )));
+        }
+
+        $form = $this->createFormBuilder(null, array('csrf_protection' => false))
+            ->add('file', 'file', array(
+                'error_bubbling' => true,
+                'constraints' => $constraints
+            ))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($request->isMethod('POST')) {
+            if ($form->isValid()) {
+                $file = $form->getData()['file'];
+
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $fileName);
+
+                $return_data = array(
+                    'file_original_name' => $file->getClientOriginalName(),
+                    'file_name_tmp' => $fileName,
+                    'file_path_tmp' => _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$fileName,
+                    'file_url_tmp' => __PS_BASE_URI__.'cache/tmp/upload/'.$fileName,
+                    'file_type' => $file->getClientMimeType(),
+                    'filesize' => filesize(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$fileName)
+                );
+            } else {
+                $error_msg = array();
+                foreach ($form->getErrors() as $key => $error) {
+                    $error_msg[] = $error->getMessage();
+                }
+                $return_data = array('message' => implode(" ", $error_msg));
+                $response->setStatusCode(400);
+            }
+        }
+
+        return $response->setContent(json_encode($return_data));
     }
 }
