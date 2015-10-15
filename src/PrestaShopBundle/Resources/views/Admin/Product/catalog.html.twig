@@ -16,7 +16,7 @@
     <!--## QUICK HELP GREEN BANNER TO REINTEGRATE SOON!-->
     
     <div id="product_catalog_category_tree_filter" class="panel">
-        {{ "Categories"|trans({}, transDomain) }} &nbsp;
+        {{ "Categories"|trans }} &nbsp;
         <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
             onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'))"
             class="pull-right btn" />
@@ -25,7 +25,7 @@
     
     <div class="panel col-lg-12">
         <div class="panel-heading">
-            {{ "Products"|trans({}, transDomain) }} {% if has_filter == true %} {{ "(filtered)"|trans({}, transDomain) }} {% endif %}
+            {{ "Products"|trans }} {% if has_filter == true %} {{ "(filtered)"|trans }} {% endif %}
             <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
         </div>
     
@@ -38,49 +38,49 @@
                             <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
                         </th>
                         <th>
-                            {{ "ID"|trans({}, transDomain) }}
+                            {{ "ID"|trans }}
                             &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Image"|trans({}, transDomain) }}
+                            {{ "Image"|trans }}
                         </th>
                         <th>
-                            {{ "Name"|trans({}, transDomain) }}
+                            {{ "Name"|trans }}
                             &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Reference"|trans({}, transDomain) }}
+                            {{ "Reference"|trans }}
                             &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Category"|trans({}, transDomain) }}
+                            {{ "Category"|trans }}
                             &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Base price"|trans({}, transDomain) }}
+                            {{ "Base price"|trans }}
                             &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Final price"|trans({}, transDomain) }}
+                            {{ "Final price"|trans }}
                         </th>
                         <th>
-                            {{ "Quantity"|trans({}, transDomain) }}
+                            {{ "Quantity"|trans }}
                             &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         <th>
-                            {{ "Status"|trans({}, transDomain) }}
+                            {{ "Status"|trans }}
                             &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
                             &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
                         </th>
                         {% if has_category_filter == true %}
                             <th>
-                                {{ "Position"|trans({}, transDomain) }}
+                                {{ "Position"|trans }}
                                 &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
                                 &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down"></span>
                             </th>
@@ -90,17 +90,17 @@
                     <tr class="column-filters">
                         <td>&nbsp;</td>
                         <td>
-                            <input type="text" placeholder="{{ "Exact ID matching"|trans({}, transDomain) }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
+                            <input type="text" placeholder="{{ "Exact ID matching"|trans }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
                         </td>
                         <td>&nbsp;</td>
                         <td>
-                            <input type="text" placeholder="{{ "Partial name allowed"|trans({}, transDomain) }}" name="filter_column_name" value="{{ filter_column_name }}" />
+                            <input type="text" placeholder="{{ "Partial name allowed"|trans }}" name="filter_column_name" value="{{ filter_column_name }}" />
                         </td>
                         <td>
-                            <input type="text" placeholder="{{ "Partial reference allowed"|trans({}, transDomain) }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
+                            <input type="text" placeholder="{{ "Partial reference allowed"|trans }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
                         </td>
                         <td>
-                            <input type="text" placeholder="{{ "Partial category name allowed"|trans({}, transDomain) }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
+                            <input type="text" placeholder="{{ "Partial category name allowed"|trans }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
                         </td>
                         <td>
                             {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
@@ -131,18 +131,18 @@
                         {% if has_category_filter == true %}
                             <td>
                                 {% if not(activate_drag_and_drop) %}
-                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans({}, transDomain) }}" onclick="productOrderTable('position', 'asc');" />
+                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderTable('position', 'asc');" />
                                 {% endif %}
                             </td>
                         {% endif %}
                         <td>
-                            <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{{ "Filter"|trans({}, transDomain) }}" />
-                            <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{{ "Reset"|trans({}, transDomain) }}" />
+                            <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{{ "Filter"|trans }}" />
+                            <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{{ "Reset"|trans }}" />
                         </td>
                     </tr>
                 </theader>
                 {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction',
-                  {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'transDomain': transDomain, 'products': products})
+                  {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products})
                 %}
                 <tfooter>
                     
@@ -193,9 +193,9 @@
                         
                     <div style="display: inline; margin-left: 2em;">
                         <span id="bulk_edition_toolbar" style="display: none;">
-                            <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, transDomain)|raw }}" />
-                            <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans({}, transDomain)|raw }}" />
-                            <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans({}, transDomain) }}" />
+                            <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans|raw }}" />
+                            <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans|raw }}" />
+                            <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans }}" />
                         </span>
                     </div>
                 </div>

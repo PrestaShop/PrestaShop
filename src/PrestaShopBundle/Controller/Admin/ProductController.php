@@ -164,7 +164,6 @@ class ProductController extends FrameworkBundleAdminController
             $persistedFilterParameters,
             $urls,
             array(
-                'transDomain' => $request->attributes->get('_legacy_controller'),
                 'limit' => $limit,
                 'offset' => $offset,
                 'orderBy' => $orderBy,
@@ -217,7 +216,6 @@ class ProductController extends FrameworkBundleAdminController
 
         // Template vars injection
         return array(
-            'transDomain' => $request->attributes->get('_legacy_controller', $request->attributes->get('transDomain')),
             'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
             'products' => $products,
             'product_count' => $totalCount
