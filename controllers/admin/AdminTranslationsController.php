@@ -2125,6 +2125,26 @@ class AdminTranslationsControllerCore extends AdminController
             }
         }
 
+        //adding sf2 form translations
+        $sf2_loader = new Symfony\Component\Translation\Loader\XliffFileLoader();
+        try {
+            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.'.$this->lang_selected->iso_code.'.xlf', $this->lang_selected->iso_code);
+        } catch (\Exception $e) {
+            $sf2_trans = $sf2_loader->load(VENDOR_DIR.'/symfony/symfony/src/Symfony/Component/Validator/Resources/translations/validators.en.xlf', $this->lang_selected->iso_code);
+        }
+
+        foreach ($sf2_trans->all()['messages'] as $k => $v) {
+            if (array_key_exists(md5($k), $GLOBALS[$name_var])) {
+                $string_to_translate[$k]['trad'] = html_entity_decode($GLOBALS[$name_var][md5($k)], ENT_COMPAT, 'UTF-8');
+            } else {
+                $string_to_translate[$k]['trad'] = '';
+                if (!isset($count_empty[$k])) {
+                    $count_empty[$k] = 1;
+                }
+            }
+            $string_to_translate[$k]['use_sprintf'] = false;
+        }
+
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, array(
             'count' => count($string_to_translate),
             'cancel_url' => $this->context->link->getAdminLink('AdminTranslations'),
