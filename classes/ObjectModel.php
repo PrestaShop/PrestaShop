@@ -1813,6 +1813,12 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
             $definition = $reflection->getStaticPropertyValue('definition');
 
+            // New hook to allow modification of each objects class in a clean way
+            Hook::exec('action'.$class.'DefinitionModifier', array(
+                'definition' => &$definition,
+                'class' => &$class
+            ));
+
             $definition['classname'] = $class;
 
             if (!empty($definition['multilang'])) {
