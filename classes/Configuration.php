@@ -148,7 +148,7 @@ class ConfigurationCore extends ObjectModel
         $result = $db->executeS($sql, false);
         while ($row = $db->nextRow($result)) {
             $lang = ($row['id_lang']) ? $row['id_lang'] : 0;
-            self::$types[$row['name']] = ($lang) ? 'lang' : 'normal';
+            self::$types[$row['name']] = ($lang) ? true : false;
             if (!isset(self::$_cache[self::$definition['table']][$lang])) {
                 self::$_cache[self::$definition['table']][$lang] = array(
                     'global' => array(),
@@ -575,7 +575,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function isLangKey($key)
     {
-        return (isset(self::$types[$key]) && self::$types[$key] == 'lang') ? true : false;
+        return (isset(self::$types[$key]) && self::$types[$key]) ? true : false;
     }
 
     /**
