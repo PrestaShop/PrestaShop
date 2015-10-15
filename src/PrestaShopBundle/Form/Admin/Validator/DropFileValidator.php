@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\File;
 
 /**
  * DropFileValidator
@@ -48,7 +48,7 @@ class DropFileValidator extends ConstraintValidator
     public function validate($files, Constraint $constraint)
     {
         $validator = Validation::createValidator();
-        $constraint = array(new Image(array(
+        $constraint = array(new File(array(
             'maxSize' => '1024k',
             'mimeTypes' => array(
                 'image/jpeg',
