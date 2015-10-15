@@ -29,10 +29,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
+use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
+use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
+use PrestaShopBundle\Exception\DataUpdateException;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -82,7 +84,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterface */
+        /* @var $productProvider ProductInterfaceProvider */
         $translator = $this->container->get('prestashop.adapter.translator');
         /* @var $translator TranslatorInterface */
 
@@ -154,7 +156,7 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
 
             // Category tree
-// TODO !2: continue: needs category tree form helper
+// TODO !1: continue: needs category tree form helper
         }
 
         // Template vars injection
@@ -199,7 +201,7 @@ class ProductController extends FrameworkBundleAdminController
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
         if ($products === null) {
             $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-            /* @var $productProvider ProductInterface */
+            /* @var $productProvider ProductInterfaceProvider */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
         }
 
@@ -256,12 +258,66 @@ class ProductController extends FrameworkBundleAdminController
 
     public function bulkAction(Request $request, $action)
     {
-        // TODO !1
+        $productIdList = $request->request->get('bulk_action_selected_products');
+        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
+
+        try {
+            switch ($action) {
+                case 'activate_all':
+                    $success = $productUpdater->activateProductIdList($productIdList);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully activated.'));
+                    break;
+                case 'deactivate_all':
+                    $success = $productUpdater->activateProductIdList($productIdList, false);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.'));
+                    break;
+                case 'delete_all':
+                    $success = $productUpdater->deleteProductIdList($productIdList);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully deleted.'));
+                    break;
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new \Exception('Bad action received from call to ProductController::bulkAction: "'.$action.'"', 2001);
+            }
+        } catch (DataUpdateException $due) {
+            $this->addFlash('failure', $translator->trans($due->getMessage()));
+        }
+
+        // redirect after success
+        return $this->redirect($request->request->get('redirect_url'), 302);
     }
 
     public function unitAction(Request $request, $action, $id)
     {
-        // TODO !1
+        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
+
+        try {
+            switch ($action) {
+                case 'delete':
+                    $success = $productUpdater->deleteProduct($id);
+                    $this->addFlash('success', $translator->trans('Product successfully deleted.'));
+                    break;
+                case 'duplicate':
+                    $duplicateProductId = $productUpdater->duplicateProduct($id);
+                    $this->addFlash('success', $translator->trans('Product successfully duplicated.'));
+                    // stops here and redirect to the new product's page.
+                    return $this->redirectToRoute('admin_product_form', array('id_product' => $duplicateProductId), 302);
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new \Exception('Bad action received from call to ProductController::unitAction: "'.$action.'"', 2002);
+            }
+        } catch (DataUpdateException $due) {
+            $this->addFlash('failure', $translator->trans($due->getMessage()));
+        }
+
+        // redirect after success
+        return $this->redirect($request->request->get('redirect_url'), 302);
     }
 
     /**

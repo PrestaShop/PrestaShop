@@ -70,6 +70,6 @@ class AdminUrlGeneratorFactory
      */
     public function forSymfony()
     {
-        return $this->container->get('router');
+        return $this->router;
     }
 }

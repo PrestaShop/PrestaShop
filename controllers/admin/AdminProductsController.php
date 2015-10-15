@@ -2686,6 +2686,13 @@ class AdminProductsControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
+            // New architecture modification: temporary behavior to switch between old and new controllers.
+            $this->page_header_toolbar_btn['legacy'] = array(
+                'href' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/product/uselegacy/0',
+                'desc' => $this->l('Switch again to new Page', null, null, false),
+                'icon' => 'process-icon-toggle-off'
+            );
+            
             $this->page_header_toolbar_btn['new_product'] = array(
                     'href' => self::$currentIndex.'&addproduct&token='.$this->token,
                     'desc' => $this->l('Add new product', null, null, false),
