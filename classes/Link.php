@@ -389,6 +389,17 @@ class LinkCore
      */
     public function getAdminLink($controller, $with_token = true)
     {
+        switch ($controller) {
+            case 'AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                $pagePreference = new \PrestaShop\PrestaShop\Adapter\Admin\PagePreference();
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy) {
+                    return _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/product/catalog';
+                }
+                break;
+        }
+
         $id_lang = Context::getContext()->language->id;
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 
