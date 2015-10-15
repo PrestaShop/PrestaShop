@@ -20,10 +20,10 @@
     </section>
 
     <footer class="form-footer">
-      <input type="hidden" class="hidden" name="back" value="{$back}" />
-      <button type="submit" id="SubmitLogin" name="SubmitLogin">
-        {l s='Sign in'}
-      </button>
+      <input type="hidden" name="back" value="{$back}">
+      <input type="hidden" name="SubmitLogin" value="1">
+
+      <button type="submit">{l s='Sign in'}</button>
     </footer>
 
   </form>

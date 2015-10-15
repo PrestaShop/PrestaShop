@@ -6,9 +6,8 @@
 
 {block name="page_content_container"}
   <section id="content" class="page-content page-address">
-
     {block name="address_form_container"}
-      {include file="customer/_partials/address-form.tpl"}
+      {include file="customer/_partials/address-form.tpl" form_action=$urls.pages.address}
     {/block}
 
   </section>
