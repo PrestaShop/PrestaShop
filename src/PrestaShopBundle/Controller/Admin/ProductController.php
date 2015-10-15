@@ -50,7 +50,7 @@ use PrestaShopBundle\Form\Admin\Product as ProductForms;
  *
  * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
  */
-class ProductController extends Controller
+class ProductController extends FrameworkBundleAdminController
 {
     /**
      * Get the Catalog page with KPI banner, product list, bulk actions, filters, search, etc...

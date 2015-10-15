@@ -1,5 +1,5 @@
-{% use "form_div_layout.html.twig" %}
-{% use 'typeahead.html.twig' %}
+{% use "PrestaShopBundle:Admin/TwigTemplateForm:form_div_layout.html.twig" %}
+{% use 'PrestaShopBundle:Admin/TwigTemplateForm:typeahead.html.twig' %}
 
 {# Widgets #}
 
@@ -159,7 +159,7 @@
                 <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}"  {{ checked }}>{{ child.name }}</label>
             </div>
         {%- endif %}
-        {% if child.children %}
+        {% if child.children is defined %}
             <ul>
                 {% for item in child.children %}
                     {% set child = item %}

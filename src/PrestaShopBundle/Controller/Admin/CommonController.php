@@ -37,7 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  * Admin controller for the common actions across the whole admin interface.
  *
  */
-class CommonController extends Controller
+class CommonController extends FrameworkBundleAdminController
 {
     /**
      * This will allow you to retrieve an HTML code with a ready and linked paginator.
