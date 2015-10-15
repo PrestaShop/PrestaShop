@@ -80,7 +80,9 @@ class LegacyContext
         if ($withToken) {
             $params['token'] = \Tools::getAdminTokenLite($controller);
         }
-        return _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.\Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+
+        $link = new \Link();
+        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
