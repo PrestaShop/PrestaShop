@@ -92,10 +92,6 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		/*In order to prevent mod_evasive DOSPageInterval (Default 1s)*/
-		if (mod_evasive)
-			sleep(1000);
-
 		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
@@ -211,8 +207,16 @@ function ProductTabsManager(){
 				}
 				else if (stack.length !== 0 && status !== 'abort')
 				{
-					stack.shift();
-					self.displayBulk(stack);
+					/*In order to prevent mod_evasive DOSPageInterval (Default 1s)*/
+					if (mod_evasive) {
+						setTimeout(function(){
+							stack.shift();
+							self.displayBulk(stack);
+						}, 1000);
+					} else {
+						stack.shift();
+						self.displayBulk(stack);
+					}
 				}
 			});
 		}
