@@ -395,7 +395,7 @@ class LinkCore
                 $pagePreference = new \PrestaShop\PrestaShop\Adapter\Admin\PagePreference();
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
-                    return _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/product/catalog';
+                    return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
                 }
                 break;
         }
@@ -403,7 +403,7 @@ class LinkCore
         $id_lang = Context::getContext()->language->id;
         $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 
-        return _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**

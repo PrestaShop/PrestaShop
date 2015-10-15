@@ -2688,7 +2688,7 @@ class AdminProductsControllerCore extends AdminController
         if (empty($this->display)) {
             // New architecture modification: temporary behavior to switch between old and new controllers.
             $this->page_header_toolbar_btn['legacy'] = array(
-                'href' => _PS_BASE_URL_.__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/product/uselegacy/0',
+                'href' => __PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/product/uselegacy/0',
                 'desc' => $this->l('Switch again to new Page', null, null, false),
                 'icon' => 'process-icon-toggle-off'
             );
