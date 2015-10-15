@@ -13,7 +13,7 @@
       </tr>
     </thead>
 
-    {foreach from=$products item=product}
+    {foreach from=$products item=product name=products}
       <tr>
         <td>
           {if !$product.customizedDatas}
@@ -22,7 +22,18 @@
         </td>
         <td>{$product.product_reference}</td>
         <td>{$product.product_name}</td>
-        <td>{$product.product_quantity}</td>
+        <td>
+          {$product.product_quantity}
+          {if !$product.customizedDatas}
+            <select name="order_qte_input[{$product.id_order_detail}]">
+          {else}
+            <select name="order_qte_input[{$smarty.foreach.products.index}]">
+          {/if}
+              {section name=quantity start=1 loop=$product.product_quantity+1}
+                <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+              {/section}
+            </select>
+        </td>
         <td>{$product.qty_returned}</td>
         <td>{$product.unit_price}</td>
         <td>{$product.total_price}</td>
@@ -30,7 +41,7 @@
       {if $product.customizations}
         {foreach $product.customizations  as $customization}
           <tr>
-            <td><input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{*$customizationId*}" /></td>
+            <td><input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}" /></td>
             <td colspan="2">
               <ul>
                 {foreach from=$customization.fields item=field}
@@ -42,7 +53,14 @@
                 {/foreach}
               </ul>
             </td>
-            <td>{$customization.quantity}</td>
+            <td>
+              {$customization.quantity}
+              <select name="customization_qty_input[{$customization.id_customization}]">
+                {section name=quantity start=1 loop=$customization.quantity+1}
+                  <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                {/section}
+              </select>
+            </td>
             <td colspan="3"></td>
           </tr>
         {/foreach}
