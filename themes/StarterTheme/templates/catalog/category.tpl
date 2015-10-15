@@ -1,7 +1,7 @@
 {extends $layout}
 
 {block name="content"}
-  <section id="main">
+  <header id="main">
 
     {block name="category_header"}
       <h1>{$category.name}</h1>
@@ -12,36 +12,42 @@
     {/block}
 
     {block name="category_subcategories"}
-      {if $subcategories|count}
-        <div class="subcategories">
-            {foreach from=$subcategories item="subcategory"}
-              {block name="category_miniature"}
-                {include './category-miniature.tpl' category=$subcategory}
-              {/block}
-            {/foreach}
-          </div>
-      {/if}
+      <aside>
+        {if $subcategories|count}
+          <nav class="subcategories">
+            <ul class="category-miniature">
+              <li>
+                {foreach from=$subcategories item="subcategory"}
+                  {block name="category_miniature"}
+                    {include './category-miniature.tpl' category=$subcategory}
+                  {/block}
+                {/foreach}
+              </li>
+            </ul>
+          </nav>
+        {/if}
+      </aside>
     {/block}
 
-    {block name="category_products"}
-      {if $products|count}
-        <section id="products">
-          <h1>{l s='Products'}</h1>
+  </header>
+  {block name="category_products"}
+    {if $products|count}
+      <section id="products">
+        <h1>{$category.name}&nbsp;{l s='Product''s'}</h1>
 
-          {block name="sort_by"}
-            {include './_partials/sort-by.tpl' options=$sort_options}
-          {/block}
+        {block name="sort_by"}
+          {include './_partials/sort-by.tpl' options=$sort_options}
+        {/block}
 
-          <div class="products">
+        <div class="products">
             {foreach from=$products item="product"}
               {block name="product_miniature"}
                 {include './product-miniature.tpl' product=$product}
               {/block}
             {/foreach}
           </div>
-        </section>
-      {/if}
-    {/block}
+      </section>
+    {/if}
+  {/block}
 
-  </section>
 {/block}
