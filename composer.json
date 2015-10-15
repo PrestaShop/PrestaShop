@@ -115,6 +115,9 @@
     "classmap": ["Core/", "Adapter/"]
   },
   "scripts": {
+    "pre-install-cmd": [
+      "bash app/install.sh"
+    ],
     "post-install-cmd": [
       "bash tools/contrib/install.sh",
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
