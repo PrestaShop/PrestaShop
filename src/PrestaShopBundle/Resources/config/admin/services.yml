@@ -36,6 +36,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
         decorates: prestashop.core.admin.data_updater.product_interface
         public: false
+    prestashop.adapter.admin.wrapper.product:
+        class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
     prestashop.adapter.admin.page_preference:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         arguments:

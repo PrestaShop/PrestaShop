@@ -4389,4 +4389,24 @@ class AdminControllerCore extends Controller
             $this->meta_title[] = $entry;
         }
     }
+
+    /**
+     * Set action
+     *
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * Set IdObject
+     *
+     * @param int $id_object
+     */
+    public function setIdObject($id_object)
+    {
+        $this->id_object = (int)$id_object;
+    }
 }

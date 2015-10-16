@@ -1430,6 +1430,16 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
+     * postProcess for new form archi (need object return)
+     *
+     * @return void
+     */
+    public function postCoreProcess()
+    {
+        return parent::postProcess();
+    }
+
+    /**
      * postProcess handle every checks before saving products information
      *
      * @return void
@@ -2942,11 +2952,15 @@ class AdminProductsControllerCore extends AdminController
     }
 
     /**
-    * Post treatment for suppliers
-    */
-    public function processSuppliers()
+     * Post treatment for suppliers
+     *
+     * @param null|int $id_product
+     */
+    public function processSuppliers($id_product = null)
     {
-        if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
+        $id_product = (int) $id_product ? $id_product : (int)Tools::getValue('id_product');
+
+        if ((int)Tools::getValue('supplier_loaded') === 1 && Validate::isLoadedObject($product = new Product($id_product))) {
             // Get all id_product_attribute
             $attributes = $product->getAttributesResume($this->context->language->id);
             if (empty($attributes)) {

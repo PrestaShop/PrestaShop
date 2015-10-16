@@ -35,6 +35,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\DataUpdateException;
+use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -227,9 +229,10 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @Template
      * @param int $id The product ID
+     * @param Request $request
      * @return array Template vars
      */
-    public function formAction($id)
+    public function formAction($id, Request $request)
     {
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
@@ -240,7 +243,10 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect($legacyUrlGenerator->generate('admin_product_form', array('id' => $id)), 302);
         }
 
-        $form = $this->createFormBuilder()
+        $response = new JsonResponse();
+        $modelMapper = new ProductAdminModelAdapter($id, $this->container);
+
+        $form = $this->createFormBuilder($modelMapper->getFormDatas())
             ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductQuantity())
@@ -248,6 +254,32 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step4', new ProductForms\ProductSeo($this->container))
             ->add('step5', new ProductForms\ProductOptions($this->container))
             ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                //define POST values for keeping legacy adminController skills
+                $_POST = $modelMapper->getModelDatas($form->getData());
+
+                $adminProductController = $this->container->get('prestashop.adapter.admin.wrapper.product')->getInstance();
+                $adminProductController->setIdObject($form->getData()['id_product']);
+                $adminProductController->setAction('save');
+
+                if ($product = $adminProductController->postCoreProcess()) {
+                    $adminProductController->processSuppliers($product->id);
+                    $response->setData(['product' => $product]);
+                }
+
+                if ($request->isXmlHttpRequest()) {
+                    return $response;
+                }
+            } elseif ($request->isXmlHttpRequest()) {
+                $response->setStatusCode(400);
+                $response->setData($this->getFormErrorsForJS($form));
+                return $response;
+            }
+        }
 
         return array(
             'form' => $form->createView(),
