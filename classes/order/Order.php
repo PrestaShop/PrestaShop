@@ -265,6 +265,7 @@ class OrderCore extends ObjectModel
                     'product_name' => array('setter' => false),
                     'product_reference' => array('setter' => false),
                     'product_ean13' => array('setter' => false),
+                    'product_isbn' => array('setter' => false),
                     'product_upc' => array('setter' => false),
                     'product_price' => array('setter' => false),
                     'unit_price_tax_incl' => array('setter' => false),
@@ -1529,6 +1530,7 @@ class OrderCore extends ObjectModel
             `product_name`,
             `product_reference`,
             `product_ean13`,
+            `product_isbn`,
             `product_upc`,
             `unit_price_tax_incl`,
             `unit_price_tax_excl`

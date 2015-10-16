@@ -24,3 +24,9 @@ INSERT INTO  `PREFIX_configuration` (`id_configuration` ,`id_shop_group` ,`id_sh
 
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `firstname` `firstname` varchar(255) NOT NULL;
 ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) NOT NULL;
+
+ALTER TABLE  `PREFIX_product` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
+ALTER TABLE  `PREFIX_order_detail` ADD  `product_isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
+ALTER TABLE  `PREFIX_product_attribute` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
+ALTER TABLE  `PREFIX_stock` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;
+ALTER TABLE  `PREFIX_supply_order_detail` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT NULL;

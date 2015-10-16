@@ -102,6 +102,9 @@ class OrderDetailCore extends ObjectModel
     public $product_ean13;
 
     /** @var string */
+    public $product_isbn;
+
+    /** @var string */
     public $product_upc;
 
     /** @var string */
@@ -185,6 +188,7 @@ class OrderDetailCore extends ObjectModel
             'group_reduction' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
             'product_quantity_discount' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
             'product_ean13' =>                array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
+            'product_isbn' =>                array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
             'product_upc' =>                array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
             'product_reference' =>            array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
             'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference'),
@@ -652,6 +656,7 @@ class OrderDetailCore extends ObjectModel
 
         $this->product_quantity = (int)$product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);
+        $this->product_isbn = empty($product['isbn']) ? null : pSQL($product['isbn']);
         $this->product_upc = empty($product['upc']) ? null : pSQL($product['upc']);
         $this->product_reference = empty($product['reference']) ? null : pSQL($product['reference']);
         $this->product_supplier_reference = empty($product['supplier_reference']) ? null : pSQL($product['supplier_reference']);
@@ -776,7 +781,7 @@ class OrderDetailCore extends ObjectModel
 
             $order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                 SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-                cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
+                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
                 FROM '._DB_PREFIX_.'order_detail od
                 LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
                 '.Shop::addSqlAssociation('product', 'p').

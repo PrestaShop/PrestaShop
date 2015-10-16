@@ -558,6 +558,17 @@ class ValidateCore
     }
 
     /**
+     * Check for ISBN
+     *
+     * @param string $isbn validate
+     * @return bool Validity is ok or not
+     */
+    public static function isIsbn($isbn)
+    {
+        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
+    }
+
+    /**
      * Check for barcode validity (UPC)
      *
      * @param string $upc Barcode to validate
