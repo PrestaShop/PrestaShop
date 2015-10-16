@@ -46,7 +46,6 @@ $( document ).ready(function() {
 				$( "*.has-error" ).removeClass("has-error");
 			},
 			success: function(response){
-				response = jQuery.parseJSON(response);
 				$('#form_id_product').val(response.product.id);
 				showSuccessMessage(translate_javascripts['Form update success']);
 			},
