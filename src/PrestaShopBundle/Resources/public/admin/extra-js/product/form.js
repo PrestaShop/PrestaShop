@@ -119,7 +119,6 @@ $( document ).ready(function() {
 				$("#form_step1_new_category *.has-error" ).removeClass("has-error");
 			},
 			success: function(response){
-				response = jQuery.parseJSON(response);
 				$("#form_step1_new_category_name").val("");
 
 				var html = '<li><div class="checkbox"><label><input type="checkbox" name="form[step1][categories][tree][]" value="'+response.category.id+'">'+response.category.name[1]+'</label></div></li>';
