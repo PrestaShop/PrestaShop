@@ -392,7 +392,8 @@ class LinkCore
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = new \PrestaShop\PrestaShop\Adapter\Admin\PagePreference();
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
