@@ -11,11 +11,15 @@ _admin_feature_routing:
     resource: "admin/routing_feature.yml"
     prefix: /feature
 
+_admin_module_routing:
+    resource: "admin/routing_module.yml"
+    prefix: /module
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}
     methods:  [GET]
-    defaults: 
+    defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
         limit: 20

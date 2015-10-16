@@ -1,0 +1,13 @@
+#All the module related routes
+
+admin_module_catalog:
+    path:     /catalog
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
+
+admin_module_import:
+    path:     /import
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::importAction
