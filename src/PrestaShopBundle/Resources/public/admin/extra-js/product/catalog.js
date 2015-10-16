@@ -60,6 +60,18 @@ $(document).ready(function() {
 	});
 
 	/*
+	 * Sortable case when ordered by position ASC
+	 */
+	$('tbody.sortable td.placeholder', form).disableSelection();
+	$('tbody.sortable', form).sortable({
+		placeholder: 'placeholder',
+		update: function(event, ui) {
+			bulkProductEdition(event, 'sort');
+		}
+	});
+	
+
+	/*
 	 * Form submit pre action
 	 */
 	form.submit(function(e) {
@@ -77,6 +89,13 @@ $(document).ready(function() {
 function productOrderTable(orderBy, orderWay) {
 	var form = $('form#product_catalog_list');
 	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/desc/, orderWay);
+	window.location.href = url;
+}
+
+function productOrderPrioritiesTable() {
+	var form = $('form#product_catalog_list');
+	var url = form.attr('orderingurl').replace(/name/, 'position').replace(/desc/, 'asc');
+	url = url.replace(/\/\d+\/\d+\/position\//, '/0/300/position/');
 	window.location.href = url;
 }
 
@@ -136,12 +155,12 @@ function bulkProductAction(element, action) {
 		// this case will brings to the next page
 		case 'edition_next':
 			alert('+1 page !');
-			// TODO !2: add 1 page at offset for redirection (go to next page in redirecturl)
+			// TODO !0: add 1 page at offset for redirection (go to next page in redirecturl)
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
 			alert(editionAction);
-			// TODO !2: specific work here: submit form with another URL (different than bulkurl...
+			// TODO !0: specific work here: submit form with another URL (different than bulkurl...
 			break;
 		// unknown cases...
 		default:
@@ -201,6 +220,11 @@ function bulkProductEdition(element, action) {
 			$('#bulk_edition_toolbar input:submit').attr('editionaction', action);
 
 			$('td.product-sav-quantity input', form).first().focus();
+			break;
+		case 'sort':
+			$('#bulk_edition_toolbar').show();
+			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
+			$('#bulk_edition_toolbar input:submit').attr('editionaction', action);
 			break;
 		case 'cancel':
 			// quantity inputs

@@ -4,7 +4,8 @@
     {{ parent() }}
 	{% javascripts
 		'@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
-	    '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js' %}
+	    '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
+	    '../js/jquery/ui/jquery.ui.sortable.min.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
@@ -20,7 +21,9 @@
         <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
             onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'))"
             class="pull-right btn" />
-        #### {$categories}
+        <div class="form-wrapper">
+            {{ form_widget(categories) }}
+        </div>
     </div>
     
     <div class="panel col-lg-12">
@@ -131,7 +134,7 @@
                         {% if has_category_filter == true %}
                             <td>
                                 {% if not(activate_drag_and_drop) %}
-                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderTable('position', 'asc');" />
+                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderPrioritiesTable('position', 'asc');" />
                                 {% endif %}
                             </td>
                         {% endif %}

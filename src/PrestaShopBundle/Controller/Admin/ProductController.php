@@ -37,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\DataUpdateException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -158,7 +159,12 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
 
             // Category tree
-// TODO !1: continue: needs category tree form helper
+                $categories = $this->createForm(
+                    new ChoiceCategoriesTreeType('categories', $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(), array(), false)
+                );
+            if (!empty($persistedFilterParameters['filter_category'])) {
+                $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+            }
         }
 
         // Template vars injection
@@ -178,7 +184,8 @@ class ProductController extends FrameworkBundleAdminController
                 'product_count' => $totalProductCount,
                 'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
                 'pagination_parameters' => $paginationParameters,
-                'layoutHeaderToolbarBtn' => $toolbarButtons
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'categories' => $categories->createView()
             )
         );
     }
@@ -286,6 +293,14 @@ class ProductController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Do bulk action on a list of Products. Used with the 'bulk action' dropdown menu on the Catalog page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected products
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
     public function bulkAction(Request $request, $action)
     {
         $productIdList = $request->request->get('bulk_action_selected_products');
@@ -320,6 +335,14 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($request->request->get('redirect_url'), 302);
     }
 
+    /**
+     * Do action on one product at a time. Can be used at many places in the controller's page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected product
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
     public function unitAction(Request $request, $action, $id)
     {
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
@@ -361,6 +384,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param boolean $use True to use legacy version. False for refactored page.
+     * @return redirection
      */
     public function shouldUseLegacyPagesAction(Request $request, $use)
     {

@@ -5,7 +5,7 @@ admin_product_catalog:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         _legacy_controller: AdminProducts
-        limit: 10
+        limit: 20
         offset: 0
         orderBy: id_product
         sortOrder: asc
@@ -18,7 +18,7 @@ admin_product_list:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
-        limit: 10
+        limit: 20
         offset: 0
         orderBy: id_product
         sortOrder: asc

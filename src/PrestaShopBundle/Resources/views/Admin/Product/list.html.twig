@@ -1,4 +1,4 @@
-<tbody>
+<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}>
     {% for product in products %}
         <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
             <td class="checkbox-column">
@@ -32,9 +32,9 @@
                 {{ product.active|default(0) }}
             </td>
             {% if product.position is defined %}
-                <td>
+                <td {% if activate_drag_and_drop %}class="placeholder"{% endif %}>
                     {% if activate_drag_and_drop %}
-                        TODO: MOVE!&nbsp;
+                        TODO:&nbsp;MOVE!
                     {% endif %}
                     {{ product.position }}
                 </td>
