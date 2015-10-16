@@ -324,7 +324,7 @@ function clean_tabs_15()
     //=====================================/
 
     //specific case for AdminStockMvt in AdminStock
-    
+
     $id_AdminStockMvt = get_tab_id('AdminStockMvt');
     $id_AdminStock = get_tab_id('AdminStock');
     Db::getInstance()->update('tab', array('id_parent' => $id_AdminStock), 'id_tab ='.$id_AdminStockMvt);

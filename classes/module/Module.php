@@ -1588,7 +1588,7 @@ abstract class ModuleCore
         }
         if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg') &&
         !file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img))) {
-                copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+            copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
         }
         if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg')) {
             return '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
@@ -3105,15 +3105,16 @@ abstract class ModuleCore
      */
     public function getOverrides()
     {
-        if (!is_dir($this->getLocalPath().'override'))
+        if (!is_dir($this->getLocalPath().'override')) {
             return null;
+        }
 
         $result = array();
-        foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
-        {
+        foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file) {
             $class = basename($file, '.php');
-            if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core') || Module::getModuleIdByName($class))
+            if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core') || Module::getModuleIdByName($class)) {
                 $result[] = $class;
+            }
         }
         return $result;
     }

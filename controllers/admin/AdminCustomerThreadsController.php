@@ -1096,8 +1096,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         imap_close($mbox);
         if ($str_errors.$str_error_delete) {
             return array('hasError' => true, 'errors' => array($str_errors.$str_error_delete));
-        }
-        else {
+        } else {
             return array('hasError' => false, 'errors' => '');
         }
     }

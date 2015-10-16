@@ -2,7 +2,6 @@
 
 class AdminProductsController extends AdminProductsControllerCore
 {
-
     /*
     * module: pscsx3241
     * date: 2015-07-13 16:05:30
@@ -691,7 +690,6 @@ class AdminProductsController extends AdminProductsControllerCore
             if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1) {
                 $this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
             } else {
-
                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $object->advanced_stock_management) {
                     $stock_manager = StockManagerFactory::getManager();
                     $physical_quantity = $stock_manager->getProductPhysicalQuantities($object->id, 0);
@@ -725,14 +723,12 @@ class AdminProductsController extends AdminProductsControllerCore
         $id_image = (int)Tools::getValue('id_image');
         $image = new Image((int)$id_image);
         if (Validate::isLoadedObject($image)) {
-
             if (Tools::getIsset('editImage')) {
                 if ($image->cover) {
                     $_POST['cover'] = 1;
                 }
                 $_POST['id_image'] = $image->id;
             } elseif (Tools::getIsset('coverImage')) {
-
                 Image::deleteCover($image->id_product);
                 $image->cover = 1;
                 if (!$image->update()) {
@@ -744,7 +740,6 @@ class AdminProductsController extends AdminProductsControllerCore
                     $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&action=Images&addproduct'.'&token='.$this->token;
                 }
             } elseif (Tools::getIsset('imgPosition') && Tools::getIsset('imgDirection')) {
-
                 $image->updatePosition(Tools::getValue('imgDirection'), Tools::getValue('imgPosition'));
                 $this->redirect_after = self::$currentIndex.'&id_product='.$image->id_product.'&id_category='.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&add'.$this->table.'&action=Images&token='.$this->token;
             }
@@ -1692,7 +1687,6 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function addProductImage($product, $method = 'auto')
     {
-
         if ($id_image = (int)Tools::getValue('id_image')) {
             $image = new Image((int)$id_image);
             if (!Validate::isLoadedObject($image)) {
@@ -2219,7 +2213,6 @@ class AdminProductsController extends AdminProductsControllerCore
                 return true;
             }
         } else {
-
             if ($edit == 1) {
                 $id_product_download = (int)ProductDownload::getIdFromIdProduct((int)$product->id);
                 if (!$id_product_download) {
@@ -4003,7 +3996,6 @@ class AdminProductsController extends AdminProductsControllerCore
             'upc' => array('title' => $this->l('UPC'), 'align' => 'left')
         );
         if ($product->id) {
-
             $combinations = $product->getAttributeCombinations($this->context->language->id);
             $groups = array();
             $comb_array = array();

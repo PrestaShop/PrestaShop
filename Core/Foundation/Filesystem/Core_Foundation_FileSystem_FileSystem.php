@@ -50,12 +50,12 @@ class Core_Foundation_FileSystem_FileSystem
     {
         if (func_num_args() < 2) {
             throw new Core_Foundation_FileSystem_Exception('joinPaths requires at least 2 arguments.');
-        } else if (func_num_args() === 2) {
+        } elseif (func_num_args() === 2) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
 
             return $this->joinTwoPaths($arg_O, $arg_1);
-        } else if (func_num_args() > 2) {
+        } elseif (func_num_args() > 2) {
             $func_args = func_get_args();
             $arg_0 = func_get_arg(0);
 

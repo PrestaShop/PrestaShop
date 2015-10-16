@@ -136,7 +136,7 @@ class MediaCore
         if (strlen($html_content) > 0) {
             $html_content_copy = $html_content;
             if (!preg_match('/'.Media::$pattern_keepinline.'/', $html_content)) {
-                    $html_content = preg_replace_callback(
+                $html_content = preg_replace_callback(
                     Media::$pattern_js,
                     array('Media', 'packJSinHTMLpregCallback'),
                     $html_content,
@@ -227,8 +227,9 @@ class MediaCore
                 $server = Tools::getMediaServer($tmp);
 
                 return $matches[1].$protocol_link.$server.$tmp;
-            } else
+            } else {
                 return $matches[0];
+            }
         }
         return false;
     }

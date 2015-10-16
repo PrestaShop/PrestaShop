@@ -530,7 +530,7 @@ class AdminImagesControllerCore extends AdminController
                             if (!file_exists($dir.$image) || !filesize($dir.$image)) {
                                 $this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
                             } elseif (!ImageManager::resize($dir.$image, $newDir.substr(str_replace('_thumb.', '.', $image), 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height'])) {
-                                    $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+                                $this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
                             }
 
                             if ($generate_hight_dpi_images) {

@@ -303,12 +303,12 @@ class AdminModulesControllerCore extends AdminController
             'not_installed' => $uninstalled
             );
 
-		$this->context->smarty->assign(array(
-			'currentIndex' => self::$currentIndex,
-			'tab_modules_list' => $modules_list_sort,
-			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
+        $this->context->smarty->assign(array(
+            'currentIndex' => self::$currentIndex,
+            'tab_modules_list' => $modules_list_sort,
+            'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
             'lang_iso' => $this->context->language->iso_code
-		));
+        ));
 
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
             $this->context->smarty->assign('admin_list_from_source', $admin_list_from_source);
@@ -1672,7 +1672,7 @@ class AdminModulesControllerCore extends AdminController
             }
         }
 
-		$this->fillModuleData($module, 'array');
+        $this->fillModuleData($module, 'array');
 
         $this->context->smarty->assign(array(
             'displayName' => $module->displayName,
@@ -1702,7 +1702,7 @@ class AdminModulesControllerCore extends AdminController
     {
         $this->assignReadMoreSmartyVar();
 
-        die (Tools::jsonEncode(array(
+        die(Tools::jsonEncode(array(
             'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
             'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl')
         )));

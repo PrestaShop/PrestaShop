@@ -33,7 +33,7 @@ function fix_unique_specific_price()
     if (!$result || !count($result)) {
         return true;
     } // return tru if there is not any specific price in the database
-        
+
     $sql = '';
     foreach ($result as $row) {
         $sql .= (int)$row['id_specific_price'].',';

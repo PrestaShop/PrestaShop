@@ -173,8 +173,7 @@ class CountryCore extends ObjectModel
             .($active ? ' AND active = 1' : '')
         );
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -195,8 +194,7 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($result['id_zone']))
-        {
+        if (isset($result['id_zone'])) {
             self::$_idZones[$id_country] = (int)$result['id_zone'];
             return (int)$result['id_zone'];
         }
@@ -240,8 +238,7 @@ class CountryCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'country`
 			WHERE `id_country` = '.(int)$id_country);
         }
-        if (isset(Country::$cache_iso_by_id[$id_country]))
-        {
+        if (isset(Country::$cache_iso_by_id[$id_country])) {
             return Country::$cache_iso_by_id[$id_country];
         }
         return false;
@@ -266,8 +263,7 @@ class CountryCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        if (isset($result['id_country']))
-        {
+        if (isset($result['id_country'])) {
             return (int)$result['id_country'];
         }
         return false;
@@ -296,8 +292,7 @@ class CountryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'country`
 		WHERE `id_country` = '.(int)$id_country);
 
-        if (isset($zip_code_format) && $zip_code_format)
-        {
+        if (isset($zip_code_format) && $zip_code_format) {
             return $zip_code_format;
         }
         return false;
