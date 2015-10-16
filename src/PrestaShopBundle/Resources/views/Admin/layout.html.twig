@@ -25,3 +25,33 @@
         var translate_javascripts = {{ js_translatable|json_encode()|raw }}
     </script>
 {% endblock %}
+
+{% block content_header %}
+    {% if app.session.flashbag.peek('error')|length() > 0 %}
+        <div class="flash-message-list alert alert-danger">
+            <ul>
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <li>{{ flashMessage }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if app.session.flashbag.peek('failure')|length() > 0 %}
+        <div class="flash-message-list alert alert-danger">
+            <ul>
+            {% for flashMessage in app.session.flashbag.get('failure') %}
+                <li>{{ flashMessage }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if app.session.flashbag.peek('success')|length() > 0 %}
+        <div class="flash-message-list alert alert-success">
+            <ul>
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <li>{{ flashMessage }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
