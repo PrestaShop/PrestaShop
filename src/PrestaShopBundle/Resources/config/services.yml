@@ -3,6 +3,7 @@ imports:
 
 services:
     # ADAPTERS (prestashop.adapter.*)
+
     # Legacy context service, transitional
     prestashop.adapter.legacy.context:
         class: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -11,6 +12,13 @@ services:
     prestashop.adapter.translator:
         class: PrestaShop\PrestaShop\Adapter\Translator
         arguments: ["@prestashop.adapter.legacy.context"]
+
+    # SSL middleware
+    prestashop.adapter.middleware.ssl:
+        class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
 
     # Data providers service
     prestashop.adapter.data_provider.supplier:
@@ -34,11 +42,6 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    # Adapter services that decorates interfaced services
-    prestashop.adapter.admin.page_preference:
-        class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
-        decorates: prestashop.core.admin.page_preference_interface
-        public: false
 
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
@@ -57,8 +60,3 @@ services:
         arguments: ["@prestashop.adapter.legacy.context"]
         tags:
             - { name: twig.extension }
-
-
-
-
-

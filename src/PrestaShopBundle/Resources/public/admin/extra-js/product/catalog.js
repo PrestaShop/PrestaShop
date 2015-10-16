@@ -133,12 +133,12 @@ function bulkProductAction(element, action) {
 		// this case will brings to the next page
 		case 'edition_next':
 			alert('+1 page !');
-			// TODO: add 1 page at offset for redirection (go to next page in redirecturl)
+			// TODO !2: add 1 page at offset for redirection (go to next page in redirecturl)
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
 			alert(editionAction);
-			// TODO: specific work here: submit form with another URL (different than bulkurl...
+			// TODO !2: specific work here: submit form with another URL (different than bulkurl...
 			break;
 		// unknown cases...
 		default:

@@ -90,7 +90,7 @@ class LayoutExtension extends \Twig_Extension
                 '</body>',
             ),
             array(
-                '{% block content %}{% endblock %}',
+                '{% block content_header %}{% endblock %}{% block content %}{% endblock %}{% block content_footer %}{% endblock %}',
                 'var currentIndex = \''.$this->context->getAdminLink($controllerName).'\';',
                 '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
                 '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',

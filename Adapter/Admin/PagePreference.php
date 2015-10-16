@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Adapter to know which page's version to display.
@@ -38,6 +39,13 @@ use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
  */
 class PagePreference implements AdminPagePreferenceInterface
 {
+    private $session;
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
     /* (non-PHPdoc)
      * @see \PrestaShopCoreAdminBundle\TransitionalBehavior\AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()
      */
@@ -47,9 +55,7 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        $legacyCookie = \Context::getContext()->cookie;
-        /* @var $legacyCookie \CookieCore */
-        return (!empty($legacyCookie->{'should_use_legacy_page_for_'.$page}) && $legacyCookie->{'should_use_legacy_page_for_'.$page} == 1);
+        return ($this->session->has('should_use_legacy_page_for_'.$page) && $this->session->get('should_use_legacy_page_for_'.$page, 0) == 1);
     }
 
     /* (non-PHPdoc)
@@ -61,12 +67,10 @@ class PagePreference implements AdminPagePreferenceInterface
             throw new \InvalidParameterException('$page parameter missing');
         }
 
-        $legacyCookie = \Context::getContext()->cookie;
-        /* @var $legacyCookie \CookieCore */
         if ((bool)$useLegacy) {
-            $legacyCookie->__set('should_use_legacy_page_for_'.$page, 1);
+            $this->session->set('should_use_legacy_page_for_'.$page, 1);
         } else {
-            $legacyCookie->__unset('should_use_legacy_page_for_'.$page);
+            $this->session->remove('should_use_legacy_page_for_'.$page);
         }
     }
 
