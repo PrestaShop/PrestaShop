@@ -87,7 +87,10 @@ function updateBulkMenu() {
 
 function updateFilterMenu() {
 	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').size();
-	$('form#product_catalog_list tr.column-filters input[type="text"]').each(function() {
+	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
+		if ($(this).val()!="") count ++;
+	});
+	$('form#product_catalog_list tr.column-filters input[type="text"][sql!=""][sql]').each(function() {
 		if ($(this).val()!="") count ++;
 	});
 	$('input[name="products_filter_submit"]').prop('disabled', (count == 0));

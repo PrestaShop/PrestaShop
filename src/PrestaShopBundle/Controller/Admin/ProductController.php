@@ -209,7 +209,7 @@ class ProductController extends FrameworkBundleAdminController
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
             $totalCount = isset($product['total'])? $product['total'] : $totalCount;
-            $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
+            $product['url'] = $this->generateUrl('admin_product_form', array('id' => $product['id_product']));
             $product['unit_action_url'] = $this->generateUrl(
                 'admin_product_unit_action',
                 array('action' => 'duplicate', 'id' => $product['id_product'])
