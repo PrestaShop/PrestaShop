@@ -906,7 +906,8 @@ class AdminProductsController extends AdminProductsControllerCore
                                 Tools::getValue('attribute_upc'),
                                 Tools::getValue('attribute_minimal_quantity'),
                                 array(),
-                                Tools::getValue('available_date_attribute')
+                                Tools::getValue('available_date_attribute'),
+                                Tools::getValue('attribute_isbn')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);

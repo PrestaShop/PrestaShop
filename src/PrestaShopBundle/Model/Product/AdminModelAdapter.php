@@ -191,7 +191,7 @@ class AdminModelAdapter
                 //images
                 'upc' => $this->product->upc,
                 'ean13' => $this->product->ean13,
-                'isbn' => isset($this->product->isbn) ? $this->product->isbn : null,
+                'isbn' => $this->product->isbn,
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
                 'price' => $this->product->price,
