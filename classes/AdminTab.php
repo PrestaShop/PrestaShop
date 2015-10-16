@@ -432,7 +432,7 @@ abstract class AdminTabCore
                 }
                 if (!count($actions)) {
                     if (($methodname == 'displayErrors' && count($adminTab->_errors)) || $methodname != 'displayErrors') {
-                        echo (isset($this->_includeTabTitle[$key]) ? '<h2>'.$this->_includeTabTitle[$key].'</h2>' : '');
+                        echo(isset($this->_includeTabTitle[$key]) ? '<h2>'.$this->_includeTabTitle[$key].'</h2>' : '');
                     }
                 }
                 if ($adminTab->_includeVars) {
@@ -1753,7 +1753,7 @@ abstract class AdminTabCore
                         echo '--';
                     }
 
-                    echo (isset($params['suffix']) ? $params['suffix'] : '').
+                    echo(isset($params['suffix']) ? $params['suffix'] : '').
                     '</td>';
                 }
 
@@ -1963,7 +1963,7 @@ abstract class AdminTabCore
 
                 // Field description
                 //echo (isset($field['desc']) ? '<p class="preference_description">'.((isset($field['thumb']) AND $field['thumb'] AND $field['thumb']['pos'] == 'after') ? '<img src="'.$field['thumb']['file'].'" alt="'.$field['title'].'" title="'.$field['title'].'" style="float:left;" />' : '' ).$field['desc'].'</p>' : '');
-                echo (isset($field['desc']) ? '<p class="preference_description">'.$field['desc'].'</p>' : '');
+                echo(isset($field['desc']) ? '<p class="preference_description">'.$field['desc'].'</p>' : '');
 
                 // Is this field invisible in current shop context ?
                 echo ($isInvisible) ? '<p class="multishop_warning">'.$this->l('You cannot change the value of this configuration field in this shop context').'</p>' : '';

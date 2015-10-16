@@ -450,7 +450,6 @@ class AuthControllerCore extends FrontController
 
         if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Tools::isSubmit('submitGuestAccount')) {
             if (!count($this->errors)) {
-
                 $this->processCustomerNewsletter($customer);
 
                 $customer->firstname = Tools::ucwords($customer->firstname);

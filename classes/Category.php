@@ -1248,12 +1248,12 @@ class CategoryCore extends ObjectModel
 
     public function cleanGroups()
     {
-    	return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
+        return Db::getInstance()->delete('category_group', 'id_category = '.(int)$this->id);
     }
 
     public function cleanAssoProducts()
     {
-    	return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
+        return Db::getInstance()->delete('category_product', 'id_category = '.(int)$this->id);
     }
 
     public function addGroups($groups)
@@ -1786,7 +1786,7 @@ class CategoryCore extends ObjectModel
      */
     public static function deleteCategoriesFromShop($id_shop)
     {
-    	return Db::getInstance()->delete('category_shop', 'id_shop = '.(int)$id_shop);
+        return Db::getInstance()->delete('category_shop', 'id_shop = '.(int)$id_shop);
     }
 
     /**

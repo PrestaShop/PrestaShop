@@ -183,7 +183,7 @@ class StockAvailableTest extends UnitTestCase
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
@@ -193,7 +193,7 @@ class StockAvailableTest extends UnitTestCase
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
-        foreach($products as $k => $product) {
+        foreach ($products as $k => $product) {
             $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
@@ -272,7 +272,7 @@ class StockAvailableTest extends UnitTestCase
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
@@ -286,7 +286,7 @@ class StockAvailableTest extends UnitTestCase
         $stockManager->updatePacksQuantityContainingProduct($products[0][0], $products[0][1], $stockAvailable);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
-        foreach($products as $k => $product) {
+        foreach ($products as $k => $product) {
             $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
@@ -382,7 +382,7 @@ class StockAvailableTest extends UnitTestCase
     {
         $this->setStockType($default_stock_type);
         $this->packItemsManager = new FakePackItemsManager4759();
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
         $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
@@ -396,9 +396,8 @@ class StockAvailableTest extends UnitTestCase
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
-        foreach($products as $k => $product) {
+        foreach ($products as $k => $product) {
             $this->assertEquals($expected[$k+1], $product[0]->stock_available->quantity);
         }
     }
-    
 }

@@ -803,8 +803,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 parent::postProcess();
             } else {
                 parent::postProcess();
-                if (Tools::isSubmit('delete'.$this->table))
-                {
+                if (Tools::isSubmit('delete'.$this->table)) {
                     AttributeGroup::cleanPositions();
                 }
             }

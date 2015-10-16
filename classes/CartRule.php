@@ -362,7 +362,7 @@ class CartRuleCore extends ObjectModel
 
                 if (is_array($countries) && count($countries)) {
                     foreach ($countries as $country) {
-                       $id_cart_rule = (bool)Db::getInstance()->getValue('
+                        $id_cart_rule = (bool)Db::getInstance()->getValue('
                             SELECT crc.id_cart_rule
                             FROM '._DB_PREFIX_.'cart_rule_country crc
                             WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
@@ -375,8 +375,9 @@ class CartRuleCore extends ObjectModel
             }
         }
 
-        if (!$country_restriction)
-             $result = $result_bak;
+        if (!$country_restriction) {
+            $result = $result_bak;
+        }
 
         // Retrocompatibility with 1.4 discounts
         foreach ($result as &$cart_rule) {

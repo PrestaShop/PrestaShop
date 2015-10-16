@@ -262,7 +262,7 @@ class TagCore extends ObjectModel
         Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'product_tag
         												WHERE '._DB_PREFIX_.'product_tag.id_tag = '._DB_PREFIX_.'tag.id_tag)');
         $tag_list = array();
-        foreach($tags_removed as $tag_removed) {
+        foreach ($tags_removed as $tag_removed) {
             $tag_list[] = $tag_removed['id_tag'];
         }
         if ($tag_list != array()) {

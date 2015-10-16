@@ -31,7 +31,7 @@ function update_for_13version()
     if (version_compare($oldversion, '1.4.0.1') >= 0) {
         return;
     } // if the old version is a 1.4 version
-    
+
     // Disable the Smarty 3
     // Disable the URL rewritting
     // Disable Canonical redirection

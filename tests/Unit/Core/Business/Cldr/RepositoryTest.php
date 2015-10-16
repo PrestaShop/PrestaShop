@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Cldr;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-
 use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\Repository;
 use ICanBoogie\CLDR\RunTimeProvider;
