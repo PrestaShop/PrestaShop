@@ -2,7 +2,7 @@ Hej {firstname} {lastname},
 
 Här är dina personliga inloggningsuppgifter för {shop_name}:
 
-Password: {passwd}
+Lösenord: {passwd}
 E-postadress: {email}
 
 {shop_name} - {shop_url}
