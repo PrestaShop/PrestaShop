@@ -1,5 +1,6 @@
 exports.config = {
-
+    user: process.env.SAUCE_USERNAME,
+    key: process.env.SAUCE_ACCESS_KEY,
     //
     // ==================
     // Specify Test Files
@@ -30,7 +31,10 @@ exports.config = {
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
-        browserName: 'firefox'
+        browserName: 'firefox',
+        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+        screenResolution: "1600x1200",
+        platform: "Windows 7"
     }],
     //
     // ===================
@@ -118,6 +122,7 @@ exports.config = {
         chai.should();
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
+        return browser.timeoutsImplicitWait(2000);
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
