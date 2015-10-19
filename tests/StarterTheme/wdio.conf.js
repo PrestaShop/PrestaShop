@@ -32,7 +32,9 @@ exports.config = {
     //
     capabilities: [{
         browserName: 'firefox',
-        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER
+        tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+        screenResolution: "1600x1200",
+        platform: "Windows 7"
     }],
     //
     // ===================
@@ -120,6 +122,7 @@ exports.config = {
         chai.should();
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
+        return browser.timeoutsImplicitWait(2000);
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from
