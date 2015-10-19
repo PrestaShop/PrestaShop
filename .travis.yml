@@ -43,15 +43,25 @@ script:
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - cd /var/www/prestashop.unit.test && bash getcomposer.sh && php composer.phar install
   - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
-  --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
-  --db_create=1 --name=prestashop.unit.test --password=123456789
-  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
-  - cd /var/www/prestashop.unit.test && php bin/phpunit -c admin-dev/
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
     --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
     --db_create=1 --name=prestashop.unit.test --password=123456789
+  # backup install for next step
+  - cp -R /var/www/prestashop.unit.test $TRAVIS_BUILD_DIR/fresh_install
+  - mysqldump -uroot prestashop.unit.test > $TRAVIS_BUILD_DIR/db.sql
+  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
+  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c admin-dev/
+  # re-install PrestaShop for Selenium tests
+  - sudo rm -Rf /var/www/prestashop.unit.test
+  - sudo cp -Rf $TRAVIS_BUILD_DIR/fresh_install /var/www/prestashop.unit.test
+  - sudo chmod 777 -R /var/www
+  - mysql -uroot -e "drop database \`prestashop.unit.test\`"
+  - mysqladmin -uroot create prestashop.unit.test
+  - mysql -uroot prestashop.unit.test < $TRAVIS_BUILD_DIR/db.sql
+  # run Selenium tests
   - cd /var/www/prestashop.unit.test/tests/StarterTheme
   - curl http://localhost/prestashop.unit.test
   - mv settings.travis.js settings.js
   - npm install
+  - DISPLAY=:10 npm run selenium &> /dev/null &
+  - sleep 5
   - npm test
