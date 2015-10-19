@@ -763,7 +763,12 @@ class AdminMetaControllerCore extends AdminController
         $tab = array();
 
         // Special allow directives
-        $tab['Allow'] = array('*/modules/*.css', '*/modules/*.js');
+        $tab['Allow'] = array(
+            '*/modules/*.css',
+            '*/modules/*.js',
+            '*/modules/*.png',
+            '*/modules/*.jpg',
+        );
 
         // Directories
         $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
