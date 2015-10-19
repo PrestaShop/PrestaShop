@@ -25,7 +25,7 @@
  */
 
 /**
- * Step 3 : configure database and email connection
+ * Step 3 : configure database
  */
 class InstallControllerHttpDatabase extends InstallControllerHttp
 {
@@ -33,11 +33,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
      * @var InstallModelDatabase
      */
     public $model_database;
-
-    /**
-     * @var InstallModelMail
-     */
-    public $model_mail;
 
     public function init()
     {
@@ -57,7 +52,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
         $this->session->database_password = trim(Tools::getValue('dbPassword'));
         $this->session->database_prefix = trim(Tools::getValue('db_prefix'));
         $this->session->database_clear = Tools::getValue('database_clear');
-        
+
         $this->session->rewrite_engine = Tools::getValue('rewrite_engine');
     }
 
@@ -80,7 +75,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp
         if (count($this->errors)) {
             return false;
         }
-        
+
         if (!isset($this->session->database_engine)) {
             $this->session->database_engine = $this->model_database->getBestEngine($this->session->database_server, $this->session->database_name, $this->session->database_login, $this->session->database_password);
         }
