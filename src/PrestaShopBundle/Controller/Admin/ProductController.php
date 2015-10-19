@@ -249,10 +249,11 @@ class ProductController extends FrameworkBundleAdminController
         $form = $this->createFormBuilder($modelMapper->getFormDatas())
             ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation($this->container))
-            ->add('step2', new ProductForms\ProductQuantity())
-            ->add('step3', new ProductForms\ProductShipping())
-            ->add('step4', new ProductForms\ProductSeo($this->container))
-            ->add('step5', new ProductForms\ProductOptions($this->container))
+            ->add('step2', new ProductForms\ProductPrice($this->container))
+            ->add('step3', new ProductForms\ProductQuantity())
+            ->add('step4', new ProductForms\ProductShipping())
+            ->add('step5', new ProductForms\ProductSeo($this->container))
+            ->add('step6', new ProductForms\ProductOptions($this->container))
             ->getForm();
 
         $form->handleRequest($request);

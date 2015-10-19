@@ -10,10 +10,11 @@
             </div>
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Your product') }}</a></li>
-                <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Quantity') }}</a></li>
-                <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Shipping') }}</a></li>
-                <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('SEO') }}</a></li>
-                <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('Options') }}</a></li>
+                <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Price') }}</a></li>
+                <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity') }}</a></li>
+                <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping') }}</a></li>
+                <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO') }}</a></li>
+                <li><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options') }}</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
@@ -36,7 +37,7 @@
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
@@ -51,6 +52,14 @@
                     {{ form_widget(form.step5) }}
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
+                    {{ form_widget(form.step6) }}
+                    <div class="text-right">
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
                     </div>
                 </div>
@@ -61,20 +70,22 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ root_url }}js/vendor/node_modules/dropzone/dist/min/dropzone.min.css" />
+    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ root_url }}js/tiny_mce/tiny_mce.js"></script>
-    <script src="{{ root_url }}js/admin/tinymce.product.inc.js"></script>
-    <script src="{{ root_url }}js/admin/tinymce_loader.js"></script>
-    <script src="{{ root_url }}js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js"></script>
-    <script src="{{ root_url }}js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js"></script>
-    <script src="{{ root_url }}js/vendor/node_modules/dropzone/dist/min/dropzone.min.js"></script>
-    <script src="{{ root_url }}js/vendor/node_modules/sprintf-js/dist/sprintf.min.js"></script>
-
-    {% javascripts '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js' %}
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
+    '../js/tiny_mce/tiny_mce.js'
+    '../js/admin/tinymce.product.inc.js'
+    '../js/admin/tinymce_loader.js'
+    '../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js'
+    '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'
+    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
+    '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
+    %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
