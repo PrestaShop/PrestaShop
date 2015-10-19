@@ -724,7 +724,7 @@
 								{elseif $input.type == 'shop'}
 									{$input.html}
 								{elseif $input.type == 'categories'}
-									{$categories_tree}
+									{eval var='{$categories_tree_'|cat:$input.name|cat:'}'}
 								{elseif $input.type == 'file'}
 									{$input.file}
 								{elseif $input.type == 'categories_select'}
