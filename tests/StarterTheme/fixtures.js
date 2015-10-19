@@ -19,8 +19,7 @@ module.exports = {
       myAccount: '/en/my-account',
       myAddresses: '/en/addresses',
       address: 'en/address',
-      opc: '/en/quick-order',
-      logout: '/en/logout'
+      opc: '/en/quick-order'
     },
     customer: {
       email: 'pub@prestashop.com',

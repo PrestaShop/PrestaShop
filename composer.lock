@@ -481,12 +481,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockcart.git",
-                "reference": "866739cc5a05e2c2b841f9b68a9009c6b77a3664"
+                "reference": "ce0cf61f4e9bd6b07cd74720d96183f15ae410ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/866739cc5a05e2c2b841f9b68a9009c6b77a3664",
-                "reference": "866739cc5a05e2c2b841f9b68a9009c6b77a3664",
+                "url": "https://api.github.com/repos/PrestaShop/blockcart/zipball/ce0cf61f4e9bd6b07cd74720d96183f15ae410ae",
+                "reference": "ce0cf61f4e9bd6b07cd74720d96183f15ae410ae",
                 "shasum": ""
             },
             "require": {
@@ -507,7 +507,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blockcart/tree/feat/starter-theme"
             },
-            "time": "2015-10-05 10:30:36"
+            "time": "2015-10-18 16:30:37"
         },
         {
             "name": "prestashop/blockcategories",
@@ -1321,12 +1321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blocktopmenu.git",
-                "reference": "1bc5223796b60054a1bc3f6dfa282df894f51872"
+                "reference": "218431b726a78c72b934b078c68e557903003476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blocktopmenu/zipball/1bc5223796b60054a1bc3f6dfa282df894f51872",
-                "reference": "1bc5223796b60054a1bc3f6dfa282df894f51872",
+                "url": "https://api.github.com/repos/PrestaShop/blocktopmenu/zipball/218431b726a78c72b934b078c68e557903003476",
+                "reference": "218431b726a78c72b934b078c68e557903003476",
                 "shasum": ""
             },
             "require": {
@@ -1347,7 +1347,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/blocktopmenu/tree/feat/starter-theme"
             },
-            "time": "2015-09-25 14:53:43"
+            "time": "2015-10-19 12:13:32"
         },
         {
             "name": "prestashop/blockuserinfo",
@@ -2834,16 +2834,16 @@
         },
         {
             "name": "fabpot/php-cs-fixer",
-            "version": "v1.10",
+            "version": "v1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "8e21b4fb32c4618a425817d9f0daf3d57a9808d1"
+                "reference": "12dbcd1462f1e3a5a96c6c7398af26b28e092a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/8e21b4fb32c4618a425817d9f0daf3d57a9808d1",
-                "reference": "8e21b4fb32c4618a425817d9f0daf3d57a9808d1",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/12dbcd1462f1e3a5a96c6c7398af26b28e092a8a",
+                "reference": "12dbcd1462f1e3a5a96c6c7398af26b28e092a8a",
                 "shasum": ""
             },
             "require": {
@@ -2884,7 +2884,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2015-07-27 20:56:10"
+            "time": "2015-10-12 20:13:46"
         },
         {
             "name": "phake/phake",
@@ -3295,16 +3295,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.11",
+            "version": "4.8.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "bdd199472410fd7e32751f9c814c7e06f2c21bd5"
+                "reference": "b4900675926860bef091644849305399b986efa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bdd199472410fd7e32751f9c814c7e06f2c21bd5",
-                "reference": "bdd199472410fd7e32751f9c814c7e06f2c21bd5",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b4900675926860bef091644849305399b986efa2",
+                "reference": "b4900675926860bef091644849305399b986efa2",
                 "shasum": ""
             },
             "require": {
@@ -3363,7 +3363,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-07 10:39:46"
+            "time": "2015-10-17 15:03:30"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3655,16 +3655,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01"
+                "reference": "bc37d50fea7d017d3d340f230811c9f1d7280af4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/bc37d50fea7d017d3d340f230811c9f1d7280af4",
+                "reference": "bc37d50fea7d017d3d340f230811c9f1d7280af4",
                 "shasum": ""
             },
             "require": {
@@ -3702,7 +3702,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2014-10-06 09:23:50"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
