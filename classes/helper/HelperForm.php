@@ -91,7 +91,7 @@ class HelperFormCore extends Helper
                     }
                     switch ($params['type']) {
                         case 'categories':
-                            if ($categories) {
+
                                 if (!isset($params['tree']['id'])) {
                                     throw new PrestaShopException('Id must be filled for categories tree');
                                 }
@@ -126,9 +126,7 @@ class HelperFormCore extends Helper
                                     $tree->setData($params['tree']['set_data']);
                                 }
 
-                                $this->context->smarty->assign('categories_tree', $tree->render());
-                                $categories = false;
-                            }
+                                $this->context->smarty->assign('categories_tree_'.$params['name'], $tree->render());
                         break;
 
                         case 'file':
