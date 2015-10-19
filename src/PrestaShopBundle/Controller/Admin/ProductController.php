@@ -121,6 +121,9 @@ class ProductController extends FrameworkBundleAdminController
             'bulk_url' => $this->generateUrl('admin_product_bulk_action', array(
                 'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
             )),
+            'mass_edit_url' => $this->generateUrl('admin_product_mass_edit_action', array(
+                'action' => 'sort' // will be replaced by JS. Must be non default value (see routes YML file)
+            )),
             'bulk_redirect_url' => $actionRedirectionUrl,
             'unit_redirect_url' => $actionRedirectionUrl
         );
@@ -294,7 +297,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Do bulk action on a list of Products. Used with the 'bulk action' dropdown menu on the Catalog page.
+     * Do bulk action on a list of Products. Used with the 'selection action' dropdown menu on the Catalog page.
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
@@ -326,6 +329,41 @@ class ProductController extends FrameworkBundleAdminController
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     throw new \Exception('Bad action received from call to ProductController::bulkAction: "'.$action.'"', 2001);
+            }
+        } catch (DataUpdateException $due) {
+            $this->addFlash('failure', $translator->trans($due->getMessage()));
+        }
+
+        // redirect after success
+        return $this->redirect($request->request->get('redirect_url'), 302);
+    }
+
+    /**
+     * Do mass edit action on the current page of products. Used with the 'grouped action' dropdown menu on the Catalog page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected products
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
+    public function massEditAction(Request $request, $action)
+    {
+        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
+
+        try {
+            switch ($action) {
+                case 'sort':
+                    $productIdList = $request->request->get('mass_edit_action_sorted_products');
+                    $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
+                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList));
+                    $this->addFlash('success', $translator->trans('Products successfully sorted.'));
+                    break;
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new \Exception('Bad action received from call to ProductController::massEditAction: "'.$action.'"', 2001);
             }
         } catch (DataUpdateException $due) {
             $this->addFlash('failure', $translator->trans($due->getMessage()));

@@ -62,3 +62,11 @@ admin_product_unit_action:
     requirements:
         action: delete|duplicate
         id: \d+
+
+admin_product_mass_edit_action:
+    path:     /massedit/{action}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::massEditAction
+    requirements:
+        action: sort

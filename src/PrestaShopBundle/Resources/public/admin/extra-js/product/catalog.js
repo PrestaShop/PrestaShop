@@ -66,10 +66,11 @@ $(document).ready(function() {
 	$('tbody.sortable', form).sortable({
 		placeholder: 'placeholder',
 		update: function(event, ui) {
+			var positionSpan = $('span.position', ui.item)[0];
+			$(positionSpan).css('color', 'red');
 			bulkProductEdition(event, 'sort');
 		}
 	});
-	
 
 	/*
 	 * Form submit pre action
@@ -159,8 +160,9 @@ function bulkProductAction(element, action) {
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
-			alert(editionAction);
-			// TODO !0: specific work here: submit form with another URL (different than bulkurl...
+			var urlHandler = $(element).closest('[massediturl]');
+			postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
+			redirectUrl = urlHandler.attr('redirecturl');
 			break;
 		// unknown cases...
 		default:

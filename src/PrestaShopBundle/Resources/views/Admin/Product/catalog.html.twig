@@ -2,12 +2,20 @@
 
 {% block javascripts %}
     {{ parent() }}
-	{% javascripts
-		'@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
-	    '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
-	    '../js/jquery/ui/jquery.ui.sortable.min.js' %}
+    {% javascripts
+        '@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
+        '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
+        '../js/jquery/ui/jquery.ui.sortable.min.js'
+        '../js/vendor/node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
@@ -153,7 +161,7 @@
             </table>
             
             <div class="row">
-                <div class="pull-left" bulkurl="{{ bulk_url }}" redirecturl="{{ bulk_redirect_url }}">
+                <div class="pull-left" bulkurl="{{ bulk_url }}" massediturl="{{ mass_edit_url }}" redirecturl="{{ bulk_redirect_url }}">
                 
                     {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
                         'div_style': "btn-group dropup",

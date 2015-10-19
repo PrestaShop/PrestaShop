@@ -1,11 +1,11 @@
 <div>
     &nbsp;
     <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;">
-        <option value="5" {% if limit==20 %}selected="selected"{% endif %}>20</option>
-        <option value="10" {% if limit==50 %}selected="selected"{% endif %}>50</option>
-        <option value="20" {% if limit==100 %}selected="selected"{% endif %}>100</option>
-        <option value="50" {% if limit==300 %}selected="selected"{% endif %}>300</option>
-        <option value="100" {% if limit==1000 %}selected="selected"{% endif %}>1000</option>
+        <option value="20" {% if limit==20 %}selected="selected"{% endif %}>20</option>
+        <option value="50" {% if limit==50 %}selected="selected"{% endif %}>50</option>
+        <option value="100" {% if limit==100 %}selected="selected"{% endif %}>100</option>
+        <option value="300" {% if limit==300 %}selected="selected"{% endif %}>300</option>
+        <option value="1000" {% if limit==1000 %}selected="selected"{% endif %}>1000</option>
     </select>
     &nbsp;
     |
