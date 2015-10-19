@@ -1,3 +1,5 @@
+var fixtures = require('../fixtures');
+
 module.exports = function initializePrestaShopBrowserCommands (browser) {
 
   /**
@@ -15,6 +17,28 @@ module.exports = function initializePrestaShopBrowserCommands (browser) {
         if (text.substr(0, needle.length) === needle) {
           return browser.click('a');
         }
+      })
+    ;
+  });
+
+  browser.addCommand('loginDefaultCustomer', function loginDefaultCustomer () {
+    return browser
+      .url(fixtures.urls.login)
+      .setValue('.login-form input[name=email]', fixtures.customer.email)
+      .setValue('.login-form input[name=passwd]', fixtures.customer.password)
+      .submitForm('.login-form form')
+    ;
+  });
+
+  browser.addCommand('logout', function logout () {
+    return browser
+      .url()
+      .then(function (initialURL) {
+        return browser
+          .url('/')
+          .click('#header a.logout')
+          .url(initialURL)
+        ;
       })
     ;
   });
