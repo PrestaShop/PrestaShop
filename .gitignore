@@ -2,6 +2,7 @@
 
 /.htaccess
 *.log
+npm-debug.log.*
 /cache/*
 download/*
 /img/*
@@ -10,6 +11,7 @@ upload/*
 vendor/*
 docs/phpdoc-sf/
 /composer.lock
+tests/StarterTheme/errorShots/
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*
@@ -23,6 +25,7 @@ config/settings.inc.php
 config/settings.old.php
 config/xml/*
 !config/xml/themes/default.xml
+tests/StarterTheme/settings.js
 
 # Themes, modules and overrides
 
@@ -31,14 +34,12 @@ override/*
 
 # Vendors and dependencies
 
-bower_components
+bower_components/
 vendor/
-themes/StarterTheme/_dev/node_modules
+node_modules/
 /composer.phar
 php-cs-fixer
-js/vendor/node_modules/*
-tests/js/node_modules/*
-tests/js/.grunt/*
+.grunt/*
 
 # Translations and emails templates
 
