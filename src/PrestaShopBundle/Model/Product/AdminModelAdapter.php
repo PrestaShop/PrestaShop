@@ -75,7 +75,7 @@ class AdminModelAdapter
     public function getModelDatas($form_data)
     {
         //merge all form steps
-        $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5']);
+        $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5'], $form_data['step6']);
 
         //extract description_short from description
         foreach ($this->locales as $locale) {
@@ -163,8 +163,6 @@ class AdminModelAdapter
             'step1' => [
                 'type_product' => 0,
                 'condition' => 'new',
-                'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
-                'price' => 0,
                 'active' => 0,
                 'options' => [
                     'available_for_order' => true,
@@ -172,7 +170,11 @@ class AdminModelAdapter
                 ],
                 'categories' => ['tree' => [$this->contextShop->shop->id_category]]
             ],
-            'step5' => [
+            'step2' => [
+                'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
+                'price' => 0,
+            ],
+            'step6' => [
                 'visibility' => 'both'
             ]
         ];
@@ -194,9 +196,6 @@ class AdminModelAdapter
                 'isbn' => $this->product->isbn,
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
-                'price' => $this->product->price,
-                'id_tax_rules_group' => $this->product->id_tax_rules_group,
-                'on_sale' => (bool) $this->product->on_sale,
                 'active' => $this->product->active,
                 'options' => [
                     'available_for_order' => (bool) $this->product->available_for_order,
@@ -218,14 +217,19 @@ class AdminModelAdapter
                     )
                 ]
             ],
-            'step4' => [
-                'link_rewrite' => $this->product->link_rewrite,
-            ],
-            'step5' => [
-                'visibility' => $this->product->visibility,
+            'step2' => [
+                'price' => $this->product->price,
+                'id_tax_rules_group' => $this->product->id_tax_rules_group,
+                'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
+            ],
+            'step5' => [
+                'link_rewrite' => $this->product->link_rewrite,
+            ],
+            'step6' => [
+                'visibility' => $this->product->visibility,
                 'suppliers' => array_map(
                     function ($s) {
                         return($s->id_supplier);

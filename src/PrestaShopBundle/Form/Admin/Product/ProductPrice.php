@@ -28,14 +28,15 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is risponsible to generate the product options form
+ * This form class is risponsible to generate the product price form
  */
-class ProductOptions extends AbstractType
+class ProductPrice extends AbstractType
 {
     private $translator;
-    private $suppliers;
+    private $tax_rules;
 
     /**
      * Constructor
@@ -45,10 +46,53 @@ class ProductOptions extends AbstractType
     public function __construct($container)
     {
         $this->translator = $container->get('prestashop.adapter.translator');
-        $this->suppliers = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
-            'id_supplier'
+        $this->tax_rules = $this->formatDataChoicesList(
+            $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
+            'id_tax_rules_group'
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Builds form
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('price', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('id_tax_rules_group', 'choice', array(
+            'choices' =>  $this->tax_rules,
+            'required' => true,
+            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
+        ))
+        ->add('price_ttc', 'number', array(
+            'required' => false,
+            'mapped' => false,
+            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+        ))
+        ->add('on_sale', 'checkbox', array(
+            'required' => false,
+            'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
+        ))
+        ->add('wholesale_price', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+        ))
+        ->add('unit_price', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts')
+        ))
+        ->add('unity', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('per', [], 'AdminProducts')
+        ));
     }
 
     /**
@@ -69,46 +113,12 @@ class ProductOptions extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * Builds form
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        //TODO
-        //If product is NOT active, add redirections form
-
-        $builder->add('visibility', 'choice', array(
-            'choices'  => array(
-                'both' => $this->translator->trans('Everywhere', [], 'AdminProducts'),
-                'catalog' => $this->translator->trans('Catalog only', [], 'AdminProducts'),
-                'search' => $this->translator->trans('Search only', [], 'AdminProducts'),
-                'none' => $this->translator->trans('Nowhere', [], 'AdminProducts'),
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
-        ))
-        ->add('suppliers', 'choice', array(
-            'choices' =>  $this->suppliers,
-            'expanded' =>  true,
-            'multiple' =>  true,
-            'required' =>  false,
-            'label' => $this->translator->trans('Suppliers', [], 'AdminProducts')
-        ))
-        ->add('default_supplier', 'choice', array(
-            'choices' =>  $this->suppliers,
-            'required' =>  true,
-            'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
-        ));
-    }
-
-    /**
      * Returns the name of this type.
      *
      * @return string The name of this type
      */
     public function getName()
     {
-        return 'product_options';
+        return 'product_price';
     }
 }

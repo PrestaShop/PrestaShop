@@ -150,12 +150,12 @@ $( document ).ready(function() {
 	//end subform add category ----------------------
 
 	//manage default supplier value
-	var defaultSupplierRow = $("#form_step5_default_supplier").parent().parent();
-	if($("#form_step5_suppliers input:checked").length <= 1){
+	var defaultSupplierRow = $("#form_step6_default_supplier").parent().parent();
+	if($("#form_step6_suppliers input:checked").length <= 1){
 		defaultSupplierRow.hide();
 	}
-	$("#form_step5_suppliers input").change(function(){
-		if($("#form_step5_suppliers input").length >= 1 && $("#form_step5_suppliers input:checked").length >= 1){
+	$("#form_step6_suppliers input").change(function(){
+		if($("#form_step6_suppliers input").length >= 1 && $("#form_step6_suppliers input:checked").length >= 1){
 			defaultSupplierRow.show();
 		} else {
 			defaultSupplierRow.hide();

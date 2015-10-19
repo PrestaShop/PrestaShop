@@ -43,7 +43,6 @@ class ProductInformation extends AbstractType
     private $router;
     private $context;
     private $translator;
-    private $tax_rules;
     private $manufacturers;
     private $locales;
     private $nested_categories;
@@ -65,10 +64,6 @@ class ProductInformation extends AbstractType
         $this->nested_categories = $container->get('prestashop.adapter.data_provider.category')->getNestedCategories();
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $this->tax_rules = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
-            'id_tax_rules_group'
-        );
         $this->manufacturers = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.manufacturer')->getManufacturers(false, 0, true, false, false, false, true),
             'id_manufacturer'
@@ -158,28 +153,6 @@ class ProductInformation extends AbstractType
             ),
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'AdminProducts')
-        ))
-        ->add('price', 'number', array(
-            'required' => false,
-            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'float'))
-            )
-        ))
-        ->add('id_tax_rules_group', 'choice', array(
-            'choices' =>  $this->tax_rules,
-            'required' => true,
-            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
-        ))
-        ->add('price_ttc', 'number', array(
-            'required' => false,
-            'mapped' => false,
-            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
-        ))
-        ->add('on_sale', 'checkbox', array(
-            'required' => false,
-            'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
         ))
 
         //RIGHT COL
