@@ -23,7 +23,7 @@
             <td>{$slip.credit_slip_number}</td>
             <td><a href="#">{$slip.order_number}</a></td>
             <td>{$slip.credit_slip_date}</td>
-            <td><a href="{$slip.url}" title="{l s='Credit slip'} {$slip.credit_slip_number}">{l s='PDF'}</a></td>
+            <td><a href="{$slip.url}">{l s='PDF'}</a></td>
           </tr>
         {/foreach}
       </tbody>
