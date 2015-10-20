@@ -181,7 +181,6 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarOrder($order_object)
     {
         $order = $this->objectSerializer->toArray($order_object);
-        $pricePresenter = new Adapter_PricePresenter();
 
         $order['id_order'] = $order['id'];
         $order['reference'] = Order::getUniqReferenceOf($order_object->id);
@@ -189,12 +188,12 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
         $order['url_to_reorder'] = HistoryController::getUrlToReorder((int)$order_object->id, $this->context);
         $order['url_to_invoice'] = HistoryController::getUrlToInvoice($order_object, $this->context);
         $order['gift_message'] = nl2br($order['gift_message']);
-        $order['total_products'] = $pricePresenter->convertAndFormat($order['total_products']);
-        $order['total_products_wt'] = $pricePresenter->convertAndFormat($order['total_products_wt']);
-        $order['total_discounts'] = ($order['total_discounts'] > 0) ? $pricePresenter->convertAndFormat($order['total_discounts']) : 0;
-        $order['total_shipping'] = ($order['total_shipping'] > 0) ? $pricePresenter->convertAndFormat($order['total_shipping']) : $this->l('Free !');
-        $order['total_wrapping'] = ($order['total_wrapping'] > 0) ? $pricePresenter->convertAndFormat($order['total_wrapping']) : 0;
-        $order['total_paid'] = $pricePresenter->convertAndFormat($order['total_paid']);
+        $order['total_products'] = Tools::displayPrice($order['total_products'], (int)$order['id_currency']);
+        $order['total_products_wt'] = Tools::displayPrice($order['total_products_wt'], (int)$order['id_currency']);
+        $order['total_discounts'] = ($order['total_discounts'] > 0) ? Tools::displayPrice($order['total_discounts'], (int)$order['id_currency']) : 0;
+        $order['total_shipping'] = ($order['total_shipping'] > 0) ? Tools::displayPrice($order['total_shipping'], (int)$order['id_currency']) : $this->l('Free !');
+        $order['total_wrapping'] = ($order['total_wrapping'] > 0) ? Tools::displayPrice($order['total_wrapping'], (int)$order['id_currency']) : 0;
+        $order['total_paid'] = Tools::displayPrice($order['total_paid'], (int)$order['id_currency']);
 
         return $order;
     }
@@ -202,7 +201,6 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarProducts($order_object)
     {
         $products = [];
-        $pricePresenter = new Adapter_PricePresenter();
         $customer = new Customer($order_object->id_customer);
         $include_taxes = (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC);
         $order_products = $order_object->getProducts();
@@ -211,8 +209,8 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
         foreach ($order_products as $id_order_product => $order_product) {
             if (!isset($order_product['deleted'])) {
                 $products[$id_order_product] = $order_product;
-                $products[$id_order_product]['unit_price'] = $pricePresenter->convertAndFormat($include_taxes ? $order_product['unit_price_tax_incl'] : $order_product['unit_price_tax_excl']);
-                $products[$id_order_product]['total_price'] = $pricePresenter->convertAndFormat($include_taxes ? $order_product['total_price_tax_incl'] : $order_product['total_price_tax_excl']);
+                $products[$id_order_product]['unit_price'] = Tools::displayPrice(($include_taxes ? $order_product['unit_price_tax_incl'] : $order_product['unit_price_tax_excl']), (int)$order_object->id_currency);
+                $products[$id_order_product]['total_price'] = Tools::displayPrice(($include_taxes ? $order_product['total_price_tax_incl'] : $order_product['total_price_tax_excl']), (int)$order_object->id_currency);
                 $products[$id_order_product]['customizations'] = ($order_product['customizedDatas']) ? $this->getTemplateVarCustomization($order_product) : [];
             }
         }
@@ -312,7 +310,6 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
     {
         $shipping = [];
         $include_taxes = !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX');
-        $pricePresenter = new Adapter_PricePresenter();
         $order_shippings = $order_object->getShipping();
 
         foreach ($order_shippings as $id_order_shipping => $order_shipping) {
@@ -321,7 +318,7 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
                 $shipping[$id_order_shipping]['shipping_date'] = Tools::displayDate($order_shipping['date_add'], null, false);
                 $shipping[$id_order_shipping]['shipping_weight'] = ($order_shipping['weight'] > 0) ? sprintf('%.3f', $order_shipping['weight']).' '.Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shipping_cost = (!$order_object->getTaxCalculationMethod()) ? $order_shipping['shipping_cost_tax_excl'] : $order_shipping['shipping_cost_tax_incl'];
-                $shipping[$id_order_shipping]['shipping_cost'] = ($shipping_cost > 0) ? $pricePresenter->convertAndFormat($shipping_cost) : $this->l('Free !');
+                $shipping[$id_order_shipping]['shipping_cost'] = ($shipping_cost > 0) ? Tools::displayPrice($shipping_cost, (int)$order_object->id_currency) : $this->l('Free !');
 
                 $tracking_line = '-';
                 if ($order_shipping['tracking_number']) {
