@@ -30,7 +30,6 @@ function ProductTabsManager(){
 	this.product_tabs = [];
 	this.tabs_to_preload = [];
 	this.current_request;
-	this.stack_error = [];
 	this.stack_done = [];
 	this.page_reloading = false;
 	this.has_error_loading_tabs = false;
@@ -49,8 +48,10 @@ function ProductTabsManager(){
 	 */
 	this.init = function() {
 		for (var tab_name in this.product_tabs) {
-			if (this.product_tabs[tab_name].onReady !== undefined && this.product_tabs[tab_name] !== this.product_tabs['Pack'] )
+			if (this.product_tabs[tab_name].onReady !== undefined && this.product_tabs[tab_name] !== this.product_tabs['Pack'])
+			{
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
+			}
 		}
 
 		$('.shopList.chzn-done').on('change', function(){
@@ -162,7 +163,7 @@ function ProductTabsManager(){
 	 * @param array stack contains tab names as strings
 	 */
 	this.displayBulk = function(stack){
-		this.current_request = 	this.display(stack[0], false);
+		this.current_request = this.display(stack[0], false);
 
 		if (this.current_request !== undefined)
 		{
@@ -193,14 +194,13 @@ function ProductTabsManager(){
 						clearTimeout(tabs_running_timeout);
 						return false;
 					}
-				}
 				return true;
 			});
 		}
 		/*In order to prevent mod_evasive DOSPageInterval (Default 1s)*/
 		var time = 0;
 		if (mod_evasive) {
-			time = 10000;
+			time = 1000;
 		}
 		var tabs_running_timeout = setTimeout(function(){
 			stack.shift();
@@ -1441,10 +1441,10 @@ product_tabs['Quantities'] = new function(){
 				showSuccessMessage(quantities_ajax_success);
 			},
 			error: function(jqXHR, textStatus, errorThrown)
-  			{
+			{
 				if (textStatus != 'error' || errorThrown != '')
 					showErrorMessage(textStatus + ': ' + errorThrown);
-  			}
+			}
 		});
 	};
 
