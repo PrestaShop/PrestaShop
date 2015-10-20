@@ -7,6 +7,10 @@ _admin_category_routing:
     resource: "admin/routing_category.yml"
     prefix: /category
 
+_admin_feature_routing:
+    resource: "admin/routing_feature.yml"
+    prefix: /feature
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}

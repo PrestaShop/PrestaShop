@@ -42,6 +42,9 @@ services:
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
+    prestashop.adapter.data_provider.feature:
+        class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
+
 
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:

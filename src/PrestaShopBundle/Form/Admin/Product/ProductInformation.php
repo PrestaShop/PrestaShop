@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\DropFilesType;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
+use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 
 /**
  * This form class is risponsible to generate the basic product informations form
@@ -153,6 +154,14 @@ class ProductInformation extends AbstractType
             ),
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+        ))
+
+        //FEATURES & ATTRIBUTES
+        ->add('features', 'collection', array(
+            'type' => new ProductFeature($this->container),
+            'prototype' => true,
+            'allow_add' => true,
+            'allow_delete' => true
         ))
 
         //RIGHT COL
