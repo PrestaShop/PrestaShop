@@ -67,7 +67,7 @@ class HistoryControllerCore extends FrontController
                 $orders[$customer_order['id_order']]['virtual'] = $myOrder->isVirtual(false);
                 $orders[$customer_order['id_order']]['reference'] = Order::getUniqReferenceOf($customer_order['id_order']);
                 $orders[$customer_order['id_order']]['order_date'] = Tools::displayDate($customer_order['date_add'], null, false);
-                $orders[$customer_order['id_order']]['total_price'] = Tools::displayPrice($customer_order['total_paid']);
+                $orders[$customer_order['id_order']]['total_price'] = Tools::displayPrice($customer_order['total_paid'], (int)$customer_order['id_currency']);
                 $orders[$customer_order['id_order']]['contrast'] = (Tools::getBrightness($customer_order['order_state_color']) > 128) ? 'dark' : 'bright';
                 $orders[$customer_order['id_order']]['url_to_invoice'] = HistoryController::getUrlToInvoice($myOrder, $this->context);
                 $orders[$customer_order['id_order']]['url_details'] = $this->context->link->getPageLink('order-detail', true, null, 'id_order='.(int)$customer_order['id_order']);
