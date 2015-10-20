@@ -129,7 +129,8 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
 
                     $this->success[] = $this->l('Message successfully sent');
                 } else {
-                    $this->errors[] = $this->l('Order not found');
+                    $this->redirect_after = '404';
+                    $this->redirect();
                 }
             }
         }
@@ -144,7 +145,8 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
         parent::initContent();
 
         if (!($id_order = (int)Tools::getValue('id_order')) || !Validate::isUnsignedId($id_order)) {
-            $this->errors[] = $this->l('Order ID required');
+            $this->redirect_after = '404';
+            $this->redirect();
         } else {
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
@@ -167,7 +169,8 @@ class OrderDetailControllerCore extends ProductPresentingFrontControllerCore
                     'use_tax' => Configuration::get('PS_TAX'),
                 ]);
             } else {
-                $this->errors[] = $this->l('This order cannot be found.');
+                $this->redirect_after = '404';
+                $this->redirect();
             }
             unset($order);
         }
