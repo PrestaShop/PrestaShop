@@ -32,7 +32,7 @@
             </td>
             <td>
               {if $order.url_to_invoice}
-                <a href="{$order.url_to_invoice}" title="{l s='Invoice'}">{l s='PDF'}</a>
+                <a href="{$order.url_to_invoice}">{l s='PDF'}</a>
               {else}
                 -
               {/if}
@@ -44,7 +44,7 @@
                 </span>
               </a>
               {if $order.url_to_reorder}
-                <a href="{$order.url_to_reorder}" title="{l s='Reorder'}">{l s='Reorder'}</a>
+                <a href="{$order.url_to_reorder}">{l s='Reorder'}</a>
               {/if}
             </td>
           </tr>
