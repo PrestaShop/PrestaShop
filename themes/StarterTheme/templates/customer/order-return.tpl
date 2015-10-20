@@ -67,8 +67,7 @@
     </section>
   {/if}
 
-  <ul>
-    <li><a href="{$urls.pages.my_account}">{l s='Back to your account'}</a></li>
-    <li><a href="{$urls.pages.index}">{l s='Home'}</a></li>
-  </ul>
+  {block name="my_account_links"}
+    {include file="customer/_partials/my-account-links.tpl"}
+  {/block}
 {/block}
