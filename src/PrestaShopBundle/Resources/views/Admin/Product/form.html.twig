@@ -66,11 +66,13 @@
                                 {{ form_errors(form.step1.id_category_default) }}
                                 {{ form_widget(form.step1.id_category_default) }}
                                 <hr/>
-                                <h4>{{ trans("Add a new category") }}</h4>
-                                {{ form_errors(form.step1.new_category) }}
-                                {{ form_widget(form.step1.new_category.name) }}
-                                {{ form_widget(form.step1.new_category.id_parent) }}
-                                {{ form_widget(form.step1.new_category.save) }}
+                                <div id="form_step1_new_category" data-action="{{ form.step1.new_category.vars.attr["data-action"] }}">
+                                    <h4>{{ trans("Add a new category") }}</h4>
+                                    {{ form_errors(form.step1.new_category) }}
+                                    {{ form_widget(form.step1.new_category.name) }}
+                                    {{ form_widget(form.step1.new_category.id_parent) }}
+                                    {{ form_widget(form.step1.new_category.save) }}
+                                </div>
                             </div>
                         </div>
                         <div class="panel">
