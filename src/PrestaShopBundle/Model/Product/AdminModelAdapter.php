@@ -65,7 +65,7 @@ class AdminModelAdapter
         $this->translatableKeys = array('name', 'description', 'description_short', 'link_rewrite');
 
         //define unused key for manual binding
-        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'options', 'features');
+        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'display_options', 'features');
     }
 
     /**
@@ -122,9 +122,9 @@ class AdminModelAdapter
         }
         $form_data['supplier_loaded'] = 1;
 
-        //map options
-        foreach ($form_data['options'] as $option => $value) {
-            $from_data[$option] = $value;
+        //map display options
+        foreach ($form_data['display_options'] as $option => $value) {
+            $form_data[$option] = $value;
         }
 
         //if empty, set link_rewrite for default locale
@@ -185,10 +185,6 @@ class AdminModelAdapter
                 'type_product' => 0,
                 'condition' => 'new',
                 'active' => 0,
-                'options' => [
-                    'available_for_order' => true,
-                    'show_price' => true,
-                ],
                 'categories' => ['tree' => [$this->contextShop->shop->id_category]]
             ],
             'step2' => [
@@ -196,7 +192,11 @@ class AdminModelAdapter
                 'price' => 0,
             ],
             'step6' => [
-                'visibility' => 'both'
+                'visibility' => 'both',
+                'display_options' => [
+                    'available_for_order' => true,
+                    'show_price' => true,
+                ],
             ]
         ];
 
@@ -218,11 +218,6 @@ class AdminModelAdapter
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
                 'active' => $this->product->active,
-                'options' => [
-                    'available_for_order' => (bool) $this->product->available_for_order,
-                    'show_price' => (bool) $this->product->show_price,
-                    'online_only' => (bool) $this->product->online_only,
-                ],
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
                 'id_manufacturer' => $this->product->id_manufacturer,
@@ -252,6 +247,11 @@ class AdminModelAdapter
             ],
             'step6' => [
                 'visibility' => $this->product->visibility,
+                'display_options' => [
+                    'available_for_order' => (bool) $this->product->available_for_order,
+                    'show_price' => (bool) $this->product->show_price,
+                    'online_only' => (bool) $this->product->online_only,
+                ],
                 'suppliers' => array_map(
                     function ($s) {
                         return($s->id_supplier);

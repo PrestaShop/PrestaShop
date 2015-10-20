@@ -88,6 +88,21 @@ class ProductOptions extends AbstractType
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'AdminProducts'),
         ))
+        ->add(
+            $builder->create('display_options', 'form', array('required' => false, 'label' => $this->translator->trans('Display options', [], 'AdminProducts')))
+                ->add('available_for_order', 'checkbox', array(
+                    'label'    => $this->translator->trans('Available for order', [], 'AdminProducts'),
+                    'required' => false,
+                ))
+                ->add('show_price', 'checkbox', array(
+                    'label'    => $this->translator->trans('Show price', [], 'AdminProducts'),
+                    'required' => false,
+                ))
+                ->add('online_only', 'checkbox', array(
+                    'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),
+                    'required' => false,
+                ))
+        )
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,
             'expanded' =>  true,
