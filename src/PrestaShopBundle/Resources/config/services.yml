@@ -60,6 +60,6 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context"]
+        arguments: ["@prestashop.adapter.legacy.context", "@kernel"]
         tags:
             - { name: twig.extension }
