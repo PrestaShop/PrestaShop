@@ -10,14 +10,14 @@
     <div id="order-infos">
       <p>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</p>
       {if $order.data.url_to_reorder}
-        <a href="{$order.data.url_to_reorder}" title="{l s='Reorder'}">{l s='Reorder'}</a>
+        <a href="{$order.data.url_to_reorder}">{l s='Reorder'}</a>
       {/if}
 
       <p>{l s='Carrier'} {$order.carrier.name}</p>
       <p>{l s='Payment method'} {$order.data.payment}</p>
 
       {if $order.data.url_to_invoice}
-        <p><a href="{$order.data.url_to_invoice}" title="{l s='Invoice'}">{l s='Download your invoice as a PDF file.'}</a></p>
+        <p><a href="{$order.data.url_to_invoice}">{l s='Download your invoice as a PDF file.'}</a></p>
       {/if}
 
       {if $order.data.recyclable}
