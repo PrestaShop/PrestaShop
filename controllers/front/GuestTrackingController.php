@@ -136,7 +136,7 @@ class GuestTrackingControllerCore extends OrderDetailController
             $this->order_to_display['data']['followup'] = str_replace('@', $order->shipping_number, $this->order_to_display['carrier']['url']);
         }
 
-        $this->order_to_display['customer'] = $this->objectSerializer->toArray(new Customer($order->id_customer));
+        $this->order_to_display['customer'] = $this->getTemplateVarCustomer(new Customer($order->id_customer));
 
         $this->context->smarty->assign([
             'order' => $this->order_to_display,
