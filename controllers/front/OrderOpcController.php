@@ -282,6 +282,23 @@ class OrderOpcControllerCore extends FrontController
     {
         parent::initContent();
 
+        if (Tools::isSubmit('submitReorder') && $id_order = (int)Tools::getValue('id_order')) {
+            $oldCart = new Cart(Order::getCartIdStatic($id_order, $this->context->customer->id));
+            $duplication = $oldCart->duplicate();
+            if (!$duplication || !Validate::isLoadedObject($duplication['cart'])) {
+                $this->errors[] = $this->l('Sorry. We cannot renew your order.');
+            } elseif (!$duplication['success']) {
+                $this->errors[] = $this->l('Some items are no longer available, and we are unable to renew your order.');
+            } else {
+                $this->context->cookie->id_cart = $duplication['cart']->id;
+                $context = $this->context;
+                $context->cart = $duplication['cart'];
+                CartRule::autoAddToCart($context);
+                $this->context->cookie->write();
+                Tools::redirect('index.php?controller=order-opc');
+            }
+        }
+
         $this->advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
         $this->context->smarty->assign([

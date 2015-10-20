@@ -51,13 +51,14 @@ class PDFCore
     {
         $this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
         $this->template = $template;
-        $this->smarty = $smarty;
+        $this->smarty = $smarty->createData($smarty);
+        $this->smarty->escape_html = false;
 
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
             $this->objects = array($objects);
         }
-        
+
         if (count($this->objects)>1) { // when bulk mode only
             $this->send_bulk_flag = true;
         }
