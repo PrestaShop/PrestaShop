@@ -123,28 +123,25 @@ class GuestTrackingControllerCore extends OrderDetailController
             $this->info[] = $this->l('You cannot return merchandise with a guest account');
         }
 
-        $carrier = $this->getTemplateVarCarrier($order);
+        $this->order_to_display['data'] = $this->getTemplateVarOrder($order);
+        $this->order_to_display['products'] = $this->getTemplateVarProducts($order);
+        $this->order_to_display['history'] = $this->getTemplateVarOrderHistory($order);
+        $this->order_to_display['addresses'] = $this->getTemplateVarAddresses($order);
+        $this->order_to_display['shipping'] = $this->getTemplateVarShipping($order);
+        $this->order_to_display['messages'] = $this->getTemplateVarMessages($order);
+        $this->order_to_display['carrier'] = $this->getTemplateVarCarrier($order);
 
-        $followup = '';
-        if ($carrier['url'] && $order->shipping_number) {
-            $followup = str_replace('@', $order->shipping_number, $carrier->url);
+        $this->order_to_display['data']['followup'] = '';
+        if ($this->order_to_display['carrier']['url'] && $order->shipping_number) {
+            $this->order_to_display['data']['followup'] = str_replace('@', $order->shipping_number, $this->order_to_display['carrier']['url']);
         }
 
+        $this->order_to_display['customer'] = $this->objectSerializer->toArray(new Customer($order->id_customer));
+
         $this->context->smarty->assign([
-            'order' => $this->getTemplateVarOrder($order),
-            'customer' => $this->objectSerializer->toArray(new Customer($order->id_customer)),
-            'products' => $this->getTemplateVarProducts($order),
-            'order_history' => $this->getTemplateVarOrderHistory($order),
-            'addresses' => $this->getTemplateVarAddresses($order),
-            'shipping' => $this->getTemplateVarShipping($order),
-            'carrier' => $carrier,
-            'return_allowed' => (int)$order->isReturnable(),
-            'followup' => $followup,
-            'messages' => $this->getTemplateVarMessages($order),
+            'order' => $this->order_to_display,
             'hook_orderdetaildisplayed' => Hook::exec('displayOrderDetail', ['order' => $order]),
             'use_tax' => Configuration::get('PS_TAX'),
         ]);
-
-        unset($carrier);
     }
 }
