@@ -1,4 +1,4 @@
-{if $messages}
+{if $order.messages}
   <h3>{l s='Messages'}</h3>
   <table>
     <thead>
@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-    {foreach from=$messages item=message}
+    {foreach from=$order.messages item=message}
       <tr>
         <td>
           {$message.name}<br>
@@ -35,7 +35,7 @@
         <span>{l s='Product'}</span>
         <select name="id_product">
           <option value="0">{l s='-- Choose --'}</option>
-          {foreach from=$products item=product}
+          {foreach from=$order.products item=product}
             <option value="{$product.product_id}">{$product.product_name}</option>
           {/foreach}
         </select>
@@ -48,7 +48,7 @@
     </section>
 
     <footer class="form-footer">
-      <input type="hidden" name="id_order" value="{$order.id}" />
+      <input type="hidden" name="id_order" value="{$order.data.id}" />
       <button type="submit" name="submitMessage">
         {l s='Send'}
       </button>

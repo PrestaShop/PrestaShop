@@ -8,25 +8,25 @@
 
   {block name="order_infos"}
     <div id="order-infos">
-      <p>{l s='Order Reference %s - placed on %s' sprintf=[$order.reference, $order.order_date]}</p>
-      {if $order.url_to_reorder}
-        <a href="{$order.url_to_reorder}" title="{l s='Reorder'}">{l s='Reorder'}</a>
+      <p>{l s='Order Reference %s - placed on %s' sprintf=[$order.data.reference, $order.data.order_date]}</p>
+      {if $order.data.url_to_reorder}
+        <a href="{$order.data.url_to_reorder}" title="{l s='Reorder'}">{l s='Reorder'}</a>
       {/if}
 
-      <p>{l s='Carrier'} {$carrier.name}</p>
-      <p>{l s='Payment method'} {$order.payment}</p>
+      <p>{l s='Carrier'} {$order.carrier.name}</p>
+      <p>{l s='Payment method'} {$order.data.payment}</p>
 
-      {if $order.url_to_invoice}
-        <p><a href="{$order.url_to_invoice}" title="{l s='Invoice'}">{l s='Download your invoice as a PDF file.'}</a></p>
+      {if $order.data.url_to_invoice}
+        <p><a href="{$order.data.url_to_invoice}" title="{l s='Invoice'}">{l s='Download your invoice as a PDF file.'}</a></p>
       {/if}
 
-      {if $order.recyclable}
+      {if $order.data.recyclable}
         <p>{l s='You have given permission to receive your order in recycled packaging.'}</p>
       {/if}
 
-      {if $order.gift}
+      {if $order.data.gift}
         <p>{l s='You have requested gift wrapping for this order.'}</p>
-        <p>{l s='Message'} {$order.gift_message nofilter}</p>
+        <p>{l s='Message'} {$order.data.gift_message nofilter}</p>
       {/if}
     </div>
   {/block}
@@ -42,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          {foreach from=$order_history item=state}
+          {foreach from=$order.history item=state}
             <tr>
               <td>{$state.history_date}</td>
               <td><span class="order-status-label {$state.contrast}" style="background-color:{$state.color}">{$state.ostate_name}</span></td>
@@ -53,35 +53,35 @@
     </section>
   {/block}
 
-  {if $followup}
+  {if $order.data.followup}
     <p>{l s='Click the following link to track the delivery of your order'}</p>
-    <a href="{$followup}">{$followup}</a>
+    <a href="{$order.data.followup}">{$order.data.followup}</a>
   {/if}
 
   {block name="addresses"}
-    {if $addresses.delivery}
-      <article id="address-{$addresses.delivery.id}" class="address">
+    {if $order.addresses.delivery}
+      <article id="address-{$order.addresses.delivery.id}" class="address">
         <header>
-          <h1 class="h4">{l s='Delivery address %s' sprintf=$addresses.delivery.alias}</h1>
+          <h1 class="h4">{l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}</h1>
         </header>
 
-        <p>{$addresses.delivery.formatted nofilter}</p>
+        <p>{$order.addresses.delivery.formatted nofilter}</p>
       </article>
     {/if}
 
-    <article id="address-{$addresses.invoice.id}" class="address">
+    <article id="address-{$order.addresses.invoice.id}" class="address">
       <header>
-        <h1 class="h4">{l s='Invoice address %s' sprintf=$addresses.invoice.alias}</h1>
+        <h1 class="h4">{l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}</h1>
       </header>
 
-      <p>{$addresses.invoice.formatted nofilter}</p>
+      <p>{$order.addresses.invoice.formatted nofilter}</p>
     </article>
   {/block}
 
   {$hook_orderdetaildisplayed}
 
   {block name="order_detail"}
-    {if $return_allowed}
+    {if $order.data.return_allowed}
       {include file='customer/_partials/order-detail-return.tpl'}
     {else}
       {include file='customer/_partials/order-detail-no-return.tpl'}
@@ -89,7 +89,7 @@
   {/block}
 
   {block name="order_carriers"}
-    {if $shipping}
+    {if $order.shipping}
       <table>
         <thead>
           <tr>
@@ -101,7 +101,7 @@
           </tr>
         </thead>
         <tbody>
-          {foreach from=$shipping item=line}
+          {foreach from=$order.shipping item=line}
             <tr>
               <td>{$line.shipping_date}</td>
               <td>{$line.carrier_name}</td>
