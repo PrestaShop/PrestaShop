@@ -47,6 +47,14 @@
                     <div class="col-lg-3">
                         <div class="panel">
                             {{ form_row(form.step1.active) }}
+                            <hr/>
+                            <div class="form-group">
+                                {{ form_errors(form.step1.price_shortcut) }}
+                                <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price") }}</label>
+                                <div class="col-xs-6 pull-right">
+                                    {{ form_widget(form.step1.price_shortcut) }}
+                                </div>
+                            </div>
                         </div>
                         <div class="panel">
                             <div class="panel-heading">{{ trans("Categories") }}</div>

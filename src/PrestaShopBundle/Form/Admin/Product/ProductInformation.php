@@ -172,6 +172,14 @@ class ProductInformation extends AbstractType
             'required' => true,
             'multiple' => false,
         ))
+        ->add('price_shortcut', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(
             'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
         ))

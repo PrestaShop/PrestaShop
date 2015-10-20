@@ -185,6 +185,7 @@ class AdminModelAdapter
                 'type_product' => 0,
                 'condition' => 'new',
                 'active' => 0,
+                'price_shortcut' => 0,
                 'categories' => ['tree' => [$this->contextShop->shop->id_category]]
             ],
             'step2' => [
@@ -218,6 +219,7 @@ class AdminModelAdapter
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
                 'active' => $this->product->active,
+                'price_shortcut' => $this->product->price,
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
                 'id_manufacturer' => $this->product->id_manufacturer,
