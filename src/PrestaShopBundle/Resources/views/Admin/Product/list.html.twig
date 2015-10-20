@@ -1,4 +1,4 @@
-<tbody>
+<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}>
     {% for product in products %}
         <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
             <td class="checkbox-column">
@@ -32,11 +32,13 @@
                 {{ product.active|default(0) }}
             </td>
             {% if product.position is defined %}
-                <td>
+                <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
                     {% if activate_drag_and_drop %}
-                        TODO: MOVE!&nbsp;
+                        <big><big>⇅</big></big>
                     {% endif %}
-                    {{ product.position }}
+                    <span class="position">{{ product.position }}</span>
+                    <input type="hidden" name="mass_edit_action_sorted_products[]" value="{{ product.id_product }}" />
+                    <input type="hidden" name="mass_edit_action_sorted_positions[]" value="{{ product.position }}" />
                 </td>
             {% endif %}
             <td>

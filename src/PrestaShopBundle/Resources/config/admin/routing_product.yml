@@ -5,12 +5,12 @@ admin_product_catalog:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         _legacy_controller: AdminProducts
-        limit: 10
+        limit: 20
         offset: 0
         orderBy: id_product
         sortOrder: asc
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
         sortOrder: asc|desc
 
 admin_product_list:
@@ -18,12 +18,12 @@ admin_product_list:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
-        limit: 10
+        limit: 20
         offset: 0
         orderBy: id_product
         sortOrder: asc
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
         sortOrder: asc|desc
 
 admin_product_form:
@@ -62,3 +62,11 @@ admin_product_unit_action:
     requirements:
         action: delete|duplicate
         id: \d+
+
+admin_product_mass_edit_action:
+    path:     /massedit/{action}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::massEditAction
+    requirements:
+        action: sort

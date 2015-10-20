@@ -151,4 +151,82 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('An error occurred while creating an object.', 5009);
         }
     }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::sortProductIdList()
+     */
+    public function sortProductIdList(array $productList, $filterParams)
+    {
+        if (count($productList) < 2) {
+            return false;
+        }
+
+        $filterParams = array_diff($filterParams, array('')); // removes empty filters for the test
+        if (count($filterParams) !== 1 || !isset($filterParams['filter_category'])) {
+            dump($filterParams);
+            die;
+            throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
+        }
+        $categoryId = $filterParams['filter_category'];
+
+        /* Sorting items on one page only, with ONE SQL UPDATE query,
+         * then fixing bugs (duplicates and 0 values) on next pages with more queries, if needed.
+         *
+         * Most complicated case example:
+         * We have to sort items from offset 5, limit 5, on total object count: 14
+         * The previous AND the next pages MUST NOT be impacted but fixed if needed.
+         * legend:  #<id>|P<position>
+         *
+         * Before sort:
+         * #1|P2 #2|P4 #3|P5 #7|P8 #6|P9   #5|P10 #8|P11 #10|P13 #12|P14 #11|P15   #9|P16 #12|P18 #14|P19 #22|P24
+         * (there is holes in positions)
+         *
+         * Sort request:
+         *                                 #5|P?? #10|P?? #12|P?? #8|P?? #11|P??
+         *
+         * After sort:
+         * (previous page unchanged)       (page to sort: sort and no duplicates) (the next pages MUST be shifted to avoid duplicates if any)
+         *
+         * Request input:
+         *                               [#5]P10 [#10]P13 [#12]P14 [#8]P11 [#11]P15
+         */
+        $maxPosition = max(array_values($productList));
+        $sortedPositions = array_values($productList);
+        sort($sortedPositions); // new positions to update
+
+        // avoid '0', starts with '1', so shift right (+1)
+        if ($sortedPositions[1] === 0) {
+            foreach ($sortedPositions as $k => $v) {
+                $sortedPositions[$k] = $v+1;
+            }
+        }
+
+        // combine old positions with new position in an array
+        $combinedOldNewPositions = array_combine(array_values($productList), $sortedPositions);
+        ksort($combinedOldNewPositions); // (keys: old positions starting at '1', values: new positions)
+        $positionsMatcher = array_replace(array_pad(array(), $maxPosition, 0), $combinedOldNewPositions); // pad holes with 0
+        array_shift($positionsMatcher);// shift because [0] is not used in MySQL FIELD()
+        $fields = implode(',', $positionsMatcher);
+
+        // update current pages.
+        $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
+            INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
+            '.\Shop::addSqlAssociation('product', 'p').'
+            SET cp.`position` = FIELD(cp.`position`, '.$fields.'),
+                p.`date_upd` = "'.date('Y-m-d H:i:s').'",
+                product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
+            WHERE cp.`id_category` = '.$categoryId.' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
+        
+        $res = \Db::getInstance()->query($updatePositions);
+
+        // Fixes duplicates on all pages
+        \Db::getInstance()->query('SET @i := 0');
+        $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
+            SET cp.`position` = (SELECT @i := @i + 1)
+            WHERE cp.`id_category` = '.$categoryId.'
+            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_keys($productList)).'), cp.`position` ASC';
+        $res = \Db::getInstance()->query($selectPositions);
+
+        return true;
+    }
 }

@@ -14,7 +14,7 @@ admin_common_pagination:
     defaults: 
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
-        limit: 10
+        limit: 20
         total: 0
     requirements:
         offset: \d+

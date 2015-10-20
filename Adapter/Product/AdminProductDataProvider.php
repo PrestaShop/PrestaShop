@@ -156,6 +156,16 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $filterParams = $this->combinePersistentCatalogProductFilter($post);
         $showPositionColumn = $this->isCategoryFiltered();
+        if ($orderBy == 'position_ordering' && $showPositionColumn) {
+            foreach ($filterParams as $key => $param) {
+                if (strpos($key, 'filter_column_') === 0) {
+                    $filterParams[$key] = '';
+                }
+            }
+        }
+        if ($orderBy == 'position_ordering') {
+            $orderBy = 'position';
+        }
 
         $idShop = \Context::getContext()->shop->id;
         $idLang = \Context::getContext()->language->id;
@@ -236,15 +246,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 } else {
                     $sqlWhere[] = '('.sprintf($sqlSelect[$field]['filtering'], $filterValue).')';
                 }
-            } else {
-                if ($filterParam == 'filter_category') {
-                    $sqlWhere[] = array(
-                        'AND',
-                        'c.`nleft` >= (SELECT `nleft` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.$filterValue.')',
-                        'c.`nright` <= (SELECT `nright` FROM `'._DB_PREFIX_.'category` WHERE `id_category` = '.$filterValue.')'
-                    );
-                }
             }
+            // for 'filter_category', see next if($showPositionColumn) block.
         }
 
         $sqlOrder = array($orderBy.' '.$sortOrder);

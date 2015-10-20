@@ -2,11 +2,20 @@
 
 {% block javascripts %}
     {{ parent() }}
-	{% javascripts
-		'@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
-	    '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js' %}
+    {% javascripts
+        '@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
+        '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
+        '../js/jquery/ui/jquery.ui.sortable.min.js'
+        '../js/vendor/node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
@@ -20,12 +29,14 @@
         <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
             onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'))"
             class="pull-right btn" />
-        #### {$categories}
+        <div class="form-wrapper">
+            {{ form_widget(categories) }}
+        </div>
     </div>
     
     <div class="panel col-lg-12">
         <div class="panel-heading">
-            {{ "Products"|trans }} {% if has_filter == true %} {{ "(filtered)"|trans }} {% endif %}
+            {{ "Products"|trans }} {% if has_category_filter == true and activate_drag_and_drop == true %} {{ "(ordering)"|trans }} {%else%} {% if has_filter == true %} {{ "(filtered)"|trans }} {% endif %} {% endif %}
             <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
         </div>
     
@@ -131,7 +142,7 @@
                         {% if has_category_filter == true %}
                             <td>
                                 {% if not(activate_drag_and_drop) %}
-                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderTable('position', 'asc');" />
+                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderPrioritiesTable();" />
                                 {% endif %}
                             </td>
                         {% endif %}
@@ -150,7 +161,7 @@
             </table>
             
             <div class="row">
-                <div class="pull-left" bulkurl="{{ bulk_url }}" redirecturl="{{ bulk_redirect_url }}">
+                <div class="pull-left" bulkurl="{{ bulk_url }}" massediturl="{{ mass_edit_url }}" redirecturl="{{ bulk_redirect_url }}" redirecturlnextpage="{{ bulk_redirect_url_next_page }}">
                 
                     {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
                         'div_style': "btn-group dropup",
@@ -193,8 +204,8 @@
                         
                     <div style="display: inline; margin-left: 2em;">
                         <span id="bulk_edition_toolbar" style="display: none;">
-                            <input type="button" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans|raw }}" />
-                            <input type="submit" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans|raw }}" />
+                            <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans|raw }}" />
+                            <input type="submit" id="bulk_edition_save_next" class="btn btn-primary" onclick="return bulkProductAction(this, 'edition_next');" value="{{ "Save & next page"|trans|raw }}" />
                             <input type="button" class="btn btn-warning" onclick="bulkProductEdition(this, 'cancel');" value="{{ "Cancel"|trans }}" />
                         </span>
                     </div>

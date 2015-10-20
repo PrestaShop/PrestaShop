@@ -37,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\DataUpdateException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -120,8 +121,17 @@ class ProductController extends FrameworkBundleAdminController
             'bulk_url' => $this->generateUrl('admin_product_bulk_action', array(
                 'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
             )),
+            'mass_edit_url' => $this->generateUrl('admin_product_mass_edit_action', array(
+                'action' => 'sort' // will be replaced by JS. Must be non default value (see routes YML file)
+            )),
             'bulk_redirect_url' => $actionRedirectionUrl,
-            'unit_redirect_url' => $actionRedirectionUrl
+            'unit_redirect_url' => $actionRedirectionUrl,
+            'bulk_redirect_url_next_page' => $this->generateUrl('admin_product_catalog', array(
+                'limit' => $request->attributes->get('limit'),
+                'offset' => $request->attributes->get('offset') + $request->attributes->get('limit'),
+                'orderBy' => $request->attributes->get('orderBy'),
+                'sortOrder' => $request->attributes->get('sortOrder')
+            )),
         );
 
         // Add layout top-right menu actions
@@ -158,7 +168,21 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
 
             // Category tree
-// TODO !1: continue: needs category tree form helper
+                $categories = $this->createForm(
+                    new ChoiceCategoriesTreeType('categories', $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(), array(), false)
+                );
+            if (!empty($persistedFilterParameters['filter_category'])) {
+                $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+            }
+        }
+
+        // when position_ordering, ignore all filters except filter_category
+        if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
+            foreach ($persistedFilterParameters as $key => $param) {
+                if (strpos($key, 'filter_column_') === 0) {
+                    $persistedFilterParameters[$key] = '';
+                }
+            }
         }
 
         // Template vars injection
@@ -176,9 +200,10 @@ class ProductController extends FrameworkBundleAdminController
                 'products' => $products,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
-                'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
+                'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
                 'pagination_parameters' => $paginationParameters,
-                'layoutHeaderToolbarBtn' => $toolbarButtons
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'categories' => $categories->createView()
             )
         );
     }
@@ -200,16 +225,17 @@ class ProductController extends FrameworkBundleAdminController
     {
         $totalCount = 0;
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
         if ($products === null) {
-            $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-            /* @var $productProvider ProductInterfaceProvider */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
         }
+        $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
             $totalCount = isset($product['total'])? $product['total'] : $totalCount;
-            $product['url'] = $this->generateUrl('admin_product_form', array('id_product' => $product['id_product']));
+            $product['url'] = $this->generateUrl('admin_product_form', array('id' => $product['id_product']));
             $product['unit_action_url'] = $this->generateUrl(
                 'admin_product_unit_action',
                 array('action' => 'duplicate', 'id' => $product['id_product'])
@@ -218,7 +244,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Template vars injection
         return array(
-            'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
+            'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
             'product_count' => $totalCount
         );
@@ -287,6 +313,14 @@ class ProductController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Do bulk action on a list of Products. Used with the 'selection action' dropdown menu on the Catalog page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected products
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
     public function bulkAction(Request $request, $action)
     {
         $productIdList = $request->request->get('bulk_action_selected_products');
@@ -321,6 +355,51 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($request->request->get('redirect_url'), 302);
     }
 
+    /**
+     * Do mass edit action on the current page of products. Used with the 'grouped action' dropdown menu on the Catalog page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected products
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
+    public function massEditAction(Request $request, $action)
+    {
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
+        $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
+        /* @var $productUpdater ProductInterfaceUpdater */
+        $translator = $this->container->get('prestashop.adapter.translator');
+        /* @var $translator TranslatorInterface */
+
+        try {
+            switch ($action) {
+                case 'sort':
+                    $productIdList = $request->request->get('mass_edit_action_sorted_products');
+                    $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
+                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
+                    $this->addFlash('success', $translator->trans('Products successfully sorted.'));
+                    break;
+                default:
+                    // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    throw new \Exception('Bad action received from call to ProductController::massEditAction: "'.$action.'"', 2001);
+            }
+        } catch (DataUpdateException $due) {
+            $this->addFlash('failure', $translator->trans($due->getMessage()));
+        }
+
+        // redirect after success
+        return $this->redirect($request->request->get('redirect_url'), 302);
+    }
+
+    /**
+     * Do action on one product at a time. Can be used at many places in the controller's page.
+     *
+     * @param Request $request
+     * @param string $action The action to apply on the selected product
+     * @throws \Exception If action not properly set or unknown.
+     * @return redirection
+     */
     public function unitAction(Request $request, $action, $id)
     {
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
@@ -362,6 +441,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param boolean $use True to use legacy version. False for refactored page.
+     * @return redirection
      */
     public function shouldUseLegacyPagesAction(Request $request, $use)
     {

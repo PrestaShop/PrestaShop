@@ -69,4 +69,17 @@ interface ProductInterface
      * @return integer The new product ID (duplicate)
      */
     public function duplicateProduct($productId);
+
+    /**
+     * Do a sort on a page of products
+     *
+     * Since the sort can be partial (only one page, with offset and limit), we MUST sort only the given IDs,
+     * and keep the others safely sorted without any functional change (even if we can bulk shift positions to fix gaps and duplicates).
+     *
+     * @param array $productList The list of products to sort (keys: ID, values: old positions) The natural order of the array is the new order to update.
+     * @param array $filterParams Contains the ID of the category to sort. Take it from AdminProductDataProvider::getPersistedFilterParameters().
+     * @throws DataUpdateException If deletion failed (some normal cases can brings this, it's not a Development error)
+     * @return boolean True when succeed.
+     */
+    public function sortProductIdList(array $productList, $filterParams);
 }
