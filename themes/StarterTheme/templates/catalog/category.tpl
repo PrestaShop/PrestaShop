@@ -1,7 +1,7 @@
 {extends $layout}
 
 {block name="content"}
-  <header id="main">
+  <section id="main">
 
     {block name="category_header"}
       <h1>{$category.name}</h1>
@@ -29,7 +29,7 @@
       </aside>
     {/block}
 
-  </header>
+  </section>
   {block name="category_products"}
     {if $products|count}
       <section id="products">
