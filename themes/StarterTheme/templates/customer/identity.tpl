@@ -113,7 +113,9 @@
     {/block}
 
     <footer class="form-footer">
-      <a href="{$urls.pages.my_account}">{l s='Back to my account'}</a>
+      {block name="my_account_links"}
+        {include file="customer/_partials/my-account-links.tpl"}
+      {/block}
     </footer>
 
   </section>
