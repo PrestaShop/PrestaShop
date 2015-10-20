@@ -1035,13 +1035,15 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
-    public function processFeatures()
+    public function processFeatures($id_product = null)
     {
         if (!Feature::isFeatureActive()) {
             return;
         }
 
-        if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product')))) {
+        $id_product = (int) $id_product ? $id_product : (int)Tools::getValue('id_product');
+
+        if (Validate::isLoadedObject($product = new Product($id_product))) {
             // delete all objects
             $product->deleteFeatures();
 

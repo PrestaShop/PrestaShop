@@ -161,4 +161,45 @@ $( document ).ready(function() {
 			defaultSupplierRow.hide();
 		}
 	});
+
+	//Features collection form
+	var collectionFeaturesHolder = $('ul.featureCollection');
+	var addFeatureLink = $('<a href="#" class="btn btn-primary btn-xs">+</a>');
+	var removeFeatureLink = $('<a href="#" class="delete btn btn-primary btn-xs">-</a>');
+	var newFeatureItem = $('<li class="add"></li>').append(addFeatureLink);
+
+	collectionFeaturesHolder.append(newFeatureItem);
+
+	addFeatureLink.on('click', function(e) {
+		e.preventDefault();
+		addFeature(collectionFeaturesHolder, newFeatureItem, false);
+	});
+
+	addFeature(collectionFeaturesHolder, newFeatureItem, true);
+
+	$(document).on("click", "ul.featureCollection a.delete", function(e) {
+		e.preventDefault();
+		$(this).parent().remove();
+	});
+
+	$(document).on("change", "ul.featureCollection select.feature-selector", function() {
+		var selector = $(this).parent().parent().parent().find('.feature-value-selector');
+		$.ajax({
+			url: $(this).attr('data-action')+'/'+$(this).val(),
+			success: function(response){
+				selector.empty();
+				$.each(response, function(key, val){
+					selector.append($("<option></option>").attr("value", key).text(val));
+				});
+			}
+		});
+	});
+
+	function addFeature(collectionHolder, newItem, isDefault) {
+		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+		newItem.before($('<li></li>').prepend(
+			isDefault ? '' : removeFeatureLink,
+			newForm
+		));
+	}
 });

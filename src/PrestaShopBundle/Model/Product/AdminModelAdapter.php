@@ -33,9 +33,11 @@ class AdminModelAdapter
 {
     private $context;
     private $locales;
+    private $defaultLocale;
     private $tools;
     private $productAdapter;
     private $supplierAdapter;
+    private $featureAdapter;
     private $product;
     private $translatableKeys;
     private $unmapKeys;
@@ -52,16 +54,18 @@ class AdminModelAdapter
         $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->contextShop = $this->context->getContext();
         $this->locales = $this->context->getLanguages();
+        $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $container->get('prestashop.adapter.tools');
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
+        $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
 
         //define translatable key
         $this->translatableKeys = array('name', 'description', 'description_short', 'link_rewrite');
 
         //define unused key for manual binding
-        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'options');
+        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'options', 'features');
     }
 
     /**
@@ -136,6 +140,23 @@ class AdminModelAdapter
                 $inputAccessories .= $accessoryIds[0].'-';
             }
             $form_data['inputAccessories'] = $inputAccessories;
+        }
+
+        //map features
+        if (!empty($form_data['features'])) {
+            foreach ($form_data['features'] as $dataFeature) {
+                $idFeature = $dataFeature['feature'];
+
+                //custom value is defined
+                if ($dataFeature['custom_value'][$this->defaultLocale]) {
+                    foreach ($this->locales as $locale) {
+                        $form_data['feature_'.$idFeature.'_value'] = null;
+                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
+                    }
+                } elseif ($dataFeature['value']) {
+                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
+                }
+            }
         }
 
         //map all
@@ -215,7 +236,8 @@ class AdminModelAdapter
                             array($this->locales[0]['id_lang'], $this->product->id)
                         )
                     )
-                ]
+                ],
+                'features' => $this->getFormFeatures()
             ],
             'step2' => [
                 'price' => $this->product->price,
@@ -268,5 +290,34 @@ class AdminModelAdapter
         }
 
         return $full_descriptions;
+    }
+
+    /**
+     * get form Full product Description with description short
+     *
+     * @return array features with translation
+     */
+    private function getFormFeatures()
+    {
+        $formDataFeatures = [];
+        foreach ($this->product->getFeatures() as $dataFeature) {
+            $itemForm = [
+                'feature' => $dataFeature['id_feature'],
+                'value' => $dataFeature['id_feature_value'],
+                'custom_value' => null,
+            ];
+
+            if ($dataFeature['custom'] == 1) {
+                $cusomLangs = [];
+                foreach ($this->featureAdapter->getFeatureValueLang($dataFeature['id_feature_value']) as $customValues) {
+                    $cusomLangs[$customValues['id_lang']] = $customValues['value'];
+                }
+                $itemForm['custom_value'] = $cusomLangs;
+            }
+
+            $formDataFeatures[] = $itemForm;
+        }
+
+        return $formDataFeatures;
     }
 }

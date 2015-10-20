@@ -295,6 +295,8 @@ class ProductController extends FrameworkBundleAdminController
 
                 if ($product = $adminProductController->postCoreProcess()) {
                     $adminProductController->processSuppliers($product->id);
+                    $adminProductController->processFeatures($product->id);
+
                     $response->setData(['product' => $product]);
                 }
 
