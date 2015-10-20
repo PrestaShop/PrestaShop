@@ -125,7 +125,13 @@ class ProductController extends FrameworkBundleAdminController
                 'action' => 'sort' // will be replaced by JS. Must be non default value (see routes YML file)
             )),
             'bulk_redirect_url' => $actionRedirectionUrl,
-            'unit_redirect_url' => $actionRedirectionUrl
+            'unit_redirect_url' => $actionRedirectionUrl,
+            'bulk_redirect_url_next_page' => $this->generateUrl('admin_product_catalog', array(
+                'limit' => $request->attributes->get('limit'),
+                'offset' => $request->attributes->get('offset') + $request->attributes->get('limit'),
+                'orderBy' => $request->attributes->get('orderBy'),
+                'sortOrder' => $request->attributes->get('sortOrder')
+            )),
         );
 
         // Add layout top-right menu actions
@@ -170,6 +176,15 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        // when position_ordering, ignore all filters except filter_category
+        if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
+            foreach ($persistedFilterParameters as $key => $param) {
+                if (strpos($key, 'filter_column_') === 0) {
+                    $persistedFilterParameters[$key] = '';
+                }
+            }
+        }
+
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
@@ -185,7 +200,7 @@ class ProductController extends FrameworkBundleAdminController
                 'products' => $products,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
-                'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
+                'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categories->createView()
@@ -210,11 +225,12 @@ class ProductController extends FrameworkBundleAdminController
     {
         $totalCount = 0;
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
         if ($products === null) {
-            $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-            /* @var $productProvider ProductInterfaceProvider */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
         }
+        $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Adds controller info (URLs, etc...) to product list
         foreach ($products as &$product) {
@@ -228,7 +244,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Template vars injection
         return array(
-            'activate_drag_and_drop' => ('position' == $orderBy && 'asc' == $sortOrder),
+            'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
             'product_count' => $totalCount
         );
@@ -348,6 +364,8 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function massEditAction(Request $request, $action)
     {
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
         $productUpdater = $this->container->get('prestashop.core.admin.data_updater.product_interface');
         /* @var $productUpdater ProductInterfaceUpdater */
         $translator = $this->container->get('prestashop.adapter.translator');
@@ -358,7 +376,7 @@ class ProductController extends FrameworkBundleAdminController
                 case 'sort':
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
-                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList));
+                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
                     $this->addFlash('success', $translator->trans('Products successfully sorted.'));
                     break;
                 default:

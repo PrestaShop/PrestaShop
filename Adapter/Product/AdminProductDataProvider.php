@@ -156,6 +156,16 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $filterParams = $this->combinePersistentCatalogProductFilter($post);
         $showPositionColumn = $this->isCategoryFiltered();
+        if ($orderBy == 'position_ordering' && $showPositionColumn) {
+            foreach ($filterParams as $key => $param) {
+                if (strpos($key, 'filter_column_') === 0) {
+                    $filterParams[$key] = '';
+                }
+            }
+        }
+        if ($orderBy == 'position_ordering') {
+            $orderBy = 'position';
+        }
 
         $idShop = \Context::getContext()->shop->id;
         $idLang = \Context::getContext()->language->id;

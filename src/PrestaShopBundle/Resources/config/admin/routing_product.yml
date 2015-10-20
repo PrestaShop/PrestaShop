@@ -10,7 +10,7 @@ admin_product_catalog:
         orderBy: id_product
         sortOrder: asc
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
         sortOrder: asc|desc
 
 admin_product_list:
@@ -23,7 +23,7 @@ admin_product_list:
         orderBy: id_product
         sortOrder: asc
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active
+        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
         sortOrder: asc|desc
 
 admin_product_form:

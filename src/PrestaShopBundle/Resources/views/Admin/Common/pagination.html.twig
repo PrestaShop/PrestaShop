@@ -1,6 +1,7 @@
 <div>
     &nbsp;
     <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;">
+        {% if limit not in [20, 50, 100, 300, 1000] %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
         <option value="20" {% if limit==20 %}selected="selected"{% endif %}>20</option>
         <option value="50" {% if limit==50 %}selected="selected"{% endif %}>50</option>
         <option value="100" {% if limit==100 %}selected="selected"{% endif %}>100</option>
@@ -17,7 +18,7 @@
         {'$from': from, '$to': to, '$total': total, '$current_page': current_page, '$page_count': page_count},
         'AdminTab') }}
     |
-    &nbsp; <a {% if next_url is defined %}href="{{ next_url }}"{% else %}nohref{% endif %}>&gt;</a> &nbsp;
+    &nbsp; <a id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}>&gt;</a> &nbsp;
     |
-    &nbsp; <a {% if last_url is defined %}href="{{ last_url }}"{% else %}nohref{% endif %}>&gt;&gt;</a> &nbsp;
+    &nbsp; <a {% if last_url is defined and last_url != false %}href="{{ last_url }}"{% else %}nohref{% endif %}>&gt;&gt;</a> &nbsp;
 </div>

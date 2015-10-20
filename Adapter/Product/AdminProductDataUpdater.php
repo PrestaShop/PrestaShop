@@ -155,19 +155,24 @@ class AdminProductDataUpdater implements ProductInterface
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::sortProductIdList()
      */
-    public function sortProductIdList(array $productList)
+    public function sortProductIdList(array $productList, $filterParams)
     {
         if (count($productList) < 2) {
             return false;
         }
 
-        $filterParams = array('filter_category' => 20); // TODO !0 : il faut que le sort ne soit possible QUE si on n'a QUE les categories en filter !
-        // TODO ! 0: Donc le bouton 'Sort on this category' doit annuler les autres filtres, et les conditiondu drage & drop doivent être complétées.
+        $filterParams = array_diff($filterParams, array('')); // removes empty filters for the test
+        if (count($filterParams) !== 1 || !isset($filterParams['filter_category'])) {
+            dump($filterParams);
+            die;
+            throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
+        }
+        $categoryId = $filterParams['filter_category'];
 
         /* Sorting items on one page only, with ONE SQL UPDATE query,
          * then fixing bugs (duplicates and 0 values) on next pages with more queries, if needed.
          *
-         * Most complicated case:
+         * Most complicated case example:
          * We have to sort items from offset 5, limit 5, on total object count: 14
          * The previous AND the next pages MUST NOT be impacted but fixed if needed.
          * legend:  #<id>|P<position>
@@ -210,16 +215,16 @@ class AdminProductDataUpdater implements ProductInterface
             SET cp.`position` = FIELD(cp.`position`, '.$fields.'),
                 p.`date_upd` = "'.date('Y-m-d H:i:s').'",
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
-            WHERE cp.`id_category` = '.$filterParams['filter_category'].' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
+            WHERE cp.`id_category` = '.$categoryId.' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
         
         $res = \Db::getInstance()->query($updatePositions);
 
-        // Fixes duplicates
+        // Fixes duplicates on all pages
         \Db::getInstance()->query('SET @i := 0');
         $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = '.$filterParams['filter_category'].'
-            ORDER BY cp.`position` ASC';
+            WHERE cp.`id_category` = '.$categoryId.'
+            ORDER BY cp.`id_product` NOT IN ('.implode(',', array_keys($productList)).'), cp.`position` ASC';
         $res = \Db::getInstance()->query($selectPositions);
 
         return true;

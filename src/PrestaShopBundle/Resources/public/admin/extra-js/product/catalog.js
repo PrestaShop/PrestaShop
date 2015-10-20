@@ -95,8 +95,8 @@ function productOrderTable(orderBy, orderWay) {
 
 function productOrderPrioritiesTable() {
 	var form = $('form#product_catalog_list');
-	var url = form.attr('orderingurl').replace(/name/, 'position').replace(/desc/, 'asc');
-	url = url.replace(/\/\d+\/\d+\/position\//, '/0/300/position/');
+	var url = form.attr('orderingurl').replace(/name/, 'position_ordering').replace(/desc/, 'asc');
+	url = url.replace(/\/\d+\/\d+\/position_ordering\//, '/0/300/position_ordering/');
 	window.location.href = url;
 }
 
@@ -155,14 +155,15 @@ function bulkProductAction(element, action) {
 			break;
 		// this case will brings to the next page
 		case 'edition_next':
-			alert('+1 page !');
-			// TODO !0: add 1 page at offset for redirection (go to next page in redirecturl)
+			redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
 			var urlHandler = $(element).closest('[massediturl]');
 			postUrl = urlHandler.attr('massediturl').replace(/sort/, editionAction);
-			redirectUrl = urlHandler.attr('redirecturl');
+			if (redirectUrl == '') {
+				redirectUrl = urlHandler.attr('redirecturl');
+			}
 			break;
 		// unknown cases...
 		default:
@@ -198,12 +199,25 @@ function unitProductAction(element, action) {
 	form.submit();
 }
 
+function showBulkProductEdition(show) {
+	// Paginator does not have a next page link : we are on the last page!
+	if ($('a#pagination_next_url[href]').length == 0) {
+		$('#bulk_edition_save_next').prop('disabled', true).removeClass('btn-primary');
+		$('#bulk_edition_save_keep').attr('type', 'submit').addClass('btn-primary');
+	}
+	if (show) {
+		$('#bulk_edition_toolbar').show();
+	} else {
+		$('#bulk_edition_toolbar').hide();
+	}
+}
+
 function bulkProductEdition(element, action) {
 	var form = $('form#product_catalog_list');
 	
 	switch (action) {
 		case 'quantity_edition':
-			$('#bulk_edition_toolbar').show();
+			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
 
 			i = 1;
@@ -224,7 +238,7 @@ function bulkProductEdition(element, action) {
 			$('td.product-sav-quantity input', form).first().focus();
 			break;
 		case 'sort':
-			$('#bulk_edition_toolbar').show();
+			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
 			$('#bulk_edition_toolbar input:submit').attr('editionaction', action);
 			break;
@@ -235,7 +249,7 @@ function bulkProductEdition(element, action) {
 			});
 
 			$('#bulk_edition_toolbar input:submit').removeAttr('editionaction');
-			$('#bulk_edition_toolbar').hide();
+			showBulkProductEdition(false);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
 			break;
 	}
