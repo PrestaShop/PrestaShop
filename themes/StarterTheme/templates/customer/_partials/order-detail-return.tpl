@@ -13,7 +13,7 @@
       </tr>
     </thead>
 
-    {foreach from=$products item=product name=products}
+    {foreach from=$order.products item=product name=products}
       <tr>
         <td>
           {if !$product.customizedDatas}
@@ -71,32 +71,32 @@
       {if $priceDisplay && $use_tax}
         <tr>
           <td colspan="2">{l s='Items (tax excl.)'}</td>
-          <td colspan="5">{$order.total_products}</td>
+          <td colspan="5">{$order.data.total_products}</td>
         </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5">{$order.total_products_wt}</td>
+        <td colspan="5">{$order.data.total_products_wt}</td>
       </tr>
-      {if $order.total_discounts}
+      {if $order.data.total_discounts}
         <tr>
           <td colspan="2">{l s='Total vouchers'}</td>
-          <td colspan="5">{$order.total_discounts}</td>
+          <td colspan="5">{$order.data.total_discounts}</td>
         </tr>
       {/if}
-      {if $order.total_wrapping}
+      {if $order.data.total_wrapping}
       <tr>
         <td colspan="2">{l s='Total gift wrapping cost'}</td>
-        <td colspan="5">{$order->total_wrapping}</td>
+        <td colspan="5">{$order.data.total_wrapping}</td>
       </tr>
       {/if}
       <tr>
         <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
-        <td colspan="5">{$order.total_shipping}</td>
+        <td colspan="5">{$order.data.total_shipping}</td>
       </tr>
       <tr>
         <td colspan="2">{l s='Total'}</td>
-        <td colspan="5">{$order.total_paid}</td>
+        <td colspan="5">{$order.data.total_paid}</td>
       </tr>
     </tfoot>
   </table>
@@ -115,7 +115,7 @@
   </section>
 
   <footer class="form-footer">
-    <input type="hidden" name="id_order" value="{$order.id}" />
+    <input type="hidden" name="id_order" value="{$order.data.id}" />
     <button type="submit" name="submitReturnMerchandise">
       {l s='Make an RMA slip'}
     </button>
