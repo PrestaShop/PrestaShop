@@ -42,7 +42,8 @@ class OrderReturnControllerCore extends FrontController
         $id_order_return = (int)Tools::getValue('id_order_return');
 
         if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return)) {
-            $this->errors[] = $this->l('Order ID required');
+            $this->redirect_after = '404';
+            $this->redirect();
         } else {
             $order_return = new OrderReturn((int)$id_order_return);
             if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
@@ -64,10 +65,12 @@ class OrderReturnControllerCore extends FrontController
                         'customizedDatas' => Product::getAllCustomizedDatas((int)$order->id_cart)
                     ));
                 } else {
-                    $this->errors[] = $this->l('Cannot find the order return.');
+                    $this->redirect_after = '404';
+                    $this->redirect();
                 }
             } else {
-                $this->errors[] = $this->l('Cannot find the order return.');
+                $this->redirect_after = '404';
+                $this->redirect();
             }
         }
     }
