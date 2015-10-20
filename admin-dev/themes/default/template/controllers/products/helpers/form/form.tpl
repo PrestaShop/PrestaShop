@@ -224,8 +224,7 @@
 							tabs_to_preload.push('{$tab_name}');
 					{/if}
 				{/foreach}
-
-				// Recursively load tabs starting with the first element of stack
+				tabs_manager.tabs_to_preload = tabs_to_preload.slice(0);
 				tabs_manager.displayBulk(tabs_to_preload);
 				$('.productTabs').show();
 				$('#product-tab-content-wait').hide();
