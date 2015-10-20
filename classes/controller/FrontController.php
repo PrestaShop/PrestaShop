@@ -1543,9 +1543,13 @@ class FrontControllerCore extends Controller
         return $curr;
     }
 
-    public function getTemplateVarCustomer()
+    public function getTemplateVarCustomer($customer = null)
     {
-        $cust = $this->objectSerializer->toArray($this->context->customer);
+        if (Validate::isLoadedObject($customer)) {
+            $cust = $this->objectSerializer->toArray($customer);
+        } else {
+            $cust = $this->objectSerializer->toArray($this->context->customer);
+        }
 
         unset($cust['secure_key']);
         unset($cust['passwd']);
