@@ -11,6 +11,7 @@ admin_product_catalog:
         sortOrder: asc
     requirements:
         orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: \d+
         sortOrder: asc|desc
 
 admin_product_list:
@@ -24,6 +25,7 @@ admin_product_list:
         sortOrder: asc
     requirements:
         orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: \d+
         sortOrder: asc|desc
 
 admin_product_form:
