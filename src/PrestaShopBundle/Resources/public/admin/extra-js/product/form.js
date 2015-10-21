@@ -41,7 +41,7 @@ $( document ).ready(function() {
 			type: "POST",
 			data: data,
 			beforeSend: function() {
-				$('#form #submit').attr("disabled", "disabled");
+				$('#form .btn-submit').attr("disabled", "disabled");
 				$('.help-block').remove();
 				$( "*.has-error" ).removeClass("has-error");
 			},
@@ -69,9 +69,16 @@ $( document ).ready(function() {
 				}, 500);
 			},
 			complete: function(){
-				$('#form #submit').removeAttr("disabled");
+				$('#form .btn-submit').removeAttr("disabled");
 			}
 		});
+	});
+
+	//auto save form on switching tabs (if form is not processing and product id is not defined)
+	$("#form > .nav li:not(.active) a").click(function(){
+		if($('#form .btn-submit').attr("disabled") != "disabled" && $("#form_id_product").val() == 0){
+			$("#form").submit();
+		}
 	});
 
 	//form nested categories ------------------
