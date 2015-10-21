@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 class LayoutExtension extends \Twig_Extension
 {
     private $context;
+    private $environment;
 
     /**
      * Constructor.
@@ -42,9 +44,10 @@ class LayoutExtension extends \Twig_Extension
      *
      * @param LegacyContext $context
      */
-    public function __construct(LegacyContext $context)
+    public function __construct(LegacyContext $context, Kernel $kernel)
     {
         $this->context = $context;
+        $this->environment = $kernel->getEnvironment();
     }
 
     public function getGlobals()
@@ -82,6 +85,20 @@ class LayoutExtension extends \Twig_Extension
      */
     public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "")
     {
+        if ($this->environment == 'test') {
+            return <<<EOF
+<html>
+  <head>
+    <title>Test layout</title>
+    {% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}
+  </head>
+  <body>
+    {% block content_header %}{% endblock %}{% block content %}{% endblock %}{% block content_footer %}{% endblock %}
+    {% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}
+  </body>
+</html>
+EOF;
+        }
         $content = str_replace(
             array(
                 '{$content}',
