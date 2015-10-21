@@ -45,6 +45,8 @@ services:
     prestashop.adapter.data_provider.feature:
         class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
 
+    prestashop.adapter.data_provider.carrier:
+        class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
 
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:

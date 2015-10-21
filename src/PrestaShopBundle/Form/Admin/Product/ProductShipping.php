@@ -28,17 +28,33 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is risponsible to generate the product shipping form
  */
 class ProductShipping extends AbstractType
 {
+    private $translator;
+    private $container;
+    private $carriersChoices;
+
     /**
      * Constructor
+     *
+     * @param object $container The SF2 container
      */
-    public function __construct()
+    public function __construct($container)
     {
+        $this->container = $container;
+        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+
+        $carriers = $this->container->get('prestashop.adapter.data_provider.carrier')->getCarriers($this->locales[0]['id_lang'], false, false, false, null, \Carrier::ALL_CARRIERS);
+        $this->carriersChoices = [];
+        foreach ($carriers as $carrier) {
+            $this->carriersChoices[$carrier['id_carrier']] = $carrier['name'].' ('.$carrier['delay'].')';
+        }
     }
 
     /**
@@ -48,6 +64,53 @@ class ProductShipping extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('width', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Package width', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('height', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Package height', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('depth', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Package depth', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('weight', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Package weight', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('additional_shipping_cost', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Additional shipping fees (for a single item)', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('selectedCarriers', 'choice', array(
+            'choices' =>  $this->carriersChoices,
+            'expanded' =>  true,
+            'multiple' =>  true,
+            'required' =>  false,
+            'label' => $this->translator->trans('Carriers', [], 'AdminProducts')
+        ));
     }
 
     /**
