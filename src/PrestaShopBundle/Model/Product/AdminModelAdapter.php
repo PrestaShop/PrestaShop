@@ -62,10 +62,28 @@ class AdminModelAdapter
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
 
         //define translatable key
-        $this->translatableKeys = array('name', 'description', 'description_short', 'link_rewrite');
+        $this->translatableKeys = array(
+            'name',
+            'description',
+            'description_short',
+            'link_rewrite',
+            'meta_title',
+            'meta_description',
+            'social_sharing_title',
+            'social_sharing_description'
+        );
 
         //define unused key for manual binding
-        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'display_options', 'features');
+        $this->unmapKeys = array('name',
+            'description',
+            'description_short',
+            'images',
+            'related_products',
+            'categories',
+            'suppliers',
+            'display_options',
+            'features'
+        );
     }
 
     /**
@@ -246,6 +264,10 @@ class AdminModelAdapter
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
+                'meta_title' => $this->product->meta_title,
+                'meta_description' => $this->product->meta_description,
+                'social_sharing_title' => $this->product->social_sharing_title,
+                'social_sharing_description' => $this->product->social_sharing_description,
             ],
             'step6' => [
                 'visibility' => $this->product->visibility,
