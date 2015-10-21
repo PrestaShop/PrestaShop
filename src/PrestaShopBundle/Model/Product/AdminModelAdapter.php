@@ -244,6 +244,13 @@ class AdminModelAdapter
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
             ],
+            'step4' => [
+                'width' => $this->product->width,
+                'height' => $this->product->height,
+                'depth' => $this->product->depth,
+                'weight' => $this->product->weight,
+                'additional_shipping_cost' => $this->product->additional_shipping_cost,
+            ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
             ],
