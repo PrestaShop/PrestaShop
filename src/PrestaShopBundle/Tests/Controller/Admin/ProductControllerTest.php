@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class ProductControllerTest extends WebTestCase
 {
     /**
-     * Test all Productcontroller URLs.
+     * Test all ProductController URLs.
      *
      * @dataProvider urlProvider
      *
@@ -22,40 +22,67 @@ class ProductControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request($method, $url);
-
         $this->assertEquals($statusCode, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Contains all URLs that could be rejected or accepted by the ProductController.
+     *
+     * Please avoid side-effect URLs here (POST or actions that modify data in DB).
+     *
+     * @return multitype:multitype:string  multitype:string number
+     */
     public function urlProvider()
     {
+        // if no status code given, then 200 by default
         // 405: method not allowed
         // 302: URL redirection ('found')
         return array(
-            array('/product/catalog', 'GET'),
-            array('/product/catalog', 'POST'),
-            array('/product/catalog/test/test', 'GET', 404),
-            array('/product/catalog/0/10', 'GET'),
-            array('/product/catalog/0/10/test/test', 'GET', 404),
-            array('/product/catalog/0/10/name_category/asc', 'GET'),
+            ['/product/catalog', 'GET'],
+            ['/product/catalog', 'POST'],
+            ['/product/catalog/test/test', 'GET', 404],
+            ['/product/catalog/0/10', 'GET'],
+            ['/product/catalog/0/10/test/test', 'GET', 404],
+            ['/product/catalog/0/10/name_category/asc', 'GET'],
+            ['/product/catalog/0/10/position_ordering/asc', 'GET'],
 
-            array('/product/list', 'GET'),
-            array('/product/list', 'POST', 405),
-            array('/product/list/test/test', 'GET', 404),
-            array('/product/list/0/10', 'GET'),
-            array('/product/list/0/10/test/test', 'GET', 404),
-            array('/product/list/0/10/name_category/asc', 'GET'),
+            ['/product/list', 'GET'],
+            ['/product/list', 'POST', 405],
+            ['/product/list/test/test', 'GET', 404],
+            ['/product/list/0/10', 'GET'],
+            ['/product/list/0/10/test/test', 'GET', 404],
+            ['/product/list/0/10/name_category/asc', 'GET'],
 
-            array('/product/form', 'GET'),
+            ['/product/form', 'GET'],
+            // TODO: Luc, test it!
 
-            array('/product/uselegacy/1', 'GET', 302),
-            array('/product/uselegacy/0', 'GET', 302),
-            array('/product/uselegacy/test', 'GET', 404),
-            array('/product/uselegacy', 'GET', 404),
+            ['/product/uselegacy/1', 'GET', 302],
+            ['/product/uselegacy/0', 'GET', 302],
+            ['/product/uselegacy/test', 'GET', 404],
+            ['/product/uselegacy', 'GET', 404],
 
-            array('/product/bulk', 'GET', 404),
-            
-            array('/product/catalog', 'GET'),
-            // TODO !0: complete !
+            ['/product/bulk', 'GET', 404],
+            ['/product/bulk/test', 'GET', 404],
+            ['/product/bulk/activate_all', 'GET', 405],
+            ['/product/bulk', 'POST', 404],
+            ['/product/bulk/test', 'POST', 404],
+            ['/product/bulk/activate_all', 'POST', 500], // route & action OK, but missing POST parameters
+
+            ['/product/unit', 'GET', 404],
+            ['/product/unit/test', 'GET', 404],
+            ['/product/unit/duplicate', 'GET', 404],
+            ['/product/unit/duplicate/0', 'GET', 405], // even if 0 is not a valid ID, GET is forbidden
+            ['/product/unit', 'POST', 404],
+            ['/product/unit/test', 'POST', 404],
+            ['/product/unit/duplicate', 'POST', 404], // route & action OK, but missing POST parameters
+            ['/product/unit/duplicate/0', 'POST', 500], // route & action OK, but ID 0 is not valid
+
+            ['/product/massedit', 'GET', 404],
+            ['/product/massedit/test', 'GET', 404],
+            ['/product/massedit/sort', 'GET', 405],
+            ['/product/massedit', 'POST', 404],
+            ['/product/massedit/test', 'POST', 404],
+            ['/product/massedit/sort', 'POST', 500], // route & action OK, but missing POST parameters
         );
     }
 
@@ -77,20 +104,6 @@ class ProductControllerTest extends WebTestCase
 
         $crawler = $client->request('POST', '/product/catalog');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-    }
-
-    /**
-     * Tests about route attributes on catalogAction
-     */
-    public function testCatalogParams()
-    {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/product/catalog/1/2/id_product/asc');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $crawler = $client->request('GET', '/product/catalog/a/b/toto/titi');
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     /**
@@ -129,18 +142,4 @@ class ProductControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("", $crawler->filter('input[name="filter_column_id_product"]')->attr('value'));
     }
-
-    /**
-     * Simple basic tests on listAction
-     */
-    public function testList()
-    {
-        // TODO !1 : GET 200, POST 404
-    }
-    
-    // TODO !1 : listAction with different params...
-
-    // TODO !2 : navigation on catalogAction, click on the next page if any, test if offset=2 gives max 2 products.
-
-    // TODO !3 : filter with price range, and use improbable amount, then test no product returned.
 }
