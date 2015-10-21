@@ -37,6 +37,7 @@ class ProductShipping extends AbstractType
 {
     private $translator;
     private $container;
+    private $carriersChoices;
 
     /**
      * Constructor
@@ -47,6 +48,13 @@ class ProductShipping extends AbstractType
     {
         $this->container = $container;
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+
+        $carriers = $this->container->get('prestashop.adapter.data_provider.carrier')->getCarriers($this->locales[0]['id_lang'], false, false, false, null, \Carrier::ALL_CARRIERS);
+        $this->carriersChoices = [];
+        foreach ($carriers as $carrier) {
+            $this->carriersChoices[$carrier['id_carrier']] = $carrier['name'].' ('.$carrier['delay'].')';
+        }
     }
 
     /**
@@ -95,6 +103,13 @@ class ProductShipping extends AbstractType
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
+        ))
+        ->add('selectedCarriers', 'choice', array(
+            'choices' =>  $this->carriersChoices,
+            'expanded' =>  true,
+            'multiple' =>  true,
+            'required' =>  false,
+            'label' => $this->translator->trans('Carriers', [], 'AdminProducts')
         ));
     }
 

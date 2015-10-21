@@ -159,6 +159,9 @@ class AdminModelAdapter
             }
         }
 
+        //add some legacy filed to execute some add/update methods
+        $form_data['submitted_tabs'] = ['Shipping'];
+
         //map all
         $new_form_data = [];
         foreach ($form_data as $k => $v) {
@@ -191,6 +194,13 @@ class AdminModelAdapter
             'step2' => [
                 'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
                 'price' => 0,
+            ],
+            'step4' => [
+                'width' => 0,
+                'height' => 0,
+                'depth' => 0,
+                'weight' => 0,
+                'additional_shipping_cost' => 0,
             ],
             'step6' => [
                 'visibility' => 'both',
@@ -250,6 +260,7 @@ class AdminModelAdapter
                 'depth' => $this->product->depth,
                 'weight' => $this->product->weight,
                 'additional_shipping_cost' => $this->product->additional_shipping_cost,
+                'selectedCarriers' => $this->getFormProductCarriers()
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
@@ -302,7 +313,7 @@ class AdminModelAdapter
     }
 
     /**
-     * get form Full product Description with description short
+     * get form product features
      *
      * @return array features with translation
      */
@@ -328,5 +339,20 @@ class AdminModelAdapter
         }
 
         return $formDataFeatures;
+    }
+
+    /**
+     * get product carrier
+     *
+     * @return array carrier
+     */
+    private function getFormProductCarriers()
+    {
+        $formDataCarriers = [];
+        foreach ($this->product->getCarriers() as $carrier) {
+            $formDataCarriers[] = $carrier['id_carrier'];
+        }
+
+        return $formDataCarriers;
     }
 }
