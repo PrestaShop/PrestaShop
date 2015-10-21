@@ -202,4 +202,9 @@ $( document ).ready(function() {
 			newForm
 		));
 	}
+
+	//update price and shorcut price field on change
+	$("#form_step1_price_shortcut, #form_step2_price").keyup(function(){
+		$(this).attr('id') == 'form_step1_price_shortcut' ? $("#form_step2_price").val($(this).val()) : $("#form_step1_price_shortcut").val($(this).val());
+	});
 });

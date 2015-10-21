@@ -172,21 +172,14 @@ class ProductInformation extends AbstractType
             'required' => true,
             'multiple' => false,
         ))
-        ->add(
-            $builder->create('options', 'form', array('required' => false, 'label' => $this->translator->trans('Options', [], 'AdminProducts')))
-                ->add('available_for_order', 'checkbox', array(
-                    'label'    => $this->translator->trans('Available for order', [], 'AdminProducts'),
-                    'required' => false,
-                ))
-                ->add('show_price', 'checkbox', array(
-                    'label'    => $this->translator->trans('Show price', [], 'AdminProducts'),
-                    'required' => false,
-                ))
-                ->add('online_only', 'checkbox', array(
-                    'label'    => $this->translator->trans('Online only (not sold in your retail store)', [], 'AdminProducts'),
-                    'required' => false,
-                ))
-        )
+        ->add('price_shortcut', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            )
+        ))
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(
             'label' => $this->translator->trans('Associated categories', [], 'AdminProducts')
         ))
