@@ -1386,7 +1386,7 @@ class CategoryCore extends ObjectModel
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
             AND c.`id_category`='.(int)$moved_category['id_category']));
-        Hook::exec('actionCategoryUpdate', array('category' => $moved_category));
+        Hook::exec('actionCategoryUpdate', array('category' => new Category($moved_category['id_category'])));
         return $result;
     }
 
