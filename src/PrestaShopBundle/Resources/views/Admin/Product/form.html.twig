@@ -15,6 +15,9 @@
                 <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping') }}</a></li>
                 <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO') }}</a></li>
                 <li><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options') }}</a></li>
+                {% if hookcount('displayAdminProductsExtra') > 0 %}
+                    <li><a href="#hooks" role="tab" data-toggle="tab">{{ trans('HOOKS') }}</a></li>
+                {% endif %}
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane panel panel-default active" id="step1">
@@ -132,9 +135,21 @@
                     {{ form_widget(form.step6) }}
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
+                        {% if hookcount('displayAdminProductsExtra') > 0 %}
+                            <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
+                        {% endif %}
                         <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
                     </div>
                 </div>
+                {% if hookcount('displayAdminProductsExtra') > 0 %}
+                <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
+                    {{ renderhook('displayAdminProductsExtra') }}
+                    <div class="text-right">
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                    </div>
+                </div>
+                {% endif %}
             </div>
             {{ form_widget(form.id_product) }}
             {{ form_widget(form._token) }}

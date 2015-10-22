@@ -419,7 +419,7 @@ class ProductController extends FrameworkBundleAdminController
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully duplicated.'));
                     // stops here and redirect to the new product's page.
-                    return $this->redirectToRoute('admin_product_form', array('id_product' => $duplicateProductId), 302);
+                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId), 302);
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     throw new \Exception('Bad action received from call to ProductController::unitAction: "'.$action.'"', 2002);
