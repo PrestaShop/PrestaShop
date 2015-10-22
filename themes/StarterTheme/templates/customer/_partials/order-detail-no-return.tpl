@@ -1,4 +1,4 @@
-<table>
+<table id="order-products">
   <thead>
     <tr>
       <th>{l s='Reference'}</th>

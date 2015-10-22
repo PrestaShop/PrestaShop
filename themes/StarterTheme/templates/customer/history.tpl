@@ -32,19 +32,17 @@
             </td>
             <td>
               {if $order.url_to_invoice}
-                <a href="{$order.url_to_invoice}">{l s='PDF'}</a>
+                <a href="{$order.url_to_invoice}" class="order-invoice-link">{l s='PDF'}</a>
               {else}
                 -
               {/if}
             </td>
             <td>
-              <a href="{$order.url_details}">
-                <span>
-                  {l s='Details'}<i class="icon-chevron-right right"></i>
-                </span>
+              <a href="{$order.url_details}" class="order-detail-link">
+                {l s='Details'}
               </a>
               {if $order.url_to_reorder}
-                <a href="{$order.url_to_reorder}">{l s='Reorder'}</a>
+                <a href="{$order.url_to_reorder}" class="order-reorder-link">{l s='Reorder'}</a>
               {/if}
             </td>
           </tr>
