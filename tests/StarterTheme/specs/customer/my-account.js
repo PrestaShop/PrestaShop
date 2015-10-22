@@ -45,5 +45,32 @@ describe('My account page', function () {
       ;
     });
 
+    it('should display credit splips link', function () {
+      return browser
+        .isExisting('.page-content a#order-slips-link')
+        .then(function (isExisting) {
+          isExisting.should.be.true;
+        })
+      ;
+    });
+
+    it('should display vouchers link', function () {
+      return browser
+        .isExisting('.page-content a#discounts-link')
+        .then(function (isExisting) {
+          isExisting.should.be.true;
+        })
+      ;
+    });
+
+    it('should display returns link', function () {
+      return browser
+        .isExisting('.page-content a#returns-link')
+        .then(function (isExisting) {
+          isExisting.should.be.true;
+        })
+      ;
+    });
+
   });
 });
