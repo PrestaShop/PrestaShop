@@ -2,6 +2,13 @@ imports:
     - { resource: admin/services.yml }
 
 services:
+    # DISPATCHERS
+    prestashop.hook.dispatcher:
+        class: PrestaShopBundle\Service\Hook\HookDispatcher
+        calls:
+            - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
+
+
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
@@ -19,6 +26,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    # Legacy Hooks registrator
+    prestashop.adapter.legacy.hook.subscriber:
+        class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
 
     # Data providers service
     prestashop.adapter.data_provider.supplier:
@@ -52,6 +62,12 @@ services:
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationExtension
         arguments: ["@translator", "@prestashop.adapter.translator", "@service_container"]
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments: ["@prestashop.hook.dispatcher"]
         tags:
             - { name: twig.extension }
 

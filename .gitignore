@@ -71,7 +71,8 @@ themes/default-bootstrap/modules/*/mails/*
 /app/phpunit.xml
 /bin/
 /web/bundles/
-
+/web/css/
+/web/js/
 
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
