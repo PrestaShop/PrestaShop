@@ -1,6 +1,6 @@
 <form action="{$urls.pages.order_follow}" method="post">
 
-  <table>
+  <table id="order-products">
     <thead>
       <tr>
         <th><input type="checkbox" /></th>
