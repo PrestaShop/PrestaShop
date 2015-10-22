@@ -36,6 +36,32 @@ if (!Configuration::get('PS_REWRITING_SETTINGS')) {
 
 echo "- URL rewriting enabled\n";
 
+//Enable returns
+
+function enableReturns()
+{
+    Configuration::updateValue('PS_ORDER_RETURN', 1);
+}
+
+if (!Configuration::get('PS_ORDER_RETURN')) {
+    enableReturns();
+}
+
+echo "- Returns enabled\n";
+
+//Enable returns
+
+function enableVouchers()
+{
+    Configuration::updateValue('PS_CART_RULE_FEATURE_ACTIVE', 1);
+}
+
+if (!CartRule::isFeatureActive()) {
+    enableVouchers();
+}
+
+echo "- Vouchers enabled\n";
+
 // Setup modules
 
 function disableModule($moduleName)
@@ -93,5 +119,18 @@ echo "- added a required customizable text field to product #1\n";
 // We need 2 languages for some tests
 Language::checkAndAddLanguage('fr');
 echo "- added French language just so that we have 2\n";
+
+$order = new Order(5);
+$history = new OrderHistory();
+$history->id_order = $order->id;
+$history->id_employee = 1;
+
+$use_existings_payment = false;
+if (!$order->hasInvoice()) {
+    $use_existings_payment = true;
+}
+$history->changeIdOrderState(5, $order, $use_existings_payment);
+$history->add();
+echo "- Order number 5 is now delivered\n";
 
 echo "Shop fixtures prepared for tests!\n";
