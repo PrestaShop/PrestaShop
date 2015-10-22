@@ -528,10 +528,14 @@
 											{if $accessory.show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 											<span class="price">
 												{if $priceDisplay != 1}
-												{displayWtPrice p=$accessory.price}{else}{displayWtPrice p=$accessory.price_tax_exc}
+													{displayWtPrice p=$accessory.price}
+												{else}
+													{displayWtPrice p=$accessory.price_tax_exc}
 												{/if}
+												{hook h="displayProductPriceBlock" product=$accessory type="price"}
 											</span>
 											{/if}
+											{hook h="displayProductPriceBlock" product=$accessory type="after_price"}
 										</div>
 										<div class="clearfix" style="margin-top:5px">
 											{if !$PS_CATALOG_MODE && ($accessory.allow_oosp || $accessory.quantity > 0) && isset($add_prod_display) && $add_prod_display == 1}

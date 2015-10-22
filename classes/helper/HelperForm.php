@@ -90,6 +90,14 @@ class HelperFormCore extends Helper
                         unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                     }
                     switch ($params['type']) {
+                        case 'select':
+                            $field_name = (string)$params['name'];
+                            // If multiple select check that 'name' field is suffixed with '[]'
+                            if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
+                                $params['name'] .= '[]';
+                            }
+                            break;
+
                         case 'categories':
                             if ($categories) {
                                 if (!isset($params['tree']['id'])) {
