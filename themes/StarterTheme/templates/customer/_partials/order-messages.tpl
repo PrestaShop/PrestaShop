@@ -21,7 +21,7 @@
   </table>
 {/if}
 
-<section class="login-form">
+<section class="order-message-form">
   <form action="{$urls.pages.order_detail}" method="post">
 
     <header>
