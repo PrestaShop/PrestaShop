@@ -60,7 +60,7 @@
 
   {block name="addresses"}
     {if $order.addresses.delivery}
-      <article id="address-{$order.addresses.delivery.id}" class="address">
+      <article id="delivery-address" class="address">
         <header>
           <h1 class="h4">{l s='Delivery address %s' sprintf=$order.addresses.delivery.alias}</h1>
         </header>
@@ -69,7 +69,7 @@
       </article>
     {/if}
 
-    <article id="address-{$order.addresses.invoice.id}" class="address">
+    <article id="invoice-address" class="address">
       <header>
         <h1 class="h4">{l s='Invoice address %s' sprintf=$order.addresses.invoice.alias}</h1>
       </header>
