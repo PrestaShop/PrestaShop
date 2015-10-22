@@ -216,7 +216,12 @@ if (!class_exists('PEAR', false))
 			 * @access public
 			 * @return void
 			 */
-			function __destruct() {
+			function __destruct()
+			{
+				$this->_PEAR();
+			}
+
+			function _PEAR() {
 					if ($this->_debug) {
 							printf("PEAR destructor called, class=%s\n", strtolower(get_class($this)));
 					}
