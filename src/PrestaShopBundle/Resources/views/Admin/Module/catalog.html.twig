@@ -1,9 +1,18 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/module/module.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
 {% block content %}
     {# Contains menu with Selection/Categories/Popular #}
-    {% include 'PrestaShopBundle:Admin/Module:menu_header.html.twig' %}
-
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_menu_top.html.twig' %}
     {# Actual Page Content #}
-    DA MODULE CATALOG
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
 {% endblock %}

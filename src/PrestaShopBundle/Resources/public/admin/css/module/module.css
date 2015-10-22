@@ -1,0 +1,52 @@
+.module-item {
+    /*height: 215px;*/
+    width: 23% !important;
+    max-width: 23% !important;
+    background: white;
+    text-transform: none !important;
+    /*padding: 35px !important;*/
+    margin: 10px;
+    /*overflow: hidden;*/
+}
+
+.module-item .panel-heading {
+    border: none !important;
+    background-color: white !important;
+    padding: 15px !important;
+}
+
+.module-name {
+    color: #1E2024 !important;
+    font-family:"Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    width: 265px;
+}
+
+.panel-footer.module-quick-action {
+    padding-top: 25px;
+    padding-right: 20px;
+}
+
+.module-quick-description {
+    width: 100%;
+    height: 100px;
+    max-height: 100px;
+    padding-top: 25px !important;
+}
+
+.module-version-author {
+    margin-top: -20px;
+}
+
+.module-item .panel-heading img {
+    margin-right: 5px;
+    margin-bottom: 22px;
+}
+
+.module-item .panel-footer {
+    border: none !important;
+    background-color: white !important;
+    margin: none !important;
+}

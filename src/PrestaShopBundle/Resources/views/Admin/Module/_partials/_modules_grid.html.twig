@@ -1,0 +1,32 @@
+
+
+
+<div class="container-fluid">
+    <div class="row">
+            {% for module in modules %}
+                    <div class="module-item panel panel-default col-md-3" data-module-id="{{ module.id }}">
+                        <div class="panel-heading">
+                            <img class="module-logo-thumb" height="15" width="15" src="{{ '../' ~ module.image }}" alt="{{ module.displayName }}" />
+                            <div class="text-ellipsis module-name">
+                                {{ module.displayName }}
+                            </div>
+                            <div class="x-small-text module-version-author">
+                                v{{ module.version }} by {{ module.author }}
+                            </div>
+                        </div>
+                        <div class="module-quick-description no-padding panel-body">
+                            {{ module.description }}
+                        </div>
+                        <div class="module-quick-action panel-footer">
+                            <div class="pull-right">
+                                <input type="button" class="light-button" value="FREE" />
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{{ dump(modules) }}

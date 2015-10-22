@@ -22,6 +22,8 @@ services:
         class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
     prestashop.core.admin.page_preference_interface:
         class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.data_provider.module_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
 
 # ADAPTERS (prestashop.adapter.*)
     # Legacy context service, transitional
@@ -46,3 +48,7 @@ services:
         public: false
     prestashop.adapter.admin.controller.category:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
+    prestashop.adapter.admin.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+        decorates: prestashop.core.admin.data_provider.module_interface
+        public: false

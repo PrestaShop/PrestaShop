@@ -36,6 +36,9 @@ services:
     prestashop.adapter.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
 
+    prestashop.adapter.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context
 

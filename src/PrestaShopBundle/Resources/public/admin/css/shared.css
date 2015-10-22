@@ -1,0 +1,41 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+.x-small-text {
+    font-family:"Open Sans", Helvetica,Arial,sans-serif;
+    font-size: 10px;
+    color: #95A7AD;
+}
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    /* Required for text-overflow to do anything */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.light-button {
+    height: 30px;
+    width: 70px;
+    background: white;
+    border: 1px solid #25B9D7;
+    color: #25B9D7;
+    border-radius: 5px;
+    -webkit-transition: color .6s ease-in;
+    -moz-transition: color .6s ease-in;
+    -o-transition: color .6s ease-in;
+    transition: color .6s ease-in;
+}
+
+.light-button:hover {
+    border-color: #3ED2F0;
+    color: #3ED2F0;
+}
