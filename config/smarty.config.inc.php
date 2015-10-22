@@ -32,7 +32,6 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 } else {
     $smarty = new Smarty();
 }
-$smarty->escape_html = true;
 
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
@@ -89,23 +88,9 @@ smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval')
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
+smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
-smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
-
-function smartyEscape($string, $esc_type = 'html', $char_set = null, $double_encode = true)
-{
-    require_once implode(DIRECTORY_SEPARATOR, [
-        _PS_VENDOR_DIR_, 'smarty', 'smarty', 'libs', 'plugins',
-        'modifier.escape.php'
-    ]);
-    global $smarty;
-    if ($esc_type === 'html' && $smarty->escape_html) {
-        return $string;
-    } else {
-        return smarty_modifier_escape($string, $esc_type, $char_set, $double_encode);
-    }
-}
 
 function smartyDieObject($params, &$smarty)
 {
@@ -324,12 +309,18 @@ function smartyWidgetBlock($params, $content, &$smarty)
     }
 }
 
+function smartyClassname($classname)
+{
+    $classname = str_replace('_', '-', $classname);
+    return $classname;
+}
+
 function smartyClassnames(array $classnames)
 {
     $enabled_classes = [];
     foreach ($classnames as $classname => $enabled) {
         if ($enabled) {
-            $enabled_classes[] = $classname;
+            $enabled_classes[] = smartyClassname($classname);
         }
     }
     return implode(' ', $enabled_classes);

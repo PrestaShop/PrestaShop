@@ -29,25 +29,9 @@
       </aside>
     {/block}
 
-  </section>
-  {block name="category_products"}
-    {if $products|count}
-      <section id="products">
-        <h1>{$category.name}&nbsp;{l s='Product''s'}</h1>
+    {block name="category_products"}
+      {include file='./products.tpl' products=$products}
+    {/block}
 
-        {block name="sort_by"}
-          {include './_partials/sort-by.tpl' options=$sort_options}
-        {/block}
-
-        <div class="products">
-            {foreach from=$products item="product"}
-              {block name="product_miniature"}
-                {include './product-miniature.tpl' product=$product}
-              {/block}
-            {/foreach}
-          </div>
-      </section>
-    {/if}
-  {/block}
 
 {/block}

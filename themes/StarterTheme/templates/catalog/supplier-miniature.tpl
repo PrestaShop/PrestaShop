@@ -1,0 +1,1 @@
+{extends "./brand.tpl"}

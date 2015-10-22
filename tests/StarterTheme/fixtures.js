@@ -15,6 +15,14 @@ module.exports = {
       id: 1
     },
     urls: {
+      login: '/en/login',
+      myAccount: '/en/my-account',
+      myAddresses: '/en/addresses',
+      address: 'en/address',
       opc: '/en/quick-order'
+    },
+    customer: {
+      email: 'pub@prestashop.com',
+      password: '123456789'
     }
 };

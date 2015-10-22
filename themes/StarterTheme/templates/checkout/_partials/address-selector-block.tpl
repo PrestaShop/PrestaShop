@@ -1,12 +1,12 @@
 {foreach $addresses as $address}
-  <article id="address-{$address.id}" class="address-item">
+  <article id="{$name|classname}-address-{$address.id}" class="address-item">
     <header class="h4">
       {$address.alias}
     </header>
 
     <label class="radio-block">
         <input type="radio" name="{$name}" value="{$address.id}" {if $address.id == $selected}checked{/if} />
-        {$address.formatted}
+        {$address.formatted nofilter}
     </label>
 
     <footer>

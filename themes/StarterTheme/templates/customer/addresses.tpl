@@ -13,5 +13,11 @@
     {/block}
   {/foreach}
 
+  <footer>
+    <a href="{$urls.pages.address}" data-link-action="add-address">
+      {l s='Create new address'}
+    </a>
+  </footer>
+
 </section>
 {/block}

@@ -2,7 +2,6 @@
   "repositories": [
     {"type": "vcs", "url": "https://github.com/prestashop/blockbanner"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockcart"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blockcontactinfos"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockcurrencies"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocklanguages"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocktopmenu"},
@@ -13,10 +12,10 @@
   ],
   "require": {
     "composer/installers": "~1.0",
-    "smarty/smarty": "3.1.19",
     "icanboogie/cldr": "1.3.9",
     "curl/curl": "^1.2",
     "ircmaxell/password-compat": "1.0.*",
+    "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-feat/starter-theme",
     "prestashop/blockadvertising": "dev-master",
     "prestashop/blockbanner": "dev-feat/starter-theme",
@@ -26,7 +25,6 @@
     "prestashop/blockcms": "dev-master",
     "prestashop/blockcmsinfo": "dev-master",
     "prestashop/blockcontact": "dev-feat/starter-theme",
-    "prestashop/blockcontactinfos": "dev-feat/starter-theme",
     "prestashop/blockcurrencies": "dev-feat/starter-theme",
     "prestashop/blockcustomerprivacy": "dev-master",
     "prestashop/blockfacebook": "dev-master",
