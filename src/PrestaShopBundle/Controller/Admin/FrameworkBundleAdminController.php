@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Service\Hook\HookEvent;
-use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 
@@ -83,13 +81,30 @@ class FrameworkBundleAdminController extends Controller
         return $errors;
     }
 
-    protected function dispatchHook($hookName, $parameters)
+    /**
+     * Creates a HookEvent, sets its parameters, and dispatches it.
+     *
+     * Wrapper to: @see HookDispatcher::dispatchForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     */
+    protected function dispatchHook($hookName, array $parameters)
     {
-        return $this->container->get('prestashop.hook.dispatcher')->dispatch($hookName, new HookEvent());
+        $this->container->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
     }
 
-    protected function renderHook($hookName, $parameters)
+    /**
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     *
+     * Wrapper to: @see HookDispatcher::renderForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     * @return array The responses of hooks
+     */
+    protected function renderHook($hookName, array $parameters)
     {
-        return $this->container->get('prestashop.hook.dispatcher')->dispatch($hookName, new RenderingHookEvent());
+        return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 }
