@@ -462,7 +462,7 @@ $(document).ready(function () {
 				ampm: false,
 				amNames: ['AM', 'A'],
 				pmNames: ['PM', 'P'],
-				timeFormat: 'hh:mm:ss tt',
+				timeFormat: 'hh:mm:ss',
 				timeSuffix: '',
 				timeOnlyTitle: '{l s='Choose Time' js=1}',
 				timeText: '{l s='Time' js=1}',
