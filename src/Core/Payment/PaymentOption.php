@@ -25,14 +25,93 @@
  */
 namespace PrestaShop\PrestaShop\Core\Payment;
 
+/**
+ * We define 4 types of payment options:
+ *
+ * - the "offline" kind: simple URL to call + information to display (e.g. bankwire, cheque)
+ * - the "external" kind: simple URL to call, but payment processed on PSP's website (e.g. simple paypal)
+ * - the "embedded" kind: you write your credit card info in a form that is on your site and not inside an iframe (e.g. stripe)
+ * - the "iframe" kind: payment form is displayed on your website but inside an iframe (e.g. atos)
+ */
 class PaymentOption
 {
+    /**
+     * This text will be displayed
+     * in the payment option selection widget.
+     * @var string
+     */
     private $callToActionText;
+
+    /**
+     * Additional information to display to the customer.
+     * This is free HTML, and may be used by modules such as
+     * bankwire to display to which account the bank transfer should be made.
+     *
+     * @var string
+     */
+    private $additionalInformation;
+
+    /**
+     * The URL to a picture to display in the
+     * payment option selection widget.
+     *
+     * @var string
+     */
     private $logo;
+
+    /**
+     * The URL to which the request to process the
+     * payment must be made.
+     *
+     * @var string
+     */
     private $action;
+
+    /**
+     * The HTTP method to use when sending the request to $action,
+     * i.e. "GET" or "POST".
+     * @var string
+     */
     private $method;
+
+    /**
+     * An associative array of additional parameters to use when sending
+     * the request to $action,
+     * e.g. if  $action is "http://payment-provider.example.com/process",
+     * 			$method is "GET"
+     *      	and $inputs is ['customerName' => 'bob']
+     *      then the request will be made to:
+     *      	"http://payment-provider.example.com/process?customerName=bob"
+     *
+     * @var array
+     */
     private $inputs;
+
+    /**
+     * Custom HTML to display e.g. a form where
+     * you write your credit card number.
+     * The HTML MUST NOT contain a submit button, as
+     * the Core will submit the form.
+     *
+     * @var string
+     */
     private $form;
+
+    /**
+     * Custom HTML containing an iframe with the
+     * payment confirmation widget for modules like ATOS.
+     *
+     * @var string
+     */
+    private $iframe;
+
+    /**
+     * For internal reasons, the name of the module
+     * that provided this option.
+     * Is this still necessary?
+     *
+     * @var string
+     */
     private $moduleName;
 
     /**
