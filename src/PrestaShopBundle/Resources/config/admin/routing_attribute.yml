@@ -1,0 +1,14 @@
+# All the Attributes related routes
+
+admin_attribute_get_all:
+    path:     /get-all-attributes
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttributeController::getAllAttributesAction
+        _format: json
+
+admin_attribute_generator:
+    path:     /generator
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttributeController::attributesGeneratorAction

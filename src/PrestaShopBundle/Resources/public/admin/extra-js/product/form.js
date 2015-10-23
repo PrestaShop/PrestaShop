@@ -215,5 +215,55 @@ $( document ).ready(function() {
 		$(this).attr('id') == 'form_step1_price_shortcut' ? $("#form_step2_price").val($(this).val()) : $("#form_step1_price_shortcut").val($(this).val());
 	});
 
+	//manage combination generator form
+	var engineCombinationGenerator = new Bloodhound({
+		datumTokenizer: function(d) {
+			return Bloodhound.tokenizers.whitespace(d.label);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: {
+			url: $("#form_step3_attributes").attr("data-prefetch"),
+			cache: false
+		}
+	});
+
+	$('#form_step3_attributes').tokenfield({typeahead: [
+		null, {
+			source: engineCombinationGenerator,
+			display: 'label'
+		}]
+	});
+
+	//store attributes in input when add a token
+	$('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
+		$("#attributes-generator").append('<input type="hidden" id="attribute-generator-'+e.attrs.value+'" class="attribute-generator" value="'+e.attrs.value+'" name="options['+e.attrs.data.id_group+']['+e.attrs.value+']" />');
+	});
+
+	//remove stored attributes input when remove token
+	$('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
+		$("#attribute-generator-"+e.attrs.value).remove();
+	});
+
+	$("#create-combinations").click(function(){
+		var data = $("#attributes-generator input.attribute-generator, #form_id_product").serialize();
+		$.ajax({
+			type: "POST",
+			url: $("#form_step3_attributes").attr("data-action"),
+			data: data,
+			beforeSend: function() {
+				$('#create-combinations').attr("disabled", "disabled");
+			},
+			success: function(response){
+
+				//initialize form
+				$("input.attribute-generator").remove();
+				$('#attributes-generator div.token').remove();
+			},
+			complete: function(){
+				$('#create-combinations').removeAttr("disabled");
+			}
+		});
+	});
+
 	$("div#form_step1_categories").categorytree();
 });

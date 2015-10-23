@@ -11,6 +11,10 @@ _admin_feature_routing:
     resource: "admin/routing_feature.yml"
     prefix: /feature
 
+_admin_attribute_routing:
+    resource: "admin/routing_attribute.yml"
+    prefix: /attribute
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}

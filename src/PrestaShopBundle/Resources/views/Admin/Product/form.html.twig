@@ -108,7 +108,16 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
-                    {{ form_widget(form.step3) }}
+                    <div class="form-group" id="attributes-generator">
+                        {{ form_label(form.step3.attributes) }}
+                        <div class="col-sm-8">
+                            {{ form_errors(form.step3.attributes) }}
+                            {{ form_widget(form.step3.attributes) }}
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
+                        </div>
+                    </div>
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
@@ -159,7 +168,9 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' %}
+    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -175,6 +186,7 @@
     '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

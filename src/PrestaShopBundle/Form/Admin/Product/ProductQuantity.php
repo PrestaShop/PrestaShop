@@ -34,11 +34,18 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class ProductQuantity extends AbstractType
 {
+    private $router;
+    private $translator;
+
     /**
      * Constructor
+     *
+     * @param object $container The SF2 container
      */
-    public function __construct()
+    public function __construct($container)
     {
+        $this->router = $container->get('router');
+        $this->translator = $container->get('prestashop.adapter.translator');
     }
 
     /**
@@ -48,6 +55,17 @@ class ProductQuantity extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('attributes', 'text', array(
+            'attr' =>  [
+                'class' => 'tokenfield',
+                'data-limit' => 20,
+                'data-minLength' => 1,
+                'placeholder' => $this->translator->trans('Type something...', [], 'AdminProducts'),
+                'data-prefetch' => $this->router->generate('admin_attribute_get_all'),
+                'data-action' => $this->router->generate('admin_attribute_generator'),
+            ],
+            'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
+        ));
     }
 
     /**
