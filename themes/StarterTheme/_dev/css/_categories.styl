@@ -11,7 +11,7 @@ a.add-to-cart, a.add-to-cart:hover
 .category-cover img
   width 100%
 
-.subcategories
+.subcategories > ul
   display flex
   flex-wrap wrap
   align-items stretch
@@ -20,7 +20,7 @@ a.add-to-cart, a.add-to-cart:hover
 .product-miniature, .category-miniature
   background-color white
 
-.category-miniature
+.subcategories > ul > li
   overflow hidden
   margin-bottom 25px
   margin-right 25px
@@ -29,6 +29,7 @@ a.add-to-cart, a.add-to-cart:hover
   border 1px solid #ccc
   padding 15px
   flex-grow 1
+  background-color white
 
 .category-miniature img
   max-width 100%
@@ -46,7 +47,7 @@ a.add-to-cart, a.add-to-cart:hover
   justify-content space-between
 
 @media (max-width breakpoint-small)
-  .products, .subcategories
+  .products, .subcategories > ul
     justify-content space-around
 
   .product-miniature
