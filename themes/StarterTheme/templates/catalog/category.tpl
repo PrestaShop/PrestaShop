@@ -15,14 +15,14 @@
       <aside>
         {if $subcategories|count}
           <nav class="subcategories">
-            <ul class="category-miniature">
-              <li>
-                {foreach from=$subcategories item="subcategory"}
+            <ul>
+              {foreach from=$subcategories item="subcategory"}
+                <li>
                   {block name="category_miniature"}
                     {include './category-miniature.tpl' category=$subcategory}
                   {/block}
-                {/foreach}
-              </li>
+                </li>
+              {/foreach}
             </ul>
           </nav>
         {/if}
