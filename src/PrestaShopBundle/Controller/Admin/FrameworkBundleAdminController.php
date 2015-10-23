@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Service\Hook\HookEvent;
+use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 
@@ -79,5 +81,15 @@ class FrameworkBundleAdminController extends Controller
             }
         }
         return $errors;
+    }
+
+    protected function dispatchHook($hookName, $parameters)
+    {
+        return $this->container->get('prestashop.hook.dispatcher')->dispatch($hookName, new HookEvent());
+    }
+
+    protected function renderHook($hookName, $parameters)
+    {
+        return $this->container->get('prestashop.hook.dispatcher')->dispatch($hookName, new RenderingHookEvent());
     }
 }

@@ -131,6 +131,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         } else {
             $legacyCookie->__unset('productsproductFilter_active');
         }
+
+        // TODO: log
     }
 
     /* (non-PHPdoc)

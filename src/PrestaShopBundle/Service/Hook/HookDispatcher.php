@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Service\Hook;
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Composer\Hook;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -80,5 +81,35 @@ class HookDispatcher extends EventDispatcher
             $event->setContent($this->renderingContent);
             $this->renderingContent = array();
         }
+    }
+
+    /**
+     * Creates a HookEvent, sets its parameters, and dispatches it.
+     *
+     * @param $eventName
+     * @param array $parameters
+     * @return Event
+     * @throws \Exception
+     */
+    public function dispatchForParameters($eventName, array $parameters = array())
+    {
+        $event = new HookEvent();
+        $event->setHookParameters($parameters);
+        return $this->dispatch($eventName, $event);
+    }
+
+    /**
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     *
+     * @param $eventName
+     * @param array $parameters
+     * @return Event
+     * @throws \Exception
+     */
+    public function renderForParameters($eventName, array $parameters = array())
+    {
+        $event = new RenderingHookEvent();
+        $event->setHookParameters($parameters);
+        return $this->dispatch($eventName, $event);
     }
 }
