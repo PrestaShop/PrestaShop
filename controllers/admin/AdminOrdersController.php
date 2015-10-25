@@ -478,19 +478,63 @@ class AdminOrdersControllerCore extends AdminController
                         // Send mail to customer
                         $customer = new Customer((int)$order->id_customer);
                         $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+                        $address = new Address((int)$order->id_address_delivery);
+
                         if (!Validate::isLoadedObject($customer)) {
                             throw new PrestaShopException('Can\'t load Customer object');
                         }
                         if (!Validate::isLoadedObject($carrier)) {
                             throw new PrestaShopException('Can\'t load Carrier object');
                         }
+                        if (!Validate::isLoadedObject($address)) {
+                            throw new PrestaShopException('Can\'t load Address object');
+                        }
+
+                        $products = $order->getCartProducts();
+
+                        $metadata = '';
+
+                        $link = Context::getContext()->link;
+
+                        foreach ($products as $product) {
+                            $metadata .= '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product"> <meta itemprop="name" content="' . $product['product_name'] . '"/>';
+
+                            $prod_obj = new Product((int)$product['product_id']);
+
+                            //try to get the first image for the purchased combination
+                            $img = $prod_obj->getCombinationImages($order->id_lang);
+                            $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
+
+                            if ($combination_img != null) {
+                                $img_url = $link->getImageLink($prod_obj->link_rewrite, $combination_img, 'large_default');
+                            }
+                            //if there is no combination image, then get the product cover instead
+                            else {
+                                $img = $prod_obj->getCover($prod_obj->id);
+                                $img_url = $link->getImageLink($prod_obj->link_rewrite, $img['id_image']);
+                            }
+
+                            $prod_url = $prod_obj->getLink();
+
+                            $metadata .= '<link itemprop="image" href="' . $img_url . '"/>';
+                            $metadata .= '<link itemprop="url" href="' . $prod_url . '"/>';
+                            $metadata .= '</div>';
+                        }
+
                         $templateVars = array(
                             '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
                             '{firstname}' => $customer->firstname,
                             '{lastname}' => $customer->lastname,
                             '{id_order}' => $order->id,
                             '{shipping_number}' => $order->shipping_number,
-                            '{order_name}' => $order->getUniqReference()
+                            '{order_name}' => $order->getUniqReference(),
+                            '{carrier}' => $carrier->name,
+                            '{address1}' => $address->address1,
+                            '{country}' => $address->country,
+                            '{postcode}' => $address->postcode,
+                            '{city}' => $address->city,
+                            '{country}' => $address->country,
+                            '{meta_products}' => $metadata
                         );
                         if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
                             $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
