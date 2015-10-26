@@ -1,2 +1,29 @@
-TOP PAGE MENU HEADER
-<hr/>
+{# dump(topMenuData) #}
+
+
+<div class="container-fluid module-top-menu">
+    <div class="row">
+            <div class="col-md-2 module-menu-item {{topMenuData.catalog.class}}">
+                <a href="#">{{topMenuData.catalog.translation}}</a>
+            </div>
+            <div class="col-md-2 module-menu-item {{topMenuData.categories.class}}">
+                <a href="#">{{topMenuData.categories.translation}}</a>
+            </div>
+            <div class="col-md-2 module-menu-item {{topMenuData.thematics.class}}">
+                <a href="#">{{topMenuData.thematics.translation}}</a>
+            </div>
+
+
+            <div class="col-md-4 col-md-offset-2">
+                <div class="input-group add-on left-addon">
+                    <span class="input-group-addon">
+                        <i class="icon-search"></i>
+                    </span>
+                    <input class="module-search-bar form-control" type="text" placeholder="Search for modules ..."/>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<hr class="top-menu-separator"/>

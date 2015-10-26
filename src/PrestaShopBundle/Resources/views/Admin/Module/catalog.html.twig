@@ -12,7 +12,7 @@
 
 {% block content %}
     {# Contains menu with Selection/Categories/Popular #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_menu_top.html.twig' %}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
     {# Actual Page Content #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
 {% endblock %}

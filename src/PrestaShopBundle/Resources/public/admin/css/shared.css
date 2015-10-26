@@ -1,5 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
 
 .x-small-text {
     font-family:"Open Sans", Helvetica,Arial,sans-serif;
@@ -38,4 +38,17 @@
 .light-button:hover {
     border-color: #3ED2F0;
     color: #3ED2F0;
+}
+
+.bootstrap hr.top-menu-separator {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 10px;
+    border-color: #D6D9DC;
+    padding-left: 33px;
+    margin-right: 50px;
+}
+
+.active {
+    color: #25B9D7 !important;
 }

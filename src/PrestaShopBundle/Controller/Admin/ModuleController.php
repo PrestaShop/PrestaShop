@@ -27,7 +27,8 @@ class ModuleController extends Controller
         //die(var_dump($modulesProvider->getAllModules()));
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->createCatalogModuleList($modulesProvider->getAllModules())
+                'modules' => $this->createCatalogModuleList($modulesProvider->getAllModules()),
+                'topMenuData' => $this->getTopMenuData('catalog')
             ));
     }
 
@@ -52,19 +53,43 @@ class ModuleController extends Controller
             ));
     }
 
-    final private function createCatalogModuleList(array $module_full_list)
+    final private function createCatalogModuleList(array $moduleFullList)
     {
-        foreach ($module_full_list as $key => $module) {
+        foreach ($moduleFullList as $key => $module) {
             if ((bool)$module->installed === true) {
-                unset($module_full_list[$key]);
+                unset($moduleFullList[$key]);
             }
 
             // @TODO: Check why some of the module dont have any image attached, meanwhile just remove it from the list
             if (!isset($module->image)) {
-                unset($module_full_list[$key]);
+                unset($moduleFullList[$key]);
             }
         }
 
-        return $module_full_list;
+        return $moduleFullList;
+    }
+
+    final private function getTopMenuData($activeMenu)
+    {
+        //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
+        $topMenuData = array(
+            'catalog' => array( 'class' => '',
+                                'translation' => 'Our selection'
+                        ),
+            'categories' => array(  'class' => '',
+                                    'translation' => 'Categories'
+                            ),
+            'thematics' => array(  'class' => '',
+                                    'translation' => 'Thematics'
+                            ),
+        );
+
+        if (!isset($topMenuData[$activeMenu])) {
+            throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
+        } else {
+            $topMenuData[$activeMenu]['class'] = 'active';
+        }
+
+        return $topMenuData;
     }
 }
