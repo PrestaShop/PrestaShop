@@ -80,15 +80,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected function loadCatalogData()
     {
         $addons_modules = \Tools::addonsRequest('must-have');
+        $partners_modules = \Tools::addonsRequest('partner');
+        $natives_modules = \Tools::addonsRequest('native');
 
-        if (!$addons_modules) {
+        if (!$addons_modules || !$partners_modules || !$natives_modules) {
             return false;
         }
 
         $json_addons_modules = json_decode($addons_modules);
-        if ($json_addons_modules !== false) {
-            $this->catalog_categories = $this->getCategoriesFromJson($json_addons_modules);
-            $this->catalog_modules    = $this->convertJsonForNewCatalog($json_addons_modules);
+        $json_partners_modules = json_decode($partners_modules);
+        $json_natives_modules = json_decode($natives_modules);
+
+        if ($json_addons_modules !== false && $json_partners_modules !== false) {
+            $jsons = array_merge($json_addons_modules->modules, $json_natives_modules->modules, $json_partners_modules->products);
+
+            $this->catalog_categories = $this->getCategoriesFromJson($jsons);
+            $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
         }
     }
 
@@ -104,7 +111,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $categories['categories'] = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($original_json->modules as $module_key => $module) {
+        foreach ($original_json as $module_key => $module) {
             $name = $module->categoryName;
             $ref  = $this->getRefFromModuleCategoryName($name);
 
@@ -122,7 +129,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected function convertJsonForNewCatalog($original_json)
     {
         $remixed_json = [];
-        foreach ($original_json->modules as $module) {
+        foreach ($original_json as $module) {
             // Add un-implemented properties
             $module->refs       = (array)$this->getRefFromModuleCategoryName($module->categoryName);
             $module->conditions = [];

@@ -27,7 +27,7 @@ class ModuleController extends Controller
         //die(var_dump($modulesProvider->getAllModules()));
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $modulesProvider->getCatalogModules(),
+                'modules' => $this->createCatalogModuleList($modulesProvider->getCatalogModules()),
                 'topMenuData' => $this->getTopMenuData('catalog')
             ));
     }
@@ -55,13 +55,18 @@ class ModuleController extends Controller
 
     final private function createCatalogModuleList(array $moduleFullList)
     {
+        $installed_modules = [];
+        array_map(function ($module) use (&$installed_modules) {
+            $installed_modules[$module['name']] = $module;
+        }, \Module::getModulesInstalled());
+
         foreach ($moduleFullList as $key => $module) {
-            if ((bool)$module->installed === true) {
+            if ((bool)array_key_exists($module->name, $installed_modules) === true) {
                 unset($moduleFullList[$key]);
             }
 
             // @TODO: Check why some of the module dont have any image attached, meanwhile just remove it from the list
-            if (!isset($module->image)) {
+            if (!isset($module->media->img)) {
                 unset($moduleFullList[$key]);
             }
         }
