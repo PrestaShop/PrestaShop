@@ -497,7 +497,8 @@ class AdminOrdersControllerCore extends AdminController
                         $link = Context::getContext()->link;
 
                         foreach ($products as $product) {
-                            $metadata .= '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product"> <meta itemprop="name" content="' . $product['product_name'] . '"/>';
+                            $metadata .= '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
+                            $metadata .= "\n" .  '<meta itemprop="name" content="' . $product['product_name'] . '"/>';
 
                             $prod_obj = new Product((int)$product['product_id']);
 
