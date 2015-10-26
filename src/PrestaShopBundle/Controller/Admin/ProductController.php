@@ -320,6 +320,7 @@ class ProductController extends FrameworkBundleAdminController
 
         return array(
             'form' => $form->createView(),
+            'id_product' => $id,
         );
     }
 

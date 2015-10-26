@@ -143,7 +143,7 @@
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
                 <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
-                    {{ renderhook('displayAdminProductsExtra') }}
+                    {{ renderhook('displayAdminProductsExtra', {'id_product': id_product}) }}
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
