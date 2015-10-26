@@ -917,6 +917,12 @@
 								<tr>
 									<th></th>
 									<th><span class="title_box ">{l s='Product'}</span></th>
+									{if ($order->getTaxCalculationMethod() != $smarty.const.PS_TAX_EXC)}
+									<th>
+										<span class="title_box ">{l s='Unit Price'}</span>
+										<small class="text-muted">{l s='tax excluded.'}</small>
+									</th>
+									{/if}
 									<th>
 										<span class="title_box ">{l s='Unit Price'}</span>
 										<small class="text-muted">{$smarty.capture.TaxMethod}</small>
