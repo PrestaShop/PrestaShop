@@ -118,6 +118,32 @@
                             <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        {{ form_errors(form.step3.combinations) }}
+                        <div class="panel-group accordion" id="accordion_combinations">
+                            {% for combination in form.step3.combinations %}
+                            <div class="panel panel-default">
+                                <span class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">
+                                        {{ combination.vars.value.name }}
+                                    </a>
+                                    <div class="pull-right">
+                                        <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">Open</a>
+                                        <a href="" class="btn btn-default btn-sm">delete</a>
+                                    </div>
+                                </span>
+                                <div class="clearfix"></div>
+                                <div id="combination_form_{{ loop.index }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        {{ form_widget(combination) }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>

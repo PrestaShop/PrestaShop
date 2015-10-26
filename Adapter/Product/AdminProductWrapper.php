@@ -41,4 +41,76 @@ class AdminProductWrapper
     {
         return new \AdminProductsControllerCore();
     }
+
+    /**
+     * processProductAttribute
+     * Update a combination
+     *
+     * @param object $product
+     * @param array $combinationValues the posted values
+     *
+     * @return \AdminProductsControllerCore instance
+     */
+    public function processProductAttribute($product, $combinationValues)
+    {
+        $id_product_attribute = (int)$combinationValues['id_product_attribute'];
+
+        if (!\Combination::isFeatureActive() || $id_product_attribute == 0) {
+            return;
+        }
+
+        if (!isset($combinationValues['attribute_wholesale_price'])) {
+            $combinationValues['attribute_wholesale_price'] = 0;
+        }
+        if (!isset($combinationValues['attribute_price_impact'])) {
+            $combinationValues['attribute_price_impact'] = 0;
+        }
+        if (!isset($combinationValues['attribute_weight_impact'])) {
+            $combinationValues['attribute_weight_impact'] = 0;
+        }
+        if (!isset($combinationValues['attribute_ecotax'])) {
+            $combinationValues['attribute_ecotax'] = 0;
+        }
+        if ($combinationValues['attribute_default']) {
+            $product->deleteDefaultAttributes();
+        }
+
+        $product->updateAttribute(
+            $id_product_attribute,
+            $combinationValues['attribute_wholesale_price'],
+            $combinationValues['attribute_price'] * $combinationValues['attribute_price_impact'],
+            $combinationValues['attribute_weight'] * $combinationValues['attribute_weight_impact'],
+            $combinationValues['attribute_unity'] * $combinationValues['attribute_unit_impact'],
+            $combinationValues['attribute_ecotax'],
+            null,
+            $combinationValues['attribute_reference'],
+            $combinationValues['attribute_ean13'],
+            $combinationValues['attribute_default'],
+            isset($combinationValues['attribute_location']) ? $combinationValues['attribute_location'] : null,
+            $combinationValues['attribute_upc'],
+            $combinationValues['attribute_minimal_quantity'],
+            $combinationValues['available_date_attribute'],
+            false,
+            array(),
+            $combinationValues['attribute_isbn']
+        );
+
+        \StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
+        \StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, $id_product_attribute);
+
+        $product->checkDefaultAttributes();
+
+        if ($combinationValues['attribute_default']) {
+            \Product::updateDefaultAttribute((int)$product->id);
+            if (isset($id_product_attribute)) {
+                $product->cache_default_attribute = (int)$id_product_attribute;
+            }
+
+            if ($available_date = $combinationValues['available_date_attribute']) {
+                $product->setAvailableDate($available_date);
+            } else {
+                $product->setAvailableDate();
+            }
+        }
+    }
 }
