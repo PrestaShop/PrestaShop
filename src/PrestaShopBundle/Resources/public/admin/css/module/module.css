@@ -1,12 +1,11 @@
+/* Everything related to module grid list thumbs */
+
 .module-item {
-    /*height: 215px;*/
     width: 23% !important;
     max-width: 23% !important;
     background: white;
     text-transform: none !important;
-    /*padding: 35px !important;*/
     margin: 10px;
-    /*overflow: hidden;*/
 }
 
 .module-item .panel-heading {
@@ -32,8 +31,7 @@
 }
 
 .module-item .panel-heading a {
-    margin-right: 5px;
-    margin-bottom: 22px;
+
 }
 
 .module-menu-item {
@@ -82,4 +80,17 @@
     padding-left: 11px !important;
     padding-right: 45px !important;
     padding-top: 15px !important;
+}
+
+/* All relative to module modal */
+.module-modal-title {
+    display: inline-block;
+}
+
+.module-modal-header {
+    border: 0;
+}
+
+.module-modal-footer {
+    border: 0;
 }

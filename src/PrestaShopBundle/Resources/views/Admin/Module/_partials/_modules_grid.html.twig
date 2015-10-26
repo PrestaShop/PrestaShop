@@ -19,9 +19,11 @@
                         </div>
                         <div class="module-quick-action panel-footer">
                             <div class="pull-right">
-                                <input type="button" class="light-button" value="FREE" />
+                                <input type="button" class="light-button" value="FREE" data-toggle="modal" data-target="#module-modal-{{module.name}}" />
                             </div>
                         </div>
+                        {# Include Modal partial and give it current module to fill in included tpl #}
+                        {% include 'PrestaShopBundle:Admin/Module/_partials:_module_modal.html.twig' with { 'module': module } %}
                     </div>
             {% endfor %}
         </div>
