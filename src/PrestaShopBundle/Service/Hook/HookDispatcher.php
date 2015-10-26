@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Service\Hook;
 
-use PrestaShop\PrestaShop\Core\Business\Cldr\Composer\Hook;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 
