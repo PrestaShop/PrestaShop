@@ -27,12 +27,28 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
 use PrestaShopBundle\Exception\DataUpdateException;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 
 /**
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.
  */
 class AdminProductDataUpdater implements ProductInterface
 {
+    /**
+     * @var HookDispatcher
+     */
+    private $hookDispatcher;
+
+    /**
+     * Constructor. HookDispatcher is injected by Sf container.
+     *
+     * @param HookDispatcher $hookDispatcher
+     */
+    public function __construct(HookDispatcher $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::activateProductIdList()
      */
@@ -51,6 +67,7 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate?1:0);
             $result = $product->update();
+            // TODO: Hook ?
         }
 
         if (count($failedIdList) > 0) {
@@ -69,6 +86,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
+        // Hooks: will trigger actionProductDelete multiple times
         $result = (new \Product())->deleteSelection($productIdList);
 
         if ($result === 0) {
@@ -88,6 +106,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         // dumb? no: delete() makes a lot of things, and can reject deletion in specific cases.
+        // Hooks: will trigger actionProductDelete
         $result = $product->delete();
 
         if ($result === 0) {
@@ -141,7 +160,7 @@ class AdminProductDataUpdater implements ProductInterface
             if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new DataUpdateException('product', $id_product_old, 'An error occurred while copying images.', 5008);
             } else {
-                \Hook::exec('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
+                $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && \Configuration::get('PS_SEARCH_INDEXATION')) {
                     \Search::indexation(false, $product->id);
                 }
@@ -226,6 +245,8 @@ class AdminProductDataUpdater implements ProductInterface
             WHERE cp.`id_category` = '.$categoryId.'
             ORDER BY cp.`id_product` NOT IN ('.implode(',', array_keys($productList)).'), cp.`position` ASC';
         $res = \Db::getInstance()->query($selectPositions);
+
+        // TODO: Hook ?
 
         return true;
     }

@@ -131,6 +131,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         } else {
             $legacyCookie->__unset('productsproductFilter_active');
         }
+
+        // TODO: log
     }
 
     /* (non-PHPdoc)
@@ -268,6 +270,16 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             // We do not show position column, so we do not join the table, so we do not order by position!
             $sqlOrder = array('id_product ASC');
         }
+
+        // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
+        \Hook::exec('actionAdminProductsListingFieldsModifier', array(
+            '_ps_version' => _PS_VERSION_,
+            'sql_select' => &$sqlSelect,
+            'sql_table' => &$sqlTable,
+            'sql_where' => &$sqlWhere,
+            'sql_order' => &$sqlOrder,
+            'sql_limit' => &$sqlLimit
+        ));
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlOrder, $sqlLimit);
         $products = \Db::getInstance()->executeS($sql, true, false);

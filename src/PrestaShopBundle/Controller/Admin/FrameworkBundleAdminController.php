@@ -80,4 +80,31 @@ class FrameworkBundleAdminController extends Controller
         }
         return $errors;
     }
+
+    /**
+     * Creates a HookEvent, sets its parameters, and dispatches it.
+     *
+     * Wrapper to: @see HookDispatcher::dispatchForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     */
+    protected function dispatchHook($hookName, array $parameters)
+    {
+        $this->container->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+    }
+
+    /**
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     *
+     * Wrapper to: @see HookDispatcher::renderForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     * @return array The responses of hooks
+     */
+    protected function renderHook($hookName, array $parameters)
+    {
+        return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
+    }
 }

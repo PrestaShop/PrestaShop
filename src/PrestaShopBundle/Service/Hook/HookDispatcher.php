@@ -81,4 +81,34 @@ class HookDispatcher extends EventDispatcher
             $this->renderingContent = array();
         }
     }
+
+    /**
+     * Creates a HookEvent, sets its parameters, and dispatches it.
+     *
+     * @param $eventName The hook name.
+     * @param array $parameters Hook parameters
+     * @return Event The event that has been passed to each listener.
+     * @throws \Exception
+     */
+    public function dispatchForParameters($eventName, array $parameters = array())
+    {
+        $event = new HookEvent();
+        $event->setHookParameters($parameters);
+        return $this->dispatch($eventName, $event);
+    }
+
+    /**
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     *
+     * @param $eventName The hook name.
+     * @param array $parameters Hook parameters
+     * @return Event The event that has been passed to each listener. Contains the responses.
+     * @throws \Exception
+     */
+    public function renderForParameters($eventName, array $parameters = array())
+    {
+        $event = new RenderingHookEvent();
+        $event->setHookParameters($parameters);
+        return $this->dispatch($eventName, $event);
+    }
 }
