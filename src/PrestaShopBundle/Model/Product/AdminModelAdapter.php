@@ -23,13 +23,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Model\Product;
 
 /**
- * This form class is risponsible to mapp the form data to the product object
+ * This form class is responsible to map the form data to the product object
  */
-class AdminModelAdapter
+class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
     private $locales;
@@ -70,11 +69,11 @@ class AdminModelAdapter
 
     /**
      * modelMapper
-     * Mapp form data to object model
+     * Map form data to object model
      *
      * @param array $form_data
      *
-     * @return array Transormed form data to model attempt
+     * @return array Transformed form data to model attempt
      */
     public function getModelDatas($form_data)
     {
@@ -171,14 +170,14 @@ class AdminModelAdapter
             $new_form_data[$k] = $v;
         }
 
-        return $new_form_data;
+        return array_merge(parent::getHookData(), $new_form_data);
     }
 
     /**
      * formMapper
-     * Mapp object model to form data
+     * Map object model to form data
      *
-     * @return array Transormed model datas to form attempt
+     * @return array Transformed model data to form attempt
      */
     public function getFormDatas()
     {
@@ -287,7 +286,7 @@ class AdminModelAdapter
 
     /**
      * get form Full product Description with description short
-     * Mapp object model to form data
+     * Map object model to form data
      *
      * @param array $descriptionLangs the translated descriptions
      * @param array $descriptionShortLangs the translated short descriptions

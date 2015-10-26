@@ -167,7 +167,7 @@ class ProductController extends FrameworkBundleAdminController
             // no filter, total filtered == 0, and then total count == 0 too.
             return $this->render('PrestaShopBundle:Admin/Product:catalogEmpty.html.twig');
         } else {
-            // Paginator
+            // Pagination
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
 
@@ -346,19 +346,19 @@ class ProductController extends FrameworkBundleAdminController
             switch ($action) {
                 case 'activate_all':
                     // Hooks: managed in ProductUpdater
-                    $success = $productUpdater->activateProductIdList($productIdList);
+                    $productUpdater->activateProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully activated.'));
                     $logger->info('Products activated: ('.implode(',', $productIdList).').');
                     break;
                 case 'deactivate_all':
                     // Hooks: managed in ProductUpdater
-                    $success = $productUpdater->activateProductIdList($productIdList, false);
+                    $productUpdater->activateProductIdList($productIdList, false);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.'));
                     $logger->info('Products deactivated: ('.implode(',', $productIdList).').');
                     break;
                 case 'delete_all':
                     // Hooks: managed in ProductUpdater
-                    $success = $productUpdater->deleteProductIdList($productIdList);
+                    $productUpdater->deleteProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deleted.'));
                     $logger->info('Products deleted: ('.implode(',', $productIdList).').');
                     break;
@@ -403,7 +403,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
-                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
+                    $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
                     $this->addFlash('success', $translator->trans('Products successfully sorted.'));
                     $logger->info('Products sorted: ('.implode(',', $productIdList).') with positions ('.implode(',', $productPositionList).').');
                     break;
@@ -444,7 +444,7 @@ class ProductController extends FrameworkBundleAdminController
             switch ($action) {
                 case 'delete':
                     // Hooks: managed in ProductUpdater
-                    $success = $productUpdater->deleteProduct($id);
+                    $productUpdater->deleteProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully deleted.'));
                     $logger->info('Product deleted: ('.$id.').');
                     break;
@@ -479,11 +479,10 @@ class ProductController extends FrameworkBundleAdminController
      *
      * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
      *
-     * @param Request $request
      * @param boolean $use True to use legacy version. False for refactored page.
      * @return void (redirection)
      */
-    public function shouldUseLegacyPagesAction(Request $request, $use)
+    public function shouldUseLegacyPagesAction($use)
     {
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
