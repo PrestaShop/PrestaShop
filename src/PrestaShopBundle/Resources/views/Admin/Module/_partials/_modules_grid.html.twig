@@ -1,4 +1,4 @@
-
+{% dump(topMenuData) %}
 
 
 <div class="container-fluid">
@@ -6,7 +6,7 @@
             {% for module in modules %}
                     <div class="module-item panel panel-default col-md-3" data-module-id="{{ module.id }}">
                         <div class="panel-heading">
-                            <img class="module-logo-thumb" height="15" width="15" src="{{ '../' ~ module.image }}" alt="{{ module.displayName }}" />
+                            <img class="module-logo-thumb" height="15" width="15" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
                             <div class="text-ellipsis module-name">
                                 {{ module.displayName }}
                             </div>

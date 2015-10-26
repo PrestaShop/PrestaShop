@@ -3,15 +3,11 @@
 
 <div class="container-fluid module-top-menu">
     <div class="row">
-            <div class="col-md-2 module-menu-item {{topMenuData.catalog.class}}">
-                <a href="#">{{topMenuData.catalog.translation}}</a>
+	   {% for menu in topMenuData %}
+            <div class="col-md-2 module-menu-item {#menu.class#}">
+                <a href="#">{{menu.name}}</a>
             </div>
-            <div class="col-md-2 module-menu-item {{topMenuData.categories.class}}">
-                <a href="#">{{topMenuData.categories.translation}}</a>
-            </div>
-            <div class="col-md-2 module-menu-item {{topMenuData.thematics.class}}">
-                <a href="#">{{topMenuData.thematics.translation}}</a>
-            </div>
+           {% endfor %}
 
 
             <div class="col-md-4 col-md-offset-2">

@@ -27,7 +27,7 @@ class ModuleController extends Controller
         //die(var_dump($modulesProvider->getAllModules()));
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->createCatalogModuleList($modulesProvider->getAllModules()),
+                'modules' => $modulesProvider->getCatalogModules(),
                 'topMenuData' => $this->getTopMenuData('catalog')
             ));
     }
@@ -71,23 +71,14 @@ class ModuleController extends Controller
 
     final private function getTopMenuData($activeMenu)
     {
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         //@TODO: To be made ultra flexible, hardcoded for dev purpose ATM
-        $topMenuData = array(
-            'catalog' => array( 'class' => '',
-                                'translation' => 'Our selection'
-                        ),
-            'categories' => array(  'class' => '',
-                                    'translation' => 'Categories'
-                            ),
-            'thematics' => array(  'class' => '',
-                                    'translation' => 'Thematics'
-                            ),
-        );
+        $topMenuData = $modulesProvider->getCatalogCategories();
 
         if (!isset($topMenuData[$activeMenu])) {
-            throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
+            throw new \Exception("Menu '$activeMenu' not found in Top Menu data", 1);
         } else {
-            $topMenuData[$activeMenu]['class'] = 'active';
+            $topMenuData[$activeMenu]->class = 'active';
         }
 
         return $topMenuData;

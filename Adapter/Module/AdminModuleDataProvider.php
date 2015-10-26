@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2015 PrestaShop
  *
@@ -24,6 +23,7 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
@@ -40,20 +40,127 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements ModuleInterface
 {
     private $is_employee_addons_logged = false;
+    protected $catalog_categories      = [];
+    protected $catalog_modules         = [];
 
     public function __construct()
     {
         $context = \Context::getContext();
-        if (isset($context->cookie->username_addons)
-            && isset($context->cookie->password_addons)
-            && !empty($context->cookie->username_addons)
-            && !empty($context->cookie->password_addons)) {
+        if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
+            && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)) {
             $this->is_employee_addons_logged = true;
         }
     }
 
     public function getAllModules()
     {
-        return \Module::getModulesOnDisk(true, (bool)$this->is_employee_addons_logged, (int)\Context::getContext()->employee->id);
+        return \Module::getModulesOnDisk(true,
+                (bool)$this->is_employee_addons_logged,
+                (int)\Context::getContext()->employee->id);
+    }
+
+    public function getCatalogModules()
+    {
+        if (count($this->catalog_modules) === 0) {
+            $this->loadCatalogData();
+        }
+
+        return $this->catalog_modules;
+    }
+
+    public function getCatalogCategories()
+    {
+        if (count($this->catalog_categories) === 0) {
+            $this->loadCatalogData();
+        }
+
+        return $this->catalog_categories;
+    }
+
+    protected function loadCatalogData()
+    {
+        $addons_modules = \Tools::addonsRequest('must-have');
+
+        if (!$addons_modules) {
+            return false;
+        }
+
+        $json_addons_modules = json_decode($addons_modules);
+        if ($json_addons_modules !== false) {
+            $this->catalog_categories = $this->getCategoriesFromJson($json_addons_modules);
+            $this->catalog_modules    = $this->convertJsonForNewCatalog($json_addons_modules);
+        }
+    }
+
+    protected function getCategoriesFromJson($original_json)
+    {
+        $categories = [];
+
+        // First Tab: Catalog
+        $categories['catalog'] = $this->createMenuObject('selection',
+            'Our selection');
+
+        // Second Tab: Categories
+        $categories['categories'] = $this->createMenuObject('categories',
+            'Categories');
+
+        foreach ($original_json->modules as $module_key => $module) {
+            $name = $module->categoryName;
+            $ref  = $this->getRefFromModuleCategoryName($name);
+
+            if (!array_key_exists($ref, $categories['categories']->subMenu)) {
+                $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
+                    $name);
+            }
+
+            $categories['categories']->subMenu[$ref]->modulesRef[] = $module_key;
+        }
+
+        return $categories;
+    }
+
+    protected function convertJsonForNewCatalog($original_json)
+    {
+        $remixed_json = [];
+        foreach ($original_json->modules as $module) {
+            // Add un-implemented properties
+            $module->refs       = (array)$this->getRefFromModuleCategoryName($module->categoryName);
+            $module->conditions = [];
+            $module->rating     = (object)[
+                    'score' => 0.0,
+                    'countReviews' => 0,
+            ];
+            $module->scoring    = 0;
+            $module->media      = (object)[
+                    'img' => $module->img,
+                    'badges' => isset($module->badges)?$module->badges:[],
+                    'cover' => isset($module->cover)?$module->cover:[],
+                    'screenshotsUrls' => [],
+                    'videoUrl' => null,
+            ];
+            unset($module->badges);
+            //unset($module->categoryName);
+            unset($module->cover);
+
+            $remixed_json[] = $module;
+        }
+
+        return $remixed_json;
+    }
+
+    protected function createMenuObject($ref, $name)
+    {
+        return (object)[
+                'name' => $name,
+                'refMenu' => $ref,
+                'subMenu' => [],
+                'modulesRef' => [],
+        ];
+    }
+
+    protected function getRefFromModuleCategoryName($name)
+    {
+        return \Tools::replaceAccentedChars(str_replace([' '], ['_'],
+                    strtolower($name)));
     }
 }
