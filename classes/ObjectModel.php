@@ -1817,7 +1817,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
             Hook::exec('action'.$class.'DefinitionModifier', array(
                 'definition' => &$definition,
                 'class' => &$class
-            ));
+            ), null, true, false);
 
             $definition['classname'] = $class;
 
