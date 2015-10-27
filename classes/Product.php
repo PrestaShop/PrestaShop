@@ -151,6 +151,12 @@ class ProductCore extends ObjectModel
     /** @var string Meta tag title */
     public $meta_title;
 
+    /** @var string Social sharing description */
+    public $social_sharing_description;
+
+    /** @var string Social sharing title */
+    public $social_sharing_title;
+
     /** @var bool Product statuts */
     public $quantity_discount = 0;
 
@@ -320,6 +326,8 @@ class ProductCore extends ObjectModel
             'meta_description' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_keywords' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_title' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+            'social_sharing_description' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'social_sharing_title' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'link_rewrite' =>    array(
                 'type' => self::TYPE_STRING,
                 'lang' => true,

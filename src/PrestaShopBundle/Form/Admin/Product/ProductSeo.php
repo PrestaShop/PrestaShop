@@ -56,11 +56,43 @@ class ProductSeo extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('link_rewrite', new TranslateType(
+        $builder->add('meta_title', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
+            'required' => false
+        ))
+        ->add('meta_description', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
+            'required' => false
+        ))
+        ->add('link_rewrite', new TranslateType(
             'text',
             array(),
             $this->locales
-        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
+        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')))
+        ->add('social_sharing_title', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Social Sharing title', [], 'AdminProducts'),
+            'required' => false
+        ))
+        ->add('social_sharing_description', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Social Sharing description', [], 'AdminProducts'),
+            'required' => false
+        ));
     }
 
     /**

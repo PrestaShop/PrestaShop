@@ -1611,6 +1611,8 @@ CREATE TABLE `PREFIX_product_lang` (
   `name` varchar(128) NOT NULL,
   `available_now` varchar(255) DEFAULT NULL,
   `available_later` varchar(255) DEFAULT NULL,
+  `social_sharing_title` varchar(255) DEFAULT NULL,
+  `social_sharing_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_product`, `id_shop` , `id_lang`),
   KEY `id_lang` (`id_lang`),
   KEY `name` (`name`)
