@@ -37,10 +37,9 @@ interface ProductInterface
     /**
      * Will retrieve set of parameters from persistence, for product filters.
      *
-     * @param string $prefix
      * @return string[] The old filter parameters values
      */
-    public function getPersistedFilterParameters($prefix = '');
+    public function getPersistedFilterParameters();
 
     /**
      * Is there a specific category selected to filter product?

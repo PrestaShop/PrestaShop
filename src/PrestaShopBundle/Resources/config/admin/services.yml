@@ -31,6 +31,8 @@ services:
     prestashop.adapter.admin.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
         decorates: prestashop.core.admin.data_provider.product_interface
+        arguments:
+            - @doctrine.orm.entity_manager
         public: false
     prestashop.adapter.admin.data_updater.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater

@@ -25,7 +25,9 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
+use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 
 /**
@@ -33,31 +35,44 @@ use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
  *
  * This class will provide data from DB / ORM about Products for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
- *
- * FIXME: rewrite persistence of filter parameters -> into DB
  */
 class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * Constructor
+     *
+     * Entity manager is automatically injected.
+     *
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getPersistedFilterParameters()
      */
-    public function getPersistedFilterParameters($prefix = '')
+    public function getPersistedFilterParameters()
     {
-        /* @var $legacyCookie \CookieCore */
-        $legacyCookie = \Context::getContext()->cookie;
-        if (!$legacyCookie) {
-            return array();
+        $employee = \Context::getContext()->employee;
+        $shop = \Context::getContext()->shop;
+        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+            'employee' => $employee->id,
+            'shop' => $shop->id,
+            'controller' => 'ProductController',
+            'action' => 'catalogAction'
+        ));
+        /* @var $filter AdminFilter */
+        if (!$filter) {
+            return AdminFilter::getProductCatalogEmptyFilter();
         }
-        return array(
-            $prefix.'filter_category' => $legacyCookie->id_category_products_filter,
-            $prefix.'filter_column_id_product' => $legacyCookie->productsproductFilter_id_product,
-            $prefix.'filter_column_name' => $legacyCookie->__get('productsproductFilter_b!name'),
-            $prefix.'filter_column_reference' => $legacyCookie->productsproductFilter_reference,
-            $prefix.'filter_column_name_category' => $legacyCookie->__get('productsproductFilter_cl!name'),
-            $prefix.'filter_column_price' => $legacyCookie->__get('productsproductFilter_a!price'),
-            $prefix.'filter_column_sav_quantity' => $legacyCookie->__get('productsproductFilter_sav!quantity'),
-            $prefix.'filter_column_active' => $legacyCookie->__get('productsproductFilter_active')
-        );
+        return $filter->getProductCatalogFilter();
     }
 
     /* (non-PHPdoc)
@@ -88,51 +103,29 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function persistFilterParameters(array $parameters)
     {
-        /* @var $legacyCookie \CookieCore */
-        $legacyCookie = \Context::getContext()->cookie;
+        $employee = \Context::getContext()->employee;
+        $shop = \Context::getContext()->shop;
+        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+            'employee' => $employee->id,
+            'shop' => $shop->id,
+            'controller' => 'ProductController',
+            'action' => 'catalogAction'
+        ));
 
-        if (isset($parameters['filter_category'])) {
-            $legacyCookie->__set('id_category_products_filter', $parameters['filter_category']);
-        } else {
-            $legacyCookie->__unset('id_category_products_filter');
-        }
-        if (isset($parameters['filter_column_id_product'])) {
-            $legacyCookie->__set('productsproductFilter_id_product', $parameters['filter_column_id_product']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_id_product');
-        }
-        if (isset($parameters['filter_column_name'])) {
-            $legacyCookie->__set('productsproductFilter_b!name', $parameters['filter_column_name']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_b!name');
-        }
-        if (isset($parameters['filter_column_reference'])) {
-            $legacyCookie->__set('productsproductFilter_reference', $parameters['filter_column_reference']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_reference');
-        }
-        if (isset($parameters['filter_column_name_category'])) {
-            $legacyCookie->__set('productsproductFilter_cl!name', $parameters['filter_column_name_category']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_cl!name');
-        }
-        if (isset($parameters['filter_column_price'])) {
-            $legacyCookie->__set('productsproductFilter_a!price', $parameters['filter_column_price']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_a!price');
-        }
-        if (isset($parameters['filter_column_sav_quantity'])) {
-            $legacyCookie->__set('productsproductFilter_sav!quantity', $parameters['filter_column_sav_quantity']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_sav!quantity');
-        }
-        if (isset($parameters['filter_column_active'])) {
-            $legacyCookie->__set('productsproductFilter_active', $parameters['filter_column_active']);
-        } else {
-            $legacyCookie->__unset('productsproductFilter_active');
+        if (!$filter) {
+            $filter = new AdminFilter();
+            $filter->setEmployee($employee->id)->setShop($shop->id)->setController('ProductController')->setAction('catalogAction');
+            $this->entityManager->persist($filter);
         }
 
-        // TODO: log
+        $filter->setProductCatalogFilter($parameters);
+
+        // if each filter is == '', then remove item from DB :)
+        if (count(array_diff($filter->getProductCatalogFilter(), array(''))) == 0) {
+            $this->entityManager->remove($filter);
+        }
+
+        $this->entityManager->flush($filter);
     }
 
     /* (non-PHPdoc)
@@ -319,7 +312,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         );
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable);
-        $products = \Db::getInstance()->executeS($sql, true, false);
+        \Db::getInstance()->executeS($sql, true, false);
         $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];
         return $total;
