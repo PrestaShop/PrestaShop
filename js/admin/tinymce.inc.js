@@ -33,7 +33,10 @@ function tinySetup(config)
 			format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
 			table: {title: 'Table', items: 'inserttable tableprops deletetable | cell row column'},
 			tools: {title: 'Tools', items: 'code'}
-		}
+		},
+		rel_list:[
+			{ title: 'nofollow', value: 'nofollow' }
+		]
 	};
 
 	$.each(default_config, function(index, el)
