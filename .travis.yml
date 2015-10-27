@@ -20,8 +20,10 @@ matrix:
   - php: 5.4
   - php: 5.5
   - php: 7.0
+
 before_install:
-- sudo apt-get update
+  - sudo apt-get update
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16"
 
 before_script:
   - phpenv config-rm xdebug.ini
@@ -33,7 +35,7 @@ before_script:
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
-  - sudo cp -Rf . /var/www/prestashop.unit.test
+  - sudo cp -Rf $TRAVIS_BUILD_DIR /var/www/prestashop.unit.test
   - sudo chmod 777 -R /var/www/
   - sudo service apache2 restart
 
@@ -42,6 +44,7 @@ notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
 script:
+  # install PrestaShop for PHPUnit tests
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - cd /var/www/prestashop.unit.test && composer install
   - /var/www/prestashop.unit.test/tests/check_php_parse_errors.sh
