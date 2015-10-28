@@ -134,7 +134,7 @@
 
                         <div class="panel-group accordion" id="accordion_combinations">
                             {% for combination in form.step3.combinations %}
-                            <div class="panel panel-default">
+                            <div class="panel panel-default combination">
                                 <div class="panel-title">
                                     <div class="col-lg-6 pull-left">
                                         <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">
@@ -147,7 +147,7 @@
                                     </div>
                                     <div class="col-lg-2 pull-right text-right">
                                         <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">Open</a>
-                                        <a href="" class="btn btn-default btn-sm">delete</a>
+                                        <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete">delete</a>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>

@@ -265,5 +265,27 @@ $( document ).ready(function() {
 		});
 	});
 
+	$("#accordion_combinations .delete").click(function(e){
+		e.preventDefault();
+		var combinationElem = $(this).parent().parent().parent();
+		$.ajax({
+			type: "GET",
+			url: $(this).attr('href'),
+			beforeSend: function() {
+				$(this).attr("disabled", "disabled");
+			},
+			success: function(response){
+				combinationElem.remove();
+				showSuccessMessage(response.message);
+			},
+			error: function(response){
+				showErrorMessage(jQuery.parseJSON(response.responseText).message);
+			},
+			complete: function(){
+				$(this).removeAttr("disabled");
+			}
+		});
+	});
+
 	$("div#form_step1_categories").categorytree();
 });

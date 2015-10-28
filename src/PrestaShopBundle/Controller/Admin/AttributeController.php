@@ -109,4 +109,33 @@ class AttributeController extends FrameworkBundleAdminController
 
         return $response;
     }
+
+    /**
+     * Delete a product atrtibute
+     *
+     * @param int $idAttribute The attribute ID
+     * @param int $idProduct The product ID
+     * @param Request $request The request
+     *
+     * @return string
+     */
+    public function deleteAttributeAction($idAttribute, $idProduct, Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $response = new JsonResponse();
+
+        if (!$request->isXmlHttpRequest()) {
+            return $response;
+        }
+
+        $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
+            ->ajaxProcessDeleteProductAttribute($idAttribute, $idProduct);
+
+        if ($res['status'] == 'error') {
+            $response->setStatusCode(400);
+        }
+
+        $response->setData(['message' => $translator->trans($res['message'])]);
+        return $response;
+    }
 }

@@ -55,4 +55,55 @@ class AdminAttributeGeneratorControllerWrapper
         \SpecificPriceRule::enableAnyApplication();
         \SpecificPriceRule::applyAllRules(array((int)$product->id));
     }
+
+    /**
+     * Delete a product attribute
+     *
+     * @param int $idAttribute The attribute ID
+     * @param int $idProduct The product ID
+     *
+     * @return array
+     */
+    public function ajaxProcessDeleteProductAttribute($idAttribute, $idProduct)
+    {
+        if (!\Combination::isFeatureActive()) {
+            return false;
+        }
+
+        if ($idProduct && \Validate::isUnsignedId($idProduct) && \Validate::isLoadedObject($product = new \Product($idProduct))) {
+            if (($depends_on_stock = \StockAvailable::dependsOnStock($idProduct)) && \StockAvailable::getQuantityAvailableByProduct($idProduct, $idAttribute)) {
+                return array(
+                    'status' => 'error',
+                    'message'=> 'It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.'
+                );
+            } else {
+                $product->deleteAttributeCombination((int)$idAttribute);
+                $product->checkDefaultAttributes();
+                \Tools::clearColorListCache((int)$product->id);
+                if (!$product->hasAttributes()) {
+                    $product->cache_default_attribute = 0;
+                    $product->update();
+                } else {
+                    \Product::updateDefaultAttribute($idProduct);
+                }
+
+                if ($depends_on_stock && !\Stock::deleteStockByIds($idProduct, $idAttribute)) {
+                    return array(
+                        'status' => 'error',
+                        'message'=> 'Error while deleting the stock'
+                    );
+                } else {
+                    return array(
+                        'status' => 'ok',
+                        'message'=> 'Successful deletion'
+                    );
+                }
+            }
+        } else {
+            return array(
+                'status' => 'error',
+                'message'=> 'You cannot delete this attribute.'
+            );
+        }
+    }
 }
