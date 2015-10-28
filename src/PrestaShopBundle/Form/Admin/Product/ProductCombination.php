@@ -124,7 +124,7 @@ class ProductCombination extends AbstractType
                 '-1' => $this->translator->trans('Decrease', [], 'AdminProducts'),
             ),
             'required' => true,
-            'label' => $this->translator->trans('Impact on weight', [], 'AdminProducts'),
+            'label' => $this->translator->trans('Impact on unit price', [], 'AdminProducts'),
         ))
         ->add('attribute_unity', 'number', array(
             'required' => false,
