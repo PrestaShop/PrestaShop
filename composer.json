@@ -138,7 +138,8 @@
     "git-hook-uninstall": "bash tools/contrib/uninstall.sh",
     "cldr-init": "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
     "phpunit-sf": "php bin/phpunit -c admin-dev/",
-    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\""
+    "phpdoc-sf": "php vendor/phpdocumentor/phpdocumentor/bin/phpdoc.php -d Core -d Adapter -d src -t docs/phpdoc-sf --template=\"responsive-twig\"",
+    "phpunit-ps": "php bin/phpunit -c tests/"
   },
   "config": {
     "bin-dir": "bin"
