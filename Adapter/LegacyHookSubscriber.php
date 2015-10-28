@@ -156,6 +156,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
 
             $moduleListeners = array();
             $modules = array();
+            //SF2 cache clear bug fix : call bqSQL alias function
             if (function_exists("bqSQL")) {
                 $modules = \Hook::getHookModuleExecList($name);
             }
