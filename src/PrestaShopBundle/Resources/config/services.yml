@@ -7,6 +7,7 @@ services:
         class: PrestaShopBundle\Service\Hook\HookDispatcher
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
+            - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
 
 
     # ADAPTERS (prestashop.adapter.*)
@@ -29,6 +30,8 @@ services:
     # Legacy Hooks registrator
     prestashop.adapter.legacy.hook.subscriber:
         class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+    prestashop.adapter.legacy.block.helper.subscriber:
+            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
 
     # Data providers service
     prestashop.adapter.data_provider.supplier:
