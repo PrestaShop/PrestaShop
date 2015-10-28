@@ -325,13 +325,13 @@ class CustomerCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        if (isset($passwd)) {
-            try {
-                $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
-            } catch (Adapter_Exception $e) {
-                return false;
-            }
+        try {
+            $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        } catch (Adapter_Exception $e) {
+            return false;
+        }
 
+        if (isset($passwd)) {
             $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
                 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
 
