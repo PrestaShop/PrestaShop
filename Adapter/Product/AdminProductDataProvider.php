@@ -63,8 +63,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $employee = \Context::getContext()->employee;
         $shop = \Context::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
-            'employee' => $employee->id,
-            'shop' => $shop->id,
+            'employee' => $employee->id ?: 0,
+            'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',
             'action' => 'catalogAction'
         ));
@@ -106,15 +106,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $employee = \Context::getContext()->employee;
         $shop = \Context::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
-            'employee' => $employee->id,
-            'shop' => $shop->id,
+            'employee' => $employee->id ?: 0,
+            'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',
             'action' => 'catalogAction'
         ));
 
         if (!$filter) {
             $filter = new AdminFilter();
-            $filter->setEmployee($employee->id)->setShop($shop->id)->setController('ProductController')->setAction('catalogAction');
+            $filter->setEmployee($employee->id ?: 0)->setShop($shop->id ?: 0)->setController('ProductController')->setAction('catalogAction');
         }
 
         $filter->setProductCatalogFilter($parameters);
