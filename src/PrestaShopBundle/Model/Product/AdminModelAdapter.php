@@ -67,9 +67,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'description_short',
             'link_rewrite',
             'meta_title',
-            'meta_description',
-            'social_sharing_title',
-            'social_sharing_description'
+            'meta_description'
         );
 
         //define unused key for manual binding
@@ -283,8 +281,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'link_rewrite' => $this->product->link_rewrite,
                 'meta_title' => $this->product->meta_title,
                 'meta_description' => $this->product->meta_description,
-                'social_sharing_title' => $this->product->social_sharing_title,
-                'social_sharing_description' => $this->product->social_sharing_description,
             ],
             'step6' => [
                 'visibility' => $this->product->visibility,
