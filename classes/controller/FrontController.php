@@ -815,37 +815,15 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $this->addCSS(_THEME_CSS_DIR_ . DIRECTORY_SEPARATOR . 'theme.css');
-        $this->addJquery();
-        $this->addJqueryPlugin('easing');
-        $this->addJS(array(
-            _PS_JS_DIR_.'cldr.js',
-            _PS_JS_DIR_.'tools.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
-            _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/supplemental.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/number.js',
-            _PS_JS_DIR_.'vendor/node_modules/globalize/dist/globalize/currency.js',
-            _THEME_JS_DIR_.'theme.js'
-        ));
+        $this->addCSS([
+            _THEME_CSS_DIR_ . 'theme.css',
+            _THEME_CSS_DIR_ . 'custom.css',
+        ]);
 
-        // Automatically add js files from js/autoload directory in the template
-        if (@filemtime($this->getThemeDir().'js/autoload/')) {
-            foreach (scandir($this->getThemeDir().'js/autoload/', 0) as $file) {
-                if (preg_match('/^[^.].*\.js$/', $file)) {
-                    $this->addJS($this->getThemeDir().'js/autoload/'.$file);
-                }
-            }
-        }
-        // Automatically add css files from css/autoload directory in the template
-        if (@filemtime($this->getThemeDir().'css/autoload/')) {
-            foreach (scandir($this->getThemeDir().'css/autoload', 0) as $file) {
-                if (preg_match('/^[^.].*\.css$/', $file)) {
-                    $this->addCSS($this->getThemeDir().'css/autoload/'.$file);
-                }
-            }
-        }
+        $this->addJS([
+            _THEME_JS_DIR_.'theme.js',
+            _THEME_JS_DIR_.'custom.js',
+        ]);
 
         if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
             $this->addJqueryUI('ui.sortable');
