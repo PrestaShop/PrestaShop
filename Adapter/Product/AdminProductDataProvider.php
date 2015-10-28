@@ -115,17 +115,17 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         if (!$filter) {
             $filter = new AdminFilter();
             $filter->setEmployee($employee->id)->setShop($shop->id)->setController('ProductController')->setAction('catalogAction');
-            $this->entityManager->persist($filter);
         }
 
         $filter->setProductCatalogFilter($parameters);
+        $this->entityManager->persist($filter);
 
         // if each filter is == '', then remove item from DB :)
         if (count(array_diff($filter->getProductCatalogFilter(), array(''))) == 0) {
             $this->entityManager->remove($filter);
         }
 
-        $this->entityManager->flush($filter);
+        $this->entityManager->flush();
     }
 
     /* (non-PHPdoc)

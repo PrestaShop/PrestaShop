@@ -4,7 +4,8 @@
   "require": {
     "php": ">=5.4",
     "symfony/symfony": "2.7.5",
-    "doctrine/orm": "2.5.1",
+    "doctrine/dbal": "2.4.4",
+    "doctrine/orm": "2.4.4",
     "doctrine/doctrine-bundle": "1.5.2",
     "symfony/assetic-bundle": "2.7.0",
     "symfony/swiftmailer-bundle": "2.3.8",
