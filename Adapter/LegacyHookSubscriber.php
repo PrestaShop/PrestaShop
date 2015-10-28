@@ -155,7 +155,11 @@ class LegacyHookSubscriber implements EventSubscriberInterface
             $id = $hook['id_hook'];
 
             $moduleListeners = array();
-            $modules = \Hook::getHookModuleExecList($name);
+            $modules = array();
+            if (function_exists("bqSQL")) {
+                $modules = \Hook::getHookModuleExecList($name);
+            }
+            
             if (is_array($modules)) {
                 foreach ($modules as $order => $module) {
                     $moduleId = $module['id_module'];
