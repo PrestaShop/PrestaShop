@@ -2,7 +2,13 @@ imports:
     - { resource: admin/services.yml }
 
 services:
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ["%database_prefix%"]
+
+
     # DISPATCHERS
+
     prestashop.hook.dispatcher:
         class: PrestaShopBundle\Service\Hook\HookDispatcher
         calls:

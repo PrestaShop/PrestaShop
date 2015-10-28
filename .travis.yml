@@ -29,8 +29,9 @@ notifications:
   slack: prestashop:Eovjydk55zPrwPkoQIOF0cZn
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 script:
-  - cd /var/www/prestashop.unit.test/app/config && cp parameters.yml.dist parameters.yml
+  - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - cd /var/www/prestashop.unit.test && bash getcomposer.sh && php composer.phar install
   - /var/www/prestashop.unit.test/tests/check_php_parse_errors.sh
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --password=123456789
-  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
+  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test --db_create=0 --name=prestashop.unit.test --password=123456789
+  - cd /var/www/prestashop.unit.test && php bin/phpunit -c tests/
+  - cd /var/www/prestashop.unit.test && php bin/phpunit -c admin-dev/
