@@ -50,5 +50,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+        arguments:
+             - @kernel
         decorates: prestashop.core.admin.data_provider.module_interface
         public: false

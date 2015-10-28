@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
+use Symfony\Component\Config\ConfigCacheFactory;
+use Symfony\Component\Config\ConfigCacheInterface;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -39,12 +41,21 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
  */
 class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements ModuleInterface
 {
+    const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
+    const _CACHEFILE_MODULES_ = 'catalog_modules.json';
+
+    /* Cache for One Day */
+    const _WATCH_DOG_ = 86400;
+
     private $is_employee_addons_logged = false;
+    private $kernel;
+
     protected $catalog_categories      = [];
     protected $catalog_modules         = [];
 
-    public function __construct()
+    public function __construct(\AppKernel $kernel)
     {
+        $this->kernel = $kernel;
         $context = \Context::getContext();
         if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
             && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)) {
@@ -77,25 +88,52 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->catalog_categories;
     }
 
-    protected function loadCatalogData()
+    private function getModuleCache($file)
     {
-        $addons_modules = \Tools::addonsRequest('must-have');
-        $partners_modules = \Tools::addonsRequest('partner');
-        $natives_modules = \Tools::addonsRequest('native');
+        $cacheFile = $this->kernel->getCacheDir().'/modules/'.$file;
 
-        if (!$addons_modules || !$partners_modules || !$natives_modules) {
-            return false;
+        if (file_exists($cacheFile)) {
+            if ((filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
+                return false;
+            }
+
+            $fh = fopen($cacheFile, 'r');
+            $cache = trim(fgets($fh));
+
+            if ($cache) {
+                return json_decode($cache);
+            }
         }
 
-        $json_addons_modules = json_decode($addons_modules);
-        $json_partners_modules = json_decode($partners_modules);
-        $json_natives_modules = json_decode($natives_modules);
+        return false;
+    }
 
-        if ($json_addons_modules !== false && $json_partners_modules !== false) {
-            $jsons = array_merge($json_addons_modules->modules, $json_natives_modules->modules, $json_partners_modules->products);
+    protected function loadCatalogData()
+    {
+        $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_);
+        $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
 
-            $this->catalog_categories = $this->getCategoriesFromJson($jsons);
-            $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
+        if (!$this->catalog_categories || !$this->catalog_modules) {
+            $addons_modules = \Tools::addonsRequest('must-have');
+            $partners_modules = \Tools::addonsRequest('partner');
+            $natives_modules = \Tools::addonsRequest('native');
+
+            if (!$addons_modules || !$partners_modules || !$natives_modules) {
+                return false;
+            }
+
+            $json_addons_modules = json_decode($addons_modules);
+            $json_partners_modules = json_decode($partners_modules);
+            $json_natives_modules = json_decode($natives_modules);
+
+            if ($json_addons_modules !== false && $json_partners_modules !== false && $json_natives_modules !== false) {
+                $jsons = array_merge($json_addons_modules->modules, $json_natives_modules->modules, $json_partners_modules->products);
+
+                $this->catalog_categories = $this->getCategoriesFromJson($jsons);
+                $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
+                $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
+                $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
+            }
         }
     }
 
@@ -169,5 +207,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     {
         return \Tools::replaceAccentedChars(str_replace([' '], ['_'],
                     strtolower($name)));
+    }
+
+    private function registerModuleCache($file, $data)
+    {
+        $cache = (new ConfigCacheFactory(true))->cache($this->kernel->getCacheDir().'/modules/'.$file, function () {});
+        $cache->write(json_encode($data));
+
+        return $cache->getPath();
     }
 }
