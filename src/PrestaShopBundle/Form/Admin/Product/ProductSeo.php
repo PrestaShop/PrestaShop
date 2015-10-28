@@ -76,23 +76,7 @@ class ProductSeo extends AbstractType
             'text',
             array(),
             $this->locales
-        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')))
-        ->add('social_sharing_title', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales
-        ), array(
-            'label' => $this->translator->trans('Social Sharing title', [], 'AdminProducts'),
-            'required' => false
-        ))
-        ->add('social_sharing_description', new TranslateType(
-            'text',
-            array('required' => false),
-            $this->locales
-        ), array(
-            'label' => $this->translator->trans('Social Sharing description', [], 'AdminProducts'),
-            'required' => false
-        ));
+        ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
     }
 
     /**
