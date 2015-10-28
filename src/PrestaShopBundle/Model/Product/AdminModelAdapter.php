@@ -23,7 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Model\Product;
+
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -31,6 +34,7 @@ namespace PrestaShopBundle\Model\Product;
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $cldrRepository;
     private $locales;
     private $defaultLocale;
     private $tools;
@@ -52,6 +56,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->contextShop = $this->context->getContext();
+        $this->cldrRepository = new cldrRepository($this->contextShop->language);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $container->get('prestashop.adapter.tools');
@@ -419,6 +424,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'attribute_wholesale_price' => $combination['wholesale_price'],
                 'attribute_price_impact' => $attribute_price_impact,
                 'attribute_price' => $combination['price'],
+                'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
                 'attribute_priceTI' => '',
                 'attribute_weight_impact' => $attribute_weight_impact,
                 'attribute_weight' => $combination['weight'],

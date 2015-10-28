@@ -121,18 +121,35 @@
 
                     <div class="form-group">
                         {{ form_errors(form.step3.combinations) }}
+                        {% if form.step3.combinations|length > 0 %}
+                        <div class="uppercase">
+                            <div class="col-lg-6 pull-left">{{ trans('Product') }}</div>
+                            <div class="col-lg-4 pull-left">
+                                <span class="col-lg-4">{{ trans('Impact on weight') }}</span>
+                                <span class="col-lg-4">{{ trans('Impact on price') }}</span>
+                            </div>
+                        </div>
+                        <hr/>
+                        {% endif %}
+
                         <div class="panel-group accordion" id="accordion_combinations">
                             {% for combination in form.step3.combinations %}
                             <div class="panel panel-default">
-                                <span class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">
-                                        {{ combination.vars.value.name }}
-                                    </a>
-                                    <div class="pull-right">
+                                <div class="panel-title">
+                                    <div class="col-lg-6 pull-left">
+                                        <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">
+                                            {{ combination.vars.value.name }}
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 pull-left">
+                                        <span class="small col-lg-4">{{ combination.vars.value.attribute_weight }} kg</span>
+                                        <span class="small col-lg-4">{{ combination.vars.value.attribute_price_display }}</span>
+                                    </div>
+                                    <div class="col-lg-2 pull-right text-right">
                                         <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">Open</a>
                                         <a href="" class="btn btn-default btn-sm">delete</a>
                                     </div>
-                                </span>
+                                </div>
                                 <div class="clearfix"></div>
                                 <div id="combination_form_{{ loop.index }}" class="panel-collapse collapse">
                                     <div class="panel-body">
