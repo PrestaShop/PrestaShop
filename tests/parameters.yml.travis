@@ -3,8 +3,8 @@ parameters:
     database_host:     localhost
     database_port:     ~
     database_name:     prestashop.unit.test
-    database_user:     prestashop.unit.test
-    database_password: 123456789
+    database_user:     root
+    database_password: ~
     database_prefix:   ps_
 
     mailer_transport:  smtp

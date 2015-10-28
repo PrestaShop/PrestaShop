@@ -15,7 +15,6 @@
     "icanboogie/cldr": "1.3.9",
     "curl/curl": "1.2.1",
     "ircmaxell/password-compat": "1.0.4",
-    "incenteev/composer-parameter-handler": "~2.0",
     "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-master",
     "prestashop/blockadvertising": "dev-master",
@@ -99,7 +98,8 @@
     "fabpot/php-cs-fixer": "^1.10",
     "sensio/generator-bundle": "~2.3",
     "phpdocumentor/phpdocumentor": "2.*",
-    "symfony/var-dumper": "2.7.*"
+    "symfony/var-dumper": "2.7.*",
+    "incenteev/composer-parameter-handler": "~2.0"
   },
   "autoload-dev": {
     "psr-4": {
