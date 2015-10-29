@@ -26,9 +26,11 @@
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
 
+
 	/*
-	 * Click on a radio button in the categories tree filter (through radio.change() event)
+	 * Tree behavior: collapse/expand system and radio button change event.
 	 */
+	$("div#product_catalog_category_tree_filter div.form-wrapper").categorytree();
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
 		if ($(this).is(':checked')) {
 			$('form#product_catalog_list input[name="filter_category"]').val($(this).val());
