@@ -69,7 +69,7 @@ function setupAdvancedCheckout () {
 }
 
 $(document).ready(function setupCheckoutScripts () {
-  if (!$('body#order-opc')) {
+  if (!$('body#order')) {
     return;
   }
 

@@ -27,7 +27,7 @@ describe('The One Page Checkout', function () {
 
       it('should display customer addresses', function () {
         return browser
-          .url(fixtures.urls.opc)
+          .url(fixtures.urls.checkout)
           .elements('.address-selector .address-item')
           .then(function (elements) {
             initialAddressesCount = elements.value.length;
@@ -62,8 +62,8 @@ describe('The One Page Checkout', function () {
       it('should save the new selected address', function () {
         return browser
           .click('#id-address-delivery-address-' + newlyCreatedAddressId + ' label')
-          .submitForm('#opc-addresses form')
-          .url(fixtures.urls.opc)
+          .submitForm('#checkout-addresses form')
+          .url(fixtures.urls.checkout)
           .getValue('input[name="id_address_delivery"]:checked')
           .then(function (value) {
             value.should.equal(newlyCreatedAddressId);
@@ -78,14 +78,14 @@ describe('The One Page Checkout', function () {
       return browser
         .click('#select-delivery-address [name="id_address_delivery"]')
         .click('#select-invoice-address [name="id_address_invoice"]')
-        .click('#opc-addresses button[type="submit"]')
+        .click('#checkout-addresses button[type="submit"]')
       ;
     }
 
     describe('without the Advanced payment API', function () {
       before(function () {
         return browser
-          .url(fixtures.urls.opc + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=0')
+          .url(fixtures.urls.checkout + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=0')
           .then(selectAddressesForOrder)
         ;
       });
@@ -126,7 +126,7 @@ describe('The One Page Checkout', function () {
     describe('with the Advanced payment API', function () {
       before(function () {
         return browser
-          .url(fixtures.urls.opc + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=1')
+          .url(fixtures.urls.checkout + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=1')
         ;
       });
 
@@ -157,7 +157,7 @@ describe('The One Page Checkout', function () {
 
     describe('without the Advanced payment API and without JS', function () {
       before(function () {
-        return browser.url(fixtures.urls.opc + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=0&debug-disable-javascript=1');
+        return browser.url(fixtures.urls.checkout + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=0&debug-disable-javascript=1');
       });
 
       it('should display a button to approve all terms and conditions...', function () {
@@ -178,7 +178,7 @@ describe('The One Page Checkout', function () {
 
     describe('with the Advanced payment API and without JS', function () {
       before(function () {
-        return browser.url(fixtures.urls.opc + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=1&debug-disable-javascript=1');
+        return browser.url(fixtures.urls.checkout + '?debug-set-configuration-PS_ADVANCED_PAYMENT_API=1&debug-disable-javascript=1');
       });
 
       it('should not display payment module selection buttons upon reaching the page', function () {
