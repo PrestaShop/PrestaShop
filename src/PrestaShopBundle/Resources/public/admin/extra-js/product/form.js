@@ -207,4 +207,6 @@ $( document ).ready(function() {
 	$("#form_step1_price_shortcut, #form_step2_price").keyup(function(){
 		$(this).attr('id') == 'form_step1_price_shortcut' ? $("#form_step2_price").val($(this).val()) : $("#form_step1_price_shortcut").val($(this).val());
 	});
+
+	$("div#form_step1_categories").categorytree();
 });
