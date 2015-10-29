@@ -297,7 +297,7 @@ class AuthControllerCore extends FrontController
                 $this->context->cart->id_customer = (int)$customer->id;
                 $this->context->cart->secure_key = $customer->secure_key;
 
-                if ($this->ajax && isset($id_carrier) && $id_carrier && Configuration::get('PS_ORDER_PROCESS_TYPE')) {
+                if ($this->ajax && isset($id_carrier) && $id_carrier) {
                     $delivery_option = array($this->context->cart->id_address_delivery => $id_carrier.',');
                     $this->context->cart->setDeliveryOption($delivery_option);
                 }
@@ -401,7 +401,7 @@ class AuthControllerCore extends FrontController
         $_POST['lastname'] = Tools::getValue('customer_lastname', $lastnameAddress);
         $_POST['firstname'] = Tools::getValue('customer_firstname', $firstnameAddress);
         $addresses_types = array('address');
-        if (!Configuration::get('PS_ORDER_PROCESS_TYPE') && Configuration::get('PS_GUEST_CHECKOUT_ENABLED') && Tools::getValue('invoice_address')) {
+        if (Configuration::get('PS_GUEST_CHECKOUT_ENABLED') && Tools::getValue('invoice_address')) {
             $addresses_types[] = 'address_invoice';
         }
 
@@ -411,9 +411,7 @@ class AuthControllerCore extends FrontController
                 if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')) {
                     $error_phone = true;
                 }
-            } elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE'))
-                    || (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create'))
-                    || (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Tools::getValue('email_create')))
+            } elseif (Configuration::get('PS_REGISTRATION_PROCESS_TYPE')
                     && (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))) {
                 $error_phone = true;
             }
@@ -615,7 +613,7 @@ class AuthControllerCore extends FrontController
                             $this->context->cart->id_address_invoice = (int)$address_invoice->id;
                         }
 
-                        if ($this->ajax && Configuration::get('PS_ORDER_PROCESS_TYPE')) {
+                        if ($this->ajax) {
                             $delivery_option = array((int)$this->context->cart->id_address_delivery => (int)$this->context->cart->id_carrier.',');
                             $this->context->cart->setDeliveryOption($delivery_option);
                         }
