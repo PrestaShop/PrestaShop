@@ -254,9 +254,6 @@
 	<configuration id="PS_COMPARATOR_MAX_ITEM" name="PS_COMPARATOR_MAX_ITEM">
 		<value>3</value>
 	</configuration>
-	<configuration id="PS_ORDER_PROCESS_TYPE" name="PS_ORDER_PROCESS_TYPE">
-		<value>0</value>
-	</configuration>
 	<configuration id="PS_SPECIFIC_PRICE_PRIORITIES" name="PS_SPECIFIC_PRICE_PRIORITIES">
 		<value>id_shop;id_currency;id_country;id_group</value>
 	</configuration>
