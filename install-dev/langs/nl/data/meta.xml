@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>winkels</url_rewrite>
   </meta>
-  <meta id='order-opc' id_shop='1'>
-    <title>Bestelling</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>snel bestellen</url_rewrite>
-  </meta>
   <meta id='guest-tracking' id_shop='1'>
     <title>Gast traceren</title>
     <description/>
