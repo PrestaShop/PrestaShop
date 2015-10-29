@@ -24,7 +24,7 @@
     {block name="content"}
 
       {block name="shopping_cart_summary_section"}
-        <section id="opc-cart-summary">
+        <section id="checkout-cart-summary">
           <header>
             <h1 class="h3">{l s='Your order'}</h1>
           </header>
@@ -38,14 +38,14 @@
         </section>
       {/block}
 
-      {block name="opc_addresses_section"}
+      {block name="checkout_addresses_section"}
         {if $customer.is_logged}
-          {block name="opc_customer_addresses"}
-            {include file="checkout/_partials/opc-section-logged-addresses.tpl"}
+          {block name="checkout_customer_addresses"}
+            {include file="checkout/_partials/checkout-section-logged-addresses.tpl"}
           {/block}
         {else}
-          {block name="opc_login_or_registrer"}
-            {include file="checkout/_partials/opc-section-login_or_register.tpl"}
+          {block name="checkout_login_or_registrer"}
+            {include file="checkout/_partials/checkout-section-login_or_register.tpl"}
           {/block}
         {/if}
       {/block}
