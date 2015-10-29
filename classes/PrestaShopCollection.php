@@ -569,7 +569,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             } else {
                 $current_def['complete_field'] = $current_def['field'];
             }
-            $current_def['complete_foreign_field'] = $association.'.'.$current_def['field'];
+            $current_def['complete_foreign_field'] = $association.'.'.$current_def['foreign_field'];
 
             $definition['is_lang'] = $is_lang;
             $definition['asso'] = $current_def;

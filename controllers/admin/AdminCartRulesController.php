@@ -227,8 +227,19 @@ class AdminCartRulesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('An action is required for this cart rule.');
             }
         }
-
         return parent::postProcess();
+    }
+
+    public function processDelete()
+    {
+        $res = parent::processDelete();
+        if (Tools::isSubmit('delete'.$this->table)) {
+            $back = urldecode(Tools::getValue('back', ''));
+            if (!empty($back)) {
+                $this->redirect_after = $back;
+            }
+        }
+        return $res;
     }
 
     protected function afterUpdate($current_object)
@@ -583,11 +594,6 @@ class AdminCartRulesControllerCore extends AdminController
     public function renderForm()
     {
         $limit = 40;
-        $back = Tools::safeOutput(Tools::getValue('back', ''));
-        if (empty($back)) {
-            $back = self::$currentIndex.'&token='.$this->token;
-        }
-
         $this->toolbar_btn['save-and-stay'] = array(
             'href' => '#',
             'desc' => $this->l('Save and Stay')

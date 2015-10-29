@@ -66,12 +66,14 @@ class StockManagerCore implements StockManagerInterface
         $id_supply_order = null,
         $employee = null
     ) {
-        if (!Validate::isLoadedObject($warehouse) || (!is_int($price_te) && !is_float($price_te))
-        || !$quantity || !$id_product) {
+        if (!Validate::isLoadedObject($warehouse) || !$quantity || !$id_product) {
             return false;
         }
 
-        $price_te = (float)round($price_te, 6);
+        $price_te = round((float)$price_te, 6);
+        if ($price_te <= 0.0) {
+            return false;
+        }
 
         if (!StockMvtReason::exists($id_stock_mvt_reason)) {
             $id_stock_mvt_reason = Configuration::get('PS_STOCK_MVT_INC_REASON_DEFAULT');

@@ -24,24 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function ps1610_safe_remove_indexes()
+function alter_ignore_drop_key($table, $key)
 {
-    $keysToRemove = array(
-        array('table' => 'shop', 'key' => 'id_group_shop'),
-        array('table' => 'specific_price', 'key' => 'id_product_2'),
-        array('table' => 'hook_module', 'key' => 'position'),
-        array('table' => 'cart_product', 'key' => 'PRIMARY'),
-        array('table' => 'cart_product', 'key' => 'cart_product_index'),
-    );
+    $indexes = Db::getInstance()->executeS('
+        SHOW INDEX FROM `'._DB_PREFIX_.pSQL($table).'` WHERE Key_name = \''.pSQL($key).'\'
+    ');
 
-    foreach ($keysToRemove as $details) {
-        $indexes = Db::getInstance()->executeS('
-            SHOW INDEX FROM `'._DB_PREFIX_.$details['table'].'` WHERE Key_name = \''.$details['key'].'\'
+    if (count($indexes) > 0) {
+        Db::getInstance()->execute('
+            ALTER TABLE `'._DB_PREFIX_.pSQL($table).'` DROP KEY `'.pSQL($key).'`
         ');
-        if (count($indexes) > 0) {
-            Db::getInstance()->execute('
-                ALTER TABLE `'._DB_PREFIX_.$details['table'].'` DROP KEY `'.$details['key'].'`
-            ');
-        }
     }
 }

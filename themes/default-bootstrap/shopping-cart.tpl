@@ -126,13 +126,6 @@
 						<tr class="cart_total_price">
 							<td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
-									{if isset($errors_discount) && $errors_discount}
-										<ul class="alert alert-danger">
-											{foreach $errors_discount as $k=>$error}
-												<li>{$error|escape:'html':'UTF-8'}</li>
-											{/foreach}
-										</ul>
-									{/if}
 									<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 										<fieldset>
 											<h4>{l s='Vouchers'}</h4>
@@ -158,13 +151,6 @@
 						<tr class="cart_total_price">
 							<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
-									{if isset($errors_discount) && $errors_discount}
-										<ul class="alert alert-danger">
-											{foreach $errors_discount as $k=>$error}
-												<li>{$error|escape:'html':'UTF-8'}</li>
-											{/foreach}
-										</ul>
-									{/if}
 									<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 										<fieldset>
 											<h4>{l s='Vouchers'}</h4>
@@ -191,13 +177,6 @@
 					<tr class="cart_total_price">
 						<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 							{if $voucherAllowed}
-								{if isset($errors_discount) && $errors_discount}
-									<ul class="alert alert-danger">
-										{foreach $errors_discount as $k=>$error}
-											<li>{$error|escape:'html':'UTF-8'}</li>
-										{/foreach}
-									</ul>
-								{/if}
 								<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 									<fieldset>
 										<h4>{l s='Vouchers'}</h4>
@@ -333,7 +312,7 @@
 					{* Display the product line *}
 					{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 					{* Then the customized datas ones*}
-					{if isset($customizedDatas.$productId.$productAttributeId)}
+					{if isset($customizedDatas.$productId.$productAttributeId[$product.id_address_delivery])}
 						{foreach $customizedDatas.$productId.$productAttributeId[$product.id_address_delivery] as $id_customization=>$customization}
 							<tr
 								id="product_{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"

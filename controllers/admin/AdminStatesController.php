@@ -48,7 +48,7 @@ class AdminStatesControllerCore extends AdminController
 
         $this->bulk_actions = array(
             'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-            'affectzone' => array('text' => $this->l('Affect a new zone'))
+            'affectzone' => array('text' => $this->l('Assign a new zone'))
         );
 
         $this->_select = 'z.`name` AS zone, cl.`name` AS country';

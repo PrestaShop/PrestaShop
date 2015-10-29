@@ -243,10 +243,10 @@ class CMSCore extends ObjectModel
     public static function getCMSContent($id_cms, $id_lang = null, $id_shop = null)
     {
         if (is_null($id_lang)) {
-            $id_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
+            $id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         }
         if (is_null($id_shop)) {
-            $id_shop = (int)Configuration::get('PS_LANG_DEFAULT');
+            $id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
         }
 
         $sql = '

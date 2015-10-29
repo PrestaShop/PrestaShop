@@ -67,11 +67,11 @@
 							<div class="content_price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
-                                        {hook h="displayProductPriceBlock" product=$product type="before_price"}
+										{hook h="displayProductPriceBlock" product=$product type="before_price"}
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
-									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+									{if $product.price_without_reduction > 0 && isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
@@ -83,7 +83,7 @@
 									{if $PS_STOCK_MANAGEMENT && isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}
 										<span class="unvisible">
 											{if ($product.allow_oosp || $product.quantity > 0)}
-													<link itemprop="availability" href="https://schema.org/InStock" />{if $product.quantity <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{else}{l s='Out of stock'}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}
+													<link itemprop="availability" href="https://schema.org/InStock" />{if $product.quantity <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}
 											{elseif (isset($product.quantity_all_versions) && $product.quantity_all_versions > 0)}
 													<link itemprop="availability" href="https://schema.org/LimitedAvailability" />{l s='Product available with different options'}
 
@@ -118,18 +118,23 @@
 							{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}
 						</a>
 					</h5>
-					{hook h='displayProductListReviews' product=$product}
+					{capture name='displayProductListReviews'}{hook h='displayProductListReviews' product=$product}{/capture}
+					{if $smarty.capture.displayProductListReviews}
+						<div class="hook-reviews">
+						{hook h='displayProductListReviews' product=$product}
+						</div>
+					{/if}
 					<p class="product-desc" itemprop="description">
 						{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}
 					</p>
 					{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 					<div class="content_price">
 						{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
-                            {hook h="displayProductPriceBlock" product=$product type='before_price'}
+							{hook h="displayProductPriceBlock" product=$product type='before_price'}
 							<span class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
-							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+							{if $product.price_without_reduction > 0 && isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 								{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
@@ -141,7 +146,7 @@
 							{/if}
 							{hook h="displayProductPriceBlock" product=$product type="price"}
 							{hook h="displayProductPriceBlock" product=$product type="unit_price"}
-                            {hook h="displayProductPriceBlock" product=$product type='after_price'}
+							{hook h="displayProductPriceBlock" product=$product type='after_price'}
 						{/if}
 					</div>
 					{/if}
@@ -197,7 +202,7 @@
 					{/if}
 				</div>
 				{if $page_name != 'index'}
-	 				<div class="functional-buttons clearfix">
+					<div class="functional-buttons clearfix">
 						{hook h='displayProductListFunctionalButtons' product=$product}
 						{if isset($comparator_max_item) && $comparator_max_item}
 							<div class="compare">

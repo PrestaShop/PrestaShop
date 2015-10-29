@@ -593,14 +593,16 @@ function isCleanHtml(content)
 	return true;
 }
 
-function sleep(milliseconds)
-{
-	var start = new Date().getTime();
-
-	for (var i = 0; i < 1e7; i++) {
-		if ((new Date().getTime() - start) > milliseconds) {
-			break;
-		}
+function getStorageAvailable() {
+	test = 'foo';
+	storage =  window.localStorage || window.sessionStorage;
+	try {
+		storage.setItem(test, test);
+		storage.removeItem(test);
+		return storage;
+	}
+	catch (error) {
+		return null;
 	}
 }
 

@@ -786,7 +786,10 @@ class AdminControllerCore extends Controller
         }
 
         $filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-        $definition = ObjectModel::getDefinition($this->className);
+        $definition = false;
+        if (isset($this->className) && $this->className) {
+            $definition = ObjectModel::getDefinition($this->className);
+        }
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */
@@ -844,7 +847,6 @@ class AdminControllerCore extends Controller
                             $value = (float)str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.pSQL(trim($value)).' ';
                         } else {
-
                             $sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
                         }
                     }
@@ -886,6 +888,10 @@ class AdminControllerCore extends Controller
                 // Process list filtering
                 if ($this->filter && $this->action != 'reset_filters') {
                     $this->processFilter();
+                }
+
+                if (isset($_POST) && count($_POST) && (int)Tools::getValue('submitFilter'.$this->list_id) || Tools::isSubmit('submitReset'.$this->list_id)) {
+                    $this->setRedirectAfter(self::$currentIndex.'&token='.$this->token.(Tools::isSubmit('submitFilter'.$this->list_id) ? '&submitFilter'.$this->list_id.'='.(int)Tools::getValue('submitFilter'.$this->list_id) : ''));
                 }
 
                 // If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -1648,10 +1654,6 @@ class AdminControllerCore extends Controller
         return false;
     }
 
-    public function displayNoSmarty()
-    {
-    }
-
     /**
      * @return void
      */
@@ -2055,20 +2057,6 @@ class AdminControllerCore extends Controller
         }
 
         $this->tab_modules_list = Tab::getTabModulesList($this->id);
-
-        $modules = Module::getModulesOnDisk();
-
-        $tmp = array();
-        foreach ($modules as $module) {
-            $tmp[] = $module->name;
-        }
-
-        foreach ($this->tab_modules_list['slider_list'] as $key => $module) {
-            if (!in_array($module, $tmp)) {
-                unset($this->tab_modules_list['slider_list'][$key]);
-            }
-        }
-
 
         if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
             $this->filter_modules_list = $this->tab_modules_list['default_list'];
@@ -2600,8 +2588,8 @@ class AdminControllerCore extends Controller
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
 
         $this->addJS(array(
-            _PS_JS_DIR_.'admin.js',
-            _PS_JS_DIR_.'tools.js',
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
+            _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
             _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js'
         ));
 
@@ -3872,9 +3860,9 @@ class AdminControllerCore extends Controller
             if ($result) {
                 $this->redirect_after = self::$currentIndex.'&conf=28&token='.$this->token;
             }
-            $this->errors[] = Tools::displayError('An error occurred while affecting a zone to the selection.');
+            $this->errors[] = Tools::displayError('An error occurred while assigning a zone to the selection.');
         } else {
-            $this->errors[] = Tools::displayError('You must select at least one element to affect a new zone.');
+            $this->errors[] = Tools::displayError('You must select at least one element to assign a new zone.');
         }
 
         return $result;

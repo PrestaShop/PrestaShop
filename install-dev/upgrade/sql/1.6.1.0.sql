@@ -64,8 +64,11 @@ SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
     AND product_shop.id_shop = ps.id_shop
     GROUP BY pt.id_tag;
 
-
-/* PHP:ps1610_safe_remove_indexes(); */;
+/* PHP:alter_ignore_drop_key(shop, id_group_shop); */;
+/* PHP:alter_ignore_drop_key(specific_price, id_product_2); */;
+/* PHP:alter_ignore_drop_key(hook_module, position); */;
+/* PHP:alter_ignore_drop_key(cart_product, PRIMARY); */;
+/* PHP:alter_ignore_drop_key(cart_product, cart_product_index); */;
 
 ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
 ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
@@ -166,7 +169,7 @@ ALTER TABLE `PREFIX_cart` ADD KEY `id_shop_2` (`id_shop`,`date_upd`), ADD KEY `i
 ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
 UPDATE `PREFIX_product_shop` SET `date_add` = NOW() WHERE `date_add` = "0000-00-00 00:00:00";
 
-INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`, `live_edit`) VALUES
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`, `live_edit`) VALUES
 (NULL, 'actionAdminLoginControllerSetMedia', 'Set media on admin login page header', 'This hook is called after adding media to admin login page header', '1', '0'),
 (NULL, 'actionOrderEdited', 'Order edited', 'This hook is called when an order is edited.', '1', '0'),
 (NULL, 'displayAdminNavBarBeforeEnd', 'Admin Nav-bar before end', 'Called before the end of the nav-bar.', '1', '0'),

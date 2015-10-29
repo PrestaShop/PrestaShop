@@ -222,7 +222,7 @@ class AdminCountriesControllerCore extends AdminController
                     'label' => $this->l('Default currency'),
                     'name' => 'id_currency',
                     'options' => array(
-                        'query' => Currency::getCurrencies(),
+                        'query' => Currency::getCurrencies(false, true, true),
                         'id' => 'id_currency',
                         'name' => 'name',
                         'default' => array(

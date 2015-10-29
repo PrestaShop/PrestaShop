@@ -1,10 +1,10 @@
-Hi {firstname} {lastname},
+Hallo {firstname} {lastname},
 
-Here is your personal login information for {shop_name}:
+Hier is uw persoonlijke logininformatie voor {shop_name}:
 
-Password: {passwd}
-E-mail address: {email}
+Wachtwoord: {passwd}
+E-mailadres: {email}
 
 {shop_name} - {shop_url}
 
-{shop_url} powered by PrestaShop™
+{shop_url} gebouwd met PrestaShop™
