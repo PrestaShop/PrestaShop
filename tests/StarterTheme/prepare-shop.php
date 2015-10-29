@@ -24,7 +24,8 @@ Db::getInstance()->execute("UPDATE {$dbPrefix}shop SET id_theme=2");
 
 // Enable URL rewriting
 
-function enableURLRewriting() {
+function enableURLRewriting()
+{
     Configuration::updateValue('PS_REWRITING_SETTINGS', 1);
     Tools::generateHtaccess();
 }
@@ -37,13 +38,15 @@ echo "- URL rewriting enabled\n";
 
 // Setup modules
 
-function disableModule ($moduleName) {
+function disableModule($moduleName)
+{
     $module = Module::getInstanceByName($moduleName);
     $module->disable();
     echo "- module `$moduleName` disabled\n";
 }
 
-function hookModule ($moduleName, $hookName) {
+function hookModule($moduleName, $hookName)
+{
     $dbPrefix   = _DB_PREFIX_;
     $module     = Module::getInstanceByName($moduleName);
     $moduleId   = $module->id;
@@ -86,11 +89,6 @@ $_POST[implode('_', ['require', 1, $id_customization_field])] = true;
 $customizableProduct->updateLabels();
 
 echo "- added a required customizable text field to product #1\n";
-
-// Enable OPC
-
-Configuration::updateValue('PS_ORDER_PROCESS_TYPE', PS_ORDER_PROCESS_OPC);
-echo "- order process type set to OPC\n";
 
 // We need 2 languages for some tests
 Language::checkAndAddLanguage('fr');
