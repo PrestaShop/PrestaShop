@@ -703,6 +703,7 @@ class AdminImportControllerCore extends AdminController
                 'forceIDs' => Tools::getValue('forceIDs'),
                 'regenerate' => Tools::getValue('regenerate'),
                 'match_ref' => Tools::getValue('match_ref'),
+                'hashedPasswords' => Tools::getValue('hashedPasswords'),
                 'separator' => $this->separator,
                 'multiple_value_separator' => $this->multiple_value_separator
             ),
@@ -2453,6 +2454,7 @@ class AdminImportControllerCore extends AdminController
 
         $shop_is_feature_active = Shop::isFeatureActive();
         $convert = Tools::getValue('convert');
+        $hashed_passwords = Tools::getValue('hashedPasswords');
         $force_ids = Tools::getValue('forceIDs');
 
         for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++) {
@@ -2525,7 +2527,7 @@ class AdminImportControllerCore extends AdminController
 
             AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
 
-            if ($customer->passwd) {
+            if (!$hashed_passwords && $customer->passwd) {
                 $customer->passwd = Tools::encrypt($customer->passwd);
             }
 

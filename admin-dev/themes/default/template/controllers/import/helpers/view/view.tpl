@@ -108,6 +108,9 @@
 			{if $fields_value.match_ref}
 				<input type="hidden" name="match_ref" value="1" />
 			{/if}
+			{if $fields_value.hashedPasswords}
+				<input type="hidden" name="hashedPasswords" value="1" />
+			{/if}
 			<input type="hidden" name="separator" value="{$fields_value.separator}" />
 			<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 			<div class="form-group">
