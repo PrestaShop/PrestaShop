@@ -159,9 +159,6 @@ define('PS_BOTH_TAX', 2);
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
-define('PS_ORDER_PROCESS_STANDARD', 0);
-define('PS_ORDER_PROCESS_OPC', 1);
-
 define('PS_ROUND_UP', 0);
 define('PS_ROUND_DOWN', 1);
 define('PS_ROUND_HALF_UP', 2);
