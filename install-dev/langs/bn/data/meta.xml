@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>stores</url_rewrite>
   </meta>
-  <meta id='order-opc' id_shop='1'>
-    <title>অর্ডার </title>
-    <description/>
-    <keywords/>
-    <url_rewrite>quick-order</url_rewrite>
-  </meta>
   <meta id='guest-tracking' id_shop='1'>
     <title>অতিত্থি অনুসরন </title>
     <description/>
