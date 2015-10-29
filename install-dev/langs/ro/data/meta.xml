@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>magazine</url_rewrite>
   </meta>
-  <meta id="order-opc" id_shop="1">
-    <title>Comandă</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>comanda-rapida</url_rewrite>
-  </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>Urmărire pentru oaspeți</title>
     <description/>
