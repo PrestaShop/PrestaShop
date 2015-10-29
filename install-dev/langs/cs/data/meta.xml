@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>prodejny</url_rewrite>
   </meta>
-  <meta id="order-opc" id_shop="1">
-    <title>Objednávka</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>objednavka</url_rewrite>
-  </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>Sledování objednávky návštěvníka</title>
     <description/>
