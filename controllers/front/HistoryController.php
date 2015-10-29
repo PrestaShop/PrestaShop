@@ -96,11 +96,7 @@ class HistoryControllerCore extends FrontController
     {
         $url_to_reorder = '';
         if (!(bool)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')) {
-            if ((bool)Configuration::get('PS_ORDER_PROCESS_TYPE')) {
-                $url_to_reorder = $context->link->getPageLink('order-opc', true, null, 'submitReorder&id_order='.(int)$id_order);
-            } else {
-                $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
-            }
+            $url_to_reorder = $context->link->getPageLink('order', true, null, 'submitReorder&id_order='.(int)$id_order);
         }
 
         return $url_to_reorder;

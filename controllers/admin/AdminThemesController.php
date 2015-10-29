@@ -81,16 +81,6 @@ class AdminThemesControllerCore extends AdminController
             'error' => 'This theme may not correctly use PrestaShop\'s "guest checkout" feature.',
             'tab' => 'AdminPreferences',
         ),
-        'one_page_checkout' => array(
-            'attributes' => array(
-                'available' => array(
-                    'value' => 'true',
-                    'check_if_not_valid' => array('PS_ORDER_PROCESS_TYPE' => 0),
-                ),
-            ),
-            'error' => 'This theme may not correctly use PrestaShop\'s "one-page checkout" feature.',
-            'tab' => 'AdminPreferences',
-        ),
         'store_locator' => array(
             'attributes' => array(
                 'available' => array(
