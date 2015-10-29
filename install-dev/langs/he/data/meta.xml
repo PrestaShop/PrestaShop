@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>חנויות</url_rewrite>
   </meta>
-  <meta id="order-opc" id_shop="1">
-    <title>הזמנה</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>הזמנה-מהירה</url_rewrite>
-  </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>מעקב אורחים</title>
     <description/>

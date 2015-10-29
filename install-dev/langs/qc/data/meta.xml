@@ -138,12 +138,6 @@
     <keywords/>
     <url_rewrite>magasins</url_rewrite>
   </meta>
-  <meta id='order-opc' id_shop='1'>
-    <title>Commande</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>commande-rapide</url_rewrite>
-  </meta>
   <meta id='guest-tracking' id_shop='1'>
     <title>Suivi de commande invité</title>
     <description/>
