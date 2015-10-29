@@ -399,15 +399,13 @@ class CartControllerCore extends FrontController
 
         if (Tools::getIsset('summary')) {
             $result = array();
-            if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1) {
-                $groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
-                if ($this->context->cart->id_address_delivery) {
-                    $deliveryAddress = new Address($this->context->cart->id_address_delivery);
-                }
-                $id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
-
-                Cart::addExtraCarriers($result);
+            $groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
+            if ($this->context->cart->id_address_delivery) {
+                $deliveryAddress = new Address($this->context->cart->id_address_delivery);
             }
+            $id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
+
+            Cart::addExtraCarriers($result);
             $result['summary'] = $this->context->cart->getSummaryDetails(null, true);
             $result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
             $result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);

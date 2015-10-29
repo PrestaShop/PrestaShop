@@ -771,7 +771,7 @@ class AdminMetaControllerCore extends AdminController
         // Files
         $disallow_controllers = array(
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
-            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order', 'order-opc',
+            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
             'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
         );
