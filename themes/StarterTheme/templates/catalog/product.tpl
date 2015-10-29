@@ -153,7 +153,7 @@
 
                       {block name="product_without_taxes"}
                         {if $priceDisplay == 2}
-                          <p calss="product-without-taxes">{$product.price_tax_exc}</span> {l s='tax excl.'}</p>
+                          <p class="product-without-taxes">{$product.price_tax_exc}</span> {l s='tax excl.'}</p>
                         {/if}
                       {/block}
 
