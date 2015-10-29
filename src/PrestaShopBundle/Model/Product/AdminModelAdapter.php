@@ -381,62 +381,79 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         return $formDataCarriers;
     }
 
+    /**
+     * Get all product combinations values
+     *
+     * @return array combinations
+     */
     private function getFormCombinations()
     {
         $combinations = $this->product->getAttributeCombinations(1, false);
         $formCombinations = [];
         foreach ($combinations as $combination) {
-            $attribute_price_impact = 0;
-            if ($combination['price'] > 0) {
-                $attribute_price_impact = 1;
-            } elseif ($combination['price'] < 0) {
-                $attribute_price_impact = -1;
-            }
-
-            $attribute_weight_impact = 0;
-            if ($combination['weight'] > 0) {
-                $attribute_weight_impact = 1;
-            } elseif ($combination['weight'] < 0) {
-                $attribute_weight_impact = -1;
-            }
-
-            $attribute_unity_price_impact = 0;
-            if ($combination['unit_price_impact'] > 0) {
-                $attribute_unity_price_impact = 1;
-            } elseif ($combination['unit_price_impact'] < 0) {
-                $attribute_unity_price_impact = -1;
-            }
-
-            //generate combination name
-            $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], 1);
-            $name = [];
-            foreach ($attributesCombinations as $attribute) {
-                $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
-            }
-
-            $formCombinations[] = [
-                'id_product_attribute' => $combination['id_product_attribute'],
-                'attributes' => array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']),
-                'attribute_reference' => $combination['reference'],
-                'attribute_ean13' => $combination['ean13'],
-                'attribute_isbn' => $combination['isbn'],
-                'attribute_upc' => $combination['upc'],
-                'attribute_wholesale_price' => $combination['wholesale_price'],
-                'attribute_price_impact' => $attribute_price_impact,
-                'attribute_price' => $combination['price'],
-                'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
-                'attribute_priceTI' => '',
-                'attribute_weight_impact' => $attribute_weight_impact,
-                'attribute_weight' => $combination['weight'],
-                'attribute_unit_impact' => $attribute_unity_price_impact,
-                'attribute_unity' => $combination['unit_price_impact'],
-                'attribute_minimal_quantity' => $combination['minimal_quantity'],
-                'available_date_attribute' =>  $combination['available_date'],
-                'attribute_default' => (bool)$combination['default_on'],
-                'name' => implode(', ', $name)
-            ];
+            $formCombinations[] = $this->getFormCombination($combination);
         }
 
         return $formCombinations;
+    }
+
+    /**
+     * Get a combination values
+     *
+     * @param array $combination The combination values
+     *
+     * @return array combinations
+     */
+    public function getFormCombination($combination)
+    {
+        $attribute_price_impact = 0;
+        if ($combination['price'] > 0) {
+            $attribute_price_impact = 1;
+        } elseif ($combination['price'] < 0) {
+            $attribute_price_impact = -1;
+        }
+
+        $attribute_weight_impact = 0;
+        if ($combination['weight'] > 0) {
+            $attribute_weight_impact = 1;
+        } elseif ($combination['weight'] < 0) {
+            $attribute_weight_impact = -1;
+        }
+
+        $attribute_unity_price_impact = 0;
+        if ($combination['unit_price_impact'] > 0) {
+            $attribute_unity_price_impact = 1;
+        } elseif ($combination['unit_price_impact'] < 0) {
+            $attribute_unity_price_impact = -1;
+        }
+
+        //generate combination name
+        $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], 1);
+        $name = [];
+        foreach ($attributesCombinations as $attribute) {
+            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
+        }
+
+        return [
+            'id_product_attribute' => $combination['id_product_attribute'],
+            'attributes' => array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']),
+            'attribute_reference' => $combination['reference'],
+            'attribute_ean13' => $combination['ean13'],
+            'attribute_isbn' => $combination['isbn'],
+            'attribute_upc' => $combination['upc'],
+            'attribute_wholesale_price' => $combination['wholesale_price'],
+            'attribute_price_impact' => $attribute_price_impact,
+            'attribute_price' => $combination['price'],
+            'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
+            'attribute_priceTI' => '',
+            'attribute_weight_impact' => $attribute_weight_impact,
+            'attribute_weight' => $combination['weight'],
+            'attribute_unit_impact' => $attribute_unity_price_impact,
+            'attribute_unity' => $combination['unit_price_impact'],
+            'attribute_minimal_quantity' => $combination['minimal_quantity'],
+            'available_date_attribute' =>  $combination['available_date'],
+            'attribute_default' => (bool)$combination['default_on'],
+            'name' => implode(', ', $name)
+        ];
     }
 }

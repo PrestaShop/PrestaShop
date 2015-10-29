@@ -71,6 +71,7 @@ class ProductQuantity extends AbstractType
         ))
         ->add('combinations', 'collection', array(
             'type' => new ProductCombination($this->container),
+            'allow_add' => true,
             'allow_delete' => true
         ));
     }

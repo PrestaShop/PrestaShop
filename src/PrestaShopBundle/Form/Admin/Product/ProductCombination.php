@@ -147,6 +147,16 @@ class ProductCombination extends AbstractType
             'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
             'required' => false,
         ));
+
+        //set default minimal values for collection prototype
+        $builder->setData([
+            'attribute_wholesale_price' => 0,
+            'attribute_price' => 0,
+            'attribute_weight' => 0,
+            'attribute_unity' => 0,
+            'attribute_minimal_quantity' => 1,
+            'available_date_attribute' => '0000-00-00',
+        ]);
     }
 
     /**

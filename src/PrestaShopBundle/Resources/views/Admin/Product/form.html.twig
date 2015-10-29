@@ -132,12 +132,12 @@
                         <hr/>
                         {% endif %}
 
-                        <div class="panel-group accordion" id="accordion_combinations">
+                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}">
                             {% for combination in form.step3.combinations %}
-                            <div class="panel panel-default combination">
+                            <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}">
                                 <div class="panel-title">
                                     <div class="col-lg-6 pull-left">
-                                        <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">
+                                        <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">
                                             {{ combination.vars.value.name }}
                                         </a>
                                     </div>
@@ -146,12 +146,12 @@
                                         <span class="small col-lg-4">{{ combination.vars.value.attribute_price_display }}</span>
                                     </div>
                                     <div class="col-lg-2 pull-right text-right">
-                                        <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ loop.index }}">Open</a>
-                                        <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete">delete</a>
+                                        <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">Open</a>
+                                        <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ combination.vars.value.id_product_attribute }}">delete</a>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
-                                <div id="combination_form_{{ loop.index }}" class="panel-collapse collapse">
+                                <div id="combination_form_{{ combination.vars.value.id_product_attribute }}" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         {{ form_widget(combination) }}
                                     </div>

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
  * Admin controller for the attribute / attribute group
@@ -82,6 +83,8 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
+        $modelMapper = new ProductAdminModelAdapter($product->id, $this->container);
+
         //store exisiting product combinations
         $existingCombinationsIds = array_map(function ($o) {
             return $o['id_product_attribute'];
@@ -102,7 +105,8 @@ class AttributeController extends FrameworkBundleAdminController
 
         $newCombinations = [];
         foreach ($newCombinationIds as $combinationId) {
-            $newCombinations[] = $product->getAttributeCombinationsById($combinationId, 1);
+            $attribute = $product->getAttributeCombinationsById($combinationId, 1);
+            $newCombinations[] = $modelMapper->getFormCombination($attribute[0]);
         }
 
         $response->setData($newCombinations);

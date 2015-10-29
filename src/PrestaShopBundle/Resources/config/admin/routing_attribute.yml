@@ -18,6 +18,8 @@ admin_delete_attribute:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::deleteAttributeAction
+        idAttribute: 0
+        idProduct: 0
     requirements:
         idAttribute: \d+
         idProduct: \d+

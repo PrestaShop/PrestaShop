@@ -245,15 +245,48 @@ $( document ).ready(function() {
 	});
 
 	$("#create-combinations").click(function(){
-		var data = $("#attributes-generator input.attribute-generator, #form_id_product").serialize();
+
+		var combinationRowMaker = function(attribute){
+			var combinationsLength = $("#accordion_combinations").children().length;
+			var form = $("#accordion_combinations").attr('data-prototype').replace(/__name__/g, combinationsLength);
+
+			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__">\
+				<div class="panel-title">\
+					<div class="col-lg-6 pull-left">\
+						<a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">__combination_name__</a>\
+					</div>\
+				</div>\
+				<div class="col-lg-2 pull-right text-right">\
+					<a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">Open</a>\
+					<a href="__delete_link__" class="btn btn-default btn-sm delete" data="__id_attribute__">delete</a>\
+				</div>\
+				<div class="clearfix"></div>\
+				<div id="combination_form___name__" class="panel-collapse collapse">\
+					<div class="panel-body">__form__</div>\
+				</div>\
+			</div>';
+
+			var newRow = row.replace(/__name__/g, combinationsLength);
+			newRow = newRow.replace(/__combination_name__/g, attribute.name);
+			newRow = newRow.replace(/__delete_link__/g, $("#accordion_combinations").attr("data-action-delete")+'/'+attribute.id_product_attribute+'/'+$("#form_id_product").val());
+			newRow = newRow.replace(/__id_attribute__/g, attribute.id_product_attribute);
+			newRow = newRow.replace(/__form__/g, form);
+
+			$("#accordion_combinations").prepend(newRow);
+			$("#form_step3_combinations_"+combinationsLength+"_id_product_attribute").val(attribute.id_product_attribute);
+		};
+
 		$.ajax({
 			type: "POST",
 			url: $("#form_step3_attributes").attr("data-action"),
-			data: data,
+			data: $("#attributes-generator input.attribute-generator, #form_id_product").serialize(),
 			beforeSend: function() {
 				$('#create-combinations').attr("disabled", "disabled");
 			},
 			success: function(response){
+				$.each(response, function(key, val){
+					combinationRowMaker(val);
+				});
 
 				//initialize form
 				$("input.attribute-generator").remove();
@@ -265,9 +298,9 @@ $( document ).ready(function() {
 		});
 	});
 
-	$("#accordion_combinations .delete").click(function(e){
+	$(document).on("click", "#accordion_combinations .delete", function(e) {
 		e.preventDefault();
-		var combinationElem = $(this).parent().parent().parent();
+		var combinationElem = $("#attribute_"+$(this).attr("data"));
 		$.ajax({
 			type: "GET",
 			url: $(this).attr('href'),
