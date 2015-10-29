@@ -5,6 +5,7 @@
     {% javascripts
         '@PrestaShopBundle/Resources/public/admin/extra-js/product/catalog.js'
         '@PrestaShopBundle/Resources/public/admin/extra-js/pagination.js'
+        '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
         '../js/jquery/ui/jquery.ui.sortable.min.js'
         '../js/vendor/node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' %}
         <script src="{{ asset_url }}"></script>
@@ -13,14 +14,15 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}
+    {% stylesheets
+        '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
 
-    <!--## STATS BANNER TO REINTEGRATE SOON!-->
+    {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
     
     <!--## QUICK HELP GREEN BANNER TO REINTEGRATE SOON!-->
     
@@ -42,123 +44,126 @@
     
         <form name="product_catalog_list" id="product_catalog_list" method="post" action="{{ post_url }}" orderingurl="{{ ordering_url }}" >
             <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
-            <table class="table product" redirecturl="{{ unit_redirect_url }}">
-                <theader>
-                    <tr class="column-headers">
-                        <th>
-                            <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
-                        </th>
-                        <th>
-                            {{ "ID"|trans }}
-                            &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Image"|trans }}
-                        </th>
-                        <th>
-                            {{ "Name"|trans }}
-                            &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Reference"|trans }}
-                            &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Category"|trans }}
-                            &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Base price"|trans }}
-                            &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Final price"|trans }}
-                        </th>
-                        <th>
-                            {{ "Quantity"|trans }}
-                            &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        <th>
-                            {{ "Status"|trans }}
-                            &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
-                            &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
-                        </th>
-                        {% if has_category_filter == true %}
+
+            <div class="table-responsive-row clearfix">
+                <table class="table product" redirecturl="{{ unit_redirect_url }}">
+                    <thead>
+                        <tr class="column-headers">
                             <th>
-                                {{ "Position"|trans }}
-                                &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down"></span>
+                                <input type="checkbox" id="bulk_action_select_all" onclick="$(this).closest('table').find('td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();" />
                             </th>
-                        {% endif %}
-                        <th>&nbsp;</th>
-                    </tr>
-                    <tr class="column-filters">
-                        <td>&nbsp;</td>
-                        <td>
-                            <input type="text" placeholder="{{ "Exact ID matching"|trans }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>
-                            <input type="text" placeholder="{{ "Partial name allowed"|trans }}" name="filter_column_name" value="{{ filter_column_name }}" />
-                        </td>
-                        <td>
-                            <input type="text" placeholder="{{ "Partial reference allowed"|trans }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
-                        </td>
-                        <td>
-                            <input type="text" placeholder="{{ "Partial category name allowed"|trans }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
-                        </td>
-                        <td>
-                            {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
-                                'input_name': "filter_column_price",
-                                'min': '0',
-                                'max': '5000',
-                                'scale': 'logarithmic',
-                                'value': filter_column_price,
-                            } %}
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>
-                            {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
-                                'input_name': "filter_column_sav_quantity",
-                                'min': '0',
-                                'max': '1000',
-                                'scale': 'logarithmic',
-                                'value': filter_column_sav_quantity,
-                            } %}
-                        </td>
-                        <td>
-                            <select name="filter_column_active">
-                                <option value=""></option>
-                                <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
-                                <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
-                            </select>
-                        </td>
-                        {% if has_category_filter == true %}
-                            <td>
-                                {% if not(activate_drag_and_drop) %}
-                                    <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderPrioritiesTable();" />
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                        <td>
-                            <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{{ "Filter"|trans }}" />
-                            <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{{ "Reset"|trans }}" />
-                        </td>
-                    </tr>
-                </theader>
-                {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction',
-                  {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products})
-                %}
-                <tfooter>
-                    
-                </tfooter>
-            </table>
+                            <th>
+                                {{ "ID"|trans }}
+                                &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Image"|trans }}
+                            </th>
+                            <th>
+                                {{ "Name"|trans }}
+                                &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Reference"|trans }}
+                                &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Category"|trans }}
+                                &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Base price"|trans }}
+                                &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Final price"|trans }}
+                            </th>
+                            <th>
+                                {{ "Quantity"|trans }}
+                                &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            <th>
+                                {{ "Status"|trans }}
+                                &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
+                                &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
+                            </th>
+                            {% if has_category_filter == true %}
+                                <th>
+                                    {{ "Position"|trans }}
+                                    &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
+                                    &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down"></span>
+                                </th>
+                            {% endif %}
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr class="column-filters">
+                            <th>&nbsp;</th>
+                            <th>
+                                <input type="text" placeholder="{{ "Exact ID matching"|trans }}" name="filter_column_id_product" value="{{ filter_column_id_product }}" />
+                            </th>
+                            <th>&nbsp;</th>
+                            <th>
+                                <input type="text" placeholder="{{ "Partial name allowed"|trans }}" name="filter_column_name" value="{{ filter_column_name }}" />
+                            </th>
+                            <th>
+                                <input type="text" placeholder="{{ "Partial reference allowed"|trans }}" name="filter_column_reference" value="{{ filter_column_reference }}" />
+                            </th>
+                            <th>
+                                <input type="text" placeholder="{{ "Partial category name allowed"|trans }}" name="filter_column_name_category" value="{{ filter_column_name_category }}" />
+                            </th>
+                            <th>
+                                {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
+                                    'input_name': "filter_column_price",
+                                    'min': '0',
+                                    'max': '5000',
+                                    'scale': 'logarithmic',
+                                    'value': filter_column_price,
+                                } %}
+                            </th>
+                            <th>&nbsp;</th>
+                            <th>
+                                {% include 'PrestaShopBundle:Admin/Helpers:range_slider.html.twig' with {
+                                    'input_name': "filter_column_sav_quantity",
+                                    'min': '0',
+                                    'max': '1000',
+                                    'scale': 'logarithmic',
+                                    'value': filter_column_sav_quantity,
+                                } %}
+                            </th>
+                            <th>
+                                <select name="filter_column_active">
+                                    <option value=""></option>
+                                    <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                                    <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+                                </select>
+                            </th>
+                            {% if has_category_filter == true %}
+                                <th>
+                                    {% if not(activate_drag_and_drop) %}
+                                        <input type="button" class="btn" name="products_filter_position_asc" value="{{ "Sort on this category"|trans }}" onclick="productOrderPrioritiesTable();" />
+                                    {% endif %}
+                                </th>
+                            {% endif %}
+                            <th>
+                                <input type="submit" class="btn btn-primary" name="products_filter_submit" value="{{ "Filter"|trans }}" />
+                                <input type="reset" class="btn btn-warning" name="products_filter_reset" onclick="productColumnFilterReset($(this).closest('tr.column-filters'))" value="{{ "Reset"|trans }}" />
+                            </th>
+                        </tr>
+                    </thead>
+                    {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction',
+                      {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products})
+                    %}
+                    <tfooter>
+
+                    </tfooter>
+                </table>
+            </div>
             
             <div class="row">
                 <div class="pull-left" bulkurl="{{ bulk_url }}" massediturl="{{ mass_edit_url }}" redirecturl="{{ bulk_redirect_url }}" redirecturlnextpage="{{ bulk_redirect_url_next_page }}">
