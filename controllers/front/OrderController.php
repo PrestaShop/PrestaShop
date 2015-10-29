@@ -347,7 +347,7 @@ class OrderControllerCore extends FrontController
             ]);
         }
 
-        $this->setTemplate('checkout/opc.tpl');
+        $this->setTemplate('checkout/checkout.tpl');
     }
 
     public function postProcess()
