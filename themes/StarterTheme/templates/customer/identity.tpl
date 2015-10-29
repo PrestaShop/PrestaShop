@@ -1,4 +1,4 @@
-{extends "page.tpl"}
+{extends "customer/page.tpl"}
 
 {block name="page_title"}
   {l s='Your personal information'}
@@ -111,12 +111,6 @@
       </form>
     </section>
     {/block}
-
-    <footer class="form-footer">
-      {block name="my_account_links"}
-        {include file="customer/_partials/my-account-links.tpl"}
-      {/block}
-    </footer>
 
   </section>
 {/block}
