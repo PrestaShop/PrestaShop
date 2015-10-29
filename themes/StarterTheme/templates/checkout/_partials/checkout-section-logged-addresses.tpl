@@ -1,4 +1,4 @@
-<section id="opc-addresses">
+<section id="checkout-addresses">
 
   <header>
     <h1 class="h3">{l s='Addresses'}</h1>
@@ -6,7 +6,7 @@
 
   <ul class="actions">
     <li>
-      <a  href="{url entity="address" params=['back' => $urls.pages.order_opc]}"
+      <a  href="{url entity="address" params=['back' => $urls.pages.order]}"
           data-link-action="add-new-address">
         {l s='Create new address'}
       </a>
@@ -39,7 +39,7 @@
     </div>
 
     <input type="hidden" name="token" value="{$static_token}">
-    <input type="hidden" name="back" value="{$urls.pages.order_opc|urlencode}">
+    <input type="hidden" name="back" value="{$urls.pages.order|urlencode}">
     <input type="hidden" name="changeAddresses" value="1">
 
     <button type="submit">
