@@ -234,7 +234,7 @@ class MailCore extends ObjectModel
             if (!$connection) {
                 return false;
             }
-            $swift = new Swift($connection, Configuration::get('PS_MAIL_DOMAIN', null, null, $id_shop));
+            $swift = new SwiftPs($connection, Configuration::get('PS_MAIL_DOMAIN', null, null, $id_shop));
             /* Get templates content */
             $iso = Language::getIsoById((int)$id_lang);
             if (!$iso) {
@@ -419,9 +419,9 @@ class MailCore extends ObjectModel
                 $smtp->setUsername($smtpLogin);
                 $smtp->setpassword($smtpPassword);
                 $smtp->setTimeout(5);
-                $swift = new Swift($smtp, Configuration::get('PS_MAIL_DOMAIN'));
+                $swift = new SwiftPs($smtp, Configuration::get('PS_MAIL_DOMAIN'));
             } else {
-                $swift = new Swift(new Swift_Connection_NativeMail(), Configuration::get('PS_MAIL_DOMAIN'));
+                $swift = new SwiftPs(new Swift_Connection_NativeMail(), Configuration::get('PS_MAIL_DOMAIN'));
             }
 
             $message = new Swift_Message($subject, $content, $type);
