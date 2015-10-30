@@ -172,6 +172,11 @@ class SearchCore
     }
 
     public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
+        $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null) {
+        return self::findWithCategory($id_lang, $expr, false, $page_number, $page_size, $order_by, $order_way, $ajax, $use_cookie);
+    }
+
+    public static function findWithCategory($id_lang, $expr, $id_category = false, $page_number = 1, $page_size = 1, $order_by = 'position',
         $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
     {
         if (!$context) {
@@ -255,6 +260,7 @@ class SearchCore
 		AND product_shop.`active` = 1
 		AND product_shop.`visibility` IN ("both", "search")
 		AND product_shop.indexed = 1
+		'.($id_category ? ' AND product_shop.`id_category_default` = '.(int)$id_category : '').'
 		'.$sql_groups, true, false);
 
         $eligible_products = array();
