@@ -5,8 +5,8 @@
 
     <h1>{l s='Your Shopping Cart'}</h1>
 
-    {block name="shopping_cart_summary"}
-      {include 'checkout/_partials/shopping-cart-summary.tpl' cart=$cart}
+    {block name="cart_overview"}
+      {include 'checkout/_partials/cart-overview.tpl' cart=$cart}
     {/block}
 
     <ul>
