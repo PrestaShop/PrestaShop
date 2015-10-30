@@ -27,6 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
+use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 
@@ -44,15 +45,22 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     private $entityManager;
 
     /**
+     * @var ImageManager
+     */
+    private $imageManager;
+
+    /**
      * Constructor
      *
      * Entity manager is automatically injected.
      *
      * @param EntityManager $entityManager
+     * @param ImageManager $imageManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, ImageManager $imageManager)
     {
         $this->entityManager = $entityManager;
+        $this->imageManager = $imageManager;
     }
 
     /* (non-PHPdoc)
@@ -288,6 +296,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                     (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                     true, null, null, null, $nothing, true, true);
             $product['price_final'] = \Tools::displayPrice($product['price_final'], $currency);
+            $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
         }
 
         return $products;
