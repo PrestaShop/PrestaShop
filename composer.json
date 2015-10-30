@@ -11,7 +11,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blockuserinfo"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockmyaccount"},
-    {"type": "vcs", "url": "https://github.com/prestashop/bankwire"}
+    {"type": "vcs", "url": "https://github.com/prestashop/bankwire"},
+    {"type": "vcs", "url": "https://github.com/prestashop/contactform"}
   ],
   "require": {
     "php": ">=5.4",
@@ -63,6 +64,7 @@
     "prestashop/blockuserinfo": "dev-feat/starter-theme",
     "prestashop/blockviewed": "dev-master",
     "prestashop/cheque": "dev-master",
+    "prestashop/contactform": "dev-dev",
     "prestashop/crossselling": "dev-master",
     "prestashop/dashactivity": "dev-master",
     "prestashop/dashgoals": "dev-master",
