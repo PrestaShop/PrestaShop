@@ -3265,7 +3265,7 @@ exit;
             'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
             'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
             'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
-            'format' => 'json'
+            'format' => isset($params['format']) ? $params['format'] : 'xml',
         );
         if (isset($params['source'])) {
             $post_query_data['source'] = $params['source'];

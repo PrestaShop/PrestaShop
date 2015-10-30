@@ -114,12 +114,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
 
         if (!$this->catalog_categories || !$this->catalog_modules) {
-            $addons_modules = \Tools::addonsRequest('must-have');
-            $partners_modules = \Tools::addonsRequest('partner');
-            $natives_modules = \Tools::addonsRequest('native');
+            $params = ['format' => 'json'];
+            $addons_modules = \Tools::addonsRequest('must-have', $params);
+            $partners_modules = \Tools::addonsRequest('partner', $params);
+            $natives_modules = \Tools::addonsRequest('native', $params);
 
             if ((!$addons_modules || !$partners_modules || !$natives_modules) && ! $this->fallbackOnCache()) {
-                    throw new \Exception("Cannot load data from PrestaShop Addons");
+                throw new \Exception("Cannot load data from PrestaShop Addons");
             }
 
             $json_addons_modules = json_decode($addons_modules);
@@ -133,8 +134,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
                 $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
-            }
-            elseif (! $this->fallbackOnCache()) {
+            } elseif (! $this->fallbackOnCache()) {
                 throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache");
             }
         }
@@ -210,7 +210,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function fallbackOnCache()
     {
-         // Fallback on data from cache if exists
+        // Fallback on data from cache if exists
         $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_, false);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
