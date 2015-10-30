@@ -350,7 +350,23 @@ class OrderControllerCore extends FrontController
                     $this->context->link->getPageLink('order')
                 );
             }
+        } elseif (Tools::isSubmit('submitPersonalDetails')) {
+            $this->processSubmitPersonalDetails();
         }
+    }
+
+    public function processSubmitPersonalDetails()
+    {
+        if ($this->context->customer->isLogged()) {
+            // StarterTheme: Handle errors with Validate::isName(), etc
+            $this->context->customer->firstname = Tools::getValue('firstname');
+            $this->context->customer->lastname = Tools::getValue('lastname');
+            $this->context->customer->update();
+            Tools::redirect($this->context->link->getPageLink('order'));
+        } else {
+            // StarterTheme: Create account or guest
+        }
+
     }
 
     public function processAddressRegistration()
