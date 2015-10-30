@@ -37,6 +37,6 @@ class ContactControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->setTemplate('contact-form.tpl');
+        $this->setTemplate('contact.tpl');
     }
 }
