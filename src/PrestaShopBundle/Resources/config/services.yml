@@ -71,6 +71,9 @@ services:
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
 
+    prestashop.adapter.data_provider.attribute:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
+
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationExtension

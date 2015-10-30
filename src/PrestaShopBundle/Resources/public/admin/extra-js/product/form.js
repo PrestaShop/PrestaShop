@@ -41,7 +41,7 @@ $( document ).ready(function() {
 			type: "POST",
 			data: data,
 			beforeSend: function() {
-				$('#form #submit').attr("disabled", "disabled");
+				$('#form .btn-submit').attr("disabled", "disabled");
 				$('.help-block').remove();
 				$( "*.has-error" ).removeClass("has-error");
 			},
@@ -69,9 +69,16 @@ $( document ).ready(function() {
 				}, 500);
 			},
 			complete: function(){
-				$('#form #submit').removeAttr("disabled");
+				$('#form .btn-submit').removeAttr("disabled");
 			}
 		});
+	});
+
+	//auto save form on switching tabs (if form is not processing and product id is not defined)
+	$("#form > .nav li:not(.active) a").click(function(){
+		if($('#form .btn-submit').attr("disabled") != "disabled" && $("#form_id_product").val() == 0){
+			$("#form").submit();
+		}
 	});
 
 	//form nested categories ------------------
@@ -206,6 +213,111 @@ $( document ).ready(function() {
 	//update price and shorcut price field on change
 	$("#form_step1_price_shortcut, #form_step2_price").keyup(function(){
 		$(this).attr('id') == 'form_step1_price_shortcut' ? $("#form_step2_price").val($(this).val()) : $("#form_step1_price_shortcut").val($(this).val());
+	});
+
+	//manage combination generator form
+	var engineCombinationGenerator = new Bloodhound({
+		datumTokenizer: function(d) {
+			return Bloodhound.tokenizers.whitespace(d.label);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		prefetch: {
+			url: $("#form_step3_attributes").attr("data-prefetch"),
+			cache: false
+		}
+	});
+
+	$('#form_step3_attributes').tokenfield({typeahead: [
+		null, {
+			source: engineCombinationGenerator,
+			display: 'label'
+		}]
+	});
+
+	//store attributes in input when add a token
+	$('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
+		$("#attributes-generator").append('<input type="hidden" id="attribute-generator-'+e.attrs.value+'" class="attribute-generator" value="'+e.attrs.value+'" name="options['+e.attrs.data.id_group+']['+e.attrs.value+']" />');
+	});
+
+	//remove stored attributes input when remove token
+	$('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
+		$("#attribute-generator-"+e.attrs.value).remove();
+	});
+
+	$("#create-combinations").click(function(){
+
+		var combinationRowMaker = function(attribute){
+			var combinationsLength = $("#accordion_combinations").children().length;
+			var form = $("#accordion_combinations").attr('data-prototype').replace(/__name__/g, combinationsLength);
+
+			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__">\
+				<div class="panel-title">\
+					<div class="col-lg-6 pull-left">\
+						<a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">__combination_name__</a>\
+					</div>\
+				</div>\
+				<div class="col-lg-2 pull-right text-right">\
+					<a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">Open</a>\
+					<a href="__delete_link__" class="btn btn-default btn-sm delete" data="__id_attribute__">delete</a>\
+				</div>\
+				<div class="clearfix"></div>\
+				<div id="combination_form___name__" class="panel-collapse collapse">\
+					<div class="panel-body">__form__</div>\
+				</div>\
+			</div>';
+
+			var newRow = row.replace(/__name__/g, combinationsLength);
+			newRow = newRow.replace(/__combination_name__/g, attribute.name);
+			newRow = newRow.replace(/__delete_link__/g, $("#accordion_combinations").attr("data-action-delete")+'/'+attribute.id_product_attribute+'/'+$("#form_id_product").val());
+			newRow = newRow.replace(/__id_attribute__/g, attribute.id_product_attribute);
+			newRow = newRow.replace(/__form__/g, form);
+
+			$("#accordion_combinations").prepend(newRow);
+			$("#form_step3_combinations_"+combinationsLength+"_id_product_attribute").val(attribute.id_product_attribute);
+		};
+
+		$.ajax({
+			type: "POST",
+			url: $("#form_step3_attributes").attr("data-action"),
+			data: $("#attributes-generator input.attribute-generator, #form_id_product").serialize(),
+			beforeSend: function() {
+				$('#create-combinations').attr("disabled", "disabled");
+			},
+			success: function(response){
+				$.each(response, function(key, val){
+					combinationRowMaker(val);
+				});
+
+				//initialize form
+				$("input.attribute-generator").remove();
+				$('#attributes-generator div.token').remove();
+			},
+			complete: function(){
+				$('#create-combinations').removeAttr("disabled");
+			}
+		});
+	});
+
+	$(document).on("click", "#accordion_combinations .delete", function(e) {
+		e.preventDefault();
+		var combinationElem = $("#attribute_"+$(this).attr("data"));
+		$.ajax({
+			type: "GET",
+			url: $(this).attr('href'),
+			beforeSend: function() {
+				$(this).attr("disabled", "disabled");
+			},
+			success: function(response){
+				combinationElem.remove();
+				showSuccessMessage(response.message);
+			},
+			error: function(response){
+				showErrorMessage(jQuery.parseJSON(response.responseText).message);
+			},
+			complete: function(){
+				$(this).removeAttr("disabled");
+			}
+		});
 	});
 
 	$("div#form_step1_categories").categorytree();

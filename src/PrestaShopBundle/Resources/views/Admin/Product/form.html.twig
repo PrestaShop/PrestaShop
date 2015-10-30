@@ -96,7 +96,7 @@
                     <div class="clearfix"></div>
                     <div class="text-right">
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
@@ -104,15 +104,67 @@
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
-                    {{ form_widget(form.step3) }}
+                    <div class="form-group" id="attributes-generator">
+                        {{ form_label(form.step3.attributes) }}
+                        <div class="col-sm-8">
+                            {{ form_errors(form.step3.attributes) }}
+                            {{ form_widget(form.step3.attributes) }}
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_errors(form.step3.combinations) }}
+                        {% if form.step3.combinations|length > 0 %}
+                        <div class="uppercase">
+                            <div class="col-lg-6 pull-left">{{ trans('Product') }}</div>
+                            <div class="col-lg-4 pull-left">
+                                <span class="col-lg-4">{{ trans('Impact on weight') }}</span>
+                                <span class="col-lg-4">{{ trans('Impact on price') }}</span>
+                            </div>
+                        </div>
+                        <hr/>
+                        {% endif %}
+
+                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}">
+                            {% for combination in form.step3.combinations %}
+                            <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}">
+                                <div class="panel-title">
+                                    <div class="col-lg-6 pull-left">
+                                        <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">
+                                            {{ combination.vars.value.name }}
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-4 pull-left">
+                                        <span class="small col-lg-4">{{ combination.vars.value.attribute_weight }} kg</span>
+                                        <span class="small col-lg-4">{{ combination.vars.value.attribute_price_display }}</span>
+                                    </div>
+                                    <div class="col-lg-2 pull-right text-right">
+                                        <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">Open</a>
+                                        <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ combination.vars.value.id_product_attribute }}">delete</a>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div id="combination_form_{{ combination.vars.value.id_product_attribute }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        {{ form_widget(combination) }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
@@ -120,7 +172,7 @@
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
@@ -128,7 +180,7 @@
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
@@ -138,7 +190,7 @@
                         {% if hookcount('displayAdminProductsExtra') > 0 %}
                             <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
                         {% endif %}
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
@@ -159,7 +211,9 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' %}
+    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -175,6 +229,7 @@
     '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

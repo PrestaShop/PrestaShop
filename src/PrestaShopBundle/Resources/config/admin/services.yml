@@ -51,3 +51,5 @@ services:
         public: false
     prestashop.adapter.admin.controller.category:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
+    prestashop.adapter.admin.controller.attribute_generator:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper

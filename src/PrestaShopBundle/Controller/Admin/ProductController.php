@@ -275,12 +275,13 @@ class ProductController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $modelMapper = new ProductAdminModelAdapter($id, $this->container);
+        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormDatas())
             ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductPrice($this->container))
-            ->add('step3', new ProductForms\ProductQuantity())
+            ->add('step3', new ProductForms\ProductQuantity($this->container))
             ->add('step4', new ProductForms\ProductShipping($this->container))
             ->add('step5', new ProductForms\ProductSeo($this->container))
             ->add('step6', new ProductForms\ProductOptions($this->container))
@@ -293,7 +294,7 @@ class ProductController extends FrameworkBundleAdminController
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelDatas($form->getData());
 
-                $adminProductController = $this->container->get('prestashop.adapter.admin.wrapper.product')->getInstance();
+                $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($form->getData()['id_product']);
                 $adminProductController->setAction('save');
 
@@ -304,6 +305,9 @@ class ProductController extends FrameworkBundleAdminController
                 if ($product = $adminProductController->postCoreProcess()) {
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
+                    foreach ($_POST['combinations'] as $combinationValues) {
+                        $adminProductWrapper->processProductAttribute($product, $combinationValues);
+                    }
 
                     $response->setData(['product' => $product]);
                 }

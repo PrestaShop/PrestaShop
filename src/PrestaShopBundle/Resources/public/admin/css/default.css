@@ -1,0 +1,15 @@
+.token-input{
+  border:0 !important;
+  padding: 0 !important;
+  margin-top: -6px !important;
+  background-color: #fff !important;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
