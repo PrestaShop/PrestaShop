@@ -23,29 +23,26 @@
 
     {block name="content"}
 
-      {block name="shopping_cart_summary_section"}
-        <section id="checkout-cart-summary">
-          <header>
-            <h1 class="h3">{l s='Your order'}</h1>
-          </header>
-
-          {block name="shopping_cart_summary"}
-            <div id="cart-summary">
-              {$cart_summary nofilter}
-            </div>
-          {/block}
-
-        </section>
+      {block name="cart_summary_section"}
+        {$cart_summary nofilter}
       {/block}
 
-      {block name="checkout_addresses_section"}
+      {block name="checkout_basic_information"}
+        {include file="checkout/_partials/basic-info-form.tpl"}
+      {/block}
+
+      {block name="checkout_login_form"}
+        {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
+      {/block}
+
+      {block name="checkout_addresses"}
         {if $customer.is_logged}
           {block name="checkout_customer_addresses"}
             {include file="checkout/_partials/checkout-section-logged-addresses.tpl"}
           {/block}
         {else}
-          {block name="checkout_login_or_registrer"}
-            {include file="checkout/_partials/checkout-section-login_or_register.tpl"}
+          {block name="checkout_guest_addresses"}
+            {include file="customer/_partials/address-form.tpl" address_fields=$address_fields address=$address countries=$countries form_action=$urls.pages.order}
           {/block}
         {/if}
       {/block}
