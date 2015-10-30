@@ -33,6 +33,7 @@ services:
         decorates: prestashop.core.admin.data_provider.product_interface
         arguments:
             - @doctrine.orm.entity_manager
+            - @prestashop.adapter.image_manager
         public: false
     prestashop.adapter.admin.data_updater.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater

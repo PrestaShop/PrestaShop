@@ -8,7 +8,7 @@
                 {{ product.id_product }}
             </td>
             <td>
-                [im#{{ product.id_image|default('') }}]
+                {{ product.image|raw }}
             </td>
             <td>
                 <a href="{{ product.url|default('#') }}">{{ product.name|default('???') }}</a>

@@ -55,17 +55,21 @@ services:
     prestashop.adapter.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
 
+    prestashop.adapter.data_provider.feature:
+        class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
+
+    prestashop.adapter.data_provider.carrier:
+        class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
+
+    # Other adapters
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
     prestashop.adapter.tools:
         class: PrestaShop\PrestaShop\Adapter\Tools
 
-    prestashop.adapter.data_provider.feature:
-        class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
-
-    prestashop.adapter.data_provider.carrier:
-        class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
+    prestashop.adapter.image_manager:
+        class: PrestaShop\PrestaShop\Adapter\ImageManager
 
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:

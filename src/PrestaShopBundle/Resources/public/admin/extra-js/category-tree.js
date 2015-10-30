@@ -26,9 +26,7 @@
 (function ($) {
 	$.fn.categorytree = function (settings) {
 		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().jstree("open_node")
-			args = Array.prototype.slice.call(arguments, 1),
 			returnValue = this;
-
 		// if a method call execute the method on all selected instances
 		if(isMethodCall) {
 			// Put here code when called like $(item).categorytree('method');
@@ -36,22 +34,26 @@
 		// initialize tree
 		else {
 			$("li > ul", this).each(function(i, item) {
-				$(item).prev("div").on('click', function() {
-					$(this).next("ul").toggle();
-					if ($(this).next("ul").is(":visible")) {
-						$(this).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_less.gif')");
+				$(item).prev("div").on('click', function(event) {
+					var ui = event.target;
+					$(ui).next("ul").toggle();
+					if ($(ui).next("ul").is(":visible")) {
+						$(ui).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_less.gif')");
 					} else {
-						$(this).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_more.gif')");
+						$(ui).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_more.gif')");
 					}
 				});
-
-				$(item).toggle(); // initial collapse
-				// TODO : add initial state (expand selected) + effect sliding
+				if ($(item).find("input:radio:checked").length == 0) {
+					$(item).toggle(); // initial collapse, except if child selected
+				}
 				if ($(item).is(":visible")) {
 					$(item).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_less.gif')");
 				} else {
 					$(item).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_more.gif')");
 				}
+			});
+			$("li:not(:has(ul))", this).each(function(i, item) {
+				$(item).attr("style", "list-style-image:none;"); // leafs do not need the folder icon.
 			});
 		}
 		// return the jquery selection (or if it was a method call that returned a value - the returned value)
