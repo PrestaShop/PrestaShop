@@ -30,6 +30,7 @@ class OrderControllerCore extends FrontController
 {
     public $ssl = true;
     public $php_self = 'order';
+    public $page_name = 'checkout';
     public $address;
 
     private $address_formatter;
@@ -232,7 +233,7 @@ class OrderControllerCore extends FrontController
     public function renderCartSummary()
     {
         $cart_presenter = new Adapter_CartPresenter;
-        return $this->render('checkout/_partials/shopping-cart-summary.tpl', [
+        return $this->render('checkout/_partials/cart-summary.tpl', [
             'cart' => $cart_presenter->present($this->context->cart)
         ]);
     }
