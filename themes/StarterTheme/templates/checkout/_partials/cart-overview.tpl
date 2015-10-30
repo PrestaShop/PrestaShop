@@ -1,4 +1,4 @@
-<div class="cart-preview cart-summary">
+<div class="cart-preview cart-overview">
   <div class="header">
     <span>{l s='Cart'}</span>
     <span>{$cart.summary_string}</span>
@@ -6,7 +6,7 @@
   <div class="body">
     <ul>
       {foreach from=$cart.products item=product}
-        <li>{include './shopping-cart-product-line.tpl' product=$product}</li>
+        <li>{include './cart-overview-product-line.tpl' product=$product}</li>
       {/foreach}
     </ul>
     <div class="cart-totals">
