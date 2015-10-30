@@ -88,12 +88,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->catalog_categories;
     }
 
-    private function getModuleCache($file)
+    private function getModuleCache($file, $check_freshness = true)
     {
         $cacheFile = $this->kernel->getCacheDir().'/modules/'.$file;
 
         if (file_exists($cacheFile)) {
-            if ((filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
+            if ($check_freshness && (filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
                 return false;
             }
 
@@ -118,8 +118,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $partners_modules = \Tools::addonsRequest('partner');
             $natives_modules = \Tools::addonsRequest('native');
 
-            if (!$addons_modules || !$partners_modules || !$natives_modules) {
-                return false;
+            if ((!$addons_modules || !$partners_modules || !$natives_modules) && ! $this->fallbackOnCache()) {
+                    throw new \Exception("Cannot load data from PrestaShop Addons");
             }
 
             $json_addons_modules = json_decode($addons_modules);
@@ -134,31 +134,30 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
             }
+            elseif (! $this->fallbackOnCache()) {
+                throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache");
+            }
         }
     }
 
     protected function getCategoriesFromJson($original_json)
     {
-        $categories = [];
+        $categories = new \stdClass;
 
-        // First Tab: Catalog
-        $categories['catalog'] = $this->createMenuObject('selection',
-            'Our selection');
-
-        // Second Tab: Categories
-        $categories['categories'] = $this->createMenuObject('categories',
+        // Only Tab: Categories
+        $categories->categories = $this->createMenuObject('categories',
             'Categories');
 
         foreach ($original_json as $module_key => $module) {
             $name = $module->categoryName;
             $ref  = $this->getRefFromModuleCategoryName($name);
 
-            if (!array_key_exists($ref, $categories['categories']->subMenu)) {
-                $categories['categories']->subMenu[$ref] = $this->createMenuObject($ref,
+            if (!array_key_exists($ref, $categories->categories->subMenu)) {
+                $categories->categories->subMenu[$ref] = $this->createMenuObject($ref,
                     $name);
             }
 
-            $categories['categories']->subMenu[$ref]->modulesRef[] = $module_key;
+            $categories->categories->subMenu[$ref]->modulesRef[] = $module_key;
         }
 
         return $categories;
@@ -207,6 +206,15 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     {
         return \Tools::replaceAccentedChars(str_replace([' '], ['_'],
                     strtolower($name)));
+    }
+
+    protected function fallbackOnCache()
+    {
+         // Fallback on data from cache if exists
+        $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_, false);
+        $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
+
+        return ($this->catalog_categories && $this->catalog_modules);
     }
 
     private function registerModuleCache($file, $data)
