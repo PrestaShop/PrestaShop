@@ -353,12 +353,16 @@ class AdminRequestSqlControllerCore extends AdminController
                     $filesize = filesize($export_dir.$file);
                     $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
                     if ($filesize < $upload_max_filesize) {
+                        // Set default encoding to utf-8
+                        $charset = self::$encoding_file[0]['name'];
+                        // Overwrite default encoding if configuration value
                         if (Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
-                            $charset = Configuration::get('PS_ENCODING_FILE_MANAGER_SQL');
-                        } else {
-                            $charset = self::$encoding_file[0]['name'];
+                            foreach (self::$encoding_file as $encoding) {
+                                if ($encoding['value'] == Configuration::get('PS_ENCODING_FILE_MANAGER_SQL')) {
+                                    $charset = $encoding['name'];
+                                }
+                            }
                         }
-
                         header('Content-Type: text/csv; charset='.$charset);
                         header('Cache-Control: no-store, no-cache');
                         header('Content-Disposition: attachment; filename="'.$file.'"');
