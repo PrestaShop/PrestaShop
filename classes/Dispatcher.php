@@ -795,7 +795,7 @@ class DispatcherCore
                 }
             }
 
-            if ($controller == 'index' || preg_match('/^\/index.php(?:\?.*)?$/', $this->request_uri)) {
+	    if ($controller == 'index' || preg_match('/^\/index.php(?:\?.*)?$/', $this->request_uri) || preg_match('#/+(?:\?.*)?$#',$this->request_uri)) {
                 $controller = $this->useDefaultController();
             }
         }
