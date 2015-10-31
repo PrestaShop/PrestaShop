@@ -2085,37 +2085,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   UNIQUE KEY `full_shop_url_ssl` (`domain_ssl`, `physical_uri`, `virtual_uri`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
-  `id_theme` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL,
-  `directory` varchar(64) NOT NULL,
-  `responsive` tinyint(1) NOT NULL DEFAULT '0',
-  `default_left_column` tinyint(1) NOT NULL DEFAULT '0',
-  `default_right_column` tinyint(1) NOT NULL DEFAULT '0',
-  `product_per_page` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_theme`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_theme_meta` (
-  `id_theme_meta` int(11) NOT NULL AUTO_INCREMENT,
-  `id_theme` int(11) NOT NULL,
-  `id_meta` int(10) unsigned NOT NULL,
-  `left_column` tinyint(1) NOT NULL DEFAULT '1',
-  `right_column` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_theme_meta`),
-  UNIQUE KEY `id_theme_2` (`id_theme`,`id_meta`),
-  KEY `id_theme` (`id_theme`),
-  KEY `id_meta` (`id_meta`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_theme_specific` (
-  `id_theme` int(11) unsigned NOT NULL,
-	`id_shop` INT(11) UNSIGNED NOT NULL,
-  `entity` int(11) unsigned NOT NULL,
-  `id_object` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id_theme`,`id_shop`, `entity`,`id_object`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_country_shop` (
 `id_country` INT( 11 ) UNSIGNED NOT NULL,
 `id_shop` INT( 11 ) UNSIGNED NOT NULL ,
