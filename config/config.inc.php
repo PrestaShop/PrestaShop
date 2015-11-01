@@ -128,8 +128,13 @@ try {
 define('_THEME_NAME_', $theme_name);
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
-/* Include all defines related to base uri and theme name */
+/* Include PS Core defines related to base uri and theme name */
 require_once($currentDir.'/defines_uri.inc.php');
+
+/* Custom defines related to base uri and theme name made by users */
+if (is_file($currentDir.'/defines_uri_custom.inc.php')) {
+    include_once($currentDir.'/defines_uri_custom.inc.php');
+}
 
 global $_MODULES;
 $_MODULES = array();
