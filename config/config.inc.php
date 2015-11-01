@@ -26,11 +26,13 @@
 
 $currentDir = dirname(__FILE__);
 
+/* PS Core defines */
+require_once($currentDir.'/defines.inc.php');
+
 /* Custom defines made by users */
 if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once($currentDir.'/defines_custom.inc.php');
 }
-require_once($currentDir.'/defines.inc.php');
 
 $start_time = microtime(true);
 
