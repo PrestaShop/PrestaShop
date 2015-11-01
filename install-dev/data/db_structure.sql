@@ -2061,13 +2061,12 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `id_shop_group` int(11) unsigned NOT NULL,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,
   `id_category` INT(11) UNSIGNED NOT NULL DEFAULT '1',
-  `id_theme` INT(1) UNSIGNED NOT NULL,
+  `theme_directory` varchar(255) NOT NULL DEFAULT '',
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_shop`),
   KEY `id_shop_group` (`id_shop_group`, `deleted`),
-  KEY `id_category` (`id_category`),
-  KEY `id_theme` (`id_theme`)
+  KEY `id_category` (`id_category`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
