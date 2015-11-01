@@ -25,8 +25,21 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\PrestaShop\Core\Foundation\Exception;
+
 class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterface
 {
+    private $shop;
+
+    public function __construct(Shop $shop = null)
+    {
+        if (is_null($shop)) {
+            $this->shop = \Context::getContext()->shop;
+        } else {
+            $this->shop = $shop;
+        }
+    }
+
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
      * \Configuration
@@ -40,5 +53,25 @@ class Configuration implements \PrestaShop\PrestaShop\Core\ConfigurationInterfac
         } else {
             return \Configuration::get($key);
         }
+    }
+
+    /**
+     * Set configuration value
+     */
+    public function set($key, $value)
+    {
+        $success = \Configuration::updateValue(
+            $key,
+            $value,
+            false,
+            $this->shop->id_shop_group,
+            $this->shop->id_shop
+        );
+
+        if (!$success) {
+            throw new Exception("Could not update configuration", 1);
+        }
+
+        return $this;
     }
 }
