@@ -79,6 +79,11 @@ abstract class ControllerCore
     public $php_self;
 
     /**
+     * @var object ThemeManager
+     */
+    public $themeManager;
+
+    /**
      * Check if the controller is available for the current user/visitor
      */
     abstract public function checkAccess();
@@ -167,6 +172,8 @@ abstract class ControllerCore
             || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
+
+        $this->themeManager = new ThemeManager();
     }
 
     /**
