@@ -37,6 +37,29 @@ class AdminThemesControllerCore extends AdminController
         parent::__construct();
     }
 
+    public function init()
+    {
+        parent::init();
+        $this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
+
+        $themes = $this->themeManager->getThemes();
+        if (count($themes) > 1) {
+            $this->fields_options['theme'] = array(
+                'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
+                'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+                'fields' => array(
+                    'theme_for_shop' => array(
+                        'type' => 'theme',
+                        'themes' => $themes,
+                        'theme_current' => $this->context->shop->theme->directory,
+                        'can_display_themes' => $this->can_display_themes,
+                        'no_multishop_checkbox' => true
+                    ),
+                ),
+            );
+        }
+    }
+
     /**
      * Function used to render the options for this controller
      */
