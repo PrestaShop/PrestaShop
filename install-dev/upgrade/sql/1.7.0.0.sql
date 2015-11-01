@@ -42,3 +42,5 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 DROP TABLE `PREFIX_theme`;
 DROP TABLE `PREFIX_theme_meta`;
 DROP TABLE `PREFIX_theme_specific`;
+ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
+ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_directory` VARCHAR(255) AFTER `id_category`;

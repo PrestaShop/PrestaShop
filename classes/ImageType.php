@@ -165,7 +165,7 @@ class ImageTypeCore extends ObjectModel
 
     public static function getFormatedName($name)
     {
-        $theme_name = Context::getContext()->shop->theme_name;
+        $theme_name = Context::getContext()->shop->theme->directory;
         $name_without_theme_name = str_replace(array('_'.$theme_name, $theme_name.'_'), '', $name);
 
         //check if the theme name is already in $name if yes only return $name
