@@ -24,11 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+
 /**
  * @property Theme $object
  */
 class AdminThemesControllerCore extends AdminController
 {
+    /**
+    * @var object ThemeManager
+    */
+    public $theme_manager;
+
     protected $toolbar_scroll = false;
     private $img_error;
 
@@ -40,6 +48,8 @@ class AdminThemesControllerCore extends AdminController
     {
         $this->bootstrap = true;
         parent::__construct();
+
+        $this->theme_manager = new ThemeManager(_PS_ALL_THEMES_DIR_, new AdapterConfiguration());
     }
 
     public function init()
