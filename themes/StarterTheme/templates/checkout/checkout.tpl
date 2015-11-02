@@ -32,7 +32,9 @@
       {/block}
 
       {block name="checkout_login_form"}
-        {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
+        <section class="login-form ps-shown-by-js">
+          {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
+        </section>
       {/block}
 
       {block name="checkout_addresses"}
