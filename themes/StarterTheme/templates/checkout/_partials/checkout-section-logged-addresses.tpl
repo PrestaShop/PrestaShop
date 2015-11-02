@@ -26,7 +26,14 @@
         {/block}
       </div>
 
-      <div id="select-invoice-address" class="address-selector">
+      {block name="checkout_guest_same_address"}
+        <label>
+          <input type="checkbox" id="checkout-different-address-for-invoice" data-role="checkout-different-address-for-invoice">
+          {l s='Use a different address for invoice'}
+        </label>
+      {/block}
+
+      <div id="select-invoice-address" class="address-selector ps-shown-by-js">
         <h2 class="h3">{l s='Your invoice address'}</h2>
         {block name="opc_invoice_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
