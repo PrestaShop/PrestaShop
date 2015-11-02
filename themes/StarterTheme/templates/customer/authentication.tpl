@@ -8,7 +8,11 @@
       {include file="customer/_partials/register-form.tpl"}
     {/block}
     {block name="login_form_container"}
-      {include file="customer/_partials/login-form.tpl"}
+      <section class="login-form">
+        {block name="login_form"}
+          {include file="customer/_partials/login-form.tpl"}
+        {/block}
+      </section>
     {/block}
   </section>
 {/block}
