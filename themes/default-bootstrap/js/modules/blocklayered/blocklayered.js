@@ -91,22 +91,7 @@ $(document).ready(function()
 		});
 		return true;
 	});
-
-	// Click on label
-	$('#layered_block_left label:not(.layered_color) a').on({
-		click: function(e) {
-			e.preventDefault();
-			var disable = $(this).parent().parent().find('input').attr('disabled');
-			if (disable == ''
-			|| typeof(disable) == 'undefined'
-			|| disable == false)
-			{
-				$(this).parent().parent().find('input').click();
-				reloadContent();
-			}
-		}
-	});
-
+	
 	layered_hidden_list = {};
 	$('.hide-action').on('click', function(e){
 		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
