@@ -175,7 +175,7 @@ class SearchCore
             $order_way, $ajax, $use_cookie, $context);
     }
 
-    public static function findWithCategory($id_lang, $expr, $id_category = false, $page_number = 1, $page_size = 1, 
+    public static function findWithCategory($id_lang, $expr, $id_category = false, $page_number = 1, $page_size = 1,
         $order_by = 'position', $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
     {
         if (!$context) {
@@ -247,6 +247,14 @@ class SearchCore
             $sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
         }
 
+        $category_filter = '';
+        if ($id_category) {
+            $category_filter = ' AND product_shop.`id_category_default`';
+            $category_filter .= is_array($id_category)
+                ? (' in ('.implode(',', $id_category).')' )
+                : (' = '.(int)$id_category);
+        }
+
         $results = $db->executeS('
 		SELECT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_product` cp
@@ -258,7 +266,7 @@ class SearchCore
 		AND product_shop.`active` = 1
 		AND product_shop.`visibility` IN ("both", "search")
 		AND product_shop.indexed = 1
-		'.($id_category ? ' AND product_shop.`id_category_default` = '.(int)$id_category : '').'
+		'.$category_filter.'
 		'.$sql_groups, true, false);
 
         $eligible_products = array();
