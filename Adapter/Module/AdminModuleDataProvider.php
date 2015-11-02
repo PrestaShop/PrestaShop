@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Config\ConfigCacheInterface;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -130,8 +129,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             if ($json_addons_modules !== false && $json_partners_modules !== false && $json_natives_modules !== false) {
                 $jsons = array_merge($json_addons_modules->modules, $json_natives_modules->modules, $json_partners_modules->products);
 
-                $this->catalog_categories = $this->getCategoriesFromJson($jsons);
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
+                $this->catalog_categories = $this->getCategoriesFromModules();
                 $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } elseif (! $this->fallbackOnCache()) {
@@ -140,7 +139,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
     }
 
-    protected function getCategoriesFromJson($original_json)
+    protected function getCategoriesFromModules()
     {
         $categories = new \stdClass;
 
@@ -148,7 +147,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $categories->categories = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($original_json as $module_key => $module) {
+        foreach ($this->catalog_modules as $module_key => $module) {
             $name = $module->categoryName;
             $ref  = $this->getRefFromModuleCategoryName($name);
 
@@ -166,7 +165,14 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected function convertJsonForNewCatalog($original_json)
     {
         $remixed_json = [];
+        $doublons = [];
+
         foreach ($original_json as $module) {
+            if (in_array($module->name, $doublons))
+                continue;
+            
+            $doublons[] = $module->name;
+
             // Add un-implemented properties
             $module->refs       = (array)$this->getRefFromModuleCategoryName($module->categoryName);
             $module->conditions = [];
@@ -188,6 +194,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
             $remixed_json[] = $module;
         }
+
+        usort($remixed_json, function ($module1, $module2) {
+            return strnatcmp($module1->displayName, $module2->displayName);
+        });
 
         return $remixed_json;
     }
