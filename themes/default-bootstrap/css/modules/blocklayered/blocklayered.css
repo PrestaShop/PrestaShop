@@ -170,5 +170,25 @@
 #layered_block_left ul li {
   min-width: 50%;
   width: auto; }
+  
+#layered_block_left ul li label span i {
+	vertical-align: super;
+	font-size: 11px;
+	font-stretch:normal;
+}
+
+#layered_block_left ul li>input[type=checkbox]:checked+label>span {
+	font-size: 14px;
+	color: #444;
+	border-bottom: 1px dotted;
+}
+
+#layered_block_left ul li>input[type=checkbox]:checked:disabled+label>span {
+	border-bottom: none;
+	font-size: 14px;
+	color: #999;
+}
+
+#layered_block_left ul li .disabled { color: #999; }
 
 /*# sourceMappingURL=blocklayered.css.map */
