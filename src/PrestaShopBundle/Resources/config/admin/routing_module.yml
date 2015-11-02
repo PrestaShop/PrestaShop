@@ -5,6 +5,12 @@ admin_module_catalog:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
+        
+admin_module_catalog_search:
+    path:     /catalog/search/{keyword}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
 
 admin_module_import:
     path:     /import

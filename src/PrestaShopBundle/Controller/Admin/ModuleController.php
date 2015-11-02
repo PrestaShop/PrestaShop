@@ -14,6 +14,9 @@ class ModuleController extends Controller
      */
     public function catalogAction(Request $request)
     {
+        $keyword_search = $request->attributes->get('keyword', null);
+        $category_search = $request->attributes->get('category', null);
+
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
         // toolbarButtons
@@ -24,10 +27,18 @@ class ModuleController extends Controller
             'icon' => 'process-icon-new',
             'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
         );
-        //die(var_dump($modulesProvider->getAllModules()));
+
+        $filter = [];
+        if ($keyword_search !== null) {
+            $filter['search'] = $keyword_search;
+        }
+        if ($category_search !== null) {
+            $filter['category'] = $category_search;
+        }
+
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->createCatalogModuleList($modulesProvider->getCatalogModules()),
+                'modules' => $this->createCatalogModuleList($modulesProvider->getCatalogModules($filter)),
                 'topMenuData' => $this->getTopMenuData()
             ));
     }

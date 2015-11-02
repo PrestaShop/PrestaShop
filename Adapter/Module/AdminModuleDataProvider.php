@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -69,13 +70,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 (int)\Context::getContext()->employee->id);
     }
 
-    public function getCatalogModules()
+    public function getCatalogModules(array $filter = [])
     {
         if (count($this->catalog_modules) === 0) {
             $this->loadCatalogData();
         }
 
-        return $this->catalog_modules;
+        return $this->applyModuleFilters($filter);
     }
 
     public function getCatalogCategories()
@@ -87,24 +88,55 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->catalog_categories;
     }
 
-    private function getModuleCache($file, $check_freshness = true)
+    protected function applyModuleFilters(array $filters)
     {
-        $cacheFile = $this->kernel->getCacheDir().'/modules/'.$file;
+        if (! count($filters)) {
+            return $this->catalog_modules;
+        }
 
-        if (file_exists($cacheFile)) {
-            if ($check_freshness && (filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
-                return false;
+        $module_ids = [];
+
+        // We get our module IDs to keep
+        foreach ($filters as $filter_name => $value) {
+            $search_result = [];
+
+            switch ($filter_name) {
+                case 'category':
+                    $ref = $this->getRefFromModuleCategoryName($value);
+                    // We get the IDs list from the category
+                    $search_result = isset($this->catalog_categories->categories->subMenu->{$ref}) ?
+                        $this->catalog_categories->categories->subMenu->{$ref}->modulesRef :
+                        [];
+                    break;
+                case 'search':
+                    // We build our results array.
+                    // We could remove directly the non-matching modules, but we will give that for the final loop of this function
+
+                    foreach ($this->catalog_modules as $key => $module) {
+                        if (strpos($module->displayName, $value) !== false
+                            || strpos($module->name, $value) !== false
+                            || strpos($module->description, $value) !== false) {
+                            $search_result[] = $key;
+                        }
+                    }
+                    break;
             }
 
-            $fh = fopen($cacheFile, 'r');
-            $cache = trim(fgets($fh));
-
-            if ($cache) {
-                return json_decode($cache);
+            if (count($module_ids)) {
+                $module_ids = array_intersect($search_result, $module_ids);
+            } else {
+                $module_ids = $search_result;
             }
         }
 
-        return false;
+        // We apply the filter results
+        foreach ($this->catalog_modules as $key => $module) {
+            if (! in_array($key, $module_ids)) {
+                unset($this->catalog_modules[$key]);
+            }
+        }
+
+        return $this->catalog_modules;
     }
 
     protected function loadCatalogData()
@@ -151,12 +183,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $name = $module->categoryName;
             $ref  = $this->getRefFromModuleCategoryName($name);
 
-            if (!array_key_exists($ref, $categories->categories->subMenu)) {
-                $categories->categories->subMenu[$ref] = $this->createMenuObject($ref,
+            if (!isset($ref, $categories->categories->subMenu->{$ref})) {
+                $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
                     $name);
             }
 
-            $categories->categories->subMenu[$ref]->modulesRef[] = $module_key;
+            $categories->categories->subMenu->{$ref}->modulesRef[] = $module_key;
         }
 
         return $categories;
@@ -168,8 +200,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $doublons = [];
 
         foreach ($original_json as $module) {
-            if (in_array($module->name, $doublons))
+            if (in_array($module->name, $doublons)) {
                 continue;
+            }
             
             $doublons[] = $module->name;
 
@@ -207,7 +240,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return (object)[
                 'name' => $name,
                 'refMenu' => $ref,
-                'subMenu' => [],
+                'subMenu' => new \stdClass,
                 'modulesRef' => [],
         ];
     }
@@ -227,11 +260,38 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return ($this->catalog_categories && $this->catalog_modules);
     }
 
+    private function getModuleCache($file, $check_freshness = true)
+    {
+        $cacheFile = $this->kernel->getCacheDir().'/modules/'.$file;
+        if (! file_exists($cacheFile)) {
+            return false;
+        }
+
+        try {
+            if ($check_freshness && (filemtime($cacheFile) + self::_WATCH_DOG_) <= time()) {
+                return false;
+            }
+
+            $fh = fopen($cacheFile, 'r');
+            $cache = trim(fgets($fh));
+
+            if ($cache) {
+                return json_decode($cache);
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Cannot read from the cache file '. $file);
+        }
+    }
+
     private function registerModuleCache($file, $data)
     {
-        $cache = (new ConfigCacheFactory(true))->cache($this->kernel->getCacheDir().'/modules/'.$file, function () {});
-        $cache->write(json_encode($data));
+        try {
+            $cache = (new ConfigCacheFactory(true))->cache($this->kernel->getCacheDir().'/modules/'.$file, function () {});
+            $cache->write(json_encode($data));
 
-        return $cache->getPath();
+            return $cache->getPath();
+        } catch (IOException $e) {
+            throw new \Exception('Cannot write in the cache file '. $file, $e->getCode(), $e);
+        }
     }
 }
