@@ -15,7 +15,9 @@ if (production) {
 }
 
 module.exports = {
-    entry: ['./js/theme.js'],
+    entry: [
+      './js/theme.js'
+    ],
     output: {
         path: '../assets/js',
         filename: 'theme.js'
@@ -26,7 +28,6 @@ module.exports = {
         ]
     },
     externals: {
-        jquery: '$',
         prestashop: 'prestashop'
     },
     devtool: 'source-map',
