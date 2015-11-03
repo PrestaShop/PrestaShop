@@ -135,6 +135,26 @@ class PaymentOption
     }
 
     /**
+     * Return Additional Information
+     * @return string
+     */
+    public function getAdditionalInformation()
+    {
+        return $this->additionalInformation;
+    }
+
+    /**
+     * Set Additional Information
+     * @param $additionalInformation
+     * @return $this
+     */
+    public function setAdditionalInformation($additionalInformation)
+    {
+        $this->additionalInformation = $additionalInformation;
+        return $this;
+    }
+
+    /**
      * Return logo path
      * @return string
      */
@@ -254,6 +274,7 @@ class PaymentOption
             'method' => $this->method,
             'inputs' => $this->inputs,
             'logo' => $this->logo,
+            'additionalInformation' => $this->additionalInformation,
             'call_to_action_text' => $this->callToActionText
         ];
     }
@@ -280,6 +301,7 @@ class PaymentOption
         $newOptions = array();
 
         $defaults = array(
+            'additionalInformation' => null,
             'action' => null,
             'form' => null,
             'method' => null,
@@ -292,6 +314,7 @@ class PaymentOption
 
             $newOption = new self();
             $newOption->setCallToActionText($option['cta_text'])
+                      ->setAdditionalInformation($option['additionalInformation'])
                       ->setAction($option['action'])
                       ->setForm($option['form'])
                       ->setInputs($option['inputs'])
