@@ -76,9 +76,10 @@ class AttributeController extends FrameworkBundleAdminController
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
         //get product
-        $product = new \Product((int)$idProduct);
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct((int)$idProduct, true);
 
-        if (!\Validate::isLoadedObject($product) || empty($options) || !is_array($options)) {
+        if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {
             $response->setStatusCode(400);
             return $response;
         }
