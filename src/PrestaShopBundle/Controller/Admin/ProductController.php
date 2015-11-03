@@ -291,6 +291,8 @@ class ProductController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                // Legacy code. To fix when Object model will change. But report Hooks.
+
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelDatas($form->getData());
 
@@ -309,6 +311,14 @@ class ProductController extends FrameworkBundleAdminController
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
                     }
 
+                    // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
+                    if (count($_POST['combinations']) === 0) {
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
+                    } else { // quantities are managed from $adminProductWrapper->processProductAttribute() above.
+                        // TODO: dependsOnStock for each attribute ???
+                    }
+
                     $response->setData(['product' => $product]);
                 }
 
@@ -325,6 +335,8 @@ class ProductController extends FrameworkBundleAdminController
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
+            'has_combinations' => (count($form->getData()['step3']['combinations']) > 0),
+            'asm_globally_activated' => true, // TODO
         );
     }
 

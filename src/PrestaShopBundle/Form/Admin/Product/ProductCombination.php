@@ -147,6 +147,15 @@ class ProductCombination extends AbstractType
             'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
             'required' => false,
         ));
+        // TODO: add(quantities)
+        /*->add('attribute_quantity', 'number', array(
+            'required' => true,
+            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric')),
+            )
+        ))*/
 
         //set default minimal values for collection prototype
         $builder->setData([

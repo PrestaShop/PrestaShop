@@ -4932,6 +4932,7 @@ class AdminProductsControllerCore extends AdminController
                 Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
 
                 // Catch potential echo from modules
+                // This echoed error is kept for legacy controllers, but is dropped during sf refactoring of the hook.
                 $error = ob_get_contents();
                 if (!empty($error)) {
                     ob_end_clean();

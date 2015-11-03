@@ -210,9 +210,44 @@ $( document ).ready(function() {
 		));
 	}
 
-	//update price and shorcut price field on change
+	function updateQtyFields() {
+		if ($('#accordion_combinations > div.combination[id^="attribute_"]').length > 0) {
+			$("#form_step3_qty_0").attr('readonly', 'readonly');
+			$("#product_qty_0_shortcut_div").hide();
+			return;
+		}
+
+		var isManual = ($('#form_step3_depends_on_stock_1:checked').length == 1);
+		if (isManual) {
+			$('#form_step3_qty_0').removeAttr("readonly");
+			$("#product_qty_0_shortcut_div").show();
+			return;
+		}
+
+		$("#form_step3_qty_0").attr('readonly', 'readonly');
+		$("#product_qty_0_shortcut_div").hide();
+	}
+
+	//update price and shortcut price field on change
 	$("#form_step1_price_shortcut, #form_step2_price").keyup(function(){
 		$(this).attr('id') == 'form_step1_price_shortcut' ? $("#form_step2_price").val($(this).val()) : $("#form_step1_price_shortcut").val($(this).val());
+	});
+
+	//update qty_0 and shortcut qty_0 field on change
+	$("#form_step1_qty_0_shortcut, #form_step3_qty_0").keyup(function(){
+		$(this).attr('id') == 'form_step1_qty_0_shortcut' ? $("#form_step3_qty_0").val($(this).val()) : $("#form_step1_qty_0_shortcut").val($(this).val());
+	});
+
+	// Show depends_on_stock choice only if advanced_stock_management checked.
+	$('#form_step3_advanced_stock_management').on('change', function(e) {
+		if (e.target.checked) {
+			$('#depends_on_stock_div').show();
+		} else {
+			$('#depends_on_stock_div').hide();
+		}
+	});
+	$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1').on('change', function(e) {
+		updateQtyFields();
 	});
 
 	//manage combination generator form
@@ -274,6 +309,8 @@ $( document ).ready(function() {
 
 			$("#accordion_combinations").prepend(newRow);
 			$("#form_step3_combinations_"+combinationsLength+"_id_product_attribute").val(attribute.id_product_attribute);
+
+			updateQtyFields();
 		};
 
 		$.ajax({
@@ -307,9 +344,10 @@ $( document ).ready(function() {
 			beforeSend: function() {
 				$(this).attr("disabled", "disabled");
 			},
-			success: function(response){
+			success: function(response) {
 				combinationElem.remove();
 				showSuccessMessage(response.message);
+				updateQtyFields();
 			},
 			error: function(response){
 				showErrorMessage(jQuery.parseJSON(response.responseText).message);

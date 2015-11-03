@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use PrestaShopBundle\Form\Admin\Product\ProductCombination;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is risponsible to generate the product quantity form
+ * This form class is responsible to generate the product quantity form
  */
 class ProductQuantity extends AbstractType
 {
@@ -68,6 +68,27 @@ class ProductQuantity extends AbstractType
                 'data-action' => $this->router->generate('admin_attribute_generator'),
             ],
             'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
+        ))
+        ->add('advanced_stock_management', 'checkbox', array(
+            'required' => false,
+            'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
+        ))
+        ->add('depends_on_stock', 'choice', array(
+            'choices'  => array(
+                1 => $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts'),
+                0 => $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts'),
+            ),
+            'expanded' => true,
+            'required' => true,
+            'multiple' => false,
+        ))
+        ->add('qty_0', 'number', array(
+            'required' => true,
+            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric')),
+            ),
         ))
         ->add('combinations', 'collection', array(
             'type' => new ProductCombination($this->container),
