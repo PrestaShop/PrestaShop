@@ -17,7 +17,14 @@ class Adapter_AdvancedPaymentOptionsConverter
             $advancedPaymentOptions = [];
         }
 
-        $paymentOptions = array_merge($displayPaymentEUOptions, $advancedPaymentOptions);
+
+        // Payment options coming from regular Advanced API
+        $newOption = Hook::exec('paymentOptions', array(), null, true);
+        if (!is_array($newOption)) {
+            $newOption = [];
+        }
+
+        $paymentOptions = array_merge($displayPaymentEUOptions, $advancedPaymentOptions, $newOption);
 
         return $paymentOptions;
     }

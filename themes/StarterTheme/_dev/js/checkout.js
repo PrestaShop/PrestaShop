@@ -44,17 +44,24 @@ function setupAdvancedCheckout () {
       }
     });
 
-    if (!getSelectedPaymentOption()) {
+    $('.additional-information, .payment-option-form').each(function( index ) {
+      $(this).hide();
+    });
+
+    var option = getSelectedPaymentOption();
+    if (!option) {
       show = false;
     }
 
+    $('#' + option + '-additional-information').show();
+    $('#pay-with-' + option + '-form').show();
     $('#payment-confirmation button').attr('disabled', !show);
   }
 
   function confirmPayment () {
     var option = getSelectedPaymentOption();
     if (option) {
-      $('#pay-with-' + option + '-form').submit();
+      $('#pay-with-' + option + '-form form').submit();
     }
   }
 
@@ -81,9 +88,5 @@ $(document).ready(function setupCheckoutScripts () {
     });
   });
 
-  if ($('#payment-options').data('uses-advanced-payment-api')) {
-    setupAdvancedCheckout();
-  } else {
-    setupRegularCheckout();
-  }
+  setupAdvancedCheckout();
 });
