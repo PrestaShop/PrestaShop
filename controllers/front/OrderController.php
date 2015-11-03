@@ -35,7 +35,6 @@ class OrderControllerCore extends FrontController
     private $address_formatter;
     private $address_form;
     private $address_fields;
-    private $advanced_payment_api;
 
     private function render($template, array $params)
     {
@@ -135,7 +134,6 @@ class OrderControllerCore extends FrontController
                     'delivery_option_list' => $delivery_option_list,
                     'delivery_option' => $delivery_option
                 ]),
-                'advanced_payment_api' => $this->advanced_payment_api
             ];
 
             Cart::addExtraCarriers($vars);
@@ -186,19 +184,13 @@ class OrderControllerCore extends FrontController
     {
         $all_conditions_approved = $this->checkWhetherAllConditionsAreApproved();
 
-        if ($this->advanced_payment_api) {
-            $payment_options = (new Adapter_AdvancedPaymentOptionsConverter)->getPaymentOptionsForTemplate();
-            $selected_payment_option = Tools::getValue('select_payment_option');
-            if ($selected_payment_option) {
-                $all_conditions_approved = true;
-            }
-        } else {
-            $payment_options = Hook::exec('displayPayment');
-            $selected_payment_option = null;
+        $payment_options = (new Adapter_AdvancedPaymentOptionsConverter)->getPaymentOptionsForTemplate();
+        $selected_payment_option = Tools::getValue('select_payment_option');
+        if ($selected_payment_option) {
+            $all_conditions_approved = true;
         }
 
         return $this->render('checkout/payment.tpl', [
-            'advanced_payment_api' => $this->advanced_payment_api,
             'payment_options' => $payment_options,
             'conditions_to_approve' => $this->getConditionsToApprove(),
             'approved_conditions' => $this->getSubmittedConditionsApproval(),
@@ -299,8 +291,6 @@ class OrderControllerCore extends FrontController
                 Tools::redirect('index.php?controller=order');
             }
         }
-
-        $this->advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
         $this->context->smarty->assign([
             'payment_options' => $this->renderPaymentOptions(),
