@@ -10,22 +10,26 @@ PrestaShop is a free and open-source e-commerce web application, committed to pr
 To download the latest stable public version of PrestaShop, please go to [the download page][2] on the official PrestaShop site.
 
 
-About this repository
+About the 'develop' branch
 --------
 
-This repository contains the source code for the latest version of PrestaShop 1.6.
+The 'develop' branch of this repository contains the source code for the latest version of PrestaShop 1.7.
 
-Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- which is in active development, and cannot be considered stable. If you want the latest stable version, go to [the download page][2].
+PRESTASHOP IS CURRENTLY IN DEVELOPMENT. It is not production ready yet!
 
-Note that the ZIP file does not contain the default modules: you need to make a recursive clone using your local Git client in order to download their files too. See [CONTRIBUTING.md][7] for more information about using Git and GitHub.
+Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.7 -- which is in active development, and cannot be considered stable. If you want the latest stable version of PrestaShop, choose version 1.6. You can find the latest 1.6 version on the [the download page][2].
 
-Also, the ZIP file contains resources for developers and designers that are not in the public archive, for instance the SCSS sources files for the default themes (in the /default-bootstrap/sass folder) or the unit testing files (in the /tests folder).
+Note that the ZIP file does not contain the default modules: if you need them, you need to use Git, to make a recursive clone using your local Git client in order to download their files too. See [CONTRIBUTING.md][7] for more information about using Git and GitHub.
+
+Also, the ZIP file contains resources for developers and designers that are not in the public archive, such as the unit testing files (in the /tests folder).
+
+Finally, the theme present in this archive in the /themes/default-bootstrap folder, will not be the final theme for PrestaShop 1.7. You can see the work being done on the Starter Theme in the 'feat/starter-theme' branch.
 
 
 Server configuration
 --------
 
-To install PrestaShop, you need a web server running PHP 5.2+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).  
+To install PrestaShop 1.7, you need a web server running PHP 5.4+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).  
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
 We recommend the Apache or Nginx web servers.  
 You can find more information on the [System Administrator Guide][19].
@@ -100,7 +104,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 Getting support
 --------
 
-If you need help using PrestaShop 1.7, contact the PrestaShop support team: http://support.prestashop.com/.
+If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-170x-in-development/
 
 
 Thank you for downloading and using the PrestaShop open-source e-commerce solution!
