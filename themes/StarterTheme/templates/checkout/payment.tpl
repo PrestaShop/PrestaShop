@@ -6,5 +6,5 @@
   {/if}
 
   {include 'checkout/_partials/terms-and-conditions.tpl' assume_approved=$all_conditions_approved}
-  {include 'checkout/_partials/advanced-payment-options.tpl'}
+  {include 'checkout/_partials/payment-options.tpl'}
 </section>
