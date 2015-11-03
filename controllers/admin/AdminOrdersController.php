@@ -584,7 +584,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
                     foreach ($rules['validate'] as $field => $function) {
                         if (Tools::getValue($field)) {
-                            if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
+                            if (!Validate::{$function}(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8'))) {
                                 $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $field);
                             }
                         }
