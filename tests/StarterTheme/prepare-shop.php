@@ -9,18 +9,7 @@ $shop       = Context::getContext()->shop;
 $dbPrefix   = _DB_PREFIX_;
 
 // Enable the StarterTheme
-
-Db::getInstance()->execute("REPLACE INTO {$dbPrefix}theme (
-    id_theme,
-    name,
-    directory,
-    responsive,
-    default_left_column,
-    default_right_column,
-    product_per_page
-) VALUES (2, 'StarterTheme', 'StarterTheme', 1, 0, 0, 12)");
-
-Db::getInstance()->execute("UPDATE {$dbPrefix}shop SET id_theme=2");
+Db::getInstance()->execute("UPDATE {$dbPrefix}shop SET theme_directory='StarterTheme'");
 
 // Enable URL rewriting
 
@@ -58,6 +47,7 @@ function hookModule($moduleName, $hookName)
 }
 
 disableModule('blocklayered');
+disableModule('onboarding');
 hookModule('blocktopmenu', 'displayTop');
 hookModule('blocklanguages', 'displayNav');
 hookModule('blockcurrencies', 'displayNav');
