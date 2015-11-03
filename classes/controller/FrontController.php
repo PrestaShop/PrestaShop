@@ -1499,6 +1499,10 @@ class FrontControllerCore extends Controller
 
         $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
 
+        $urls['actions'] = [
+            'logout' => $this->context->link->getPageLink('index', true, NULL, 'mylogout'),
+        ];
+
         return $urls;
     }
 
