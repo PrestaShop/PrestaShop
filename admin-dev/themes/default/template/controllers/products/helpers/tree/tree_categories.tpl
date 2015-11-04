@@ -35,17 +35,9 @@
 <script type="text/javascript">
 	var currentToken="{$token|@addslashes}";
 	var treeClickFunc = function() {
-		var loc = location.href;
-		if (loc.indexOf("&id_category") !== -1) {
-			loc = location.href.replace(
-				/&id_category=[0-9]*/, "&id_category="
-				+ $(this).val());
-		}
-		else {
-			loc = location.href + "&id_category="
-				+ $(this).val();
-		}
-		location.href = loc;
+		var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+		var queryString = window.location.search.replace(/&id_category=[0-9]*/, "") + "&id_category=" + $(this).val();
+		location.href = newURL+queryString; // hash part is dropped: window.location.hash
 	};
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
