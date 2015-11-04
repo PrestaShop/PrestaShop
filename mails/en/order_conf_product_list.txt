@@ -10,12 +10,8 @@
 						{$product['price']}
 
 	{foreach $product['customization'] as $customization}
-							{$product['name']} {$customization['customization_text']}
-
-							{$product['price']}
+							{$customization['customization_text']}
 
 							{$product['customization_quantity']}
-
-							{$product['quantity']}
 	{/foreach}
 {/foreach}
