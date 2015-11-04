@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Service\DataProvider\StockInterface;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
@@ -332,11 +333,14 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
+        /* @var $stockManager StockInterface */
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
             'has_combinations' => (count($form->getData()['step3']['combinations']) > 0),
-            'asm_globally_activated' => true, // TODO
+            'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
         );
     }
 

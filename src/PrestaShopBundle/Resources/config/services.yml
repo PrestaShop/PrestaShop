@@ -6,6 +6,9 @@ services:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
 
+    # Interfaced services to decorate
+    prestashop.core.data_provider.stock_interface:
+        class: PrestaShopBundle\Service\DataProvider\StockInterface
 
     # DISPATCHERS
 
@@ -63,6 +66,12 @@ services:
 
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
+
+    prestashop.adapter.stock_manager:
+            class: Adapter_StockManager
+            decorates: prestashop.core.data_provider.stock_interface
+            public: false
+
 
     # Other adapters
     prestashop.adapter.shop.context:
