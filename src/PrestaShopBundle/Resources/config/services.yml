@@ -81,6 +81,13 @@ services:
         decorates: prestashop.core.data_provider.stock_interface
         public: false
 
+    prestashop.adapter.data_provider.meta:
+        class: PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider
+        arguments: ["@prestashop.database.autoprefixing_database"]
+
+    prestashop.database.autoprefixing_database:
+        class: PrestaShop\PrestaShop\Core\Foundation\Database\AutoPrefixingDatabase
+        arguments: ["%database_prefix%", "@database_connection"]
 
     # Other adapters
     prestashop.adapter.shop.context:
