@@ -358,5 +358,19 @@ $( document ).ready(function() {
 		});
 	});
 
+	$('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').keyup(function() {
+		$(this).closest('div.panel.combination').find('span.attribute-quantity').html($(this).val());
+	});
+	$('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup(function() {
+		$(this).closest('div.panel.combination').find('span.attribute-weight').html($(this).val());
+		// FIXME: unit and float format.
+	});
+
+	// FIXME: complex operation from many fields.
+	$('input[id^="form_step3_combinations_"][id$="_attribute_WHAT_WHAT"]').keyup(function() {
+		$(this).closest('div.panel.combination').find('span.attribute-price-display').html($(this).val());
+		// FIXME: conversion and format.
+	});
+
 	$("div#form_step1_categories").categorytree();
 });

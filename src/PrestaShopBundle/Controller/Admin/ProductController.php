@@ -317,7 +317,10 @@ class ProductController extends FrameworkBundleAdminController
                         $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
                         $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
                     } else { // quantities are managed from $adminProductWrapper->processProductAttribute() above.
-                        // TODO: dependsOnStock for each attribute ???
+                        foreach ($_POST['combinations'] as $combinationValues) {
+                            // For now, each attribute set the same value.
+                            $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
+                        }
                     }
 
                     $response->setData(['product' => $product]);
