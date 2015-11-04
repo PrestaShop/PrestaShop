@@ -164,6 +164,7 @@ class ProductCombination extends AbstractType
             'attribute_unity' => 0,
             'attribute_minimal_quantity' => 1,
             'available_date_attribute' => '0000-00-00',
+            'attribute_quantity' => 0,
         ]);
     }
 

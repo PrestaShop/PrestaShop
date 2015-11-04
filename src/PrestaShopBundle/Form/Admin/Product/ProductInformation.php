@@ -166,7 +166,7 @@ class ProductInformation extends AbstractType
 
         //RIGHT COL
         ->add('active', 'choice', array(
-            'choices'  => array( 1 => $this->translator->trans('Oui', [], 'AdminProducts'), 0 => $this->translator->trans('Non', [], 'AdminProducts')),
+            'choices'  => array( 1 => $this->translator->trans('Yes', [], 'AdminProducts'), 0 => $this->translator->trans('No', [], 'AdminProducts')),
             'expanded' => true,
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => true,

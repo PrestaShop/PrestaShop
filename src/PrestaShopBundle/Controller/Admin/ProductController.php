@@ -310,18 +310,16 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processFeatures($product->id);
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
+                        // For now, each attribute set the same value.
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
                     }
 
                     // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
                     if (count($_POST['combinations']) === 0) {
                         $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
                         $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
-                    } else { // quantities are managed from $adminProductWrapper->processProductAttribute() above.
-                        foreach ($_POST['combinations'] as $combinationValues) {
-                            // For now, each attribute set the same value.
-                            $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
-                        }
                     }
+                    // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $response->setData(['product' => $product]);
                 }
@@ -342,7 +340,7 @@ class ProductController extends FrameworkBundleAdminController
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
-            'has_combinations' => (count($form->getData()['step3']['combinations']) > 0),
+            'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
         );
     }
