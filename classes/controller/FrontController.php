@@ -1327,8 +1327,12 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        // StarterTheme: Remove columns and allow theme maker to create as many template as they want
-        $layout = 'layout/layout.tpl';
+        $layoutName = $this->context->shop->theme['layouts'][0]['name'];
+        if (isset($this->context->shop->theme['page_preference'][$this->getPageName()]['layout'])) {
+            $layoutName = $this->context->shop->theme['page_preference'][$this->getPageName()]['layout'];
+        }
+
+        $layout = 'layout/' . $layoutName . '.tpl';
 
         $entity = $this->php_self;
         $id_item = (int)Tools::getValue('id_'.$entity);
@@ -1461,7 +1465,7 @@ class FrontControllerCore extends Controller
         }
         $urls['pages'] = $pages;
 
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme_directory . '/assets/';
 
         return $urls;
     }

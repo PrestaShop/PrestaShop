@@ -18,10 +18,10 @@ class MetaDataProvider
         return $this->db->select(
             'SELECT m.page, ml.title, ml.description
                 FROM prefix_meta m
-                    INNER JOIN prefix_meta_lang ml
+                    LEFT JOIN prefix_meta_lang ml
                         ON m.id_meta = ml.id_meta
-                WHERE ml.id_shop = :id_shop
-                    AND ml.id_lang = :id_lang
+                            AND ml.id_shop = :id_shop
+                            AND ml.id_lang = :id_lang
                 ORDER BY ml.title ASC
                 ', [
                 'id_shop' => $context->shop->id,

@@ -59,6 +59,36 @@ class ThemeController extends FrameworkBundleAdminController
         return $themes;
     }
 
+    public function getPages()
+    {
+        $theme = $this->getShop()->theme;
+
+        $pages = $this->get('prestashop.adapter.data_provider.meta')->all(
+            $this->getContext()
+        );
+
+        $availableLayouts = $theme['layouts'];
+
+        return array_map(function (array $page) use ($availableLayouts, $theme) {
+
+            $page['layout'] = [];
+
+            foreach ($availableLayouts as $layout) {
+
+                $current = isset($theme['page_preference'][$page['page']]) &&
+                    $theme['page_preference'][$page['page']]['layout'] === $layout['name']
+                ;
+
+                $page['layout'][$layout['name']] = [
+                    'description' => $layout['description'],
+                    'current'     => $current
+                ];
+            }
+
+            return $page;
+        }, $pages);
+    }
+
     /**
      * @Template
      */
@@ -66,14 +96,10 @@ class ThemeController extends FrameworkBundleAdminController
     {
         $translator = $this->get('prestashop.adapter.translator');
 
-        $meta = $this->get('prestashop.adapter.data_provider.meta')->all(
-            $this->getContext()
-        );
-
         return [
             'layoutTitle' => $translator->trans('Theme Preferences'),
             'themes'      => $this->getThemesList(),
-            'pages'       => $meta
+            'pages'       => $this->getPages()
         ];
     }
 
@@ -84,6 +110,30 @@ class ThemeController extends FrameworkBundleAdminController
         $shop = $this->getShop();
         $shop->theme_directory = $themeDirectory;
         $shop->save();
+
+        return $this->redirectToRoute('admin_theme');
+    }
+
+    public function changeLayoutAction(Request $request)
+    {
+        $layout = $request->request->get('layout');
+        $theme  = $this->getShop()->theme;
+
+        if (!isset($theme['page_preference'])) {
+            $theme['page_preference'] = [];
+        }
+
+        foreach ($this->getPages() as $page) {
+            if (!isset($theme['page_preference'][$page['page']])) {
+                $theme['page_preference'][$page['page']] = [];
+            }
+        }
+
+        foreach ($layout as $page => $layout) {
+            $theme['page_preference'][$page]['layout'] = $layout;
+        }
+
+        $this->getShop()->setTheme($theme);
 
         return $this->redirectToRoute('admin_theme');
     }

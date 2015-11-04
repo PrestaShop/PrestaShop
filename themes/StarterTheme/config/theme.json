@@ -1,4 +1,138 @@
 {
-  "name" : "Starter Theme",
-  "directory" : "StarterTheme"
+    "name": "Starter Theme",
+    "directory": "StarterTheme",
+    "layouts": [
+        {
+            "name": "layout-full-width",
+            "description": "Full Width"
+        },
+        {
+            "name": "layout-both-columns",
+            "description": "3 Columns"
+        },
+        {
+            "name": "layout-left-column",
+            "description": "2 Columns, with a small left column"
+        },
+        {
+            "name": "layout-right-column",
+            "description": "2 Columns, with a small right column"
+        }
+    ],
+    "page_preference": {
+        "index": {
+            "layout": "layout-full-width"
+        },
+        "module-blocknewsletter-verification": {
+            "layout": "layout-left-column"
+        },
+        "module-blockwishlist-mywishlist": {
+            "layout": "layout-both-columns"
+        },
+        "module-blockwishlist-view": {
+            "layout": "layout-full-width"
+        },
+        "module-cronjobs-callback": {
+            "layout": "layout-full-width"
+        },
+        "pagenotfound": {
+            "layout": "layout-full-width"
+        },
+        "address": {
+            "layout": "layout-full-width"
+        },
+        "addresses": {
+            "layout": "layout-full-width"
+        },
+        "best-sales": {
+            "layout": "layout-full-width"
+        },
+        "cart": {
+            "layout": "layout-full-width"
+        },
+        "contact": {
+            "layout": "layout-full-width"
+        },
+        "order-slip": {
+            "layout": "layout-full-width"
+        },
+        "discount": {
+            "layout": "layout-full-width"
+        },
+        "password": {
+            "layout": "layout-full-width"
+        },
+        "guest-tracking": {
+            "layout": "layout-full-width"
+        },
+        "identity": {
+            "layout": "layout-full-width"
+        },
+        "authentication": {
+            "layout": "layout-full-width"
+        },
+        "manufacturer": {
+            "layout": "layout-full-width"
+        },
+        "my-account": {
+            "layout": "layout-full-width"
+        },
+        "new-products": {
+            "layout": "layout-full-width"
+        },
+        "order": {
+            "layout": "layout-full-width"
+        },
+        "order-confirmation": {
+            "layout": "layout-full-width"
+        },
+        "order-follow": {
+            "layout": "layout-full-width"
+        },
+        "history": {
+            "layout": "layout-full-width"
+        },
+        "prices-drop": {
+            "layout": "layout-full-width"
+        },
+        "products-comparison": {
+            "layout": "layout-full-width"
+        },
+        "search": {
+            "layout": "layout-full-width"
+        },
+        "sitemap": {
+            "layout": "layout-full-width"
+        },
+        "stores": {
+            "layout": "layout-full-width"
+        },
+        "supplier": {
+            "layout": "layout-full-width"
+        },
+        "module-bankwire-validation": {
+            "layout": "layout-full-width"
+        },
+        "module-cashondelivery-validation": {
+            "layout": "layout-full-width"
+        },
+        "category": {
+            "layout": "layout-full-width"
+        },
+        "module-cheque-payment": {
+            "layout": "layout-full-width"
+        },
+        "cms": {
+            "layout": "layout-full-width"
+        },
+        "module-cheque-validation": {
+            "layout": "layout-full-width"
+        },
+        "module-bankwire-payment": {
+            "layout": "layout-full-width"
+        },
+        "product": {
+            "layout": "layout-full-width"
+        }
+    }
 }

@@ -124,7 +124,7 @@ class ShopCore extends ObjectModel
         parent::__construct($id, $id_lang, $id_shop);
         if ($this->id) {
             $this->setUrl();
-            $this->setTheme();
+            $this->loadTheme();
         }
     }
 
@@ -458,14 +458,14 @@ class ShopCore extends ObjectModel
      *
      * @return string
      */
-    public function setTheme()
+    public function loadTheme()
     {
         $configPath = _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json';
 
         if (file_exists($configPath)) {
             $this->theme = json_decode(file_get_contents(
                 $configPath
-            ));
+            ), true);
         } else {
             /**
              * StarterTheme TODO: Provide better defaults!
@@ -474,10 +474,19 @@ class ShopCore extends ObjectModel
         }
     }
 
+    public function setTheme(array $theme)
+    {
+        $configPath = _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json';
+        $this->theme = $theme;
+
+        file_put_contents($configPath, json_encode($this->theme, JSON_PRETTY_PRINT));
+
+        return $this;
+    }
+
     public function getTheme()
     {
-        Toos::displayAsDeprecated('Please use $this->theme->directory instead');
-        return $this->theme->directory;
+        return $this->theme;
     }
 
     /**
