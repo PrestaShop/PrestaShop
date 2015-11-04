@@ -1728,7 +1728,7 @@ abstract class ModuleCore
 
         if ($trusted_modules_list_content === null) {
             $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
-            if (strpos($trusted_modules_list_content, $context->theme->name) === false) {
+            if (strpos($trusted_modules_list_content, $context->shop->theme_directory) === false) {
                 self::generateTrustedXml();
             }
         }
@@ -1828,11 +1828,10 @@ abstract class ModuleCore
         }
 
         $context = Context::getContext();
-        $theme = new Theme($context->shop->id_theme);
 
         // Save the 2 arrays into XML files
         $trusted_xml = new SimpleXMLElement('<modules_list/>');
-        $trusted_xml->addAttribute('theme', $theme->name);
+        $trusted_xml->addAttribute('theme', $context->shop->theme_directory);
         $modules = $trusted_xml->addChild('modules');
         $modules->addAttribute('type', 'trusted');
         foreach ($trusted as $key => $name) {
