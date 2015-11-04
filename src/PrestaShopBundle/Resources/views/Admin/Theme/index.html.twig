@@ -3,6 +3,28 @@
 {% block content %}
     <div class="panel">
         <div class="panel-heading">
+            {{trans('Change Page Layouts')}}
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <th>{{trans('Page')}}</th>
+                    <th>{{trans('Title')}}</th>
+                    <th>{{trans('Description')}}</th>
+                    <th>{{trans('Layout')}}</th>
+                </tr>
+                {% for page in pages %}
+                    <tr>
+                        <th>{{page.page}}</th>
+                        <td>{{page.title}}</td>
+                        <td>{{page.description}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
             {{trans('Change your theme')}}
         </div>
         <form class="form-horizontal" method="POST" action="{{url('change_theme')}}">

@@ -30,13 +30,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ThemeController extends FrameworkBundleAdminController
 {
+    private function getContext()
+    {
+        return $this->get('prestashop.adapter.legacy.context')->getContext();
+    }
+
     private function getShop()
     {
-        return $this
-            ->get('prestashop.adapter.legacy.context')
-            ->getContext()
-            ->shop
-        ;
+        return $this->getContext()->shop;
     }
 
     private function getThemesList()
@@ -65,9 +66,14 @@ class ThemeController extends FrameworkBundleAdminController
     {
         $translator = $this->get('prestashop.adapter.translator');
 
+        $meta = $this->get('prestashop.adapter.data_provider.meta')->all(
+            $this->getContext()
+        );
+
         return [
             'layoutTitle' => $translator->trans('Theme Preferences'),
-            'themes'      => $this->getThemesList()
+            'themes'      => $this->getThemesList(),
+            'pages'       => $meta
         ];
     }
 
