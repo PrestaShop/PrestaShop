@@ -289,6 +289,13 @@
 										  title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
 								</span>
 							{/if}
+              {if isset($debug_mode) && $debug_mode == true}
+                <span class="debug-mode">
+                  &mdash;
+                  <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                      title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All PHP errors and messages are displayed, when you are done <strong>turn off</strong> this mode.'}</p>">{l s='Debug mode'}</span>
+                  </span>
+                {/if}
 						</li>
 					</ul>
 				{/if}

@@ -1638,7 +1638,8 @@ class AdminModulesControllerCore extends AdminController
             'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
             'dont_filter' => $dont_filter,
             'is_contributor' => (int)$this->context->cookie->is_contributor,
-            'maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')
+            'maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE'),
+            'debug_mode' => (bool)_PS_MODE_DEV_
         );
 
         if ($this->logged_on_addons) {
