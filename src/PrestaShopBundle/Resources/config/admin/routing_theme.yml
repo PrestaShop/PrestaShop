@@ -9,3 +9,9 @@ change_theme:
     methods:  [POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ThemeController::changeAction
+
+theme_change_layout:
+    path: /change-layout
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ThemeController::changeLayoutAction

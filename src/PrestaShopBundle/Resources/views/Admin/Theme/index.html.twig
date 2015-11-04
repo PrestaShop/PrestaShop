@@ -5,8 +5,8 @@
         <div class="panel-heading">
             {{trans('Change Page Layouts')}}
         </div>
-        <div>
-            <table>
+        <form method="POST" action="{{url('theme_change_layout')}}">
+            <table class="table">
                 <tr>
                     <th>{{trans('Page')}}</th>
                     <th>{{trans('Title')}}</th>
@@ -15,13 +15,27 @@
                 </tr>
                 {% for page in pages %}
                     <tr>
-                        <th>{{page.page}}</th>
+                        <td>{{page.page}}</td>
                         <td>{{page.title}}</td>
                         <td>{{page.description}}</td>
+                        <td>
+                            <select name="layout[{{page.page}}]">
+                                {% for name, layout in page.layout %}
+                                    <option value="{{name}}" {% if layout.current %} selected {% endif %}>
+                                        {{layout.description}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
-        </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-default pull-right">
+                    <i class="process-icon-save"></i> {{trans('Save')}}
+                </button>
+            </div>
+        </form>
     </div>
     <div class="panel">
         <div class="panel-heading">
