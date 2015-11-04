@@ -5,5 +5,29 @@
         <div class="panel-heading">
             {{trans('Change your theme')}}
         </div>
+        <form class="form-horizontal" method="POST" action="{{url('change_theme')}}">
+            <div class="form-group">
+                <label for="change-your-theme" class="control-label col-lg-3">
+                    {{trans('Change your theme')}}
+                </label>
+                <div class="col-lg-3">
+                    <select name="theme-directory" id="change-your-theme" class="form-control">
+                        {% for theme in themes %}
+                            <option
+                                value="{{theme.directory}}"
+                                {% if theme.current %} selected {% endif %}
+                            >
+                                {{theme.directory}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-default pull-right">
+                    <i class="process-icon-save"></i> {{trans('Save')}}
+                </button>
+            </div>
+        </form>
     </div>
 {% endblock %}

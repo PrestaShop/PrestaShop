@@ -21,6 +21,8 @@ services:
         class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
     prestashop.core.admin.page_preference_interface:
         class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.configuration_interface:
+        class: Core_Business_ConfigurationInterface
 
 # ADAPTERS (prestashop.adapter.*)
     # Legacy context service, transitional
@@ -53,3 +55,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+    prestashop.adapter.admin.configuration:
+        class: Adapter_Configuration
+        decorates: prestashop.core.admin.configuration_interface

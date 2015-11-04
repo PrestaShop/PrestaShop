@@ -120,7 +120,7 @@ try {
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
-define('_THEME_DIR_NAME_', $context->shop->theme->directory);
+define('_THEME_DIR_NAME_', $context->shop->theme_directory);
 define('_THEME_NAME_', _THEME_DIR_NAME_); // Legacy
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 

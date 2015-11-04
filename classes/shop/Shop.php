@@ -460,9 +460,18 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $this->theme = json_decode(file_get_contents(
-            _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json'
-        ));
+        $configPath = _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json';
+
+        if (file_exists($configPath)) {
+            $this->theme = json_decode(file_get_contents(
+                $configPath
+            ));
+        } else {
+            /**
+             * StarterTheme TODO: Provide better defaults!
+             */
+            $this->theme = [];
+        }
     }
 
     public function getTheme()
