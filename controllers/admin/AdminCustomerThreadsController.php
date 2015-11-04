@@ -1003,6 +1003,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $result = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
+        $message_errors = array();
         foreach ($result as $overview) {
             //check if message exist in database
             if (isset($overview->subject)) {
@@ -1033,11 +1034,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
                 $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
+                $fetch_succeed = true;
                 if ($match_found || $new_ct) {
                     if ($new_ct) {
-                        if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
-                            || !Validate::isEmail($from = $result[1])) {
+                        // parse from attribute and fix it if needed
+                        $from_parsed = array();
+                        if (!isset($overview->from)
+                            || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
+                            && !Validate::isEmail($overview->from))) {
+                            $message_errors[] = 'An unindentified message has no valid "FROM" information, cannot create it in a new thread.';
                             continue;
+                        }
+
+                        // fix email format: from "Mr Sanders <sanders@blueforest.com>" to "sanders@blueforest.com"
+                        $from = $overview->from;
+                        if (isset($from_parsed[1])) {
+                            $from = $from_parsed[1];
                         }
 
                         // we want to assign unrecognized mails to the right contact category
@@ -1047,7 +1059,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
 
                         foreach ($contacts as $contact) {
-                            if (strpos($overview->to, $contact['email']) !== false) {
+                            if (isset($overview->to) && strpos($overview->to, $contact['email']) !== false) {
                                 $id_contact = $contact['id_contact'];
                             }
                         }
@@ -1079,21 +1091,40 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = utf8_encode($message);
                         $message = quoted_printable_decode($message);
                         $message = nl2br($message);
+                        if (!$message || strlen($message)==0) {
+                            $message_errors[] = 'The message body is empty, cannot import it.';
+                            $fetch_succeed = false;
+                            continue;
+                        }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         if (empty($message) || !Validate::isCleanHtml($message)) {
                             $str_errors.= Tools::displayError(sprintf('Invalid Message Content for subject: %1s', $subject));
                         } else {
-                            $cm->message = $message;
-                            $cm->add();
+                            try {
+                                $cm->message = $message;
+                                $cm->add();
+                            } catch (PrestaShopException $pse) {
+                                $message_errors[] = 'The message content is not valid, cannot import it.';
+                                $fetch_succeed = false;
+                                continue;
+                            }
                         }
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+                if ($fetch_succeed) {
+                    Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
+                }
             }
         }
         imap_expunge($mbox);
         imap_close($mbox);
+        if (sizeof($message_errors)>0) {
+            if (($more_error = $str_errors.$str_error_delete) && strlen($more_error)>0) {
+                $message_errors = array_merge(array($more_error), $message_errors);
+            }
+            return array('hasError' => true, 'errors' => $message_errors);
+        }
         if ($str_errors.$str_error_delete) {
             return array('hasError' => true, 'errors' => array($str_errors.$str_error_delete));
         } else {
