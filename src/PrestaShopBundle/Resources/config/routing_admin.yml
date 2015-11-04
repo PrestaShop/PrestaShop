@@ -19,11 +19,15 @@ _admin_specific_price_routing:
     resource: "admin/routing_specific_price.yml"
     prefix: /specific-price
 
+_admin_theme_routing:
+    resource: "admin/routing_theme.yml"
+    prefix: /theme
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}
     methods:  [GET]
-    defaults: 
+    defaults:
         _controller: 'PrestaShopBundle\Controller\Admin\CommonController::paginationAction'
         offset: 0
         limit: 20

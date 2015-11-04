@@ -1,0 +1,5 @@
+admin_theme:
+    path: /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ThemeController::indexAction
