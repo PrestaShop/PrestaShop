@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Service\DataProvider\StockInterface;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
@@ -291,6 +292,8 @@ class ProductController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                // Legacy code. To fix when Object model will change. But report Hooks.
+
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelDatas($form->getData());
 
@@ -307,7 +310,16 @@ class ProductController extends FrameworkBundleAdminController
                     $adminProductController->processFeatures($product->id);
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
+                        // For now, each attribute set the same value.
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
                     }
+
+                    // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
+                    if (count($_POST['combinations']) === 0) {
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
+                    }
+                    // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $response->setData(['product' => $product]);
                 }
@@ -322,9 +334,14 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
+        /* @var $stockManager StockInterface */
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
+            'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
+            'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
         );
     }
 

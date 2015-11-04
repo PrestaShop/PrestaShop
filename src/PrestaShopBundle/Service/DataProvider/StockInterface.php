@@ -23,34 +23,19 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\Service\DataProvider;
 
 /**
  * Data provider for new Architecture, about Product stocks.
  *
  * This class will provide data from DB / ORM about Product stocks.
  */
-class Adapter_StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterface
+interface StockInterface
 {
-    /**
-     * Gets available stock for a given product / combination / shop.
-     *
-     * @param object $product
-     * @param null $id_product_attribute
-     * @param null $id_shop
-     * @return StockAvailable
-     */
-    public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
-    {
-        return new StockAvailable(StockAvailable::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
-    }
-
     /**
      * Returns True if Stocks are managed by a module (or by legacy ASM)
      *
      * @return boolean True if Stocks are managed by a module (or by legacy ASM)
      */
-    public function isAsmGloballyActivated()
-    {
-        return (bool)\Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
-    }
+    public function isAsmGloballyActivated();
 }

@@ -65,6 +65,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
 
+        if ($this->product != null) {
+            $this->product->loadStockData();
+        }
+
         //define translatable key
         $this->translatableKeys = array(
             'name',
@@ -209,11 +213,15 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'condition' => 'new',
                 'active' => 0,
                 'price_shortcut' => 0,
+                'qty_0_shortcut' => 0,
                 'categories' => ['tree' => [$this->contextShop->shop->id_category]]
             ],
             'step2' => [
                 'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
                 'price' => 0,
+            ],
+            'step3' => [
+                'qty_0' => 0,
             ],
             'step4' => [
                 'width' => 0,
@@ -250,6 +258,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'condition' => $this->product->condition,
                 'active' => $this->product->active,
                 'price_shortcut' => $this->product->price,
+                'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
                 'id_manufacturer' => $this->product->id_manufacturer,
@@ -275,6 +284,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'unity' => $this->product->unity,
             ],
             'step3' => [
+                'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
+                'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
+                'qty_0' => $this->product->getQuantity($this->product->id),
                 'combinations' => $this->getFormCombinations()
             ],
             'step4' => [
@@ -453,6 +465,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
             'available_date_attribute' =>  $combination['available_date'],
             'attribute_default' => (bool)$combination['default_on'],
+            'attribute_quantity' => \Product::getQuantity($this->product->id, $combination['id_product_attribute']),
             'name' => implode(', ', $name)
         ];
     }

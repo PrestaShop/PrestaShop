@@ -31,6 +31,19 @@ namespace PrestaShop\PrestaShop\Adapter;
 class ImageManager
 {
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @param LegacyContext $legacyContext
+     */
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->legacyContext = $legacyContext;
+    }
+
+    /**
      * Old legacy way to generate a thumbnail.
      *
      * Use it upon a new Image management system is available.
@@ -50,7 +63,11 @@ class ImageManager
             $path_to_image = _PS_IMG_DIR_.$imageDir.'/'.$imageId.'.'.$imageType;
         }
         $thumbPath = \ImageManager::thumbnail($path_to_image, $tableName.'_mini_'.$imageId.'.'.$imageType, 45, $imageType);
-        $thumbPath = preg_replace('/src="(\\.\\.\\/)+/', 'src="/', $thumbPath); // because legacy uses relative path to reach a directory under root directory...
+
+        // because legacy uses relative path to reach a directory under root directory...
+        $replacement = 'src="'.$this->legacyContext->getRootUrl();
+        $thumbPath = preg_replace('/src="(\\.\\.\\/)+/', $replacement, $thumbPath);
+
         return $thumbPath;
     }
 }

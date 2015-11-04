@@ -146,6 +146,14 @@ class ProductCombination extends AbstractType
         ->add('attribute_default', 'checkbox', array(
             'label'    => $this->translator->trans('Make this combination the default combination for this product.', [], 'AdminProducts'),
             'required' => false,
+        ))
+        ->add('attribute_quantity', 'number', array(
+            'required' => true,
+            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric')),
+            )
         ));
 
         //set default minimal values for collection prototype
@@ -156,6 +164,7 @@ class ProductCombination extends AbstractType
             'attribute_unity' => 0,
             'attribute_minimal_quantity' => 1,
             'available_date_attribute' => '0000-00-00',
+            'attribute_quantity' => 0,
         ]);
     }
 

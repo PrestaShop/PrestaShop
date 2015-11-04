@@ -23,7 +23,6 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 /**
@@ -112,5 +111,37 @@ class AdminProductWrapper
                 $product->setAvailableDate();
             }
         }
+
+        $this->processQuantityUpdate($product, $combinationValues['attribute_quantity'], $id_product_attribute);
+    }
+
+    /**
+     * Update a quantity for a product or a combination.
+     *
+     * Does not work in Advanced stock management.
+     *
+     * @param \Product $product
+     * @param integer $quantity
+     * @param integer $forAttributeId
+     */
+    public function processQuantityUpdate(\Product $product, $quantity, $forAttributeId = 0)
+    {
+        // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
+        \StockAvailable::setQuantity((int)$product->id, $forAttributeId, $quantity);
+        \Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
+    }
+
+    /**
+     * Set if a product depends on stock (ASM). For a product or a combination.
+     *
+     * Does work only in Advanced stock management.
+     *
+     * @param \Product $product
+     * @param boolean $dependsOnStock
+     * @param integer $forAttributeId
+     */
+    public function processDependsOnStock(\Product $product, $dependsOnStock, $forAttributeId = 0)
+    {
+        \StockAvailable::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
     }
 }

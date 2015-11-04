@@ -1,5 +1,5 @@
 services:
-# CORE (prestashop.core.*)
+# CORE ADMIN (prestashop.core.admin.*)
     # URL generation
     prestashop.core.admin.url_generator_factory:
         class: PrestaShopBundle\Service\TransitionalBehavior\AdminUrlGeneratorFactory
@@ -14,7 +14,6 @@ services:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
         factory: [@prestashop.core.admin.url_generator_factory, forSymfony]
 
-# CORE ADMIN (prestashop.core.admin.*)
     # Interfaced services to decorate
     prestashop.core.admin.data_provider.product_interface:
         class: PrestaShopBundle\Service\DataProvider\Admin\ProductInterface

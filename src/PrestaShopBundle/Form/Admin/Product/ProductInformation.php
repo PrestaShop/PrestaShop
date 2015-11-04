@@ -166,7 +166,7 @@ class ProductInformation extends AbstractType
 
         //RIGHT COL
         ->add('active', 'choice', array(
-            'choices'  => array( 1 => 'Oui', 0 => 'Non'),
+            'choices'  => array( 1 => $this->translator->trans('Yes', [], 'AdminProducts'), 0 => $this->translator->trans('No', [], 'AdminProducts')),
             'expanded' => true,
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => true,
@@ -178,6 +178,14 @@ class ProductInformation extends AbstractType
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('qty_0_shortcut', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(
