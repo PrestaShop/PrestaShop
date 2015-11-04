@@ -30,15 +30,55 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class ThemeController extends FrameworkBundleAdminController
 {
+    private function getShop()
+    {
+        return $this
+            ->get('prestashop.adapter.legacy.context')
+            ->getContext()
+            ->shop
+        ;
+    }
+
+    private function getThemesList()
+    {
+        $shop = $this->getShop();
+        $conf = $this->get('prestashop.core.admin.configuration_interface');
+        $themesDir = $conf->get('_PS_ALL_THEMES_DIR_');
+        $themes = [];
+        foreach (glob($themesDir.'*') as $entry) {
+            if (is_dir($entry)) {
+                $directory = basename($entry);
+                $themes[] = [
+                    'directory' => $directory,
+                    'current'   => ($directory === $shop->theme_directory)
+                ];
+            }
+        }
+
+        return $themes;
+    }
+
     /**
      * @Template
      */
     public function indexAction(Request $request)
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
+        $translator = $this->get('prestashop.adapter.translator');
 
         return [
-            'layoutTitle' => $translator->trans('Theme Preferences')
+            'layoutTitle' => $translator->trans('Theme Preferences'),
+            'themes'      => $this->getThemesList()
         ];
+    }
+
+    public function changeAction(Request $request)
+    {
+        $themeDirectory = $request->request->get('theme-directory');
+
+        $shop = $this->getShop();
+        $shop->theme_directory = $themeDirectory;
+        $shop->save();
+
+        return $this->redirectToRoute('admin_theme');
     }
 }
