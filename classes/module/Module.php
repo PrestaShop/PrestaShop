@@ -726,13 +726,15 @@ abstract class ModuleCore
             }
         }
 
-        // Install overrides
-        try {
-            $this->installOverrides();
-        } catch (Exception $e) {
-            $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
-            $this->uninstallOverrides();
-            return false;
+        if ($this->getOverrides() != null) {
+            // Install overrides
+            try {
+                $this->installOverrides();
+            } catch (Exception $e) {
+                $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
+                $this->uninstallOverrides();
+                return false;
+            }
         }
 
         // Enable module in the shop where it is not enabled yet
