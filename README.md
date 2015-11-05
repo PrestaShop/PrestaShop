@@ -1,6 +1,8 @@
 About PrestaShop
 --------
 
+[![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=feat%2Fstarter-theme)](https://travis-ci.org/PrestaShop/PrestaShop)
+
 PrestaShop is a free and Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
 
 <p align="center">
@@ -25,7 +27,7 @@ Note that the theme present in this archive (in the /themes/default-bootstrap fo
 
 Also, the ZIP file does not contain the default modules. Since the 1.6 theme needs these module, the store will not display much as-is, even if you install the Starter Theme. We therefore advise you to focus your tests on the back office for the time being -- unless you are helping the team improve the Starter Theme.
 
-Finally, the ZIP file contains resources for developers and designers that are not in the public archive, such as the unit testing files (in the /tests folder). 
+Finally, the ZIP file contains resources for developers and designers that are not in the public archive, such as the unit testing files (in the /tests folder).
 
 
 Server configuration
