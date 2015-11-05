@@ -117,7 +117,7 @@
             "layout": "layout-full-width"
         },
         "category": {
-            "layout": "layout-full-width"
+            "layout": "layout-both-columns"
         },
         "module-cheque-payment": {
             "layout": "layout-full-width"
