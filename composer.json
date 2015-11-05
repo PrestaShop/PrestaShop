@@ -12,7 +12,9 @@
     {"type": "vcs", "url": "https://github.com/prestashop/blockcontact"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockmyaccount"},
     {"type": "vcs", "url": "https://github.com/prestashop/bankwire"},
-    {"type": "vcs", "url": "https://github.com/prestashop/contactform"}
+    {"type": "vcs", "url": "https://github.com/prestashop/contactform"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blocklink"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blockadvertising"}
   ],
   "require": {
     "php": ">=5.4",
@@ -31,7 +33,7 @@
     "phpoffice/phpexcel": "1.8",
     "prestashop/smarty": "dev-master",
     "prestashop/bankwire": "dev-feat/starter-theme",
-    "prestashop/blockadvertising": "dev-master",
+    "prestashop/blockadvertising": "dev-feat/starter-theme",
     "prestashop/blockbanner": "dev-feat/starter-theme",
     "prestashop/blockbestsellers": "dev-master",
     "prestashop/blockcart": "dev-feat/starter-theme",
@@ -44,7 +46,7 @@
     "prestashop/blockfacebook": "dev-master",
     "prestashop/blocklanguages": "dev-feat/starter-theme",
     "prestashop/blocklayered": "dev-master",
-    "prestashop/blocklink": "dev-master",
+    "prestashop/blocklink": "dev-feat/starter-theme",
     "prestashop/blockmanufacturer": "dev-master",
     "prestashop/blockmyaccount": "dev-feat/starter-theme",
     "prestashop/blocknewproducts": "dev-master",
