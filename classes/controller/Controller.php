@@ -379,32 +379,19 @@ abstract class ControllerCore
      */
     public function addJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri)) {
-            foreach ($js_uri as $js_file) {
-                $js_file = explode('?', $js_file);
-                $version = '';
-                if (isset($js_file[1]) && $js_file[1]) {
-                    $version = $js_file[1];
-                }
-                $js_path = $js_file = $js_file[0];
-                if ($check_path) {
-                    $js_path = Media::getJSPath($js_file);
-                }
+        if (!is_array($js_uri)) {
+            $js_uri = [$js_uri];
+        }
 
-                // $key = is_array($js_path) ? key($js_path) : $js_path;
-                if ($js_path && !in_array($js_path, $this->js_files)) {
-                    $this->js_files[] = $js_path.($version ? '?'.$version : '');
-                }
-            }
-        } else {
-            $js_uri = explode('?', $js_uri);
+        foreach ($js_uri as $js_file) {
+            $js_file = explode('?', $js_file);
             $version = '';
-            if (isset($js_uri[1]) && $js_uri[1]) {
-                $version = $js_uri[1];
+            if (isset($js_file[1]) && $js_file[1]) {
+                $version = $js_file[1];
             }
-            $js_path = $js_uri = $js_uri[0];
+            $js_path = $js_file = $js_file[0];
             if ($check_path) {
-                $js_path = Media::getJSPath($js_uri);
+                $js_path = Media::getJSPath($js_file);
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
