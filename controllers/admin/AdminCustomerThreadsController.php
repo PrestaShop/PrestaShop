@@ -1042,7 +1042,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!isset($overview->from)
                             || (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
-                            $message_errors[] = 'An unindentified message has no valid "FROM" information, cannot create it in a new thread.';
+                            $message_errors[] = Tools::displayError('An unindentified message has no valid "FROM" information, cannot create it in a new thread.');
                             continue;
                         }
 
@@ -1092,7 +1092,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = quoted_printable_decode($message);
                         $message = nl2br($message);
                         if (!$message || strlen($message)==0) {
-                            $message_errors[] = 'The message body is empty, cannot import it.';
+                            $message_errors[] = Tools::displayError('The message body is empty, cannot import it.');
                             $fetch_succeed = false;
                             continue;
                         }
@@ -1105,7 +1105,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                                 $cm->message = $message;
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
-                                $message_errors[] = 'The message content is not valid, cannot import it.';
+                                $message_errors[] = Tools::displayError('The message content is not valid, cannot import it.');
                                 $fetch_succeed = false;
                                 continue;
                             }
