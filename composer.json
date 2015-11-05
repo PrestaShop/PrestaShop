@@ -14,7 +14,8 @@
     {"type": "vcs", "url": "https://github.com/prestashop/bankwire"},
     {"type": "vcs", "url": "https://github.com/prestashop/contactform"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocklink"},
-    {"type": "vcs", "url": "https://github.com/prestashop/blockadvertising"}
+    {"type": "vcs", "url": "https://github.com/prestashop/blockadvertising"},
+    {"type": "vcs", "url": "https://github.com/prestashop/blocksearch"}
   ],
   "require": {
     "php": ">=5.4",
@@ -55,7 +56,7 @@
     "prestashop/blockpermanentlinks": "dev-master",
     "prestashop/blockreinsurance": "dev-master",
     "prestashop/blockrss": "dev-master",
-    "prestashop/blocksearch": "dev-master",
+    "prestashop/blocksearch": "dev-feat/starter-theme",
     "prestashop/blocksharefb": "dev-master",
     "prestashop/blocksocial": "dev-master",
     "prestashop/blockspecials": "dev-master",
