@@ -46,7 +46,7 @@ script:
   # install PrestaShop for PHPUnit tests
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - cd /var/www/prestashop.unit.test && bash getcomposer.sh && php composer.phar install
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
+  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=fr
     --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
     --db_create=1 --name=prestashop.unit.test --password=123456789
   # backup install for next step
