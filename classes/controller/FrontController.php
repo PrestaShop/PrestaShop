@@ -832,16 +832,6 @@ class FrontControllerCore extends Controller
             _THEME_JS_DIR_.'custom.js',
         ]);
 
-        if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
-            $this->addJqueryUI('ui.sortable');
-            $this->addjqueryPlugin('fancybox');
-            $this->addJS(_PS_JS_DIR_.'hookLiveEdit.js');
-        }
-
-        if (Configuration::get('PS_QUICK_VIEW')) {
-            $this->addjqueryPlugin('fancybox');
-        }
-
         if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0) {
             $this->addJS(_THEME_JS_DIR_.'products-comparison.js');
         }
