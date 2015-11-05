@@ -106,6 +106,54 @@ class InstallModelInstall extends InstallAbstractModel
             $this->setError($this->language->l('Cannot write settings file'));
             return false;
         }
+
+        return $this->generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix);
+    }
+
+    /**
+     * Customize SF2 parameters file
+     *
+     * @param $database_server
+     * @param $database_login
+     * @param $database_password
+     * @param $database_name
+     * @param $database_prefix
+     *
+     * @return bool
+     */
+    private function generateSf2ParametersFile($database_server, $database_login, $database_password, $database_name, $database_prefix)
+    {
+        //If ENV is DEV, by pass this step
+        if (_PS_MODE_DEV_) {
+            return true;
+        }
+
+        if (!is_writable(_PS_ROOT_DIR_.'/app/config')) {
+            $this->setError($this->language->l('%s folder is not writable (check permissions)', 'app/config'));
+            return false;
+        }
+
+        umask(0000);
+
+        //generate parameters content file
+        $content = 'parameters:'."\n";
+        $content .= '    database_host: '.$database_server."\n";
+        $content .= '    database_port: ~'."\n";
+        $content .= '    database_name: '.$database_name."\n";
+        $content .= '    database_user: '.$database_login."\n";
+        $content .= '    database_password: '.$database_password."\n";
+        $content .= '    database_prefix: '.$database_prefix."\n";
+        $content .= '    mailer_transport: smtp'."\n";
+        $content .= '    mailer_host: 127.0.0.1'."\n";
+        $content .= '    mailer_user: ~'."\n";
+        $content .= '    mailer_password: ~'."\n";
+        $content .= '    secret: '.Tools::passwdGen(56)."\n";
+
+        if (!file_put_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml', $content)) {
+            $this->setError($this->language->l('Cannot write app/config/parameters.yml file'));
+            return false;
+        }
+
         return true;
     }
 
@@ -145,8 +193,46 @@ class InstallModelInstall extends InstallAbstractModel
             return false;
         }
 
+        return $this->generateSf2ProductionEnv();
+    }
+
+    /**
+     * Pass SF2 to production
+     * cache:clear
+     * assetic:dump
+     * doctrine:schema:update
+     *
+     * @return bool
+     */
+    private function generateSf2ProductionEnv()
+    {
+        //If ENV is DEV, by pass this step
+        if (_PS_MODE_DEV_) {
+            return true;
+        }
+
+        umask(0000);
+        set_time_limit(0);
+
+        require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+        $kernel = new AppKernel('prod', false);
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+        $application->setAutoExit(false);
+
+        $commands = [
+            ['command' => 'cache:clear', '--env' => 'prod', '--no-debug' => true],
+            ['command' => 'assetic:dump', '--env' => 'prod', '--no-debug' => true],
+            ['command' => 'doctrine:schema:update', '--env' => 'prod', '--no-debug' => true, '--force' => true]
+        ];
+
+        $output = new \Symfony\Component\Console\Output\NullOutput();
+        foreach ($commands as $command) {
+            $application->run(new \Symfony\Component\Console\Input\ArrayInput($command), $output);
+        }
+
         return true;
     }
+
 
     /**
      * Clear database (only tables with same prefix)
