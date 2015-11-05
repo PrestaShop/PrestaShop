@@ -46,14 +46,14 @@ script:
   # install PrestaShop for PHPUnit tests
   - cd /var/www/prestashop.unit.test && cp tests/parameters.yml.travis app/config/parameters.yml
   - cd /var/www/prestashop.unit.test && bash getcomposer.sh && php composer.phar install
-  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=us
+  - php /var/www/prestashop.unit.test/install-dev/index_cli.php --language=en --country=fr
     --domain=localhost --base_uri=/prestashop.unit.test --db_name=prestashop.unit.test
     --db_create=1 --name=prestashop.unit.test --password=123456789
   # backup install for next step
   - cp -R /var/www/prestashop.unit.test $TRAVIS_BUILD_DIR/fresh_install
   - mysqldump -uroot prestashop.unit.test > $TRAVIS_BUILD_DIR/db.sql
-  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c tests/
-  - cd /var/www/prestashop.unit.test && php vendor/bin/phpunit -c admin-dev/
+  - cd /var/www/prestashop.unit.test && php bin/phpunit -c tests/
+  - cd /var/www/prestashop.unit.test && php bin/phpunit -c admin-dev/
   # re-install PrestaShop for Selenium tests
   - sudo rm -Rf /var/www/prestashop.unit.test
   - sudo cp -Rf $TRAVIS_BUILD_DIR/fresh_install /var/www/prestashop.unit.test
