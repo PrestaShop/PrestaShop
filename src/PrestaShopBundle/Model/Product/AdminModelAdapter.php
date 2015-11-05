@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $adminProductWrapper;
     private $cldrRepository;
     private $locales;
     private $defaultLocale;
@@ -56,6 +57,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->contextShop = $this->context->getContext();
+        $this->adminProductWrapper = $container->get('prestashop.adapter.admin.wrapper.product');
         $this->cldrRepository = new cldrRepository($this->contextShop->language);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
@@ -88,7 +90,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'categories',
             'suppliers',
             'display_options',
-            'features'
+            'features',
+            'specific_price',
         );
     }
 
@@ -219,6 +222,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step2' => [
                 'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
                 'price' => 0,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
             ],
             'step3' => [
                 'qty_0' => 0,
@@ -282,6 +291,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
             ],
             'step3' => [
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,

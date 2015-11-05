@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 
 /**
  * This form class is risponsible to generate the product price form
@@ -45,7 +46,8 @@ class ProductPrice extends AbstractType
      */
     public function __construct($container)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->container = $container;
+        $this->translator = $this->container->get('prestashop.adapter.translator');
         $this->tax_rules = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -92,7 +94,8 @@ class ProductPrice extends AbstractType
         ->add('unity', 'text', array(
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
-        ));
+        ))
+        ->add('specific_price', new ProductSpecificPrice($this->container));
     }
 
     /**

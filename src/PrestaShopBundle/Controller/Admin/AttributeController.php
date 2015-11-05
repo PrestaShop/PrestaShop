@@ -143,4 +143,31 @@ class AttributeController extends FrameworkBundleAdminController
         $response->setData(['message' => $translator->trans($res['message'])]);
         return $response;
     }
+
+    /**
+     * get All Combinations for a product
+     *
+     * @param int $idProduct The product id
+     *
+     * @return string Json
+     */
+    public function getProductCombinationsAction($idProduct)
+    {
+        $response = new JsonResponse();
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+
+        //get combinations
+        $modelMapper = new ProductAdminModelAdapter($idProduct, $this->container);
+
+        $combinationList = [];
+        foreach ($combinations as $combination) {
+            $newCombination = $modelMapper->getFormCombination($combination);
+            $combinationList[] = ['id' => $newCombination['id_product_attribute'], 'name' => $newCombination['name']];
+        }
+
+        $response->setData($combinationList);
+
+        return $response;
+    }
 }

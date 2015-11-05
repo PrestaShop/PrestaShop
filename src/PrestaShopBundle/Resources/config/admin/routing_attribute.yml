@@ -23,3 +23,13 @@ admin_delete_attribute:
     requirements:
         idAttribute: \d+
         idProduct: \d+
+
+admin_get_product_combinations:
+    path:     /get-product-combinations/{idProduct}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttributeController::getProductCombinationsAction
+        _format: json
+        idProduct: 0
+    requirements:
+        idProduct: \d+

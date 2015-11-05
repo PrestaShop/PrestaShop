@@ -43,4 +43,32 @@ class AttributeDataProvider
     {
         return \Attribute::getAttributes($id_lang, $not_null);
     }
+
+    /**
+     * Get combination for a product
+     *
+     * @param int $idProduct
+     *
+     * @return array Combinations
+     */
+    public static function getProductCombinations($idProduct)
+    {
+        //get product
+        $product = new \Product((int)$idProduct, false);
+        if (!is_object($product) || empty($product->id)) {
+            return false;
+        }
+
+        $allCombinations = $product->getAttributeCombinations(1, false);
+        $allCombinationsIds = array_map(function ($o) {
+            return $o['id_product_attribute'];
+        }, $allCombinations);
+
+        $combinations = [];
+        foreach ($allCombinationsIds as $combinationId) {
+            $combinations[] = $product->getAttributeCombinationsById($combinationId, 1)[0];
+        }
+
+        return $combinations;
+    }
 }
