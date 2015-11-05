@@ -23,14 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is risponsible to create a product with attribute without attribute field
+ * This form class is responsible to create a product with attribute without attribute field
  */
 class TypeaheadProductCollectionType extends TypeaheadCollectionType
 {

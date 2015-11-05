@@ -23,17 +23,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is risponsible to generate the product price form
+ * This form class is responsible to generate the product price form
  */
-class ProductPrice extends AbstractType
+class ProductPrice extends CommonModelAbstractType
 {
     private $translator;
     private $tax_rules;
@@ -93,23 +92,6 @@ class ProductPrice extends AbstractType
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ));
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**

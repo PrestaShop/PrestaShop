@@ -299,6 +299,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
         }
 
+        // post treatment by hooks
+        // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
+        \Hook::exec('actionAdminProductsListingResultsModifier', array(
+            '_ps_version' => _PS_VERSION_,
+            'products' => &$products,
+            'total' => $total
+        ));
+
         return $products;
     }
 

@@ -23,23 +23,22 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 
 /**
- * FrameworkBundleAdminController that extends The Symfony framework bundle controller
+ * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
 class FrameworkBundleAdminController extends Controller
 {
     /**
-     * This function returns form errors for JS implementation
+     * Returns form errors for JS implementation.
+     *
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
-     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
