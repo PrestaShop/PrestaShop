@@ -66,6 +66,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
 
         if ($this->product != null) {
             $this->product->loadStockData();
@@ -198,6 +199,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $new_form_data[$k] = $v;
         }
 
+        //map specific price priority
+        $new_form_data['specificPricePriority'] = [
+            $new_form_data['specificPricePriority_0'],
+            $new_form_data['specificPricePriority_1'],
+            $new_form_data['specificPricePriority_2'],
+            $new_form_data['specificPricePriority_3'],
+        ];
+
         return array_merge(parent::getHookData(), $new_form_data);
     }
 
@@ -228,6 +237,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     'sp_reduction_tax' => 1,
                     'leave_bprice' => true,
                 ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
+                'specificPricePriorityToAll' => false,
             ],
             'step3' => [
                 'qty_0' => 0,
@@ -297,6 +311,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     'sp_reduction_tax' => 1,
                     'leave_bprice' => true,
                 ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
             ],
             'step3' => [
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,

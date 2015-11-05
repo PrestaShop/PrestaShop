@@ -1,7 +1,7 @@
 # All the Attributes related routes
 
 admin_attribute_get_all:
-    path:     /get-all-attributes
+    path:     /get-all
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::getAllAttributesAction
@@ -25,7 +25,7 @@ admin_delete_attribute:
         idProduct: \d+
 
 admin_get_product_combinations:
-    path:     /get-product-combinations/{idProduct}
+    path:     /product-combinations/{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\AttributeController::getProductCombinationsAction

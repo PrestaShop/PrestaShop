@@ -48,6 +48,7 @@ class ProductPrice extends AbstractType
     {
         $this->container = $container;
         $this->translator = $this->container->get('prestashop.adapter.translator');
+
         $this->tax_rules = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -95,7 +96,26 @@ class ProductPrice extends AbstractType
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
-        ->add('specific_price', new ProductSpecificPrice($this->container));
+        ->add('specific_price', new ProductSpecificPrice($this->container))
+        ->add('specificPricePriorityToAll', 'checkbox', array(
+            'required' => false,
+            'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
+        ));
+
+        //generates fields for price priority
+        $specificPricePriorityChoices = [
+            'id_shop' => $this->translator->trans('Shop', [], 'AdminProducts'),
+            'id_currency' => $this->translator->trans('Currency', [], 'AdminProducts'),
+            'id_country' => $this->translator->trans('Country', [], 'AdminProducts'),
+            'id_group' => $this->translator->trans('Group', [], 'AdminProducts'),
+        ];
+
+        for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
+            $builder->add('specificPricePriority_'.$i, 'choice', array(
+                'choices' => $specificPricePriorityChoices,
+                'required' => true
+            ));
+        }
     }
 
     /**

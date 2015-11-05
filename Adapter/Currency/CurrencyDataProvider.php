@@ -36,7 +36,7 @@ class CurrencyDataProvider
      *
      * @return array Currencies
      */
-    public static function getCurrencies($object = false, $active = true, $group_by = false)
+    public function getCurrencies($object = false, $active = true, $group_by = false)
     {
         return \Currency::getCurrencies($object = false, $active = true, $group_by = false);
     }

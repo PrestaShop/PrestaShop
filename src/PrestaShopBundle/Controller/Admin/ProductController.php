@@ -310,6 +310,7 @@ class ProductController extends FrameworkBundleAdminController
                 if ($product = $adminProductController->postCoreProcess()) {
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
+                    $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
                         // For now, each attribute set the same value.

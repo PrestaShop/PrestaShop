@@ -400,4 +400,32 @@ class AdminProductWrapper
             'message'=> 'Successful deletion'
         );
     }
+
+    /**
+     * Get price priority
+     *
+     * @param null|int $idProduct
+     *
+     * @return array
+     */
+    public function getPricePriority($idProduct = null)
+    {
+        if (!$idProduct) {
+            return [
+                0 => "id_shop",
+                1 => "id_currency",
+                2 => "id_country",
+                3 => "id_group"
+            ];
+        }
+
+        $specific_price_priorities = \SpecificPrice::getPriority((int)$idProduct);
+
+        // Not use id_customer
+        if ($specific_price_priorities[0] == 'id_customer') {
+            unset($specific_price_priorities[0]);
+        }
+
+        return array_values($specific_price_priorities);
+    }
 }

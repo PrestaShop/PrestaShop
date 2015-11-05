@@ -39,7 +39,7 @@ class GroupDataProvider
      *
      * @return array Groups
      */
-    public static function getGroups($id_lang, $id_shop = false)
+    public function getGroups($id_lang, $id_shop = false)
     {
         return \Group::getGroups($id_lang, $id_shop);
     }

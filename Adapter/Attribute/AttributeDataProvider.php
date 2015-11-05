@@ -51,7 +51,7 @@ class AttributeDataProvider
      *
      * @return array Combinations
      */
-    public static function getProductCombinations($idProduct)
+    public function getProductCombinations($idProduct)
     {
         //get product
         $product = new \Product((int)$idProduct, false);
