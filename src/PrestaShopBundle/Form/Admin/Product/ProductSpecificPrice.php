@@ -26,16 +26,16 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 /**
- * This form class is risponsible to generate the basic product informations form
+ * This form class is responsible to generate the basic product information form
  */
-class ProductSpecificPrice extends AbstractType
+class ProductSpecificPrice extends CommonModelAbstractType
 {
     private $translator;
     private $locales;
@@ -62,23 +62,6 @@ class ProductSpecificPrice extends AbstractType
         $this->countries = $this->formatDataChoicesList($countryAdapter->getCountries($this->locales[0]['id_lang']), 'id_country');
         $this->currencies = $this->formatDataChoicesList($currencyAdapter->getCurrencies(), 'id_currency');
         $this->groups = $this->formatDataChoicesList($groupAdapter->getGroups($this->locales[0]['id_lang']), 'id_group');
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**
