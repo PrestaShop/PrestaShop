@@ -35,7 +35,7 @@
 <div class="clearfix">&nbsp;</div>
 <div class="panel" id="conditions-panel" style="display:none;">
 	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
-	<div class="form-group">
+	<div class="form-group condition-category">
 		<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
@@ -46,13 +46,13 @@
 				</select>
 			</div>
 			<div class="col-lg-1">
-				<a class="btn btn-default" href="#" id="add_condition_category">
+				<a class="btn btn-default add_condition" href="#">
 					<i class="icon-plus-sign"></i> {l s='Add condition'}
 				</a>
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group condition-manufacturer">
 		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
@@ -63,13 +63,13 @@
 				</select>
 			</div>
 			<div class="col-lg-1">
-				<a class="btn btn-default" href="#" id="add_condition_manufacturer">
+				<a class="btn btn-default add_condition" href="#">
 					<i class="icon-plus-sign"></i> {l s='Add condition'}
 				</a>
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group condition-supplier">
 		<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
@@ -80,13 +80,13 @@
 				</select>
 			</div>
 			<div class="col-lg-1">
-				<a class="btn btn-default" href="#" id="add_condition_supplier">
+				<a class="btn btn-default add_condition" href="#">
 					<i class="icon-plus-sign"></i> {l s='Add condition'}
 				</a>
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group condition-attribute">
 		<label for="id_attribute_group" class="control-label col-lg-3">{l s='Attributes'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-4">
@@ -100,19 +100,19 @@
 				{foreach from=$attributes_group item='attribute_group'}
 					<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
 						{foreach from=$attribute_group.attributes item='attribute'}
-							<option value="{$attribute.id_attribute}">{$attribute.name}</option>
+							<option value="{$attribute.id_attribute}" data-attribute-group-id="{$attribute_group.id_attribute_group}">{$attribute.name}</option>
 						{/foreach}
 					</select>
 				{/foreach}
 			</div>
 			<div class="col-lg-1">
-				<a class="btn btn-default" href="#" id="add_condition_attribute">
+				<a class="btn btn-default add_condition" href="#">
 					<i class="icon-plus-sign"></i> {l s='Add condition'}
 				</a>
 			</div>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group condition-feature">
 		<label for="id_feature" class="control-label col-lg-3">{l s='Features'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-4">
@@ -126,13 +126,13 @@
 				{foreach from=$features item='feature'}
 					<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
 						{foreach from=$feature.values item='value'}
-							<option value="{$value.id_feature_value}">{$value.value}</option>
+							<option value="{$value.id_feature_value}" data-feature-id="{$feature.id_feature}">{$value.value}</option>
 						{/foreach}
 					</select>
 				{/foreach}
 			</div>
 			<div class="col-lg-1">
-				<a class="btn btn-default" href="#" id="add_condition_feature">
+				<a class="btn btn-default add_condition" href="#">
 					<i class="icon-plus-sign"></i> {l s='Add condition'}
 				</a>
 			</div>
@@ -148,6 +148,46 @@
 var current_id_condition_group = 0;
 var last_condition_group = 0;
 var conditions = new Array();
+var conditionBuilder = {
+	'category': {
+		'value': function() { return $('#id_category option:selected').val(); },
+		'html': function (id_condition, value) {
+			return '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+	'manufacturer': {
+		'value': function () { return $('#id_manufacturer option:selected').val(); },
+		'html': function (id_condition, value) {
+			return '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+	'supplier': {
+		'value': function () { return $('#id_supplier option:selected').val(); },
+		'html': function (id_condition, value) {
+			return '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+	'attribute': {
+		'value': function () { return $('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').val(); },
+		'html': function (id_condition, value) {
+			var attribute = $('.id_attribute option[value='+value+']');
+			var attribute_group_id = attribute.data('attribute-group-id');
+			var attribute_name = $('#id_attribute_group option[value='+attribute_group_id+']').html();
+			var attribute_value = attribute.html();
+			return '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+attribute_name+': '+attribute_value+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+	'feature': {
+		'value': function () { return $('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').val(); },
+		'html': function (id_condition, value) {
+			var feature = $('.id_feature_value option[value='+value+']');
+			var feature_id = feature.data('feature-id');
+			var feature_name = $('#id_feature option[value='+feature_id+']').html();
+			var feature_value = feature.html();
+			return '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+feature_name+': '+feature_value+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+};
 
 function toggle_condition_group(id_condition_group)
 {
@@ -201,11 +241,22 @@ function new_condition_group()
 	toggle_condition_group(last_condition_group);
 }
 
-function appendConditionToGroup(html)
+function appendConditionToGroup(condition_group_id, html)
 {
-	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
-	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
+	if ($('#condition_group_'+condition_group_id+' table tbody tr').length > 0)
+		$('#condition_group_'+condition_group_id+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+	$('#condition_group_'+condition_group_id+' table tbody').append(html);
+}
+
+function createCondition(condition_type, value) {
+	var builder = conditionBuilder[condition_type];
+	if (builder == undefined) return;
+	if (value == undefined) value = builder.value();
+
+	var id_condition = add_condition(current_id_condition_group, condition_type, value);
+	if (!id_condition) return;
+
+	appendConditionToGroup(current_id_condition_group, builder.html(id_condition, value));
 }
 
 $(document).ready(function() {
@@ -233,58 +284,10 @@ $(document).ready(function() {
 		$('#id_attribute_'+$(this).val()).show();
 	});
 
-	$('#add_condition_category').click(function() {
-		var id_condition = add_condition(current_id_condition_group, 'category', $('#id_category option:selected').val());
-		if (!id_condition)
-			return false;
-
-		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
-		appendConditionToGroup(html);
-
-		return false;
-	});
-
-	$('#add_condition_manufacturer').click(function() {
-		var id_condition = add_condition(current_id_condition_group, 'manufacturer', $('#id_manufacturer option:selected').val());
-		if (!id_condition)
-			return false;
-
-		var html = '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
-		appendConditionToGroup(html);
-
-		return false;
-	});
-
-	$('#add_condition_supplier').click(function() {
-		var id_condition = add_condition(current_id_condition_group, 'supplier', $('#id_supplier option:selected').val());
-		if (!id_condition)
-			return false;
-
-		var html = '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
-		appendConditionToGroup(html);
-
-		return false;
-	});
-
-	$('#add_condition_attribute').click(function() {
-		var id_condition = add_condition(current_id_condition_group, 'attribute', $('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').val());
-		if (!id_condition)
-			return false;
-
-		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
-		appendConditionToGroup(html);
-
-		return false;
-	});
-
-	$('#add_condition_feature').click(function() {
-		var id_condition = add_condition(current_id_condition_group, 'feature', $('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').val());
-		if (!id_condition)
-			return false;
-
-		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
-		appendConditionToGroup(html);
-
+	$('#conditions-panel .add_condition').click(function() {
+		var matches = $(this).closest('.form-group').attr('class').match(/condition-(.*)/);
+		if (matches == null) return false;
+		createCondition(matches[1]);
 		return false;
 	});
 
@@ -302,16 +305,7 @@ $(document).ready(function() {
 	{foreach from=$conditions key='id_group_condition' item='condition_group'}
 		new_condition_group();
 		{foreach from=$condition_group item='condition'}
-			{if $condition.type == 'attribute'}
-				$('#id_attribute_group option[value="{$condition.id_attribute_group}"]').attr('selected', true);
-				$('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]').attr('selected', true);
-			{elseif $condition.type == 'feature'}
-				$('#id_feature option[value="{$condition.id_feature}"]').attr('selected', true);
-				$('#id_feature_{$condition.id_feature} option[value="{$condition.value}"]').attr('selected', true);
-			{else}
-				$('#id_{$condition.type} option[value="{$condition.value}"]').attr('selected', true);
-			{/if}
-			$('#add_condition_{$condition.type}').click();
+			createCondition('{$condition.type}', {$condition.value});
 		{/foreach}
 	{/foreach}
 	$('#id_attribute_group').change();
