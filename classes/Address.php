@@ -408,7 +408,7 @@ class AddressCore extends ObjectModel
                 // set the default address
                 $address             = new Address();
                 $address->id_country = (int)$context->country->id;
-                $address->id_state   = 0;
+                $address->id_state   = (Configuration::get('PS_SHOP_STATE_ID') ? Configuration::get('PS_SHOP_STATE_ID') : 0 );
                 $address->postcode   = 0;
             }
             Cache::store($cache_id, $address);
