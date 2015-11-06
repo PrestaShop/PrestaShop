@@ -311,8 +311,8 @@ class LinkCore
         $params = array();
         $params['id'] = $supplier->id;
         $params['rewrite'] = (!$alias) ? $supplier->link_rewrite : $alias;
-        $params['meta_keywords'] =    Tools::str2url($supplier->meta_keywords);
-        $params['meta_title'] = Tools::str2url($supplier->meta_title);
+        $params['meta_keywords'] =    Tools::str2url($supplier->meta_keywords[$id_lang]);
+        $params['meta_title'] = Tools::str2url($supplier->meta_title[$id_lang]);
 
         return $url.$dispatcher->createUrl('supplier_rule', $id_lang, $params, $this->allow, '', $id_shop);
     }
