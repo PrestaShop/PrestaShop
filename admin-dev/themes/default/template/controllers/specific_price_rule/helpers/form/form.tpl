@@ -152,19 +152,19 @@ var conditionBuilder = {
 	'category': {
 		'value': function() { return $('#id_category option:selected').val(); },
 		'html': function (id_condition, value) {
-			return '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+			return '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option[value='+value+']').html()+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		},
 	},
 	'manufacturer': {
 		'value': function () { return $('#id_manufacturer option:selected').val(); },
 		'html': function (id_condition, value) {
-			return '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+			return '<tr id="'+id_condition+'"><td>{l s='Manufacturer'}</td><td>'+$('#id_manufacturer option[value='+value+']').html()+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		},
 	},
 	'supplier': {
 		'value': function () { return $('#id_supplier option:selected').val(); },
 		'html': function (id_condition, value) {
-			return '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option[value='+value+']').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+			return '<tr id="'+id_condition+'"><td>{l s='Supplier'}</td><td>'+$('#id_supplier option[value='+value+']').html()+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		},
 	},
 	'attribute': {
@@ -174,7 +174,7 @@ var conditionBuilder = {
 			var attribute_group_id = attribute.data('attribute-group-id');
 			var attribute_name = $('#id_attribute_group option[value='+attribute_group_id+']').html();
 			var attribute_value = attribute.html();
-			return '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+attribute_name+': '+attribute_value+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+			return '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+attribute_name+': '+attribute_value+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		},
 	},
 	'feature': {
@@ -184,7 +184,7 @@ var conditionBuilder = {
 			var feature_id = feature.data('feature-id');
 			var feature_name = $('#id_feature option[value='+feature_id+']').html();
 			var feature_value = feature.html();
-			return '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+feature_name+': '+feature_value+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+			return '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+feature_name+': '+feature_value+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		},
 	},
 };
@@ -216,7 +216,7 @@ function delete_condition(condition)
 	delete conditions[condition];
 
 	to_delete = $('#'+condition).prev();
-	if ($(to_delete).children().hasClass('btn_delete_condition'))
+	if ($(to_delete).children().hasClass('condition-group-separator'))
 		$(to_delete).remove();
 	else
 		$('#'+condition).next().remove();
@@ -241,11 +241,18 @@ function new_condition_group()
 	toggle_condition_group(last_condition_group);
 }
 
-function appendConditionToGroup(condition_group_id, html)
+function appendConditionToGroup(id_condition, html)
 {
-	if ($('#condition_group_'+condition_group_id+' table tbody tr').length > 0)
-		$('#condition_group_'+condition_group_id+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
-	$('#condition_group_'+condition_group_id+' table tbody').append(html);
+	var condition = conditions[id_condition];
+	if (condition == undefined) return;
+
+	if ($('#condition_group_'+condition.id_condition_group+' table tbody tr').length > 0)
+		$('#condition_group_'+condition.id_condition_group+' table tbody').append('<tr><td class="text-center condition-group-separator" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+	$('#condition_group_'+condition.id_condition_group+' table tbody').append(html);
+	$('#conditions #'+id_condition+' a.btn-delete-condition').click(function() {
+		delete_condition(id_condition);
+		return false;
+	});
 }
 
 function createCondition(condition_type, value) {
@@ -256,7 +263,7 @@ function createCondition(condition_type, value) {
 	var id_condition = add_condition(current_id_condition_group, condition_type, value);
 	if (!id_condition) return;
 
-	appendConditionToGroup(current_id_condition_group, builder.html(id_condition, value));
+	appendConditionToGroup(id_condition, builder.html(id_condition, value));
 }
 
 $(document).ready(function() {
