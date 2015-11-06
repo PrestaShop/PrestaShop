@@ -3211,7 +3211,7 @@ class ProductCore extends ObjectModel
         );
     }
 
-    public function getPriceWithoutReduct($notax = false, $id_product_attribute = false, $decimals = 6)
+    public function getPriceWithoutReduct($notax = false, $id_product_attribute = null, $decimals = 6)
     {
         return Product::getPriceStatic((int)$this->id, !$notax, $id_product_attribute, $decimals, null, false, false);
     }
