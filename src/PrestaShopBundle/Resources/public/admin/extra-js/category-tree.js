@@ -38,18 +38,18 @@
 					var ui = event.target;
 					$(ui).next("ul").toggle();
 					if ($(ui).next("ul").is(":visible")) {
-						$(ui).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_less.gif')");
+						$(ui).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
 					} else {
-						$(ui).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_more.gif')");
+						$(ui).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
 					}
 				});
 				if ($(item).find("input:radio:checked").length == 0) {
 					$(item).toggle(); // initial collapse, except if child selected
 				}
 				if ($(item).is(":visible")) {
-					$(item).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_less.gif')");
+					$(item).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_less.gif')");
 				} else {
-					$(item).parent("li").attr("style", "list-style-image:url('/web/bundles/framework/images/blue_picto_more.gif')");
+					$(item).parent("li").attr("style", "list-style-image:url('"+ baseDir +"web/bundles/framework/images/blue_picto_more.gif')");
 				}
 			});
 			$("li:not(:has(ul))", this).each(function(i, item) {
