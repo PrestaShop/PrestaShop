@@ -24,10 +24,10 @@
             "layout": "layout-full-width"
         },
         "module-blocknewsletter-verification": {
-            "layout": "layout-left-column"
+            "layout": "layout-full-width"
         },
         "module-blockwishlist-mywishlist": {
-            "layout": "layout-both-columns"
+            "layout": "layout-full-width"
         },
         "module-blockwishlist-view": {
             "layout": "layout-full-width"
@@ -117,7 +117,7 @@
             "layout": "layout-full-width"
         },
         "category": {
-            "layout": "layout-both-columns"
+            "layout": "layout-full-width"
         },
         "module-cheque-payment": {
             "layout": "layout-full-width"

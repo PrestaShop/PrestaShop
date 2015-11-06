@@ -59,49 +59,12 @@ class ThemeController extends FrameworkBundleAdminController
 
     public function getPages()
     {
-        $theme = $this->getShop()->theme;
+        $meta = $this->get('prestashop.adapter.data_provider.meta');
 
-        $pages = $this->get('prestashop.adapter.data_provider.meta')->all(
+        return $this->get('prestashop.core.theme_manager')->getPagesSettings(
+            $meta,
             $this->getContext()
         );
-
-        $availableLayouts = $theme['layouts'];
-
-        $pagesWithLayout = array_map(function (array $page) use ($availableLayouts, $theme) {
-
-            $page['layout'] = [];
-
-            foreach ($availableLayouts as $layout) {
-
-                $current = isset($theme['page_preference'][$page['page']]) &&
-                    $theme['page_preference'][$page['page']]['layout'] === $layout['name']
-                ;
-
-                $page['layout'][$layout['name']] = [
-                    'description' => $layout['description'],
-                    'current'     => $current
-                ];
-            }
-
-            return $page;
-        }, $pages);
-
-        // Sort pages by alphabetical order of title,
-        // and by alphabetical order of page name for pages
-        // that don't have a title
-        usort($pagesWithLayout, function (array $a, array $b) {
-            if ($a['title'] && $b['title']) {
-                return $b['title'] < $a['title'] ? 1 : -1;
-            } else if (!$a['title'] && !$b['title']) {
-                return $b['page'] < $a['page'] ? 1 : -1;
-            } else if ($b['title']) {
-                return 1;
-            } else {
-                return -1;
-            }
-        });
-
-        return $pagesWithLayout;
     }
 
     /**
@@ -132,23 +95,13 @@ class ThemeController extends FrameworkBundleAdminController
     public function changeLayoutAction(Request $request)
     {
         $layout = $request->request->get('layout');
-        $theme  = $this->getShop()->theme;
+        $meta = $this->get('prestashop.adapter.data_provider.meta');
 
-        if (!isset($theme['page_preference'])) {
-            $theme['page_preference'] = [];
-        }
-
-        foreach ($this->getPages() as $page) {
-            if (!isset($theme['page_preference'][$page['page']])) {
-                $theme['page_preference'][$page['page']] = [];
-            }
-        }
-
-        foreach ($layout as $page => $layout) {
-            $theme['page_preference'][$page]['layout'] = $layout;
-        }
-
-        $this->getShop()->setTheme($theme);
+        $this->get('prestashop.core.theme_manager')->updateLayoutPreferences(
+            $meta,
+            $this->getContext(),
+            $layout
+        );
 
         return $this->redirectToRoute('admin_theme');
     }
