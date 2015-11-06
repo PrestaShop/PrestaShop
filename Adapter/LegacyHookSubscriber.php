@@ -189,6 +189,19 @@ use PrestaShopBundle\Service\Hook\RenderingHookEvent;
  *         <li>Returns: void</li>
  *       </ul>
  *     </li>
+ *     <li><h5>actionProductActivation</h5>
+ *       <ul>
+ *         <li>Since 1.7, triggered from the AdminProductDataUpdater via sf ProductController.</li>
+ *         <li>Parameters:
+ *           <ol>
+ *             <li>id_product: [int] Product ID to be updated</li>
+ *             <li>product: [object] Product</li>
+ *             <li>activated: [boolean] True if activation, False if deactivation.</li>
+ *           </ol>
+ *         </li>
+ *         <li>Returns: void</li>
+ *       </ul>
+ *     </li>
  *   </ul>
  * </div>
  * <hr />

@@ -38,7 +38,7 @@ class AdminModelAdapter
      *
      * This parent method will return only hook sub array.
      *
-     * @return array Transormed form data to model attempt
+     * @return array Transformed form data to model attempt
      */
     public function getHookData()
     {

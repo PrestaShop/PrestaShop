@@ -66,8 +66,8 @@ class AdminProductDataUpdater implements ProductInterface
                 continue;
             }
             $product->active = ($activate?1:0);
-            $result = $product->update();
-            // TODO: Hook ?
+            $product->update();
+            $this->hookDispatcher->dispatchForParameters('actionProductActivation', array('id_product' => (int)$product->id, 'product' => $product, 'activated' => $activate));
         }
 
         if (count($failedIdList) > 0) {
@@ -234,7 +234,7 @@ class AdminProductDataUpdater implements ProductInterface
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE cp.`id_category` = '.$categoryId.' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
 
-        $res = \Db::getInstance()->query($updatePositions);
+        \Db::getInstance()->query($updatePositions);
 
         // Fixes duplicates on all pages
         \Db::getInstance()->query('SET @i := 0');
@@ -242,9 +242,7 @@ class AdminProductDataUpdater implements ProductInterface
             SET cp.`position` = (SELECT @i := @i + 1)
             WHERE cp.`id_category` = '.$categoryId.'
             ORDER BY cp.`id_product` NOT IN ('.implode(',', array_keys($productList)).'), cp.`position` ASC';
-        $res = \Db::getInstance()->query($selectPositions);
-
-        // TODO: Hook ?
+        \Db::getInstance()->query($selectPositions);
 
         return true;
     }

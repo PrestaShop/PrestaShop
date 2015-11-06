@@ -23,14 +23,30 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Service\Hook;
 
+/**
+ * RenderingHookEvent is used in HookDispatcher for rendering hooks.
+ *
+ * A HookEvent can contains parameters to give to the listeners through getHookParameters,
+ * but can also contains responses from subscribers, to deliver HTML or other data to the caller.
+ */
 class RenderingHookEvent extends HookEvent
 {
     private $currentContent = '';
     private $currentListener = null;
 
+    /**
+     * Sets the response from the listener.
+     *
+     * Should be called by the listener to store its response.
+     * This content will be pushed in a stack between each listener call.
+     * Every response is kept, but a given listener cannot see the previous listeners' responses.
+     *
+     * @param $content
+     * @param null $fromListener
+     * @return $this
+     */
     public function setContent($content, $fromListener = null)
     {
         $this->currentContent = $content;
@@ -38,11 +54,20 @@ class RenderingHookEvent extends HookEvent
         return $this;
     }
 
+    /**
+     * Gets the last pushed content (for the current listener).
+     *
+     * @return string
+     */
     public function getContent()
     {
         return $this->currentContent;
     }
 
+    /**
+     * Retrieves the last pushed content (and cleans the corresponding attribute).
+     * @return string
+     */
     public function popContent()
     {
         $content = $this->currentContent;
@@ -50,6 +75,11 @@ class RenderingHookEvent extends HookEvent
         return $content;
     }
 
+    /**
+     * Gets the current listener that put the response (and cleans the corresponding attribute).
+     *
+     * @return undefined a listener
+     */
     public function popListener()
     {
         $listener = $this->currentListener;
