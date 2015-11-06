@@ -182,8 +182,6 @@ class AdminProductDataUpdater implements ProductInterface
 
         $filterParams = array_diff($filterParams, array('')); // removes empty filters for the test
         if (count($filterParams) !== 1 || !isset($filterParams['filter_category'])) {
-            dump($filterParams);
-            die;
             throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
         }
         $categoryId = $filterParams['filter_category'];
@@ -216,7 +214,7 @@ class AdminProductDataUpdater implements ProductInterface
         // avoid '0', starts with '1', so shift right (+1)
         if ($sortedPositions[1] === 0) {
             foreach ($sortedPositions as $k => $v) {
-                $sortedPositions[$k] = $v+1;
+                $sortedPositions[$k] = $v + 1;
             }
         }
 
@@ -231,11 +229,11 @@ class AdminProductDataUpdater implements ProductInterface
         $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
             INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
             '.\Shop::addSqlAssociation('product', 'p').'
-            SET cp.`position` = FIELD(cp.`position`, '.$fields.'),
+            SET cp.`position` = ELT(cp.`position`, '.$fields.'),
                 p.`date_upd` = "'.date('Y-m-d H:i:s').'",
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE cp.`id_category` = '.$categoryId.' AND cp.`id_product` IN ('.implode(',', array_keys($productList)).')';
-        
+
         $res = \Db::getInstance()->query($updatePositions);
 
         // Fixes duplicates on all pages
