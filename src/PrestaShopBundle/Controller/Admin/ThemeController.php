@@ -44,16 +44,14 @@ class ThemeController extends FrameworkBundleAdminController
     {
         $shop = $this->getShop();
         $conf = $this->get('prestashop.core.admin.configuration_interface');
-        $themesDir = $conf->get('_PS_ALL_THEMES_DIR_');
+
         $themes = [];
-        foreach (glob($themesDir.'*') as $entry) {
-            if (is_dir($entry)) {
-                $directory = basename($entry);
-                $themes[] = [
-                    'directory' => $directory,
-                    'current'   => ($directory === $shop->theme_directory)
-                ];
-            }
+        foreach ($this->get('prestashop.core.theme_manager')->getThemes() as $theme) {
+            $directory = $theme['directory'];
+            $themes[] = [
+                'directory' => $directory,
+                'current'   => ($directory === $shop->theme_directory)
+            ];
         }
 
         return $themes;

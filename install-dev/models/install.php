@@ -143,6 +143,7 @@ class InstallModelInstall extends InstallAbstractModel
         $content .= '    database_user: '.$database_login."\n";
         $content .= '    database_password: '.$database_password."\n";
         $content .= '    database_prefix: '.$database_prefix."\n";
+        $content .= '    ps_all_themes_dir: '._PS_ALL_THEMES_DIR_."\n";
         $content .= '    mailer_transport: smtp'."\n";
         $content .= '    mailer_host: 127.0.0.1'."\n";
         $content .= '    mailer_user: ~'."\n";

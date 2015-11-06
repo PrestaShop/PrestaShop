@@ -6,7 +6,7 @@ parameters:
     database_user:     root
     database_password: ~
     database_prefix:   ps_
-
+    ps_all_themes_dir: /var/www/prestashop.unit.test/themes
     mailer_transport:  smtp
     mailer_host:       localhost
     mailer_user:       ~

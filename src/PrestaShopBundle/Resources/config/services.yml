@@ -6,6 +6,10 @@ services:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
 
+    prestashop.core.theme_manager:
+        class: ThemeManager
+        arguments: ["%ps_all_themes_dir%"]
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface
