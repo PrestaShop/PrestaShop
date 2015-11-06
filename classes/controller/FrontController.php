@@ -106,12 +106,6 @@ class FrontControllerCore extends Controller
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var bool If false, does not build left page column content and hides it. */
-    public $display_column_left = true;
-
-    /** @var bool If false, does not build right page column content and hides it. */
-    public $display_column_right = true;
-
     /**
      * True if controller has already been initialized.
      * Prevents initializing controller more than once.
@@ -156,16 +150,6 @@ class FrontControllerCore extends Controller
             $this->ssl = $useSSL;
         } else {
             $useSSL = $this->ssl;
-        }
-
-        if (isset($this->php_self) && is_object(Context::getContext()->theme)) {
-            $columns = Context::getContext()->theme->hasColumns($this->php_self);
-
-            // Don't use theme tables if not configured in DB
-            if ($columns) {
-                $this->display_column_left  = $columns['left_column'];
-                $this->display_column_right = $columns['right_column'];
-            }
         }
 
         $this->objectSerializer = new Adapter_ObjectSerializer();
@@ -435,8 +419,6 @@ class FrontControllerCore extends Controller
             'link'                => $link,
             'cart'                => $cart,
             'cookie'              => $this->context->cookie,
-            'hide_left_column'    => !$this->display_column_left,
-            'hide_right_column'   => !$this->display_column_right,
             'base_dir'            => _PS_BASE_URL_.__PS_BASE_URI__,
             'base_dir_ssl'        => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
             'force_ssl'           => Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'),
@@ -534,8 +516,6 @@ class FrontControllerCore extends Controller
         $this->context->smarty->assign(array(
             'HOOK_HEADER'       => Hook::exec('displayHeader'),
             'HOOK_TOP'          => Hook::exec('displayTop'),
-            'HOOK_LEFT_COLUMN'  => ($this->display_column_left  ? Hook::exec('displayLeftColumn') : ''),
-            'HOOK_RIGHT_COLUMN' => ($this->display_column_right ? Hook::exec('displayRightColumn', array('cart' => $this->context->cart)) : ''),
         ));
     }
 
@@ -1347,15 +1327,12 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
-        $layout = 'layout/layout-full-width.tpl';
-
-        if ($this->display_column_left && $this->display_column_right) {
-            $layout = 'layout/layout-both-columns.tpl';
-        } elseif ($this->display_column_left) {
-            $layout = 'layout/layout-left-column.tpl';
-        } elseif ($this->display_column_right) {
-            $layout = 'layout/layout-right-column.tpl';
+        $layoutName = $this->context->shop->theme['layouts'][0]['name'];
+        if (isset($this->context->shop->theme['page_preference'][$this->getPageName()]['layout'])) {
+            $layoutName = $this->context->shop->theme['page_preference'][$this->getPageName()]['layout'];
         }
+
+        $layout = 'layout/' . $layoutName . '.tpl';
 
         $entity = $this->php_self;
         $id_item = (int)Tools::getValue('id_'.$entity);
@@ -1488,7 +1465,7 @@ class FrontControllerCore extends Controller
         }
         $urls['pages'] = $pages;
 
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->theme->directory . '/assets/';
+        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme_directory . '/assets/';
 
         return $urls;
     }

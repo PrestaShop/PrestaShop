@@ -1,0 +1,69 @@
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+    <div class="panel">
+        <div class="panel-heading">
+            {{trans('Change Page Layouts')}}
+        </div>
+        <form method="POST" action="{{url('theme_change_layout')}}">
+            <table class="table">
+                <tr>
+                    <th>{{trans('Page')}}</th>
+                    <th>{{trans('Title')}}</th>
+                    <th>{{trans('Description')}}</th>
+                    <th>{{trans('Layout')}}</th>
+                </tr>
+                {% for page in pages %}
+                    <tr>
+                        <td>{{page.page}}</td>
+                        <td>{{page.title}}</td>
+                        <td>{{page.description}}</td>
+                        <td>
+                            <select name="layout[{{page.page}}]">
+                                {% for name, layout in page.layout %}
+                                    <option value="{{name}}" {% if layout.current %} selected {% endif %}>
+                                        {{layout.description}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-default pull-right">
+                    <i class="process-icon-save"></i> {{trans('Save')}}
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            {{trans('Change your theme')}}
+        </div>
+        <form class="form-horizontal" method="POST" action="{{url('change_theme')}}">
+            <div class="form-group">
+                <label for="change-your-theme" class="control-label col-lg-3">
+                    {{trans('Change your theme')}}
+                </label>
+                <div class="col-lg-3">
+                    <select name="theme-directory" id="change-your-theme" class="form-control">
+                        {% for theme in themes %}
+                            <option
+                                value="{{theme.directory}}"
+                                {% if theme.current %} selected {% endif %}
+                            >
+                                {{theme.directory}}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-default pull-right">
+                    <i class="process-icon-save"></i> {{trans('Save')}}
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

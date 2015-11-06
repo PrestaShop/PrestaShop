@@ -431,16 +431,19 @@ class LinkCore
      */
     public function getAdminLink($controller, $with_token = true)
     {
+        // New architecture modification: temporary behavior to switch between old and new controllers.
+        global $kernel; // sf kernel
+
         switch ($controller) {
             case 'AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
                 $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
                 }
                 break;
+            case 'AdminThemes':
+                return $kernel->getContainer()->get('router')->generate('admin_theme');
         }
 
         $id_lang = Context::getContext()->language->id;

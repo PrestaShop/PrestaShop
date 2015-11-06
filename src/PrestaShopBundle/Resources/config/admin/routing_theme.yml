@@ -1,0 +1,17 @@
+admin_theme:
+    path: /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ThemeController::indexAction
+
+change_theme:
+    path: /change
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ThemeController::changeAction
+
+theme_change_layout:
+    path: /change-layout
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ThemeController::changeLayoutAction

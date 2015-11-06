@@ -35,13 +35,12 @@ ALTER TABLE  `PREFIX_supply_order_detail` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
 ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
 
-/* PHP:ps1700_stores(); */;
-
-
-/* Password reset token for new "Forgot my password screen */
-ALTER TABLE PREFIX_customer ADD `reset_password_token` varchar(40) DEFAULT NULL;
-ALTER TABLE PREFIX_customer ADD `reset_password_validity` datetime DEFAULT NULL;
-ALTER TABLE PREFIX_employee ADD `reset_password_token` varchar(40) DEFAULT NULL;
-ALTER TABLE PREFIX_employee ADD `reset_password_validity` datetime DEFAULT NULL;
+/* PHP:ps1700_stores(); */
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
+
+DROP TABLE `PREFIX_theme`;
+DROP TABLE `PREFIX_theme_meta`;
+DROP TABLE `PREFIX_theme_specific`;
+ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
+ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_directory` VARCHAR(255) AFTER `id_category`;

@@ -38,55 +38,23 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;theme_name={$theme->directory|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
-												{if $theme->name != 'default-bootstrap' || ($theme->name == 'default-bootstrap'  && $host_mode == 0)}
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 													<i class="icon-caret-down"></i>&nbsp;
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme->id}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_name={$theme->directory|urlencode}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
 												</ul>
-												{/if}
 											</div>
 										</div>
 									</div>
 									<img class="center-block img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->name}" />
-								</div>
-							</div>
-						</div>
-					{/foreach}
-					{foreach $field.not_installed as $theme}
-						<div class="col-sm-4 col-lg-3">
-							<div class="theme-container">
-								<h4 class="theme-title">{$theme.name}</h4>
-								<div class="thumbnail-wrapper">
-									<div class="action-wrapper">
-										<div class="action-overlay"></div>
-										<div class="action-buttons">
-											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;installThemeFromFolder&amp;theme_dir={$theme.directory}" class="btn btn-default">
-													<i class="icon-check"></i> {l s='Install this theme'}
-												</a>
-												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<i class="icon-caret-down"></i>&nbsp;
-												</button>
-												<ul class="dropdown-menu">
-													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_dir={$theme.directory}" title="Delete this theme" class="delete">
-															<i class="icon-trash"></i> {l s='Delete this theme'}
-														</a>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme.directory}/themes/{$theme.directory}/preview.jpg" alt="{$theme.name}" />
 								</div>
 							</div>
 						</div>
@@ -119,35 +87,6 @@
 					{l s='Designed by %s' sprintf=$cur_theme.author_name}
 				</p>
 				{/if}
-
-				{if isset($cur_theme.tc) && $cur_theme.tc}
-				<hr />
-				<h4>{l s='Customize your theme'}</h4>
-				<div class="row">
-					<div class="col-sm-8">
-						<p>{l s='Customize the main elements of your theme: sliders, banners, colors, etc.'}</p>
-					</div>
-					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|escape:'html':'UTF-8'}&amp;configure=themeconfigurator">
-							<i class="icon icon-list-alt"></i>
-							{l s='Theme Configurator'}
-						</a>
-					</div>
-				</div>
-				{/if}
-				<hr />
-				<h4>{l s='Configure your theme'}</h4>
-				<div class="row">
-					<div class="col-sm-8">
-						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
-					</div>
-					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;updatetheme&amp;id_theme={$cur_theme.theme_id}">
-							<i class="icon icon-cog"></i>
-							{l s='Advanced settings'}
-						</a>
-					</div>
-				</div>
 			</div>
 		</div>
 
