@@ -1,96 +1,156 @@
-/* Everything related to module grid list thumbs */
-
-.module-item {
-    width: 23% !important;
-    max-width: 23% !important;
-    background: white;
-    text-transform: none !important;
-    margin: 10px;
-}
-
-.module-item .panel-heading {
-    border: none !important;
-    background-color: white !important;
-    padding: 15px !important;
-}
-
-.module-item .panel-heading img {
-    margin-right: 5px;
-    margin-bottom: 22px;
-}
-
-.module-item .panel-footer {
-    border: none !important;
-    background-color: white !important;
-    margin: none !important;
-}
-
-.module-item .panel-heading img {
-    margin-right: 5px;
-    margin-bottom: 22px;
-}
-
-.module-item .panel-heading a {
-
-}
-
+/**
+ * Generalist CSS for module pages
+ */
+.module-search-bar {
+     height: 50px !important;
+     border-left: 0 !important;
+ }
+.module-search-block {
+    padding: 5px;
+ }
 .module-menu-item {
     color: #363A41 !important;
     padding: 20px;
     font-size: 16px;
     font-family: "Open Sans Semibold", Helvetica,Arial,sans-serif;;
 }
+.module-install-button {
+    color: white;
+    background-color: #25B9D7;
+    border: 0;
+    border-radius: 5px;
+    padding: 6px;
+    height: 30px;
+    width: 70px;
+}
+.module-sorting-menu {
+    margin-bottom: 30px;
+}
+.module-sorting {
+    margin-left: 35px;
+}
+.module-sorting span {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.module-sort-active {
+    color: #A6B9C0 !important;
+}
+.module-sort-switch {
+    color: #C7D6DB;
+}
 
-
-.module-name {
+/**
+ * Module GRID CSS
+ */
+.module-name-grid {
     color: #1E2024 !important;
     font-family:"Open Sans", Helvetica, Arial,sans-serif !important;
     font-weight: bold;
     font-size: 14px;
     display: inline-block;
     width: 265px;
+    margin-left: 5px;
 }
-
-.panel-footer.module-quick-action {
-    padding-top: 25px;
-    padding-right: 20px;
+.module-item-heading-grid {
+    display: inline-block;
+    width: 100%;
 }
-
-.module-quick-description {
+.module-quick-description-grid {
     width: 100%;
     height: 100px;
     max-height: 100px;
     padding-top: 25px !important;
+    text-align: justify;
+}
+.module-quick-description-grid:after{
+    content: "\02026";
+}
+.module-quick-action-grid {
+    margin-top: 10px;
+}
+.module-version-author-grid {
+    margin-top: 10px;
+}
+.module-logo-thumb-grid {
+    vertical-align: 0 !important;
+}
+.module-item-wrapper-grid {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
 }
 
-.module-version-author {
-    margin-top: -20px;
+/**
+ * Module LIST CSS
+ */
+.module-item-list {
+    background-color: white;
+    max-height: 50px;
+ }
+ .module-item-list-grey {
+     background-color: #EBEDEF !important;
+ }
+.module-item-list img {
+    float:left;
+    margin-top: 13px;
+    margin-right: 15px;
+}
+.module-name-list {
+    color: #1E2024 !important;
+    font-family:"Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+    width: 135px;
+    cursor: default;
+}
+.module-quick-action-list {
+    float: right;
+    padding: 10px;
+}
+.module-quick-description-list {
+    line-height: 50px;
+    max-width: 66%;
+    float: left;
+    height: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.module-version-author-list {
+    display: inline-block;
+    float:left;
+    margin-right: 15px;
+    width: 145px;
+}
+.module-item-heading-list {
+    float:left;
+    line-height: 50px;
+}
+.module-logo-thumb-list {
+
 }
 
-.module-search-bar {
-    height: 50px !important;
-    border-left: 0 !important;
-}
-
-.module-search-block {
-    color: #EBEDEF !important;
-}
-
-.module-top-menu {
-    padding-left: 11px !important;
-    padding-right: 45px !important;
-    padding-top: 15px !important;
-}
-
-/* All relative to module modal */
+/**
+ * Module Modal CSS
+ */
 .module-modal-title {
     display: inline-block;
+    color: #1E2024 !important;
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold !important;
+    font-size: 14px;
 }
-
 .module-modal-header {
     border: 0;
 }
-
 .module-modal-footer {
     border: 0;
+}
+.module-big-cover {
+    text-align: center;
 }

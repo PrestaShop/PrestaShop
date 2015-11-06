@@ -10,9 +10,21 @@
 
 {% endblock %}
 
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/module.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}
+
 {% block content %}
     {# Contains menu with Selection/Categories/Popular #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
+    {# Contains sorting options #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' %}
     {# Actual Page Content #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
 {% endblock %}

@@ -40,13 +40,11 @@
     color: #3ED2F0;
 }
 
-.bootstrap hr.top-menu-separator {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    margin-left: 10px;
-    border-color: #D6D9DC;
-    padding-left: 33px;
-    margin-right: 50px;
+.top-menu-separator {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+    margin-left: 5px;
+    border-color: #E7E8E8 !important;
 }
 
 .active {

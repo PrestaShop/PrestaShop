@@ -1,16 +1,12 @@
-{# dump(topMenuData) #}
-
-
-<div class="container-fluid module-top-menu">
+<div class="module-top-menu">
     <div class="row">
 	   {% for menu in topMenuData %}
-            <div class="col-md-2 module-menu-item {#menu.class#}">
+            <div class="col-md-8 module-menu-item {#menu.class#}">
                 <a href="#">{{menu.name}}</a>
             </div>
            {% endfor %}
-
-
-            <div class="col-md-4 col-md-offset-2">
+           
+            <div class="col-md-4 module-search-block">
                 <div class="input-group add-on left-addon">
                     <span class="input-group-addon">
                         <i class="icon-search"></i>

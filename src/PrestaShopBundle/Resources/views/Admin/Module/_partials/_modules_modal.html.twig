@@ -11,10 +11,17 @@
         </div>
       </div>
       <div class="modal-body">
-        <p>{{ module.description }}</p>
+          <div class="row">
+              <div class="col-md-6">
+                  <p>{{ module.description }}</p>
+              </div>
+              <div class="col-md-6 module-big-cover">
+                  <img src="{% if module.media.cover.big is defined %}{{module.media.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}" height="200"/>
+              </div>
+          </div>
       </div>
       <div class="modal-footer module-modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="button" class="pull-left module-install-button" value="Install"/>
       </div>
     </div>
   </div>
