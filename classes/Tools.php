@@ -919,10 +919,11 @@ class ToolsCore
     */
     public static function clearXMLCache()
     {
+        $themeManager = new ThemeManager(_PS_ALL_THEMES_DIR_);
         $themes = array();
-        foreach (Theme::getThemes() as $theme) {
+        foreach ($themeManager->getThemes() as $theme) {
             /** @var Theme $theme */
-            $themes[] = $theme->directory;
+            $themes[] = $theme['directory'];
         }
 
         foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file) {
