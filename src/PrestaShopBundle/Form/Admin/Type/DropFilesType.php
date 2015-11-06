@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -33,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use PrestaShopBundle\Form\Admin\Validator\DropFile;
 
 /**
- * This form class is risponsible to create/manage a drag&drop form field
+ * This form class is responsible to create/manage a drag&drop form field
  */
 class DropFilesType extends AbstractType
 {

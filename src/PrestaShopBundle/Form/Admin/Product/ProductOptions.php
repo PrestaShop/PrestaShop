@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class is risponsible to generate the product options form
+ * This form class is responsible to generate the product options form
  */
-class ProductOptions extends AbstractType
+class ProductOptions extends CommonModelAbstractType
 {
     private $translator;
     private $suppliers;
@@ -49,23 +49,6 @@ class ProductOptions extends AbstractType
             $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
             'id_supplier'
         );
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**

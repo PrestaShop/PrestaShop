@@ -101,44 +101,6 @@ class ProductController extends FrameworkBundleAdminController
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
-        // URLs injection
-        $actionRedirectionUrl = $this->generateUrl('admin_product_catalog', array(
-            'limit' => $request->attributes->get('limit'),
-            'offset' => $request->attributes->get('offset'),
-            'orderBy' => $request->attributes->get('orderBy'),
-            'sortOrder' => $request->attributes->get('sortOrder')
-        ));
-        $urls = array(
-            'post_url' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                // No offset: filter & bulk action will post form and want to redirect to first page.
-                //'offset' => $request->attributes->get('offset'),
-                'orderBy' => $request->attributes->get('orderBy'),
-                'sortOrder' => $request->attributes->get('sortOrder')
-            )),
-            'ordering_url' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                // No offset: re-ordering action will use this url to redirect to first page.
-                //'offset' => $request->attributes->get('offset'),
-                'orderBy' => 'name', // will be replaced by JS. Must be non default value (see routes YML file)
-                'sortOrder' => 'desc' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'bulk_url' => $this->generateUrl('admin_product_bulk_action', array(
-                'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'mass_edit_url' => $this->generateUrl('admin_product_mass_edit_action', array(
-                'action' => 'sort' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'bulk_redirect_url' => $actionRedirectionUrl,
-            'unit_redirect_url' => $actionRedirectionUrl,
-            'bulk_redirect_url_next_page' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                'offset' => $request->attributes->get('offset') + $request->attributes->get('limit'),
-                'orderBy' => $request->attributes->get('orderBy'),
-                'sortOrder' => $request->attributes->get('sortOrder')
-            )),
-        );
-
         // Add layout top-right menu actions
         $toolbarButtons = array();
         if ($pagePreference->getTemporaryShouldAllowUseLegacyPage('product')) {
@@ -194,7 +156,6 @@ class ProductController extends FrameworkBundleAdminController
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
-            $urls,
             array(
                 'limit' => $limit,
                 'offset' => $offset,

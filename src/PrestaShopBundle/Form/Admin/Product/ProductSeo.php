@@ -23,17 +23,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 
 /**
- * This form class is risponsible to generate the product SEO form
+ * This form class is responsible to generate the product SEO form
  */
-class ProductSeo extends AbstractType
+class ProductSeo extends CommonModelAbstractType
 {
     private $translator;
     private $locales;

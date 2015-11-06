@@ -68,7 +68,7 @@ class HookDispatcher extends EventDispatcher
      */
     public function dispatchMultiple(array $eventNames, array $eventParameters)
     {
-        foreach($eventNames as $name) {
+        foreach ($eventNames as $name) {
             $this->dispatch($name, (new HookEvent())->setHookParameters($eventParameters));
         }
     }

@@ -42,11 +42,13 @@
             <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
         </div>
     
-        <form name="product_catalog_list" id="product_catalog_list" method="post" action="{{ post_url }}" orderingurl="{{ ordering_url }}" >
+        <form name="product_catalog_list" id="product_catalog_list" method="post"
+              action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+              orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'desc'}) }}" >
             <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
 
             <div class="table-responsive-row clearfix">
-                <table class="table product" redirecturl="{{ unit_redirect_url }}">
+                <table class="table product" redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
                     <thead>
                         <tr class="column-headers">
                             <th>
@@ -166,7 +168,10 @@
             </div>
             
             <div class="row">
-                <div class="pull-left" bulkurl="{{ bulk_url }}" massediturl="{{ mass_edit_url }}" redirecturl="{{ bulk_redirect_url }}" redirecturlnextpage="{{ bulk_redirect_url_next_page }}">
+                <div class="pull-left" bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
+                     massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
+                     redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
+                     redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
                 
                     {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
                         'div_style': "btn-group dropup",
