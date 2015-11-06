@@ -400,6 +400,9 @@ $( document ).ready(function() {
 
 	//get specific prices list
 	function getSpecificPricesList() {
+		if($("#form_id_product").val() == 0) {
+			return;
+		}
 		var elem = $("#js-specific-price-list");
 		$.ajax({
 			type: "GET",
