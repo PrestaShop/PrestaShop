@@ -2,11 +2,12 @@
 
 class ThemeManager
 {
-    private $all_themes_dir = _PS_ALL_THEMES_DIR_;
+    private $all_themes_dir;
     private $themes = [];
 
-    public function __construct()
+    public function __construct($all_themes_dir)
     {
+        $this->all_themes_dir = $all_themes_dir;
         $this->setThemes();
     }
 
