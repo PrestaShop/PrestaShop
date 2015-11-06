@@ -69,7 +69,7 @@ class ThemeController extends FrameworkBundleAdminController
 
         $availableLayouts = $theme['layouts'];
 
-        return array_map(function (array $page) use ($availableLayouts, $theme) {
+        $pagesWithLayout = array_map(function (array $page) use ($availableLayouts, $theme) {
 
             $page['layout'] = [];
 
@@ -87,6 +87,23 @@ class ThemeController extends FrameworkBundleAdminController
 
             return $page;
         }, $pages);
+
+        // Sort pages by alphabetical order of title,
+        // and by alphabetical order of page name for pages
+        // that don't have a title
+        usort($pagesWithLayout, function (array $a, array $b) {
+            if ($a['title'] && $b['title']) {
+                return $b['title'] < $a['title'] ? 1 : -1;
+            } else if (!$a['title'] && !$b['title']) {
+                return $b['page'] < $a['page'] ? 1 : -1;
+            } else if ($b['title']) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        return $pagesWithLayout;
     }
 
     /**
