@@ -38,12 +38,16 @@
 	<div class="form-group condition-category">
 		<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
 		<div class="col-lg-9">
-			<div class="col-lg-8">
+			<div class="col-lg-6">
 				<select id="id_category" name="id_category">
 					{foreach from=$categories item='category'}
 					<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
 					{/foreach}
 				</select>
+			</div>
+			<div class="col-lg-2">
+				<input type="checkbox" id="category_tree" name="category_tree" value="1">
+				<label for="category_tree" class="control-label">{l s='Applies to categories'}</label>
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default add_condition" href="#">
@@ -153,6 +157,12 @@ var conditionBuilder = {
 		'value': function() { return $('#id_category option:selected').val(); },
 		'html': function (id_condition, value) {
 			return '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option[value='+value+']').html()+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
+		},
+	},
+	'category-tree': {
+		'value': function() { return $('#id_category option:selected').val(); },
+		'html': function (id_condition, value) {
+			return '<tr id="'+id_condition+'"><td>{l s='Category tree'}</td><td>'+$('#id_category  option[value='+value+']').html()+'</td><td><a href="#" class="btn btn-default btn-delete-condition"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>'
 		},
 	},
 	'manufacturer': {
@@ -296,6 +306,17 @@ $(document).ready(function() {
 		if (matches == null) return false;
 		createCondition(matches[1]);
 		return false;
+	});
+
+	$('#category_tree').change(function () {
+		var category_form = $(this).closest('.form-group');
+		if ($(this).attr('checked')) {
+			category_form.removeClass('condition-category');
+			category_form.addClass('condition-category-tree');
+		} else {
+			category_form.removeClass('condition-category-tree');
+			category_form.addClass('condition-category');
+		}
 	});
 
 	$('#add_condition_group').click(function() {
