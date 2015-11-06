@@ -49,6 +49,15 @@ services:
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
 
+    prestashop.adapter.data_provider.country:
+        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+
+    prestashop.adapter.data_provider.currency:
+        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
+
+    prestashop.adapter.data_provider.group:
+        class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
+
     prestashop.adapter.data_provider.tax:
         class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
 

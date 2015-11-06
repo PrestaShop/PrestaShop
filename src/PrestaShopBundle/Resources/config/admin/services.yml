@@ -42,6 +42,7 @@ services:
             - @prestashop.hook.dispatcher
     prestashop.adapter.admin.wrapper.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+        arguments: ["@prestashop.adapter.translator", "@prestashop.adapter.legacy.context"]
     prestashop.adapter.admin.page_preference:
         class: PrestaShop\PrestaShop\Adapter\Admin\PagePreference
         arguments:

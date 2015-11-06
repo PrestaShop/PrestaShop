@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $adminProductWrapper;
     private $cldrRepository;
     private $locales;
     private $defaultLocale;
@@ -56,6 +57,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->contextShop = $this->context->getContext();
+        $this->adminProductWrapper = $container->get('prestashop.adapter.admin.wrapper.product');
         $this->cldrRepository = new cldrRepository($this->contextShop->language);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
@@ -64,6 +66,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
 
         if ($this->product != null) {
             $this->product->loadStockData();
@@ -88,7 +91,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'categories',
             'suppliers',
             'display_options',
-            'features'
+            'features',
+            'specific_price',
         );
     }
 
@@ -195,6 +199,14 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $new_form_data[$k] = $v;
         }
 
+        //map specific price priority
+        $new_form_data['specificPricePriority'] = [
+            $new_form_data['specificPricePriority_0'],
+            $new_form_data['specificPricePriority_1'],
+            $new_form_data['specificPricePriority_2'],
+            $new_form_data['specificPricePriority_3'],
+        ];
+
         return array_merge(parent::getHookData(), $new_form_data);
     }
 
@@ -219,6 +231,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step2' => [
                 'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
                 'price' => 0,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
+                'specificPricePriorityToAll' => false,
             ],
             'step3' => [
                 'qty_0' => 0,
@@ -282,6 +305,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
             ],
             'step3' => [
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,

@@ -15,6 +15,10 @@ _admin_attribute_routing:
     resource: "admin/routing_attribute.yml"
     prefix: /attribute
 
+_admin_specific_price_routing:
+    resource: "admin/routing_specific_price.yml"
+    prefix: /specific-price
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}

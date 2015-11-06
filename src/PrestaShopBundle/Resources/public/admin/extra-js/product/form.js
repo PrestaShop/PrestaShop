@@ -78,6 +78,9 @@ $( document ).ready(function() {
 	$("#form > .nav li:not(.active) a").click(function(){
 		if($('#form .btn-submit').attr("disabled") != "disabled" && $("#form_id_product").val() == 0){
 			$("#form").submit();
+		} else if ($(this).attr("href") == "#step2" && $("#form_id_product").val() != 0){
+			//each switch to price tab, reload combinations into specific price form
+			addCombinationsToSpecificPriceForm();
 		}
 	});
 
@@ -138,7 +141,6 @@ $( document ).ready(function() {
 			},
 			error: function(response){
 				$.each(jQuery.parseJSON(response.responseText), function(key, errors){
-					console.log(key, errors)
 					var html = '<span class="help-block"><ul class="list-unstyled">';
 					$.each(errors, function(key, error){
 						html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
@@ -373,4 +375,109 @@ $( document ).ready(function() {
 	});
 
 	$("div#form_step1_categories").categorytree();
+
+	//Specifc prices form
+	getSpecificPricesList();
+	$("#form_step2_specific_price_sp_price").val($("#form_step2_price").val());
+
+	function addCombinationsToSpecificPriceForm() {
+		var elem = $("#form_step2_specific_price_sp_id_product_attribute");
+		var url = elem.attr("data-action")+"/"+$("#form_id_product").val();
+
+		$.ajax({
+			type: "GET",
+			url: url,
+			success: function(combinations){
+				//remove all options except first one
+				elem.find("option:gt(0)").remove();
+
+				$.each(combinations, function(key, combination){
+					elem.append('<option value="'+combination.id+'">'+combination.name+'</option>');
+				});
+			}
+		});
+	};
+
+	//get specific prices list
+	function getSpecificPricesList() {
+		var elem = $("#js-specific-price-list");
+		$.ajax({
+			type: "GET",
+			url: elem.attr('data')+'/'+$("#form_id_product").val(),
+			success: function(specific_prices){
+				var tbody = elem.find('tbody');
+				tbody.find("tr").remove();
+
+				if(specific_prices.length > 0){
+					elem.removeClass('hide');
+				} else {
+					elem.addClass('hide');
+				}
+
+				$.each(specific_prices, function(key, specific_price){
+					var row = '<tr>\
+						<td>'+ specific_price.rule_name +'</td>\
+						<td>'+ specific_price.attributes_name +'</td>\
+						<td>'+ specific_price.shop +'</td>\
+						<td>'+ specific_price.currency +'</td>\
+						<td>'+ specific_price.country +'</td>\
+						<td>'+ specific_price.group +'</td>\
+						<td>'+ specific_price.customer +'</td>\
+						<td>'+ specific_price.fixed_price +'</td>\
+						<td>'+ specific_price.impact +'</td>\
+						<td>'+ specific_price.period +'</td>\
+						<td>'+ specific_price.from_quantity +'</td>\
+						<td>'+ (specific_price.can_delete ? '<a href="'+ $("#js-specific-price-list").attr("data-action-delete")+'/'+specific_price.id_specific_price +'" class="btn btn-default js-delete">X</a>' : '') +'</td>\
+					</tr>';
+
+					tbody.append(row);
+				});
+			}
+		});
+	}
+
+	$("#specific_price_form .js-save").click(function(){
+		var _this = $(this);
+		$.ajax({
+			type: "POST",
+			url: $("#specific_price_form").attr("data-action"),
+			data: $("#form_step2_specific_price input, #form_step2_specific_price select, #form_id_product").serialize(),
+			beforeSend: function() {
+				_this.attr("disabled", "disabled");
+			},
+			success: function(response){
+				showSuccessMessage(translate_javascripts['Form update success']);
+				getSpecificPricesList();
+			},
+			complete: function(){
+				_this.removeAttr("disabled");
+			},
+			error: function(errors){
+				showErrorMessage(errors.responseJSON);
+			}
+		});
+	});
+
+	$(document).on("click", "#js-specific-price-list .js-delete", function(e) {
+		e.preventDefault();
+		var elem = $(this).parent().parent();
+
+		$.ajax({
+			type: "GET",
+			url: $(this).attr('href'),
+			beforeSend: function() {
+				$(this).attr("disabled", "disabled");
+			},
+			success: function(response){
+				elem.remove();
+				showSuccessMessage(response);
+			},
+			error: function(response){
+				showErrorMessage(response.responseJSON);
+			},
+			complete: function(){
+				$(this).removeAttr("disabled");
+			}
+		});
+	});
 });
