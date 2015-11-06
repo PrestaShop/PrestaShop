@@ -173,7 +173,7 @@ abstract class ControllerCore
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
 
-        $this->themeManager = new ThemeManager();
+        $this->themeManager = new ThemeManager(_PS_ALL_THEMES_DIR_);
     }
 
     /**
