@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
-class Adapter_ProductPriceCalculator
+class PriceCalculator
 {
     public function getProductPrice(
         $id_product,
@@ -42,10 +43,10 @@ class Adapter_ProductPriceCalculator
         &$specific_price_output = null,
         $with_ecotax = true,
         $use_group_reduction = true,
-        Context $context = null,
+        \Context $context = null,
         $use_customer_price = true
     ) {
-        return Product::getPriceStatic(
+        return \Product::getPriceStatic(
             $id_product,
             $usetax,
             $id_product_attribute,

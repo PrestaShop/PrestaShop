@@ -77,7 +77,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
 
     prestashop.adapter.stock_manager:
-        class: Adapter_StockManager
+        class: PrestaShop\PrestaShop\Adapter\StockManager
         decorates: prestashop.core.data_provider.stock_interface
         public: false
 

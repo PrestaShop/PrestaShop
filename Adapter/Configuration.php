@@ -23,12 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter;
 
-class Adapter_Configuration implements Core_Business_ConfigurationInterface
+class Configuration implements \Core_Business_ConfigurationInterface
 {
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * Configuration
+     * \Configuration
      * @param $key
      * @return mixed
      */
@@ -37,7 +38,7 @@ class Adapter_Configuration implements Core_Business_ConfigurationInterface
         if (defined($key)) {
             return constant($key);
         } else {
-            return Configuration::get($key);
+            return \Configuration::get($key);
         }
     }
 }

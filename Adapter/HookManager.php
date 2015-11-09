@@ -23,8 +23,9 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter;
 
-class Adapter_HookManager
+class HookManager
 {
     /**
      * Execute modules for specified hook
@@ -37,7 +38,7 @@ class Adapter_HookManager
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
      * @param int $id_shop If specified, hook will be execute the shop with this ID
      *
-     * @throws PrestaShopException
+     * @throws \PrestaShopException
      *
      * @return string/array modules output
      */
@@ -50,6 +51,6 @@ class Adapter_HookManager
         $use_push = false,
         $id_shop = null
     ) {
-        return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
+        return \Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
     }
 }

@@ -186,8 +186,8 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
         $stockManager = new Core_Business_Stock_StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
@@ -275,8 +275,8 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
         $stockManager = new Core_Business_Stock_StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
@@ -385,8 +385,8 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
         
         $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];

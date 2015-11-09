@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Adapter_ProductPriceCalculator;
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use Adapter_AddressFactory;
 use Core_Business_ConfigurationInterface;
 use Address;
@@ -84,7 +84,7 @@ class CartTest extends UnitTestCase
         parent::setup();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
-        $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);
 
         $addressFactory = Phake::mock('Adapter_AddressFactory');
         $address = new Address;

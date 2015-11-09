@@ -1413,7 +1413,7 @@ class CartCore extends ObjectModel
     {
         // Dependencies
         $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
-        $price_calculator    = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+        $price_calculator    = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
         $configuration        = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
 
         $ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
