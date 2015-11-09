@@ -216,6 +216,11 @@ if (!class_exists('PEAR', false))
 			 * @access public
 			 * @return void
 			 */
+			function __destruct()
+			{
+				$this->_PEAR();
+			}
+
 			function _PEAR() {
 					if ($this->_debug) {
 							printf("PEAR destructor called, class=%s\n", strtolower(get_class($this)));
@@ -1301,7 +1306,7 @@ if (!class_exists('PEAR_Exception', false))
 			}
 
 			public function getTraceSafe()
-			{   
+			{
 					if (!isset($this->_trace)) {
 							$this->_trace = $this->getTrace();
 							if (empty($this->_trace)) {
