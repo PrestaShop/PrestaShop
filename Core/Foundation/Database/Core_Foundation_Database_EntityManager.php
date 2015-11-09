@@ -78,7 +78,7 @@ class Core_Foundation_Database_EntityManager
      * Return entity's meta data
      * @param $className
      * @return mixed
-     * @throws Adapter_Exception
+     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      */
     public function getEntityMetaData($className)
     {

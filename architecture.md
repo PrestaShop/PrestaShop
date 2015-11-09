@@ -114,7 +114,7 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 {
     // Dependencies
 
-    $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
+    $address_factory    = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
     $price_calculator   = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
     $configuration      = Adapter_ServiceLocator::get('Core_Business_Configuration');
 
@@ -128,20 +128,20 @@ On the unit test side, setting up the mocked objects follow this pattern:
 $this->container = new Core_Foundation_IoC_Container;
 Adapter_ServiceLocator::setServiceContainerInstance($this->container);
 
-$addressFactory = Phake::mock('Adapter_AddressFactory');
+$addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
 $address = new Address;
 $address->id = 1;
 
 Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
 
-$this->container->bind('Adapter_AddressFactory', $addressFactory);
+$this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory', $addressFactory);
 ```
 
 What's happening here is:
 
 1. We create a Dependency Injection Container instance specifically for our tests
 2. We tell the ServiceLocator to fetch dependencies from our container
-3. We mock our dependency (`Adapter_AddressFactory` here)
+3. We mock our dependency (`\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` here)
 4. We bind the mocked dependency to the ServiceContainer instance
 5. In the code under test, the ServiceLocator only talks with our test container and pulls the dependencies we crafted from there
 
@@ -157,12 +157,12 @@ Code in an adapter might:
 
 As a first step, an Adapter can just use the same code as the legacy part it replaces.
 
-For instance our `Adapter_AddressFactory` class:
+For instance our `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` class:
 
 ```php
 <?php
 
-class Adapter_AddressFactory
+class AddressFactory
 {
     public function findOrCreate($id_address = null, $with_geoloc = false)
     {
@@ -196,7 +196,7 @@ But the same exact code as before is called, which is as safe as can be.
 
 Now that our dependencies are safely exposed we have a solid starting point for further work:
 
-if `Adapter_AddressFactory::findOrCreate` does strange things we're not comfortable with, and if we have strong unit tests on the code that uses the adapter, then we can start delegating work from `Adapter_AddressFactory` to non-legacy code instead of using the copy-pasted logic from the legacy code.
+if `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory::findOrCreate` does strange things we're not comfortable with, and if we have strong unit tests on the code that uses the adapter, then we can start delegating work from `\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory` to non-legacy code instead of using the copy-pasted logic from the legacy code.
 
 # A Proposal for a New Software Architecture
 

@@ -327,7 +327,7 @@ class CustomerCore extends ObjectModel
 
         try {
             $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
-        } catch (Adapter_Exception $e) {
+        } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
             return false;
         }
 

@@ -23,7 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter;
 
-class Adapter_Exception extends Core_Foundation_Exception_Exception
+class CoreException extends \Core_Foundation_Exception_Exception
 {
 }

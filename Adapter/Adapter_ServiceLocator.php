@@ -41,12 +41,12 @@ class Adapter_ServiceLocator
      * Get a service depending on its given $serviceName
      * @param $serviceName
      * @return mixed|object
-     * @throws Adapter_Exception
+     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      */
     public static function get($serviceName)
     {
         if (empty(self::$service_container) || is_null(self::$service_container)) {
-            throw new Adapter_Exception('Service container is not set.');
+            throw new \PrestaShop\PrestaShop\Adapter\CoreException('Service container is not set.');
         }
 
         return self::$service_container->make($serviceName);

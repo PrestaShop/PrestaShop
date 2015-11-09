@@ -38,7 +38,7 @@ class Adapter_EntityMetaDataRetriever
             $metaData->setTableName($classVars['definition']['table']);
             $metaData->setPrimaryKeyFieldNames(array($classVars['definition']['primary']));
         } else {
-            throw new Adapter_Exception(
+            throw new \PrestaShop\PrestaShop\Adapter\CoreException(
                 sprintf(
                     'Cannot get metadata for entity `%s`.',
                     $className
