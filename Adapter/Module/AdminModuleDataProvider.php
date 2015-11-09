@@ -193,7 +193,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
             if (!isset($ref, $categories->categories->subMenu->{$ref})) {
                 $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
-                    $name);
+                    $name
+                );
             }
 
             $categories->categories->subMenu->{$ref}->modulesRef[] = $module_key;
@@ -260,8 +261,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     protected function getRefFromModuleCategoryName($name)
     {
-        return \Tools::replaceAccentedChars(str_replace([' '], ['_'],
-                    strtolower($name)));
+        return str_replace([' '], ['_'], strtolower(\Tools::replaceAccentedChars($name)));
     }
 
     protected function fallbackOnCache()
