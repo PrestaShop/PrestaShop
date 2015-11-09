@@ -58,7 +58,11 @@ class Adapter_EntityMapper
                 $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
             }
 
-            if ($object_datas = Db::getInstance()->getRow($sql)) {
+            /* Don't $use_cache:
+               We try to grab information about an Entity unavailable at $cache_id
+               But old data may very well be in the own database query results cache what
+               very easily lead to double caching of stale results. */
+            if ($object_datas = Db::getInstance()->getRow($sql, FALSE)) {
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
