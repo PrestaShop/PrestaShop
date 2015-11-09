@@ -219,7 +219,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 // Add un-implemented properties
                 $product->refs       = (array)$this->getRefFromModuleCategoryName($product->categoryName);
                 if (! isset($product->product_type)) {
-                    $product->product_type = isset($json_key)?$json_key:'module';
+                    $product->productType = isset($json_key)?$json_key:'module';
+                } else {
+                    $product->productType = $product->product_type;
+                    unset($product->product_type);
                 }
                 $product->conditions = [];
                 $product->rating     = (object)[
