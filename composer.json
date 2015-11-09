@@ -15,6 +15,7 @@
     {"type": "vcs", "url": "https://github.com/prestashop/contactform"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocklink"},
     {"type": "vcs", "url": "https://github.com/prestashop/blockadvertising"},
+    {"type": "vcs", "url": "https://github.com/prestashop/paymentexample"},
     {"type": "vcs", "url": "https://github.com/prestashop/blocksearch"}
   ],
   "require": {
@@ -77,6 +78,7 @@
     "prestashop/homefeatured": "dev-master",
     "prestashop/homeslider": "dev-master",
     "prestashop/pagesnotfound": "dev-master",
+    "prestashop/paymentexample": "dev-master",
     "prestashop/productpaymentlogos": "dev-master",
     "prestashop/productscategory": "dev-master",
     "prestashop/producttooltip": "dev-master",
