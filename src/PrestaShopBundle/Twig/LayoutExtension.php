@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
@@ -35,6 +36,7 @@ class LayoutExtension extends \Twig_Extension
 {
     private $context;
     private $environment;
+    private $contextLegacy;
 
     /**
      * Constructor.
@@ -47,6 +49,7 @@ class LayoutExtension extends \Twig_Extension
     {
         $this->context = $context;
         $this->environment = $kernel->getEnvironment();
+        $this->configurationAdapter = new Configuration();
     }
 
     public function getGlobals()
@@ -54,6 +57,9 @@ class LayoutExtension extends \Twig_Extension
         return array(
             "root_url" => $this->context->getRootUrl(),
             "js_translatable" => [],
+            "ps_configuration" => [
+                "weight_unit" => $this->configurationAdapter->get('PS_WEIGHT_UNIT'),
+            ]
         );
     }
 
