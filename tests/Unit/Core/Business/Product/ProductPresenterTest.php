@@ -68,8 +68,13 @@ class ProductPresenterTest extends UnitTestCase
         $link = Phake::mock('Link');
         Phake::when($link)->getAddToCartURL(Phake::anyParameters())->thenReturn('http://add-to-cart.url');
 
+        $imageRetriever = Phake::mock('Adapter_ImageRetriever');
+        Phake::when($imageRetriever)->getProductImages(Phake::anyParameters())->thenReturn([
+            ['id_image' => 0, 'associatedVariants' => []]
+        ]);
+
         $presenter = new ProductPresenter(
-            Phake::mock('Adapter_ImageRetriever'),
+            $imageRetriever,
             $link,
             new PricePresenter,
             Phake::mock('Adapter_ProductColorsRetriever'),
