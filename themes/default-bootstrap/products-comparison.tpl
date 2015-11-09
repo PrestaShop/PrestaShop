@@ -74,6 +74,9 @@
 						</h5>
 						<div class="prices-container">
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+                                {if isset($product->lowest_price)}
+                                    <span class="price product-price">{convertPrice price=$product->lowest_price} - </span>
+                                {/if}
 								<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
 								{hook h="displayProductPriceBlock" id_product=$product->id type="price"}
 								{if isset($product->specificPrice) && $product->specificPrice}

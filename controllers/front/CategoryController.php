@@ -240,6 +240,32 @@ class CategoryControllerCore extends FrontController
             if (isset($product['id_product_attribute']) && $product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity'])) {
                 $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
             }
+           if (Configuration::get('PS_SHOW_LOW_PRICE')) {
+               $product_price = Product::getPriceStatic($product['id_product'], Product::$_taxCalculationMethod == PS_TAX_INC);
+               $id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
+               $id_group = (int)Group::getCurrent()->id;
+               $id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+               $id_shop = $this->context->shop->id;
+               $id_currency = (int)$this->context->cookie->id_currency;
+               $quantity_discounts = SpecificPrice::getQuantityDiscounts($product['id_product'], $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
+               $lowest_price = $product_price;
+
+                foreach ($quantity_discounts as &$quantity_discount) {
+                    if ($quantity_discount['reduction_type'] == 'amount') {
+                        $low = $product_price - $quantity_discount['reduction'];
+                    } else {
+                        $low = $product_price-round($product_price*$quantity_discount['reduction'], 1);
+                    }
+
+                    if ($lowest_price > $low) {
+                        $lowest_price = $low;
+                    }
+                }
+
+                if ($lowest_price != $product_price) {
+                    $product['lowest_price'] = $lowest_price;
+                }
+           }
         }
         
         $this->context->smarty->assign('nb_products', $this->nbProducts);
