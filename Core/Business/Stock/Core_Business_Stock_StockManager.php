@@ -42,7 +42,7 @@ class Core_Business_Stock_StockManager
             $products_pack = $packItemsManager->getPackItems($product);
             $stockAvailable = new Core_Business_Stock_StockManager();
             $stockManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
+            $cacheManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
             foreach ($products_pack as $product_pack) {
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
@@ -74,7 +74,7 @@ class Core_Business_Stock_StockManager
         $configuration = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
         $packItemsManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
         $stockManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
+        $cacheManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach ($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
@@ -114,7 +114,7 @@ class Core_Business_Stock_StockManager
         $stockManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
         $packItemsManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $cacheManager = Adapter_ServiceLocator::get('Adapter_CacheManager');
+        $cacheManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
         $hookManager = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
 
         // Update quantity of the pack products

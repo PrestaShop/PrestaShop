@@ -1412,7 +1412,7 @@ class CartCore extends ObjectModel
     public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
     {
         // Dependencies
-        $address_factory    = Adapter_ServiceLocator::get('Adapter_AddressFactory');
+        $address_factory    = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
         $price_calculator    = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
         $configuration        = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
 
