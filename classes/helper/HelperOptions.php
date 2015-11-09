@@ -183,7 +183,12 @@ class HelperOptionsCore extends Helper
 							{
 								var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
 								if (length > 0)
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+								{
+									if($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\''.Tools::getRemoteAddr().'\') < 0)
+									{
+										$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+									}
+								}
 								else
 									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
 							}
