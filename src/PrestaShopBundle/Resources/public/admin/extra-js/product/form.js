@@ -485,7 +485,7 @@ var combinations = (function() {
 			});
 
 			/** on change quantity, update field quantity row */
-			$('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').keyup(function() {
+			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_quantity"]', function() {
 				$(this).closest('div.panel.combination').find('span.attribute-quantity').html($(this).val());
 			});
 
