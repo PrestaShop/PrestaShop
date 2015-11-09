@@ -93,12 +93,22 @@ class SpecificPriceCore extends ObjectModel
     protected static $_cache_priorities = array();
     protected static $_no_specific_values = array();
 
+    /**
+     * Flush local cache
+     */
+    protected function flushCache() {
+        SpecificPrice::$_specificPriceCache = array();
+        SpecificPrice::$_filterOutCache = array();
+        SpecificPrice::$_cache_priorities = array();
+        SpecificPrice::$_no_specific_values = array();
+        Product::flushPriceCache();
+    }
+
     public function add($autodate = true, $nullValues = false)
     {
         if (parent::add($autodate, $nullValues)) {
             // Flush cache when we adding a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Set cache of feature detachable to true
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', '1');
             return true;
@@ -110,8 +120,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::update($null_values)) {
             // Flush cache when we updating a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             return true;
         }
         return false;
@@ -121,8 +130,7 @@ class SpecificPriceCore extends ObjectModel
     {
         if (parent::delete()) {
             // Flush cache when we deletind a new specific price
-            SpecificPrice::$_specificPriceCache = array();
-            Product::flushPriceCache();
+            $this->flushCache();
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed($this->def['table']));
             return true;
@@ -209,7 +217,7 @@ class SpecificPriceCore extends ObjectModel
      * @return string
      * @throws PrestaShopDatabaseException
      */
-    private static function filterOutField($field_name, $field_value, $threshold = 1000)
+    protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
         $query_extra = 'AND `'.$field_name.'` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
@@ -237,7 +245,8 @@ class SpecificPriceCore extends ObjectModel
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
         }
 
-        if (in_array($field_value, $specific_list)) {
+        // $specific_list is empty if the threshold is reached
+        if (empty($specific_list) || in_array($field_value, $specific_list)) {
             $query_extra = 'AND `'.$field_name.'` '.self::formatIntInQuery(0, $field_value).' ';
         }
 
@@ -254,7 +263,7 @@ class SpecificPriceCore extends ObjectModel
      * @param string|null $ending
      * @return string
      */
-    private static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
+    protected static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
     {
         $first_date = date('Y-m-d 00:00:00');
         $last_date = date('Y-m-d 23:59:59');
