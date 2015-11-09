@@ -94,7 +94,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             return $this->catalog_modules;
         }
 
-        $module_ids = [];
+        $module_ids = array_keys($this->catalog_modules);
 
         // We get our module IDs to keep
         foreach ($filters as $filter_name => $value) {
@@ -112,21 +112,26 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     // We build our results array.
                     // We could remove directly the non-matching modules, but we will give that for the final loop of this function
 
-                    foreach ($this->catalog_modules as $key => $module) {
-                        if (strpos($module->displayName, $value) !== false
-                            || strpos($module->name, $value) !== false
-                            || strpos($module->description, $value) !== false) {
-                            $search_result[] = $key;
+                    foreach (explode(' ', $value) as $keyword) {
+                        if (empty($keyword)) {
+                            continue;
+                        }
+
+                        // Instead of looping on the whole module list, we use $module_ids which can already be reduced
+                        // thanks to the previous array_intersect(...)
+                        foreach ($module_ids as $key) {
+                            $module = $this->catalog_modules[$key];
+                            if (strpos($module->displayName, $keyword) !== false
+                                || strpos($module->name, $keyword) !== false
+                                || strpos($module->description, $keyword) !== false) {
+                                $search_result[] = $key;
+                            }
                         }
                     }
                     break;
             }
 
-            if (count($module_ids)) {
-                $module_ids = array_intersect($search_result, $module_ids);
-            } else {
-                $module_ids = $search_result;
-            }
+            $module_ids = array_intersect($search_result, $module_ids);
         }
 
         // We apply the filter results
@@ -147,19 +152,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         if (!$this->catalog_categories || !$this->catalog_modules) {
             $params = ['format' => 'json'];
             $addons_modules = \Tools::addonsRequest('must-have', $params);
+            $addons_services = \Tools::addonsRequest('service', $params);
             $partners_modules = \Tools::addonsRequest('partner', $params);
             $natives_modules = \Tools::addonsRequest('native', $params);
 
-            if ((!$addons_modules || !$partners_modules || !$natives_modules) && ! $this->fallbackOnCache()) {
+            if ((!$addons_modules || !$addons_services || !$partners_modules || !$natives_modules) && ! $this->fallbackOnCache()) {
                 throw new \Exception("Cannot load data from PrestaShop Addons");
             }
 
-            $json_addons_modules = json_decode($addons_modules);
-            $json_partners_modules = json_decode($partners_modules);
-            $json_natives_modules = json_decode($natives_modules);
+            $json_addons_modules = (array) json_decode($addons_modules);
+            $json_addons_services = (array) json_decode($addons_services);
+            $json_partners_modules = (array) json_decode($partners_modules);
+            $json_natives_modules = (array) json_decode($natives_modules);
 
-            if ($json_addons_modules !== false && $json_partners_modules !== false && $json_natives_modules !== false) {
-                $jsons = array_merge($json_addons_modules->modules, $json_natives_modules->modules, $json_partners_modules->products);
+            if ($json_addons_modules !== false && $json_addons_services !== false
+                && $json_partners_modules !== false && $json_natives_modules !== false) {
+                $jsons = array_merge($json_addons_modules, $json_addons_services, $json_natives_modules, $json_partners_modules);
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
                 $this->catalog_categories = $this->getCategoriesFromModules();
@@ -199,33 +207,38 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $remixed_json = [];
         $doublons = [];
 
-        foreach ($original_json as $module) {
-            if (in_array($module->name, $doublons)) {
-                continue;
+        foreach ($original_json as $json_key => $products) {
+            foreach ($products as $product) {
+                if (in_array($product->name, $doublons)) {
+                    continue;
+                }
+
+                $doublons[] = $product->name;
+
+                // Add un-implemented properties
+                $product->refs       = (array)$this->getRefFromModuleCategoryName($product->categoryName);
+                if (! isset($product->product_type)) {
+                    $product->product_type = isset($json_key)?$json_key:'module';
+                }
+                $product->conditions = [];
+                $product->rating     = (object)[
+                        'score' => 0.0,
+                        'countReviews' => 0,
+                ];
+                $product->scoring    = 0;
+                $product->media      = (object)[
+                        'img' => $product->img,
+                        'badges' => isset($product->badges)?$product->badges:[],
+                        'cover' => isset($product->cover)?$product->cover:[],
+                        'screenshotsUrls' => [],
+                        'videoUrl' => null,
+                ];
+                unset($product->badges);
+                //unset($module->categoryName);
+                unset($product->cover);
+
+                $remixed_json[] = $product;
             }
-            
-            $doublons[] = $module->name;
-
-            // Add un-implemented properties
-            $module->refs       = (array)$this->getRefFromModuleCategoryName($module->categoryName);
-            $module->conditions = [];
-            $module->rating     = (object)[
-                    'score' => 0.0,
-                    'countReviews' => 0,
-            ];
-            $module->scoring    = 0;
-            $module->media      = (object)[
-                    'img' => $module->img,
-                    'badges' => isset($module->badges)?$module->badges:[],
-                    'cover' => isset($module->cover)?$module->cover:[],
-                    'screenshotsUrls' => [],
-                    'videoUrl' => null,
-            ];
-            unset($module->badges);
-            //unset($module->categoryName);
-            unset($module->cover);
-
-            $remixed_json[] = $module;
         }
 
         usort($remixed_json, function ($module1, $module2) {

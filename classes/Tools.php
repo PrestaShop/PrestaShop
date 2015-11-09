@@ -3285,6 +3285,10 @@ exit;
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=partner';
                 break;
+            case 'service':
+                $protocols[] = 'http';
+                $post_data .= '&method=listing&action=service';
+                break;
             case 'native_all':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native&iso_code=all';
