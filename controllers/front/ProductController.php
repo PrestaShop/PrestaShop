@@ -778,6 +778,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         if (Tools::getValue('refresh_product')) {
             $product['id_product_attribute'] = (int)$this->product->getIdProductAttributesByIdAttributes((int)$this->product->id, Tools::getValue('group'));
+            $url = $this->context->link->getProductLink(
+                $product['id_product'], null, null, null,
+                $this->context->language->id, null,
+                $product['id_product_attribute'],
+                false, false, true
+            );
+            return Tools::redirect($url);
         } else {
             $product['id_product_attribute'] = (int)Tools::getValue('id_product_attribute');
         }
