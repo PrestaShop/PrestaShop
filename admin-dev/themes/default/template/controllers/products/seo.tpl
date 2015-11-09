@@ -57,7 +57,6 @@
 				input_name='meta_description'
 				input_value=$product->meta_description
 				maxchar=160
-				maxlength=160
 			}
 		</div>
 	</div>
