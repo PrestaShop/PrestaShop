@@ -178,16 +178,19 @@ class HelperOptionsCore extends Helper
                 // @todo move this
                 if ($field['type'] == 'maintenance_ip') {
                     $field['script_ip'] = '
-						<script type="text/javascript">
-							function addRemoteAddr()
-							{
-								var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
-								if (length > 0)
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
-								else
-									$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
-							}
-						</script>';
+                        <script type="text/javascript">
+                            function addRemoteAddr()
+                            {
+                                var length = $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').length;
+                                if (length > 0) {
+                                    if ($(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\').indexOf(\''.Tools::getRemoteAddr().'\') < 0) {
+                                        $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',$(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\') +\','.Tools::getRemoteAddr().'\');
+                                    }
+                                } else {
+                                    $(\'input[name=PS_MAINTENANCE_IP]\').attr(\'value\',\''.Tools::getRemoteAddr().'\');
+                                }
+                            }
+                        </script>';
                     $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> '.$this->l('Add my IP', 'Helper').'</button>';
                 }
 
