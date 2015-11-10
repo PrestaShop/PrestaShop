@@ -443,7 +443,6 @@ var combinationGenerator = (function() {
 	};
 })();
 
-
 /**
  * Combination management
  */
@@ -502,14 +501,14 @@ var combinations = (function() {
 			});
 
 			/** on change price, update price row */
-			$('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup(function() {
+			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
 				var impactField = $(this).closest('div.panel.combination').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
 				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$(this).closest('div.panel.combination').find('span.attribute-price-display').html(impact * $(this).val());
+				$(this).closest('div.panel.combination').find('span.attribute-price-display').html(formatCurrency(impact * $(this).val()));
 			});
 
 			/** on change price impact, update price row */
-			$('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]').change(function() {
+			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
 				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
 			});
 		}
