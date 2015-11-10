@@ -53,11 +53,11 @@ class Core_Foundation_Database_EntityRepository
             $one = false;
             $by  = substr($method, 6);
         } else {
-            throw new Core_Foundation_Database_Exception(sprintf('Undefind method %s.', $method));
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Undefind method %s.', $method));
         }
 
         if (count($arguments) !== 1) {
-            throw new Core_Foundation_Database_Exception(sprintf('Method %s takes exactly one argument.', $method));
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Method %s takes exactly one argument.', $method));
         }
 
         if (!$by) {
@@ -85,21 +85,21 @@ class Core_Foundation_Database_EntityRepository
     /**
      * Return ID field name
      * @return mixed
-     * @throws Core_Foundation_Database_Exception
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     protected function getIdFieldName()
     {
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
         if (count($primary) === 0) {
-            throw new Core_Foundation_Database_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(
                 sprintf(
                     'No primary key defined in entity `%s`.',
                     $this->entityMetaData->getEntityClassName()
                 )
             );
         } elseif (count($primary) > 1) {
-            throw new Core_Foundation_Database_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(
                 sprintf(
                     'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
                     $this->entityMetaData->getEntityClassName()
@@ -152,7 +152,7 @@ class Core_Foundation_Database_EntityRepository
         if (count($rows) === 0) {
             return null;
         } elseif (count($rows) > 1) {
-            throw new Core_Foundation_Database_Exception('Too many rows returned.');
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception('Too many rows returned.');
         } else {
             $data = $rows[0];
             $entity = $this-> getNewEntity();
@@ -177,7 +177,7 @@ class Core_Foundation_Database_EntityRepository
      * @param $one
      * @param array $cumulativeConditions
      * @return array|mixed|null
-     * @throws Core_Foundation_Database_Exception
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     private function doFind($one, array $cumulativeConditions)
     {
@@ -198,7 +198,7 @@ class Core_Foundation_Database_EntityRepository
      * Find one entity in DB
      * @param $id
      * @return array|mixed|null
-     * @throws Core_Foundation_Database_Exception
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function findOne($id)
     {

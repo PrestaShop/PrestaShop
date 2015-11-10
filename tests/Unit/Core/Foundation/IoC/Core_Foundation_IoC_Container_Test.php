@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\IoC;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
@@ -50,7 +50,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_cannot_bind_the_same_service_twice()
     {
@@ -108,7 +108,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_an_alias_cannot_be_changed()
     {
@@ -131,7 +131,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_unbuildable_not_built()
     {
@@ -139,7 +139,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_non_existing_class_not_built()
     {
@@ -147,7 +147,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Core_Foundation_IoC_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function test_dependency_loop_doesnt_crash_container()
     {

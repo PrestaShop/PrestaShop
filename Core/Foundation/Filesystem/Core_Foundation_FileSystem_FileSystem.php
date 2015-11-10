@@ -49,7 +49,7 @@ class Core_Foundation_FileSystem_FileSystem
     public function joinPaths()
     {
         if (func_num_args() < 2) {
-            throw new Core_Foundation_FileSystem_Exception('joinPaths requires at least 2 arguments.');
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception('joinPaths requires at least 2 arguments.');
         } elseif (func_num_args() === 2) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
@@ -80,7 +80,7 @@ class Core_Foundation_FileSystem_FileSystem
     public function listEntriesRecursively($path)
     {
         if (!file_exists($path)) {
-            throw new Core_Foundation_FileSystem_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception(
                 sprintf(
                     'No such file or directory: %s',
                     $path
@@ -89,7 +89,7 @@ class Core_Foundation_FileSystem_FileSystem
         }
 
         if (!is_dir($path)) {
-            throw new Core_Foundation_FileSystem_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception(
                 sprintf(
                     '%s is not a directory',
                     $path

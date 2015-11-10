@@ -43,7 +43,7 @@ class Core_Foundation_IoC_Container
     public function bind($serviceName, $constructor, $shared = false)
     {
         if ($this->knows($serviceName)) {
-            throw new Core_Foundation_IoC_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(
                 sprintf('Cannot bind `%s` again. A service name can only be bound once.', $serviceName)
             );
         }
@@ -59,7 +59,7 @@ class Core_Foundation_IoC_Container
     public function aliasNamespace($alias, $namespacePrefix)
     {
         if ($this->knowsNamespaceAlias($alias)) {
-            throw new Core_Foundation_IoC_Exception(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(
                 sprintf(
                     'Namespace alias `%1$s` already exists and points to `%2$s`',
                     $alias, $this->namespaceAliases[$alias]
@@ -92,13 +92,13 @@ class Core_Foundation_IoC_Container
         try {
             $refl = new ReflectionClass($className);
         } catch (ReflectionException $re) {
-            throw new Core_Foundation_IoC_Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
+            throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }
 
         $args = array();
 
         if ($refl->isAbstract()) {
-            throw new Core_Foundation_IoC_Exception(sprintf('Cannot build abstract class: `%s`.', $className));
+            throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(sprintf('Cannot build abstract class: `%s`.', $className));
         }
 
         $classConstructor = $refl->getConstructor();
@@ -111,7 +111,7 @@ class Core_Foundation_IoC_Container
                 } elseif ($param->isDefaultValueAvailable()) {
                     $args[] = $param->getDefaultValue();
                 } else {
-                    throw new Core_Foundation_IoC_Exception(sprintf('Cannot build a `%s`.', $className));
+                    throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(sprintf('Cannot build a `%s`.', $className));
                 }
             }
         }
@@ -128,7 +128,7 @@ class Core_Foundation_IoC_Container
     private function doMake($serviceName, array $alreadySeen = array())
     {
         if (array_key_exists($serviceName, $alreadySeen)) {
-            throw new Core_Foundation_IoC_Exception(sprintf(
+            throw new \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception(sprintf(
                 'Cyclic dependency detected while building `%s`.',
                 $serviceName
             ));

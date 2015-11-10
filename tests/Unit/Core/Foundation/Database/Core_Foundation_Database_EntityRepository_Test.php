@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\Database;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use Phake;
 use Core_Foundation_Database_EntityRepository;
 use Core_Foundation_Database_EntityMetaData;
-use Core_Foundation_Database_Exception;
+use \PrestaShop\PrestaShop\Core\Foundation\Database\Exception;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {
@@ -52,7 +52,7 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
     }
 
     /**
-     * @expectedException Core_Foundation_Database_Exception
+     * @expectedException \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function test_call_to_invalid_method_throws_exception()
     {

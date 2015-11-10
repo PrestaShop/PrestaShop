@@ -23,11 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
-class Core_Foundation_Exception_Exception extends Exception
+class Exception extends \PrestaShop\PrestaShop\Core\Foundation\Exception\Exception
 {
-    public function __construct($message = null, $code = 0, Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
 }
