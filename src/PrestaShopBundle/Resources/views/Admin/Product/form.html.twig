@@ -221,7 +221,7 @@
                         <hr/>
                         {% endif %}
 
-                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}">
+                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ ps_configuration.weight_unit }}">
                             {% for combination in form.step3.combinations %}
                             <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}">
                                 <div class="panel-title">
@@ -231,7 +231,7 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-4 pull-left">
-                                        <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} kg</span>
+                                        <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} {{ ps_configuration.weight_unit }}</span>
                                         <span class="small col-lg-4 attribute-price-display">{{ combination.vars.value.attribute_price_display }}</span>
                                         <span class="small col-lg-4 attribute-quantity">{{ combination.vars.value.attribute_quantity }}</span>
                                     </div>

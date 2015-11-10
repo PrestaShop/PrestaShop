@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -36,6 +37,8 @@ class ProductCombination extends CommonModelAbstractType
 {
     private $translator;
     private $container;
+    private $contextLegacy;
+    private $configurationAdapter;
 
     /**
      * Constructor
@@ -46,6 +49,8 @@ class ProductCombination extends CommonModelAbstractType
     {
         $this->container = $container;
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
+        $this->configurationAdapter = new Configuration();
     }
 
     /**
@@ -114,7 +119,7 @@ class ProductCombination extends CommonModelAbstractType
         ))
         ->add('attribute_weight', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans('Kg', [], 'AdminProducts')
+            'label' => $this->translator->trans($this->configurationAdapter->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
         ))
         ->add('attribute_unit_impact', 'choice', array(
             'choices'  => array(
@@ -127,7 +132,7 @@ class ProductCombination extends CommonModelAbstractType
         ))
         ->add('attribute_unity', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans('€/', [], 'AdminProducts')
+            'label' => $this->translator->trans($this->contextLegacy->currency->sign.'/', [], 'AdminProducts')
         ))
         ->add('attribute_minimal_quantity', 'number', array(
             'required' => false,

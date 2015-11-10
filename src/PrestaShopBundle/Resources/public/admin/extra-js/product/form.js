@@ -363,8 +363,13 @@ var combinationGenerator = (function() {
 
 			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__">\
 				<div class="panel-title">\
-					<div class="col-lg-6 pull-left">\
+					<div class="col-lg-4 pull-left">\
 						<a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">__combination_name__</a>\
+					</div>\
+					<div class="col-lg-4 pull-left">\
+					    <span class="small col-lg-4 attribute-weight">'+ attribute.attribute_weight +' '+ $('#accordion_combinations').attr('data-weight-unit') +'</span>\
+						<span class="small col-lg-4 attribute-price-display">0,00 €</span>\
+						<span class="small col-lg-4 attribute-quantity">0</span>\
 					</div>\
 				</div>\
 				<div class="col-lg-2 pull-right text-right">\
@@ -438,7 +443,6 @@ var combinationGenerator = (function() {
 	};
 })();
 
-
 /**
  * Combination management
  */
@@ -458,7 +462,7 @@ var combinations = (function() {
 			success: function(response) {
 				combinationElem.remove();
 				showSuccessMessage(response.message);
-				updateQtyFields();
+				stock.updateQtyFields();
 			},
 			error: function(response){
 				showErrorMessage(jQuery.parseJSON(response.responseText).message);
@@ -471,6 +475,8 @@ var combinations = (function() {
 
 	return {
 		'init': function() {
+			var weightUnit = $('#accordion_combinations').attr('data-weight-unit');
+
 			/** delete combination */
 			$(document).on('click', '#accordion_combinations .delete', function(e) {
 				e.preventDefault();
@@ -478,31 +484,31 @@ var combinations = (function() {
 			});
 
 			/** on change quantity, update field quantity row */
-			$('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').keyup(function() {
+			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_quantity"]', function() {
 				$(this).closest('div.panel.combination').find('span.attribute-quantity').html($(this).val());
 			});
 
 			/** on change weigth, update weight row */
-			$('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup(function() {
+			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
 				var impactField = $(this).closest('div.panel.combination').find('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]');
 				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$(this).closest('div.panel.combination').find('span.attribute-weight').html(impact * $(this).val());
+				$(this).closest('div.panel.combination').find('span.attribute-weight').html(impact * $(this).val() + ' ' + weightUnit);
 			});
 
 			/** on change weigth impact, update weight row */
-			$('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]').change(function() {
+			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]', function() {
 				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup();
 			});
 
 			/** on change price, update price row */
-			$('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup(function() {
+			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
 				var impactField = $(this).closest('div.panel.combination').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
 				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$(this).closest('div.panel.combination').find('span.attribute-price-display').html(impact * $(this).val());
+				$(this).closest('div.panel.combination').find('span.attribute-price-display').html(formatCurrency(impact * $(this).val()));
 			});
 
 			/** on change price impact, update price row */
-			$('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]').change(function() {
+			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
 				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
 			});
 		}

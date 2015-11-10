@@ -90,7 +90,7 @@ function formatNumberCldr(value, callback, numberOfDecimal) {
 function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
 	var formatter = cldrForCurrencyFormatterWrapper(null, {
-		maximumFractionDigits: priceDisplayPrecision
+		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
 	});
 	return formatter(price);
 }
@@ -106,7 +106,7 @@ function formatCurrencyCldr(price, callback) {
 	cldrForCurrencyFormatterWrapper(function(formatter) {
 		callback(formatter(price));
 	}, {
-		maximumFractionDigits: priceDisplayPrecision
+		maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2
 	});
 }
 
