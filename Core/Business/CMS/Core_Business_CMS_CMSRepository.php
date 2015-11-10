@@ -61,7 +61,7 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
      * @param $id_lang
      * @param $id_shop
      * @return CMS|null
-     * @throws Core_Foundation_Database_Exception
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
      */
     public function i10nFindOneById($id_cms, $id_lang, $id_shop)
     {

@@ -29,7 +29,7 @@ class Core_Business_ContainerBuilder
     /**
      * Construct PrestaShop Core Service container
      * @return Core_Foundation_IoC_Container
-     * @throws Core_Foundation_IoC_Exception
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
      */
     public function build()
     {

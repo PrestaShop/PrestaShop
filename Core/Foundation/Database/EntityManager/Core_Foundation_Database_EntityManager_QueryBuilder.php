@@ -49,7 +49,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder
         $operator = strtoupper($andOrOr);
 
         if ($operator !== 'AND' && $operator !== 'OR') {
-            throw new Core_Foundation_Database_Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
+            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Invalid operator %s - must be "and" or "or".', $andOrOr));
         }
 
         $parts = array();
