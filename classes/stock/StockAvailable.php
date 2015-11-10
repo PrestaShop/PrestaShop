@@ -468,7 +468,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        $stockManager = Adapter_ServiceLocator::get('Core_Business_Stock_StockManager');
+        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_Stock_StockManager');
         $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
         return true;
     }

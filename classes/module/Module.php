@@ -1142,12 +1142,12 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($override);
+                $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($override);
             }
         }
 
         if (!$r && class_exists($module_name, false)) {
-            $r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($module_name);
+            $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module_name);
         }
 
         if (Module::$_log_modules_perfs) {
@@ -1375,7 +1375,7 @@ abstract class ModuleCore
 
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
-                    $tmp_module = Adapter_ServiceLocator::get($module);
+                    $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
 
                     $item = new stdClass();
 

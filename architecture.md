@@ -114,9 +114,9 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 {
     // Dependencies
 
-    $address_factory    = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
-    $price_calculator   = Adapter_ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
-    $configuration      = Adapter_ServiceLocator::get('Core_Business_Configuration');
+    $address_factory    = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
+    $price_calculator   = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
+    $configuration      = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_Configuration');
 
     // Code...
 }
@@ -126,7 +126,7 @@ On the unit test side, setting up the mocked objects follow this pattern:
 
 ```php
 $this->container = new Core_Foundation_IoC_Container;
-Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+\PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($this->container);
 
 $addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
 $address = new Address;
@@ -257,13 +257,13 @@ The life cycle of an adapter is roughly as follows:
 - **Debugging / Refactoring Stage**
     1. Create `Adapter_SomeService` to break a static dependency to `SomeService` in the code you're working on
         - Adapter should be minimal at first - [it might just forward a call to some legacy function](https://github.com/djfm/PrestaShop/commit/42db57be45c299259a28a247db6c62267d3fb671). 
-    2. Use `Adapter_ServiceLocator::get('Adapter_SomeService')` in the code under test to retrieve an instance of the service we depend on
+    2. Use `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` in the code under test to retrieve an instance of the service we depend on
     3. Write tests, refactor...
 - **Architecture Improvement Stage**: With time and experience, the precise responsibilities of `Adapter_SomeService` have been clearly identified and tested
     1. Write a new `Core_SomeService` class inside the `Core` file hierarchy, test it thoroughly
-    2. Delegate work from `Adapter_SomeService` to `Core_SomeService`, keeping the `Adapter_ServiceLocator::get('Adapter_SomeService')` calls in the code where proper dependency injection is still too hard to do. Propagate the `Core_SomeService` dependency in a better way where possible.
+    2. Delegate work from `Adapter_SomeService` to `Core_SomeService`, keeping the `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` calls in the code where proper dependency injection is still too hard to do. Propagate the `Core_SomeService` dependency in a better way where possible.
 - **Adapter Removal**: At some point, if enough code has been cleaned up, the `Adapter_SomeService` might not be needed any more
-    1. Remove all calls to `Adapter_ServiceLocator::get('Adapter_SomeService')` and replace them with proper dependency injection
+    1. Remove all calls to `\PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Adapter_SomeService')` and replace them with proper dependency injection
     2. Delete `Adapter_SomeService`.
     3. Profit!
 
@@ -273,4 +273,4 @@ The life cycle of an adapter is roughly as follows:
 
 Our goal is to gradually move the code from `Legacy` towards `Core`.
 
-As an intermediate step, code in `Legacy` is expected to make heavy use of the `Adapter_ServiceLocator` to break dependencies.
+As an intermediate step, code in `Legacy` is expected to make heavy use of the `\PrestaShop\PrestaShop\Adapter\ServiceLocator` to break dependencies.

@@ -1133,7 +1133,7 @@ class CarrierCore extends ObjectModel
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
         if ($use_average_tax_of_products) {
-            return Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
+            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
         } else {
             $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
             return $tax_manager->getTaxCalculator();

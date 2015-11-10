@@ -23,32 +23,30 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter;
 
-class Adapter_ServiceLocator
+class EntityMetaDataRetriever
 {
-    /**
-     * Set a service container Instance
-     * @var Core_Foundation_IoC_Container
-     */
-    private static $service_container;
-
-    public static function setServiceContainerInstance(Core_Foundation_IoC_Container $container)
+    public function getEntityMetaData($className)
     {
-        self::$service_container = $container;
-    }
+        $metaData = new \Core_Foundation_Database_EntityMetaData;
 
-    /**
-     * Get a service depending on its given $serviceName
-     * @param $serviceName
-     * @return mixed|object
-     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
-     */
-    public static function get($serviceName)
-    {
-        if (empty(self::$service_container) || is_null(self::$service_container)) {
-            throw new \PrestaShop\PrestaShop\Adapter\CoreException('Service container is not set.');
+        $metaData->setEntityClassName($className);
+
+        if (property_exists($className, 'definition')) {
+            // Legacy entity
+            $classVars = get_class_vars($className);
+            $metaData->setTableName($classVars['definition']['table']);
+            $metaData->setPrimaryKeyFieldNames(array($classVars['definition']['primary']));
+        } else {
+            throw new \PrestaShop\PrestaShop\Adapter\CoreException(
+                sprintf(
+                    'Cannot get metadata for entity `%s`.',
+                    $className
+                )
+            );
         }
 
-        return self::$service_container->make($serviceName);
+        return $metaData;
     }
 }

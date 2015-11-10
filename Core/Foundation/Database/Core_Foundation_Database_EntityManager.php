@@ -83,7 +83,7 @@ class Core_Foundation_Database_EntityManager
     public function getEntityMetaData($className)
     {
         if (!array_key_exists($className, $this->entityMetaData)) {
-            $metaDataRetriever = new Adapter_EntityMetaDataRetriever;
+            $metaDataRetriever = new \PrestaShop\PrestaShop\Adapter\EntityMetaDataRetriever;
             $this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
         }
 
