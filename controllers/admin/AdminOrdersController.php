@@ -458,47 +458,67 @@ class AdminOrdersControllerCore extends AdminController
             ShopUrl::cacheMainDomainForShop((int)$order->id_shop);
         }
 
-        /* Update shipping number */
+        /* Update shipping number and carrier */
         if (Tools::isSubmit('submitShippingNumber') && isset($order)) {
             if ($this->tabAccess['edit'] === '1') {
+                $tracking_number = Tools::getValue('shipping_tracking_number');
+                $id_carrier = Tools::getValue('shipping_carrier');
+                $old_tracking_number = $order->shipping_number;
+
                 $order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
                 if (!Validate::isLoadedObject($order_carrier)) {
                     $this->errors[] = Tools::displayError('The order carrier ID is invalid.');
-                } elseif (!Validate::isTrackingNumber(Tools::getValue('tracking_number'))) {
+                } elseif (!empty($tracking_number) && !Validate::isTrackingNumber($tracking_number)) {
                     $this->errors[] = Tools::displayError('The tracking number is incorrect.');
                 } else {
+                    //update carrier - ONLY if changed - then refresh shipping cost
+                    $old_id_carrier = $order_carrier->id_carrier;
+                    if (!empty($id_carrier) && $old_id_carrier != $id_carrier) {
+                        $order->id_carrier = $id_carrier;
+                        $order_carrier->id_carrier = $id_carrier;
+                        $order_carrier->update();
+                        $order->refreshShippingCost();
+                    }
+
+                    //load fresh order carrier because updated just before
+                    $order_carrier = new OrderCarrier(Tools::getValue('id_order_carrier'));
+
                     // update shipping number
                     // Keep these two following lines for backward compatibility, remove on 1.6 version
-                    $order->shipping_number = Tools::getValue('tracking_number');
+                    $order->shipping_number = $tracking_number;
                     $order->update();
 
                     // Update order_carrier
-                    $order_carrier->tracking_number = pSQL(Tools::getValue('tracking_number'));
+                    $order_carrier->tracking_number = pSQL($tracking_number);
+
                     if ($order_carrier->update()) {
-                        // Send mail to customer
-                        $customer = new Customer((int)$order->id_customer);
-                        $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
-                        if (!Validate::isLoadedObject($customer)) {
-                            throw new PrestaShopException('Can\'t load Customer object');
-                        }
-                        if (!Validate::isLoadedObject($carrier)) {
-                            throw new PrestaShopException('Can\'t load Carrier object');
-                        }
-                        $templateVars = array(
-                            '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
-                            '{firstname}' => $customer->firstname,
-                            '{lastname}' => $customer->lastname,
-                            '{id_order}' => $order->id,
-                            '{shipping_number}' => $order->shipping_number,
-                            '{order_name}' => $order->getUniqReference()
-                        );
-                        if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
-                            $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null, null,
-                            _PS_MAIL_DIR_, true, (int)$order->id_shop)) {
-                            Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier), null, false, true, false, $order->id_shop);
-                            Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-                        } else {
-                            $this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
+                        //send mail only if trackcking number is different AND not empty
+                        if (!empty($tracking_number) && $old_tracking_number != $tracking_number) {
+                            $customer = new Customer((int)$order->id_customer);
+                            $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+                            if (!Validate::isLoadedObject($customer)) {
+                                throw new PrestaShopException('Can\'t load Customer object');
+                            }
+                            if (!Validate::isLoadedObject($carrier)) {
+                                throw new PrestaShopException('Can\'t load Carrier object');
+                            }
+                            $templateVars = array(
+                                '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
+                                '{firstname}' => $customer->firstname,
+                                '{lastname}' => $customer->lastname,
+                                '{id_order}' => $order->id,
+                                '{shipping_number}' => $order->shipping_number,
+                                '{order_name}' => $order->getUniqReference()
+                            );
+                            if (@Mail::Send((int)$order->id_lang, 'in_transit', Mail::l('Package in transit', (int)$order->id_lang), $templateVars,
+                                $customer->email, $customer->firstname . ' ' . $customer->lastname, null, null, null, null,
+                                _PS_MAIL_DIR_, true, (int)$order->id_shop)
+                            ) {
+                                Hook::exec('actionAdminOrdersTrackingNumberUpdate', array('order' => $order, 'customer' => $customer, 'carrier' => $carrier), null, false, true, false, $order->id_shop);
+                                Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=4&token=' . $this->token);
+                            } else {
+                                $this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
+                            }
                         }
                     } else {
                         $this->errors[] = Tools::displayError('The order carrier cannot be updated.');
@@ -507,10 +527,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
-        }
-
-        /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
-        elseif (Tools::isSubmit('submitState') && isset($order)) {
+        } elseif (Tools::isSubmit('submitState') && isset($order)) {
+            /* Change order status, add a new entry in order history and send an e-mail to the customer if needed */
             if ($this->tabAccess['edit'] === '1') {
                 $order_state = new OrderState(Tools::getValue('id_order_state'));
 
@@ -1176,6 +1194,7 @@ class AdminOrdersControllerCore extends AdminController
                         $order->id_address_invoice = $address->id;
                     }
                     $order->update();
+                    $order->refreshShippingCost();
                     Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
                 } else {
                     $this->errors[] = Tools::displayError('This address can\'t be loaded');
@@ -1788,6 +1807,8 @@ class AdminOrdersControllerCore extends AdminController
             'payment_methods' => $payment_methods,
             'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
             'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+            'carrier_list' => $this->getCarrierList($order),
+            'recalculate_shipping_cost' => (int)Configuration::get('PS_ORDER_RECALCULATE_SHIPPING'),
             'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
                 'order' => $order,
                 'products' => $products,
@@ -2185,6 +2206,8 @@ class AdminOrdersControllerCore extends AdminController
             $invoice_array[] = $invoice;
         }
 
+        $order = $order->refreshShippingCost();
+
         // Assign to smarty informations in order to show the new product line
         $this->context->smarty->assign(array(
             'product' => $product,
@@ -2442,11 +2465,14 @@ class AdminOrdersControllerCore extends AdminController
             $invoice_array[] = $invoice;
         }
 
+        $order = $order->refreshShippingCost();
+        $orderCurrency = new Currency($order->id_currency);
+
         // Assign to smarty informations in order to show the new product line
         $this->context->smarty->assign(array(
             'product' => $product,
             'order' => $order,
-            'currency' => new Currency($order->id_currency),
+            'currency' => $orderCurrency,
             'can_edit' => $this->tabAccess['edit'],
             'invoices_collection' => $invoice_collection,
             'current_id_lang' => Context::getContext()->language->id,
@@ -2480,7 +2506,8 @@ class AdminOrdersControllerCore extends AdminController
             'invoices' => $invoice_array,
             'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
             'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-            'customized_product' => is_array(Tools::getValue('product_quantity'))
+            'customized_product' => is_array(Tools::getValue('product_quantity')),
+            'currency' => $orderCurrency
         )));
     }
 
@@ -2541,6 +2568,8 @@ class AdminOrdersControllerCore extends AdminController
             $invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
             $invoice_array[] = $invoice;
         }
+
+        $order = $order->refreshShippingCost();
 
         // Assign to smarty informations in order to show the new product line
         $this->context->smarty->assign(array(
@@ -2866,5 +2895,42 @@ class AdminOrdersControllerCore extends AdminController
         if ($id_image) {
             $pack_item['image'] = new Image($id_image);
         }
+    }
+
+
+    /**
+     * Get available carrieier list for an order
+     * @param Object $order
+     * @return array $delivery_option_list_formated
+     */
+    protected function getCarrierList($order)
+    {
+        $fake_cart = new Cart($order->id_cart);
+
+        //assign order id_address_delivery to cart
+        $fake_cart->updateAddressId($fake_cart->id_address_delivery, $order->id_address_delivery);
+        $delivery_option_list = $fake_cart->getDeliveryOptionList(null, true);
+        $delivery_option_list_formated = array();
+
+        if (count($delivery_option_list) > 0) {
+            foreach (current($delivery_option_list) as $key => $delivery_option) {
+                $name = '';
+                $first = true;
+                foreach ($delivery_option['carrier_list'] as $carrier) {
+                    if (!$first) {
+                        $name .= ', ';
+                    } else {
+                        $first = false;
+                    }
+                    $name .= $carrier['instance']->name;
+                    if ($delivery_option['unique_carrier']) {
+                        $name .= ' - ' . $carrier['instance']->delay[$this->context->employee->id_lang];
+                    }
+                }
+                $delivery_option_list_formated[] = array('name' => $name, 'id' => $carrier['instance']->id);
+            }
+        }
+
+        return $delivery_option_list_formated;
     }
 }

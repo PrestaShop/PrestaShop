@@ -734,6 +734,9 @@ function init()
 						updateDocuments(data.documents_html);
 						updateDiscountForm(data.discount_form_html);
 
+						//Update new shipping price on shipping zone
+						$('#price_carrier_' + data.order.id_carrier).text(formatCurrency(data.order.total_shipping_tax_incl, data.currency.format, data.currency.sign, data.currency.blank));
+
 						// Initialize all events
 						init();
 

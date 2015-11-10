@@ -87,11 +87,18 @@ class AdminOrderPreferencesControllerCore extends AdminController
                         'type' => 'bool'
                     ),
                     'PS_PURCHASE_MINIMUM' => array(
-                        'title' => $this->l('Minimum purchase total required in order to validate the order'),
+                        'title' => $this->l('Minimum purchase total required to validate the order'),
                         'hint' => $this->l('Set to 0 to disable this feature.'),
                         'validation' => 'isFloat',
                         'cast' => 'floatval',
                         'type' => 'price'
+                    ),
+                    'PS_ORDER_RECALCULATE_SHIPPING' => array(
+                        'title' => $this->l('Recalculate shipping cost'),
+                        'hint' => $this->l('Automatically updates the shipping cost when you edit an order.'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool'
                     ),
                     'PS_ALLOW_MULTISHIPPING' => array(
                         'title' => $this->l('Allow multishipping'),
@@ -136,20 +143,20 @@ class AdminOrderPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_GIFT_WRAPPING' => array(
                         'title' => $this->l('Offer gift wrapping'),
-                        'hint' => $this->l('Suggest gift-wrapping to customers.'),
+                        'hint' => $this->l('Suggest gift wrapping to customers.'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool'
                     ),
                     'PS_GIFT_WRAPPING_PRICE' => array(
-                        'title' => $this->l('Gift-wrapping price'),
+                        'title' => $this->l('Gift wrapping price'),
                         'hint' => $this->l('Set a price for gift wrapping.'),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'price'
                     ),
                     'PS_GIFT_WRAPPING_TAX_RULES_GROUP' => array(
-                        'title' => $this->l('Gift-wrapping tax'),
+                        'title' => $this->l('Gift wrapping tax'),
                         'hint' => $this->l('Set a tax for gift wrapping.'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
