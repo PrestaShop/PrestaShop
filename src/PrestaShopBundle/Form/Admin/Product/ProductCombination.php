@@ -37,6 +37,7 @@ class ProductCombination extends CommonModelAbstractType
 {
     private $translator;
     private $container;
+    private $contextLegacy;
     private $configurationAdapter;
 
     /**
@@ -48,6 +49,7 @@ class ProductCombination extends CommonModelAbstractType
     {
         $this->container = $container;
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
         $this->configurationAdapter = new Configuration();
     }
 
@@ -130,7 +132,7 @@ class ProductCombination extends CommonModelAbstractType
         ))
         ->add('attribute_unity', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans('€/', [], 'AdminProducts')
+            'label' => $this->translator->trans($this->contextLegacy->currency->sign.'/', [], 'AdminProducts')
         ))
         ->add('attribute_minimal_quantity', 'number', array(
             'required' => false,
