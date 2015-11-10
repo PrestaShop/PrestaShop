@@ -186,23 +186,16 @@ class AdminTabsControllerCore extends AdminController
             )
         );
 
-        $display_parent = true;
-        if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller')) {
-            $display_parent = false;
-        }
-
-        if ($display_parent) {
-            $this->fields_form['input'][] = array(
-                'type' => 'select',
-                'label' => $this->l('Parent'),
-                'name' => 'id_parent',
-                'options' => array(
-                    'query' => $tabs,
-                    'id' => 'id_tab',
-                    'name' => 'name'
-                )
-            );
-        }
+        $this->fields_form['input'][] = array(
+            'type' => 'select',
+            'label' => $this->l('Parent'),
+            'name' => 'id_parent',
+            'options' => array(
+                'query' => $tabs,
+                'id' => 'id_tab',
+                'name' => 'name'
+            )
+        );
 
         return parent::renderForm();
     }
@@ -304,24 +297,27 @@ class AdminTabsControllerCore extends AdminController
                 )
             ), $this->bulk_actions);
             foreach ($submit_bulk_actions as $bulk_action => $params) {
-                if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action)) {
+                if (Tools::isSubmit('submitBulk' . $bulk_action . $this->table) || Tools::isSubmit('submitBulk' . $bulk_action)) {
                     if ($this->tabAccess['edit'] === '1') {
-                        $this->action = 'bulk'.$bulk_action;
-                        $this->boxes = Tools::getValue($this->list_id.'Box');
+                        $this->action = 'bulk' . $bulk_action;
+                        $this->boxes = Tools::getValue($this->list_id . 'Box');
                     } else {
                         $this->errors[] = Tools::displayError('You do not have permission to edit this.');
                     }
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
                     if ($this->tabAccess['edit'] === '1') {
-                        $this->action = 'bulk'.Tools::getValue('select_submitBulk');
-                        $this->boxes = Tools::getValue($this->list_id.'Box');
+                        $this->action = 'bulk' . Tools::getValue('select_submitBulk');
+                        $this->boxes = Tools::getValue($this->list_id . 'Box');
                     } else {
                         $this->errors[] = Tools::displayError('You do not have permission to edit this.');
                     }
                     break;
                 }
             }
+        } elseif (Tools::isSubmit('submitAdd'.$this->table) && ($class_name = Tools::getValue('class_name')) && !class_exists($class_name.'Controller')) {
+            $this->errors[] = sprintf(Tools::displayError('The class name \'%sController\' cannot be found.'), $class_name);
+            return parent::postProcess();
         } else {
             // Temporary add the position depend of the selection of the parent category
             if (!Tools::isSubmit('id_tab')) { // @todo Review
