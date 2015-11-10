@@ -31,7 +31,7 @@ abstract class Swift_ConnectionBase implements Swift_Connection
    * @var boolean
    */
   protected $isESMTP = false;
-  
+
   /**
    * Set an extension which the connection reports to support
    * @param string Extension name
@@ -58,7 +58,7 @@ abstract class Swift_ConnectionBase implements Swift_Connection
   /**
    * Execute any needed logic after connecting and handshaking
    */
-  public function postConnect(Swift $instance) {}
+  public function postConnect(SwiftPs $instance) {}
   /**
    * Get the list of attributes supported by the given extension
    * @param string The name of the connection
