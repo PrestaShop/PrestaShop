@@ -325,19 +325,17 @@ class CustomerCore extends ObjectModel
             die(Tools::displayError());
         }
 
+        $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
+            '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
+
         try {
             $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
             return false;
         }
 
-        if (isset($passwd)) {
-            $hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
-                '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
-
-            if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
-                return false;
-            }
+        if (isset($passwd) && !$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
+            return false;
         }
 
         $result = Db::getInstance()->getRow('
