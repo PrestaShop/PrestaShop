@@ -1959,6 +1959,14 @@ class AdminControllerCore extends Controller
             .(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
             $this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
         }
+
+        //In production mode OR user browser is IE <= 9, compile css
+        if (preg_match('/(?i)msie [1-9]/',$_SERVER['HTTP_USER_AGENT']) || !defined('_PS_MODE_DEV_') || (defined('_PS_MODE_DEV_') && !_PS_MODE_DEV_)) {
+            $this->css_files = Media::cccCss($this->css_files, _PS_CACHE_DIR_.'admin'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR);
+            $this->context->smarty->assign(array(
+                'css_files' => $this->css_files
+            ));
+        }
     }
 
     /**
@@ -2579,6 +2587,7 @@ class AdminControllerCore extends Controller
     {
         //Bootstrap
         $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 
         $this->addJquery();
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2619,9 +2628,6 @@ class AdminControllerCore extends Controller
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
-
-        // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
     }
 
     /**
