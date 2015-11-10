@@ -326,7 +326,7 @@ class CustomerCore extends ObjectModel
         }
 
         try {
-            $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
             return false;
         }
@@ -800,7 +800,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
         $this->is_guest = 0;
         $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
         $this->cleanGroups();
@@ -834,7 +834,7 @@ class CustomerCore extends ObjectModel
 
     public function setWsPasswd($passwd)
     {
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
 
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
@@ -928,7 +928,7 @@ class CustomerCore extends ObjectModel
     public function validateController($htmlentities = true)
     {
         $errors = parent::validateController($htmlentities);
-        $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+        $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
 
         if ($value = Tools::getValue('passwd')) {
             $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);

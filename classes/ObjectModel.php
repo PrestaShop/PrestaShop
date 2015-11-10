@@ -229,7 +229,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
         }
 
         if ($id) {
-            $entity_mapper = Adapter_ServiceLocator::get("Adapter_EntityMapper");
+            $entity_mapper = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get("\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper");
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
     }

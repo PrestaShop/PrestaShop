@@ -46,7 +46,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
     public function __construct(Address $address, $type, Core_Business_ConfigurationInterface $configurationManager = null)
     {
         if ($configurationManager === null) {
-            $this->configurationManager = Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+            $this->configurationManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_ConfigurationInterface');
         } else {
             $this->configurationManager = $configurationManager;
         }

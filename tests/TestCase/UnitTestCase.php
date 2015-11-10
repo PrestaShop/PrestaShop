@@ -8,7 +8,7 @@ use Db;
 use PHPUnit_Framework_TestCase;
 use Core_Business_ContainerBuilder;
 use Core_Foundation_IoC_Container;
-use Adapter_ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 use Phake;
@@ -55,13 +55,13 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->container = new Core_Foundation_IoC_Container;
-        Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+        ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->setupDatabaseMock();
 
         $this->entity_mapper = new FakeEntityMapper();
 
-        $this->container->bind('Adapter_EntityMapper', $this->entity_mapper);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper', $this->entity_mapper);
 
         $this->context = Phake::mock('Context');
 
@@ -109,6 +109,6 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
         $container_builder = new Core_Business_ContainerBuilder;
         $container = $container_builder->build();
-        Adapter_ServiceLocator::setServiceContainerInstance($container);
+        ServiceLocator::setServiceContainerInstance($container);
     }
 }
