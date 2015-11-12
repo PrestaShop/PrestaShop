@@ -84,7 +84,9 @@ class PasswordControllerCore extends FrontController
 
     protected function changePassword()
     {
-        if ($email = Db::getInstance()->getValue('SELECT `email` FROM '._DB_PREFIX_.'customer c WHERE c.`secure_key` = \''.pSQL($token).'\' AND c.id_customer = '.(int)$id_customer)) {
+        $token = Tools::getValue('token');
+        $id_customer = (int)Tools::getValue('id_customer');
+        if ($email = Db::getInstance()->getValue('SELECT `email` FROM '._DB_PREFIX_.'customer c WHERE c.`secure_key` = \''.pSQL($token).'\' AND c.id_customer = '.$id_customer)) {
             $customer = new Customer();
             $customer->getByEmail($email);
 
