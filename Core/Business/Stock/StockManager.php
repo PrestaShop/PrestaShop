@@ -23,16 +23,17 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Business\Stock;
 
-class Core_Business_Stock_StockManager
+class StockManager
 {
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
-     * @param Product $product A product pack object to update its quantity
-     * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
+     * @param \Product $product A product pack object to update its quantity
+     * @param \StockAvailable $stock_available the stock of the product to fix with correct quantity
      * @param integer $delta_quantity The movement of the stock (negative for a decrease)
-     * @param integer|null $id_shop Opional shop ID
+     * @param integer|null $id_shop Optional shop ID
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
@@ -40,7 +41,6 @@ class Core_Business_Stock_StockManager
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
             $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
             $products_pack = $packItemsManager->getPackItems($product);
-            $stockAvailable = new Core_Business_Stock_StockManager();
             $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
             $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
             foreach ($products_pack as $product_pack) {
@@ -62,12 +62,12 @@ class Core_Business_Stock_StockManager
 
     /**
      * This will decrease (if needed) Packs containing this product
-     * (with the right declinaison) if there is not enough product in stocks.
+     * (with the right declination) if there is not enough product in stocks.
      *
-     * @param Product $product A product object to update its quantity
+     * @param \Product $product A product object to update its quantity
      * @param integer $id_product_attribute The product attribute to update
-     * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
-     * @param integer|null $id_shop Opional shop ID
+     * @param \StockAvailable $stock_available the stock of the product to fix with correct quantity
+     * @param integer|null $id_shop Optional shop ID
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
@@ -84,9 +84,9 @@ class Core_Business_Stock_StockManager
                 continue;
             }
 
-            // Decrease stocks of the pack only if there is not enough items to constituate the actual pack stocks.
+            // Decrease stocks of the pack only if there is not enough items to make the actual pack stocks.
 
-            // How many packs can be constituated with the remaining product stocks
+            // How many packs can be made with the remaining product stocks
             $quantity_by_pack = $pack->pack_item_quantity;
             $max_pack_quantity = max(array(0, floor($stock_available->quantity / $quantity_by_pack)));
 
@@ -104,7 +104,7 @@ class Core_Business_Stock_StockManager
      * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
-     * @param Product $product The product to update its stockAvailable
+     * @param \Product $product The product to update its stockAvailable
      * @param integer $id_product_attribute The declinaison to update (null if not)
      * @param integer $delta_quantity The quantity change (positive or negative)
      * @param integer|null $id_shop Optional

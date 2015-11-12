@@ -23,12 +23,15 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Business\Email;
 
-class Core_Business_Email_EmailLister
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+
+class EmailLister
 {
     private $filesystem;
 
-    public function __construct(Core_Foundation_FileSystem_FileSystem $fs)
+    public function __construct(FileSystem $fs)
     {
         // Register dependencies
         $this->filesystem = $fs;
