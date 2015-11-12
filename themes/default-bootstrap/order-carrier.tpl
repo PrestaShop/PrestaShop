@@ -84,11 +84,11 @@
 															<strong>{$carrier.instance->name|escape:'htmlall':'UTF-8'}</strong>
 														{/foreach}
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
-															<br />{l s='Delivery time:'}&nbsp;{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+															<div class="delivery_time">{l s='Delivery time:'}&nbsp;{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}</div>
 														{/if}
 													{/if}
 													{if count($option_list) > 1}
-													<br />
+													<div class="option_list">
 														{if $option.is_best_grade}
 															{if $option.is_best_price}
 																<span class="best_grade best_grade_price best_grade_speed">{l s='The best price and speed'}</span>
@@ -98,6 +98,7 @@
 														{elseif $option.is_best_price}
 															<span class="best_grade best_grade_price">{l s='The best price'}</span>
 														{/if}
+													</div>
 													{/if}
 												</td>
 												<td class="delivery_option_price">
