@@ -8,15 +8,15 @@
         '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
         '../js/jquery/ui/jquery.ui.sortable.min.js'
         '../js/vendor/node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' %}
-        <script src="{{ asset_url }}"></script>
+        <script src="{{ asset_url|admin_asset_path }}"></script>
     {% endjavascripts %}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
-        '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+        '../js/vendor/node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
     {% endstylesheets %}
 {% endblock %}
 
