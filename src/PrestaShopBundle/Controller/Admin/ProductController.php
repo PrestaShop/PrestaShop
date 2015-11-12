@@ -282,7 +282,7 @@ class ProductController extends FrameworkBundleAdminController
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
                     if (count($_POST['combinations']) === 0) {
                         $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
-                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0'], $_POST['out_of_stock']);
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 

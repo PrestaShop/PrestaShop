@@ -138,11 +138,13 @@ class AdminProductWrapper
      *
      * @param \Product $product
      * @param integer $quantity
+     * @param integer $out_of_stock
      * @param integer $forAttributeId
      */
-    public function processQuantityUpdate(\Product $product, $quantity, $forAttributeId = 0)
+    public function processQuantityUpdate(\Product $product, $quantity, $out_of_stock, $forAttributeId = 0)
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
+        \StockAvailable::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
         \StockAvailable::setQuantity((int)$product->id, $forAttributeId, $quantity);
         \Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
     }

@@ -67,7 +67,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->product = $id ? $this->productAdapter->getProduct($id) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
-
         if ($this->product != null) {
             $this->product->loadStockData();
         }
@@ -245,6 +244,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             ],
             'step3' => [
                 'qty_0' => 0,
+                'out_of_stock' => 2,
             ],
             'step4' => [
                 'width' => 0,
@@ -320,7 +320,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
                 'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
                 'qty_0' => $this->product->getQuantity($this->product->id),
-                'combinations' => $this->getFormCombinations()
+                'combinations' => $this->getFormCombinations(),
+                'out_of_stock' => $this->product->out_of_stock,
             ],
             'step4' => [
                 'width' => $this->product->width,

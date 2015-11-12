@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 
 /**
  * This form class is responsible to generate the product quantity form
@@ -48,6 +51,7 @@ class ProductQuantity extends CommonModelAbstractType
         $this->container = $container;
         $this->router = $container->get('router');
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->configurationAdapter = new ConfigurationAdapter();
     }
 
     /**
@@ -93,7 +97,30 @@ class ProductQuantity extends CommonModelAbstractType
             'type' => new ProductCombination($this->container),
             'allow_add' => true,
             'allow_delete' => true
-        ));
+        ))->add('out_of_stock', 'choice') //see eventListener for details
+        ;
+
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').' (';
+            $defaultChoiceLabel .= $this->configurationAdapter->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
+                $this->translator->trans('Allow orders', [], 'AdminProducts') :
+                $this->translator->trans('Deny orders', [], 'AdminProducts');
+            $defaultChoiceLabel .= ')';
+
+            $form->add('out_of_stock', 'choice', array(
+                'choices'  => array(
+                    '0' => $this->translator->trans('Deny orders', [], 'AdminProducts'),
+                    '1' => $this->translator->trans('Allow orders', [], 'AdminProducts'),
+                    '2' => $defaultChoiceLabel,
+                ),
+                'expanded' => false,
+                'required' => true,
+                'label' => $this->translator->trans('When out of stock', [], 'AdminProducts')
+            ));
+        });
     }
 
     /**
