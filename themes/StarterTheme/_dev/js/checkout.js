@@ -31,6 +31,10 @@ function setupRegularCheckout () {
 
 }
 
+function collapsePaymentOptions() {
+  $('.js-additional-information, .js-payment-option-form').hide();
+}
+
 function setupAdvancedCheckout () {
   function getSelectedPaymentOption () {
     return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
@@ -44,9 +48,7 @@ function setupAdvancedCheckout () {
       }
     });
 
-    $('.additional-information, .payment-option-form').each(function( index ) {
-      $(this).hide();
-    });
+    collapsePaymentOptions();
 
     var option = getSelectedPaymentOption();
     if (!option) {
@@ -79,6 +81,8 @@ $(document).ready(function setupCheckoutScripts () {
   if (!$('body#order')) {
     return;
   }
+
+  collapsePaymentOptions();
 
   prestashop.on('cart updated', function () {
     $.get('', {
