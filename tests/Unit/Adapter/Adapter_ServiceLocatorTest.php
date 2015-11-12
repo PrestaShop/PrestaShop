@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use Core_Foundation_IoC_Container;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PHPUnit_Framework_TestCase;
 
 class Adapter_ServiceLocatorTest extends PHPUnit_Framework_TestCase
@@ -35,12 +35,12 @@ class Adapter_ServiceLocatorTest extends PHPUnit_Framework_TestCase
     public function test_get_delegates_to_service_container()
     {
         ServiceLocator::setServiceContainerInstance(
-            new Core_Foundation_IoC_Container
+            new Container()
         );
 
         $this->assertInstanceOf(
-            'Core_Foundation_IoC_Container',
-            ServiceLocator::get('Core_Foundation_IoC_Container')
+            '\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container',
+            ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\IoC\\Container')
         );
     }
 }

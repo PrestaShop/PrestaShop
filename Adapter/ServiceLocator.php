@@ -25,15 +25,17 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+
 class ServiceLocator
 {
     /**
      * Set a service container Instance
-     * @var \Core_Foundation_IoC_Container
+     * @var Container
      */
     private static $service_container;
 
-    public static function setServiceContainerInstance(\Core_Foundation_IoC_Container $container)
+    public static function setServiceContainerInstance(Container $container)
     {
         self::$service_container = $container;
     }

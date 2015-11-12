@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Payment;
+namespace PrestaShop\PrestaShop\tests\Unit\Core\Business\Payment;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Business_Payment_PaymentOption as PaymentOption;
+use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption as PaymentOption;
 
 class Core_Business_Payment_PaymentOptionTest extends UnitTestCase
 {
     public function test_convertLegacyOption_converts_one_option()
     {
-        $newOption = new PaymentOption;
+        $newOption = new PaymentOption();
         $newOption
             ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')
@@ -60,7 +60,7 @@ class Core_Business_Payment_PaymentOptionTest extends UnitTestCase
 
     public function test_convertLegacyOption_converts_two_options_specified_as_one()
     {
-        $newOption = new PaymentOption;
+        $newOption = new PaymentOption();
         $newOption
             ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')

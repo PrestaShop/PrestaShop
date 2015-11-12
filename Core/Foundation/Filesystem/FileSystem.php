@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
-class Core_Foundation_FileSystem_FileSystem
+class FileSystem
 {
     /**
      * Replaces directory separators with the system's native one
@@ -49,7 +50,7 @@ class Core_Foundation_FileSystem_FileSystem
     public function joinPaths()
     {
         if (func_num_args() < 2) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception('joinPaths requires at least 2 arguments.');
+            throw new Exception('joinPaths requires at least 2 arguments.');
         } elseif (func_num_args() === 2) {
             $arg_O = func_get_arg(0);
             $arg_1 = func_get_arg(1);
@@ -80,7 +81,7 @@ class Core_Foundation_FileSystem_FileSystem
     public function listEntriesRecursively($path)
     {
         if (!file_exists($path)) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception(
+            throw new Exception(
                 sprintf(
                     'No such file or directory: %s',
                     $path
@@ -89,7 +90,7 @@ class Core_Foundation_FileSystem_FileSystem
         }
 
         if (!is_dir($path)) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception(
+            throw new Exception(
                 sprintf(
                     '%s is not a directory',
                     $path
@@ -105,7 +106,7 @@ class Core_Foundation_FileSystem_FileSystem
             }
 
             $newPath = $this->joinPaths($path, $entry);
-            $info = new SplFileInfo($newPath);
+            $info = new \SplFileInfo($newPath);
 
             $entries[$newPath] = $info;
 
@@ -123,7 +124,7 @@ class Core_Foundation_FileSystem_FileSystem
     /**
      * Filter used by listFilesRecursively.
      */
-    private function matchOnlyFiles(SplFileInfo $info)
+    private function matchOnlyFiles(\SplFileInfo $info)
     {
         return $info->isFile();
     }

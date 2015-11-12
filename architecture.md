@@ -125,7 +125,7 @@ public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products 
 On the unit test side, setting up the mocked objects follow this pattern:
 
 ```php
-$this->container = new Core_Foundation_IoC_Container;
+$this->container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 \PrestaShop\PrestaShop\Adapter\ServiceLocator::setServiceContainerInstance($this->container);
 
 $addressFactory = Phake::mock('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
