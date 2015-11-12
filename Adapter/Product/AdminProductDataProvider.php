@@ -199,7 +199,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sav' => array(
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
-                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop_group = 1 AND sav.id_shop = 0' // FIXME, from legacy request, why these settings?
+                'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0 AND sav.id_shop = '.$idShop
             ),
             'sa' => array(
                 'table' => 'product_shop',
