@@ -36,7 +36,7 @@ class Core_Business_Stock_StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
             $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
             $products_pack = $packItemsManager->getPackItems($product);
@@ -71,7 +71,7 @@ class Core_Business_Stock_StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Business_ConfigurationInterface');
+        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface');
         $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
         $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
         $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');

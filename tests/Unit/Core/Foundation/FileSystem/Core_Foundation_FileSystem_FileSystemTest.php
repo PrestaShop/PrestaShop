@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Foundation_FileSystem_FileSystem;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use \PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
@@ -37,7 +37,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     public function setup()
     {
-        $this->fs = new Core_Foundation_FileSystem_FileSystem;
+        $this->fs = new FileSystem();
         $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';
     }
 

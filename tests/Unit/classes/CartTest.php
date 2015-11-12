@@ -30,7 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
-use Core_Business_ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Business\ConfigurationInterface;
 use Address;
 use Cart;
 use Order;

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Admin;
 
-use Core_Foundation_IoC_Container;
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\Admin\UrlGenerator;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;

@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\IoC;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
-use Core_Foundation_IoC_Container as Container;
+use \PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassWithDep;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
@@ -37,7 +37,7 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
 {
     public function setup()
     {
-        $this->container = new Container;
+        $this->container = new Container();
     }
 
     public function test_bind_by_closure()

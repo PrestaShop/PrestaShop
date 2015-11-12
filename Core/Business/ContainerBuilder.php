@@ -23,8 +23,22 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Business;
 
-interface Core_Business_ConfigurationInterface
+class ContainerBuilder
 {
-    public function get($key);
+    /**
+     * Construct PrestaShop Core Service container
+     * @return \PrestaShop\PrestaShop\Core\Foundation\IoC\Container
+     * @throws \PrestaShop\PrestaShop\Core\Foundation\IoC\Exception
+     */
+    public function build()
+    {
+        $container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container();
+
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('Core_Foundation_Database_DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+
+        return $container;
+    }
 }

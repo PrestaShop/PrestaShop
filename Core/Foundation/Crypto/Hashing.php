@@ -23,8 +23,9 @@
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Crypto;
 
-class Core_Foundation_Crypto_Hashing
+class Hashing
 {
     /** @var array should contain encryption methods */
     private $hash_methods = [];
@@ -99,7 +100,7 @@ class Core_Foundation_Crypto_Hashing
 
     /**
      * encrypt the $passwd string and return the result of the 1st encryption method
-     * contained in Core_Foundation_Crypto_Hashing::hash_methods
+     * contained in \PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing::hash_methods
      * @param  string  $passwd     the password you want to encrypt
      * @param  string  $cookie_key the define _COOKIE_KEY_
      * @return string

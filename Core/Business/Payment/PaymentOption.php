@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Business\Payment;
 
-class Core_Business_Payment_PaymentOption
+class PaymentOption
 {
     private $callToActionText;
     private $logo;
@@ -173,7 +174,7 @@ class Core_Business_Payment_PaymentOption
      * - or a numerically indexed array or arrays as described above
      * Since this was a mess, this method is provided to convert them.
      * It takes as input a legacy option (in either form) and always
-     * returns an array of instances of Core_Business_Payment_PaymentOption
+     * returns an array of instances of PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption
      */
     public static function convertLegacyOption(array $legacyOption)
     {
@@ -198,7 +199,7 @@ class Core_Business_Payment_PaymentOption
         foreach ($legacyOption as $option) {
             $option = array_merge($defaults, $option);
 
-            $newOption = new Core_Business_Payment_PaymentOption();
+            $newOption = new self();
             $newOption->setCallToActionText($option['cta_text'])
                       ->setAction($option['action'])
                       ->setForm($option['form'])

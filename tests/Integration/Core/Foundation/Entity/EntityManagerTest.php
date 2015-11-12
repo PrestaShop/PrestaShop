@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
+namespace PrestaShop\PrestaShop\tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use Core_Business_ContainerBuilder;
+use PrestaShop\PrestaShop\Core\Business\ContainerBuilder;
 use CMSRole;
 use CMSRoleRepository;
 use Db;
@@ -40,7 +40,7 @@ class EntityManagerTest extends IntegrationTestCase
 
     public function setup()
     {
-        $containerBuilder = new Core_Business_ContainerBuilder;
+        $containerBuilder = new ContainerBuilder();
         $this->container = $containerBuilder->build();
         $this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
     }
