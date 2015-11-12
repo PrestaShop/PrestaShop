@@ -1,4 +1,4 @@
-{extends "checkout/order.tpl"}
+{extends "page.tpl"}
 
 {block name="page_title"}
   {l s='Order confirmation'}
