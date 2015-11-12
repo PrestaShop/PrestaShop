@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOptionFormDecorator;
+
 class Adapter_AdvancedPaymentOptionsConverter
 {
     public function getPaymentOptions()
@@ -37,6 +39,15 @@ class Adapter_AdvancedPaymentOptionsConverter
                 ++$id;
                 $formattedOption = $option->toArray();
                 $formattedOption['id'] = 'advanced-payment-option-' . $id;
+
+                if ($formattedOption['form']) {
+                    $decorator = new PaymentOptionFormDecorator;
+                    $formattedOption['form'] = $decorator->addHiddenSubmitButton(
+                        $formattedOption['form'],
+                        $formattedOption['id']
+                    );
+                }
+
                 if (!$formattedOption['method']) {
                     $formattedOption['method'] = 'GET';
                 }
