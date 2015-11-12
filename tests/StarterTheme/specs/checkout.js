@@ -119,7 +119,7 @@ describe('The One Page Checkout', function () {
         return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1');
       });
 
-      xit('should not display payment module selection buttons upon reaching the page', function () {
+      it('should not display payment module selection buttons upon reaching the page', function () {
         return browser.element('[name="select_payment_option"]').then(function () {
           throw new Error('Payment modules should not be selectable at this stage of the order.');
         }).catch(function () {
@@ -127,23 +127,23 @@ describe('The One Page Checkout', function () {
         });
       });
 
-      xit('should display a button to approve all terms and conditions...', function () {
+      it('should display a button to approve all terms and conditions...', function () {
         return browser.element('#approve-terms');
       });
 
 
-      xit('...that should turn into a disapprove button once conditions are approved', function () {
+      it('...that should turn into a disapprove button once conditions are approved', function () {
         return toggleAllTermsCheckboxes()
           .click('#approve-terms')
           .waitForVisible('#disapprove-terms')
         ;
       });
 
-      xit('should allow selecting a payment method once terms are approved', function () {
+      it('should allow selecting a payment method once terms are approved', function () {
         return browser.click('[name="select_payment_option"][value="advanced-payment-option-1"]');
       });
 
-      xit('should now allow paying with the selected option', function () {
+      it('should now allow paying with the selected option', function () {
         return browser.element('#payment-confirmation label[for="pay-with-advanced-payment-option-1"]');
       });
     });
