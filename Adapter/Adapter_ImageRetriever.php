@@ -18,6 +18,9 @@ class Adapter_ImageRetriever
         );
         $images = $productInstance->getImages($language->id);
         $combinationImages = $productInstance->getCombinationImages($language->id);
+        if (!$combinationImages) {
+            $combinationImages = [];
+        }
         $imageToCombinations = [];
 
         foreach ($combinationImages as $imgs) {
@@ -41,7 +44,11 @@ class Adapter_ImageRetriever
                 $image['id_image']
             ));
 
-            $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
+            if (isset($imageToCombinations[$image['id_image']])) {
+                $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
+            } else {
+                $image['associatedVariants'] = [];
+            }
 
             return $image;
         }, $images);
