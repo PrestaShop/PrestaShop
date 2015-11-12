@@ -103,6 +103,8 @@ class CartControllerCore extends FrontController
                 }
 
                 Tools::redirect('index.php?controller=cart&action=show');
+            } elseif ($this->ajax) {
+                return $this->ajaxDie(json_encode(['success' => empty($this->errors)]));
             }
         } elseif (Tools::getValue('action') === 'show') {
             return;
