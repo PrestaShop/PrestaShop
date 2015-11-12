@@ -1,86 +1,50 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
-function setupRegularCheckout () {
-  function hideSubmitButton () {
-    $('#conditions-to-approve button').hide();
-    $('#delivery-method button').hide();
-  }
-
-  function refreshPaymentOptions () {
-    let params = $('#conditions-to-approve').serialize() + '&action=getPaymentOptions';
-    $.post('', params).then(resp => {
-      $('#payment-options').replaceWith(resp);
-      hideSubmitButton();
-    });
-  }
-
-  function refreshDeliveryOptions () {
-    let params = $('#delivery-method').serialize() + '&action=selectDeliveryOption';
-    $.post('', params).then(resp => {
-      $('#delivery-options').replaceWith(resp);
-      prestashop.emit('cart updated');
-      hideSubmitButton();
-    });
-  }
-
-  hideSubmitButton();
-  $('body').on('change', '#conditions-to-approve input[type="checkbox"]', refreshPaymentOptions);
-  $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
-
-
-}
-
 function collapsePaymentOptions() {
   $('.js-additional-information, .js-payment-option-form').hide();
 }
 
-function setupAdvancedCheckout () {
-  function getSelectedPaymentOption () {
-    return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
-  }
-
-  function enableOrDisableOrderButton () {
-    var show = true;
-    $('#conditions-to-approve input[type="checkbox"]').each((_, checkbox) => {
-      if (!checkbox.checked) {
-        show = false;
-      }
-    });
-
-    collapsePaymentOptions();
-
-    var option = getSelectedPaymentOption();
-    if (!option) {
-      show = false;
-    }
-
-    $('#' + option + '-additional-information').show();
-    $('#pay-with-' + option + '-form').show();
-    $('#payment-confirmation button').attr('disabled', !show);
-  }
-
-  function confirmPayment () {
-    var option = getSelectedPaymentOption();
-    if (option) {
-      $('#pay-with-' + option + '-form form').submit();
-    }
-  }
-
-  $('#payment-confirmation button').on('click', function () {
-    confirmPayment();
-  });
-
-
-  $('#payment-options input[type="checkbox"][disabled]').attr('disabled', false);
-  $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
-  $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
+function getSelectedPaymentOption () {
+  return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
 }
 
-$(document).ready(function setupCheckoutScripts () {
+function enableOrDisableOrderButton () {
+  var show = true;
+  $('#conditions-to-approve input[type="checkbox"]').each((_, checkbox) => {
+    if (!checkbox.checked) {
+      show = false;
+    }
+  });
+
+  collapsePaymentOptions();
+
+  var option = getSelectedPaymentOption();
+  if (!option) {
+    show = false;
+  }
+
+  $('#' + option + '-additional-information').show();
+  $('#pay-with-' + option + '-form').show();
+  $('#payment-confirmation button').attr('disabled', !show);
+}
+
+function confirmPayment () {
+  var option = getSelectedPaymentOption();
+  if (option) {
+    $('#pay-with-' + option + '-form form').submit();
+  }
+}
+
+function setupCheckoutScripts () {
   if (!$('body#order')) {
     return;
   }
+
+  $('#payment-confirmation button').on('click', confirmPayment);
+  $('#payment-options input[type="checkbox"][disabled]').attr('disabled', false);
+  $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
+  $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
 
   collapsePaymentOptions();
 
@@ -91,6 +55,6 @@ $(document).ready(function setupCheckoutScripts () {
       $('#cart-summary').html(resp);
     });
   });
+}
 
-  setupAdvancedCheckout();
-});
+$(document).ready(setupCheckoutScripts);
