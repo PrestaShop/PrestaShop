@@ -7,8 +7,8 @@ npm-debug.log.*
 download/*
 /img/*
 /log/*
-upload/*
-vendor/*
+/upload/*
+/vendor/*
 docs/phpdoc-sf/
 /composer.lock
 tests/StarterTheme/errorShots/
@@ -35,8 +35,7 @@ override/*
 # Vendors and dependencies
 
 bower_components/
-vendor/
-node_modules/
+node_modules
 /composer.phar
 php-cs-fixer
 .grunt/*
