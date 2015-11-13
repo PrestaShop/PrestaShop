@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\CMS;
 
-class CMSRepository extends Core_Foundation_Database_EntityRepository
+class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
 {
     /**
      * Return CMSRepository lang associative table name

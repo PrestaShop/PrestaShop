@@ -37,7 +37,9 @@ class ContainerBuilder
         $container = new \PrestaShop\PrestaShop\Core\Foundation\IoC\Container();
 
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
-        $container->bind('Core_Foundation_Database_DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Business\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
 
         return $container;
     }

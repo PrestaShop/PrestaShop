@@ -63,7 +63,7 @@ class EntityManager
         }
 
         if (!$repositoryClass) {
-            $repositoryClass = 'Core_Foundation_Database_EntityRepository';
+            $repositoryClass = '\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityRepository';
         }
 
         $repository = new $repositoryClass(
@@ -93,10 +93,10 @@ class EntityManager
 
     /**
      * Flush entity to DB
-     * @param \Core_Foundation_Database_EntityInterface $entity
+     * @param EntityInterface $entity
      * @return $this
      */
-    public function save(\Core_Foundation_Database_EntityInterface $entity)
+    public function save(EntityInterface $entity)
     {
         $entity->save();
         return $this;
@@ -104,10 +104,10 @@ class EntityManager
 
     /**
      * DElete entity from DB
-     * @param \Core_Foundation_Database_EntityInterface $entity
+     * @param EntityInterface $entity
      * @return $this
      */
-    public function delete(\Core_Foundation_Database_EntityInterface $entity)
+    public function delete(EntityInterface $entity)
     {
         $entity->delete();
         return $this;

@@ -36,7 +36,7 @@ class EntityRepository
     public function __construct(
         EntityManager $entityManager,
         $tablesPrefix,
-        \Core_Foundation_Database_EntityMetaData $entityMetaData
+        EntityMetaData $entityMetaData
     ) {
         $this->entityManager = $entityManager;
         $this->db = $this->entityManager->getDatabase();

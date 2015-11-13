@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterface
+abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
     /**
      * List of field types

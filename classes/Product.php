@@ -909,12 +909,12 @@ class ProductCore extends ObjectModel
                 return false;
             }
 
-            $warehouse_product_locations = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
+            $warehouse_product_locations = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
             foreach ($warehouse_product_locations as $warehouse_product_location) {
                 $warehouse_product_location->delete();
             }
 
-            $stocks = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Database_EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
+            $stocks = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
             foreach ($stocks as $stock) {
                 $stock->delete();
             }
