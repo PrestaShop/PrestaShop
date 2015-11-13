@@ -7,6 +7,7 @@ import './checkout';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
+import {psShowHide} from './common';
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
@@ -14,6 +15,5 @@ for (var i in EventEmitter.prototype) {
 }
 
 $(document).ready(() => {
-    $('.ps-shown-by-js').show();
-    $('.ps-hidden-by-js').hide();
+  psShowHide();
 });
