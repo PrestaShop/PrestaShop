@@ -20,7 +20,9 @@
             {/foreach}
           </ul>
         {/block}
-        <button type="submit">{l s='Ok'}</button>
+        <div class='ps-hidden-by-js'>
+          <button type="submit">{l s='Ok'}</button>
+        </div>
       </form>
     {else}
       <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
