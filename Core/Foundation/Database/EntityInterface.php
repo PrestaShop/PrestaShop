@@ -23,9 +23,21 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
-interface Core_Foundation_Database_DatabaseInterface
+interface EntityInterface
 {
-    public function select($sqlString);
-    public function escape($unsafeData);
+    /**
+     * Returns the name of the repository class for this entity.
+     * If unspecified, a generic repository will be used for the entity.
+     *
+     * @return string or false value
+     */
+    public static function getRepositoryClassName();
+
+    public function save();
+
+    public function delete();
+
+    public function hydrate(array $keyValueData);
 }

@@ -25,7 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Business\CMS;
 
-class CMSRoleRepository extends Core_Foundation_Database_EntityRepository
+class CMSRoleRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
 {
     /**
      * Return all CMSRoles which are already associated

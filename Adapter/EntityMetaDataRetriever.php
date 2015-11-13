@@ -29,7 +29,7 @@ class EntityMetaDataRetriever
 {
     public function getEntityMetaData($className)
     {
-        $metaData = new \Core_Foundation_Database_EntityMetaData;
+        $metaData = new \PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
 
         $metaData->setEntityClassName($className);
 

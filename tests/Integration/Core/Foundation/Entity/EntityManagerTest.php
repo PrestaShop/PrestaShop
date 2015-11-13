@@ -42,7 +42,7 @@ class EntityManagerTest extends IntegrationTestCase
     {
         $containerBuilder = new ContainerBuilder();
         $this->container = $containerBuilder->build();
-        $this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
+        $this->entityManager = $this->container->make('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
     }
 
     public function test_explicitly_defined_repository_is_found_by_entitymanager()
