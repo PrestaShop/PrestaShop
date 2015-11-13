@@ -20,6 +20,10 @@ describe('The One Page Checkout', function () {
       });
     });
 
+    after(function () {
+      return browser.logout();
+    });
+
     describe('Addresses management', function () {
       var initialAddressesCount = 0;
 
