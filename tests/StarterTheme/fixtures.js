@@ -19,7 +19,9 @@ module.exports = {
       myAccount: '/en/my-account',
       myAddresses: '/en/addresses',
       address: 'en/address',
-      checkout: '/en/order'
+      checkout: '/en/order',
+      orderhistory: '/en/order-history',
+      orderdetail: '/en/index.php?controller=order-detail&id_order=5'
     },
     customer: {
       email: 'pub@prestashop.com',
