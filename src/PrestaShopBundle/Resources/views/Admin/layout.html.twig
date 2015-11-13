@@ -7,16 +7,15 @@
     )
 )) %}
 
-
 {% block stylesheets %}
     {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/*' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {% javascripts '@PrestaShopBundle/Resources/public/admin/js/*' %}
-    <script src="{{ asset_url }}"></script>
+    <script src="{{ asset_url|admin_asset_path }}"></script>
     {% endjavascripts %}
 {% endblock %}
 

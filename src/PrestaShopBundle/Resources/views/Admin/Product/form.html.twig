@@ -303,8 +303,8 @@
     {{ parent() }}
     {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
     {% endstylesheets %}
 {% endblock %}
 
@@ -321,7 +321,7 @@
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
     %}
-    <script src="{{ asset_url }}"></script>
+    <script src="{{ asset_url|admin_asset_path }}"></script>
     {% endjavascripts %}
 {% endblock %}
 
