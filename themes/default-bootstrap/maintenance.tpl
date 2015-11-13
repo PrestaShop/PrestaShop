@@ -43,8 +43,7 @@
     <div class="container">
         <div id="maintenance">
             <div class="logo"><img src="{$logo_url}"
-                {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if}
-                alt="logo" style="width: 100%; height: 100%;"/></div>
+                {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /></div>
             {$HOOK_MAINTENANCE}
             <div id="message">
                 <h1 class="maintenance-heading">{l s='We\'ll be back soon.'}</h1>
