@@ -11,14 +11,21 @@
 
       <form id="delivery-method" method="post">
         {block name="delivery_options"}
-          <ul>
+          <div class="delivery-options">
             {foreach from=$carriers_available item=carrier key=carrier_id}
-              <li>
-                <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
-                <label for="delivery_option_{$carrier.id}"><img src="{$carrier.logo}" alt="{$carrier.name}" /> {$carrier.label}</label>
-              </li>
+              <div>
+                <div class="delivery-option">
+                  <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if} />
+                  <label for="delivery_option_{$carrier.id}">
+                    <span>{$carrier.label}</span>
+                    {if $carrier.logo}
+                      <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                    {/if}
+                  </label>
+                </div>
+              </div>
             {/foreach}
-          </ul>
+          </div>
         {/block}
         <div class='ps-hidden-by-js'>
           <button type="submit">{l s='Ok'}</button>
