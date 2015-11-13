@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
-class Core_Foundation_Database_EntityManager
+class EntityManager
 {
     private $db;
     private $configuration;
@@ -32,7 +33,7 @@ class Core_Foundation_Database_EntityManager
     private $entityMetaData = array();
 
     public function __construct(
-        Core_Foundation_Database_DatabaseInterface $db,
+        DatabaseInterface $db,
         \PrestaShop\PrestaShop\Core\Business\ConfigurationInterface $configuration
     ) {
         $this->db = $db;
@@ -41,7 +42,7 @@ class Core_Foundation_Database_EntityManager
 
     /**
      * Return current database object used
-     * @return Core_Foundation_Database_DatabaseInterface
+     * @return DatabaseInterface
      */
     public function getDatabase()
     {
@@ -92,10 +93,10 @@ class Core_Foundation_Database_EntityManager
 
     /**
      * Flush entity to DB
-     * @param Core_Foundation_Database_EntityInterface $entity
+     * @param \Core_Foundation_Database_EntityInterface $entity
      * @return $this
      */
-    public function save(Core_Foundation_Database_EntityInterface $entity)
+    public function save(\Core_Foundation_Database_EntityInterface $entity)
     {
         $entity->save();
         return $this;
@@ -103,10 +104,10 @@ class Core_Foundation_Database_EntityManager
 
     /**
      * DElete entity from DB
-     * @param Core_Foundation_Database_EntityInterface $entity
+     * @param \Core_Foundation_Database_EntityInterface $entity
      * @return $this
      */
-    public function delete(Core_Foundation_Database_EntityInterface $entity)
+    public function delete(\Core_Foundation_Database_EntityInterface $entity)
     {
         $entity->delete();
         return $this;

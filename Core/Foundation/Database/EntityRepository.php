@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
-class Core_Foundation_Database_EntityRepository
+class EntityRepository
 {
     protected $entityManager;
     protected $db;
@@ -33,15 +34,15 @@ class Core_Foundation_Database_EntityRepository
     protected $queryBuilder;
 
     public function __construct(
-        Core_Foundation_Database_EntityManager $entityManager,
+        EntityManager $entityManager,
         $tablesPrefix,
-        Core_Foundation_Database_EntityMetaData $entityMetaData
+        \Core_Foundation_Database_EntityMetaData $entityMetaData
     ) {
         $this->entityManager = $entityManager;
         $this->db = $this->entityManager->getDatabase();
         $this->tablesPrefix = $tablesPrefix;
         $this->entityMetaData = $entityMetaData;
-        $this->queryBuilder = new Core_Foundation_Database_EntityManager_QueryBuilder($this->db);
+        $this->queryBuilder = new \PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder($this->db);
     }
 
     public function __call($method, $arguments)
@@ -53,11 +54,11 @@ class Core_Foundation_Database_EntityRepository
             $one = false;
             $by  = substr($method, 6);
         } else {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Undefind method %s.', $method));
+            throw new Exception(sprintf('Undefind method %s.', $method));
         }
 
         if (count($arguments) !== 1) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(sprintf('Method %s takes exactly one argument.', $method));
+            throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
         }
 
         if (!$by) {
@@ -85,21 +86,21 @@ class Core_Foundation_Database_EntityRepository
     /**
      * Return ID field name
      * @return mixed
-     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
+     * @throws Exception
      */
     protected function getIdFieldName()
     {
         $primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
         if (count($primary) === 0) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(
+            throw new Exception(
                 sprintf(
                     'No primary key defined in entity `%s`.',
                     $this->entityMetaData->getEntityClassName()
                 )
             );
         } elseif (count($primary) > 1) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception(
+            throw new Exception(
                 sprintf(
                     'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
                     $this->entityMetaData->getEntityClassName()
@@ -152,7 +153,7 @@ class Core_Foundation_Database_EntityRepository
         if (count($rows) === 0) {
             return null;
         } elseif (count($rows) > 1) {
-            throw new \PrestaShop\PrestaShop\Core\Foundation\Database\Exception('Too many rows returned.');
+            throw new Exception('Too many rows returned.');
         } else {
             $data = $rows[0];
             $entity = $this-> getNewEntity();
@@ -177,7 +178,7 @@ class Core_Foundation_Database_EntityRepository
      * @param $one
      * @param array $cumulativeConditions
      * @return array|mixed|null
-     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
+     * @throws Exception
      */
     private function doFind($one, array $cumulativeConditions)
     {
@@ -198,7 +199,7 @@ class Core_Foundation_Database_EntityRepository
      * Find one entity in DB
      * @param $id
      * @return array|mixed|null
-     * @throws \PrestaShop\PrestaShop\Core\Foundation\Database\Exception
+     * @throws Exception
      */
     public function findOne($id)
     {

@@ -23,12 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
 
-class Core_Foundation_Database_EntityManager_QueryBuilder
+class QueryBuilder
 {
     private $db;
 
-    public function __construct(Core_Foundation_Database_DatabaseInterface $db)
+    public function __construct(\PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface $db)
     {
         $this->db = $db;
     }
