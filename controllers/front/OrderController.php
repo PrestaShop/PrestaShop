@@ -114,13 +114,8 @@ class OrderControllerCore extends FrontController
 
                             if (count($carriers) > 1) {
                                 $carrier['label'] = $carrier['price'];
-                                $carrier['logo'] = _PS_IMG_.'404.gif';
                             } else {
                                 $carrier['label'] = $carrier['name'].' - '.$carrier['delay'].' - '.$carrier['price'];
-                            }
-
-                            if (!$carrier['logo']) {
-                                $carrier['logo'] = _PS_IMG_.'404.gif';
                             }
 
                             $carriers_available[$id_carriers_list] = $carrier;
