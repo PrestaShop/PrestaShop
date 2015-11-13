@@ -65,7 +65,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
-        $this->product = $id ? $this->productAdapter->getProduct($id) : null;
+        $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
         if ($this->product != null) {
             $this->product->loadStockData();
@@ -78,7 +78,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'description_short',
             'link_rewrite',
             'meta_title',
-            'meta_description'
+            'meta_description',
+            'available_now',
+            'available_later',
         );
 
         //define unused key for manual binding
@@ -245,6 +247,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step3' => [
                 'qty_0' => 0,
                 'out_of_stock' => 2,
+                'minimal_quantity' => 1,
+                'available_date' => '0000-00-00',
             ],
             'step4' => [
                 'width' => 0,
@@ -322,6 +326,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'qty_0' => $this->product->getQuantity($this->product->id),
                 'combinations' => $this->getFormCombinations(),
                 'out_of_stock' => $this->product->out_of_stock,
+                'minimal_quantity' => $this->product->minimal_quantity,
+                'available_now' => $this->product->available_now,
+                'available_later' => $this->product->available_later,
+                'available_date' => $this->product->available_date,
             ],
             'step4' => [
                 'width' => $this->product->width,

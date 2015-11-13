@@ -251,6 +251,10 @@
                         </div>
                     </div>
                     {{ form_row(form.step3.out_of_stock) }}
+                    {{ form_row(form.step3.minimal_quantity) }}
+                    {{ form_row(form.step3.available_now) }}
+                    {{ form_row(form.step3.available_later) }}
+                    {{ form_row(form.step3.available_date) }}
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
