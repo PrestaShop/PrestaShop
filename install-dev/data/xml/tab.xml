@@ -306,5 +306,8 @@
     <tab id="Configuration" id_parent="Stock" active="1" hide_host_mode="0">
       <class_name>AdminStockConfiguration</class_name>
     </tab>
+    <tab id="PaymentPreferences" id_parent="Modules" active="1" hide_host_mode="0">
+      <class_name>AdminPaymentPreferences</class_name>
+    </tab>
   </entities>
 </entity_tab>
