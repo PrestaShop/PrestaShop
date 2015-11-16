@@ -28,6 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 
 /**
  * This form class is responsible to generate the product quantity form
@@ -48,6 +52,8 @@ class ProductQuantity extends CommonModelAbstractType
         $this->container = $container;
         $this->router = $container->get('router');
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->configurationAdapter = new ConfigurationAdapter();
+        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
     }
 
     /**
@@ -93,7 +99,48 @@ class ProductQuantity extends CommonModelAbstractType
             'type' => new ProductCombination($this->container),
             'allow_add' => true,
             'allow_delete' => true
+        ))
+        ->add('out_of_stock', 'choice') //see eventListener for details
+        ->add('minimal_quantity', 'number', array(
+            'required' => true,
+            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric')),
+            ),
+        ))
+        ->add('available_now', new TranslateType('text', array(), $this->locales), array(
+            'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
+        ))
+        ->add('available_later', new TranslateType('text', array(), $this->locales), array(
+            'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
+        ))
+        ->add('available_date', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
+            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
         ));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').' (';
+            $defaultChoiceLabel .= $this->configurationAdapter->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
+                $this->translator->trans('Allow orders', [], 'AdminProducts') :
+                $this->translator->trans('Deny orders', [], 'AdminProducts');
+            $defaultChoiceLabel .= ')';
+
+            $form->add('out_of_stock', 'choice', array(
+                'choices'  => array(
+                    '0' => $this->translator->trans('Deny orders', [], 'AdminProducts'),
+                    '1' => $this->translator->trans('Allow orders', [], 'AdminProducts'),
+                    '2' => $defaultChoiceLabel,
+                ),
+                'expanded' => false,
+                'required' => true,
+                'label' => $this->translator->trans('When out of stock', [], 'AdminProducts')
+            ));
+        });
     }
 
     /**

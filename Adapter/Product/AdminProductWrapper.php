@@ -148,6 +148,17 @@ class AdminProductWrapper
     }
 
     /**
+     * Update the out of stock strategy
+     *
+     * @param \Product $product
+     * @param integer $out_of_stock
+     */
+    public function processProductOutOfStock(\Product $product, $out_of_stock)
+    {
+        \StockAvailable::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
+    }
+
+    /**
      * Set if a product depends on stock (ASM). For a product or a combination.
      *
      * Does work only in Advanced stock management.
