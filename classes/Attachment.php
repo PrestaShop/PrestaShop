@@ -26,14 +26,33 @@
 
 class AttachmentCore extends ObjectModel
 {
+    /**
+    * @var string file name on disk / hash
+    */
     public $file;
+    /**
+    * @var string File name, displayed to user when downloading
+    */
     public $file_name;
+    /**
+    * @var int File size in bytes
+    */
     public $file_size;
+    /**
+    * @var string Localized file name, as displayed to user
+    */
     public $name;
+    /**
+    * @var string File mime type. Passed in http header response
+    */
     public $mime;
+    /**
+    * @var string Localized file description
+    */
     public $description;
-
-    /** @var int position */
+    /**
+    * @var int position
+    */
     public $position;
 
     /**
