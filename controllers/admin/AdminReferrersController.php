@@ -429,7 +429,9 @@ class AdminReferrersControllerCore extends AdminController
                 'statsdata_name' => $statsdata_name,
                 'current' => self::$currentIndex,
                 'token' => $this->token,
-                'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC'))
+                'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC')),
+                'exclude_tx' => (int)Tools::getValue('exclude_tx', Configuration::get('REFERER_TAX')),
+                'exclude_ship' => (int)Tools::getValue('exclude_ship', Configuration::get('REFERER_SHIPPING'))
             ));
 
             return $tpl->fetch();
@@ -453,7 +455,9 @@ class AdminReferrersControllerCore extends AdminController
 
         if (Tools::isSubmit('submitSettings')) {
             if ($this->tabAccess['edit'] === '1') {
-                if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)Tools::getValue('tracking_dt'))) {
+                if (Configuration::updateValue('TRACKING_DIRECT_TRAFFIC', (int)Tools::getValue('tracking_dt'))
+                && Configuration::updateValue('REFERER_TAX', (int)Tools::getValue('exclude_tx'))
+                && Configuration::updateValue('REFERER_SHIPPING', (int)Tools::getValue('exclude_ship'))) {
                     Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.Tools::getValue('token'));
                 }
             }
