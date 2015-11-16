@@ -1,6 +1,7 @@
 import $ from 'jquery';
 /* expose jQuery for modules */
 window.$ = $;
+window.jQuery = $;
 
 import './setup-rivets';
 import './checkout';
