@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Foundation\Database\AutoPrefixingDatabase;
 
-class CategoryProductsSearchProvider implements ProductSearchProviderInterface
+class CategoryProductSearchProvider implements ProductSearchProviderInterface
 {
     private $db;
 
