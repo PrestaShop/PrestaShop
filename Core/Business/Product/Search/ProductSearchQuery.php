@@ -10,6 +10,8 @@ class ProductSearchQuery
     // many layouts. 12 is the best number ever.
     private $resultsPerPage = 12;
 
+    private $page = 1;
+
     public function setIdCategory($id_category)
     {
         $this->id_category = $id_category;
@@ -36,5 +38,16 @@ class ProductSearchQuery
     public function getResultsPerPage()
     {
         return $this->resultsPerPage;
+    }
+
+    public function setPage($page)
+    {
+        $this->page = (int)$page;
+        return $this;
+    }
+
+    public function getPage()
+    {
+        return $this->page;
     }
 }
