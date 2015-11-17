@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Config\ConfigCacheFactory;
@@ -50,16 +51,29 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     private $is_employee_addons_logged = false;
     private $kernel;
 
+    private $cache_dir;
+
     protected $catalog_categories      = [];
     protected $catalog_modules         = [];
 
     public function __construct(\AppKernel $kernel)
     {
         $this->kernel = $kernel;
+        $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
         $context = \Context::getContext();
         if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
             && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)) {
             $this->is_employee_addons_logged = true;
+        }
+    }
+
+    public function clearCache()
+    {
+        foreach ([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_] as $file) {
+            $path = $this->cache_dir . $file;
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
     }
 
@@ -129,6 +143,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         }
                     }
                     break;
+                default:
+                    // "the switch statement is considered a looping structure for the purposes of continue."
+                    continue 2;
             }
 
             $module_ids = array_intersect($search_result, $module_ids);
@@ -151,30 +168,23 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         if (!$this->catalog_categories || !$this->catalog_modules) {
             $params = ['format' => 'json'];
-            $addons_modules = \Tools::addonsRequest('must-have', $params);
-            $addons_services = \Tools::addonsRequest('service', $params);
-            $partners_modules = \Tools::addonsRequest('partner', $params);
-            $natives_modules = \Tools::addonsRequest('native', $params);
+            $requests = ['must-have', 'service', 'partner', 'native'];
 
-            if ((!$addons_modules || !$addons_services || !$partners_modules || !$natives_modules) && ! $this->fallbackOnCache()) {
-                throw new \Exception("Cannot load data from PrestaShop Addons");
-            }
-
-            $json_addons_modules = (array) json_decode($addons_modules);
-            $json_addons_services = (array) json_decode($addons_services);
-            $json_partners_modules = (array) json_decode($partners_modules);
-            $json_natives_modules = (array) json_decode($natives_modules);
-
-            if ($json_addons_modules !== false && $json_addons_services !== false
-                && $json_partners_modules !== false && $json_natives_modules !== false) {
-                $jsons = array_merge($json_addons_modules, $json_addons_services, $json_natives_modules, $json_partners_modules);
+            try {
+                $addons_provider = new AddonsDataProvider();
+                $jsons = [];
+                foreach ($requests as $var => $action) {
+                    $jsons = array_merge($jsons, (array) $addons_provider->request($action, $params));
+                }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
                 $this->catalog_categories = $this->getCategoriesFromModules();
                 $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
-            } elseif (! $this->fallbackOnCache()) {
-                throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache");
+            } catch (\Exception $e) {
+                if (! $this->fallbackOnCache()) {
+                    throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache", 0, $e);
+                }
             }
         }
     }
@@ -219,7 +229,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 // Add un-implemented properties
                 $product->refs       = (array)$this->getRefFromModuleCategoryName($product->categoryName);
                 if (! isset($product->product_type)) {
-                    $product->productType = isset($json_key)?$json_key:'module';
+                    $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
                     $product->productType = $product->product_type;
                     unset($product->product_type);
@@ -278,7 +288,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     private function getModuleCache($file, $check_freshness = true)
     {
-        $cacheFile = $this->kernel->getCacheDir().'/modules/'.$file;
+        $cacheFile = $this->cache_dir.$file;
         if (! file_exists($cacheFile)) {
             return false;
         }
@@ -302,7 +312,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     private function registerModuleCache($file, $data)
     {
         try {
-            $cache = (new ConfigCacheFactory(true))->cache($this->kernel->getCacheDir().'/modules/'.$file, function () {});
+            $cache = (new ConfigCacheFactory(true))->cache($this->cache_dir.$file, function () {});
             $cache->write(json_encode($data));
 
             return $cache->getPath();
