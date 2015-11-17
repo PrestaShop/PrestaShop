@@ -53,3 +53,16 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+
+    #SECURITY
+    prestashop.adapter.security.admin:
+        class: PrestaShop\PrestaShop\Adapter\Security\Admin
+        arguments:
+            - @prestashop.adapter.legacy.context
+            - @security.token_storage
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    prestashop.security.admin.provider:
+        class: PrestaShopBundle\Security\Admin\EmployeeProvider
+        arguments:
+            - @prestashop.adapter.legacy.context
