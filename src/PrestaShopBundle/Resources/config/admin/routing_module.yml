@@ -1,19 +1,51 @@
 #All the module related routes
 
 admin_module_catalog:
-    path:     /catalog
+    path:     /catalog/{category}/{keyword}
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
-        
-admin_module_catalog_search:
-    path:     /catalog/search/{keyword}
-    methods:  [GET]
-    defaults:
+        category:
+        keyword:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::catalogAction
 
-admin_module_import:
-    path:     /import
+admin_module_manage:
+    path:     /manage/{category}/{keyword}
     methods:  [GET]
     defaults:
+        category:
+        keyword:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::manageAction
+        
+admin_module_manage_action:
+    path:     /manage/{action}/{module_name}
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
+    requirements:
+        action: install|uninstall|configure|enable|disable|reset|update
+        
+admin_module_manage_action_bulk:
+    path:     /manage/bulk/{action}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
+    requirements:
+        action: install|uninstall|configure|enable|disable|reset|update
+        
+admin_module_manage_update_all:
+    path:     /manage/update/all
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
+
+admin_module_import:
+    path:     /manage/import
+    methods:  [GET, POST]
+    defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::importAction
+        
+admin_module_notification:
+    path:     /notifications
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::notificationAction
