@@ -60,6 +60,7 @@ $(document).ready(function() {
 	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
 		updateFilterMenu();
 	});
+	// TODO : support du double slider. A faire dans le plugin !
 
 	/*
 	 * Sortable case when ordered by position ASC
