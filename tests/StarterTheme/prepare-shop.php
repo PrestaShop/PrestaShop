@@ -83,7 +83,7 @@ function hookModule($moduleName, $hookName)
     echo "- module `$moduleName` hooked to `$hookName`\n";
 }
 
-disableModule('blocklayered');
+// disableModule('blocklayered');
 hookModule('blocktopmenu', 'displayTop');
 hookModule('blocklanguages', 'displayNav');
 hookModule('blockcurrencies', 'displayNav');
