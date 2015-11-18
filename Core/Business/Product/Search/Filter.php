@@ -9,6 +9,7 @@ class Filter
     private $active;
     private $available;
     private $properties = [];
+    private $magnitude;
     private $value;
 
     public function setLabel($label)
@@ -53,5 +54,16 @@ class Filter
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function setMagnitude($magnitude)
+    {
+        $this->magnitude = (int)$magnitude;
+        return $this;
+    }
+
+    public function getMagnitude()
+    {
+        return $this->magnitude;
     }
 }
