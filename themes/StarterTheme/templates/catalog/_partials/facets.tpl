@@ -1,4 +1,4 @@
-<form id="search_filters">
+<div id="search_filters">
   {foreach from=$facets item="facet"}
     <section class="facet">
       <h1 class="h3">{$facet.label}</h1>
@@ -18,4 +18,4 @@
       {/if}
     </section>
   {/foreach}
-</form>
+</div>
