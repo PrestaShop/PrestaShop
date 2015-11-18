@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Provider\CategoryProductSearchProvider;
 
 class CategoryControllerCore extends ProductListingFrontController
@@ -72,6 +73,7 @@ class CategoryControllerCore extends ProductListingFrontController
         $query = new ProductSearchQuery;
         $query
             ->setIdCategory($this->category->id)
+            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
         return $query;
     }
