@@ -190,6 +190,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
+        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
+        /* @var $legacyContext LegacyContext */
+        $previewUrlFactory = $legacyContext->getFrontUrl('product') . '&id_product=';
         $totalCount = 0;
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
@@ -208,6 +211,7 @@ class ProductController extends FrameworkBundleAdminController
                 'admin_product_unit_action',
                 array('action' => 'duplicate', 'id' => $product['id_product'])
             );
+            $product['preview_url'] = $previewUrlFactory . $product['id_product'];
         }
 
         // Template vars injection

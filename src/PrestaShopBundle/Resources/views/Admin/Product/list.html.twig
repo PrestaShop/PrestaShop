@@ -5,31 +5,41 @@
                 <input type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}" />
             </td>
             <td>
-                {{ product.id_product }}
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.id_product }}</a>
             </td>
             <td>
-                {{ product.image|raw }}
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.image|raw }}</a>
             </td>
             <td>
-                <a href="{{ product.url|default('#') }}">{{ product.name|default('???') }}</a>
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.name|default('N/A'|trans({}, 'AdminTab')) }}</a>
             </td>
             <td>
-                {{ product.reference|default('???') }}
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.reference|default('N/A'|trans({}, 'AdminTab')) }}</a>
             </td>
             <td>
-                {{ product.name_category|default('') }}
+                <a href="{{ product.url|default('') }}#tab-step1">{{ product.name_category|default('') }}</a>
             </td>
             <td>
-                {{ product.price|default('???') }}
+                <a href="{{ product.url|default('') }}#tab-step2">{{ product.price|default('N/A'|trans({}, 'AdminTab')) }}</a>
             </td>
             <td>
-                {{ product.price_final|default('???') }}
+                <a href="{{ product.url|default('') }}#tab-step2">{{ product.price_final|default('N/A'|trans({}, 'AdminTab')) }}</a>
             </td>
             <td class="product-sav-quantity" productquantityvalue="{{ product.sav_quantity|default('') }}">
-                {{ product.sav_quantity|default('???') }}
+                <a href="{{ product.url|default('') }}#tab-step3">
+                    {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
+                        {{ product.sav_quantity }}
+                    {% else %}
+                        <span class="badge badge-danger">{{ product.sav_quantity|default('N/A'|trans({}, 'AdminTab')) }}</span>
+                    {% endif %}
+                </a>
             </td>
             <td>
-                {{ product.active|default(0) }}
+                {% if product.active|default(0) == 0 %}
+                    <i class="icon-remove"></i>
+                {% else %}
+                    <i class="icon-check"></i>
+                {% endif %}
             </td>
             {% if product.position is defined %}
                 <td {% if activate_drag_and_drop %}class="placeholder"{% endif %} style="cursor: pointer; cursor: hand;">
@@ -52,9 +62,10 @@
                         },
                         items: [
                             {
-                                "href": "#todo",
+                                "href": product.preview_url|default('#'),
+                                "target": "_blank",
                                 "icon": "icon-eye",
-                                "label": "Preview TODO"|trans({}, 'AdminTab')
+                                "label": "Preview"|trans({}, 'AdminTab')
                             },
                             {
                                 "onclick": "unitProductAction(this, 'duplicate');",
