@@ -10,6 +10,19 @@ class Facet
     private $filters = [];
     private $multipleSelectionAllowed = true;
 
+    public function toArray()
+    {
+        return [
+            'label'         => $this->label,
+            'type'          => $this->type,
+            'properties'    => $this->properties,
+            'filters'       => array_map(function (Filter $filter) {
+                return $filter->toArray();
+            }, $this->filters),
+            'multipleSelectionAllowed' => $this->multipleSelectionAllowed
+        ];
+    }
+
     public function setLabel($label)
     {
         $this->label = $label;
