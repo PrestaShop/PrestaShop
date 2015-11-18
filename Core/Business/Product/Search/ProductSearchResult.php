@@ -5,6 +5,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 class ProductSearchResult
 {
     private $products = [];
+    private $nextQuery;
 
     public function setProducts(array $products)
     {
@@ -15,5 +16,16 @@ class ProductSearchResult
     public function getProducts()
     {
         return $this->products;
+    }
+
+    public function setNextQuery(ProductSearchQuery $nextQuery)
+    {
+        $this->nextQuery = $nextQuery;
+        return $this;
+    }
+
+    public function getNextQuery()
+    {
+        return $this->nextQuery;
     }
 }
