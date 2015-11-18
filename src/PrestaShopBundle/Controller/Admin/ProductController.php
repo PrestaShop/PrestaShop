@@ -361,6 +361,14 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->info('Products deleted: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
+                case 'duplicate_all':
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->duplicateProductIdList($productIdList);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.'));
+                    $logger->info('Products duplicated: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
+                    break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Bulk action from ProductController received a bad parameter.');

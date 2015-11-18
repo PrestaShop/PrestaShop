@@ -138,6 +138,18 @@ function productColumnFilterReset(tr) {
 	$('form#product_catalog_list').submit();
 }
 
+function bulkDuplicateAction(items, postUrl, redirectUrl) {
+	// TODO !2: open popup with progressbar
+	// TODO: launch ajax calls with items by groups of X sub items.
+	// TODO: update progression
+	// TODO: if error, stops duplication (cancel next items) and show error message.
+	$(items).each(function(i) {
+		var id = $(this).val();
+		console.log(id);
+	})
+
+}
+
 function bulkProductAction(element, action) {
 	var form = $('form#product_catalog_list');
 	var postUrl = '';
@@ -166,6 +178,19 @@ function bulkProductAction(element, action) {
 			if (redirectUrl == '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
+			break;
+		case 'duplicate_all':
+			var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+			if (items.size() == 0) {
+				return false;
+			}
+			var urlHandler = $(element).closest('[bulkurl]');
+			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+			redirectUrl = urlHandler.attr('redirecturl');
+			if (items.size() > 1) {
+				// use a progressbar, because duplication is slow...
+				return bulkDuplicateAction(items, postUrl, redirectUrl);
+			} // else, just post like a single action.
 			break;
 		// unknown cases...
 		default:

@@ -96,6 +96,31 @@ class AdminProductDataUpdater implements ProductInterface
     }
 
     /* (non-PHPdoc)
+         * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProductIdList()
+         */
+    public function duplicateProductIdList(array $productIdList)
+    {
+        if (count($productIdList) < 1) {
+            throw new \Exception('AdminProductDataUpdater->duplicateProductIdList() should always receive at least one ID. Zero given.', 5005);
+        }
+
+        $failedIdList = array();
+        foreach ($productIdList as $productId) {
+            try {
+                $this->duplicateProduct($productId);
+            } catch (\Exception $e) {
+                $failedIdList[] = $productId;
+                continue;
+            }
+        }
+
+        if (count($failedIdList) > 0) {
+            throw new DataUpdateException('product', $failedIdList, 'Cannot duplicate many requested products', 5004);
+        }
+        return true;
+    }
+
+    /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::deleteProduct()
      */
     public function deleteProduct($productId)
