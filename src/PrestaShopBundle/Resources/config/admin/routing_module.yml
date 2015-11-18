@@ -17,7 +17,7 @@ admin_module_manage:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::manageAction
         
 admin_module_manage_action:
-    path:     /manage/{action}/{module_name}
+    path:     /manage/action/{action}/{module_name}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Configuration;
 use Context;
 use Country;
@@ -42,10 +43,24 @@ class AddonsDataProvider implements AddonsInterface
 {
     protected static $is_addons_up = true;
 
+    /** Does this function should be in a User related class ? **/
+    public function isAddonsAuthenticated()
+    {
+        $request = Request::createFromGlobals();
+
+        return $request->cookies->get('username_addons', false)
+            && $request->cookies->get('password_addons', false);
+    }
+
     public function request($action, $params = array())
     {
         if (!self::$is_addons_up) {
             return false;
+        }
+
+        // We merge the addons credentials
+        if ($this->isAddonsAuthenticated()) {
+            $params = array_merge($this->getAddonsCredentials(), $params);
         }
 
         $post_query_data = array(
@@ -93,12 +108,12 @@ class AddonsDataProvider implements AddonsInterface
                 $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
-                $post_data .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons))
-                    .'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+                $post_data .= '&method=listing&action=customer&username='.urlencode($params['username_addons'])
+                    .'&password='.urlencode($params['password_addons']);
                 break;
             case 'customer_themes':
-                $post_data .= '&method=listing&action=customer-themes&username='.urlencode(trim(Context::getContext()->cookie->username_addons))
-                    .'&password='.urlencode(trim(Context::getContext()->cookie->password_addons));
+                $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])
+                    .'&password='.urlencode($params['password_addons']);
                 break;
             case 'check_customer':
                 $post_data .= '&method=check_customer&username='.urlencode($params['username_addons']).'&password='.urlencode($params['password_addons']);
@@ -155,7 +170,7 @@ class AddonsDataProvider implements AddonsInterface
                 }
 
                 if (!empty($json_result->errors)) {
-                    throw new Exception('Error received from Addons: '.$json_result->errors);
+                    throw new Exception('Error received from Addons: '.json_encode($json_result->errors));
                 }
                 return $json_result;
             } else {
@@ -165,5 +180,16 @@ class AddonsDataProvider implements AddonsInterface
 
         self::$is_addons_up = false;
         throw new Exception('Cannot execute request '.$action.' to Addons');
+    }
+
+    /** Does this function should be in a User related class ? **/
+    protected function getAddonsCredentials()
+    {
+        $request = Request::createFromGlobals();
+
+        return [
+            'username_addons' => $request->cookies->get('username_addons'),
+            'password_addons' => $request->cookies->get('password_addons'),
+        ];
     }
 }

@@ -166,12 +166,16 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
 
+        $addons_provider = new AddonsDataProvider();
+
         if (!$this->catalog_categories || !$this->catalog_modules) {
             $params = ['format' => 'json'];
             $requests = ['must-have', 'service', 'partner', 'native'];
+            if ($addons_provider->isAddonsAuthenticated()) {
+                $requests[] = 'customer';
+            }
 
             try {
-                $addons_provider = new AddonsDataProvider();
                 $jsons = [];
                 foreach ($requests as $var => $action) {
                     $jsons = array_merge($jsons, (array) $addons_provider->request($action, $params));

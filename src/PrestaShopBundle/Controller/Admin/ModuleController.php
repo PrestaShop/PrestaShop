@@ -12,11 +12,8 @@ class ModuleController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function catalogAction(Request $request)
+    public function catalogAction(Request $request, $category = null, $keyword = null)
     {
-        $keyword_search = $request->attributes->get('keyword', null);
-        $category_search = $request->attributes->get('category', null);
-
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->container->get('prestashop.adapter.translator');
         // toolbarButtons
@@ -29,11 +26,11 @@ class ModuleController extends Controller
         );
 
         $filter = [];
-        if ($keyword_search !== null) {
-            $filter['search'] = $keyword_search;
+        if ($keyword !== null) {
+            $filter['search'] = $keyword;
         }
-        if ($category_search !== null) {
-            $filter['category'] = $category_search;
+        if ($category !== null) {
+            $filter['category'] = $category;
         }
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(

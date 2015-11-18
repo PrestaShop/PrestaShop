@@ -22,6 +22,8 @@ services:
         class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
     prestashop.core.admin.page_preference_interface:
         class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
+    prestashop.core.admin.data_provider.addons_interface:
+        class: PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface
     prestashop.core.admin.data_provider.module_interface:
         class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
 
@@ -48,6 +50,10 @@ services:
         public: false
     prestashop.adapter.admin.controller.category:
         class: PrestaShop\PrestaShop\Adapter\Category\AdminCategoryControllerWrapper
+    prestashop.adapter.admin.data_provider.addons:
+        class: PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider
+        decorates: prestashop.core.admin.data_provider.addons_interface
+        public: false
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
         arguments:
