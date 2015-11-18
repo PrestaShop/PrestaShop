@@ -41,4 +41,15 @@ class Facet
     {
         return $this->properties[$name];
     }
+
+    public function addFilter(Filter $filter)
+    {
+        $this->filters[] = $filter;
+        return $this;
+    }
+
+    public function getFilters()
+    {
+        return $this->filters;
+    }
 }
