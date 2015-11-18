@@ -4,6 +4,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
@@ -81,7 +82,20 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
     protected function renderFilters(array $facets)
     {
-        return 'DA FILTERS';
+        $facetsVar = array_map(function (Facet $facet) {
+            return $facet->toArray();
+        }, $facets);
+
+        $scope = $this->context->smarty->createData(
+            $this->context->smarty
+        );
+
+        $scope->assign('facets', $facetsVar);
+        $tpl = $this->context->smarty->createTemplate(
+            'catalog/_partials/facets.tpl',
+            $scope
+        );
+        return $tpl->fetch();
     }
 
     protected function assignProductSearchVariables()
