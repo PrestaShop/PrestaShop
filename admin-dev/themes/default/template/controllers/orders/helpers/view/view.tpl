@@ -331,7 +331,7 @@
 											<th><span class="title_box ">{l s='Date'}</span></th>
 											<th><span class="title_box ">{l s='Type'}</span></th>
 											<th><span class="title_box ">{l s='Carrier'}</span></th>
-											<th><span class="title_box "{l s='>Tracking number'}</span></th>
+											<th><span class="title_box ">{l s='Tracking number'}</span></th>
 										</tr>
 									</thead>
 									<tbody>
