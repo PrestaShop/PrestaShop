@@ -71,15 +71,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
     }
 
-    protected function runProductSearchQuery(ProductSearchQuery $query)
-    {
-        $provider = $this->getProductSearchProvider($query);
-        return $provider->runQuery(
-            $this->getProductSearchContext(),
-            $query
-        );
-    }
-
     protected function renderFilters(array $facets)
     {
         $facetsVar = array_map(function (Facet $facet) {
@@ -100,8 +91,20 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
     protected function assignProductSearchVariables()
     {
-        $result = $this->runProductSearchQuery(
-            $this->getProductSearchQuery()
+        $context    = $this->getProductSearchContext();
+        $query      = $this->getProductSearchQuery();
+        $provider   = $this->getProductSearchProvider($query);
+
+        $encodedFacets = Tools::getValue('q');
+        $provider->addFacetsToQuery(
+            $context,
+            $encodedFacets,
+            $query
+        );
+
+        $result   = $provider->runQuery(
+            $context,
+            $query
         );
 
         $products = $this->prepareProductsForTemplate(
