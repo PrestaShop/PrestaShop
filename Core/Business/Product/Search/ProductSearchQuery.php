@@ -1,6 +1,7 @@
 <?php
-
 namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
+
+use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 
 class ProductSearchQuery
 {
@@ -11,6 +12,13 @@ class ProductSearchQuery
     private $resultsPerPage = 12;
 
     private $page = 1;
+
+    private $sortOrder;
+
+    public function __construct()
+    {
+        $this->setSortOrder(new SortOrder('product', 'name', 'ASC'));
+    }
 
     public function setIdCategory($id_category)
     {
@@ -49,5 +57,16 @@ class ProductSearchQuery
     public function getPage()
     {
         return $this->page;
+    }
+
+    public function setSortOrder(SortOrder $sortOrder)
+    {
+        $this->sortOrder = $sortOrder;
+        return $this;
+    }
+
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
     }
 }
