@@ -41,4 +41,12 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
 
         return $result;
     }
+
+    public function addFacetsToQuery(
+        ProductSearchContext $context,
+        $encodedFacets,
+        ProductSearchQuery $query
+    ) {
+        // Nothing to do here.
+    }
 }
