@@ -12,6 +12,19 @@ class Filter
     private $magnitude;
     private $value;
 
+    public function toArray()
+    {
+        return [
+            'label'         => $this->label,
+            'type'          => $this->type,
+            'active'        => $this->active,
+            'available'     => $this->available,
+            'properties'    => $this->properties,
+            'magnitude'     => $this->magnitude,
+            'value'         => $this->value
+        ];
+    }
+
     public function setLabel($label)
     {
         $this->label = $label;
