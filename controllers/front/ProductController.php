@@ -434,12 +434,25 @@ class ProductControllerCore extends FrontController
                     $colors[$row['id_attribute']]['attributes_quantity'] += (int)$row['quantity'];
                 }
                 if (!isset($groups[$row['id_attribute_group']])) {
-                    $groups[$row['id_attribute_group']] = array(
-                        'group_name' => $row['group_name'],
-                        'name' => $row['public_group_name'],
-                        'group_type' => $row['group_type'],
-                        'default' => -1,
-                    );
+                    if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+                        $groups[$row['id_attribute_group']] = array(
+                            'meta_title' => $row['meta_title'],
+                            'url_name' => $row['url_name'],
+                            'group_url_name' => $row['group_url_name'],
+                            'group_meta_title' => $row['group_meta_title'],
+                            'group_name' => $row['group_name'],
+                            'name' => $row['public_group_name'],
+                            'group_type' => $row['group_type'],
+                            'default' => -1,
+                        );
+                    } else {
+                        $groups[$row['id_attribute_group']] = array(
+                            'group_name' => $row['group_name'],
+                            'name' => $row['public_group_name'],
+                            'group_type' => $row['group_type'],
+                            'default' => -1,
+                        );
+                    }
                 }
 
                 $groups[$row['id_attribute_group']]['attributes'][$row['id_attribute']] = $row['attribute_name'];
@@ -727,11 +740,11 @@ class ProductControllerCore extends FrontController
                 $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
             } else {
                 if ($row['reduction_type'] == 'amount') {
-					if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-						$row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
-					} else {
-						$row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-					}
+                    if (Product::$_taxCalculationMethod == PS_TAX_INC) {
+                        $row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
+                    } else {
+                        $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+                    }
                     $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;

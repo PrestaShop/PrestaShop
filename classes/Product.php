@@ -613,7 +613,7 @@ class ProductCore extends ObjectModel
      * Move a product inside its category
      * @param bool $way Up (1)  or Down (0)
      * @param int $position
-     * return boolean Update result
+     * @return boolean Update result
      */
     public function updatePosition($way, $position)
     {
@@ -1687,7 +1687,7 @@ class ProductCore extends ObjectModel
         }
 
         $total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT SUM(quantity) as quantity
+			SELECT SUM(quantity) AS quantity
 			FROM '._DB_PREFIX_.'stock_available
 			WHERE id_product = '.(int)$this->id.'
 			AND id_product_attribute <> 0 '
@@ -1982,8 +1982,8 @@ class ProductCore extends ObjectModel
         // List products features
         $features = Db::getInstance()->executeS('
 		SELECT p.*, f.*
-		FROM `'._DB_PREFIX_.'feature_product` as p
-		LEFT JOIN `'._DB_PREFIX_.'feature_value` as f ON (f.`id_feature_value` = p.`id_feature_value`)
+		FROM `'._DB_PREFIX_.'feature_product` AS p
+		LEFT JOIN `'._DB_PREFIX_.'feature_value` AS f ON (f.`id_feature_value` = p.`id_feature_value`)
 		WHERE `id_product` = '.(int)$this->id);
         foreach ($features as $tab) {
             // Delete product custom features
@@ -2032,7 +2032,7 @@ class ProductCore extends ObjectModel
             $product_attributes[] = (int)$combination['id_product_attribute'];
         }
 
-        $lang = Db::getInstance()->executeS('SELECT pac.id_product_attribute, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \''.pSQL($attribute_separator).'\') as attribute_designation
+        $lang = Db::getInstance()->executeS('SELECT pac.id_product_attribute, GROUP_CONCAT(agl.`name`, \''.pSQL($attribute_value_separator).'\',al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \''.pSQL($attribute_separator).'\') AS attribute_designation
 				FROM `'._DB_PREFIX_.'product_attribute_combination` pac
 				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
 				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
@@ -2304,9 +2304,9 @@ class ProductCore extends ObjectModel
 
         $sql = new DbQuery();
         $sql->select(
-            'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
+            'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 			pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
-			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new'
+			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" AS new'
         );
 
         $sql->from('product', 'p');
@@ -2553,7 +2553,7 @@ class ProductCore extends ObjectModel
 
         $sql = '
 		SELECT
-			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`,
+			p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity, pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`,
 			IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 			pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`,
 			pl.`name`, image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name,
@@ -2988,7 +2988,7 @@ class ProductCore extends ObjectModel
                 $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
                 $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product = p.id_product AND product_attribute_shop.id_shop = '.(int)$id_shop.')');
             } else {
-                $sql->select('0 as id_product_attribute');
+                $sql->select('0 AS id_product_attribute');
             }
 
             $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -3418,7 +3418,7 @@ class ProductCore extends ObjectModel
         }
 
         $mini = Db::getInstance()->getRow('
-		SELECT MIN(pa.id_product_attribute) as `id_attr`
+		SELECT MIN(pa.id_product_attribute) AS `id_attr`
 		FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product` = '.(int)$this->id
@@ -3483,25 +3483,50 @@ class ProductCore extends ObjectModel
         if (!Combination::isFeatureActive()) {
             return array();
         }
-        $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
-					a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
-					IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
-					product_attribute_shop.`default_on`, pa.`reference`, product_attribute_shop.`unit_price_impact`,
-					product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
-				FROM `'._DB_PREFIX_.'product_attribute` pa
-				'.Shop::addSqlAssociation('product_attribute', 'pa').'
-				'.Product::sqlStock('pa', 'pa').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
-				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
-				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
-				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
-				'.Shop::addSqlAssociation('attribute', 'a').'
-				WHERE pa.`id_product` = '.(int)$this->id.'
-					AND al.`id_lang` = '.(int)$id_lang.'
-					AND agl.`id_lang` = '.(int)$id_lang.'
-				GROUP BY id_attribute_group, id_product_attribute
-				ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+        if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+            $sql = 'SELECT `ag`.`id_attribute_group`, `ag`.`is_color_group`, `agl`.`name` AS `group_name`, `agl`.`public_name` AS `public_group_name`,
+                        `a`.`id_attribute`, `al`.`name` AS `attribute_name`, `a`.`color` AS `attribute_color`, `product_attribute_shop`.`id_product_attribute`,
+                        IFNULL(`stock`.`quantity`, 0) AS `quantity`, `product_attribute_shop`.`price`, `product_attribute_shop`.`ecotax`, `product_attribute_shop`.`weight`,
+                        `product_attribute_shop`.`default_on`, `pa`.`reference`, `product_attribute_shop`.`unit_price_impact`,
+                        `product_attribute_shop`.`minimal_quantity`, `product_attribute_shop`.`available_date`, `ag`.`group_type`,
+                        `lialv`.`url_name`, `lialv`.`meta_title`, `liaglv`.`url_name` AS `group_url_name`, `liaglv`.`meta_title` AS `group_meta_title`
+                    FROM `'._DB_PREFIX_.'product_attribute` `pa`
+                    '.Shop::addSqlAssociation('product_attribute', 'pa').'
+                    '.Product::sqlStock('pa', 'pa').'
+                    LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
+                    LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_lang_value` lialv ON (a.`id_attribute` = lialv.`id_attribute` AND lialv.`id_lang` = '.(int)$id_lang.')
+                    LEFT JOIN `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` liaglv ON (ag.`id_attribute_group` = liaglv.`id_attribute_group` AND liaglv.`id_lang` = '.(int)$id_lang.')
+                    '.Shop::addSqlAssociation('attribute', 'a').'
+                    WHERE pa.`id_product` = '.(int)$this->id.'
+                        AND al.`id_lang` = '.(int)$id_lang.'
+                        AND agl.`id_lang` = '.(int)$id_lang.'
+                    GROUP BY `id_attribute_group`, `id_product_attribute`
+                    ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+        } else {
+            $sql = 'SELECT `ag`.`id_attribute_group`, `ag`.`is_color_group`, `agl`.`name` AS `group_name`, `agl`.`public_name` AS `public_group_name`,
+                        `a`.`id_attribute`, `al`.`name` AS `attribute_name`, `a`.`color` AS `attribute_color`, `product_attribute_shop`.`id_product_attribute`,
+                        IFNULL(`stock`.`quantity`, 0) AS `quantity`, `product_attribute_shop`.`price`, `product_attribute_shop`.`ecotax`, `product_attribute_shop`.`weight`,
+                        `product_attribute_shop`.`default_on`, `pa`.`reference`, `product_attribute_shop`.`unit_price_impact`,
+                        `product_attribute_shop`.`minimal_quantity`, `product_attribute_shop`.`available_date`, `ag`.`group_type`
+                    FROM `'._DB_PREFIX_.'product_attribute` `pa`
+                    '.Shop::addSqlAssociation('product_attribute', 'pa').'
+                    '.Product::sqlStock('pa', 'pa').'
+                    LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
+                    LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
+                    '.Shop::addSqlAssociation('attribute', 'a').'
+                    WHERE pa.`id_product` = '.(int)$this->id.'
+                        AND al.`id_lang` = '.(int)$id_lang.'
+                        AND agl.`id_lang` = '.(int)$id_lang.'
+                    GROUP BY `id_attribute_group`, `id_product_attribute`
+                    ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+        }
         return Db::getInstance()->executeS($sql);
     }
 
@@ -3555,9 +3580,9 @@ class ProductCore extends ObjectModel
      */
     public function getAccessories($id_lang, $active = true)
     {
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
+        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
-					image_shop.`id_image` id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
+					image_shop.`id_image` id_image, il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default, IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -4433,16 +4458,30 @@ class ProductCore extends ObjectModel
             return array();
         }
         if (!array_key_exists($id_product.'-'.$id_lang, self::$_frontFeaturesCache)) {
-            self::$_frontFeaturesCache[$id_product.'-'.$id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT name, value, pf.id_feature
-				FROM '._DB_PREFIX_.'feature_product pf
-				LEFT JOIN '._DB_PREFIX_.'feature_lang fl ON (fl.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
-				LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fvl.id_feature_value = pf.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
-				LEFT JOIN '._DB_PREFIX_.'feature f ON (f.id_feature = pf.id_feature AND fl.id_lang = '.(int)$id_lang.')
-				'.Shop::addSqlAssociation('feature', 'f').'
-				WHERE pf.id_product = '.(int)$id_product.'
-				ORDER BY f.position ASC'
-            );
+            if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
+                self::$_frontFeaturesCache[$id_product.'-'.$id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+					SELECT `name`, `value`, `pf`.`id_feature`, `liflv`.`url_name`, `liflv`.`meta_title`
+					FROM `'._DB_PREFIX_.'feature_product` `pf`
+					LEFT JOIN `'._DB_PREFIX_.'feature_lang` `fl` ON (`fl`.`id_feature` = `pf`.`id_feature` AND `fl`.`id_lang` = '.(int)$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` `fvl` ON (`fvl`.`id_feature_value` = `pf`.`id_feature_value` AND `fvl`.`id_lang` = '.(int)$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'feature` `f` ON (`f`.`id_feature` = `pf`.`id_feature` AND `fl`.`id_lang` = '.(int)$id_lang.')
+					LEFT JOIN `'._DB_PREFIX_.'layered_indexable_feature_lang_value` `liflv` ON (`f`.`id_feature` = `liflv`.`id_feature` AND `liflv`.`id_lang` = '.(int)$id_lang.')
+					'.Shop::addSqlAssociation('feature', 'f').'
+					WHERE pf.`id_product` = '.(int)$id_product.'
+					ORDER BY f.`position` ASC'
+                );
+            } else {
+                self::$_frontFeaturesCache[$id_product.'-'.$id_lang] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+                    SELECT `name`, value, `pf`.`id_feature`
+                    FROM '._DB_PREFIX_.'feature_product `pf`
+                    LEFT JOIN '._DB_PREFIX_.'feature_lang `fl` ON (`fl`.`id_feature` = `pf`.`id_feature` AND `fl`.`id_lang` = '.(int)$id_lang.')
+                    LEFT JOIN '._DB_PREFIX_.'feature_value_lang `fvl` ON (`fvl`.`id_feature_value` = `pf`.`id_feature_value` AND `fvl`.`id_lang` = '.(int)$id_lang.')
+                    LEFT JOIN '._DB_PREFIX_.'feature `f` ON (`f`.`id_feature` = `pf`.`id_feature` AND `fl`.`id_lang` = '.(int)$id_lang.')
+                    '.Shop::addSqlAssociation('feature', 'f').'
+                    WHERE pf.`id_product` = '.(int)$id_product.'
+                    ORDER BY f.`position` ASC'
+                );
+            }
         }
         return self::$_frontFeaturesCache[$id_product.'-'.$id_lang];
     }
@@ -5281,7 +5320,7 @@ class ProductCore extends ObjectModel
     */
     public function getWsProductOptionValues()
     {
-        $result = Db::getInstance()->executeS('SELECT DISTINCT pac.id_attribute as id
+        $result = Db::getInstance()->executeS('SELECT DISTINCT pac.id_attribute AS id
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = pa.id_product_attribute)
@@ -5381,7 +5420,7 @@ class ProductCore extends ObjectModel
     public function getWsImages()
     {
         return Db::getInstance()->executeS('
-		SELECT i.`id_image` as id
+		SELECT i.`id_image` AS id
 		FROM `'._DB_PREFIX_.'image` i
 		'.Shop::addSqlAssociation('image', 'i').'
 		WHERE i.`id_product` = '.(int)$this->id.'
@@ -5398,7 +5437,7 @@ class ProductCore extends ObjectModel
     public function getWsTags()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_tag` as id
+		SELECT `id_tag` AS id
 		FROM `'._DB_PREFIX_.'product_tag`
 		WHERE `id_product` = '.(int)$this->id);
     }
@@ -5509,7 +5548,7 @@ class ProductCore extends ObjectModel
         // if blocklayered module is installed we check if user has set custom attribute name
         if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
-			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `name`
+			SELECT DISTINCT la.`id_attribute`, la.`url_name` AS `name`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 				ON (a.`id_attribute` = pac.`id_attribute`)
@@ -5528,7 +5567,7 @@ class ProductCore extends ObjectModel
                     $tab_id_attribute[] = $attribute['id_attribute'];
 
                     $group = Db::getInstance()->executeS('
-					SELECT a.`id_attribute`, g.`id_attribute_group`, g.`url_name` as `group`
+					SELECT a.`id_attribute`, g.`id_attribute_group`, g.`url_name` AS `group`
 					FROM `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` g
 					LEFT JOIN `'._DB_PREFIX_.'attribute` a
 						ON (a.`id_attribute_group` = g.`id_attribute_group`)
@@ -5537,7 +5576,7 @@ class ProductCore extends ObjectModel
 					AND g.`url_name` IS NOT NULL AND g.`url_name` != \'\'');
                     if (empty($group)) {
                         $group = Db::getInstance()->executeS('
-						SELECT g.`id_attribute_group`, g.`name` as `group`
+						SELECT g.`id_attribute_group`, g.`name` AS `group`
 						FROM `'._DB_PREFIX_.'attribute_group_lang` g
 						LEFT JOIN `'._DB_PREFIX_.'attribute` a
 							ON (a.`id_attribute_group` = g.`id_attribute_group`)
@@ -5548,7 +5587,7 @@ class ProductCore extends ObjectModel
                     $result[] = array_merge($attribute, $group[0]);
                 }
                 $values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` AS `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
@@ -5568,7 +5607,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-			SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`
+			SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` AS `group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
@@ -5598,7 +5637,7 @@ class ProductCore extends ObjectModel
         // if blocklayered module is installed we check if user has set custom attribute name
         if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered')) {
             $nb_custom_values = Db::getInstance()->executeS('
-			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `attribute`
+			SELECT DISTINCT la.`id_attribute`, la.`url_name` AS `attribute`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 				ON (a.`id_attribute` = pac.`id_attribute`)
@@ -5616,7 +5655,7 @@ class ProductCore extends ObjectModel
                     $tab_id_attribute[] = $attribute['id_attribute'];
 
                     $group = Db::getInstance()->executeS('
-					SELECT g.`id_attribute_group`, g.`url_name` as `group`
+					SELECT g.`id_attribute_group`, g.`url_name` AS `group`
 					FROM `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` g
 					LEFT JOIN `'._DB_PREFIX_.'attribute` a
 						ON (a.`id_attribute_group` = g.`id_attribute_group`)
@@ -5625,7 +5664,7 @@ class ProductCore extends ObjectModel
 					AND g.`url_name` IS NOT NULL AND g.`url_name` != \'\'');
                     if (empty($group)) {
                         $group = Db::getInstance()->executeS('
-						SELECT g.`id_attribute_group`, g.`name` as `group`
+						SELECT g.`id_attribute_group`, g.`name` AS `group`
 						FROM `'._DB_PREFIX_.'attribute_group_lang` g
 						LEFT JOIN `'._DB_PREFIX_.'attribute` a
 							ON (a.`id_attribute_group` = g.`id_attribute_group`)
@@ -5636,7 +5675,7 @@ class ProductCore extends ObjectModel
                     $result[] = array_merge($attribute, $group[0]);
                 }
                 $values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` AS `attribute`, agl.`name` AS `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5653,7 +5692,7 @@ class ProductCore extends ObjectModel
                 $result = array_merge($values_not_custom, $result);
             } else {
                 $result = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` AS `attribute`, agl.`name` AS `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5669,7 +5708,7 @@ class ProductCore extends ObjectModel
             }
         } else {
             $result = Db::getInstance()->executeS('
-			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` AS `attribute`, agl.`name` AS `group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5727,9 +5766,9 @@ class ProductCore extends ObjectModel
 
         // selects different names, if it is a combination
         if ($id_product_attribute) {
-            $query->select('IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name');
+            $query->select('IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) AS name');
         } else {
-            $query->select('DISTINCT pl.name as name');
+            $query->select('DISTINCT pl.name AS name');
         }
 
         // adds joins & where clauses for combinations
@@ -6055,7 +6094,7 @@ class ProductCore extends ObjectModel
 
     public function getWsProductBundle()
     {
-        return Db::getInstance()->executeS('SELECT id_product_item as id, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$this->id);
+        return Db::getInstance()->executeS('SELECT id_product_item AS id, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$this->id);
     }
 
     public function setWsType($type_str)
