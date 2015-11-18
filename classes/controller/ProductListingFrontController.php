@@ -79,6 +79,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
     }
 
+    protected function renderFilters(array $facets)
+    {
+        return 'DA FILTERS';
+    }
+
     protected function assignProductSearchVariables()
     {
         $result = $this->runProductSearchQuery(
@@ -89,10 +94,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $result->getProducts()
         );
 
+        $ps_search_filters = $this->renderFilters(
+            $result->getNextQuery()->getFacets()
+        );
+
         $this->context->smarty->assign([
-            'products'      => $products,
-            'sort_options'  => [],
-            'pagination'    => []
+            'products'          => $products,
+            'sort_options'      => [],
+            'pagination'        => [],
+            'ps_search_filters' => $ps_search_filters
         ]);
     }
 
