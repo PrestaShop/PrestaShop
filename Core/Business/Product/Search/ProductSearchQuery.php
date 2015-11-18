@@ -2,6 +2,7 @@
 namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 
 class ProductSearchQuery
 {
@@ -14,6 +15,8 @@ class ProductSearchQuery
     private $page = 1;
 
     private $sortOrder;
+
+    private $facets = [];
 
     public function __construct()
     {
@@ -68,5 +71,30 @@ class ProductSearchQuery
     public function getSortOrder()
     {
         return $this->sortOrder;
+    }
+
+    public function addFacet(Facet $facet)
+    {
+        $this->facets[] = $facet;
+        return $this;
+    }
+
+    public function getFacets()
+    {
+        return $this->facets;
+    }
+
+    public function setFacets(array $facets)
+    {
+        $this->facets = [];
+        // We're not directly replacing the $this->facets
+        // array because we want to ensure that $facet
+        // is of type Facet.
+        // Performance impact negligible because $facets
+        // is always a small array.
+        foreach ($facets as $facet) {
+            $this->addFacet($facet);
+        }
+        return $this;
     }
 }
