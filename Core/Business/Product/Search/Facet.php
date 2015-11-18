@@ -8,6 +8,7 @@ class Facet
     private $type;
     private $properties = [];
     private $filters = [];
+    private $multipleSelectionAllowed = true;
 
     public function setLabel($label)
     {
@@ -51,5 +52,16 @@ class Facet
     public function getFilters()
     {
         return $this->filters;
+    }
+
+    public function setMultipleSelectionAllowed($yes = true)
+    {
+        $this->multipleSelectionAllowed = $yes;
+        return $this;
+    }
+
+    public function isMultipleSelectionAllowed()
+    {
+        return $this->multipleSelectionAllowed;
     }
 }
