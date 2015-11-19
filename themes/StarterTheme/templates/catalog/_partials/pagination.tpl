@@ -6,6 +6,7 @@
           <span class="spacer">&hellip;</span>
         {else}
           <form method="GET">
+            <input type="hidden" name="q" value="{$ps_search_encoded_facets}">
             <button type="submit" name="page" value="{$page.page}" {if !$page.clickable} disabled {/if}>
               {if $page.type === 'previous'}
                 {l s='Previous'}
