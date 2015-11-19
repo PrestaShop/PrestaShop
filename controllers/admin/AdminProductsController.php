@@ -3116,7 +3116,7 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
             // Manage defaut supplier for product
-            if ($new_default_supplier != $product->id_supplier) {
+            if ($this->object && $new_default_supplier != $product->id_supplier) {
                 $this->object->id_supplier = $new_default_supplier;
                 $this->object->update();
             }
