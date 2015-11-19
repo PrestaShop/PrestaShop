@@ -74,7 +74,27 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function renderFilters(array $facets)
     {
         $facetsVar = array_map(function (Facet $facet) {
-            return $facet->toArray();
+            $facetsArray                    = $facet->toArray();
+            $requestURIWithoutParamaters    = explode('?', $_SERVER['REQUEST_URI']);
+
+            foreach ($facetsArray['filters'] as &$filter) {
+                $params = [];
+                $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$requestURIWithoutParamaters[0];
+                parse_str($_SERVER["QUERY_STRING"], $params);
+
+                if ($filter['nextEncodedFacets']) {
+                    $params['q'] = $filter['nextEncodedFacets'];
+                }
+
+                $queryString = urldecode(http_build_query($params));
+
+                if ($queryString) {
+                    $url .= "?$queryString";
+                }
+
+                $filter['nextEncodedFacetsURL'] = $url;
+            }
+            return $facetsArray;
         }, $facets);
 
         $scope = $this->context->smarty->createData(
