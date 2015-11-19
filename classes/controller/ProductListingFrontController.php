@@ -94,6 +94,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
                 $filter['nextEncodedFacetsURL'] = $url;
             }
+            unset($filter);
             return $facetsArray;
         }, $facets);
 
