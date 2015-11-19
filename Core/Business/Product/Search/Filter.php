@@ -79,4 +79,15 @@ class Filter
     {
         return $this->magnitude;
     }
+
+    public function setActive($active = true)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
 }
