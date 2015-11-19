@@ -8,7 +8,7 @@
             <li>
               <label>
                 <input type="checkbox">
-                {$filter.label}
+                <a href="{$filter.nextEncodedFacetsURL}">{$filter.label}</a>
               </label>
             </li>
           {/foreach}
