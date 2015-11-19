@@ -95,6 +95,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $query      = $this->getProductSearchQuery();
         $provider   = $this->getProductSearchProvider($query);
 
+        $query
+            ->setResultsPerPage(Configuration::get('PS_PRODUCTS_PER_PAGE'))
+            ->setPage(max((int)Tools::getValue('page'), 1))
+        ;
+
         $encodedFacets = Tools::getValue('q');
         $provider->addFacetsToQuery(
             $context,
@@ -115,10 +120,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $result->getNextQuery()->getFacets()
         );
 
+        $pagination = $result->getPaginationResult()->buildLinks();
+
         $this->context->smarty->assign([
             'products'          => $products,
             'sort_options'      => [],
-            'pagination'        => [],
+            'pagination'        => $pagination,
             'ps_search_filters' => $ps_search_filters
         ]);
     }
