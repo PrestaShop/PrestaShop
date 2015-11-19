@@ -117,6 +117,13 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => '_limit'
             )
         ));
+        $jumpPageUrl = $this->generateUrl($routeName, array_merge(
+            $callerParameters,
+            array(
+                'offset' => 999999,
+                'limit' => $limit
+            )
+        ));
 
         // Template vars injection
         return array(
@@ -130,7 +137,8 @@ class CommonController extends FrameworkBundleAdminController
             'current_page' => $currentPage,
             'page_count' => $pageCount,
             'next_url' => $nextPageUrl,
-            'last_url' => $lastPageUrl
+            'last_url' => $lastPageUrl,
+            'jump_page_url' => $jumpPageUrl,
         );
     }
 
