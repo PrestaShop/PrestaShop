@@ -13,5 +13,10 @@
         {/block}
       {/foreach}
     </div>
+
+    {block name="pagination"}
+      {include './_partials/pagination.tpl' pagination=$pagination}
+    {/block}
+
   </section>
 {/if}

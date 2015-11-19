@@ -7,6 +7,7 @@ class ProductSearchResult
     private $products = [];
     private $nextQuery;
     private $encodedFacets;
+    private $paginationResult;
 
     public function setProducts(array $products)
     {
@@ -39,5 +40,16 @@ class ProductSearchResult
     public function getEncodedFacets()
     {
         return $this->encodedFacets;
+    }
+
+    public function setPaginationResult(PaginationResult $paginationResult)
+    {
+        $this->paginationResult = $paginationResult;
+        return $this;
+    }
+
+    public function getPaginationResult()
+    {
+        return $this->paginationResult;
     }
 }
