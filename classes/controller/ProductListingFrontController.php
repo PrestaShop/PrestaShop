@@ -143,7 +143,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'products'          => $products,
             'sort_options'      => [],
             'pagination'        => $pagination,
-            'ps_search_filters' => $ps_search_filters
+            'ps_search_filters' => $ps_search_filters,
+            'ps_search_encoded_facets' => $result->getEncodedFacets()
         ]);
     }
 
