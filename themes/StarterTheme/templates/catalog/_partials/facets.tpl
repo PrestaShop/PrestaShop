@@ -7,7 +7,7 @@
           {foreach from=$facet.filters item="filter"}
             <li>
               <label>
-                <input type="checkbox">
+                <input type="checkbox" {if $filter.active } checked {/if}>
                 <a href="{$filter.nextEncodedFacetsURL}">{$filter.label}</a>
               </label>
             </li>
