@@ -6,6 +6,7 @@ class ProductSearchResult
 {
     private $products = [];
     private $nextQuery;
+    private $encodedFacets;
 
     public function setProducts(array $products)
     {
@@ -27,5 +28,16 @@ class ProductSearchResult
     public function getNextQuery()
     {
         return $this->nextQuery;
+    }
+
+    public function setEncodedFacets($encodedFacets)
+    {
+        $this->encodedFacets = $encodedFacets;
+        return $this;
+    }
+
+    public function getEncodedFacets()
+    {
+        return $this->encodedFacets;
     }
 }
