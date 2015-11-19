@@ -144,12 +144,22 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //map suppliers
-        if (!empty($form_data['suppliers'])) {
+        $form_data['supplier_loaded'] = 1;
+        if (!empty($form_data['id_product']) && !empty($form_data['suppliers'])) {
             foreach ($form_data['suppliers'] as $id_supplier) {
                 $form_data['check_supplier_'.$id_supplier] = 1;
+
+                //map supplier combinations
+                foreach ($form_data['supplier_combination_'.$id_supplier] as $combination) {
+                    $key = $form_data['id_product'].'_'.$combination['id_product_attribute'].'_'.$id_supplier;
+                    $form_data['supplier_reference_'.$key] = $combination['supplier_reference'];
+                    $form_data['product_price_'.$key] = $combination['product_price'];
+                    $form_data['product_price_currency_'.$key] = $combination['product_price_currency'];
+
+                    unset($form_data['supplier_combination_'.$id_supplier]);
+                }
             }
         }
-        $form_data['supplier_loaded'] = 1;
 
         //map display options
         foreach ($form_data['display_options'] as $option => $value) {
@@ -361,7 +371,47 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             ]
         ];
 
+        //Inject data form for supplier combinations
+        $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations());
+
         return $form_data;
+    }
+
+    /**
+     * Generate form supplier/combinations references
+     *
+     * @return array filled datas form references combinations
+     */
+    private function getDataSuppliersCombinations()
+    {
+        $combinations = $this->product->getAttributesResume($this->locales[0]['id_lang']);
+        if (!$combinations || empty($combinations)) {
+            $combinations[] = array(
+                'id_product' => $this->product->id,
+                'id_product_attribute' => 0,
+                'attribute_designation' => $this->product->name[$this->locales[0]['id_lang']]
+            );
+        }
+
+        //for each supplier, generate combinations list
+        $datasSuppliersCombinations = [];
+
+        foreach ($this->supplierAdapter->getProductSuppliers($this->product->id) as $supplier) {
+            foreach ($combinations as $combination) {
+                $productSupplierData = $this->supplierAdapter->getProductSupplierData($this->product->id, $combination['id_product_attribute'], $supplier->id_supplier);
+                $datasSuppliersCombinations['supplier_combination_'.$supplier->id_supplier][] = [
+                    'label' => $combination['attribute_designation'],
+                    'supplier_reference' => isset($productSupplierData['product_supplier_reference']) ? $productSupplierData['product_supplier_reference'] : '',
+                    'product_price' => isset($productSupplierData['price']) ? $productSupplierData['price'] : 0,
+                    'product_price_currency' => isset($productSupplierData['id_currency']) ? $productSupplierData['id_currency'] : 1,
+                    'supplier_id' => $supplier->id_supplier,
+                    'product_id' => $this->product->id,
+                    'id_product_attribute' => $combination['id_product_attribute'],
+                ];
+            }
+        }
+
+        return $datasSuppliersCombinations;
     }
 
     /**
