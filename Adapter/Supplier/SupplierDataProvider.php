@@ -52,12 +52,38 @@ class SupplierDataProvider
      * Get product suppliers
      *
      * @param int $id_product
+     * @param bool $group_by_supplier
      *
      * @return array Suppliers
      */
-    public function getProductSuppliers($id_product)
+    public function getProductSuppliers($id_product, $group_by_supplier = true)
     {
-        $suppliersCollection = \ProductSupplier::getSupplierCollection($id_product);
+        $suppliersCollection = \ProductSupplier::getSupplierCollection($id_product, $group_by_supplier);
         return $suppliersCollection->getResults();
+    }
+
+    /**
+     * For a given product and supplier, gets the product supplier datas
+     *
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $id_supplier
+     * @return array
+     */
+    public function getProductSupplierData($id_product, $id_product_attribute, $id_supplier)
+    {
+        return \ProductSupplier::getProductSupplierData($id_product, $id_product_attribute, $id_supplier);
+    }
+
+    /**
+     * Get supplier name by id
+     *
+     * @param int $id_supplier
+     *
+     * @return string
+     */
+    public function getNameById($id_supplier)
+    {
+        return \Supplier::getNameById($id_supplier);
     }
 }

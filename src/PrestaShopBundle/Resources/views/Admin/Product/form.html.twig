@@ -278,7 +278,15 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
-                    {{ form_widget(form.step6) }}
+                    {{ form_row(form.step6.visibility) }}
+                    {{ form_row(form.step6.display_options) }}
+                    {{ form_row(form.step6.suppliers) }}
+                    {{ form_row(form.step6.default_supplier) }}
+
+                    <div id="supplier_combination_collection" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form') }}">
+                        {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
+                    </div>
+
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
                         {% if hookcount('displayAdminProductsExtra') > 0 %}
