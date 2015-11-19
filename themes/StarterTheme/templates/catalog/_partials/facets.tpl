@@ -8,7 +8,7 @@
             <li>
               <label>
                 <input type="checkbox" {if $filter.active } checked {/if}>
-                <a href="{$filter.nextEncodedFacetsURL}">{$filter.label}</a>
+                <a href="{$filter.nextEncodedFacetsURL}">{$filter.label} <span class="magnitude">{$filter.magnitude}</span></a>
               </label>
             </li>
           {/foreach}
