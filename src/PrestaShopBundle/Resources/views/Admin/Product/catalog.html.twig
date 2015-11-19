@@ -235,4 +235,24 @@
         </form>
     </div>
 
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+        'id': "catalog_duplication_modal",
+        'title': "Duplication in progress..."|trans,
+        'closable': true,
+        'progressbar': {
+            'id': "catalog_duplication_progression",
+            'label': "Duplicating..."|trans
+        },
+        'actions': [],
+    } %}
+        {% block content %}
+            <div class="modal-body">
+                {{ 'Duplication can take time. Please wait...'|trans }}
+                <br/>
+                <span id="catalog_duplication_failure" style="display: none;color: darkred;">
+                    {{ 'Duplication failed!'|trans }}
+                </span>
+            </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

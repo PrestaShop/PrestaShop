@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
@@ -381,7 +382,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // redirect after success
-        return $this->redirect($request->request->get('redirect_url'), 302);
+        if ($request->request->has('redirect_url')) {
+            return $this->redirect($request->request->get('redirect_url'), 302);
+        }
+        return new Response(json_encode(array('result' => 'ok')));
     }
 
     /**

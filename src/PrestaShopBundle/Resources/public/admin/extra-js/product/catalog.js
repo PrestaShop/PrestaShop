@@ -138,16 +138,50 @@ function productColumnFilterReset(tr) {
 	$('form#product_catalog_list').submit();
 }
 
-function bulkDuplicateAction(items, postUrl, redirectUrl) {
-	// TODO !2: open popup with progressbar
-	// TODO: launch ajax calls with items by groups of X sub items.
-	// TODO: update progression
-	// TODO: if error, stops duplication (cancel next items) and show error message.
-	$(items).each(function(i) {
-		var id = $(this).val();
-		console.log(id);
-	})
+function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
+	var itemsCount = allItems.length;
+	var currentItemIdx = 0;
+	if (itemsCount < 1) return;
+	$('#catalog_duplication_modal').modal('show');
+	var details = $('#catalog_duplication_progression .progress-details-text');
 
+	// re-init popup
+	details.html(details.attr('default-value'));
+	$('#catalog_duplication_progression .progress-bar').css('width', '0%');
+	$('#catalog_duplication_progression .progress-bar span').html('');
+	$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-danger');
+	$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-success');
+	$('#catalog_duplication_failure').hide();
+
+	// call duplication in ajax. Recursive with inner function
+	var duplicateCall = function(items, successCallback, errorCallback) {
+		if (items.length == 0) return;
+		var item0 = $(items.shift()).val();
+		currentItemIdx++;
+
+		details.html(details.attr('default-value').replace(/\.\.\./, '')+' (#'+item0+')');
+		$.ajax({
+			type: "POST",
+			url: postUrl,
+			data: { bulk_action_selected_products: [item0] },
+			success: function(data, status) {
+				$('#catalog_duplication_progression .progress-bar').css('width', (currentItemIdx*100/itemsCount)+'%');
+				$('#catalog_duplication_progression .progress-bar span').html(currentItemIdx+' / '+itemsCount);
+				if (items.length > 0) duplicateCall(items, successCallback, errorCallback);
+				else successCallback();
+			},
+			error: errorCallback,
+			dataType: 'json'
+		});
+	};
+
+	duplicateCall(allItems.toArray(), function() {
+		window.location.href = redirectUrl;
+	}, function() {
+		$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-success');
+		$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-danger');
+		$('#catalog_duplication_failure').show();
+	});
 }
 
 function bulkProductAction(element, action) {
