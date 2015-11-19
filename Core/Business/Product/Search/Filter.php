@@ -11,17 +11,19 @@ class Filter
     private $properties = [];
     private $magnitude;
     private $value;
+    private $nextEncodedFacets;
 
     public function toArray()
     {
         return [
-            'label'         => $this->label,
-            'type'          => $this->type,
-            'active'        => $this->active,
-            'available'     => $this->available,
-            'properties'    => $this->properties,
-            'magnitude'     => $this->magnitude,
-            'value'         => $this->value
+            'label'             => $this->label,
+            'type'              => $this->type,
+            'active'            => $this->active,
+            'available'         => $this->available,
+            'properties'        => $this->properties,
+            'magnitude'         => $this->magnitude,
+            'value'             => $this->value,
+            'nextEncodedFacets' => $this->nextEncodedFacets
         ];
     }
 
@@ -89,5 +91,16 @@ class Filter
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function setNextEncodedFacets($nextEncodedFacets)
+    {
+        $this->nextEncodedFacets = $nextEncodedFacets;
+        return $this;
+    }
+
+    public function getNextEncodedFacets()
+    {
+        return $this->nextEncodedFacets;
     }
 }
