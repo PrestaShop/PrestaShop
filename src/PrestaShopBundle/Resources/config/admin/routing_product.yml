@@ -54,7 +54,7 @@ admin_product_bulk_action:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::bulkAction
     requirements:
-        action: activate_all|deactivate_all|delete_all
+        action: activate_all|deactivate_all|delete_all|duplicate_all
 
 admin_product_unit_action:
     path:     /unit/{action}/{id}
