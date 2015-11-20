@@ -26,6 +26,7 @@
 $(document).ready(function() {
 	form.init();
 	nav.init();
+	redirectionStrategy.init();
 	featuresCollection.init();
 	defaultCategory.init();
 	nestedCategories.init();
@@ -45,6 +46,58 @@ $(document).ready(function() {
 		}
 	});
 });
+
+/**
+ * Redirection strategy management
+ */
+var redirectionStrategy = (function() {
+	var redirectStrategyElems = $('.js-redirect-strategy', '#step6');
+	var redirectTypeElem = $('#form_step6_redirect_type');
+	var activeElem = $('input[name="form[step1][active]"]', '#step1');
+
+	/**
+	 * Hide or show all redirect fields
+	 * @param {int} active - If product is active or not
+	 */
+	function hideShowRedirectElems(active){
+		if(active == 1){
+			redirectStrategyElems.hide();
+		}else{
+			redirectStrategyElems.show();
+			hideShowRedirectToProduct();
+		}
+
+	}
+
+	/** Hide or show the input product selector */
+	function hideShowRedirectToProduct(){
+		if(redirectTypeElem.val() == '404'){
+			$('#id-product-redirected').hide();
+		}else{
+			$('#id-product-redirected').show();
+		}
+	}
+
+	return {
+		'init': function() {
+			if($('input[name="form[step1][active]"]:checked', '#step1').val() == 1){
+				redirectStrategyElems.hide();
+			}else{
+				hideShowRedirectToProduct();
+			}
+
+			/** On active button change */
+			activeElem.change(function(){
+				hideShowRedirectElems($(this).val());
+			});
+
+			/** On redirect type select change */
+			redirectTypeElem.change(function(){
+				hideShowRedirectToProduct();
+			});
+		}
+	};
+})();
 
 /**
  * Nested categories management

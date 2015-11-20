@@ -128,6 +128,24 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             }
         }
 
+        //if product is disable, remove rediretion strategy fields
+        if ($form_data['active'] == 1) {
+            $form_data['redirect_type'] = '';
+            $form_data['id_product_redirected'] = 0;
+        } else {
+            $form_data['redirect_type'] = (string)$form_data['redirect_type'];
+
+            if ($form_data['redirect_type'] != '404') {
+                if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
+                    $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
+                } else {
+                    $form_data['id_product_redirected'] = 0;
+                }
+            } else {
+                $form_data['id_product_redirected'] = 0;
+            }
+        }
+
         //map categories
         foreach ($form_data['categories']['tree'] as $category) {
             $form_data['categoryBox'][] = $category;
@@ -268,6 +286,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'additional_shipping_cost' => 0,
             ],
             'step6' => [
+                'redirect_type' => '404',
                 'visibility' => 'both',
                 'display_options' => [
                     'available_for_order' => true,
@@ -355,6 +374,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'meta_description' => $this->product->meta_description,
             ],
             'step6' => [
+                'redirect_type' => $this->product->redirect_type,
+                'id_product_redirected' => [
+                    'data' => [$this->product->id_product_redirected]
+                ],
                 'visibility' => $this->product->visibility,
                 'display_options' => [
                     'available_for_order' => (bool) $this->product->available_for_order,

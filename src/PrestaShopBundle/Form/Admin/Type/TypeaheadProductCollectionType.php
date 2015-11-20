@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormInterface;
 class TypeaheadProductCollectionType extends TypeaheadCollectionType
 {
     protected $productAdapter;
+    protected $limit;
 
     /**
      * {@inheritdoc}
@@ -43,12 +44,14 @@ class TypeaheadProductCollectionType extends TypeaheadCollectionType
      * @param string $mapping_name The name to map
      * @param string $placeholder The placeholder for the searchbox
      * @param string $template_collection The template use by php/javascript to render a collection line (name, image). EX : <img src="%s" /><span>%s</span>
-     * @param : Object $productAdapter
+     * @param object $productAdapter
+     * @param int $limit Limit the number of collection, if set to 0, collection is unlimited
      */
-    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '', $productAdapter)
+    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '', $productAdapter, $limit = 0)
     {
-        parent::__construct($remote_url, $mapping_value, $mapping_name, $placeholder, $template_collection);
+        parent::__construct($remote_url, $mapping_value, $mapping_name, $placeholder, $template_collection, $limit);
         $this->productAdapter = $productAdapter;
+        $this->limit = $limit;
     }
 
     /**
@@ -65,12 +68,22 @@ class TypeaheadProductCollectionType extends TypeaheadCollectionType
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
             $collection = array();
 
+            $i = 0;
             foreach ($view->vars['value']['data'] as $id) {
+                if (!$id) {
+                    continue;
+                }
                 $product = $this->productAdapter->getProduct($id);
                 $collection[] = array(
                     'id' => $id,
                     'name' => $product->name[1],
                 );
+                $i++;
+
+                //if collection length is up to limit, break
+                if ($this->limit != 0 && $i >= $this->limit) {
+                    break;
+                }
             }
             $view->vars['collection'] = $collection;
         }
