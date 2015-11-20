@@ -220,7 +220,7 @@ var featuresCollection = (function() {
  */
 var supplier = (function() {
 	var defaultSupplierRow = $('#form_step6_default_supplier').parent().parent();
-
+	var isInit = false;
 	return {
 		'init': function() {
 			/** On supplier select, hide or show the default supplier selector */
@@ -231,9 +231,36 @@ var supplier = (function() {
 				} else {
 					defaultSupplierRow.hide();
 				}
+				supplierCombinations.refresh();
 			});
 
-			supplierInput.change();
+			//default display
+			if(supplierInput.length >= 1 && $('#form_step6_suppliers input:checked').length >= 1){
+				defaultSupplierRow.show();
+			} else {
+				defaultSupplierRow.hide();
+			}
+		}
+	};
+})();
+
+/**
+ * Suppliercombination collection management
+ */
+var supplierCombinations = (function() {
+	var collectionHolder = $('#supplier_combination_collection');
+
+	return {
+		'refresh': function() {
+			var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function(){return $(this).val();}).get();
+			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val()+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
+
+			$.ajax({
+				url: url,
+				success: function(response){
+					collectionHolder.empty().append(response);
+				}
+			});
 		}
 	};
 })();
@@ -412,6 +439,7 @@ var combinationGenerator = (function() {
 			},
 			complete: function(){
 				$('#create-combinations').removeAttr('disabled');
+				supplierCombinations.refresh();
 			}
 		});
 	}
@@ -469,6 +497,7 @@ var combinations = (function() {
 			},
 			complete: function(){
 				elem.removeAttr('disabled');
+				supplierCombinations.refresh();
 			}
 		});
 	}

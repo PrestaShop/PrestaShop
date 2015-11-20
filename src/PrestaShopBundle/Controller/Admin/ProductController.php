@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
@@ -190,6 +191,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
+        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
+        /* @var $legacyContext LegacyContext */
+        $previewUrlFactory = $legacyContext->getFrontUrl('product') . '&id_product=';
         $totalCount = 0;
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
@@ -208,6 +212,7 @@ class ProductController extends FrameworkBundleAdminController
                 'admin_product_unit_action',
                 array('action' => 'duplicate', 'id' => $product['id_product'])
             );
+            $product['preview_url'] = $previewUrlFactory . $product['id_product'];
         }
 
         // Template vars injection
@@ -361,6 +366,14 @@ class ProductController extends FrameworkBundleAdminController
                     $logger->info('Products deleted: ('.implode(',', $productIdList).').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
+                case 'duplicate_all':
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->duplicateProductIdList($productIdList);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.'));
+                    $logger->info('Products duplicated: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
+                    break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Bulk action from ProductController received a bad parameter.');
@@ -373,7 +386,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // redirect after success
-        return $this->redirect($request->request->get('redirect_url'), 302);
+        if ($request->request->has('redirect_url')) {
+            return $this->redirect($request->request->get('redirect_url'), 302);
+        }
+        return new Response(json_encode(array('result' => 'ok')));
     }
 
     /**

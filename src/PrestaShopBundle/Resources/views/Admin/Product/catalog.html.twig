@@ -192,6 +192,12 @@
                             },
                             {"divider": true},
                             {
+                            "onclick": "bulkProductAction(this, 'duplicate_all');",
+                            "icon": "icon-copy",
+                            "label": "Duplicate selection"|trans({}, 'AdminTab')
+                            },
+                            {"divider": true},
+                            {
                                 "onclick": "bulkProductAction(this, 'delete_all');",
                                 "icon": "icon-trash",
                                 "label": "Delete selection"|trans({}, 'AdminTab')
@@ -229,4 +235,24 @@
         </form>
     </div>
 
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+        'id': "catalog_duplication_modal",
+        'title': "Duplication in progress..."|trans,
+        'closable': true,
+        'progressbar': {
+            'id': "catalog_duplication_progression",
+            'label': "Duplicating..."|trans
+        },
+        'actions': [],
+    } %}
+        {% block content %}
+            <div class="modal-body">
+                {{ 'Duplication can take time. Please wait...'|trans }}
+                <br/>
+                <span id="catalog_duplication_failure" style="display: none;color: darkred;">
+                    {{ 'Duplication failed!'|trans }}
+                </span>
+            </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

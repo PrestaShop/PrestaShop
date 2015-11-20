@@ -28,6 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
 /**
  * This form class is responsible to generate the product options form
@@ -36,6 +39,7 @@ class ProductOptions extends CommonModelAbstractType
 {
     private $translator;
     private $suppliers;
+    private $container;
 
     /**
      * Constructor
@@ -44,6 +48,7 @@ class ProductOptions extends CommonModelAbstractType
      */
     public function __construct($container)
     {
+        $this->container = $container;
         $this->translator = $container->get('prestashop.adapter.translator');
         $this->suppliers = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
@@ -98,6 +103,28 @@ class ProductOptions extends CommonModelAbstractType
             'required' =>  true,
             'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
         ));
+
+        foreach ($this->suppliers as $id => $supplier) {
+            $builder->add('supplier_combination_'.$id, 'collection', array(
+                'type' => new ProductSupplierCombination($id, $this->container),
+                'prototype' => true,
+                'allow_add' => true,
+                'required' => false,
+                'label' => $supplier,
+            ));
+        }
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            //If not supplier selected, remove all supplier combinations collection form
+            if (!isset($data['suppliers']) || count($data['suppliers']) == 0) {
+                foreach ($this->suppliers as $id => $supplier) {
+                    $form->remove('supplier_combination_'.$id);
+                }
+            }
+        });
     }
 
     /**
