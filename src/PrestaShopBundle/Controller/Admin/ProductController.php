@@ -94,11 +94,11 @@ class ProductController extends FrameworkBundleAdminController
                 switch ($param) {
                     case 'filter_column_id_product':
                     case 'filter_category':
-                        if (!is_integer($value)) {
+                        if (!is_numeric($value)) {
                             $request->request->set($param, '');
                         }
-                        if (is_integer($value) && $value < 0) {
-                            $request->request->set($param, '0');
+                        if (is_numeric($value) && $value < 0) {
+                            $request->request->set($param, '');
                         }
                 }
             }

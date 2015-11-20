@@ -55,9 +55,10 @@ $(document).ready(function() {
 	});
 
 	/*
-	 * Filter columns buttons behavior
+	 * Filter columns inputs behavior
 	 */
 	$('tr.column-filters input:text, tr.column-filters select', form).change(function() {
+		productCatalogFilterChanged = true;
 		updateFilterMenu();
 	});
 
@@ -81,6 +82,7 @@ $(document).ready(function() {
 	    e.preventDefault();
 	    $('#filter_column_price', form).val($('#filter_column_price', form).attr('sql'));
 	    $('#filter_column_sav_quantity', form).val($('#filter_column_sav_quantity', form).attr('sql'));
+		productCatalogFilterChanged = false;
 	    this.submit();
 	    return false;
 	});
@@ -107,6 +109,7 @@ function updateBulkMenu() {
 	$('#product_bulk_menu').prop('disabled', (selectedCount == 0));
 }
 
+var productCatalogFilterChanged = false;
 function updateFilterMenu() {
 	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').size();
 	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
@@ -115,8 +118,8 @@ function updateFilterMenu() {
 	$('form#product_catalog_list tr.column-filters input[type="text"][sql!=""][sql]').each(function() {
 		if ($(this).val()!="") count ++;
 	});
-	$('input[name="products_filter_submit"]').prop('disabled', (count == 0));
-	if (count == 0)
+	$('input[name="products_filter_submit"]').prop('disabled', (count == 0) && productCatalogFilterChanged == false);
+	if (count == 0 && productCatalogFilterChanged == false)
 		$('input[name="products_filter_reset"]').hide();
 	else
 		$('input[name="products_filter_reset"]').show();
