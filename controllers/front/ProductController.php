@@ -346,7 +346,7 @@ class ProductControllerCore extends FrontController
         }
 
         $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, false);
-        $address = new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        
         $this->context->smarty->assign(array(
             'quantity_discounts' => $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float)$tax, $ecotax_tax_amount),
             'ecotax_tax_inc' => $ecotax_tax_amount,
@@ -354,7 +354,7 @@ class ProductControllerCore extends FrontController
             'ecotaxTax_rate' => $ecotax_rate,
             'productPriceWithoutEcoTax' => (float)$product_price_without_eco_tax,
             'group_reduction' => $group_reduction,
-            'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
+            'no_tax' => Tax::excludeTaxeOption() || !$tax,
             'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
             'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
