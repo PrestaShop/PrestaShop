@@ -79,6 +79,9 @@ class Update extends Repository
         }
 
         //extract ONLY supplemental json files
+        if (!class_exists('\ZipArchive')) {
+            throw new \Exception('ZipArchive class missing');
+        }
         $archive = new \ZipArchive();
         if ($archive->open($file) === true) {
             for ($i = 0; $i < $archive->numFiles; $i++) {
