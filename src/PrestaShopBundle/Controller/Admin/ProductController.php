@@ -286,6 +286,8 @@ class ProductController extends FrameworkBundleAdminController
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
+                    $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
+
                     $response->setData(['product' => $product]);
                 }
 
