@@ -296,8 +296,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $is_lang_multishop = $this->isLangMultishop();
 
         $fields = array();
-        if ($this->id_lang === null) {
-            foreach (Language::getIDs(false) as $id_lang) {
+        if (!is_int($this->id_lang))
+        {
+            	$languages = is_array($this->id_lang) ? $this->id_lang : Language::getLanguages(false);
+		foreach ($languages as $language)
                 $fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
                 $fields[$id_lang]['id_lang'] = $id_lang;
                 if ($this->id_shop && $is_lang_multishop) {
