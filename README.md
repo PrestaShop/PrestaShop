@@ -21,7 +21,7 @@ To install it, you will need Composer and NPM/Node.js -- during the development 
 
 You can still clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.7 -- which is in active development, and cannot be considered stable. If you want the latest stable version of PrestaShop, choose version 1.6. You can find the latest 1.6 version on the [the download page][2].
 
-Note that the theme present in this archive (in the /themes/default-bootstrap folder) is still the old 16 theme, which will used in PrestaShop 1.7. You can see the work being done on the Starter Theme in the '[feat/starter-theme](https://github.com/PrestaShop/PrestaShop/tree/feat/starter-theme)' branch. The 1.7 default theme will be built upon the Starter Theme.
+Note that the theme present in this archive (in the /themes/default-bootstrap folder) is still the old 16 theme, which will not be used in PrestaShop 1.7. You can see the work being done on the Starter Theme in the '[feat/starter-theme](https://github.com/PrestaShop/PrestaShop/tree/feat/starter-theme)' branch. The 1.7 default theme will be built upon the Starter Theme.
 
 Also, the ZIP file does not contain the default modules. Since the 1.6 theme needs these module, the store will not display much as-is, even if you install the Starter Theme. We therefore advise you to focus your tests on the back office for the time being -- unless you are helping the team improve the Starter Theme.
 
