@@ -174,7 +174,7 @@ class SearchCore
 		return $string;
 	}
 
-	public static function find($id_lang, $expr, $page_number = 1, $page_size = null, $order_by = 'position',
+	public static function find($id_lang, $expr, $page_number = null, $page_size = null, $order_by = 'position',
 		$order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
 	{
 		if (!$context)
@@ -183,11 +183,7 @@ class SearchCore
 
 		// TODO : smart page management
 		if ($page_number < 1) $page_number = 1;
-		
-		if (empty($page_size) || (int)$page_size < 1) {
-	            $page_size = (int)Configuration::get('PS_PRODUCTS_PER_PAGE');
-	        }
-		
+		if ($page_size < 1) $page_size = 1;
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			return false;
@@ -223,11 +219,16 @@ class SearchCore
 		if (!count($words))
 			return ($ajax ? array() : array('total' => 0, 'result' => array()));
 
-		$score = '';
-		if (count($score_array))
-			$score = ', 	
-			IF(
-            			stock.`quantity` = 0, 0, 
+		$advanced_stock = $score = '';
+		
+		if (count($score_array)){
+			
+			if(Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')){
+				$advanced_stock = '(ps.`advanced_stock_management` = 1 AND stock.`quantity` = 0) OR ';
+			}
+			
+			$score  .= '
+			, IF( '.$advanced_stock.' (p.quantity = 0), 0,
             			(
 				SELECT SUM(weight)
 				FROM '._DB_PREFIX_.'search_word sw
@@ -239,6 +240,8 @@ class SearchCore
 				)
 			) position';
 
+		}
+		
 		$sql_groups = '';
 		if (Group::isFeatureActive())
 		{
@@ -298,7 +301,7 @@ class SearchCore
 						AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 					)
 					WHERE p.`id_product` '.$product_pool.'
-					ORDER BY position DESC LIMIT '.$page_size;
+					ORDER BY position DESC LIMIT '.(int)$page_size;
 			return $db->executeS($sql);
 		}
 
