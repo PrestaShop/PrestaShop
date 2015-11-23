@@ -38,6 +38,6 @@ class AdminCategoryControllerWrapper
      */
     public function getInstance()
     {
-        return new \AdminCategoriesController();
+        return new \AdminCategoriesControllerCore();
     }
 }

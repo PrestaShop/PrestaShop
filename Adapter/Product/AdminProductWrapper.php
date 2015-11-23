@@ -70,7 +70,7 @@ class AdminProductWrapper
     {
         $id_product_attribute = (int)$combinationValues['id_product_attribute'];
 
-        if (!\Combination::isFeatureActive() || $id_product_attribute == 0) {
+        if (!\CombinationCore::isFeatureActive() || $id_product_attribute == 0) {
             return;
         }
 
@@ -110,13 +110,13 @@ class AdminProductWrapper
             $combinationValues['attribute_isbn']
         );
 
-        \StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
-        \StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, $id_product_attribute);
+        \StockAvailableCore::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
+        \StockAvailableCore::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, $id_product_attribute);
 
         $product->checkDefaultAttributes();
 
         if ($combinationValues['attribute_default']) {
-            \Product::updateDefaultAttribute((int)$product->id);
+            \ProductCore::updateDefaultAttribute((int)$product->id);
             if (isset($id_product_attribute)) {
                 $product->cache_default_attribute = (int)$id_product_attribute;
             }
@@ -136,26 +136,26 @@ class AdminProductWrapper
      *
      * Does not work in Advanced stock management.
      *
-     * @param \Product $product
+     * @param \ProductCore $product
      * @param integer $quantity
      * @param integer $forAttributeId
      */
-    public function processQuantityUpdate(\Product $product, $quantity, $forAttributeId = 0)
+    public function processQuantityUpdate(\ProductCore $product, $quantity, $forAttributeId = 0)
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
-        \StockAvailable::setQuantity((int)$product->id, $forAttributeId, $quantity);
-        \Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
+        \StockAvailableCore::setQuantity((int)$product->id, $forAttributeId, $quantity);
+        \HookCore::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
     }
 
     /**
      * Update the out of stock strategy
      *
-     * @param \Product $product
+     * @param \ProductCore $product
      * @param integer $out_of_stock
      */
-    public function processProductOutOfStock(\Product $product, $out_of_stock)
+    public function processProductOutOfStock(\ProductCore $product, $out_of_stock)
     {
-        \StockAvailable::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
+        \StockAvailableCore::setProductOutOfStock((int)$product->id, (int)$out_of_stock);
     }
 
     /**
@@ -163,13 +163,13 @@ class AdminProductWrapper
      *
      * Does work only in Advanced stock management.
      *
-     * @param \Product $product
+     * @param \ProductCore $product
      * @param boolean $dependsOnStock
      * @param integer $forAttributeId
      */
-    public function processDependsOnStock(\Product $product, $dependsOnStock, $forAttributeId = 0)
+    public function processDependsOnStock(\ProductCore $product, $dependsOnStock, $forAttributeId = 0)
     {
-        \StockAvailable::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
+        \StockAvailableCore::setProductDependsOnStock((int)$product->id, $dependsOnStock, null, $forAttributeId);
     }
 
     /**
@@ -211,7 +211,7 @@ class AdminProductWrapper
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = 'Submitted reduction value (0-100) is out-of-range';
         } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
-            $specificPrice = new \SpecificPrice();
+            $specificPrice = new \SpecificPriceCore();
             $specificPrice->id_product = (int)$id_product;
             $specificPrice->id_product_attribute = (int)$id_product_attribute;
             $specificPrice->id_shop = (int)$id_shop;
@@ -240,17 +240,17 @@ class AdminProductWrapper
      */
     private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
     {
-        if (!\Validate::isUnsignedId($id_shop) || !\Validate::isUnsignedId($id_currency) || !\Validate::isUnsignedId($id_country) || !\Validate::isUnsignedId($id_group) || !\Validate::isUnsignedId($id_customer)) {
+        if (!\Validate::isUnsignedId($id_shop) || !\ValidateCore::isUnsignedId($id_currency) || !\ValidateCore::isUnsignedId($id_country) || !\ValidateCore::isUnsignedId($id_group) || !\ValidateCore::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
-        } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !\Validate::isNegativePrice($price)) || (isset($reduction) && !\Validate::isPrice($reduction))) {
+        } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !\ValidateCore::isNegativePrice($price)) || (isset($reduction) && !\ValidateCore::isPrice($reduction))) {
             $this->errors[] = 'Invalid price/discount amount';
-        } elseif (!\Validate::isUnsignedInt($from_quantity)) {
+        } elseif (!\ValidateCore::isUnsignedInt($from_quantity)) {
             $this->errors[] = 'Invalid quantity';
-        } elseif ($reduction && !\Validate::isReductionType($reduction_type)) {
+        } elseif ($reduction && !\ValidateCore::isReductionType($reduction_type)) {
             $this->errors[] = 'Please select a discount type (amount or percentage).';
-        } elseif ($from && $to && (!\Validate::isDateFormat($from) || !\Validate::isDateFormat($to))) {
+        } elseif ($from && $to && (!\ValidateCore::isDateFormat($from) || !\ValidateCore::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (\SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (\SpecificPriceCore::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;
@@ -273,7 +273,7 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = [];
-        $specific_prices = \SpecificPrice::getByProductId((int)$product->id);
+        $specific_prices = \SpecificPriceCore::getByProductId((int)$product->id);
 
         $tmp = array();
         foreach ($shops as $shop) {
@@ -309,7 +309,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . \Tools::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- ' . \ToolsCore::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', [], $this->transDomain) . ')';
                     } else {
@@ -325,7 +325,7 @@ class AdminProductWrapper
                     $period = $this->translator->trans('From', [], $this->transDomain) . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('To', [], $this->transDomain) . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
-                    $combination = new \Combination((int)$specific_price['id_product_attribute']);
+                    $combination = new \CombinationCore((int)$specific_price['id_product_attribute']);
                     $attributes = $combination->getAttributesName(1);
                     $attributes_name = '';
                     foreach ($attributes as $attribute) {
@@ -336,25 +336,25 @@ class AdminProductWrapper
                     $attributes_name = $this->translator->trans('All combinations', [], $this->transDomain);
                 }
 
-                $rule = new \SpecificPriceRule((int)$specific_price['id_specific_price_rule']);
+                $rule = new \SpecificPriceRuleCore((int)$specific_price['id_specific_price_rule']);
                 $rule_name = ($rule->id ? $rule->name : '--');
 
                 if ($specific_price['id_customer']) {
-                    $customer = new \Customer((int)$specific_price['id_customer']);
-                    if (\Validate::isLoadedObject($customer)) {
+                    $customer = new \CustomerCore((int)$specific_price['id_customer']);
+                    if (\ValidateCore::isLoadedObject($customer)) {
                         $customer_full_name = $customer->firstname . ' ' . $customer->lastname;
                     }
                     unset($customer);
                 }
 
-                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], \Shop::getContextListShopID())) {
+                if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], \ShopCore::getContextListShopID())) {
                     $can_delete_specific_prices = true;
-                    if (\Shop::isFeatureActive()) {
+                    if (\ShopCore::isFeatureActive()) {
                         $can_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
                     }
 
-                    $price = \Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == \Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : \Tools::displayPrice($price, $current_specific_currency);
+                    $price = \ToolsCore::ps_round($specific_price['price'], 2);
+                    $fixed_price = ($price == \ToolsCore::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : \ToolsCore::displayPrice($price, $current_specific_currency);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],
@@ -390,10 +390,10 @@ class AdminProductWrapper
      */
     public function deleteSpecificPrice($id_specific_price)
     {
-        if (!$id_specific_price || !\Validate::isUnsignedId($id_specific_price)) {
+        if (!$id_specific_price || !\ValidateCore::isUnsignedId($id_specific_price)) {
             $error = 'The specific price ID is invalid.';
         } else {
-            $specificPrice = new \SpecificPrice((int)$id_specific_price);
+            $specificPrice = new \SpecificPriceCore((int)$id_specific_price);
             if (!$specificPrice->delete()) {
                 $error = 'An error occurred while attempting to delete the specific price.';
             }
@@ -430,7 +430,7 @@ class AdminProductWrapper
             ];
         }
 
-        $specific_price_priorities = \SpecificPrice::getPriority((int)$idProduct);
+        $specific_price_priorities = \SpecificPriceCore::getPriority((int)$idProduct);
 
         // Not use id_customer
         if ($specific_price_priorities[0] == 'id_customer') {

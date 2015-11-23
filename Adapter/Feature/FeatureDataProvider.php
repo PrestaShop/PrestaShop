@@ -40,7 +40,7 @@ class FeatureDataProvider
      */
     public static function getFeatures($id_lang, $with_shop = true)
     {
-        return \Feature::getFeatures($id_lang, $with_shop);
+        return \FeatureCore::getFeatures($id_lang, $with_shop);
     }
 
     /**
@@ -53,7 +53,7 @@ class FeatureDataProvider
      */
     public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
     {
-        return \FeatureValue::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
+        return \FeatureValueCore::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
     }
 
     /**
@@ -64,6 +64,6 @@ class FeatureDataProvider
      */
     public static function getFeatureValueLang($id_feature_value)
     {
-        return \FeatureValue::getFeatureValueLang($id_feature_value);
+        return \FeatureValueCore::getFeatureValueLang($id_feature_value);
     }
 }

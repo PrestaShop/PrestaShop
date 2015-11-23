@@ -51,6 +51,6 @@ class HookManager
         $use_push = false,
         $id_shop = null
     ) {
-        return \Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
+        return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
     }
 }

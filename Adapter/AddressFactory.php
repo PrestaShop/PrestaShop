@@ -33,12 +33,12 @@ class AddressFactory
      *
      * @param null $id_address
      * @param bool $with_geoloc
-     * @return \Address
+     * @return \AddressCore
      */
     public function findOrCreate($id_address = null, $with_geoloc = false)
     {
         $func_args = func_get_args();
-        return call_user_func_array(array('\\Address', 'initialize'), $func_args);
+        return call_user_func_array(array('\\AddressCore', 'initialize'), $func_args);
     }
 
     /**
@@ -49,6 +49,6 @@ class AddressFactory
      */
     public function addressExists($id_address)
     {
-        return \Address::addressExists($id_address);
+        return \AddressCore::addressExists($id_address);
     }
 }

@@ -72,12 +72,12 @@ class Translator implements TranslatorInterface
     {
         // Very speific case (Form error)
         if ($domain == 'form_error') {
-            return \Tools::displayError($id, false);
+            return \ToolsCore::displayError($id, false);
         }
         // Very specific cases (PDF)
         if ($domain == 'pdf') {
             // Does not support overriding the language for this adapter!
-            return \Translate::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
+            return \TranslateCore::getPdfTranslation($id, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Search for Admin case
@@ -88,7 +88,7 @@ class Translator implements TranslatorInterface
         if ($isAdmin) {
             $domain = preg_replace('/(c|C)ontroller$/', '', $domain); // remove trailing 'Controller'
 
-            return \Translate::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
+            return \TranslateCore::getAdminTranslation($id, $domain, (count($parameters) === 0) ? null : $parameters);
         }
 
         // Front / Module case ?

@@ -580,7 +580,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
             'available_date_attribute' =>  $combination['available_date'],
             'attribute_default' => (bool)$combination['default_on'],
-            'attribute_quantity' => \Product::getQuantity($this->product->id, $combination['id_product_attribute']),
+            'attribute_quantity' => $this->productAdapter->getQuantity($this->product->id, $combination['id_product_attribute']),
             'name' => implode(', ', $name)
         ];
     }

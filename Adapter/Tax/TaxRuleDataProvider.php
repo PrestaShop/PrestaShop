@@ -40,6 +40,6 @@ class TaxRuleDataProvider
      */
     public function getTaxRulesGroups($only_active = true)
     {
-        return \TaxRulesGroup::getTaxRulesGroups($only_active);
+        return \TaxRulesGroupCore::getTaxRulesGroups($only_active);
     }
 }

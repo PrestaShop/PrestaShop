@@ -60,8 +60,8 @@ class AdminProductDataUpdater implements ProductInterface
 
         $failedIdList = array();
         foreach ($productListId as $productId) {
-            $product = new \Product($productId);
-            if (!\Validate::isLoadedObject($product)) {
+            $product = new \ProductCore($productId);
+            if (!\ValidateCore::isLoadedObject($product)) {
                 $failedIdList[] = $productId;
                 continue;
             }
@@ -87,7 +87,7 @@ class AdminProductDataUpdater implements ProductInterface
 
         $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
         // Hooks: will trigger actionProductDelete multiple times
-        $result = (new \Product())->deleteSelection($productIdList);
+        $result = (new \ProductCore())->deleteSelection($productIdList);
 
         if ($result === 0) {
             throw new DataUpdateException('product', $failedIdList, 'Cannot delete many requested products.', 5006);
@@ -125,8 +125,8 @@ class AdminProductDataUpdater implements ProductInterface
      */
     public function deleteProduct($productId)
     {
-        $product = new \Product($productId);
-        if (!\Validate::isLoadedObject($product)) {
+        $product = new \ProductCore($productId);
+        if (!\ValidateCore::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->deleteProduct() received an unknown ID.', 5005);
         }
 
@@ -145,17 +145,17 @@ class AdminProductDataUpdater implements ProductInterface
      */
     public function duplicateProduct($productId)
     {
-        $product = new \Product($productId);
-        if (!\Validate::isLoadedObject($product)) {
+        $product = new \ProductCore($productId);
+        if (!\ValidateCore::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
         }
 
         $id_product_old = $product->id;
-        if (empty($product->price) && \Shop::getContext() == \Shop::CONTEXT_GROUP) {
-            $shops = \ShopGroup::getShopsFromGroup(\Shop::getContextShopGroupID());
+        if (empty($product->price) && \ShopCore::getContext() == \ShopCore::CONTEXT_GROUP) {
+            $shops = \ShopGroupCore::getShopsFromGroup(\ShopCore::getContextShopGroupID());
             foreach ($shops as $shop) {
                 if ($product->isAssociatedToShop($shop['id_shop'])) {
-                    $product_price = new \Product($id_product_old, false, null, $shop['id_shop']);
+                    $product_price = new \ProductCore($id_product_old, false, null, $shop['id_shop']);
                     $product->price = $product_price->price;
                 }
             }
@@ -167,19 +167,19 @@ class AdminProductDataUpdater implements ProductInterface
         $product->active = 0;
 
         if ($product->add()
-            && \Category::duplicateProductCategories($id_product_old, $product->id)
-            && \Product::duplicateSuppliers($id_product_old, $product->id)
-            && ($combination_images = \Product::duplicateAttributes($id_product_old, $product->id)) !== false
-            && \GroupReduction::duplicateReduction($id_product_old, $product->id)
-            && \Product::duplicateAccessories($id_product_old, $product->id)
-            && \Product::duplicateFeatures($id_product_old, $product->id)
-            && \Product::duplicateSpecificPrices($id_product_old, $product->id)
-            && \Pack::duplicate($id_product_old, $product->id)
-            && \Product::duplicateCustomizationFields($id_product_old, $product->id)
-            && \Product::duplicateTags($id_product_old, $product->id)
-            && \Product::duplicateDownload($id_product_old, $product->id)) {
+            && \CategoryCore::duplicateProductCategories($id_product_old, $product->id)
+            && \ProductCore::duplicateSuppliers($id_product_old, $product->id)
+            && ($combination_images = \ProductCore::duplicateAttributes($id_product_old, $product->id)) !== false
+            && \GroupReductionCore::duplicateReduction($id_product_old, $product->id)
+            && \ProductCore::duplicateAccessories($id_product_old, $product->id)
+            && \ProductCore::duplicateFeatures($id_product_old, $product->id)
+            && \ProductCore::duplicateSpecificPrices($id_product_old, $product->id)
+            && \PackCore::duplicate($id_product_old, $product->id)
+            && \ProductCore::duplicateCustomizationFields($id_product_old, $product->id)
+            && \ProductCore::duplicateTags($id_product_old, $product->id)
+            && \ProductCore::duplicateDownload($id_product_old, $product->id)) {
             if ($product->hasAttributes()) {
-                \Product::updateDefaultAttribute($product->id);
+                \ProductCore::updateDefaultAttribute($product->id);
             }
 
             if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
@@ -187,7 +187,7 @@ class AdminProductDataUpdater implements ProductInterface
             } else {
                 $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
                 if (in_array($product->visibility, array('both', 'search')) && \Configuration::get('PS_SEARCH_INDEXATION')) {
-                    \Search::indexation(false, $product->id);
+                    \SearchCore::indexation(false, $product->id);
                 }
                 return $product->id;
             }
@@ -253,7 +253,7 @@ class AdminProductDataUpdater implements ProductInterface
         // update current pages.
         $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
             INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
-            '.\Shop::addSqlAssociation('product', 'p').'
+            '.\ShopCore::addSqlAssociation('product', 'p').'
             SET cp.`position` = ELT(cp.`position`, '.$fields.'),
                 p.`date_upd` = "'.date('Y-m-d H:i:s').'",
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"

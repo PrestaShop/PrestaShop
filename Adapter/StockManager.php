@@ -42,7 +42,7 @@ class StockManager implements \PrestaShopBundle\Service\DataProvider\StockInterf
      */
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        return new \StockAvailable(\StockAvailable::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
+        return new \StockAvailableCore(\StockAvailableCore::getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
     }
 
     /**

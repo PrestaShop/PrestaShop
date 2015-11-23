@@ -222,7 +222,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
     {
         $listeners = array();
 
-        $hooks = \Hook::getHooks();
+        $hooks = \HookCore::getHooks();
         foreach ($hooks as $hook) {
             $name = $hook['name'];
             $id = $hook['id_hook'];
@@ -231,7 +231,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
             $modules = array();
             //SF2 cache clear bug fix : call bqSQL alias function
             if (function_exists("bqSQL")) {
-                $modules = \Hook::getHookModuleExecList($name);
+                $modules = \HookCore::getHookModuleExecList($name);
             }
             
             if (is_array($modules)) {
@@ -277,7 +277,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $hookName = $args[1];
         $event = $args[0];
         /* @var $event HookEvent */
-        $content = \Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
+        $content = \HookCore::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
         if ($event instanceof RenderingHookEvent) {
             $event->setContent(array_values($content)[0], array_keys($content)[0]);
