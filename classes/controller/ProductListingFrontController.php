@@ -84,6 +84,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 unset($params['q']);
                 if ($filter['nextEncodedFacets']) {
                     $params['q'] = $filter['nextEncodedFacets'];
+                    // changing the query should reset the page
+                    unset($params['page']);
                 }
 
                 $queryString = urldecode(http_build_query($params));
