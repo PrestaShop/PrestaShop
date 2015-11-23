@@ -1,7 +1,7 @@
 <form action="{$urls.pages.authentication}" method="post">
   <header>
     <h1 class="h3">{l s='Log into your account'}</h1>
-    <span><a href="#" data-link-action="display-register-form">{l s='No account ? Create one here'}</a></span>
+    <span><a href="{$urls.pages.register}" data-link-action="display-register-form">{l s='No account ? Create one here'}</a></span>
   </header>
 
   <section class="form-fields">
