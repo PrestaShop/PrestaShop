@@ -5,12 +5,14 @@
       {if $facet.multipleSelectionAllowed}
         <ul>
           {foreach from=$facet.filters item="filter"}
-            <li>
-              <label>
-                <input type="checkbox" {if $filter.active } checked {/if}>
-                <a href="{$filter.nextEncodedFacetsURL}">{$filter.label} <span class="magnitude">{$filter.magnitude}</span></a>
-              </label>
-            </li>
+            {if $filter.displayed}
+              <li>
+                <label>
+                  <input type="checkbox" {if $filter.active } checked {/if}>
+                  <a href="{$filter.nextEncodedFacetsURL}">{$filter.label} <span class="magnitude">{$filter.magnitude}</span></a>
+                </label>
+              </li>
+            {/if}
           {/foreach}
         </ul>
       {else}
