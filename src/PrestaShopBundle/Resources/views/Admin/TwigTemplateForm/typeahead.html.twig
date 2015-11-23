@@ -28,6 +28,7 @@
                 identify: function(obj) { return obj.{{ mapping_value }}; },
                 remote: {
                     url: '{{ remote_url|raw }}',
+                    cache: false,
                     wildcard: '%QUERY',
                     transform: function(response){
                         if(!response){
@@ -98,6 +99,7 @@
                 },
                 remote: {
                     url: '{{ remote_url|raw }}',
+                    cache: false,
                     wildcard: '%QUERY',
                     transform: function(response){
                         if(!response){
