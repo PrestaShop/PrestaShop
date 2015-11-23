@@ -74,56 +74,58 @@ class ProductQuantity extends CommonModelAbstractType
             ],
             'label' =>  $this->translator->trans('Create combinations', [], 'AdminProducts')
         ))
-        ->add('advanced_stock_management', 'checkbox', array(
-            'required' => false,
-            'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
-        ))
-        ->add('depends_on_stock', 'choice', array(
-            'choices'  => array(
-                1 => $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts'),
-                0 => $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts'),
-            ),
-            'expanded' => true,
-            'required' => true,
-            'multiple' => false,
-        ))
-        ->add('qty_0', 'number', array(
-            'required' => true,
-            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric')),
-            ),
-        ))
-        ->add('combinations', 'collection', array(
-            'type' => new ProductCombination($this->container),
-            'allow_add' => true,
-            'allow_delete' => true
-        ))
-        ->add('out_of_stock', 'choice') //see eventListener for details
-        ->add('minimal_quantity', 'number', array(
-            'required' => true,
-            'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\NotBlank(),
-                new Assert\Type(array('type' => 'numeric')),
-            ),
-        ))
-        ->add('available_now', new TranslateType('text', array(), $this->locales), array(
-            'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
-        ))
-        ->add('available_later', new TranslateType('text', array(), $this->locales), array(
-            'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
-        ))
-        ->add('available_date', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
-            'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
-        ));
+            ->add('advanced_stock_management', 'checkbox', array(
+                'required' => false,
+                'label' => $this->translator->trans('I want to use the advanced stock management system for this product.', [], 'AdminProducts'),
+            ))
+            ->add('pack_stock_type', 'choice') //see eventListener for details
+            ->add('depends_on_stock', 'choice', array(
+                'choices'  => array(
+                    1 => $this->translator->trans('The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). ', [], 'AdminProducts'),
+                    0 => $this->translator->trans('I want to specify available quantities manually.', [], 'AdminProducts'),
+                ),
+                'expanded' => true,
+                'required' => true,
+                'multiple' => false,
+            ))
+            ->add('qty_0', 'number', array(
+                'required' => true,
+                'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+                'constraints' => array(
+                    new Assert\NotBlank(),
+                    new Assert\Type(array('type' => 'numeric')),
+                ),
+            ))
+            ->add('combinations', 'collection', array(
+                'type' => new ProductCombination($this->container),
+                'allow_add' => true,
+                'allow_delete' => true
+            ))
+            ->add('out_of_stock', 'choice') //see eventListener for details
+            ->add('minimal_quantity', 'number', array(
+                'required' => true,
+                'label' => $this->translator->trans('Minimum quantity', [], 'AdminProducts'),
+                'constraints' => array(
+                    new Assert\NotBlank(),
+                    new Assert\Type(array('type' => 'numeric')),
+                ),
+            ))
+            ->add('available_now', new TranslateType('text', array(), $this->locales), array(
+                'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
+            ))
+            ->add('available_later', new TranslateType('text', array(), $this->locales), array(
+                'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
+            ))
+            ->add('available_date', 'text', array(
+                'required' => false,
+                'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
+                'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
 
+            //Manage out_of_stock field with contextual values/label
             $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').' (';
             $defaultChoiceLabel .= $this->configurationAdapter->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
                 $this->translator->trans('Allow orders', [], 'AdminProducts') :
@@ -139,6 +141,29 @@ class ProductQuantity extends CommonModelAbstractType
                 'expanded' => false,
                 'required' => true,
                 'label' => $this->translator->trans('When out of stock', [], 'AdminProducts')
+            ));
+
+            //Manage out_of_stock field with contextual values/label
+            $pack_stock_type = $this->configurationAdapter->get('PS_PACK_STOCK_TYPE');
+            $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').': ';
+            if ($pack_stock_type == 0) {
+                $defaultChoiceLabel .= $this->translator->trans('Decrement pack only.', [], 'AdminProducts');
+            } elseif ($pack_stock_type == 1) {
+                $defaultChoiceLabel .= $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts');
+            } else {
+                $defaultChoiceLabel .= $this->translator->trans('Decrement both.', [], 'AdminProducts');
+            }
+
+            $form->add('pack_stock_type', 'choice', array(
+                'choices'  => array(
+                    '0' => $this->translator->trans('Decrement pack only.', [], 'AdminProducts'),
+                    '1' => $this->translator->trans('Decrement products in pack only.', [], 'AdminProducts'),
+                    '2' => $this->translator->trans('Decrement both.', [], 'AdminProducts'),
+                    '3' => $defaultChoiceLabel,
+                ),
+                'expanded' => false,
+                'required' => true,
+                'label' => $this->translator->trans('Pack quantities', [], 'AdminProducts')
             ));
         });
     }

@@ -128,6 +128,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             }
         }
 
+        //Product type
+        if ($form_data['type_product'] == 2) {
+            $form_data['is_virtual'] = 1;
+        } else {
+            $form_data['is_virtual'] = 0;
+        }
+
         //if product is disable, remove rediretion strategy fields
         if ($form_data['active'] == 1) {
             $form_data['redirect_type'] = '';
@@ -277,6 +284,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'out_of_stock' => 2,
                 'minimal_quantity' => 1,
                 'available_date' => '0000-00-00',
+                'pack_stock_type' => 3,
             ],
             'step4' => [
                 'width' => 0,
@@ -359,6 +367,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'available_now' => $this->product->available_now,
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,
+                'pack_stock_type' => $this->product->pack_stock_type,
             ],
             'step4' => [
                 'width' => $this->product->width,

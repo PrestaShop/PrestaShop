@@ -45,6 +45,16 @@ $(document).ready(function() {
 			$('#form_step1_price_shortcut').val($(this).val());
 		}
 	});
+
+	/** pack stock type field display management */
+	$('#form_step1_type_product').change(function(){
+		if($(this).val() == 1){
+			$('#pack_stock_type').show();
+		}else{
+			$('#pack_stock_type').hide();
+		}
+	});
+	$('#form_step1_type_product').change();
 });
 
 /**
