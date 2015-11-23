@@ -36,7 +36,7 @@ You will also need a database administration tool, such as phpMyAdmin, in order 
 We recommend the Apache or Nginx web servers.  
 You can find more information on the [System Administrator Guide][19].
 
-If your host does not offer PHP 5 by default, [here are a few explanations][3] about PHP 5 or the `.htaccess` file for certain hosting services (1&amp;1, Free.fr, OVH, Infomaniak, Amen, GoDaddy, etc.).
+If your host does not offer PHP 5 by default, you will find a few explanations about PHP 5 or the `.htaccess` file in [our documentation][3], with details for certain hosting services.
 
 If you want your own store with nothing to download and install, you should use [PrestaShop Cloud][4], our 100% free and fully-hosted PrestaShop service: it lets you create your online store in less than 10 minutes without any technical knowledge. Learn more about the [difference between PrestaShop Cloud and PrestaShop Download][10].
 
