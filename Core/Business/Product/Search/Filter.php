@@ -5,6 +5,10 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 class Filter
 {
     private $label;
+
+    /**
+     * Internal type, used by query logic.
+     */
     private $type;
 
     /**
