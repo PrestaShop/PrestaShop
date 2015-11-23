@@ -77,11 +77,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = [];
         parse_str($_SERVER["QUERY_STRING"], $params);
-        unset($params['q']);
 
         $facetsVar = array_map(function (Facet $facet) use ($url, $params) {
             $facetsArray                    = $facet->toArray();
             foreach ($facetsArray['filters'] as &$filter) {
+                unset($params['q']);
                 if ($filter['nextEncodedFacets']) {
                     $params['q'] = $filter['nextEncodedFacets'];
                 }
