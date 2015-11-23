@@ -6,8 +6,24 @@ class Filter
 {
     private $label;
     private $type;
+
+    /**
+     * Whether or not the filter is used in the query.
+     */
     private $active;
-    private $available;
+
+    /**
+     * Whether or not the user can interact with the filter.
+     */
+    private $available = true;
+
+    /**
+     * Whether or not the filter is displayed.
+     * A filter may be displayed but in a non-interactive state,
+     * that's why we have $available and $displayed.
+     */
+    private $displayed = true;
+
     private $properties = [];
     private $magnitude;
     private $value;
@@ -20,6 +36,7 @@ class Filter
             'type'              => $this->type,
             'active'            => $this->active,
             'available'         => $this->available,
+            'displayed'         => $this->displayed,
             'properties'        => $this->properties,
             'magnitude'         => $this->magnitude,
             'value'             => $this->value,
@@ -91,6 +108,17 @@ class Filter
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function setDisplayed($displayed = true)
+    {
+        $this->displayed = $displayed;
+        return $this;
+    }
+
+    public function isDisplayed()
+    {
+        return $this->displayed;
     }
 
     public function setNextEncodedFacets($nextEncodedFacets)
