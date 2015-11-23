@@ -552,6 +552,10 @@ class AdminPerformanceControllerCore extends AdminController
 
         $warning_fs = ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHEFS_DIRECTORY_));
 
+        $warning_redis = ' '.$this->l('(you must install the [a]Redis extension[/a])');
+        $warning_redis = str_replace('[a]', '<a href="https://pecl.php.net/package/redis" target="_blank">', $warning_redis);
+        $warning_redis = str_replace('[/a]', '</a>', $warning_redis);
+
         $this->fields_form[6]['form'] = array(
             'legend' => array(
                 'title' => $this->l('Caching'),
@@ -605,6 +609,11 @@ class AdminPerformanceControllerCore extends AdminController
                             'id' => 'CacheApc',
                             'value' => 'CacheApc',
                             'label' => $this->l('APC').(extension_loaded('apc') ? '' : $warning_apc)
+                        ),
+                        array(
+                            'id' => 'CacheRedis',
+                            'value' => 'CacheRedis',
+                            'label' => $this->l('Redis').(extension_loaded('redis') ? '' : $warning_apc)
                         ),
                         array(
                             'id' => 'CacheXcache',
@@ -950,6 +959,9 @@ class AdminPerformanceControllerCore extends AdminController
                         } elseif (!is_writable(_PS_CACHEFS_DIRECTORY_)) {
                             $this->errors[] = sprintf(Tools::displayError('To use CacheFS, the directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
                         }
+                    } elseif ($caching_system == 'CacheRedis' && !extension_loaded('redis')){
+                        $this->errors[] = Tools::displayError('To use Redis, you must install the Redis extension on your server.').'
+                            <a href="https://pecl.php.net/package/redis">https://pecl.php.net/package/redis</a>';
                     }
 
                     if ($caching_system == 'CacheFs') {
