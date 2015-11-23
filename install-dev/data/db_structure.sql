@@ -1,3 +1,4 @@
+SET SESSION sql_mode = '';
 SET NAMES 'utf8';
 
 CREATE TABLE `PREFIX_access` (
