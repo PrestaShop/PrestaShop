@@ -46,12 +46,14 @@ $(document).ready(function() {
 		}
 	});
 
-	/** pack stock type field display management */
+	/** pack fields display management */
 	$('#form_step1_type_product').change(function(){
 		if($(this).val() == 1){
 			$('#pack_stock_type').show();
+			$('#js_form_step1_inputPackItems').show();
 		}else{
 			$('#pack_stock_type').hide();
+			$('#js_form_step1_inputPackItems').hide();
 		}
 	});
 	$('#form_step1_type_product').change();
