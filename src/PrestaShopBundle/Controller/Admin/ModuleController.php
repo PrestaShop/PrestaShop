@@ -4,6 +4,9 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ModuleController extends Controller
 {
@@ -41,6 +44,27 @@ class ModuleController extends Controller
                 'modules' => $this->createCatalogModuleList($modulesProvider->getCatalogModules($filter)),
                 'topMenuData' => $this->getTopMenuData()
             ));
+    }
+
+    public function moduleAction(Request $request)
+    {
+        $action = $request->attributes->get('action');
+        $modules = array($request->attributes->get('module_name'));
+        $action = implode(array($action, 'Module'));
+
+        $ret = array();
+        if (method_exists($this, $action)) {
+            $ret = array_combine($modules, array_map(array($this, $action), $modules));
+        } else {
+            return new Response('Invalid action', 200, array( 'Content-Type' => 'application/json' ));
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            $res = json_encode($ret);
+            return new Response(empty($res) ? '[]' : $res, 200, array( 'Content-Type' => 'application/json' ));
+        }
+
+        return $this->redirect($this->generateUrl('admin_module_catalog'));
     }
 
      /**
@@ -100,5 +124,75 @@ class ModuleController extends Controller
         }
 
         return (array)$topMenuData;
+    }
+
+    public function installModule($module_name)
+    {
+        $status = 'ok!';
+        $msg = sprintf('Module %s is now installed', $module_name);
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function uninstallModule($module_name)
+    {
+        $status = 'ok';
+        $msg = sprintf('Module %s is now installed', $module_name);
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function configureModule($module_name)
+    {
+        $msg = sprintf('Module %s is now configured', $module_name);
+        $status = 'ok';
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function enableModule($module_name)
+    {
+        $msg = sprintf('Module %s is now enabled', $module_name);
+        $status = 'ok';
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function disableModule($module_name)
+    {
+        $msg = sprintf('Module %s is now disabled', $module_name);
+        $status = 'ok';
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function resetModule($module_name)
+    {
+        $msg = sprintf('Module %s is now reseted', $module_name);
+        $status = 'ok';
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
+    }
+
+    public function updateModule($module_name)
+    {
+        $msg = sprintf('Module %s is now updated', $module_name);
+        $status = 'ok';
+
+        // sleep(2);
+
+        return array('status' => $status, 'msg' => $msg);
     }
 }
