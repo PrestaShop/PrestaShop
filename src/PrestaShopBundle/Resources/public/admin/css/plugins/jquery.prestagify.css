@@ -1,0 +1,33 @@
+.tagifyAddTagInput:focus {
+     outline: 0;
+}
+
+.tagifyAddTagWrapper {
+    width: 100%;
+}
+
+.tagifyResetTagsBtn {
+    pointer: cursor !important;
+}
+.tagifyTagsWrapper {
+    display: none;
+    position: relative;
+}
+
+.tagifyTag{
+    float: left;
+    border-radius: 5px;
+    height: 30px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+.tagifyClosingCross {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.tagifyWrapper {
+    position: relative;
+}
