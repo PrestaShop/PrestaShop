@@ -27,13 +27,17 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\DropFilesType;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
+use Symfony\Component\Form\FormError;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -85,6 +89,17 @@ class ProductInformation extends CommonModelAbstractType
             ),
             'label' =>  $this->translator->trans('Type', [], 'AdminProducts'),
             'required' => true,
+        ))
+        ->add('inputPackItems', new TypeaheadProductPackCollectionType(
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
+            'id',
+            'name',
+            $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            '<span>%s</span> (<span>ref: %s</span> <span>X%s</span>) - <a href="" class="delete">X</a>',
+            $this->productAdapter
+        ), array(
+            'required' => false,
+            'label' => $this->translator->trans('Add product in your pack', [], 'AdminProducts'),
         ))
         ->add('name', new TranslateType('text', array(
                 'constraints' => array(
@@ -191,7 +206,7 @@ class ProductInformation extends CommonModelAbstractType
             'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
         ->add('related_products', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),
@@ -201,6 +216,19 @@ class ProductInformation extends CommonModelAbstractType
             'required' => false,
             'label' => $this->translator->trans('Accessories', [], 'AdminProducts')
         ));
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            //if product type is pack, check if inputPackItems is not empty
+            if ($data['type_product'] == 1) {
+                if (!isset($data['inputPackItems']) || empty($data['inputPackItems']['data'])) {
+                    $error = $this->translator->trans('This pack is empty. You must add at least one product item.', [], 'AdminProducts');
+                    $form->get('inputPackItems')->addError(new FormError($error));
+                }
+            }
+        });
     }
 
     /**

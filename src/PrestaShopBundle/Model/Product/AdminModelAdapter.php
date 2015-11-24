@@ -42,6 +42,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $productAdapter;
     private $supplierAdapter;
     private $featureAdapter;
+    private $packAdapter;
     private $product;
     private $translatableKeys;
     private $unmapKeys;
@@ -65,6 +66,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
+        $this->packAdapter = $container->get('prestashop.adapter.data_provider.pack');
         $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
         if ($this->product != null) {
@@ -128,6 +130,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             }
         }
 
+        //Product type
+        if ($form_data['type_product'] == 2) {
+            $form_data['is_virtual'] = 1;
+        } else {
+            $form_data['is_virtual'] = 0;
+        }
+
         //if product is disable, remove rediretion strategy fields
         if ($form_data['active'] == 1) {
             $form_data['redirect_type'] = '';
@@ -144,6 +153,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             } else {
                 $form_data['id_product_redirected'] = 0;
             }
+        }
+
+        //map inputPackItems
+        if ($form_data['type_product'] == 1 && !empty($form_data['inputPackItems']) && !empty($form_data['inputPackItems']['data'])) {
+            $inputPackItems = '';
+            foreach ($form_data['inputPackItems']['data'] as $productIds) {
+                $inputPackItems .= $productIds.'-';
+            }
+            $form_data['inputPackItems'] = $inputPackItems;
+        } else {
+            $form_data['inputPackItems'] = '';
         }
 
         //map categories
@@ -277,6 +297,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'out_of_stock' => 2,
                 'minimal_quantity' => 1,
                 'available_date' => '0000-00-00',
+                'pack_stock_type' => 3,
             ],
             'step4' => [
                 'width' => 0,
@@ -304,6 +325,20 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'id_product' => $this->product->id,
             'step1' => [
                 'type_product' => $this->product->getType(),
+                'inputPackItems' => [
+                    'data' => array_map(
+                        function ($p) {
+                            return [
+                                "id" => $p->id,
+                                "id_product_attribute" => isset($p->id_pack_product_attribute) ? $p->id_pack_product_attribute : 0,
+                                "name" => $p->name,
+                                "ref" => $p->reference,
+                                "quantity" => $p->pack_quantity,
+                            ];
+                        },
+                        $this->packAdapter->getItems($this->product->id, $this->locales[0]['id_lang'])
+                    )
+                ],
                 'name' => $this->product->name,
                 'description' => $this->getFormFullDescription($this->product->description, $this->product->description_short),
                 //images
@@ -359,6 +394,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'available_now' => $this->product->available_now,
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,
+                'pack_stock_type' => $this->product->pack_stock_type,
             ],
             'step4' => [
                 'width' => $this->product->width,

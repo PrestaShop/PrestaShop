@@ -78,7 +78,7 @@ class ProductOptions extends CommonModelAbstractType
             'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
         ))
         ->add('id_product_redirected', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),

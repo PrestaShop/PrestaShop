@@ -28,6 +28,7 @@
                 identify: function(obj) { return obj.{{ mapping_value }}; },
                 remote: {
                     url: '{{ remote_url|raw }}',
+                    cache: false,
                     wildcard: '%QUERY',
                     transform: function(response){
                         if(!response){
@@ -50,7 +51,6 @@
             }).bind('typeahead:select', function(ev, suggestion) {
                 //if collection length is up to limit, return
                 if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
-                    console.log('stop');
                     return;
                 }
 
@@ -98,6 +98,7 @@
                 },
                 remote: {
                     url: '{{ remote_url|raw }}',
+                    cache: false,
                     wildcard: '%QUERY',
                     transform: function(response){
                         if(!response){
@@ -120,7 +121,6 @@
 
                 //if collection length is up to limit, return
                 if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
-                    console.log('stop');
                     return;
                 }
 
@@ -137,6 +137,97 @@
 
             }).bind('typeahead:close', function(ev) {
                 $(ev.target).val('');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block typeahead_product_pack_collection_widget %}
+    <div class="col-lg-12">
+        <div class="col-lg-6">
+            <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
+        </div>
+        <div class="col-lg-2">
+            <div class="input-group">
+                <span class="input-group-addon">×</span>
+                <input type="number" id="{{ form.vars.id }}-curPackItemQty" class="form-control curPackItemQty" min="1" value="1">
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="input-group">
+                <button id="{{ form.vars.id }}-curPackItemAdd" class="btn">{{ trans("Add") }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <ul id="{{ form.vars.id }}-data">
+        {% if collection is defined and collection|length > 0 %}
+            {% for item in collection %}
+                <li>
+                    {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
+                    <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <script>
+        $( document ).ready(function() {
+            //remove collection item
+            $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
+                $(this).parent().remove();
+                return false;
+            });
+
+            $('#{{ form.vars.id }}-curPackItemAdd').click(function(e){
+                e.preventDefault();
+                if($(this).data('currentItem')){
+                    var number = $('#{{ form.vars.id }}-curPackItemQty').val();
+                    var data = $(this).data('currentItem');
+                    var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
+
+                    var html = '<li>';
+                    html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
+                    html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
+                    html += '</li>';
+                    $('#{{ form.vars.id }}-data').append(html);
+
+                    $('#{{ form.vars.id }}').val('');
+                }
+
+                $(this).data('currentItem', null);
+                $('#{{ form.vars.id }}-curPackItemQty').val(1);
+            });
+
+            //define source
+            this['{{ form.vars.id }}_source'] = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) {
+                    return obj.{{ mapping_value }};
+                },
+                remote: {
+                    url: '{{ remote_url|raw }}',
+                    cache: false,
+                    wildcard: '%QUERY',
+                    transform: function(response){
+                        if(!response){
+                            return [];
+                        }
+                        return response;
+                    }
+                }
+            });
+
+            //define typeahead
+            $('#{{ form.vars.id }}').typeahead({
+                limit: 20,
+                minLength: 2,
+                highlight: true
+            }, {
+                display: '{{ mapping_name }}',
+                source: this['{{ form.vars.id }}_source']
+            }).bind('typeahead:select', function(ev, suggestion) {
+                $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
             });
         });
     </script>

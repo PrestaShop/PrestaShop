@@ -81,6 +81,9 @@ services:
         decorates: prestashop.core.data_provider.stock_interface
         public: false
 
+    prestashop.adapter.data_provider.pack:
+        class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
+
 
     # Other adapters
     prestashop.adapter.shop.context:
