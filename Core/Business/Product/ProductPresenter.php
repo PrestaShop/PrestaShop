@@ -70,7 +70,11 @@ class ProductPresenter
 
 
         if (!isset($presentedProduct['cover'])) {
-            $presentedProduct['cover'] = $presentedProduct['images'][0];
+            if (isset($presentedProduct['images'][0])) {
+                $presentedProduct['cover'] = $presentedProduct['images'][0];
+            } else {
+                $presentedProduct['cover'] = null;
+            }
         }
 
         return $presentedProduct;
