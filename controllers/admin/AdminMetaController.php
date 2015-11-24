@@ -526,6 +526,13 @@ class AdminMetaControllerCore extends AdminController
                     .__PS_BASE_URI__.$sitemap_filename."\n");
             }
 
+            // Allow Google to access to CSS & JS files and images (modules & themes)
+            fwrite($write_fd, "User-agent: Googlebot\n");
+            fwrite($write_fd, "Allow: */css/\n");
+            fwrite($write_fd, "Allow: */js/\n");
+            fwrite($write_fd, "Allow: */img/\n");
+            fwrite($write_fd, "Allow: */images/\n");
+
             Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
                 'rb_data' => $this->rb_data,
                 'write_fd' => &$write_fd
