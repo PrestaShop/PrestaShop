@@ -17,6 +17,11 @@ class Adapter_ImageRetriever
             $language->id
         );
         $images = $productInstance->getImages($language->id);
+
+        if (empty($images)) {
+            return [];
+        }
+
         $combinationImages = $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
             $combinationImages = [];
@@ -27,15 +32,6 @@ class Adapter_ImageRetriever
             foreach ($imgs as $img) {
                 $imageToCombinations[$img['id_image']][] = $img['id_product_attribute'];
             }
-        }
-
-        if (count($images) <= 0) {
-            $images[] = array(
-                'cover' => true,
-                'id_image' => 0,
-                'legend' => $productInstance->name,
-                'position' => 1,
-            );
         }
 
         $images = array_map(function (array $image) use ($productInstance, $imageToCombinations) {
@@ -58,6 +54,10 @@ class Adapter_ImageRetriever
 
     public function getImage($object, $id_image)
     {
+        if (!$id_image) {
+            return null;
+        }
+
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
