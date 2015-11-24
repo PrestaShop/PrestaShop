@@ -30,6 +30,12 @@
     height: 30px;
     width: 70px;
 }
+.module-install-loader {
+    position: relative;
+    bottom: -20px;
+    right: 40px;
+    display: none;
+}
 .module-sorting-menu {
     margin-bottom: 30px;
 }
@@ -150,6 +156,7 @@
 .module-item-heading-grid {
     display: inline-block;
     width: 100%;
+    cursor: pointer;
 }
 
 .module-quick-description-grid {
@@ -171,6 +178,7 @@
 }
 .module-quick-action-grid {
     margin-top: 10px;
+    height: 30px;
 }
 .module-version-author-grid {
     margin-top: 10px;

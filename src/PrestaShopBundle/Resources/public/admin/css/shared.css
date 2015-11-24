@@ -54,101 +54,65 @@
 
 
 /* CSS FOR Spinner Loader may be removed once we have our own */
-@-moz-keyframes timer-loader {
-  0% {
-    -moz-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -moz-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes timer-loader {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes timer-loader {
-  0% {
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-/* :not(:required) hides this rule from IE9 and below */
-.timer-loader:not(:required) {
-  border: 6px solid #CCC;
-  -moz-border-radius: 24px;
-  -webkit-border-radius: 24px;
-  border-radius: 24px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  display: inline-block;
-  overflow: hidden;
+$green: #008744;
+$blue: #0057e7;
+$red: #d62d20;
+$yellow: #ffa700;
+$white: #eee;
+
+.loader {
   position: relative;
-  text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-}
-.timer-loader:not(:required)::before {
-  -moz-animation: timer-loader 1250ms infinite linear;
-  -webkit-animation: timer-loader 1250ms infinite linear;
-  animation: timer-loader 1250ms infinite linear;
-  -moz-transform-origin: 3px 3px;
-  -ms-transform-origin: 3px 3px;
-  -webkit-transform-origin: 3px 3px;
-  transform-origin: 3px 3px;
-  background: #CCC;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  content: '';
-  display: block;
-  position: absolute;
-  width: 6px;
-  height: 19.2px;
-  left: 15px;
-  top: 15px;
-}
-.timer-loader:not(:required)::after {
-  -moz-animation: timer-loader 15000ms infinite linear;
-  -webkit-animation: timer-loader 15000ms infinite linear;
-  animation: timer-loader 15000ms infinite linear;
-  -moz-transform-origin: 3px 3px;
-  -ms-transform-origin: 3px 3px;
-  -webkit-transform-origin: 3px 3px;
-  transform-origin: 3px 3px;
-  background: #CCC;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  content: '';
-  display: block;
-  position: absolute;
-  width: 6px;
-  height: 16px;
-  left: 15px;
-  top: 15px;
-}
-.timer-loader {
-    display: table !important;
-    margin: 0 auto;
+  margin: 0px auto;
+  width: 30px;
+  &:before {
+    content:'';
+    display: block;
+    padding-top: 100%;
+  }
 }
 
-.spinner-wrapper {
-    padding: 10%;
+.circular {
+  animation: rotate 2s linear infinite;
+  height: 25px;
+  transform-origin: center center;
+  width: 25px;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  margin: auto;
+}
+
+
+.path {
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+  animation:
+   dash 1.5s ease-in-out infinite,
+   color 6s ease-in-out infinite
+  ;
+  stroke-linecap: round;
+}
+
+@keyframes rotate{
+ 100%{
+  transform: rotate(360deg);
+ }
+}
+@keyframes dash{
+ 0%{
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+ }
+ 50%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -35px;
+ }
+ 100%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -124px;
+ }
+}
+@keyframes color{
+  0%, 100%{
+    stroke: #2eacce;
+  }
 }

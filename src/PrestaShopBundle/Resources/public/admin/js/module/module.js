@@ -34,6 +34,8 @@ var AdminModule = function() {
     this.addonsSearchSelector = '.module-addons-search';
     this.addonsSearchLinkSelector = '.module-addons-search-link';
     this.categoryResetBtnSelector = '.module-category-reset';
+    this.moduleInstallBtnSelector = '.module-install-btn';
+    this.moduleInstallLoaderSelector = '.module-install-loader';
 
 /**
  * Initialize all listners and bind everything
@@ -44,6 +46,26 @@ var AdminModule = function() {
     this.initSortingDisplaySwitch();
     this.initSearchBlock();
     this.initCategorySelect();
+    this.initInstallModule();
+  };
+
+  this.initInstallModule = function() {
+      var selector = (
+            this.currentDisplay == 'grid' ?
+            this.moduleItemGridSelector :
+            this.moduleItemListSelector
+        );
+
+        var _this = this;
+
+      $(this.moduleInstallBtnSelector).on('click', function(event){
+        /*  var currentModuleItem = $(this).parents().find(selector+':first');
+          var moduleName = currentModuleItem.attr('data-name');*/
+          var _that = _this;
+          $(this).fadeOut(function() {
+              $(this).next().fadeIn();
+          });
+      });
   };
 
   this.initCategorySelect = function() {
