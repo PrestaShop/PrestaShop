@@ -84,7 +84,7 @@
         </tr>
     {% else %}
         <tr><td colspan="11">
-            {{ "There is no result for this search. You should remove some criteria."|trans }}
+            {{ "There is no result for this search. You should remove some criteria."|trans({}, 'AdminProducts') }}
         </td></tr>
     {% endfor %}
 </tbody>

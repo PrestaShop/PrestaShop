@@ -140,7 +140,7 @@ class AttributeController extends FrameworkBundleAdminController
             $response->setStatusCode(400);
         }
 
-        $response->setData(['message' => $translator->trans($res['message'])]);
+        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
         return $response;
     }
 

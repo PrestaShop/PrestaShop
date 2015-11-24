@@ -34,21 +34,15 @@ class TranslationExtension extends \Twig_Extension
 {
     private $translator;
     private $prestashopTranslator;
-    private $transDomain;
 
     /**
      * Constructor : Inject Symfony\Component\Translation Translator
      *
      * @param TranslatorInterface $translator
      * @param object $prestashopTranslator
-     * @param object $serviceContainer The SF2 service container
      */
-    public function __construct(TranslatorInterface $translator, $prestashopTranslator, $serviceContainer)
+    public function __construct(TranslatorInterface $translator, $prestashopTranslator)
     {
-        $this->transDomain = null;
-        if ($serviceContainer->isScopeActive('request')) {
-            $this->transDomain = $serviceContainer->get('request')->attributes->get('_legacy_controller');
-        }
         $this->translator = $translator;
         $this->prestashopTranslator = $prestashopTranslator;
     }
@@ -79,7 +73,7 @@ class TranslationExtension extends \Twig_Extension
      *
      * @param string $message The string to translate
      * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
      *
      * @return string The translated string
      */
@@ -93,7 +87,7 @@ class TranslationExtension extends \Twig_Extension
      *
      * @param string $message The string to translate
      * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
      * @param string|null $locale The locale or null to use the default
      *
      * @return string The translated string
@@ -101,9 +95,9 @@ class TranslationExtension extends \Twig_Extension
     public function trans($message, array $arguments = array(), $domain = null, $locale = null)
     {
         return $this->translator->trans(
-            $this->getPrestaShopTranslation($message, $arguments, $domain ? $domain : $this->transDomain),
+            $this->getPrestaShopTranslation($message, $arguments, $domain),
             $arguments,
-            $domain ? $domain : $this->transDomain,
+            $domain,
             $locale
         );
     }
@@ -114,7 +108,7 @@ class TranslationExtension extends \Twig_Extension
      * @param string $message The string to translate
      * @param int $count The number to use to find the indice of the message
      * @param array $arguments An array of parameters for the message
-     * @param string|null $domain The domain for the message or null to use the default
+     * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
      * @param string|null $locale The locale or null to use the default
      *
      * @return string The translated string
@@ -125,7 +119,7 @@ class TranslationExtension extends \Twig_Extension
             $this->getPrestaShopTranslation($message, $arguments, $domain),
             $count,
             array_merge(array('%count%' => $count), $arguments),
-            $domain ? $domain : $this->transDomain,
+            $domain,
             $locale
         );
     }

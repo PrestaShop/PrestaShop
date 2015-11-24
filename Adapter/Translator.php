@@ -60,7 +60,7 @@ class Translator implements TranslatorInterface
      *
      * @param string $id The message id (may also be an object that can be cast to string)
      * @param array $parameters An array of parameters for the message
-     * @param string|null $module The domain: Legacy Admin controller name, module name or null to use the Core. Other special value: 'pdf'.
+     * @param string $domain The domain: Legacy Admin controller name, module name or null to use the Core. Other special value: 'pdf'. This value can not be passed with a variable
      * @param string|null $locale The locale or null to use the default
      *
      * @throws LogicException If no domain set
@@ -70,6 +70,10 @@ class Translator implements TranslatorInterface
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
+        if (!$domain) {
+            throw new LogicException('Error, you need to provide a translation domain');
+        }
+
         // Very speific case (Form error)
         if ($domain == 'form_error') {
             return \Tools::displayError($id, false);
@@ -82,9 +86,6 @@ class Translator implements TranslatorInterface
 
         // Search for Admin case
         $isAdmin = ((isset($this->context->controller) && $this->context->controller->controller_type == 'admin'));
-        if ($isAdmin && $domain == null) {
-            $domain = 'AdminTab'; // default class value for legacy Admin translation
-        }
         if ($isAdmin) {
             $domain = preg_replace('/(c|C)ontroller$/', '', $domain); // remove trailing 'Controller'
 
@@ -105,7 +106,7 @@ class Translator implements TranslatorInterface
      * @param string      $id         The message id (may also be an object that can be cast to string)
      * @param int         $number     The number to use to find the indice of the message
      * @param array       $parameters An array of parameters for the message
-     * @param string|null $domain     The domain for the message or null to use the default
+     * @param string|null $domain     The domain for the message or null to use the default. This value can not be passed with a variable
      * @param string|null $locale     The locale or null to use the default
      *
      * @throws LogicException If the locale contains invalid characters
