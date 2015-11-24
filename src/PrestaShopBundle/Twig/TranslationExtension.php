@@ -29,6 +29,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template
+ *
+ * WARNING : TO ENSURE TRANS PARSER WILL FIND YOUR MESSAGE, you cannot use variables for $id and $domain.
  */
 class TranslationExtension extends \Twig_Extension
 {
@@ -45,19 +47,6 @@ class TranslationExtension extends \Twig_Extension
     {
         $this->translator = $translator;
         $this->prestashopTranslator = $prestashopTranslator;
-    }
-
-    /**
-     * Define available filters
-     *
-     * @return array Twig_SimpleFilter
-     */
-    public function getFilters()
-    {
-        return array(
-            new \Twig_SimpleFilter('trans', array($this, 'trans')),
-            new \Twig_SimpleFilter('transchoice', array($this, 'transchoice'))
-        );
     }
 
     public function getFunctions()
@@ -85,7 +74,7 @@ class TranslationExtension extends \Twig_Extension
     /**
      * Translates the given message
      *
-     * @param string $message The string to translate
+     * @param string $message The string to translate. This value can not be passed with a variable
      * @param array $arguments An array of parameters for the message
      * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
      * @param string|null $locale The locale or null to use the default
@@ -105,7 +94,7 @@ class TranslationExtension extends \Twig_Extension
     /**
      * Translates the given message by choosing a translation according to a number
      *
-     * @param string $message The string to translate
+     * @param string $message The string to translate. This value can not be passed with a variable
      * @param int $count The number to use to find the indice of the message
      * @param array $arguments An array of parameters for the message
      * @param string|null $domain The domain for the message or null to use the default. This value can not be passed with a variable
