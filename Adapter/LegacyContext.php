@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Process\Exception\LogicException;
-use \Context as OldContext;
+use \ContextCore as OldContext;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -78,11 +78,11 @@ class LegacyContext
         $id_lang = OldContext::getContext()->language->id;
         $params = $extraParams;
         if ($withToken) {
-            $params['token'] = \Tools::getAdminTokenLite($controller);
+            $params['token'] = \ToolsCore::getAdminTokenLite($controller);
         }
 
-        $link = new \Link();
-        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+        $link = new \LinkCore();
+        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\DispatcherCore::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -147,6 +147,6 @@ class LegacyContext
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        return \Language::getLanguages($active, $id_shop, $ids_only);
+        return \LanguageCore::getLanguages($active, $id_shop, $ids_only);
     }
 }

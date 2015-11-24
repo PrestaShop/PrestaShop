@@ -46,7 +46,7 @@ class SslMiddleware
     public function onKernelRequest(GetResponseEvent $event)
     {
         // already SSL, do nothing more
-        if (\Tools::usingSecureMode()) {
+        if (\ToolsCore::usingSecureMode()) {
             return;
         }
 

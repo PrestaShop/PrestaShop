@@ -55,7 +55,7 @@ class EntityMapper
             }
 
             // Get shop informations
-            if (\Shop::isTableAssociated($entity_defs['table'])) {
+            if (\ShopCore::isTableAssociated($entity_defs['table'])) {
                 $sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
             }
 

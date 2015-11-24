@@ -40,7 +40,7 @@ class Context
      */
     public function getShops($active = true, $get_as_list_id = false)
     {
-        return \Shop::getShops($active, \Shop::getContextShopGroupID(), $get_as_list_id);
+        return \ShopCore::getShops($active, \ShopCore::getContextShopGroupID(), $get_as_list_id);
     }
 
     /**
@@ -50,6 +50,6 @@ class Context
      */
     public function getContextShopID($null_value_without_multishop = false)
     {
-        return \Shop::getContextShopID($null_value_without_multishop);
+        return \ShopCore::getContextShopID($null_value_without_multishop);
     }
 }

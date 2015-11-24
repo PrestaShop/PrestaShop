@@ -51,7 +51,7 @@ class ProductDataProvider
             throw new LogicException('You need to provide a product id', null, 5002);
         }
 
-        return new \Product($id_product, $full, $id_lang, $id_shop, $context);
+        return new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
     }
 
     /**
@@ -61,7 +61,21 @@ class ProductDataProvider
      */
     public function getIdTaxRulesGroup()
     {
-        $product = new \Product();
+        $product = new \ProductCore();
         return $product->getIdTaxRulesGroup();
+    }
+
+    /**
+     * Get product quantity
+     *
+     * @param int $id_product
+     * @param int|null $id_product_attribute
+     * @param bool|null $cache_is_pack
+     *
+     * @return int stock
+     */
+    public function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
+    {
+        return \ProductCore::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
     }
 }

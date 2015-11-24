@@ -44,8 +44,8 @@ class Tools
     public function link_rewrite($str, $utf8_decode = null)
     {
         if ($utf8_decode !== null) {
-            \Tools::displayParameterAsDeprecated('utf8_decode');
+            \ToolsCore::displayParameterAsDeprecated('utf8_decode');
         }
-        return \Tools::str2url($str);
+        return \ToolsCore::str2url($str);
     }
 }

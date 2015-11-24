@@ -68,8 +68,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getPersistedFilterParameters()
     {
-        $employee = \Context::getContext()->employee;
-        $shop = \Context::getContext()->shop;
+        $employee = \ContextCore::getContext()->employee;
+        $shop = \ContextCore::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
@@ -111,8 +111,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function persistFilterParameters(array $parameters)
     {
-        $employee = \Context::getContext()->employee;
-        $shop = \Context::getContext()->shop;
+        $employee = \ContextCore::getContext()->employee;
+        $shop = \ContextCore::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
@@ -170,8 +170,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $orderBy = 'position';
         }
 
-        $idShop = \Context::getContext()->shop->id;
-        $idLang = \Context::getContext()->language->id;
+        $idShop = \ContextCore::getContext()->shop->id;
+        $idLang = \ContextCore::getContext()->language->id;
 
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => self::FILTERING_EQUAL_NUMERIC),
@@ -273,7 +273,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        \Hook::exec('actionAdminProductsListingFieldsModifier', array(
+        \HookCore::exec('actionAdminProductsListingFieldsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -288,20 +288,20 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new \Currency(\Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new \CurrencyCore(\Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
-            $product['price'] = \Tools::displayPrice($product['price'], $currency);
+            $product['price'] = \ToolsCore::displayPrice($product['price'], $currency);
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = \Product::getPriceStatic($product['id_product'], true, null,
+            $product['price_final'] = \ProductCore::getPriceStatic($product['id_product'], true, null,
                     (int)\Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                     true, null, null, null, $nothing, true, true);
-            $product['price_final'] = \Tools::displayPrice($product['price_final'], $currency);
+            $product['price_final'] = \ToolsCore::displayPrice($product['price_final'], $currency);
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
         }
 
         // post treatment by hooks
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        \Hook::exec('actionAdminProductsListingResultsModifier', array(
+        \HookCore::exec('actionAdminProductsListingResultsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'products' => &$products,
             'total' => $total
@@ -315,7 +315,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function countAllProducts()
     {
-        $idShop = \Context::getContext()->shop->id;
+        $idShop = \ContextCore::getContext()->shop->id;
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product')
         );
