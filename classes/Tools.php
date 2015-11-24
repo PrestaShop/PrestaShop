@@ -650,7 +650,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository(Context::getContext()->language);
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
@@ -662,7 +662,7 @@ class ToolsCore
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository();
+        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository(Context::getContext()->language);
 
         return $cldr->getNumber($number);
     }
@@ -1391,7 +1391,7 @@ class ToolsCore
             /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
             /* b  */ '/[\x{0431}]/u',
             /* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
-            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}]/u',
+            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}\x{00F0}]/u',
             /* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}\x{00C8}-\x{00CA}\x{1EB8}-\x{1EC7}]/u',
             /* f  */ '/[\x{0444}]/u',
             /* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
@@ -1430,7 +1430,7 @@ class ToolsCore
             /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
             /* B  */ '/[\x{0411}]/u',
             /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
-            /* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
+            /* D  */ '/[\x{010E}\x{0110}\x{0414}\x{00D0}]/u',
             /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
             /* F  */ '/[\x{0424}]/u',
             /* G  */ '/[\x{011C}\x{011E}\x{0120}\x{0122}\x{0413}\x{0490}]/u',
@@ -2440,9 +2440,10 @@ class ToolsCore
         fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
-        fwrite($write_fd, "AddType application/x-font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff .woff\n");
+        fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
+    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
         Header add Access-Control-Allow-Origin \"*\"
     </FilesMatch>
 </IfModule>\n\n");
@@ -2462,6 +2463,7 @@ class ToolsCore
     ExpiresByType image/svg+xml \"access plus 1 year\"
     ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
     ExpiresByType application/font-woff \"access plus 1 year\"
+    ExpiresByType application/font-woff2 \"access plus 1 year\"
     ExpiresByType application/x-font-woff \"access plus 1 year\"
     ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
     ExpiresByType font/opentype \"access plus 1 year\"

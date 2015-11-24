@@ -13,6 +13,8 @@
     </ul>
     <script>
         $( document ).ready(function() {
+            var limit = {{ limit }}
+
             //remove collection item
             $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
                 $(this).parent().remove();
@@ -46,6 +48,12 @@
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source']
             }).bind('typeahead:select', function(ev, suggestion) {
+                //if collection length is up to limit, return
+                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
+                    console.log('stop');
+                    return;
+                }
+
                 var html = '<li>';
                 html += sprintf('{{ template_collection|raw }}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + suggestion.{{ mapping_value }} + '" />';
@@ -73,6 +81,8 @@
     </ul>
     <script>
         $( document ).ready(function() {
+            var limit = {{ limit }};
+
             //remove collection item
             $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
                 $(this).parent().remove();
@@ -107,6 +117,13 @@
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source']
             }).bind('typeahead:select', function(ev, suggestion) {
+
+                //if collection length is up to limit, return
+                if(limit != 0 && $('#{{ form.vars.id }}-data li').length >= limit){
+                    console.log('stop');
+                    return;
+                }
+
                 var value = suggestion.{{ mapping_value }};
                 if (suggestion.id_product_attribute) {
                     value = value+','+suggestion.id_product_attribute;

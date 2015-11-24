@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -32,7 +31,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * This form class is risponsible to create generic typeahed field
+ * This form class is responsible to create generic typeahed field
  */
 class TypeaheadCollectionType extends AbstractType
 {
@@ -41,6 +40,7 @@ class TypeaheadCollectionType extends AbstractType
     private $mapping_name;
     private $placeholder;
     private $template_collection;
+    private $limit;
 
     /**
      * Constructor
@@ -50,14 +50,15 @@ class TypeaheadCollectionType extends AbstractType
      * @param string $mapping_name The name to map
      * @param string $placeholder The placeholder for the searchbox
      * @param string $template_collection The template use by php/javascript to render a collection line (name, image). EX : <img src="%s" /><span>%s</span>
-     *
+     * @param int $limit Limit the number of collection, if set to 0, collection is unlimited
      */
-    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '')
+    public function __construct($remote_url, $mapping_value = 'id', $mapping_name = 'name', $placeholder = '', $template_collection = '', $limit = 0)
     {
         $this->remote_url = $remote_url;
         $this->mapping_value = $mapping_value;
         $this->mapping_name = $mapping_name;
         $this->placeholder = $placeholder;
+        $this->limit = $limit;
         $this->template_collection = $template_collection ? $template_collection : '<span>%s</span> - <a href="" class="delete">X</a>';
     }
 
@@ -74,6 +75,7 @@ class TypeaheadCollectionType extends AbstractType
         $view->vars['mapping_value'] = $this->mapping_value;
         $view->vars['mapping_name'] = $this->mapping_name;
         $view->vars['template_collection'] = $this->template_collection;
+        $view->vars['limit'] = $this->limit;
     }
 
     /**

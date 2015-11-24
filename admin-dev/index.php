@@ -29,7 +29,7 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-umask(0000); // This will let the permissions be 0775
+umask(0000); // This will let the permissions be 0777
 
 $timer_start = microtime(true);
 if (!defined('_PS_ADMIN_DIR_')) {

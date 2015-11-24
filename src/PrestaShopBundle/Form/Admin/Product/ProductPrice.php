@@ -23,17 +23,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 
 /**
- * This form class is risponsible to generate the product price form
+ * This form class is responsible to generate the product price form
  */
-class ProductPrice extends AbstractType
+class ProductPrice extends CommonModelAbstractType
 {
     private $translator;
     private $tax_rules;
@@ -45,7 +45,9 @@ class ProductPrice extends AbstractType
      */
     public function __construct($container)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->container = $container;
+        $this->translator = $this->container->get('prestashop.adapter.translator');
+
         $this->tax_rules = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -92,24 +94,27 @@ class ProductPrice extends AbstractType
         ->add('unity', 'text', array(
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
+        ))
+        ->add('specific_price', new ProductSpecificPrice($this->container))
+        ->add('specificPricePriorityToAll', 'checkbox', array(
+            'required' => false,
+            'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
         ));
-    }
 
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
+        //generates fields for price priority
+        $specificPricePriorityChoices = [
+            'id_shop' => $this->translator->trans('Shop', [], 'AdminProducts'),
+            'id_currency' => $this->translator->trans('Currency', [], 'AdminProducts'),
+            'id_country' => $this->translator->trans('Country', [], 'AdminProducts'),
+            'id_group' => $this->translator->trans('Group', [], 'AdminProducts'),
+        ];
+
+        for ($i=0; $i < count($specificPricePriorityChoices); $i++) {
+            $builder->add('specificPricePriority_'.$i, 'choice', array(
+                'choices' => $specificPricePriorityChoices,
+                'required' => true
+            ));
         }
-        return $new_list;
     }
 
     /**

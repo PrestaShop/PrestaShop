@@ -23,17 +23,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 
 /**
- * This form class is risponsible to generate the product SEO form
+ * This form class is responsible to generate the product SEO form
  */
-class ProductSeo extends AbstractType
+class ProductSeo extends CommonModelAbstractType
 {
     private $translator;
     private $locales;
@@ -56,7 +55,23 @@ class ProductSeo extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('link_rewrite', new TranslateType(
+        $builder->add('meta_title', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
+            'required' => false
+        ))
+        ->add('meta_description', new TranslateType(
+            'text',
+            array('required' => false),
+            $this->locales
+        ), array(
+            'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
+            'required' => false
+        ))
+        ->add('link_rewrite', new TranslateType(
             'text',
             array(),
             $this->locales

@@ -26,16 +26,23 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
 /**
- * This form class is risponsible to generate the product options form
+ * This form class is responsible to generate the product options form
  */
-class ProductOptions extends AbstractType
+class ProductOptions extends CommonModelAbstractType
 {
     private $translator;
     private $suppliers;
+    private $container;
+    private $context;
+    private $productAdapter;
 
     /**
      * Constructor
@@ -44,28 +51,14 @@ class ProductOptions extends AbstractType
      */
     public function __construct($container)
     {
+        $this->container = $container;
+        $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->translator = $container->get('prestashop.adapter.translator');
+        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->suppliers = $this->formatDataChoicesList(
             $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
             'id_supplier'
         );
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**
@@ -75,10 +68,28 @@ class ProductOptions extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //TODO
-        //If product is NOT active, add redirections form
-
-        $builder->add('visibility', 'choice', array(
+        $builder->add('redirect_type', 'choice', array(
+            'choices'  => array(
+                '404' => $this->translator->trans('No redirect (404)', [], 'AdminProducts'),
+                '301' => $this->translator->trans('Catalog Redirected permanently (301)', [], 'AdminProducts'),
+                '302' => $this->translator->trans('Redirected temporarily (302)', [], 'AdminProducts'),
+            ),
+            'required' => true,
+            'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
+        ))
+        ->add('id_product_redirected', new TypeaheadProductCollectionType(
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&excludeIds='.urlencode('1,').'&limit=20&q=%QUERY',
+            'id',
+            'name',
+            $this->translator->trans('search in catalog...', [], 'AdminProducts'),
+            '',
+            $this->productAdapter,
+            1
+        ), array(
+            'required' => false,
+            'label' => $this->translator->trans('Related product:', [], 'AdminProducts')
+        ))
+        ->add('visibility', 'choice', array(
             'choices'  => array(
                 'both' => $this->translator->trans('Everywhere', [], 'AdminProducts'),
                 'catalog' => $this->translator->trans('Catalog only', [], 'AdminProducts'),
@@ -115,6 +126,28 @@ class ProductOptions extends AbstractType
             'required' =>  true,
             'label' => $this->translator->trans('Default suppliers', [], 'AdminProducts')
         ));
+
+        foreach ($this->suppliers as $id => $supplier) {
+            $builder->add('supplier_combination_'.$id, 'collection', array(
+                'type' => new ProductSupplierCombination($id, $this->container),
+                'prototype' => true,
+                'allow_add' => true,
+                'required' => false,
+                'label' => $supplier,
+            ));
+        }
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            //If not supplier selected, remove all supplier combinations collection form
+            if (!isset($data['suppliers']) || count($data['suppliers']) == 0) {
+                foreach ($this->suppliers as $id => $supplier) {
+                    $form->remove('supplier_combination_'.$id);
+                }
+            }
+        });
     }
 
     /**

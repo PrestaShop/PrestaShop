@@ -2,6 +2,23 @@ imports:
     - { resource: admin/services.yml }
 
 services:
+    prestashop.database.naming_strategy:
+        class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
+        arguments: ["%database_prefix%"]
+
+    # Interfaced services to decorate
+    prestashop.core.data_provider.stock_interface:
+        class: PrestaShopBundle\Service\DataProvider\StockInterface
+
+    # DISPATCHERS
+
+    prestashop.hook.dispatcher:
+        class: PrestaShopBundle\Service\Hook\HookDispatcher
+        calls:
+            - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
+            - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
+
+
     # ADAPTERS (prestashop.adapter.*)
 
     # Legacy context service, transitional
@@ -19,6 +36,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    # Legacy Hooks registrator
+    prestashop.adapter.legacy.hook.subscriber:
+        class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+    prestashop.adapter.legacy.block.helper.subscriber:
+            class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
 
     # Data providers service
     prestashop.adapter.data_provider.supplier:
@@ -26,6 +48,15 @@ services:
 
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
+
+    prestashop.adapter.data_provider.country:
+        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+
+    prestashop.adapter.data_provider.currency:
+        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
+
+    prestashop.adapter.data_provider.group:
+        class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
 
     prestashop.adapter.data_provider.tax:
         class: PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider
@@ -39,22 +70,43 @@ services:
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
-    prestashop.adapter.shop.context:
-        class: PrestaShop\PrestaShop\Adapter\Shop\Context
-
-    prestashop.adapter.tools:
-        class: PrestaShop\PrestaShop\Adapter\Tools
-
     prestashop.adapter.data_provider.feature:
         class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
 
     prestashop.adapter.data_provider.carrier:
         class: PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider
 
+    prestashop.adapter.data_provider.attribute:
+        class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider
+
+    prestashop.adapter.stock_manager:
+        class: PrestaShop\PrestaShop\Adapter\StockManager
+        decorates: prestashop.core.data_provider.stock_interface
+        public: false
+
+
+    # Other adapters
+    prestashop.adapter.shop.context:
+        class: PrestaShop\PrestaShop\Adapter\Shop\Context
+
+    prestashop.adapter.tools:
+        class: PrestaShop\PrestaShop\Adapter\Tools
+
+    prestashop.adapter.image_manager:
+        class: PrestaShop\PrestaShop\Adapter\ImageManager
+        arguments: ["@prestashop.adapter.legacy.context"]
+
+
     #TWIG EXTENSIONS
     prestashop.twig.extension.translation:
         class: PrestaShopBundle\Twig\TranslationExtension
         arguments: ["@translator", "@prestashop.adapter.translator", "@service_container"]
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.hook:
+        class: PrestaShopBundle\Twig\HookExtension
+        arguments: ["@prestashop.hook.dispatcher"]
         tags:
             - { name: twig.extension }
 

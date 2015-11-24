@@ -3116,7 +3116,7 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
             // Manage defaut supplier for product
-            if ($new_default_supplier != $product->id_supplier) {
+            if ($this->object && $new_default_supplier != $product->id_supplier) {
                 $this->object->id_supplier = $new_default_supplier;
                 $this->object->update();
             }
@@ -4932,6 +4932,7 @@ class AdminProductsControllerCore extends AdminController
                 Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
 
                 // Catch potential echo from modules
+                // This echoed error is kept for legacy controllers, but is dropped during sf refactoring of the hook.
                 $error = ob_get_contents();
                 if (!empty($error)) {
                     ob_end_clean();

@@ -1,0 +1,21 @@
+{% for supplierId in suppliers %}
+    {% set collectionName = 'supplier_combination_' ~ supplierId %}
+    <div class="form-group" id="supplier_combination_{{ supplierId }}">
+        {{ form_label(form[collectionName]) }}
+        <div class="col-sm-10">
+            {{ form_errors(form[collectionName]) }}
+            {% for supplier_combination in form[collectionName] %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ supplier_combination.vars.value.label }}</label>
+                    <div class="col-sm-10">
+                        <div class="pull-left col-lg-3">{{ form_widget(supplier_combination.supplier_reference) }}</div>
+                        <div class="pull-left col-lg-3">{{ form_widget(supplier_combination.product_price) }}</div>
+                        <div class="pull-left col-lg-3">{{ form_widget(supplier_combination.product_price_currency) }}</div>
+                        {{ form_widget(supplier_combination.id_product_attribute) }}
+                        {{ form_widget(supplier_combination.supplier_id) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}

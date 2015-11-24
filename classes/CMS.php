@@ -260,6 +260,6 @@ class CMSCore extends ObjectModel
     /* Method required for new PrestaShop Core */
     public static function getRepositoryClassName()
     {
-        return 'Core_Business_CMS_CMSRepository';
+        return '\\PrestaShop\\PrestaShop\\Core\\Business\\CMS\\CMSRepository';
     }
 }

@@ -23,23 +23,22 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 
 /**
- * FrameworkBundleAdminController that extends The Symfony framework bundle controller
+ * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
 class FrameworkBundleAdminController extends Controller
 {
     /**
-     * This function returns form errors for JS implementation
+     * Returns form errors for JS implementation.
+     *
      * Parse all errors mapped by id html field
      *
      * @param Form $form The form
-     *
      * @return array[array[string]] Errors
      */
     public function getFormErrorsForJS(Form $form)
@@ -79,5 +78,32 @@ class FrameworkBundleAdminController extends Controller
             }
         }
         return $errors;
+    }
+
+    /**
+     * Creates a HookEvent, sets its parameters, and dispatches it.
+     *
+     * Wrapper to: @see HookDispatcher::dispatchForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     */
+    protected function dispatchHook($hookName, array $parameters)
+    {
+        $this->container->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+    }
+
+    /**
+     * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
+     *
+     * Wrapper to: @see HookDispatcher::renderForParameters()
+     *
+     * @param $hookName The hook name
+     * @param $parameters The hook parameters
+     * @return array The responses of hooks
+     */
+    protected function renderHook($hookName, array $parameters)
+    {
+        return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 }

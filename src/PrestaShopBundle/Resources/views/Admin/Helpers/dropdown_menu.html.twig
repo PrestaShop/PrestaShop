@@ -14,7 +14,9 @@
                 <li class="divider"></li>
             {% else %}
                 <li>
-                    <a href="{{ entry.href|default("#") }}" {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{%  endif %}>
+                    <a href="{{ entry.href|default("#") }}"
+                        {% if entry.onclick is defined %}onclick="{{ entry.onclick }}"{% endif %}
+                        {% if entry.target is defined %}target="{{ entry.target }}"{% endif %}>
                         <i class="{{ entry.icon|default("") }}"></i>
                         {{ entry.label|default("No label") }}
                     </a>

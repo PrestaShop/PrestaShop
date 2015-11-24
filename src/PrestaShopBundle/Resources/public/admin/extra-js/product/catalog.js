@@ -26,9 +26,11 @@
 $(document).ready(function() {
 	var form = $('form#product_catalog_list');
 
+
 	/*
-	 * Click on a radio button in the categories tree filter (through radio.change() event)
+	 * Tree behavior: collapse/expand system and radio button change event.
 	 */
+	$("div#product_catalog_category_tree_filter div.form-wrapper").categorytree();
 	$('div#product_catalog_category_tree_filter div.radio > label > input:radio').change(function() {
 		if ($(this).is(':checked')) {
 			$('form#product_catalog_list input[name="filter_category"]').val($(this).val());
@@ -136,6 +138,52 @@ function productColumnFilterReset(tr) {
 	$('form#product_catalog_list').submit();
 }
 
+function bulkDuplicateAction(allItems, postUrl, redirectUrl) {
+	var itemsCount = allItems.length;
+	var currentItemIdx = 0;
+	if (itemsCount < 1) return;
+	$('#catalog_duplication_modal').modal('show');
+	var details = $('#catalog_duplication_progression .progress-details-text');
+
+	// re-init popup
+	details.html(details.attr('default-value'));
+	$('#catalog_duplication_progression .progress-bar').css('width', '0%');
+	$('#catalog_duplication_progression .progress-bar span').html('');
+	$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-danger');
+	$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-success');
+	$('#catalog_duplication_failure').hide();
+
+	// call duplication in ajax. Recursive with inner function
+	var duplicateCall = function(items, successCallback, errorCallback) {
+		if (items.length == 0) return;
+		var item0 = $(items.shift()).val();
+		currentItemIdx++;
+
+		details.html(details.attr('default-value').replace(/\.\.\./, '')+' (#'+item0+')');
+		$.ajax({
+			type: "POST",
+			url: postUrl,
+			data: { bulk_action_selected_products: [item0] },
+			success: function(data, status) {
+				$('#catalog_duplication_progression .progress-bar').css('width', (currentItemIdx*100/itemsCount)+'%');
+				$('#catalog_duplication_progression .progress-bar span').html(currentItemIdx+' / '+itemsCount);
+				if (items.length > 0) duplicateCall(items, successCallback, errorCallback);
+				else successCallback();
+			},
+			error: errorCallback,
+			dataType: 'json'
+		});
+	};
+
+	duplicateCall(allItems.toArray(), function() {
+		window.location.href = redirectUrl;
+	}, function() {
+		$('#catalog_duplication_progression .progress-bar').removeClass('progress-bar-success');
+		$('#catalog_duplication_progression .progress-bar').addClass('progress-bar-danger');
+		$('#catalog_duplication_failure').show();
+	});
+}
+
 function bulkProductAction(element, action) {
 	var form = $('form#product_catalog_list');
 	var postUrl = '';
@@ -164,6 +212,19 @@ function bulkProductAction(element, action) {
 			if (redirectUrl == '') {
 				redirectUrl = urlHandler.attr('redirecturl');
 			}
+			break;
+		case 'duplicate_all':
+			var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
+			if (items.size() == 0) {
+				return false;
+			}
+			var urlHandler = $(element).closest('[bulkurl]');
+			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+			redirectUrl = urlHandler.attr('redirecturl');
+			if (items.size() > 1) {
+				// use a progressbar, because duplication is slow...
+				return bulkDuplicateAction(items, postUrl, redirectUrl);
+			} // else, just post like a single action.
 			break;
 		// unknown cases...
 		default:

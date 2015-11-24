@@ -1,0 +1,22 @@
+PrestaShopBundle\Entity\AdminFilter:
+    type: entity
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        employee:
+            type: integer
+        shop:
+            type: integer
+        controller:
+            type: string
+            length: 60
+        action:
+            type: string
+            length: 100
+        filter:
+            type: text
+    uniqueConstraints:
+        admin_filter_search_idx:
+          columns: [ employee, shop, controller, action ]

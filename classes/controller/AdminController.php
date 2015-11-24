@@ -1383,7 +1383,7 @@ class AdminControllerCore extends Controller
                         }
                     }
                 } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                    if (!Validate::$values['validation'](Tools::getValue($field))) {
+                    if ((PHP_MAJOR_VERSION < 7 && !Validate::$values['validation'](Tools::getValue($field))) || !Validate::{$values['validation']}(Tools::getValue($field))) {
                         $this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                     }
                 }
@@ -2022,7 +2022,10 @@ class AdminControllerCore extends Controller
         } elseif ($this->display == 'details') {
             $this->content .= $this->renderDetails();
         } elseif (!$this->ajax) {
-            $this->content .= $this->renderModulesList();
+            // FIXME: Sorry. I'm not very proud of this, but no choice... Please wait sf refactoring to solve this.
+            if (get_class($this) != 'AdminCarriersController') {
+                $this->content .= $this->renderModulesList();
+            }
             $this->content .= $this->renderKpis();
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
@@ -2602,9 +2605,9 @@ class AdminControllerCore extends Controller
         )));
 
         $this->addJS(array(
-            _PS_JS_DIR_.'admin.js',
+            _PS_JS_DIR_.'admin.js?v='._PS_VERSION_,
             _PS_JS_DIR_.'cldr.js',
-            _PS_JS_DIR_.'tools.js',
+            _PS_JS_DIR_.'tools.js?v='._PS_VERSION_,
             _PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js',
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr.js',
             _PS_JS_DIR_.'vendor/node_modules/cldrjs/dist/cldr/event.js',
@@ -3652,7 +3655,7 @@ class AdminControllerCore extends Controller
         if (isset($field['validation'])) {
             $valid_method_exists = method_exists('Validate', $field['validation']);
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
-                if (!Validate::$field['validation']($value)) {
+                if ((PHP_MAJOR_VERSION < 7 && !Validate::$field['validation']($value)) || !Validate::{$field['validation']}($value)) {
                     $this->errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }

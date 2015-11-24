@@ -771,8 +771,7 @@ class CategoryCore extends ObjectModel
 					AND cp.`id_category` = '.(int)$this->id
                     .($active ? ' AND product_shop.`active` = 1' : '')
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '')
-                    .' GROUP BY cp.id_product';
+                    .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;
@@ -1387,7 +1386,7 @@ class CategoryCore extends ObjectModel
             c.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE c.`id_parent` = '.(int)$moved_category['id_parent'].'
             AND c.`id_category`='.(int)$moved_category['id_category']));
-        Hook::exec('actionCategoryUpdate', array('category' => $moved_category));
+        Hook::exec('actionCategoryUpdate', array('category' => new Category($moved_category['id_category'])));
         return $result;
     }
 
