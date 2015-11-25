@@ -81,7 +81,6 @@
 	    </table>
 	{/if}
 {else}
-	<div id="map"></div>
 	<p class="store-title">
 		<strong class="dark">
 			{l s='Enter a location (e.g. zip/postal code, address, city or country) in order to find the nearest stores.'}
@@ -90,7 +89,7 @@
     <div class="store-content">
         <div class="address-input">
             <label for="addressInput">{l s='Your location:'}</label>
-            <input class="form-control grey" type="text" name="location" id="addressInput" value="{l s='Address, zip / postal code, city, state or country'}" />
+            <input class="form-control grey" type="text" name="location" id="addressInput" placeholder="{l s='Address, zip / postal code, city, state or country'}" />
         </div>
         <div class="radius-input">
             <label for="radiusSelect">{l s='Radius:'}</label>
@@ -128,6 +127,7 @@
         <tbody>
         </tbody>
 	</table>
+	<div id="map"></div>
 {strip}
 {addJsDef map=''}
 {addJsDef markers=array()}

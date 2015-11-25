@@ -44,11 +44,6 @@ $(document).ready(function(){
 			searchLocations();
 	});
 
-	$(document).on('click', 'input[name=location]', function(e){
-		e.preventDefault();
-		$(this).val('');
-	});
-
 	$(document).on('click', 'button[name=search_locations]', function(e){
 		e.preventDefault();
 		searchLocations();
