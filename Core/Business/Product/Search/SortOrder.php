@@ -9,6 +9,7 @@ class SortOrder
     private $entity;
     private $field;
     private $direction;
+    private $label;
 
     public function __construct($entity, $field, $direction = 'asc')
     {
@@ -17,6 +18,39 @@ class SortOrder
             ->setField($field)
             ->setDirection($direction)
         ;
+    }
+
+    public function toArray()
+    {
+        return [
+            'entity'        => $this->entity,
+            'field'         => $this->field,
+            'direction'     => $this->direction,
+            'label'         => $this->label,
+            'urlParameter'  => $this->getURLParameter()
+        ];
+    }
+
+    public function getURLParameter()
+    {
+        return "{$this->entity}.{$this->field}.{$this->direction}";
+    }
+
+    public static function fromURLParameter($paramValue)
+    {
+        list($entity, $field, $direction) = explode('.', $paramValue);
+        return new SortOrder($entity, $field, $direction);
+    }
+
+    public function setLabel($label)
+    {
+        $this->label = $label;
+        return $this;
+    }
+
+    public function getLabel()
+    {
+        return $this->label;
     }
 
     public function setEntity($entity)

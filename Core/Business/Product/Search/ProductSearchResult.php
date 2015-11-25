@@ -8,6 +8,7 @@ class ProductSearchResult
     private $nextQuery;
     private $encodedFacets;
     private $paginationResult;
+    private $availableSortOrders = [];
 
     public function setProducts(array $products)
     {
@@ -51,5 +52,27 @@ class ProductSearchResult
     public function getPaginationResult()
     {
         return $this->paginationResult;
+    }
+
+    public function addAvailableSortOrder(SortOrder $sortOrder)
+    {
+        $this->availableSortOrders[] = $sortOrder;
+        return $this;
+    }
+
+    public function getAvailableSortOrders()
+    {
+        return $this->availableSortOrders;
+    }
+
+    public function setAvailableSortOrders(array $sortOrders)
+    {
+        $this->availableSortOrders = [];
+
+        foreach ($sortOrders as $sortOrder) {
+            $this->addAvailableSortOrder($sortOrder);
+        }
+
+        return $this;
     }
 }
