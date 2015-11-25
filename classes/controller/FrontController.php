@@ -502,6 +502,8 @@ class FrontControllerCore extends Controller
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
+            'feature_active' => $this->getTemplateVarFeatureActive(),
+            'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
         ]);
 
         Media::addJsDef(['prestashop' => [
@@ -1496,6 +1498,15 @@ class FrontControllerCore extends Controller
         ];
 
         return $urls;
+    }
+
+    public function getTemplateVarFeatureActive()
+    {
+        return [
+            'b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
+            'optin' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
+            'newsletter' => Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active),
+        ];
     }
 
     public function getTemplateVarCurrency()
