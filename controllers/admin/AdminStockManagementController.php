@@ -731,11 +731,22 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_from,
 					$usable_to
 				);
-				StockAvailable::synchronize($id_product);
-				if ($is_transfer)
-					Tools::redirectAdmin($redirect.'&conf=3');
-				else
-					$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity. No stock was transferred.');
+				if ($is_transfer) {
+                    			// Create warehouse_product_location entry if we add stock to a new warehouse
+                    			$id_wpl = (int)WarehouseProductLocation::getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse_to);
+                    			if(!$id_wpl)
+                    			{
+			                        $wpl = new WarehouseProductLocation();
+			                        $wpl->id_product = (int)$id_product;
+			                        $wpl->id_product_attribute = (int)$id_product_attribute;
+			                        $wpl->id_warehouse = (int)$id_warehouse_to;
+			                        $wpl->save();
+                    			}
+                    			StockAvailable::synchronize($id_product);
+                    			Tools::redirectAdmin($redirect.'&conf=3');
+                		}else{
+                    			$this->errors[] = Tools::displayError('It is not possible to transfer the specified quantity. No stock was transferred.');
+                		}
 			}
 		}
 	}
