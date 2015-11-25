@@ -5,7 +5,7 @@
     </header>
 
     {if !$customer.is_logged}
-      <p>{l s='Have an account?'} <a data-link-action="show">{l s='Log in'}</a></p>
+      <p>{l s='Have an account?'} <a href="{$urls.pages.order_login}">{l s='Log in'}</a></p>
     {else}
       <p>{l s='Not you?'} <a href="{$urls.actions.logout}">{l s='Log out'}</a></p>
     {/if}
