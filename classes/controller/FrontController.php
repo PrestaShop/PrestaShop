@@ -1608,4 +1608,19 @@ class FrontControllerCore extends Controller
 
         return $page_name;
     }
+
+    protected function render($template, $params = [])
+    {
+        $scope = $this->context->smarty->createData(
+            $this->context->smarty
+        );
+
+        $scope->assign($params);
+        $tpl = $this->context->smarty->createTemplate(
+            $template,
+            $scope
+        );
+
+        return $tpl->fetch();
+    }
 }

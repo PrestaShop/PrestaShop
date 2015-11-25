@@ -64,8 +64,14 @@ class CategoryControllerCore extends ProductListingFrontController
             'subcategories' => $this->getTemplateVarSubCategories()
         ]);
 
-        $this->assignProductSearchVariables();
-        $this->setTemplate('catalog/category.tpl');
+        if ($this->ajax) {
+            ob_end_clean();
+            header('Content-Type: application/json');
+            die(json_encode($this->getRenderedProductSearchWidgets()));
+        } else {
+            $this->context->smarty->assign($this->getProductSearchVariables());
+            $this->setTemplate('catalog/category.tpl');
+        }
     }
 
     protected function getProductSearchQuery()
