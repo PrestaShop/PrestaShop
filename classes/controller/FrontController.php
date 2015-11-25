@@ -1543,7 +1543,7 @@ class FrontControllerCore extends Controller
         unset($cust['deleted']);
         unset($cust['id_lang']);
 
-        $cust['is_logged'] = $this->context->customer->isLogged();
+        $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectSerializer->toArray(new Gender($cust['id_gender']));
         unset($cust['id_gender']);
