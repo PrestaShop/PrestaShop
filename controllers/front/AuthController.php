@@ -69,12 +69,6 @@ class AuthControllerCore extends FrontController
             'hook_create_account_form' => Hook::exec('displayCustomerAccountForm'),
             'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
             'genders' => $genders,
-            'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
-            'feature_active' => [
-                'b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
-                'optin' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
-                'newsletter' => Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active),
-            ],
         ]);
     }
 
