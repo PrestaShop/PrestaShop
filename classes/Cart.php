@@ -1843,7 +1843,7 @@ class CartCore extends ObjectModel
         }
         unset($product);
 
-        arsort($warehouse_count_by_address);
+        arsort($warehouse_count_by_address[0]);
 
         // Step 2 : Group product by warehouse
         $grouped_by_warehouse = array();
