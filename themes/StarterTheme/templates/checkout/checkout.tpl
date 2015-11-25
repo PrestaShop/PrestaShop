@@ -27,15 +27,17 @@
         {$cart_summary nofilter}
       {/block}
 
-      {block name="checkout_basic_information"}
-        {include file="checkout/_partials/personal-details.tpl" customer=$customer}
-      {/block}
-
-      {block name="checkout_login_form"}
-        <section class="login-form ps-shown-by-js">
-          {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
-        </section>
-      {/block}
+      {if $login}
+        {block name="checkout_login_form"}
+          <section class="login-form ps-shown-by-js">
+            {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
+          </section>
+        {/block}
+      {else}
+        {block name="checkout_basic_information"}
+          {include file="checkout/_partials/personal-details.tpl" customer=$customer}
+        {/block}
+      {/if}
 
       {block name="checkout_addresses"}
         {if $customer.is_logged}
