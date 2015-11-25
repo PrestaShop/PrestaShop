@@ -161,6 +161,13 @@ class AuthControllerCore extends FrontController
     */
     protected function processSubmitCreate()
     {
+        $create_guest = false;
+
+        if (Tools::getValue('create_from') == 'order' && (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED') && !Tools::getValue('passwd')) {
+            $create_guest = true;
+            $_POST['passwd'] = md5(time()._COOKIE_KEY_);
+        }
+
         Hook::exec('actionSubmitAccountBefore');
 
         $email = trim(Tools::getValue('email'));
@@ -174,13 +181,14 @@ class AuthControllerCore extends FrontController
         if (!count($this->errors)) {
             // Preparing customer
             $customer = new Customer();
+            $customer->is_guest = $create_guest;
 
             $this->errors = array_unique(array_merge($this->errors, $customer->validateController(), $customer->validateFieldsRequiredDatabase()));
 
             if (!count($this->errors)) {
                 $this->processCustomerNewsletter($customer);
 
-                if ((int)Tools::getValue('years') != 0 && (int)Tools::getValue('months') != 0 && (int)Tools::getValue('days') != 0) {
+                if ($create_guest && (int)Tools::getValue('years') != 0 && (int)Tools::getValue('months') != 0 && (int)Tools::getValue('days') != 0) {
                     $customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
                 }
 
@@ -292,7 +300,7 @@ class AuthControllerCore extends FrontController
      */
     protected function sendConfirmationMail(Customer $customer)
     {
-        if (!Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+        if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
             return true;
         }
 
