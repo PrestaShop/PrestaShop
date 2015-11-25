@@ -5,6 +5,7 @@ window.jQuery = $;
 
 import './setup-rivets';
 import './checkout';
+import './facets';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
