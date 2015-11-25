@@ -112,7 +112,6 @@ class IdentityControllerCore extends FrontController
                     Hook::exec('actionCustomerAccountUpdate', array(
                         'customer' => $this->customer
                     ));
-
                 } else {
                     $this->errors[] = Tools::displayError('The information cannot be updated.');
                 }
@@ -169,12 +168,6 @@ class IdentityControllerCore extends FrontController
                     'days' => Tools::dateDays(),
                     'sl_day' => $birthday[2],
                 ],
-                'feature_active' => [
-                    'b2b' => (bool)Configuration::get('PS_B2B_ENABLE'),
-                    'optin' => (bool)Configuration::get('PS_CUSTOMER_OPTIN'),
-                    'newsletter' => Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active),
-                ],
-                'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             ));
 
         $this->setTemplate('customer/identity.tpl');
