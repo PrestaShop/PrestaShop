@@ -72,44 +72,63 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
     }
 
-    protected function renderFilters(array $facets)
+    /**
+     * Generate a URL corresponding to the current page but
+     * with the query string altered.
+     *
+     * Params from $extraParams that have a null value are stripped,
+     * other params are added. Params not in $extraParams are unchanged.
+     */
+    private function makeURL(array $extraParams)
     {
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = [];
         parse_str($_SERVER["QUERY_STRING"], $params);
+        foreach ($extraParams as $key => $value) {
+            if (null === $value) {
+                unset($params[$key]);
+            } else {
+                $params[$key] = $value;
+            }
+        }
+        ksort($params);
+        foreach ($params as $key => $param) {
+            if (null === $param || '' === $param) {
+                unset($params[$key]);
+            }
+        }
+        $queryString = urldecode(http_build_query($params));
+        return $url . ($queryString ? "?$queryString" : '');
+    }
 
-        $facetsVar = array_map(function (Facet $facet) use ($url, $params) {
-            $facetsArray                    = $facet->toArray();
+    protected function renderFilters(array $facets)
+    {
+        $facetsVar = array_map(function (Facet $facet) {
+            $facetsArray = $facet->toArray();
             foreach ($facetsArray['filters'] as &$filter) {
-                unset($params['q']);
                 if ($filter['nextEncodedFacets']) {
-                    $params['q'] = $filter['nextEncodedFacets'];
-                    // changing the query should reset the page
-                    unset($params['page']);
+                    $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                        'q' => $filter['nextEncodedFacets'],
+                        'page' => null
+                    ]);
+                } else {
+                    $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                        'q' => null
+                    ]);
                 }
-
-                $queryString = urldecode(http_build_query($params));
-
-                $filter['nextEncodedFacetsURL'] = $url . ($queryString ? "?$queryString" : '');
             }
             unset($filter);
             return $facetsArray;
         }, $facets);
 
-        $scope = $this->context->smarty->createData(
-            $this->context->smarty
-        );
-
-        $scope->assign('facets', $facetsVar);
-        $tpl = $this->context->smarty->createTemplate(
-            'catalog/_partials/facets.tpl',
-            $scope
-        );
-        return $tpl->fetch();
+        return $this->render('catalog/_partials/facets.tpl', [
+            'facets'        => $facetsVar,
+            'jsEnabled'     => $this->ajax
+        ]);
     }
 
-    protected function assignProductSearchVariables()
+    protected function getProductSearchVariables()
     {
         $context    = $this->getProductSearchContext();
         $query      = $this->getProductSearchQuery();
@@ -146,24 +165,51 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $result->getNextQuery()->getFacets()
         );
 
-        $pagination = $result->getPaginationResult()->buildLinks();
+        $pagination = array_map(function ($link) {
+            $link['url'] = $this->makeURL([
+                'page'  => $link['page']
+            ]);
+            return $link;
+        }, $result->getPaginationResult()->buildLinks());
 
         $ps_search_sort_order = $query->getSortOrder()->getURLParameter();
 
         $sort_orders = array_map(function ($sortOrder) use ($ps_search_sort_order) {
             $order = $sortOrder->toArray();
             $order['current'] = $order['urlParameter'] === $ps_search_sort_order;
+            $order['url'] = $this->makeURL([
+                'order' => $order['urlParameter'],
+                'page'  => null
+            ]);
             return $order;
         }, $result->getAvailableSortOrders());
 
-        $this->context->smarty->assign([
+        return [
             'products'          => $products,
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
             'ps_search_filters' => $ps_search_filters,
             'ps_search_encoded_facets' => $result->getEncodedFacets(),
-            'ps_search_sort_order' => $ps_search_sort_order
-        ]);
+            'ps_search_sort_order' => $ps_search_sort_order,
+            'jsEnabled'         => $this->ajax
+        ];
+    }
+
+    protected function getRenderedProductSearchWidgets()
+    {
+        $search = $this->getProductSearchVariables();
+
+        $products = $this->render('catalog/products.tpl', $search);
+
+        $data = [
+            'products'            => $products,
+            'ps_search_filters'   => $search['ps_search_filters'],
+            'current_url'         => $this->makeURL([
+                'q' => $search['ps_search_encoded_facets']
+            ])
+        ];
+
+        return $data;
     }
 
     abstract protected function getProductSearchQuery();
