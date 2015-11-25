@@ -5,6 +5,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
@@ -119,6 +120,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             ->setPage(max((int)Tools::getValue('page'), 1))
         ;
 
+        if (($encodedSortOrder = Tools::getValue('order'))) {
+            $query->setSortOrder(SortOrder::fromURLParameter(
+                $encodedSortOrder
+            ));
+        }
+
         $encodedFacets = Tools::getValue('q');
         $provider->addFacetsToQuery(
             $context,
@@ -141,12 +148,21 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         $pagination = $result->getPaginationResult()->buildLinks();
 
+        $ps_search_sort_order = $query->getSortOrder()->getURLParameter();
+
+        $sort_orders = array_map(function ($sortOrder) use ($ps_search_sort_order) {
+            $order = $sortOrder->toArray();
+            $order['current'] = $order['urlParameter'] === $ps_search_sort_order;
+            return $order;
+        }, $result->getAvailableSortOrders());
+
         $this->context->smarty->assign([
             'products'          => $products,
-            'sort_options'      => [],
+            'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
             'ps_search_filters' => $ps_search_filters,
-            'ps_search_encoded_facets' => $result->getEncodedFacets()
+            'ps_search_encoded_facets' => $result->getEncodedFacets(),
+            'ps_search_sort_order' => $ps_search_sort_order
         ]);
     }
 
