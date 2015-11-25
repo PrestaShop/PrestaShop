@@ -3,7 +3,7 @@
     <h1>{l s='Products'}</h1>
 
     {block name="sort_by"}
-      {include './_partials/sort-by.tpl' options=$sort_options}
+      {include './_partials/sort-orders.tpl' sort_orders=$sort_orders}
     {/block}
 
     <div class="products">
