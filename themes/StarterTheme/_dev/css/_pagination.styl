@@ -3,12 +3,28 @@ nav.pagination
     list-style none
     margin 0
     paddin 0
-  li, form
+  li
     display inline
-  button[disabled]
+  .disabled
     opacity 0.5
+    cursor default
+  a, a:visited
+    text-decoration none
+    color black
+    display inline-block
+    border 1px solid border-color
+    min-width 2em
+    padding small-padding
+    text-align center
+
+  .current
+    font-weight bold
+    a
+      background-color white
 
 .products-sort-order
-  button.current
-    font-weight bold
   margin-bottom small-padding
+  .current
+    font-weight bold
+  a
+    padding small-padding
