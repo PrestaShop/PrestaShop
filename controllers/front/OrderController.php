@@ -327,6 +327,7 @@ class OrderControllerCore extends FrontController
             'cart_summary' => $this->renderCartSummary(),
             'delivery_options' => $this->renderDeliveryOptions(),
             'genders' => $this->renderGenders(),
+            'login' => (bool)Tools::getValue('login'),
         ]);
 
         $this->assignDate();
