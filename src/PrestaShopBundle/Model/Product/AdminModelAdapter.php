@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
 
 /**
@@ -46,6 +47,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $product;
     private $translatableKeys;
     private $unmapKeys;
+    private $configuration;
 
     /**
      * Constructor
@@ -69,6 +71,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->packAdapter = $container->get('prestashop.adapter.data_provider.pack');
         $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
+        $this->configuration = new Configuration();
         if ($this->product != null) {
             $this->product->loadStockData();
         }
@@ -341,6 +344,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'specificPricePriorityToAll' => false,
             ],
             'step3' => [
+                'advanced_stock_management' => ($this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT') == "1"),
+                'depends_on_stock' => $this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT'),
                 'qty_0' => 0,
                 'out_of_stock' => 2,
                 'minimal_quantity' => 1,

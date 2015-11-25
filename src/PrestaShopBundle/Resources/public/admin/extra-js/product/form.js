@@ -354,18 +354,25 @@ var stock = (function() {
 				}
 			});
 
-			/** if GSA active : on change depend on stock, update quantities fields */
+			/** if GSA activation change on 'depend on stock', update quantities fields */
 			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1').on('change', function(e) {
-				this.updateQtyFields();
+				stock.updateQtyFields();
 			});
+			stock.updateQtyFields();
 		},
 		'updateQtyFields': function() {
 			/** if combinations exists, hide common quantity field */
 			if ($('#accordion_combinations > div.combination[id^="attribute_"]').length > 0) {
 				$('#form_step3_qty_0').attr('readonly', 'readonly');
 				$('#product_qty_0_shortcut_div').hide();
+
+				if ($('#form_step3_depends_on_stock_1:checked').length == 1) {
+					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').removeAttr('readonly');
+				} else {
+					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').attr('readonly', 'readonly');
+				}
 				return;
-			}
+			} /** else, there is no combinations */
 
 			/** if GSA and if is manual */
 			if ($('#form_step3_depends_on_stock_1:checked').length == 1) {
@@ -748,6 +755,27 @@ var specificPrices = (function() {
 	};
 })();
 
+/**
+ * Warehouse combination collection management (ASM only)
+ */
+var warehouseCombinations = (function() {
+/*	var collectionHolder = $('#supplier_combination_collection');
+
+	return {
+		'refresh': function() {
+			var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function(){return $(this).val();}).get();
+			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val()+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
+
+			$.ajax({
+				url: url,
+				success: function(response){
+					collectionHolder.empty().append(response);
+				}
+			});
+		}
+	};
+*/
+})();
 
 /**
  * Form management
