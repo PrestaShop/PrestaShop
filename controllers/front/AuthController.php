@@ -181,6 +181,8 @@ class AuthControllerCore extends FrontController
         if (!count($this->errors)) {
             // Preparing customer
             $customer = new Customer();
+            $customer->getByEmail($email, null, false);
+
             $customer->is_guest = $create_guest;
 
             $this->errors = array_unique(array_merge($this->errors, $customer->validateController(), $customer->validateFieldsRequiredDatabase()));
@@ -197,7 +199,7 @@ class AuthControllerCore extends FrontController
                 }
 
                 if (!count($this->errors)) {
-                    if ($customer->add()) {
+                    if ($customer->save()) {
                         if (!$this->sendConfirmationMail($customer)) {
                             $this->errors[] = $this->l('The email cannot be sent.');
                         }
@@ -209,17 +211,17 @@ class AuthControllerCore extends FrontController
                             '_POST' => $_POST,
                             'newCustomer' => $customer
                         ]);
-
-                        if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
-                            Tools::redirect(html_entity_decode($back));
-                        } else {
-                            Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
-                        }
                     } else {
                         $this->errors[] = $this->l('An error occurred while creating your account.');
                     }
                 }
             }
+        }
+
+        if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
+            Tools::redirect(html_entity_decode($back));
+        } else {
+            Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
         }
     }
 
