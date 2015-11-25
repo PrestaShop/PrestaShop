@@ -28,7 +28,7 @@
       {/block}
 
       {block name="checkout_basic_information"}
-        {include file="checkout/_partials/personal-details.tpl" customer=$customer  }
+        {include file="checkout/_partials/personal-details.tpl" customer=$customer}
       {/block}
 
       {block name="checkout_login_form"}

@@ -195,6 +195,40 @@ class OrderControllerCore extends FrontController
         ]);
     }
 
+    protected function renderGenders()
+    {
+        $genders = [];
+        $collec = Gender::getGenders();
+        foreach ($collec as $g) {
+            $genders[] = $this->objectSerializer->toArray($g);
+        }
+
+        return $genders;
+    }
+
+    /**
+     * Assign date var to smarty
+     */
+    protected function assignDate()
+    {
+        $selectedYears = (int)(Tools::getValue('years', 0));
+        $years = Tools::dateYears();
+        $selectedMonths = (int)(Tools::getValue('months', 0));
+        $months = Tools::dateMonths();
+        $selectedDays = (int)(Tools::getValue('days', 0));
+        $days = Tools::dateDays();
+
+        $this->context->smarty->assign([
+            'birthday_dates' => [
+                'years' => $years,
+                'sl_year' => $selectedYears,
+                'months' => $months,
+                'sl_month' => $selectedMonths,
+                'days' => $days,
+                'sl_day' => $selectedDays
+            ]]);
+    }
+
     /**
      * Terms and conditions and other conditions are posted as an associative
      * array with the condition identifier as key.
@@ -292,7 +326,10 @@ class OrderControllerCore extends FrontController
             'payment_options' => $this->renderPaymentOptions(),
             'cart_summary' => $this->renderCartSummary(),
             'delivery_options' => $this->renderDeliveryOptions(),
+            'genders' => $this->renderGenders(),
         ]);
+
+        $this->assignDate();
 
         if (!$this->context->customer->isLogged()) {
             if (empty($this->address_fields)) {
@@ -300,21 +337,20 @@ class OrderControllerCore extends FrontController
             }
 
             $this->address_fields = array_merge(
-                    ['email' => [
-                        'label' => $this->l('Email Address'),
-                        'required' => true,
-                        'errors' => [],
-                    ]],
-                    $this->address_fields,
-                    ['passwd' => [
-                        'label' => $this->l('Set a password to create a full account'),
-                        'required' => !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
-                        'errors' => [],
-                    ]]
-                );
+                ['email' => [
+                    'label' => $this->l('Email Address'),
+                    'required' => true,
+                    'errors' => [],
+                ]],
+                $this->address_fields,
+                ['passwd' => [
+                    'label' => $this->l('Set a password to create a full account'),
+                    'errors' => [],
+                ]]
+            );
 
             if (empty($this->address)) {
-                if (Validate::isLoadedObject($this->context->customer) && $this->context->customer->is_guest) {
+                if (Validate::isLoadedObject($this->context->customer) && !$this->context->customer->is_guest) {
                     $this->address = array_values($this->context->customer->getSimpleAddresses())[0];
                     $this->address['email'] = $this->context->customer->email;
                 } else {
@@ -329,6 +365,7 @@ class OrderControllerCore extends FrontController
                 'address' => $this->address,
                 'countries' => $this->address_form->getCountryList(),
                 'back' => $this->context->link->getPageLink('order'),
+                'guest_allowed' => (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
                 'mod' => false,
             ]);
         }
@@ -366,7 +403,6 @@ class OrderControllerCore extends FrontController
         } else {
             // StarterTheme: Create account or guest
         }
-
     }
 
     public function processAddressRegistration()
