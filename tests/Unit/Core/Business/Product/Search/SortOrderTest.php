@@ -74,4 +74,34 @@ class SortOrderTest extends PHPUnit_Framework_TestCase
             (new SortOrder('product', 'name', 'desc'))->toLegacyOrderWay()
         );
     }
+
+    /**
+     * dataProvider for test_serialization
+     */
+    public function serialization_examples()
+    {
+        return [
+            [['entity'    => 'product',
+            'field'      => 'name',
+            'direction'  => 'asc']]
+        ];
+    }
+
+    /**
+     * @dataProvider serialization_examples
+     */
+    public function test_serialization($data)
+    {
+        $opt = new SortOrder($data['entity'], $data['field'], $data['direction']);
+
+        $encoded = $opt->getURLParameter();
+        $this->assertInternalType('string', $encoded);
+
+        $unserialized = SortOrder::fromURLParameter($encoded);
+
+        $arr = $unserialized->toArray();
+        $this->assertEquals($data['entity'],    $arr['entity']);
+        $this->assertEquals($data['field'],     $arr['field']);
+        $this->assertEquals($data['direction'], $arr['direction']);
+    }
 }
