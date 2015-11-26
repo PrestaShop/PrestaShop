@@ -97,6 +97,37 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'features',
             'specific_price',
         );
+
+        //define multishop keys
+        $this->multishopKeys = array('category_box',
+            'id_category_default',
+            'attribute_wholesale_price',
+            'attribute_price_impact',
+            'attribute_weight_impact',
+            'attribute_unit_impact',
+            'attribute_ecotax',
+            'attribute_minimal_quantity',
+            'available_date_attribute',
+            'attribute_default',
+            'uploadable_files',
+            'text_fields',
+            'active',
+            'redirect_type',
+            'id_product_redirected',
+            'visibility',
+            'available_for_order',
+            'show_price',
+            'online_only',
+            'condition',
+            'wholesale_price',
+            'price',
+            'id_tax_rules_group',
+            'ecotax',
+            'unit_price',
+            'on_sale',
+            'minimal_quantity',
+            'available_date',
+        );
     }
 
     /**
@@ -104,10 +135,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Map form data to object model
      *
      * @param array $form_data
+     * @param bool $isMultiShopContext If the context is define to multishop, force data to be apply on all shops
      *
      * @return array Transformed form data to model attempt
      */
-    public function getModelDatas($form_data)
+    public function getModelDatas($form_data, $isMultiShopContext = false)
     {
         //merge all form steps
         $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5'], $form_data['step6']);
@@ -256,7 +288,23 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $new_form_data['specificPricePriority_3'],
         ];
 
-        return array_merge(parent::getHookData(), $new_form_data);
+        $new_form_data = array_merge(parent::getHookData(), $new_form_data);
+
+        //if multishop context is define, simalte multishop checkbox for all POST DATAS
+        if ($isMultiShopContext) {
+            foreach ($this->multishopKeys as $multishopKey) {
+                $new_form_data['multishop_check'][$multishopKey] = 1;
+            }
+
+            //apply multishop rules for translatables fields
+            foreach ($this->translatableKeys as $field) {
+                foreach ($form_data[$field] as $lang_id => $translate_value) {
+                    $new_form_data['multishop_check'][$field][$lang_id] = 1;
+                }
+            }
+        }
+
+        return $new_form_data;
     }
 
     /**
