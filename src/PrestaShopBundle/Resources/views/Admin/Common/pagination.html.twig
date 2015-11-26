@@ -19,13 +19,13 @@
     </ul>
     <ul class="pagination">
         <li style="float: left; margin-left: 2em;">
-            {{ "Viewing $from-$to on $total (page # $current_page / $page_count)"|trans(
+            {{ trans("Viewing $from-$to on $total (page # $current_page / $page_count)",
                 {'$from': from, '$to': to, '$total': total, '$current_page': current_page, '$page_count': page_count},
                 'AdminTab') }}
             &nbsp;
             |
             &nbsp;
-            {{ "Elements per page:"|trans({}, 'AdminTab') }}&nbsp;
+            {{ trans("Elementsper page:", {}, 'AdminTab') }}&nbsp;
             <select name="paginator_select_page_limit" psurl="{{ changeLimitUrl }}" style="display:inline;width:6em;" class="pagination-link">
                 {% if limit not in [20, 50, 100, 300, 1000] %}<option value="{{ limit }}" selected="selected">{{ limit }}</option>{% endif %}
                 <option value="20" {% if limit==20 %}selected="selected"{% endif %}>20</option>

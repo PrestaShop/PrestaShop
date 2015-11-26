@@ -41,7 +41,6 @@ class AdminProductWrapper
      */
     public function __construct($translator, $legacyContext)
     {
-        $this->transDomain = 'AdminProducts';
         $this->translator = $translator;
         $this->legacyContext = $legacyContext->getContext();
     }
@@ -311,18 +310,18 @@ class AdminProductWrapper
                 } elseif ($specific_price['reduction'] > 0) {
                     $impact = '- ' . \ToolsCore::displayPrice(\Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
                     if ($specific_price['reduction_tax']) {
-                        $impact .= '(' . $this->translator->trans('Tax incl.', [], $this->transDomain) . ')';
+                        $impact .= '(' . $this->translator->trans('Tax incl.', [], 'AdminProducts') . ')';
                     } else {
-                        $impact .= '(' . $this->translator->trans('Tax excl.', [], $this->transDomain) . ')';
+                        $impact .= '(' . $this->translator->trans('Tax excl.', [], 'AdminProducts') . ')';
                     }
                 } else {
                     $impact = '--';
                 }
 
                 if ($specific_price['from'] == '0000-00-00 00:00:00' && $specific_price['to'] == '0000-00-00 00:00:00') {
-                    $period = $this->translator->trans('Unlimited', [], $this->transDomain);
+                    $period = $this->translator->trans('Unlimited', [], 'AdminProducts');
                 } else {
-                    $period = $this->translator->trans('From', [], $this->transDomain) . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('To', [], $this->transDomain) . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
+                    $period = $this->translator->trans('From', [], 'AdminProducts') . ' ' . ($specific_price['from'] != '0000-00-00 00:00:00' ? $specific_price['from'] : '0000-00-00 00:00:00') . '<br />' . $this->translator->trans('To', [], 'AdminProducts') . ' ' . ($specific_price['to'] != '0000-00-00 00:00:00' ? $specific_price['to'] : '0000-00-00 00:00:00');
                 }
                 if ($specific_price['id_product_attribute']) {
                     $combination = new \CombinationCore((int)$specific_price['id_product_attribute']);
@@ -333,7 +332,7 @@ class AdminProductWrapper
                     }
                     $attributes_name = rtrim($attributes_name, ' - ');
                 } else {
-                    $attributes_name = $this->translator->trans('All combinations', [], $this->transDomain);
+                    $attributes_name = $this->translator->trans('All combinations', [], 'AdminProducts');
                 }
 
                 $rule = new \SpecificPriceRuleCore((int)$specific_price['id_specific_price_rule']);
@@ -361,11 +360,11 @@ class AdminProductWrapper
                         'id_product' => $product->id,
                         'rule_name' => $rule_name,
                         'attributes_name' => $attributes_name,
-                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', [], $this->transDomain)),
-                        'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', [], $this->transDomain)),
-                        'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', [], $this->transDomain)),
-                        'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', [], $this->transDomain)),
-                        'customer' => (isset($customer_full_name) ? $customer_full_name : $this->translator->trans('All customers', [], $this->transDomain)),
+                        'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', [], 'AdminProducts')),
+                        'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', [], 'AdminProducts')),
+                        'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', [], 'AdminProducts')),
+                        'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', [], 'AdminProducts')),
+                        'customer' => (isset($customer_full_name) ? $customer_full_name : $this->translator->trans('All customers', [], 'AdminProducts')),
                         'fixed_price' => $fixed_price,
                         'impact' => $impact,
                         'period' => $period,

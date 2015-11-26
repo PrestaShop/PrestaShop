@@ -9,14 +9,14 @@
                 </div>
             </div>
             <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Your product') }}</a></li>
-                <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Price') }}</a></li>
-                <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity') }}</a></li>
-                <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping') }}</a></li>
-                <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO') }}</a></li>
-                <li><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options') }}</a></li>
+                <li class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Your product', {}, 'AdminProducts') }}</a></li>
+                <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Price', {}, 'AdminProducts') }}</a></li>
+                <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Quantity', {}, 'AdminProducts') }}</a></li>
+                <li><a href="#step4" role="tab" data-toggle="tab">{{ trans('Shipping', {}, 'AdminProducts') }}</a></li>
+                <li><a href="#step5" role="tab" data-toggle="tab">{{ trans('SEO', {}, 'AdminProducts') }}</a></li>
+                <li><a href="#step6" role="tab" data-toggle="tab">{{ trans('Options', {}, 'AdminProducts') }}</a></li>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
-                    <li><a href="#hooks" role="tab" data-toggle="tab">{{ trans('HOOKS') }}</a></li>
+                    <li><a href="#hooks" role="tab" data-toggle="tab">{{ trans('HOOKS', {}, 'AdminProducts') }}</a></li>
                 {% endif %}
             </ul>
             <div class="tab-content">
@@ -61,31 +61,31 @@
                             <hr/>
                             <div class="form-group">
                                 {{ form_errors(form.step1.price_shortcut) }}
-                                <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price") }}</label>
+                                <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
                                 <div class="col-xs-6 pull-right">
                                     {{ form_widget(form.step1.price_shortcut) }}
                                 </div>
                             </div>
                             <div class="form-group" id="product_qty_0_shortcut_div" style="{% if has_combinations %}display: none;{% endif %}">
                                 {{ form_errors(form.step1.qty_0_shortcut) }}
-                                <label class="col-xs-6 control-label">{{ trans("Quantity") }}</label>
+                                <label class="col-xs-6 control-label">{{ trans("Quantity", {}, 'AdminProducts') }}</label>
                                 <div class="col-xs-6 pull-right">
                                     {{ form_widget(form.step1.qty_0_shortcut) }}
                                 </div>
                             </div>
                         </div>
                         <div class="panel">
-                            <div class="panel-heading">{{ trans("Categories") }}</div>
+                            <div class="panel-heading">{{ trans("Categories", {}, 'AdminProducts') }}</div>
                             <div class="panel-body">
                                 {{ form_errors(form.step1.categories) }}
                                 {{ form_widget(form.step1.categories) }}
                                 <hr/>
-                                <h4>{{ trans("Default category") }}</h4>
+                                <h4>{{ trans("Default category", {}, 'AdminProducts') }}</h4>
                                 {{ form_errors(form.step1.id_category_default) }}
                                 {{ form_widget(form.step1.id_category_default) }}
                                 <hr/>
                                 <div id="form_step1_new_category" data-action="{{ form.step1.new_category.vars.attr["data-action"] }}">
-                                    <h4>{{ trans("Add a new category") }}</h4>
+                                    <h4>{{ trans("Add a new category", {}, 'AdminProducts') }}</h4>
                                     {{ form_errors(form.step1.new_category) }}
                                     {{ form_widget(form.step1.new_category.name) }}
                                     {{ form_widget(form.step1.new_category.id_parent) }}
@@ -94,14 +94,14 @@
                             </div>
                         </div>
                         <div class="panel">
-                            <div class="panel-heading">{{ trans("Manufacturer") }}</div>
+                            <div class="panel-heading">{{ trans("Manufacturer", {}, 'AdminProducts') }}</div>
                             <div class="panel-body">
                                 {{ form_errors(form.step1.id_manufacturer) }}
                                 {{ form_widget(form.step1.id_manufacturer) }}
                             </div>
                         </div>
                         <div class="panel">
-                            <div class="panel-heading">{{ trans("Accessories") }} </div>
+                            <div class="panel-heading">{{ trans("Accessories", {}, 'AdminProducts') }} </div>
                             <div class="panel-body">
                                 {{ form_errors(form.step1.related_products) }}
                                 {{ form_widget(form.step1.related_products) }}
@@ -110,8 +110,8 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="text-right">
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
@@ -128,17 +128,17 @@
                             <table id="js-specific-price-list" class="table table-striped hide" data="{{ path('admin_specific_price_list') }}" data-action-delete="{{ path('admin_delete_specific_price') }}">
                                 <thead>
                                 <tr>
-                                    <th>{{ trans('Rule') }}</th>
-                                    <th>{{ trans('Combination') }}</th>
-                                    <th>{{ trans('Shop') }}</th>
-                                    <th>{{ trans('Currency') }}</th>
-                                    <th>{{ trans('Country') }}</th>
-                                    <th>{{ trans('Group') }}</th>
-                                    <th>{{ trans('Customer') }}</th>
-                                    <th>{{ trans('Fixed price') }}</th>
-                                    <th>{{ trans('Impact') }}</th>
-                                    <th>{{ trans('Period') }}</th>
-                                    <th>{{ trans('From (quantity)') }}</th>
+                                    <th>{{ trans('Rule', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Combination', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Shop', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Currency', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Country', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Group', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Customer', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Fixed price', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Impact', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('Period', {}, 'AdminProducts') }}</th>
+                                    <th>{{ trans('From (quantity)', {}, 'AdminProducts') }}</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -147,7 +147,7 @@
 
                             <div class="well">
                                 <a class="btn btn-primary" role="button" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
-                                    {{ trans('Add a specific price') }}
+                                    {{ trans('Add a specific price', {}, 'AdminProducts') }}
                                 </a>
                                 <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
                                     {{ form_errors(form.step2.specific_price) }}
@@ -158,9 +158,9 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2">
-                            <h3>{{ trans('Priority management') }}</h3>
+                            <h3>{{ trans('Priority management', {}, 'AdminProducts') }}</h3>
                         </div>
-                        <label class="col-sm-2 control-label">{{ trans('Priorities') }}</label>
+                        <label class="col-sm-2 control-label">{{ trans('Priorities', {}, 'AdminProducts') }}</label>
                         <div class="col-sm-10">
                             {{ form_widget(form.step2.specificPricePriority_0) }}
                             {{ form_widget(form.step2.specificPricePriority_1) }}
@@ -171,9 +171,9 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
+                        <input type="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
@@ -184,7 +184,7 @@
                                 {{ form_errors(form.step3.advanced_stock_management) }}
                                 {{ form_widget(form.step3.advanced_stock_management) }}
                                 {% if form.step1.type_product.vars.value == "1" %}
-                                    {{ trans('When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.') }}
+                                    {{ trans('When enabling advanced stock management for a pack, please make sure it is also enabled for its product(s) – if you choose to decrement product quantities.', {}, 'AdminProducts') }}
                                 {% endif %}
                             </div>
                         </div>
@@ -228,11 +228,11 @@
                         {{ form_errors(form.step3.combinations) }}
                         {% if form.step3.combinations|length > 0 %}
                         <div class="uppercase">
-                            <div class="col-lg-4 pull-left">{{ trans('Product') }}</div>
+                            <div class="col-lg-4 pull-left">{{ trans('Product', {}, 'AdminProducts') }}</div>
                             <div class="col-lg-4 pull-left">
-                                <span class="col-lg-4">{{ trans('Impact on weight') }}</span>
-                                <span class="col-lg-4">{{ trans('Impact on price') }}</span>
-                                <span class="col-lg-4">{{ trans('Quantity') }}</span>
+                                <span class="col-lg-4">{{ trans('Impact on weight', {}, 'AdminProducts') }}</span>
+                                <span class="col-lg-4">{{ trans('Impact on price', {}, 'AdminProducts') }}</span>
+                                <span class="col-lg-4">{{ trans('Quantity', {}, 'AdminProducts') }}</span>
                             </div>
                         </div>
                         <hr/>
@@ -273,25 +273,25 @@
                     {{ form_row(form.step3.available_later) }}
                     {{ form_row(form.step3.available_date) }}
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
+                        <input type="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
                     {{ form_widget(form.step4) }}
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
                     {{ form_widget(form.step5) }}
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
+                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
@@ -320,19 +320,19 @@
                     </div>
 
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
                         {% if hookcount('displayAdminProductsExtra') > 0 %}
-                            <a class="btn btn-primary btn-next">{{ trans('CONTINUE') }}</a>
+                            <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
                         {% endif %}
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-submit btn-warning" />
+                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
                 <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
                     {{ renderhook('displayAdminProductsExtra', {'id_product': id_product}) }}
                     <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE') }}" class="btn btn-warning" />
+                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
+                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-warning" />
                     </div>
                 </div>
                 {% endif %}
@@ -370,6 +370,6 @@
 {% endblock %}
 
 {% set js_translatable = {
-    "Form update success": trans("Form update success"),
-    "Form update errors": trans("Form update errors"),
+    "Form update success": trans("Form update success", {}, 'AdminProducts'),
+    "Form update errors": trans("Form update errors", {}, 'AdminProducts'),
 }|merge(js_translatable) %}
