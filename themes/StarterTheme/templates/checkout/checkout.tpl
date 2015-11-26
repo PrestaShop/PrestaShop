@@ -22,39 +22,48 @@
     {/block}
 
     {block name="content"}
+    <section id="content">
 
       {block name="cart_summary_section"}
         {$cart_summary nofilter}
       {/block}
 
-      {if $login}
+      {if !$customer.is_logged}
         {block name="checkout_login_form"}
           <section class="login-form ps-shown-by-js">
             {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
           </section>
         {/block}
-      {else}
-        {block name="checkout_basic_information"}
-          {include file="checkout/_partials/personal-details.tpl" customer=$customer}
-        {/block}
       {/if}
 
+      {block name="checkout_basic_information"}
+        {include file="checkout/_partials/personal-details.tpl" customer=$customer}
+      {/block}
+
       {block name="checkout_addresses"}
-        {if $customer.is_logged}
+
+        <header>
+          <h1 class="h3">{l s='Addresses'}</h1>
+        </header>
+
+        {if $customer.is_logged && count($customer.addresses) > 0}
           {block name="checkout_customer_addresses"}
             {include file="checkout/_partials/checkout-section-logged-addresses.tpl"}
           {/block}
         {else}
-          {block name="checkout_guest_addresses"}
-            {include file="customer/_partials/address-form.tpl" address_fields=$address_fields address=$address countries=$countries form_action=$urls.pages.order}
+          {block name="checkout_address_forms"}
+            {$address_form_delivery nofilter}
+            {$address_form_invoice nofilter}
           {/block}
         {/if}
+
       {/block}
 
       {$delivery_options nofilter}
 
       {$payment_options nofilter}
 
+    </section>
     {/block}
 
     <footer id="footer">

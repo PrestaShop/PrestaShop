@@ -229,6 +229,24 @@ class OrderControllerCore extends FrontController
             ]]);
     }
 
+    protected function renderAddressFormDelivery()
+    {
+        return $this->render('checkout/_partials/address-form-delivery.tpl', [
+            'address_fields' => $this->address_fields,
+            'address' => $this->address,
+            'countries' => $this->address_form->getCountryList(),
+        ]);
+    }
+
+    protected function renderAddressFormInvoice()
+    {
+        return $this->render('checkout/_partials/address-form-invoice.tpl', [
+            'address_fields' => $this->address_fields,
+            'address' => $this->address,
+            'countries' => $this->address_form->getCountryList(),
+        ]);
+    }
+
     /**
      * Terms and conditions and other conditions are posted as an associative
      * array with the condition identifier as key.
@@ -328,46 +346,25 @@ class OrderControllerCore extends FrontController
             'delivery_options' => $this->renderDeliveryOptions(),
             'genders' => $this->renderGenders(),
             'login' => (bool)Tools::getValue('login'),
+            'guest_allowed' => (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
         ]);
 
         $this->assignDate();
 
-        if (!$this->context->customer->isLogged()) {
+        if (!$this->context->customer->isLogged()
+            || ($this->context->customer->isLogged() && empty($this->context->customer->getSimpleAddresses()))
+        ) {
             if (empty($this->address_fields)) {
                 $this->address_fields = $this->address_form->getAddressFormat();
             }
 
-            $this->address_fields = array_merge(
-                ['email' => [
-                    'label' => $this->l('Email Address'),
-                    'required' => true,
-                    'errors' => [],
-                ]],
-                $this->address_fields,
-                ['passwd' => [
-                    'label' => $this->l('Set a password to create a full account'),
-                    'errors' => [],
-                ]]
-            );
-
             if (empty($this->address)) {
-                if (Validate::isLoadedObject($this->context->customer) && !$this->context->customer->is_guest) {
-                    $this->address = array_values($this->context->customer->getSimpleAddresses())[0];
-                    $this->address['email'] = $this->context->customer->email;
-                } else {
-                    $this->address = $this->context->customer->getSimpleAddress(0);
-                    $this->address['email'] = Tools::getValue('email');
-                }
-                $this->address['passwd'] = '';
+                $this->address = $this->context->customer->getSimpleAddress(0);
             }
 
             $this->context->smarty->assign([
-                'address_fields' => $this->address_fields,
-                'address' => $this->address,
-                'countries' => $this->address_form->getCountryList(),
-                'back' => $this->context->link->getPageLink('order'),
-                'guest_allowed' => (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
-                'mod' => false,
+                'address_form_delivery' => $this->renderAddressFormDelivery(),
+                'address_form_invoice' => $this->renderAddressFormInvoice(),
             ]);
         }
 
@@ -379,8 +376,8 @@ class OrderControllerCore extends FrontController
         parent::postProcess();
 
         // StarterTheme: Better submit
-        if (Tools::isSubmit('submitAddress')) {
-            $address_ok = $this->processAddressRegistration();
+        if (Tools::isSubmit('submitAddressDelivery')) {
+            $address_ok = $this->processAddressDelivery();
             if (!$address_ok) {
                 return true;
             } else {
@@ -393,20 +390,7 @@ class OrderControllerCore extends FrontController
         }
     }
 
-    public function processSubmitPersonalDetails()
-    {
-        if ($this->context->customer->isLogged()) {
-            // StarterTheme: Handle errors with Validate::isName(), etc
-            $this->context->customer->firstname = Tools::getValue('firstname');
-            $this->context->customer->lastname = Tools::getValue('lastname');
-            $this->context->customer->update();
-            Tools::redirect($this->context->link->getPageLink('order'));
-        } else {
-            // StarterTheme: Create account or guest
-        }
-    }
-
-    public function processAddressRegistration()
+    public function processAddressDelivery()
     {
         $this->address_fields = $this->address_form->getAddressFormatWithErrors();
 
@@ -415,8 +399,6 @@ class OrderControllerCore extends FrontController
                 'id' => Tools::getValue('id_address'),
                 'id_country' => Tools::getValue('id_country'),
                 'id_state' => Tools::getValue('id_state'),
-                'email' => Tools::getValue('email'),
-                'passwd' => '',
             ];
             foreach ($this->address_fields as $key => $value) {
                 $this->address[$key] = Tools::getValue($key);
@@ -425,47 +407,10 @@ class OrderControllerCore extends FrontController
             return false;
         }
 
-        $guest = new Guest($this->context->cookie->id_guest);
-        if ($this->context->cookie->id_customer) {
-            $new_customer = new Customer($this->context->cookie->id_customer);
-            if ($pwd = Tools::getValue('passwd')) {
-                $crypto = new Core_Foundation_Crypto_Hashing();
-                $pwd = $crypto->encrypt($pwd, _COOKIE_KEY_);
-                $new_customer->passwd = $pwd;
-                $new_customer->is_guest = 0;
-                if ($new_customer->update()) {
-                    $guest->delete();
-                }
-            }
-        } else {
-            $new_customer = new Customer();
-            $new_customer->firstname = Tools::getValue('firstname');
-            $new_customer->lastname = Tools::getValue('lastname');
-            $new_customer->email = Tools::getValue('email');
-
-            $pwd = Tools::getValue('passwd');
-            if (!$pwd) {
-                $pwd = Tools::passwdGen(16);
-                $new_customer->is_guest = 1;
-            }
-            $crypto = new Core_Foundation_Crypto_Hashing();
-            $pwd = $crypto->encrypt($pwd, _COOKIE_KEY_);
-            $new_customer->passwd = $pwd;
-
-            if ($new_customer->add()) {
-                $this->context->cookie->id_customer = $new_customer->id;
-                $this->context->cookie->write();
-                $this->context->customer = $new_customer;
-            } else {
-                $this->errors['unexpected'] = $this->l('An unexpected error occured while saving your data');
-                return false;
-            }
-        }
-
         // Save address
         $addr = new Address(Tools::getValue('id_address'));
         $addr->alias = $this->l('My address');
-        $addr->id_customer = $new_customer->id;
+        $addr->id_customer = $this->context->cookie->id_customer;
         $addr->validateController();
 
         if ($addr->save()) {
