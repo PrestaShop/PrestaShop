@@ -2,11 +2,18 @@
  * Generalist CSS for module pages
  */
 .module-search-bar {
-     height: 50px !important;
-     border-left: 0 !important;
+    height: 50px !important;
+    border: 0 !important;
+    background-color: white !important;
  }
 .module-search-block {
     padding: 5px;
+    background: white;
+    border: 1px solid #C7D6DB;
+    border-radius: 5px;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
  }
 .module-menu-item {
     color: #363A41 !important;
@@ -22,6 +29,12 @@
     padding: 6px;
     height: 30px;
     width: 70px;
+}
+.module-install-loader {
+    position: relative;
+    bottom: -20px;
+    right: 40px;
+    display: none;
 }
 .module-sorting-menu {
     margin-bottom: 30px;
@@ -40,6 +53,93 @@
 .module-sort-switch {
     color: #C7D6DB;
 }
+.module-category-selector-label {
+    float: left;
+    margin-right: 5px;
+}
+.module-category-selector {
+    z-index: 498 !important;
+    padding: 0 !important;
+}
+.module-category-menu {
+    padding: 6px 0 0 0;
+}
+.module-category-menu a {
+    color: #555 !important;
+}
+.module-category-menu a:hover {
+    background-color: transparent !important;
+    color: #2eacce !important;
+}
+.module-search-icon {
+    background: transparent !important;
+    border: 0 !important;
+}
+.module-tags-input {
+    border: 0;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    width: 100%;
+}
+.module-tags-labels {
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
+}
+.module-tags-clear-btn {
+    margin-right: 10px;
+        margin-top: 10px;
+        position: absolute;
+        color: #2eacce;
+        font-size: 20px;
+        z-index: 498 !important;
+        cursor: pointer;
+        top: 0;
+        right: 0;
+}
+.module-tag {
+    background: lightblue;
+}
+.module-search-result-wording {
+    color: #1E2024 !important;
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+.module-addons-search {
+    font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
+    font-weight: bold;
+    font-size: 14px;
+    display: none;
+}
+.module-categories-dropdown {
+    outline: 0 !important;
+    background-color: transparent !important;
+    border: none !important;
+    font-size: 15px !important;
+}
+.module-categories-dropdown:hover {
+    color: #1E2024 !important;
+}
+.module-category-reset {
+    display: none;
+}
+.module-category-reset a {
+    color: #2eacce !important;
+    text-align: center;
+    border-bottom: 1px solid #E7E8E8;
+}
+
+.module-category-reset a:hover {
+    color: white !important;
+    background-color: #2eacce !important;
+    text-align: center;
+    border-bottom: 1px solid #E7E8E8;
+}
+.module-category-reset-icon {
+    font-size: 30px;
+}
 
 /**
  * Module GRID CSS
@@ -56,16 +156,29 @@
 .module-item-heading-grid {
     display: inline-block;
     width: 100%;
+    cursor: pointer;
 }
+
 .module-quick-description-grid {
     width: 100%;
     height: 100px;
     max-height: 100px;
     margin-top: 25px !important;
     text-align: justify;
+  display: block; /* Fallback for non-webkit */
+  display: -webkit-box;
+  max-width: 400px;
+  margin: 0 auto;
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .module-quick-action-grid {
     margin-top: 10px;
+    height: 30px;
 }
 .module-version-author-grid {
     margin-top: 10px;
@@ -78,6 +191,12 @@
     padding: 20px;
     margin-bottom: 10px;
 }
+.module-read-more-grid {
+    display: inline-block;
+}
+.module-read-more-grid-btn {
+    margin-left: 5px;
+}
 
 /**
  * Module LIST CSS
@@ -85,6 +204,7 @@
 .module-item-list {
     background-color: white;
     max-height: 50px;
+    height: 50px;
  }
  .module-item-list-grey {
      background-color: #EBEDEF !important;

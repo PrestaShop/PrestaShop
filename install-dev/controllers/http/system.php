@@ -116,7 +116,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'theme_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/themes/default-bootstrap/cache/'),
                         'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
                         'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
-                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/')
+                        'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/'),
+                        'app_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/app/cache/'),
+                        'app_logs_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/app/logs/'),
                     )
                 ),
             ),

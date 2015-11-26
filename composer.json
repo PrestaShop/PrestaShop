@@ -4,7 +4,8 @@
   "require": {
     "php": ">=5.4",
     "symfony/symfony": "2.7.5",
-    "doctrine/orm": "2.5.1",
+    "doctrine/dbal": "2.4.4",
+    "doctrine/orm": "2.4.4",
     "doctrine/doctrine-bundle": "1.5.2",
     "symfony/assetic-bundle": "2.7.0",
     "symfony/swiftmailer-bundle": "2.3.8",
@@ -98,7 +99,8 @@
     "fabpot/php-cs-fixer": "^1.10",
     "sensio/generator-bundle": "~2.3",
     "phpdocumentor/phpdocumentor": "2.*",
-    "symfony/var-dumper": "2.7.*"
+    "symfony/var-dumper": "2.7.*",
+    "incenteev/composer-parameter-handler": "~2.0"
   },
   "autoload-dev": {
     "psr-4": {
@@ -115,20 +117,21 @@
     "classmap": ["Core/", "Adapter/"]
   },
   "scripts": {
-    "pre-install-cmd": [
-      "bash app/install.sh"
-    ],
     "post-install-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "bash tools/contrib/install.sh",
       "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\Composer\\Hook::init",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "php app/console doctrine:database:create --if-not-exists --no-interaction",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
     ],
     "post-update-cmd": [
+      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+      "php app/console doctrine:database:create --if-not-exists --no-interaction",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
@@ -146,6 +149,9 @@
   "extra": {
     "symfony-app-dir": "app",
     "symfony-web-dir": "web",
-    "symfony-assets-install": "relative"
+    "symfony-assets-install": "relative",
+    "incenteev-parameters": {
+      "file": "app/config/parameters.yml"
+    }
   }
 }

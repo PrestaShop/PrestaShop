@@ -71,7 +71,9 @@ class ConfigurationTestCore
             'theme_cache_dir' => 'themes/'._THEME_NAME_.'/cache/',
             'translations_dir' => 'translations',
             'customizable_products_dir' => 'upload',
-            'virtual_products_dir' => 'download'
+            'virtual_products_dir' => 'download',
+            'app_cache_dir' => 'app/cache',
+            'app_logs_dir' => 'app/logs',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -288,6 +290,16 @@ class ConfigurationTestCore
     }
 
     public static function test_translations_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_cache_dir($dir)
+    {
+        return ConfigurationTest::test_dir($dir, true);
+    }
+
+    public static function test_app_logs_dir($dir)
     {
         return ConfigurationTest::test_dir($dir, true);
     }

@@ -28,7 +28,7 @@ Swift_ClassLoader::load("Swift_Events_Listener");
  * @author Chris Corbyn <chris@w3style.co.uk>
  * @version 3.3.2
  */
-class Swift
+class SwiftPs
 {
   /**
    * The version number.

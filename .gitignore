@@ -7,8 +7,8 @@ npm-debug.log.*
 download/*
 /img/*
 /log/*
-upload/*
-vendor/*
+/upload/*
+/vendor/*
 docs/phpdoc-sf/
 /composer.lock
 tests/StarterTheme/errorShots/
@@ -35,8 +35,7 @@ override/*
 # Vendors and dependencies
 
 bower_components/
-vendor/
-node_modules/
+node_modules
 /composer.phar
 php-cs-fixer
 .grunt/*
@@ -71,7 +70,8 @@ themes/default-bootstrap/modules/*/mails/*
 /app/phpunit.xml
 /bin/
 /web/bundles/
-
+/web/css/
+/web/js/
 
 
 # Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm

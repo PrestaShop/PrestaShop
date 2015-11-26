@@ -1393,12 +1393,12 @@ class CartRuleCore extends ObjectModel
         // Delete the product rules that does not have any values
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`
-																							WHERE `cart_rule_product_rule`.`id_product_rule` = `cart_rule_product_rule_value`.`id_product_rule`)');
+																							WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule`)');
         }
         // If the product rules were the only conditions of a product rule group, delete the product rule group
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->delete('cart_rule_product_rule_group', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
-																						WHERE `cart_rule_product_rule`.`id_product_rule_group` = `cart_rule_product_rule_group`.`id_product_rule_group`)');
+																						WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
         }
 
         // If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache

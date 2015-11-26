@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template
@@ -48,6 +48,7 @@ class LayoutExtension extends \Twig_Extension
     {
         $this->context = $context;
         $this->environment = $kernel->getEnvironment();
+        $this->configurationAdapter = new Configuration();
     }
 
     public function getGlobals()
@@ -55,6 +56,21 @@ class LayoutExtension extends \Twig_Extension
         return array(
             "root_url" => $this->context->getRootUrl(),
             "js_translatable" => [],
+            "ps_configuration" => [
+                "weight_unit" => $this->configurationAdapter->get('PS_WEIGHT_UNIT'),
+            ]
+        );
+    }
+
+    /**
+     * Define available filters
+     *
+     * @return array Twig_SimpleFilter
+     */
+    public function getFilters()
+    {
+        return array(
+            new \Twig_SimpleFilter('admin_asset_path', array($this, 'getAdminAssetPath')),
         );
     }
 
@@ -116,6 +132,29 @@ EOF;
         );
 
         return $content;
+    }
+
+    /**
+     * Get admin asset path filter
+     * Rewrite css/js assets urls for prod env
+     *
+     * @param string $path The original path
+     *
+     * @return string The new asset url
+     */
+    public function getAdminAssetPath($path)
+    {
+        $validExtensions = ['css', 'js'];
+        $pathSplit = explode('?', $path);
+        $pathInfo = pathinfo($pathSplit[0]);
+
+        if ($this->environment == 'dev' || !in_array($pathInfo['extension'], $validExtensions)) {
+            return $path;
+        }
+
+        $pathBase = end(explode(DIRECTORY_SEPARATOR, $pathInfo['dirname']));
+
+        return dirname($pathInfo['dirname']).'/../web/'.$pathBase.'/'.$pathInfo['basename'].(!empty($pathSplit[1]) ? '?'.$pathSplit[1] : '');
     }
 
     /**

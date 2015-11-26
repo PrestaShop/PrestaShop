@@ -23,10 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -37,9 +36,9 @@ use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 
 /**
- * This form class is risponsible to generate the basic product informations form
+ * This form class is responsible to generate the basic product information form
  */
-class ProductInformation extends AbstractType
+class ProductInformation extends CommonModelAbstractType
 {
     private $router;
     private $context;
@@ -69,23 +68,6 @@ class ProductInformation extends AbstractType
             $container->get('prestashop.adapter.data_provider.manufacturer')->getManufacturers(false, 0, true, false, false, false, true),
             'id_manufacturer'
         );
-    }
-
-    /**
-     * Format legacy data list to mapping SF2 form filed choice
-     *
-     * @param array $list
-     * @param string $mapping_value
-     * @param string $mapping_name
-     * @return array
-     */
-    private function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
-    {
-        $new_list = array();
-        foreach ($list as $item) {
-            $new_list[$item[$mapping_value]] = $item[$mapping_name];
-        }
-        return $new_list;
     }
 
     /**
@@ -166,7 +148,7 @@ class ProductInformation extends AbstractType
 
         //RIGHT COL
         ->add('active', 'choice', array(
-            'choices'  => array( 1 => 'Oui', 0 => 'Non'),
+            'choices'  => array( 1 => $this->translator->trans('Yes', [], 'AdminProducts'), 0 => $this->translator->trans('No', [], 'AdminProducts')),
             'expanded' => true,
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => true,
@@ -178,6 +160,14 @@ class ProductInformation extends AbstractType
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
+            )
+        ))
+        ->add('qty_0_shortcut', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'numeric'))
             )
         ))
         ->add('categories', new ChoiceCategoriesTreeType('Catégories', $this->nested_categories, $this->categories), array(

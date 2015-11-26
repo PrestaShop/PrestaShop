@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 /**
  * This adapter will complete the new architecture Tools
+ *
+ * Please put only wrappers and equivalents from Legacy \Tools class.
+ * (only for this purpose, this is not here to put new utils functions).
  */
 class Tools
 {

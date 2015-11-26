@@ -35,7 +35,7 @@ class Swift_Connection_NativeMail extends Swift_ConnectionBase
    * @var Swift_Plugin_MailSend
    */
   protected $plugin = null;
-  
+
   /**
    * Ctor.
    * @param string The 5th parameter in mail() as a sprintf() formatted string where %s is the sender address. This only comes into effect if safe_mode is OFF.
@@ -48,7 +48,7 @@ class Swift_Connection_NativeMail extends Swift_ConnectionBase
    * Sets the MailSend plugin in Swift once Swift has connected
    * @param Swift The current instance of Swift
    */
-  public function postConnect(Swift $instance)
+  public function postConnect(SwiftPs $instance)
   {
     $this->plugin = new Swift_Plugin_MailSend($this->getAdditionalMailParams());
     $instance->attachPlugin($this->plugin, "_MAIL_SEND");

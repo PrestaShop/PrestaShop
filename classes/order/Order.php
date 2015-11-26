@@ -1334,7 +1334,7 @@ class OrderCore extends ObjectModel
         $order_invoice->save();
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+            $wrapping_tax_calculator = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
         } else {
             $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
             $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();

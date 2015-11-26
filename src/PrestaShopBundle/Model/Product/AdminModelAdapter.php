@@ -26,12 +26,16 @@
 
 namespace PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
+
 /**
- * This form class is risponsible to mapp the form data to the product object
+ * This form class is responsible to map the form data to the product object
  */
-class AdminModelAdapter
+class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $adminProductWrapper;
+    private $cldrRepository;
     private $locales;
     private $defaultLocale;
     private $tools;
@@ -53,28 +57,53 @@ class AdminModelAdapter
     {
         $this->context = $container->get('prestashop.adapter.legacy.context');
         $this->contextShop = $this->context->getContext();
+        $this->adminProductWrapper = $container->get('prestashop.adapter.admin.wrapper.product');
+        $this->cldrRepository = new cldrRepository($this->contextShop->language);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $container->get('prestashop.adapter.tools');
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
-        $this->product = $id ? $this->productAdapter->getProduct($id) : null;
+        $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
+        if ($this->product != null) {
+            $this->product->loadStockData();
+        }
 
         //define translatable key
-        $this->translatableKeys = array('name', 'description', 'description_short', 'link_rewrite');
+        $this->translatableKeys = array(
+            'name',
+            'description',
+            'description_short',
+            'link_rewrite',
+            'meta_title',
+            'meta_description',
+            'available_now',
+            'available_later',
+        );
 
         //define unused key for manual binding
-        $this->unmapKeys = array('name', 'description', 'description_short', 'images', 'related_products', 'categories', 'suppliers', 'display_options', 'features');
+        $this->unmapKeys = array('name',
+            'description',
+            'description_short',
+            'images',
+            'related_products',
+            'categories',
+            'suppliers',
+            'display_options',
+            'features',
+            'specific_price',
+        );
     }
 
     /**
      * modelMapper
-     * Mapp form data to object model
+     * Map form data to object model
      *
      * @param array $form_data
      *
-     * @return array Transormed form data to model attempt
+     * @return array Transformed form data to model attempt
      */
     public function getModelDatas($form_data)
     {
@@ -99,6 +128,24 @@ class AdminModelAdapter
             }
         }
 
+        //if product is disable, remove rediretion strategy fields
+        if ($form_data['active'] == 1) {
+            $form_data['redirect_type'] = '';
+            $form_data['id_product_redirected'] = 0;
+        } else {
+            $form_data['redirect_type'] = (string)$form_data['redirect_type'];
+
+            if ($form_data['redirect_type'] != '404') {
+                if (isset($form_data['id_product_redirected']) && !empty($form_data['id_product_redirected']['data'])) {
+                    $form_data['id_product_redirected'] = $form_data['id_product_redirected']['data'][0];
+                } else {
+                    $form_data['id_product_redirected'] = 0;
+                }
+            } else {
+                $form_data['id_product_redirected'] = 0;
+            }
+        }
+
         //map categories
         foreach ($form_data['categories']['tree'] as $category) {
             $form_data['categoryBox'][] = $category;
@@ -115,12 +162,22 @@ class AdminModelAdapter
         }
 
         //map suppliers
-        if (!empty($form_data['suppliers'])) {
+        $form_data['supplier_loaded'] = 1;
+        if (!empty($form_data['id_product']) && !empty($form_data['suppliers'])) {
             foreach ($form_data['suppliers'] as $id_supplier) {
                 $form_data['check_supplier_'.$id_supplier] = 1;
+
+                //map supplier combinations
+                foreach ($form_data['supplier_combination_'.$id_supplier] as $combination) {
+                    $key = $form_data['id_product'].'_'.$combination['id_product_attribute'].'_'.$id_supplier;
+                    $form_data['supplier_reference_'.$key] = $combination['supplier_reference'];
+                    $form_data['product_price_'.$key] = $combination['product_price'];
+                    $form_data['product_price_currency_'.$key] = $combination['product_price_currency'];
+
+                    unset($form_data['supplier_combination_'.$id_supplier]);
+                }
             }
         }
-        $form_data['supplier_loaded'] = 1;
 
         //map display options
         foreach ($form_data['display_options'] as $option => $value) {
@@ -171,14 +228,22 @@ class AdminModelAdapter
             $new_form_data[$k] = $v;
         }
 
-        return $new_form_data;
+        //map specific price priority
+        $new_form_data['specificPricePriority'] = [
+            $new_form_data['specificPricePriority_0'],
+            $new_form_data['specificPricePriority_1'],
+            $new_form_data['specificPricePriority_2'],
+            $new_form_data['specificPricePriority_3'],
+        ];
+
+        return array_merge(parent::getHookData(), $new_form_data);
     }
 
     /**
      * formMapper
-     * Mapp object model to form data
+     * Map object model to form data
      *
-     * @return array Transormed model datas to form attempt
+     * @return array Transformed model data to form attempt
      */
     public function getFormDatas()
     {
@@ -189,11 +254,29 @@ class AdminModelAdapter
                 'condition' => 'new',
                 'active' => 0,
                 'price_shortcut' => 0,
+                'qty_0_shortcut' => 0,
                 'categories' => ['tree' => [$this->contextShop->shop->id_category]]
             ],
             'step2' => [
                 'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
                 'price' => 0,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
+                'specificPricePriorityToAll' => false,
+            ],
+            'step3' => [
+                'qty_0' => 0,
+                'out_of_stock' => 2,
+                'minimal_quantity' => 1,
+                'available_date' => '0000-00-00',
             ],
             'step4' => [
                 'width' => 0,
@@ -203,6 +286,7 @@ class AdminModelAdapter
                 'additional_shipping_cost' => 0,
             ],
             'step6' => [
+                'redirect_type' => '404',
                 'visibility' => 'both',
                 'display_options' => [
                     'available_for_order' => true,
@@ -230,6 +314,7 @@ class AdminModelAdapter
                 'condition' => $this->product->condition,
                 'active' => $this->product->active,
                 'price_shortcut' => $this->product->price,
+                'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
                 'id_manufacturer' => $this->product->id_manufacturer,
@@ -253,6 +338,27 @@ class AdminModelAdapter
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
                 'unity' => $this->product->unity,
+                'specific_price' => [
+                    'sp_from_quantity' => 1,
+                    'sp_reduction' => 0,
+                    'sp_reduction_tax' => 1,
+                    'leave_bprice' => true,
+                ],
+                'specificPricePriority_0' => $this->productPricePriority[0],
+                'specificPricePriority_1' => $this->productPricePriority[1],
+                'specificPricePriority_2' => $this->productPricePriority[2],
+                'specificPricePriority_3' => $this->productPricePriority[3],
+            ],
+            'step3' => [
+                'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
+                'depends_on_stock' => $this->product->depends_on_stock?"1":"0",
+                'qty_0' => $this->product->getQuantity($this->product->id),
+                'combinations' => $this->getFormCombinations(),
+                'out_of_stock' => $this->product->out_of_stock,
+                'minimal_quantity' => $this->product->minimal_quantity,
+                'available_now' => $this->product->available_now,
+                'available_later' => $this->product->available_later,
+                'available_date' => $this->product->available_date,
             ],
             'step4' => [
                 'width' => $this->product->width,
@@ -264,8 +370,14 @@ class AdminModelAdapter
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
+                'meta_title' => $this->product->meta_title,
+                'meta_description' => $this->product->meta_description,
             ],
             'step6' => [
+                'redirect_type' => $this->product->redirect_type,
+                'id_product_redirected' => [
+                    'data' => [$this->product->id_product_redirected]
+                ],
                 'visibility' => $this->product->visibility,
                 'display_options' => [
                     'available_for_order' => (bool) $this->product->available_for_order,
@@ -282,12 +394,52 @@ class AdminModelAdapter
             ]
         ];
 
+        //Inject data form for supplier combinations
+        $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations());
+
         return $form_data;
     }
 
     /**
+     * Generate form supplier/combinations references
+     *
+     * @return array filled datas form references combinations
+     */
+    private function getDataSuppliersCombinations()
+    {
+        $combinations = $this->product->getAttributesResume($this->locales[0]['id_lang']);
+        if (!$combinations || empty($combinations)) {
+            $combinations[] = array(
+                'id_product' => $this->product->id,
+                'id_product_attribute' => 0,
+                'attribute_designation' => $this->product->name[$this->locales[0]['id_lang']]
+            );
+        }
+
+        //for each supplier, generate combinations list
+        $datasSuppliersCombinations = [];
+
+        foreach ($this->supplierAdapter->getProductSuppliers($this->product->id) as $supplier) {
+            foreach ($combinations as $combination) {
+                $productSupplierData = $this->supplierAdapter->getProductSupplierData($this->product->id, $combination['id_product_attribute'], $supplier->id_supplier);
+                $datasSuppliersCombinations['supplier_combination_'.$supplier->id_supplier][] = [
+                    'label' => $combination['attribute_designation'],
+                    'supplier_reference' => isset($productSupplierData['product_supplier_reference']) ? $productSupplierData['product_supplier_reference'] : '',
+                    'product_price' => isset($productSupplierData['price']) ? $productSupplierData['price'] : 0,
+                    'product_price_currency' => isset($productSupplierData['id_currency']) ? $productSupplierData['id_currency'] : 1,
+                    'supplier_id' => $supplier->id_supplier,
+                    'product_id' => $this->product->id,
+                    'id_product_attribute' => $combination['id_product_attribute'],
+                ];
+            }
+        }
+
+        return $datasSuppliersCombinations;
+    }
+
+    /**
      * get form Full product Description with description short
-     * Mapp object model to form data
+     * Map object model to form data
      *
      * @param array $descriptionLangs the translated descriptions
      * @param array $descriptionShortLangs the translated short descriptions
@@ -354,5 +506,82 @@ class AdminModelAdapter
         }
 
         return $formDataCarriers;
+    }
+
+    /**
+     * Get all product combinations values
+     *
+     * @return array combinations
+     */
+    private function getFormCombinations()
+    {
+        $combinations = $this->product->getAttributeCombinations(1, false);
+        $formCombinations = [];
+        foreach ($combinations as $combination) {
+            $formCombinations[] = $this->getFormCombination($combination);
+        }
+
+        return $formCombinations;
+    }
+
+    /**
+     * Get a combination values
+     *
+     * @param array $combination The combination values
+     *
+     * @return array combinations
+     */
+    public function getFormCombination($combination)
+    {
+        $attribute_price_impact = 0;
+        if ($combination['price'] > 0) {
+            $attribute_price_impact = 1;
+        } elseif ($combination['price'] < 0) {
+            $attribute_price_impact = -1;
+        }
+
+        $attribute_weight_impact = 0;
+        if ($combination['weight'] > 0) {
+            $attribute_weight_impact = 1;
+        } elseif ($combination['weight'] < 0) {
+            $attribute_weight_impact = -1;
+        }
+
+        $attribute_unity_price_impact = 0;
+        if ($combination['unit_price_impact'] > 0) {
+            $attribute_unity_price_impact = 1;
+        } elseif ($combination['unit_price_impact'] < 0) {
+            $attribute_unity_price_impact = -1;
+        }
+
+        //generate combination name
+        $attributesCombinations = $this->product->getAttributeCombinationsById($combination['id_product_attribute'], 1);
+        $name = [];
+        foreach ($attributesCombinations as $attribute) {
+            $name[] = $attribute['group_name'].' - '.$attribute['attribute_name'];
+        }
+
+        return [
+            'id_product_attribute' => $combination['id_product_attribute'],
+            'attributes' => array($combination['group_name'], $combination['attribute_name'], $combination['id_attribute']),
+            'attribute_reference' => $combination['reference'],
+            'attribute_ean13' => $combination['ean13'],
+            'attribute_isbn' => $combination['isbn'],
+            'attribute_upc' => $combination['upc'],
+            'attribute_wholesale_price' => $combination['wholesale_price'],
+            'attribute_price_impact' => $attribute_price_impact,
+            'attribute_price' => $combination['price'],
+            'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->contextShop->currency->iso_code),
+            'attribute_priceTI' => '',
+            'attribute_weight_impact' => $attribute_weight_impact,
+            'attribute_weight' => $combination['weight'],
+            'attribute_unit_impact' => $attribute_unity_price_impact,
+            'attribute_unity' => $combination['unit_price_impact'],
+            'attribute_minimal_quantity' => $combination['minimal_quantity'],
+            'available_date_attribute' =>  $combination['available_date'],
+            'attribute_default' => (bool)$combination['default_on'],
+            'attribute_quantity' => \Product::getQuantity($this->product->id, $combination['id_product_attribute']),
+            'name' => implode(', ', $name)
+        ];
     }
 }

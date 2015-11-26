@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Business\Stock;
 
 use Exception;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use Core_Business_Stock_StockManager;
+use PrestaShop\PrestaShop\Core\Business\Stock\StockManager;
 
 class FakeStockAvailable4759
 {
@@ -186,10 +186,10 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
-        $stockManager = new Core_Business_Stock_StockManager();
+        $stockManager = new StockManager();
         $stockManager->updatePackQuantity($pack, $pack->stock_available, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);
@@ -275,10 +275,10 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
-        $stockManager = new Core_Business_Stock_StockManager();
+        $stockManager = new StockManager();
         // we will update first product quantity only, others will remain inchanged (excepting pack on needed cases)
         $stockAvailable = $products[0][0]->stock_available;
         $stockAvailable->quantity = $stockAvailable->quantity + $delta;
@@ -385,14 +385,14 @@ class StockAvailableTest extends UnitTestCase
         foreach ($products as $product) {
             $this->packItemsManager->addProduct($pack, $product[0], $product[1], $product[2]);
         }
-        $this->container->bind('Adapter_PackItemsManager', $this->packItemsManager);
-        $this->container->bind('Adapter_StockManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager', $this->packItemsManager);
+        $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\StockManager', $this->packItemsManager);
         
         
         $productToUpdate = ($product_to_update === 0)? $pack : $products[$product_to_update-1][0];
         $productAttributeToUpdate = ($product_to_update === 0)? null : $products[$product_to_update-1][1];
         
-        $stockManager = new \Core_Business_Stock_StockManager();
+        $stockManager = new StockManager();
         $stockManager->updateQuantity($productToUpdate, $productAttributeToUpdate, $delta);
         
         $this->assertEquals($expected[0], $pack->stock_available->quantity);

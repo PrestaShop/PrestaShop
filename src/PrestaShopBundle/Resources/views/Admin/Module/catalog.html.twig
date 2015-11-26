@@ -8,6 +8,10 @@
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    {% stylesheets '@PrestaShopBundle/Resources/public/admin/css/plugins/jquery.prestagify.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -15,16 +19,20 @@
     {{ parent() }}
 
     {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/module.js' %}
-    <script src="{{ asset_url }}"></script>
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/plugins/jquery.prestagify.js' %}
+        <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
 {% endblock %}
 
 {% block content %}
-    {# Contains menu with Selection/Categories/Popular #}
+    {# Contains menu with Selection/Categories/Popular and Tag Search #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
     {# Contains sorting options #}
-    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' %}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_sorting.html.twig' with { 'totalModules' : modules|length } %}
     {# Actual Page Content #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_grid.html.twig' %}
 {% endblock %}

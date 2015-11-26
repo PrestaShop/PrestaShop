@@ -25,19 +25,22 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PrestaShopBundle\Service\DataProvider\StockInterface;
+use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
+use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\DataUpdateException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
+use Symfony\Component\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -86,6 +89,9 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
+        $logger = $this->container->get('logger');
+        /* @var $logger LoggerInterface */
+
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
         $translator = $this->container->get('prestashop.adapter.translator');
@@ -95,44 +101,6 @@ class ProductController extends FrameworkBundleAdminController
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
-
-        // URLs injection
-        $actionRedirectionUrl = $this->generateUrl('admin_product_catalog', array(
-            'limit' => $request->attributes->get('limit'),
-            'offset' => $request->attributes->get('offset'),
-            'orderBy' => $request->attributes->get('orderBy'),
-            'sortOrder' => $request->attributes->get('sortOrder')
-        ));
-        $urls = array(
-            'post_url' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                // No offset: filter & bulk action will post form and want to redirect to first page.
-                //'offset' => $request->attributes->get('offset'),
-                'orderBy' => $request->attributes->get('orderBy'),
-                'sortOrder' => $request->attributes->get('sortOrder')
-            )),
-            'ordering_url' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                // No offset: re-ordering action will use this url to redirect to first page.
-                //'offset' => $request->attributes->get('offset'),
-                'orderBy' => 'name', // will be replaced by JS. Must be non default value (see routes YML file)
-                'sortOrder' => 'desc' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'bulk_url' => $this->generateUrl('admin_product_bulk_action', array(
-                'action' => 'activate_all' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'mass_edit_url' => $this->generateUrl('admin_product_mass_edit_action', array(
-                'action' => 'sort' // will be replaced by JS. Must be non default value (see routes YML file)
-            )),
-            'bulk_redirect_url' => $actionRedirectionUrl,
-            'unit_redirect_url' => $actionRedirectionUrl,
-            'bulk_redirect_url_next_page' => $this->generateUrl('admin_product_catalog', array(
-                'limit' => $request->attributes->get('limit'),
-                'offset' => $request->attributes->get('offset') + $request->attributes->get('limit'),
-                'orderBy' => $request->attributes->get('orderBy'),
-                'sortOrder' => $request->attributes->get('sortOrder')
-            )),
-        );
 
         // Add layout top-right menu actions
         $toolbarButtons = array();
@@ -152,6 +120,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Fetch product list (and cache it into view subcall to listAction)
         $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $logger->info('Product catalog filters stored.');
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
         $hasColumnFilter = $productProvider->isColumnFiltered();
 
@@ -163,7 +132,7 @@ class ProductController extends FrameworkBundleAdminController
             // no filter, total filtered == 0, and then total count == 0 too.
             return $this->render('PrestaShopBundle:Admin/Product:catalogEmpty.html.twig');
         } else {
-            // Paginator
+            // Pagination
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
 
@@ -188,7 +157,6 @@ class ProductController extends FrameworkBundleAdminController
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
-            $urls,
             array(
                 'limit' => $limit,
                 'offset' => $offset,
@@ -223,11 +191,15 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
+        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
+        /* @var $legacyContext LegacyContext */
+        $previewUrlFactory = $legacyContext->getFrontUrl('product') . '&id_product=';
         $totalCount = 0;
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
         $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
         /* @var $productProvider ProductInterfaceProvider */
         if ($products === null) {
+            // 2 hooks are triggered here: actionAdminProductsListingFieldsModifier and actionAdminProductsListingResultsModifier
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
         }
         $hasColumnFilter = $productProvider->isColumnFiltered();
@@ -240,6 +212,7 @@ class ProductController extends FrameworkBundleAdminController
                 'admin_product_unit_action',
                 array('action' => 'duplicate', 'id' => $product['id_product'])
             );
+            $product['preview_url'] = $previewUrlFactory . $product['id_product'];
         }
 
         // Template vars injection
@@ -271,12 +244,13 @@ class ProductController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $modelMapper = new ProductAdminModelAdapter($id, $this->container);
+        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormDatas())
             ->add('id_product', 'hidden')
             ->add('step1', new ProductForms\ProductInformation($this->container))
             ->add('step2', new ProductForms\ProductPrice($this->container))
-            ->add('step3', new ProductForms\ProductQuantity())
+            ->add('step3', new ProductForms\ProductQuantity($this->container))
             ->add('step4', new ProductForms\ProductShipping($this->container))
             ->add('step5', new ProductForms\ProductSeo($this->container))
             ->add('step6', new ProductForms\ProductOptions($this->container))
@@ -286,16 +260,38 @@ class ProductController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                // Legacy code. To fix when Object model will change. But report Hooks.
+
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelDatas($form->getData());
 
-                $adminProductController = $this->container->get('prestashop.adapter.admin.wrapper.product')->getInstance();
+                $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($form->getData()['id_product']);
                 $adminProductController->setAction('save');
 
+                // Hooks: this will trigger legacy AdminProductController, postProcess():
+                // actionAdminSaveBefore; actionAdminProductsControllerSaveBefore
+                // actionProductAdd or actionProductUpdate (from processSave() -> processAdd() or processUpdate())
+                // actionAdminSaveAfter; actionAdminProductsControllerSaveAfter
                 if ($product = $adminProductController->postCoreProcess()) {
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
+                    $adminProductController->processSpecificPricePriorities();
+                    foreach ($_POST['combinations'] as $combinationValues) {
+                        $adminProductWrapper->processProductAttribute($product, $combinationValues);
+                        // For now, each attribute set the same value.
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
+                    }
+
+                    // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
+                    // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
+                    if (count($_POST['combinations']) === 0) {
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
+                    }
+                    // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
+
+                    $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
 
                     $response->setData(['product' => $product]);
                 }
@@ -310,8 +306,14 @@ class ProductController extends FrameworkBundleAdminController
             }
         }
 
+        $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
+        /* @var $stockManager StockInterface */
+
         return array(
             'form' => $form->createView(),
+            'id_product' => $id,
+            'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
+            'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
         );
     }
 
@@ -321,7 +323,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected products
      * @throws \Exception If action not properly set or unknown.
-     * @return redirection
+     * @return void (redirection)
      */
     public function bulkAction(Request $request, $action)
     {
@@ -331,30 +333,63 @@ class ProductController extends FrameworkBundleAdminController
         $translator = $this->container->get('prestashop.adapter.translator');
         /* @var $translator TranslatorInterface */
 
+        $logger = $this->container->get('logger');
+        /* @var $logger LoggerInterface */
+
+        $hookEventParameters = ['product_list_id' => $productIdList];
+        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        /* @var $hookDispatcher HookDispatcher */
+
         try {
             switch ($action) {
                 case 'activate_all':
-                    $success = $productUpdater->activateProductIdList($productIdList);
+                    $hookDispatcher->dispatchMultiple(['actionAdminActivateBefore', 'actionAdminProductsControllerActivateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->activateProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully activated.'));
+                    $logger->info('Products activated: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'], $hookEventParameters);
                     break;
                 case 'deactivate_all':
-                    $success = $productUpdater->activateProductIdList($productIdList, false);
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateBefore', 'actionAdminProductsControllerDeactivateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->activateProductIdList($productIdList, false);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deactivated.'));
+                    $logger->info('Products deactivated: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'], $hookEventParameters);
                     break;
                 case 'delete_all':
-                    $success = $productUpdater->deleteProductIdList($productIdList);
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->deleteProductIdList($productIdList);
                     $this->addFlash('success', $translator->trans('Product(s) successfully deleted.'));
+                    $logger->info('Products deleted: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
+                    break;
+                case 'duplicate_all':
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->duplicateProductIdList($productIdList);
+                    $this->addFlash('success', $translator->trans('Product(s) successfully duplicated.'));
+                    $logger->info('Products duplicated: ('.implode(',', $productIdList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    $logger->error('Bulk action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::bulkAction: "'.$action.'"', 2001);
             }
         } catch (DataUpdateException $due) {
-            $this->addFlash('failure', $translator->trans($due->getMessage()));
+            $message = $due->getMessage();
+            $this->addFlash('failure', $translator->trans($message));
+            $logger->warning($message);
         }
 
         // redirect after success
-        return $this->redirect($request->request->get('redirect_url'), 302);
+        if ($request->request->has('redirect_url')) {
+            return $this->redirect($request->request->get('redirect_url'), 302);
+        }
+        return new Response(json_encode(array('result' => 'ok')));
     }
 
     /**
@@ -363,7 +398,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected products
      * @throws \Exception If action not properly set or unknown.
-     * @return redirection
+     * @return void (redirection)
      */
     public function massEditAction(Request $request, $action)
     {
@@ -374,20 +409,35 @@ class ProductController extends FrameworkBundleAdminController
         $translator = $this->container->get('prestashop.adapter.translator');
         /* @var $translator TranslatorInterface */
 
+        $logger = $this->container->get('logger');
+        /* @var $logger LoggerInterface */
+
+        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        /* @var $hookDispatcher HookDispatcher */
+
         try {
             switch ($action) {
                 case 'sort':
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
-                    $success = $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
+                    $hookDispatcher->dispatchMultiple(['actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
                     $this->addFlash('success', $translator->trans('Products successfully sorted.'));
+                    $logger->info('Products sorted: ('.implode(',', $productIdList).') with positions ('.implode(',', $productPositionList).').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]);
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    $logger->error('Mass edit action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::massEditAction: "'.$action.'"', 2001);
             }
         } catch (DataUpdateException $due) {
-            $this->addFlash('failure', $translator->trans($due->getMessage()));
+            $message = $due->getMessage();
+            $this->addFlash('failure', $translator->trans($message));
+            $logger->warning($message);
         }
 
         // redirect after success
@@ -400,7 +450,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param Request $request
      * @param string $action The action to apply on the selected product
      * @throws \Exception If action not properly set or unknown.
-     * @return redirection
+     * @return void (redirection)
      */
     public function unitAction(Request $request, $action, $id)
     {
@@ -409,23 +459,41 @@ class ProductController extends FrameworkBundleAdminController
         $translator = $this->container->get('prestashop.adapter.translator');
         /* @var $translator TranslatorInterface */
 
+        $logger = $this->container->get('logger');
+        /* @var $logger LoggerInterface */
+
+        $hookEventParameters = ['product_id' => $id];
+        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        /* @var $hookDispatcher HookDispatcher */
+
         try {
             switch ($action) {
                 case 'delete':
-                    $success = $productUpdater->deleteProduct($id);
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteBefore', 'actionAdminProductsControllerDeleteBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
+                    $productUpdater->deleteProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully deleted.'));
+                    $logger->info('Product deleted: ('.$id.').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
                 case 'duplicate':
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateBefore', 'actionAdminProductsControllerDuplicateBefore'], $hookEventParameters);
+                    // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully duplicated.'));
+                    $logger->info('Product duplicated: (from '.$id.' to '.$duplicateProductId.').');
+                    $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     // stops here and redirect to the new product's page.
-                    return $this->redirectToRoute('admin_product_form', array('id_product' => $duplicateProductId), 302);
+                    return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId), 302);
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
+                    $logger->error('Unit action from ProductController received a bad parameter.');
                     throw new \Exception('Bad action received from call to ProductController::unitAction: "'.$action.'"', 2002);
             }
         } catch (DataUpdateException $due) {
-            $this->addFlash('failure', $translator->trans($due->getMessage()));
+            $message = $due->getMessage();
+            $this->addFlash('failure', $translator->trans($message));
+            $logger->warning($message);
         }
 
         // redirect after success
@@ -441,15 +509,23 @@ class ProductController extends FrameworkBundleAdminController
      *
      * FIXME: This is a temporary behavior. (clean the route YML conf in the same time)
      *
-     * @param Request $request
      * @param boolean $use True to use legacy version. False for refactored page.
-     * @return redirection
+     * @return void (redirection)
      */
-    public function shouldUseLegacyPagesAction(Request $request, $use)
+    public function shouldUseLegacyPagesAction($use)
     {
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
         $pagePreference->setTemporaryShouldUseLegacyPage('product', $use);
+
+        $hookDispatcher = $this->container->get('prestashop.hook.dispatcher');
+        /* @var $hookDispatcher HookDispatcher */
+        $hookDispatcher->dispatch('shouldUseLegacyPage', (new HookEvent())->setHookParameters(['page' => 'product', 'use_legacy' => $use]));
+
+        $logger = $this->container->get('logger');
+        /* @var $logger LoggerInterface */
+        $logger->info('Changed setting to use '.($use?'legacy':'new version').' pages for ProductController.');
+
         // Then redirect
         $urlGenerator = $this->container->get($use?'prestashop.core.admin.url_generator_legacy':'prestashop.core.admin.url_generator');
         /* @var $urlGenerator UrlGeneratorInterface */
