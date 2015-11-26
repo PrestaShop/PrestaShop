@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Provider\CategoryProductSearchProvider;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
 
 class CategoryControllerCore extends ProductListingFrontController
 {
@@ -92,13 +93,8 @@ class CategoryControllerCore extends ProductListingFrontController
 
     protected function getProductSearchProvider(ProductSearchQuery $query)
     {
-        $db = PrestaShop\PrestaShop\Adapter\ServiceLocator::get(
-            'PrestaShop\PrestaShop\Core\Foundation\Database\AutoPrefixingDatabase'
-        );
-        $defaultProvider = new CategoryProductSearchProvider($db);
-
         $providers = Hook::exec(
-            'categoryProductSearchProvider',
+            'productSearchProvider',
             ['query' => $query],
             null,
             true
@@ -107,10 +103,19 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!is_array($providers)) {
             $providers = [];
         }
-        $providers[] = $defaultProvider;
-        reset($providers);
 
-        return current($providers);
+        foreach ($providers as $provider) {
+            if ($provider instanceof ProductSearchProviderInterface) {
+                return $provider;
+            }
+        }
+
+        // Use core provider if none was found in modules
+
+        $db = PrestaShop\PrestaShop\Adapter\ServiceLocator::get(
+            'PrestaShop\PrestaShop\Core\Foundation\Database\AutoPrefixingDatabase'
+        );
+        $defaultProvider = new CategoryProductSearchProvider($db);
     }
 
     protected function getTemplateVarCategory()
