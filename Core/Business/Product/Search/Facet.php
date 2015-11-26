@@ -6,6 +6,7 @@ class Facet
 {
     private $label;
     private $type;
+    private $displayed = true;
     private $properties = [];
     private $filters = [];
     private $multipleSelectionAllowed = true;
@@ -14,6 +15,7 @@ class Facet
     {
         return [
             'label'         => $this->label,
+            'displayed'     => $this->displayed,
             'type'          => $this->type,
             'properties'    => $this->properties,
             'filters'       => array_map(function (Filter $filter) {
@@ -79,5 +81,16 @@ class Facet
     public function isMultipleSelectionAllowed()
     {
         return $this->multipleSelectionAllowed;
+    }
+
+    public function setDisplayed($displayed = true)
+    {
+        $this->displayed = $displayed;
+        return $this;
+    }
+
+    public function isDisplayed()
+    {
+        return $this->displayed;
     }
 }
