@@ -1645,9 +1645,57 @@ class FrontControllerCore extends Controller
             'keywords' => $meta_tags['meta_keywords'],
             'page_name' => $page_name,
             'body_classes' => '',
+            'canonical' => $this->getCanonicalURL()
         ];
 
         return $page;
+    }
+
+    public function getCanonicalURL()
+    {
+        return null;
+    }
+
+    /**
+     * Generate a URL corresponding to the current page but
+     * with the query string altered.
+     *
+     * If $extraParams is set to NULL, then all query params are stripped.
+     *
+     * Otherwise, params from $extraParams that have a null value are stripped,
+     * and other params are added. Params not in $extraParams are unchanged.
+     */
+    protected function makeURL(array $extraParams = null)
+    {
+        $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
+        $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
+        $params = [];
+        parse_str($_SERVER["QUERY_STRING"], $params);
+
+        if (null !== $extraParams) {
+            foreach ($extraParams as $key => $value) {
+                if (null === $value) {
+                    unset($params[$key]);
+                } else {
+                    $params[$key] = $value;
+                }
+            }
+        }
+
+        ksort($params);
+
+        if (null !== $extraParams) {
+            foreach ($params as $key => $param) {
+                if (null === $param || '' === $param) {
+                    unset($params[$key]);
+                }
+            }
+        } else {
+            $params = [];
+        }
+
+        $queryString = urldecode(http_build_query($params));
+        return $url . ($queryString ? "?$queryString" : '');
     }
 
     public function getPageName()

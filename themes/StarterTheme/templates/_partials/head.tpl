@@ -5,6 +5,9 @@
   <title>{block name="head_seo_title"}{$page.title}{/block}</title>
   <meta name="description" content="{block name='head_seo_description'}{$page.description}{/block}" />
   <meta name="keywords" content="{block name='head_seo_keywords'}{$page.keywords}{/block}" />
+  {if $page.canonical}
+    <link rel="canonical" href="{$page.canonical}">
+  {/if}
 {/block}
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
