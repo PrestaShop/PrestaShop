@@ -34,7 +34,7 @@ class Adapter_AddressForm
     private $ordered_address_fields = [];
     private $required_fields = [];
 
-    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, language $language, Adapter_Translator $translator)
+    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, Language $language, Adapter_Translator $translator)
     {
         $this->address_formatter = $address_formatter;
         $this->language = $language;
