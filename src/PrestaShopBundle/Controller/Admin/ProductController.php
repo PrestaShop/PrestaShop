@@ -233,6 +233,8 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
@@ -313,7 +315,8 @@ class ProductController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
+            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
+            'is_multishop_context' => count($shopContext->getContextListShopID()) > 1 ? true : false,
         );
     }
 

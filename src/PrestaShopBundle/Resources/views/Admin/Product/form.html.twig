@@ -2,6 +2,9 @@
 
 {% block content %}
     <div class="panel">
+        {% if is_multishop_context %}
+            <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
+        {% endif %}
         <form name="form" id="form" method="post" class="form-horizontal" novalidate="novalidate">
             <div class="col-lg-12">
                 <div id="form_bubbling_errors">
