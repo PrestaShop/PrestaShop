@@ -233,6 +233,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context')->getContext();
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
+
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
         /* @var $pagePreference AdminPagePreferenceInterface */
@@ -263,7 +267,7 @@ class ProductController extends FrameworkBundleAdminController
                 // Legacy code. To fix when Object model will change. But report Hooks.
 
                 //define POST values for keeping legacy adminController skills
-                $_POST = $modelMapper->getModelDatas($form->getData());
+                $_POST = $modelMapper->getModelDatas($form->getData(), $isMultiShopContext);
 
                 $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($form->getData()['id_product']);
@@ -309,11 +313,17 @@ class ProductController extends FrameworkBundleAdminController
         $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
         /* @var $stockManager StockInterface */
 
+        //If context shop is define to a group shop, disable the form
+        if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
+            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
+        }
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
-            'asm_globally_activated' => $stockManager->isAsmGloballyActivated()
+            'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
+            'is_multishop_context' => $isMultiShopContext,
         );
     }
 
