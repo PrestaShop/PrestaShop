@@ -63,4 +63,14 @@ class Context
     {
         return \ShopCore::getContextListShopID($share);
     }
+
+    /**
+     * Get the ShopCore class CONTEXT_GROUP constant value
+     *
+     * @return int
+     */
+    public function getShopContextGroupConstant()
+    {
+        return \ShopCore::CONTEXT_GROUP;
+    }
 }

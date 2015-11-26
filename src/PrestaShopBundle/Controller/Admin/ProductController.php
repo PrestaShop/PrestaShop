@@ -234,6 +234,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context')->getContext();
 
         // Redirect to legacy controller (FIXME: temporary behavior)
         $pagePreference = $this->container->get('prestashop.core.admin.page_preference_interface');
@@ -310,6 +311,11 @@ class ProductController extends FrameworkBundleAdminController
 
         $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
         /* @var $stockManager StockInterface */
+
+        //If context shop is define to a group shop, disable the form
+        if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
+            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
+        }
 
         return array(
             'form' => $form->createView(),
