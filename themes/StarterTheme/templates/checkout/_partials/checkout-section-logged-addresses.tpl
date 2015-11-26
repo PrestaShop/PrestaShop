@@ -1,9 +1,5 @@
 <section id="checkout-addresses">
 
-  <header>
-    <h1 class="h3">{l s='Addresses'}</h1>
-  </header>
-
   <ul class="actions">
     <li>
       <a  href="{url entity="address" params=['back' => $urls.pages.order]}"
@@ -28,12 +24,15 @@
 
       {block name="checkout_guest_same_address"}
         <label>
-          <input type="checkbox" id="checkout-different-address-for-invoice" data-role="checkout-different-address-for-invoice">
+          <input type="checkbox"
+                 id="checkout-different-address-for-invoice"
+                 data-action="show"
+                 data-action-target="checkout-address-invoice">
           {l s='Use a different address for invoice'}
         </label>
       {/block}
 
-      <div id="select-invoice-address" class="address-selector ps-shown-by-js">
+      <div id="select-invoice-address" class="address-selector ps-hidden-by-js">
         <h2 class="h3">{l s='Your invoice address'}</h2>
         {block name="opc_invoice_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
