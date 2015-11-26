@@ -6,7 +6,7 @@
     <h1>{l s='Your Shopping Cart'}</h1>
 
     {block name="cart_overview"}
-      {include 'checkout/_partials/cart-overview.tpl' cart=$cart}
+      {include 'checkout/_partials/cart-detailed.tpl' cart=$cart}
     {/block}
 
     <ul>
