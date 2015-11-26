@@ -56,6 +56,7 @@ GitHub contributors:
 - Chen.Zhidong
 - Chris
 - Chris Gurk
+- christianverardi
 - ChristopheBoucaut
 - CINS
 - cippest
@@ -170,6 +171,7 @@ GitHub contributors:
 - Jerome Nadaud
 - jeromenadaud
 - jessylenne
+- Jérôme Nadaud
 - Joan
 - Joan Juvanteny
 - joce
@@ -299,6 +301,7 @@ GitHub contributors:
 - Quetzacoalt91
 - Racochejl
 - Rafael Cunha
+- Raphael Droz
 - Raphael Malie
 - raulgundin
 - rGaillard
