@@ -96,7 +96,8 @@ class Translator implements TranslatorInterface
 
         // Front / Module case ?
         if ($domain !== null) {
-            //TODO: 'Module & Front translation is not yet implemented. Please contact the Architect team
+            // FIXME: probably too simple
+            return \Translate::getFrontTranslation($id, $domain);
         }
 
         throw new LogicException('Translation without $domain key is not yet implemented in the front interface. Please contact the Architect team.', 5016);
