@@ -1,6 +1,11 @@
-<span class="product-quantity">{$product.quantity}</span>
-<span class="product-name">{$product.name}</span>
+<span class="product-image"><img src="{$product.cover.small.url}"></span>
+<span class="product-name"><a href="{$product.url}">{$product.name}</a></span>
+<span class="product-name">{$product.attributes}</span>
+<span class="product-availability">{$product.availability}</span>
 <span class="product-price">{$product.price}</span>
+{if $product.down_quantity_url}<a href="{$product.down_quantity_url}">-</a>{/if}
+<span class="product-quantity">{$product.quantity}</span>
+{if $product.up_quantity_url}<a href="{$product.up_quantity_url}">+</a>{/if}
 <a
   class                       = "remove-from-cart"
   rel                         = "nofollow"
@@ -11,12 +16,16 @@
  >
   {l s="Remove" mod="blockcart"}
 </a>
+
+<span class="product-price">{$product.total}</span>
 {if $product.customizations|count}
     <div class="customizations">
         <ul>
             {foreach from=$product.customizations item="customization"}
                 <li>
+                    {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}">-</a>{/if}
                     <span class="product-quantity">{$customization.quantity}</span>
+                    {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}">+</a>{/if}
                     <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
                     <ul>
                         {foreach from=$customization.fields item="field"}
