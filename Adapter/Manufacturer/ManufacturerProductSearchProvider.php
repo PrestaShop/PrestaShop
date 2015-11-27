@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Adapter\Supplier;
+namespace PrestaShop\PrestaShop\Adapter\Manufacturer;
 
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
@@ -8,22 +8,21 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\PaginationResult;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrderFactory;
-use PrestaShop\PrestaShop\Core\Foundation\Database\AutoPrefixingDatabase;
 use PrestaShop\PrestaShop\Adapter\Translator;
-use Supplier;
+use Manufacturer;
 
-class SupplierProductsSearchProvider implements ProductSearchProviderInterface
+class ManufacturerProductSearchProvider implements ProductSearchProviderInterface
 {
     private $translator;
-    private $supplier;
+    private $manufacturer;
     private $sortOrderFactory;
 
     public function __construct(
         Translator $translator,
-        Supplier $supplier
+        Manufacturer $manufacturer
     ) {
         $this->translator = $translator;
-        $this->supplier = $supplier;
+        $this->manufacturer = $manufacturer;
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
@@ -32,8 +31,8 @@ class SupplierProductsSearchProvider implements ProductSearchProviderInterface
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        return $this->supplier->getProducts(
-            $this->supplier->id,
+        return $this->manufacturer->getProducts(
+            $this->manufacturer->id,
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
