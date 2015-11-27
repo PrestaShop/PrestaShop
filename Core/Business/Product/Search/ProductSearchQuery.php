@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 class ProductSearchQuery
 {
     private $id_category;
+    private $id_manufacturer;
 
     // A default that is multiple of 2, 3 and 4 should be OK for
     // many layouts. 12 is the best number ever.
@@ -32,6 +33,17 @@ class ProductSearchQuery
     public function getIdCategory()
     {
         return $this->id_category;
+    }
+
+    public function setIdManufacturer($id_manufacturer)
+    {
+        $this->id_manufacturer = $id_manufacturer;
+        return $this;
+    }
+
+    public function getIdManufacturer()
+    {
+        return $this->id_manufacturer;
     }
 
     public function setSortOption(SortOption $option)
