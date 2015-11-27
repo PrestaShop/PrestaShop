@@ -26,7 +26,7 @@
 
  use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
  use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
- use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductsSearchProvider;
+ use PrestaShop\PrestaShop\Adapter\Supplier\SupplierProductSearchProvider;
  use PrestaShop\PrestaShop\Adapter\Translator;
  use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
@@ -99,7 +99,7 @@
      protected function getDefaultProductSearchProvider()
      {
          $translator = new Translator(new LegacyContext);
-         return new SupplierProductsSearchProvider(
+         return new SupplierProductSearchProvider(
             $translator,
             $this->supplier
         );
