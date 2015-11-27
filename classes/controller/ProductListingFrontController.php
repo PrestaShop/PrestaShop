@@ -8,8 +8,23 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
 
+/**
+ * This class is the base class for all front-end "product listing" controllers,
+ * like "CategoryController", that is, controllers whose primary job is
+ * to display a list of products and filters to make navigation easier.
+ */
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
+    /**
+     * This method is used by "prepareProductForTemplate" to add missing fields
+     * to the product array.
+     * The minimal fields that must be contained in $rawProduct is "id_product".
+     * You should not need to use this method directly.
+     *
+     * @internal
+     * @param array $rawProduct an associative array with at least the "id_product" key
+     * @return array
+     */
     private function addMissingProductFields(array $rawProduct)
     {
         $id_shop = (int)$this->getProductSearchContext()->getIdShop();
@@ -38,6 +53,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return array_merge($rows[0], $rawProduct);
     }
 
+    /**
+     * Takes an associative array with at least the "id_product" key
+     * and returns an array containing all information necessary for
+     * rendering the product in the template.
+     *
+     * @param  array  $rawProduct an associative array with at least the "id_product" key
+     * @return array  a product ready for templating
+     */
     private function prepareProductForTemplate(array $rawProduct)
     {
         $enrichedProduct = $this->addMissingProductFields(
