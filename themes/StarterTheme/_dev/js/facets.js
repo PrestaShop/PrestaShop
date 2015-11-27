@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 let pendingQuery = false;
 
-function updateDOM ({products, ps_search_filters}) {
+function updateDOM ({products, ps_search_facets}) {
     $('#products').replaceWith(products);
-    $('#search_filters').replaceWith(ps_search_filters);
+    $('#search_filters').replaceWith(ps_search_facets);
 }
 
 function updateResults (data) {
