@@ -1,5 +1,8 @@
 <?php
 
+use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
+use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
+
 class Adapter_CartPresenter
 {
     private $pricePresenter;
@@ -27,24 +30,59 @@ class Adapter_CartPresenter
 
     protected function presentProduct(array $rawProduct)
     {
-        $product['name'] = $rawProduct['name'];
-        $product['price'] = $this->pricePresenter->convertAndFormat(
+        $presenter = new ProductPresenter(
+            $this->imageRetriever,
+            $this->link,
+            $this->pricePresenter,
+            new Adapter_ProductColorsRetriever,
+            $this->translator
+        );
+
+        $settings = new ProductPresentationSettings;
+
+        $settings->catalog_mode = Configuration::get('PS_CATALOG_MODE');
+        $settings->include_taxes = $this->includeTaxes();
+        $settings->allow_add_variant_to_cart_from_listing =  (int)Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+        $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+
+        $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['up_quantity_url'] = $this->link->getUpQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['down_quantity_url'] = $this->link->getDownQuantityCartURL(
+            $rawProduct['id_product'],
+            $rawProduct['id_product_attribute']
+        );
+
+        $rawProduct['specific_prices'] = '';
+        $rawProduct['customizable'] = '';
+        $rawProduct['online_only'] = '';
+        $rawProduct['reduction'] = '';
+        $rawProduct['new'] = '';
+
+        $rawProduct['price'] = $this->pricePresenter->convertAndFormat(
+            $this->includeTaxes() ?
+            $rawProduct['price_wt'] :
+            $rawProduct['price']
+        );
+
+        $rawProduct['total'] = $this->pricePresenter->convertAndFormat(
             $this->includeTaxes() ?
             $rawProduct['total_wt'] :
             $rawProduct['total']
         );
 
-        $product['id_product_attribute'] = $rawProduct['id_product_attribute'];
-        $product['id_product'] = $rawProduct['id_product'];
-
-        $product['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
-            $product['id_product'],
-            $product['id_product_attribute']
+        return $presenter->presentForListing(
+            $settings,
+            $rawProduct,
+            Context::getContext()->language
         );
-
-        $product['quantity'] = $rawProduct['quantity'];
-
-        return $product;
     }
 
     protected function addCustomizedData(array $products, Cart $cart)
@@ -71,7 +109,8 @@ class Adapter_CartPresenter
                                     'fields'                => [],
                                     'id_customization'      => null
                                 ];
-
+                                $product['up_quantity_url'] = [];
+                                $product['down_quantity_url'] = [];
                                 foreach ($customization['datas'] as $byType) {
                                     $field = [];
                                     foreach ($byType as $data) {
@@ -96,6 +135,18 @@ class Adapter_CartPresenter
                                 }
 
                                 $presentedCustomization['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
+                                $presentedCustomization['up_quantity_url'] = $this->link->getUpQuantityCartURL(
+                                    $product['id_product'],
+                                    $product['id_product_attribute'],
+                                    $presentedCustomization['id_customization']
+                                );
+
+                                $presentedCustomization['down_quantity_url'] = $this->link->getDownQuantityCartURL(
                                     $product['id_product'],
                                     $product['id_product_attribute'],
                                     $presentedCustomization['id_customization']
@@ -130,15 +181,13 @@ class Adapter_CartPresenter
 
         $products = array_map([$this, 'presentProduct'], $rawProducts);
         $products = $this->addCustomizedData($products, $cart);
-        $totals = [];
+        $subtotals = [];
 
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
 
-        $total = $this->includeTaxes() ? $total_including_tax : $total_excluding_tax;
-
         if ($this->shouldShowTaxLine()) {
-            $totals['tax'] = [
+            $subtotals['tax'] = [
                 'type'   => 'tax',
                 'label'  => $this->translator->l('Tax', 'Cart'),
                 'amount' => $this->pricePresenter->convertAndFormat(
@@ -147,10 +196,10 @@ class Adapter_CartPresenter
             ];
         }
 
-        $totals['total'] = [
+        $total = [
             'type'   => 'total',
             'label'  => $this->translator->l('Total', 'Cart'),
-            'amount' => $this->pricePresenter->convertAndFormat($total)
+            'amount' => $this->pricePresenter->convertAndFormat($this->includeTaxes() ? $total_including_tax : $total_excluding_tax)
         ];
 
         $products_count = array_reduce($products, function ($count, $product) {
@@ -164,7 +213,8 @@ class Adapter_CartPresenter
 
         return [
             'products' => $products,
-            'totals'   => $totals,
+            'total'   => $total,
+            'subtotals'   => $subtotals,
             'products_count' => $products_count,
             'summary_string' => $summary_string,
             'id_address_delivery' => $cart->id_address_delivery,
