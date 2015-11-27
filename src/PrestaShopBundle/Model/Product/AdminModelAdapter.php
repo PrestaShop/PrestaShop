@@ -276,24 +276,20 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['submitted_tabs'] = ['Shipping'];
 
         //map warehouseProductLocations
-        $form_data['warehouse_loaded'] = 1; // FIXME : from supplier example. But why?
+        $form_data['warehouse_loaded'] = 1;
         if (!empty($form_data['id_product'])) {
             $warehouses = $this->warehouseAdapter->getWarehouses();
             foreach ($warehouses as $warehouse) {
                 foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
-                    $key = $form_data['id_product'] . '_' . $combination['id_product_attribute'] . '_' . $warehouse['id_warehouse'];
-                    dump($combination);
-                    // TODO : ici, on mappe. Mais apres, il faut stocker. Ca se passera dans le legacy...
-                    /*
-                    $form_data['supplier_reference_' . $key] = $combination['supplier_reference'];
-                    $form_data['product_price_' . $key] = $combination['product_price'];
-                    $form_data['product_price_currency_' . $key] = $combination['product_price_currency'];
-                    */
+                    $key = $combination['warehouse_id'] . '_' . $combination['product_id'] . '_' . $combination['id_product_attribute'];
+                    if ($combination['activated']) {
+                        $form_data['check_warehouse_' . $key] = '1';
+                    }
+                    $form_data['location_warehouse_' . $key] = $combination['location'];
 
                     unset($form_data['warehouse_combination_' . $warehouse['id_warehouse']]);
                 }
             }
-            die;
         }
 
         //map all

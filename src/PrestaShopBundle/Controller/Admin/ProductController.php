@@ -298,6 +298,8 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
 
+                    $adminProductController->processWarehouses();
+
                     $response->setData(['product' => $product]);
                 }
 

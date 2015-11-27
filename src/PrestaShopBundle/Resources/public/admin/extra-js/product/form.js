@@ -353,11 +353,13 @@ var stock = (function() {
 				}else{
 					$('#depends_on_stock_div').hide();
 				}
+				warehouseCombinations.refresh();
 			});
 
 			/** if GSA activation change on 'depend on stock', update quantities fields */
 			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1').on('change', function(e) {
 				stock.updateQtyFields();
+				warehouseCombinations.refresh();
 			});
 			stock.updateQtyFields();
 		},
@@ -773,13 +775,19 @@ var warehouseCombinations = (function() {
 			});
 		},
 		'refresh': function() {
-			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val();
-			$.ajax({
-				url: url,
-				success: function(response){
-					collectionHolder.empty().append(response);
-				}
-			});
+			var show = $('input#form_step3_advanced_stock_management:checked').size() & $('input#form_step3_depends_on_stock_0:checked').size();
+			if (show) {
+				var url = collectionHolder.attr('data-url') + '/' + $('#form_id_product').val();
+				$.ajax({
+					url: url,
+					success: function (response) {
+						collectionHolder.empty().append(response);
+						collectionHolder.show();
+					}
+				});
+			} else {
+				collectionHolder.hide();
+			}
 		}
 	};
 })();
