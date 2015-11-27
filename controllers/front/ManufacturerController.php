@@ -24,13 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class ManufacturerControllerCore extends ProductPresentingFrontControllerCore
+use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerProductsSearchProvider;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+
+class ManufacturerControllerCore extends ProductListingFrontController
 {
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
-    protected $manufacturer_products;
-    protected $nbProducts;
 
     public function canonicalRedirection($canonicalURL = '')
     {
@@ -69,9 +73,8 @@ class ManufacturerControllerCore extends ProductPresentingFrontControllerCore
             parent::initContent();
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
-                $this->productSort();
-                $this->assignOne();
-                $this->setTemplate('catalog/manufacturer.tpl');
+                $this->assignManufacturer();
+                $this->doProductSearch('catalog/manufacturer.tpl');
             } else {
                 $this->assignAll();
                 $this->setTemplate('catalog/manufacturers.tpl');
@@ -82,26 +85,32 @@ class ManufacturerControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
+    protected function getProductSearchQuery()
+    {
+        $query = new ProductSearchQuery;
+        $query
+            ->setIdManufacturer($this->manufacturer->id)
+            ->setSortOrder(new SortOrder('product', 'position', 'asc'))
+        ;
+        return $query;
+    }
+
+    protected function getDefaultProductSearchProvider()
+    {
+        $translator = new Translator(new LegacyContext);
+        return new ManufacturerProductsSearchProvider(
+            $translator,
+            $this->manufacturer
+        );
+    }
+
     /**
      * Assign template vars if displaying one manufacturer
      */
-    protected function assignOne()
+    protected function assignManufacturer()
     {
-        $this->productSort();
-        $this->assignSortOptions();
-        $this->assignProductList();
-
-        $products = array_map(function (array $product) {
-            return $this->prepareProductForTemplate($product);
-        }, $this->manufacturer_products);
-
-        if ($this->nbProducts <= 0) {
-            $this->warning[] = $this->l('No products for this manufacturer.');
-        }
-
         $this->context->smarty->assign([
             'manufacturer' => $this->objectSerializer->toArray($this->manufacturer),
-            'products' => $products,
         ]);
     }
 
@@ -115,76 +124,6 @@ class ManufacturerControllerCore extends ProductPresentingFrontControllerCore
         ]);
     }
 
-    public function assignProductList()
-    {
-        $this->nbProducts = $this->manufacturer->getProducts($this->manufacturer->id, null, null, null, $this->orderBy, $this->orderWay, true);
-        $this->pagination((int)$this->nbProducts);
-        $this->manufacturer_products = $this->manufacturer->getProducts($this->manufacturer->id, $this->context->language->id, (int)$this->p, (int)$this->n, $this->orderBy, $this->orderWay);
-
-        $this->addColorsToProductList($this->manufacturer_products);
-
-        foreach ($this->manufacturer_products as &$product) {
-            if (isset($product['id_product_attribute']) && $product['id_product_attribute'] && isset($product['product_attribute_minimal_quantity'])) {
-                $product['minimal_quantity'] = $product['product_attribute_minimal_quantity'];
-            }
-        }
-    }
-
-    protected function getSortOptions()
-    {
-        $settings = $this->getProductPresentationSettings();
-
-        if ($settings->catalog_mode) {
-            $options = [];
-        } else {
-            $options = [
-                ['orderBy' => 'price', 'sortOrder' => 'asc', 'label' => $this->l('Increasing price')],
-                ['orderBy' => 'price', 'sortOrder' => 'desc', 'label' => $this->l('Decreasing price')],
-            ];
-        }
-
-        $options[] = ['orderBy' => 'name', 'sortOrder' => 'asc', 'label' => $this->l('Product name, A to Z')];
-        $options[] = ['orderBy' => 'name', 'sortOrder' => 'desc', 'label' => $this->l('Product name, Z to A')];
-
-        if (!$settings->catalog_mode && $settings->stock_management_enabled) {
-            $options[] = ['orderBy' => 'quantity', 'sortOrder' => 'desc', 'label' => $this->l('In stock')];
-        }
-
-        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'asc', 'label' => $this->l('Product reference, A to Z')];
-        $options[] = ['orderBy' => 'reference', 'sortOrder' => 'desc', 'label' => $this->l('Product reference, Z to A')];
-
-        $pageURL = $this->context->link->getManufacturerLink(
-            $this->manufacturer
-        );
-
-        $options = array_map(function ($option) use ($pageURL) {
-            $option['url'] = $pageURL . '?orderby=' . $option['orderBy'] . '&orderway=' . $option['sortOrder'];
-            $option['current'] = ($option['orderBy'] === Tools::getValue('orderby')) &&
-                                 ($option['sortOrder'] === Tools::getValue('orderway'))
-            ;
-            return $option;
-        }, $options);
-
-        return $options;
-    }
-
-    public function assignSortOptions()
-    {
-        $this->context->smarty->assign('sort_options', $this->getSortOptions());
-    }
-
-    public function prepareProductForTemplate(array $product)
-    {
-        $presenter = $this->getProductPresenter();
-        $settings = $this->getProductPresentationSettings();
-
-        return $presenter->presentForListing(
-            $settings,
-            $product,
-            $this->context->language
-        );
-    }
-
     public function getTemplateVarManufacturers()
     {
         $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
@@ -192,7 +131,7 @@ class ManufacturerControllerCore extends ProductPresentingFrontControllerCore
 
         foreach ($manufacturers as $manufacturer) {
             $manufacturers_for_display[$manufacturer['id_manufacturer']] = $manufacturer;
-            $manufacturers_for_display[$manufacturer['id_supplier']]['text'] = $manufacturer['short_description'];
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = _THEME_MANU_DIR_.$manufacturer['id_manufacturer'].'-medium_default.jpg';
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getmanufacturerLink($manufacturer['id_manufacturer']);
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? sprintf($this->l('%s products'), $manufacturer['nb_products']) : sprintf($this->l('% product'), $manufacturer['nb_products']);
