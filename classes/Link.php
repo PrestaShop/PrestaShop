@@ -181,6 +181,56 @@ class LinkCore
         );
     }
 
+    public function getUpQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'up',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
+    public function getDownQuantityCartURL(
+        $id_product,
+        $id_product_attribute,
+        $id_customization = null
+    ) {
+        $params = [
+            'update' => 1,
+            'op' => 'down',
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+        ];
+
+        if ($id_customization) {
+            $params['id_customization'] = $id_customization;
+        }
+
+        return $this->getPageLink(
+            'cart',
+            true,
+            null,
+            $params,
+            false
+        );
+    }
+
     public function getAddToCartURL($id_product, $id_product_attribute)
     {
         $params = [
