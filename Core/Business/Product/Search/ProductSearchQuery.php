@@ -8,6 +8,7 @@ class ProductSearchQuery
 {
     private $id_category;
     private $id_manufacturer;
+    private $id_supplier;
 
     // A default that is multiple of 2, 3 and 4 should be OK for
     // many layouts. 12 is the best number ever.
@@ -44,6 +45,17 @@ class ProductSearchQuery
     public function getIdManufacturer()
     {
         return $this->id_manufacturer;
+    }
+
+    public function setIdSupplier($id_supplier)
+    {
+        $this->id_supplier = $id_supplier;
+        return $this;
+    }
+
+    public function getIdSupplier()
+    {
+        return $this->id_supplier;
     }
 
     public function setSortOption(SortOption $option)
