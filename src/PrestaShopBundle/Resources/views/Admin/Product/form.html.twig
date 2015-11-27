@@ -1,7 +1,7 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-    <div class="panel">
+    <div>
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
         {% endif %}
@@ -282,7 +282,22 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
-                    {{ form_widget(form.step4) }}
+                    {{ form_row(form.step4.width) }}
+                    {{ form_row(form.step4.height) }}
+                    {{ form_row(form.step4.depth) }}
+                    {{ form_row(form.step4.weight) }}
+                    {{ form_row(form.step4.additional_shipping_cost) }}
+                    {{ form_row(form.step4.selectedCarriers) }}
+
+                    <div id="warehouse_combination_collection" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
+                        {% if asm_globally_activated
+                           and form.step1.type_product.vars.value != "2"
+                           and form.step3.advanced_stock_management.vars.checked
+                           and form.step3.depends_on_stock.vars.value == "1" %}
+                            {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form.step4 }) }}
+                        {% endif %}
+                    </div>
+
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
                         <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>

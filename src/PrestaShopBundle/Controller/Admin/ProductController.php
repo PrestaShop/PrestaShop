@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -313,6 +314,9 @@ class ProductController extends FrameworkBundleAdminController
         $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
         /* @var $stockManager StockInterface */
 
+        $warehouseProvider = $this->container->get('prestashop.adapter.data_provider.warehouse');
+        /* @var $warehouseProvider WarehouseDataProvider */
+
         //If context shop is define to a group shop, disable the form
         if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
             return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
@@ -323,6 +327,7 @@ class ProductController extends FrameworkBundleAdminController
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
+            'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
         );
     }

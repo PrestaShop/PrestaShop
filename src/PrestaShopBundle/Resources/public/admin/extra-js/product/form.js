@@ -36,6 +36,7 @@ $(document).ready(function() {
 	combinations.init();
 	combinationGenerator.init();
 	specificPrices.init();
+	warehouseCombinations.init();
 
 	/** update price and shortcut price field on change */
 	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
@@ -512,6 +513,7 @@ var combinationGenerator = (function() {
 			complete: function(){
 				$('#create-combinations').removeAttr('disabled');
 				supplierCombinations.refresh();
+				warehouseCombinations.refresh();
 			}
 		});
 	}
@@ -570,6 +572,7 @@ var combinations = (function() {
 			complete: function(){
 				elem.removeAttr('disabled');
 				supplierCombinations.refresh();
+				warehouseCombinations.refresh();
 			}
 		});
 	}
@@ -759,13 +762,18 @@ var specificPrices = (function() {
  * Warehouse combination collection management (ASM only)
  */
 var warehouseCombinations = (function() {
-/*	var collectionHolder = $('#supplier_combination_collection');
+	var collectionHolder = $('#warehouse_combination_collection');
 
 	return {
+		'init': function() {
+			// toggle all button action
+			$(document).on('click', 'div[id^="warehouse_combination_"] button.check_all_warehouse', function() {
+				var checkboxes = $(this).closest('div[id^="warehouse_combination_"]').find('input[type="checkbox"][id$="_activated"]');
+				checkboxes.prop('checked', checkboxes.filter(':checked').size() == 0);
+			});
+		},
 		'refresh': function() {
-			var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function(){return $(this).val();}).get();
-			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val()+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
-
+			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val();
 			$.ajax({
 				url: url,
 				success: function(response){
@@ -774,7 +782,6 @@ var warehouseCombinations = (function() {
 			});
 		}
 	};
-*/
 })();
 
 /**

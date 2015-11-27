@@ -37,6 +37,7 @@ class ProductShipping extends CommonModelAbstractType
     private $translator;
     private $container;
     private $carriersChoices;
+    private $warehouses;
 
     /**
      * Constructor
@@ -54,6 +55,8 @@ class ProductShipping extends CommonModelAbstractType
         foreach ($carriers as $carrier) {
             $this->carriersChoices[$carrier['id_carrier']] = $carrier['name'].' ('.$carrier['delay'].')';
         }
+
+        $this->warehouses = $container->get('prestashop.adapter.data_provider.warehouse')->getWarehouses();
     }
 
     /**
@@ -110,6 +113,16 @@ class ProductShipping extends CommonModelAbstractType
             'required' =>  false,
             'label' => $this->translator->trans('Carriers', [], 'AdminProducts')
         ));
+
+        foreach ($this->warehouses as $warehouse) {
+            $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
+                'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->container),
+                'prototype' => true,
+                'allow_add' => true,
+                'required' => false,
+                'label' => $warehouse['name'],
+            ));
+        }
     }
 
     /**

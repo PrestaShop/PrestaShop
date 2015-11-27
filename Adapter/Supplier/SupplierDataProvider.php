@@ -63,7 +63,7 @@ class SupplierDataProvider
     }
 
     /**
-     * For a given product and supplier, gets the product supplier datas
+     * For a given product and supplier, gets the product supplier data
      *
      * @param int $id_product
      * @param int $id_product_attribute

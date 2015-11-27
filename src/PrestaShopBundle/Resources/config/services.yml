@@ -46,6 +46,9 @@ services:
     prestashop.adapter.data_provider.supplier:
         class: PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider
 
+    prestashop.adapter.data_provider.warehouse:
+        class: PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider
+
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
 
