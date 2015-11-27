@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\FacetsRendererInterface;
 
 /**
  * This class is the base class for all front-end "product listing" controllers,
@@ -273,9 +274,19 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         // render the facets
-        $ps_search_facets = $this->renderFacets(
-            $result->getNextQuery()->getFacets()
-        );
+        if ($provider instanceof FacetsRendererInterface) {
+            // with the provider if it wants to
+            $ps_search_facets = $provider->renderFacets(
+                $context,
+                $result->getNextQuery()->getFacets()
+            );
+        } else {
+            // with the core
+            $ps_search_facets = $this->renderFacets(
+                $result->getNextQuery()->getFacets()
+            );
+        }
+
 
         // prepare the pagination
         $pagination = $this->getTemplateVarPagination(
