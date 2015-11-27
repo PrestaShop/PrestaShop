@@ -6,6 +6,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
 
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
@@ -72,25 +73,28 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
     }
 
-    protected function renderFilters(array $facets)
+    protected function prepareFacetForTemplate(Facet $facet)
     {
-        $facetsVar = array_map(function (Facet $facet) {
-            $facetsArray = $facet->toArray();
-            foreach ($facetsArray['filters'] as &$filter) {
-                if ($filter['nextEncodedFacets']) {
-                    $filter['nextEncodedFacetsURL'] = $this->makeURL([
-                        'q' => $filter['nextEncodedFacets'],
-                        'page' => null
-                    ]);
-                } else {
-                    $filter['nextEncodedFacetsURL'] = $this->makeURL([
-                        'q' => null
-                    ]);
-                }
+        $facetsArray = $facet->toArray();
+        foreach ($facetsArray['filters'] as &$filter) {
+            if ($filter['nextEncodedFacets']) {
+                $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                    'q' => $filter['nextEncodedFacets'],
+                    'page' => null
+                ]);
+            } else {
+                $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                    'q' => null
+                ]);
             }
-            unset($filter);
-            return $facetsArray;
-        }, $facets);
+        }
+        unset($filter);
+        return $facetsArray;
+    }
+
+    protected function renderFacets(array $facets)
+    {
+        $facetsVar = array_map([$this, 'prepareFacetForTemplate'], $facets);
 
         return $this->render('catalog/_partials/facets.tpl', [
             'facets'        => $facetsVar,
@@ -98,11 +102,37 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ]);
     }
 
+    private function getProductSearchProviderFromModules($query)
+    {
+        $providers = Hook::exec(
+            'productSearchProvider',
+            ['query' => $query],
+            null,
+            true
+        );
+
+        if (!is_array($providers)) {
+            $providers = [];
+        }
+
+        foreach ($providers as $provider) {
+            if ($provider instanceof ProductSearchProviderInterface) {
+                return $provider;
+            }
+        }
+
+        return null;
+    }
+
     protected function getProductSearchVariables()
     {
         $context    = $this->getProductSearchContext();
         $query      = $this->getProductSearchQuery();
-        $provider   = $this->getProductSearchProvider($query);
+        $provider   = $this->getProductSearchProviderFromModules($query);
+
+        if (null === $provider) {
+            $provider = $this->getDefaultProductSearchProvider();
+        }
 
         $query
             ->setResultsPerPage(Configuration::get('PS_PRODUCTS_PER_PAGE'))
@@ -131,7 +161,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $result->getProducts()
         );
 
-        $ps_search_filters = $this->renderFilters(
+        $ps_search_filters = $this->renderFacets(
             $result->getNextQuery()->getFacets()
         );
 
@@ -183,5 +213,5 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     abstract protected function getProductSearchQuery();
-    abstract protected function getProductSearchProvider(ProductSearchQuery $query);
+    abstract protected function getDefaultProductSearchProvider();
 }
