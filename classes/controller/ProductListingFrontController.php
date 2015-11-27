@@ -83,7 +83,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
     }
 
-    protected function prepareProductsForTemplate(array $products)
+    protected function prepareMultipleProductsForTemplate(array $products)
     {
         return array_map([$this, 'prepareProductForTemplate'], $products);
     }
@@ -180,7 +180,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $query
         );
 
-        $products = $this->prepareProductsForTemplate(
+        $products = $this->prepareMultipleProductsForTemplate(
             $result->getProducts()
         );
 
