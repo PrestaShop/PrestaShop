@@ -2,6 +2,8 @@
 
 This document describes the faceted search architecture that is being implemented in PrestaShop 1.7.
 
+**Please also read the extensive comments in `classes/controller/ProductListingFrontControllerCore`, as this document is only a high-level explanation.**
+
 The target audience is anybody who wants to develop a well-integrated search module that replaces the way the PrestaShop core searches for products.
 
 At the moment this proof of concept works only on the `CategoryController` but it is easy to extend to the other product controllers (manufacturers, supplier...).
@@ -72,3 +74,9 @@ Basically, this object contains:
 - the `SortOrder` that is requested
 - the `page` number that is requested
 - the `resultsPerPage`, i.e. the number of products per page that is expected
+
+### The search delegation mechanism
+
+In order for modules to replace the core search mechanism, we introduce a delegation mechanism in the form of the `productSearchProvider` hook.
+
+The hook is executed with a `ProductSearchQuery $query` param, which allows modules to return an instance of a `ProductSearchProviderInterface` that is able to handle the query.
