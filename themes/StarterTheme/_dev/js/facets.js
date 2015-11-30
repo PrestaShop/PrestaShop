@@ -40,6 +40,6 @@ $(document).ready(function () {
 
     $('body').on('click', '.js-search-link', function () {
         event.preventDefault();
-        makeQuery(event.target.href);
+        makeQuery($(event.target).closest('a').get(0).href);
     });
 });
