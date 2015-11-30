@@ -376,7 +376,15 @@ class OrderControllerCore extends FrontController
         parent::postProcess();
 
         // StarterTheme: Better submit
-        if (Tools::isSubmit('submitAddressDelivery')) {
+        if (Tools::isSubmit('changeAddresses')) {
+            $id_address_delivery = Tools::getValue('id_address_delivery');
+            $this->context->cart->id_address_delivery = $id_address_delivery;
+            if (Tools::getValue('checkout-different-address-for-invoice') === 'on') {
+                $this->context->cart->id_address_invoice = Tools::getValue('id_address_invoice');
+            } else {
+                $this->context->cart->id_address_invoice = $id_address_delivery;
+            }
+        } elseif (Tools::isSubmit('submitAddressDelivery')) {
             $address_ok = $this->processAddressDelivery();
             if (!$address_ok) {
                 return true;
