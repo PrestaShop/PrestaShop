@@ -11,7 +11,7 @@ function getSelectedPaymentOption () {
   return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
 }
 
-function enableOrDisableOrderButton () {
+function enableOrDisableOrderButton() {
   var show = true;
   $('#conditions-to-approve input[type="checkbox"]').each((_, checkbox) => {
     if (!checkbox.checked) {
@@ -46,6 +46,17 @@ function refreshDeliveryOptions () {
   });
 }
 
+function hideOrShow () {
+  var elm = this.getAttribute('data-action-target');
+  var show = this.checked;
+
+  if (show) {
+    $('body #'+elm).show();
+  } else {
+    $('body #'+elm).hide();
+  }
+}
+
 function setupCheckoutScripts () {
   if (!$('body#order')) {
     return;
@@ -56,6 +67,7 @@ function setupCheckoutScripts () {
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
+  $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
 
   collapsePaymentOptions();
 

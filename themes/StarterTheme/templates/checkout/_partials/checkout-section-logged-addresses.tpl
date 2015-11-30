@@ -9,10 +9,10 @@
     </li>
   </ul>
 
-  <form action="{$urls.pages.cart}" method="POST">
+  <form action="{$urls.pages.order}" method="POST">
     <div class="addresses-container">
 
-      <div id="select-delivery-address" class="address-selector">
+      <div id="checkout-address-delivery" class="address-selector">
         <h2 class="h3">{l s='Your delivery address'}</h2>
         {block name="opc_delivery_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
@@ -22,17 +22,11 @@
         {/block}
       </div>
 
-      {block name="checkout_guest_same_address"}
-        <label>
-          <input type="checkbox"
-                 id="checkout-different-address-for-invoice"
-                 data-action="show"
-                 data-action-target="checkout-address-invoice">
-          {l s='Use a different address for invoice'}
-        </label>
+      {block name="checkout_different_address_checkbox"}
+        {include file="checkout/_partials/form-item-checkout-different-address.tpl"}
       {/block}
 
-      <div id="select-invoice-address" class="address-selector ps-hidden-by-js">
+      <div id="checkout-address-invoice" class="address-selector -ps-hidden">
         <h2 class="h3">{l s='Your invoice address'}</h2>
         {block name="opc_invoice_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
