@@ -23,6 +23,10 @@ _admin_supplier_routing:
     resource: "admin/routing_supplier.yml"
     prefix: /supplier
 
+_admin_warehouse_routing:
+    resource: "admin/routing_warehouse.yml"
+    prefix: /warehouse
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}

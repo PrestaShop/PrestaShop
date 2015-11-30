@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -284,18 +285,20 @@ class ProductController extends FrameworkBundleAdminController
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
                         // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1), $combinationValues['id_product_attribute']);
+                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'), $combinationValues['id_product_attribute']);
                     }
+                    $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
                     if (count($_POST['combinations']) === 0) {
-                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == 1));
                         $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
+
+                    $adminProductController->processWarehouses();
 
                     $response->setData(['product' => $product]);
                 }
@@ -313,6 +316,9 @@ class ProductController extends FrameworkBundleAdminController
         $stockManager = $this->container->get('prestashop.core.data_provider.stock_interface');
         /* @var $stockManager StockInterface */
 
+        $warehouseProvider = $this->container->get('prestashop.adapter.data_provider.warehouse');
+        /* @var $warehouseProvider WarehouseDataProvider */
+
         //If context shop is define to a group shop, disable the form
         if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
             return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
@@ -323,6 +329,7 @@ class ProductController extends FrameworkBundleAdminController
             'id_product' => $id,
             'has_combinations' => (isset($form->getData()['step3']['combinations']) && count($form->getData()['step3']['combinations']) > 0),
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
+            'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
         );
     }

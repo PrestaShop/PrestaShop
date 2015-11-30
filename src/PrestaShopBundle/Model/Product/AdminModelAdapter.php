@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Business\Cldr\Repository as cldrRepository;
 
 /**
@@ -46,6 +47,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $product;
     private $translatableKeys;
     private $unmapKeys;
+    private $configuration;
 
     /**
      * Constructor
@@ -65,10 +67,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->tools = $container->get('prestashop.adapter.tools');
         $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
         $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
+        $this->warehouseAdapter = $container->get('prestashop.adapter.data_provider.warehouse');
         $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
         $this->packAdapter = $container->get('prestashop.adapter.data_provider.pack');
         $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
+        $this->configuration = new Configuration();
         if ($this->product != null) {
             $this->product->loadStockData();
         }
@@ -271,6 +275,23 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //add some legacy filed to execute some add/update methods
         $form_data['submitted_tabs'] = ['Shipping'];
 
+        //map warehouseProductLocations
+        $form_data['warehouse_loaded'] = 1;
+        if (!empty($form_data['id_product'])) {
+            $warehouses = $this->warehouseAdapter->getWarehouses();
+            foreach ($warehouses as $warehouse) {
+                foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
+                    $key = $combination['warehouse_id'] . '_' . $combination['product_id'] . '_' . $combination['id_product_attribute'];
+                    if ($combination['activated']) {
+                        $form_data['check_warehouse_' . $key] = '1';
+                    }
+                    $form_data['location_warehouse_' . $key] = $combination['location'];
+
+                    unset($form_data['warehouse_combination_' . $warehouse['id_warehouse']]);
+                }
+            }
+        }
+
         //map all
         $new_form_data = [];
         foreach ($form_data as $k => $v) {
@@ -341,6 +362,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'specificPricePriorityToAll' => false,
             ],
             'step3' => [
+                'advanced_stock_management' => ($this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT') == "1"),
+                'depends_on_stock' => $this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT'),
                 'qty_0' => 0,
                 'out_of_stock' => 2,
                 'minimal_quantity' => 1,
@@ -450,7 +473,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'depth' => $this->product->depth,
                 'weight' => $this->product->weight,
                 'additional_shipping_cost' => $this->product->additional_shipping_cost,
-                'selectedCarriers' => $this->getFormProductCarriers()
+                'selectedCarriers' => $this->getFormProductCarriers(),
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
@@ -481,13 +504,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //Inject data form for supplier combinations
         $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations());
 
+        //Inject data form for warehouse combinations
+        $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations());
+
         return $form_data;
     }
 
     /**
      * Generate form supplier/combinations references
      *
-     * @return array filled datas form references combinations
+     * @return array filled data form references combinations
      */
     private function getDataSuppliersCombinations()
     {
@@ -501,12 +527,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //for each supplier, generate combinations list
-        $datasSuppliersCombinations = [];
+        $dataSuppliersCombinations = [];
 
         foreach ($this->supplierAdapter->getProductSuppliers($this->product->id) as $supplier) {
             foreach ($combinations as $combination) {
                 $productSupplierData = $this->supplierAdapter->getProductSupplierData($this->product->id, $combination['id_product_attribute'], $supplier->id_supplier);
-                $datasSuppliersCombinations['supplier_combination_'.$supplier->id_supplier][] = [
+                $dataSuppliersCombinations['supplier_combination_'.$supplier->id_supplier][] = [
                     'label' => $combination['attribute_designation'],
                     'supplier_reference' => isset($productSupplierData['product_supplier_reference']) ? $productSupplierData['product_supplier_reference'] : '',
                     'product_price' => isset($productSupplierData['price']) ? $productSupplierData['price'] : 0,
@@ -518,7 +544,44 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             }
         }
 
-        return $datasSuppliersCombinations;
+        return $dataSuppliersCombinations;
+    }
+
+    /**
+     * Generate form warehouses/combinations references
+     *
+     * @return array filled data form references combinations
+     */
+    private function getDataWarehousesCombinations()
+    {
+        $combinations = $this->product->getAttributesResume($this->locales[0]['id_lang']);
+        if (!$combinations || empty($combinations)) {
+            $combinations[] = array(
+                'id_product' => $this->product->id,
+                'id_product_attribute' => 0,
+                'attribute_designation' => $this->product->name[$this->locales[0]['id_lang']]
+            );
+        }
+
+        //for each warehouse, generate combinations list
+        $dataWarehousesCombinations = [];
+
+        foreach ($this->warehouseAdapter->getWarehouses() as $warehouse) {
+            $warehouseId = $warehouse['id_warehouse'];
+            foreach ($combinations as $combination) {
+                $warehouseProductLocationData = $this->warehouseAdapter->getWarehouseProductLocationData($this->product->id, $combination['id_product_attribute'], $warehouseId);
+                $dataWarehousesCombinations['warehouse_combination_'.$warehouseId][] = [
+                    'label' => $combination['attribute_designation'],
+                    'activated' => (bool) $warehouseProductLocationData['activated'],
+                    'warehouse_id' => $warehouseId,
+                    'product_id' => $this->product->id,
+                    'id_product_attribute' => $combination['id_product_attribute'],
+                    'location' => isset($warehouseProductLocationData['location']) ? $warehouseProductLocationData['location'] : '',
+                ];
+            }
+        }
+
+        return $dataWarehousesCombinations;
     }
 
     /**
