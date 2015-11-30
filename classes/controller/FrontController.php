@@ -1694,7 +1694,7 @@ class FrontControllerCore extends Controller
             $params = [];
         }
 
-        $queryString = urldecode(http_build_query($params));
+        $queryString = http_build_query($params);
         return $url . ($queryString ? "?$queryString" : '');
     }
 
