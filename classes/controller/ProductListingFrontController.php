@@ -123,6 +123,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $facetsArray = $facet->toArray();
         foreach ($facetsArray['filters'] as &$filter) {
+            $filter['facetLabel'] = $facet->getLabel();
             if ($filter['nextEncodedFacets']) {
                 $filter['nextEncodedFacetsURL'] = $this->makeURL([
                     'q' => $filter['nextEncodedFacets'],
@@ -148,9 +149,19 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $facetsVar = array_map([$this, 'prepareFacetForTemplate'], $facets);
 
+        $activeFilters = [];
+        foreach ($facetsVar as $facet) {
+            foreach ($facet['filters'] as $filter) {
+                if ($filter['active']) {
+                    $activeFilters[] = $filter;
+                }
+            }
+        }
+
         return $this->render('catalog/_partials/facets.tpl', [
             'facets'        => $facetsVar,
-            'jsEnabled'     => $this->ajax
+            'jsEnabled'     => $this->ajax,
+            'activeFilters' => $activeFilters
         ]);
     }
 
