@@ -292,8 +292,7 @@
                     <div id="warehouse_combination_collection" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
                         {% if asm_globally_activated
                            and form.step1.type_product.vars.value != "2"
-                           and form.step3.advanced_stock_management.vars.checked
-                           and form.step3.depends_on_stock.vars.value == "1" %}
+                           and form.step3.advanced_stock_management.vars.checked %}
                             {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form.step4 }) }}
                         {% endif %}
                     </div>

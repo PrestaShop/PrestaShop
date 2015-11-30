@@ -790,7 +790,7 @@ var warehouseCombinations = (function() {
 			});
 		},
 		'refresh': function() {
-			var show = $('input#form_step3_advanced_stock_management:checked').size() & $('input#form_step3_depends_on_stock_0:checked').size();
+			var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
 			if (show) {
 				var url = collectionHolder.attr('data-url') + '/' + $('#form_id_product').val();
 				$.ajax({
@@ -798,7 +798,7 @@ var warehouseCombinations = (function() {
 					success: function (response) {
 						collectionHolder.empty().append(response);
 						collectionHolder.show();
-						this.locationDisabler();
+						warehouseCombinations.locationDisabler();
 					}
 				});
 			} else {
