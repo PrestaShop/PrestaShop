@@ -64,7 +64,6 @@ class WarehouseController extends FrameworkBundleAdminController
         foreach ($warehouses as $warehouse) {
             $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
                 'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->container),
-                'prototype' => true,
                 'allow_add' => true,
                 'required' => false,
                 'label' => $warehouse['name'],

@@ -13,9 +13,11 @@
         <div class="form-group" id="warehouse_combination_{{ warehouse.id_warehouse }}">
             <label class="col-sm-2 control-label">
                 <h3>{{ form[collectionName].vars.label }}</h3><br/>
-                <button type="button" class="btn btn-default check_all_warehouse">
-                    <i class="icon-check-sign"></i> {{ trans('Mark / Unmark all', [], 'AdminTab') }}
-                </button>
+                {% if form[collectionName]|length() > 1 %}
+                    <button type="button" class="btn btn-default check_all_warehouse">
+                        <i class="icon-check-sign"></i> {{ trans('Mark / Unmark all', [], 'AdminTab') }}
+                    </button>
+                {% endif %}
             </label>
             <div class="col-sm-10">
                 {{ form_errors(form[collectionName]) }}

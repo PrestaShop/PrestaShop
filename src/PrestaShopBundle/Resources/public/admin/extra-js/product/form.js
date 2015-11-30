@@ -773,6 +773,21 @@ var warehouseCombinations = (function() {
 				var checkboxes = $(this).closest('div[id^="warehouse_combination_"]').find('input[type="checkbox"][id$="_activated"]');
 				checkboxes.prop('checked', checkboxes.filter(':checked').size() == 0);
 			});
+			// location disablation depending on 'stored' checkbox
+			$(document).on('change', 'div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', function() {
+				var checked = $(this).prop('checked');
+				var location = $(this).closest('div.form-group').find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
+				location.prop('disabled', !checked);
+				if (!checked) location.val('');
+			});
+			this.locationDisabler();
+		},
+		'locationDisabler': function() {
+			$('div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', collectionHolder).each(function() {
+				var checked = $(this).prop('checked');
+				var location = $(this).closest('div.form-group').find('input[id^="form_step4_warehouse_combination_"][id$="_location"]');
+				location.prop('disabled', !checked);
+			});
 		},
 		'refresh': function() {
 			var show = $('input#form_step3_advanced_stock_management:checked').size() & $('input#form_step3_depends_on_stock_0:checked').size();
@@ -783,6 +798,7 @@ var warehouseCombinations = (function() {
 					success: function (response) {
 						collectionHolder.empty().append(response);
 						collectionHolder.show();
+						this.locationDisabler();
 					}
 				});
 			} else {
