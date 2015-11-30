@@ -82,7 +82,9 @@
 
 		</td>
 	</tr>
-
+	
+	{$note_tab}
+	
 	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
