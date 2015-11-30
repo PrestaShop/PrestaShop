@@ -9,11 +9,8 @@
         countries=$countries}
       {/block}
 
-      {block name="use_different_address"}
-        <label for="use_different_address">
-          <input type="checkbox" id="use_different_address" name="use_different_address">
-          {l s='Use a different address for invoicing'}
-        </label>
+      {block name="checkout_different_address_checkbox"}
+        {include file="checkout/_partials/form-item-checkout-different-address.tpl"}
       {/block}
 
     </section>
