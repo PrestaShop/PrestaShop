@@ -196,6 +196,13 @@ class Adapter_CartPresenter
             ];
         }
 
+        $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
+        $subtotals['shipping'] = [
+            'type'   => 'shipping',
+            'label'  => $this->translator->l('Shipping', 'Cart'),
+            'amount' => $shipping_cost != 0 ? $this->pricePresenter->convertAndFormat($shipping_cost) : $this->translator->l('Free', 'Cart')
+        ];
+
         $total = [
             'type'   => 'total',
             'label'  => $this->translator->l('Total', 'Cart'),
