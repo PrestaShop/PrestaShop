@@ -10,6 +10,7 @@ class Facet
     private $properties = [];
     private $filters = [];
     private $multipleSelectionAllowed = true;
+    private $widgetType = 'radio';
 
     public function toArray()
     {
@@ -21,7 +22,8 @@ class Facet
             'filters'       => array_map(function (Filter $filter) {
                 return $filter->toArray();
             }, $this->filters),
-            'multipleSelectionAllowed' => $this->multipleSelectionAllowed
+            'multipleSelectionAllowed' => $this->multipleSelectionAllowed,
+            'widgetType' => $this->widgetType
         ];
     }
 
@@ -92,5 +94,16 @@ class Facet
     public function isDisplayed()
     {
         return $this->displayed;
+    }
+
+    public function setWidgetType($widgetType)
+    {
+        $this->widgetType = $widgetType;
+        return $this;
+    }
+
+    public function getWidgetType()
+    {
+        return $this->widgetType;
     }
 }
