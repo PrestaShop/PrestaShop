@@ -6,6 +6,16 @@
     </header>
   {/block}
 
+  {block name="cart_summary_product_list"}
+    <div id="cart-summary-product-list">
+      <ul>
+        {foreach from=$cart.products item=product}
+          <li>{include './cart-summary-product-line.tpl' product=$product}</li>
+        {/foreach}
+      </ul>
+    </div>
+  {/block}
+
   {block name="cart_summary_body"}
     <div id="cart-summary">
       {foreach from=$cart.subtotals item="subtotal"}
@@ -14,16 +24,6 @@
           <span class="value">{$subtotal.amount}</span>
         </div>
       {/foreach}
-    </div>
-  {/block}
-
-  {block name="cart_summary_product_list"}
-    <div id="cart-summary-product-list">
-      <ul>
-        {foreach from=$cart.products item=product}
-          <li>{include './cart-summary-product-line.tpl' product=$product}</li>
-        {/foreach}
-      </ul>
     </div>
   {/block}
 
