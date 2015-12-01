@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ModuleController extends Controller
 {
@@ -45,22 +44,25 @@ class ModuleController extends Controller
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action');
-        $modules = array($request->attributes->get('module_name'));
-        $action = implode(array($action, 'Module'));
+        $action = $request->attributes->get('action'). 'Module';
+        $module = $request->attributes->get('module_name');
 
         $ret = array();
         if (method_exists($this, $action)) {
-            $ret = array_combine($modules, array_map(array($this, $action), $modules));
+            // ToDo : Check if allowed to call this action
+            $ret[$module] = $this->{$action}($module);
         } else {
-            return new Response('Invalid action', 200, array( 'Content-Type' => 'application/json' ));
+            return new JsonResponse('Invalid action', 200);
         }
 
         if ($request->isXmlHttpRequest()) {
-            $res = json_encode($ret);
-            return new Response(empty($res) ? '[]' : $res, 200, array( 'Content-Type' => 'application/json' ));
+            return new JsonResponse($ret, 200);
         }
 
+        // We need a better error handler here. Meanwhile, I throw an exception
+        if (! $ret[$module]['status']) {
+            throw new \Exception($ret[$module]['msg']);
+        }
         return $this->redirect($this->generateUrl('admin_module_catalog'));
     }
 
@@ -125,10 +127,18 @@ class ModuleController extends Controller
 
     public function installModule($module_name)
     {
-        $status = 'ok!';
-        $msg = sprintf('Module %s is now installed', $module_name);
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        if (! $modulesProvider->isModuleOnDisk($module_name)) {
+            $modulesProvider->setModuleOnDiskFromAddons($module_name);
+        }
 
-        // sleep(2);
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->install();
+        if ($status) {
+            $msg = sprintf('Module %s is now installed', $module_name);
+        } else {
+            $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
