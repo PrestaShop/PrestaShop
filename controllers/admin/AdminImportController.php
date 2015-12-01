@@ -1291,7 +1291,7 @@ class AdminImportControllerCore extends AdminController
         // Parent category
         if (isset($category->parent) && is_numeric($category->parent)) {
             // Validation for parenting itself
-            if ($validationOnly && ($category->parent == $category->id) || (isset($info['id']) && $category->parent == (int)$info['id'])) {
+            if ($validateOnly && ($category->parent == $category->id) || (isset($info['id']) && $category->parent == (int)$info['id'])) {
                 $this->errors[] = sprintf(
                     Tools::displayError('A category cannot be its own parent (ID: %1$s)'),
                     (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
@@ -1304,7 +1304,7 @@ class AdminImportControllerCore extends AdminController
             $category->id_parent = $category->parent;
         } elseif (isset($category->parent) && is_string($category->parent)) {
             // Validation for parenting itself
-            if ($validationOnly && isset($category->name) && ($category->parent == $category->name)) {
+            if ($validateOnly && isset($category->name) && ($category->parent == $category->name)) {
                 $this->errors[] = sprintf(
                     Tools::displayError('A category cannot be its own parent (Name: %1$s)'),
                     $category->parent
@@ -1549,15 +1549,9 @@ class AdminImportControllerCore extends AdminController
         $accessories = $crossStepsVariables['accessories'];
 
         if ($offset == 0) {
-//             AdminImportController::setLocale();
+            //             AdminImportController::setLocale();
             Module::setBatchMode(true);
         }
-
-        // Case if we want to unlink all accessories when a product does not specify accessories in the import file.
-        // FIXME: Please choose between this, and the case by case delete in the next loop (leave the accessories.
-//         if ($offset == 0 && count($accessories) > 0) { // only first pass!
-//             Product::deleteAccessoriesForProduct(array_keys($accessories));
-//         }
 
         $line_count = 0;
         $i = 0;
@@ -1571,7 +1565,7 @@ class AdminImportControllerCore extends AdminController
             if (count($links) > 0) { // We delete and relink only if there is accessories to link...
                 // Bulk jobs: for performances, we need to do a minimum amount of SQL queries. No product inflation.
                 $unique_ids = Product::getExistingIdsFromIdsOrRefs($links);
-                Product::deleteAccessoriesForProduct($product_id); // FIXME : delete this action if we choose the other behavior described just before the loop.
+                Db::getInstance()->delete('accessory', 'id_product_1 = '.(int)$product_id);
                 Product::changeAccessoriesForProduct($unique_ids, $product_id);
             }
             $line_count++;
@@ -1933,7 +1927,6 @@ class AdminImportControllerCore extends AdminController
                     $product_download->add();
                 }
             }
-
         }
 
         $shops = array();
@@ -2582,7 +2575,7 @@ class AdminImportControllerCore extends AdminController
 
                     // if a reference is specified for this product, get the associate id_product_attribute to UPDATE
                     if (isset($info['reference']) && !empty($info['reference'])) {
-                         $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
+                        $id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
 
                         // updates the attribute
                         if ($id_product_attribute && !$validateOnly) {
@@ -2590,7 +2583,7 @@ class AdminImportControllerCore extends AdminController
                             $attribute_combinations = $product->getAttributeCombinations($default_language);
                             foreach ($attribute_combinations as $attribute_combination) {
                                 if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination)) {
-// FIXME: ~3s/declinaison
+                                    // FIXME: ~3s/declinaison
                                     $product->updateAttribute(
                                         $id_product_attribute,
                                         (float)$info['wholesale_price'],
@@ -2819,8 +2812,8 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-            $customer_exist = false;
-            $autodate = true;
+        $customer_exist = false;
+        $autodate = true;
 
         if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer)) {
             $current_id_customer = (int)$customer->id;
@@ -3076,6 +3069,7 @@ class AdminImportControllerCore extends AdminController
                     $address->id_country = (int)$country->id;
                 } else {
                     if (!$validateOnly) {
+                        $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
                         $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3185,7 +3179,6 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
             }
-
         }
 
         if (isset($address->supplier) && is_numeric($address->supplier) && Supplier::supplierExists((int)$address->supplier)) {
@@ -3614,6 +3607,7 @@ class AdminImportControllerCore extends AdminController
                     $store->id_country = (int)$country->id;
                 } else {
                     if (!$validateOnly) {
+                        $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
                         $this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3708,6 +3702,7 @@ class AdminImportControllerCore extends AdminController
             $this->supplyOrdersImportOne(
                 $info,
                 $force_ids,
+                $current_line,
                 $validateOnly
             );
         }
@@ -3717,7 +3712,7 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function supplyOrdersImportOne($info, $force_ids, $validateOnly = false)
+    protected function supplyOrdersImportOne($info, $force_ids, $current_line, $validateOnly = false)
     {
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
@@ -3844,6 +3839,7 @@ class AdminImportControllerCore extends AdminController
                 $products, // by ref
                 $reset, // by ref
                 $force_ids,
+                $current_line,
                 $validateOnly
             );
         }
@@ -3857,7 +3853,7 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids, $validateOnly = false)
+    protected function supplyOrdersDetailsImportOne($info, &$products, &$reset, $force_ids, $current_line, $validateOnly = false)
     {
         // sets default values if needed
         AdminImportController::setDefaultValues($info);
@@ -4209,7 +4205,7 @@ class AdminImportControllerCore extends AdminController
         if (Tools::getValue('csv')) {
             $shop_is_feature_active = Shop::isFeatureActive();
             // If i am a superadmin, i can truncate table (ONLY IF OFFSET == 0 or false and NOT FOR VALIDATION MODE!)
-            if (!$offset && !$validateOnly &&(($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate')) {
+            if (!$offset && !$moreStep && !$validateOnly &&(($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate')) {
                 $this->truncateTables((int)Tools::getValue('entity'));
             }
             $import_type = false;
@@ -4304,7 +4300,7 @@ class AdminImportControllerCore extends AdminController
                 }
                 if ($results['isFinished'] && !$validateOnly && ($moreStep < count($moreStepLabels))) {
                     $results['oneMoreStep'] = $moreStep + 1;
-                    $results['moreStepLabel'] = $stepLabels[$moreStep];
+                    $results['moreStepLabel'] = $moreStepLabels[$moreStep];
                 }
             }
 
@@ -4440,8 +4436,8 @@ class AdminImportControllerCore extends AdminController
     public function initModal()
     {
         parent::initModal();
-         $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
-         $this->modals[] = array(
+        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
+        $this->modals[] = array(
              'modal_id' => 'importProgress',
              'modal_class' => 'modal-md',
              'modal_title' => $this->l('Processing import...'),
