@@ -9,6 +9,8 @@ class ProductSearchQuery
     private $id_category;
     private $id_manufacturer;
     private $id_supplier;
+    private $search_string;
+    private $search_tag;
 
     // A default that is multiple of 2, 3 and 4 should be OK for
     // many layouts. 12 is the best number ever.
@@ -120,5 +122,27 @@ class ProductSearchQuery
             $this->addFacet($facet);
         }
         return $this;
+    }
+
+    public function setSearchString($search_string)
+    {
+        $this->search_string = $search_string;
+        return $this;
+    }
+
+    public function getSearchString()
+    {
+        return $this->search_string;
+    }
+
+    public function setSearchTag($search_tag)
+    {
+        $this->search_tag = $search_tag;
+        return $this;
+    }
+
+    public function getSearchTag()
+    {
+        return $this->search_tag;
     }
 }
