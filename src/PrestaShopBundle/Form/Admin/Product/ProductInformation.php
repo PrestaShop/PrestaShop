@@ -51,25 +51,34 @@ class ProductInformation extends CommonModelAbstractType
     private $locales;
     private $nested_categories;
     private $productAdapter;
-    private $container;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $router
+     * @param object $categoryDataProvider
+     * @param object $productDataProvider
+     * @param object $manufacturerDataProvider
+     * @param object $featureDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $manufacturerDataProvider, $featureDataProvider)
     {
-        $this->container = $container;
-        $this->context = $container->get('prestashop.adapter.legacy.context');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->router = $container->get("router");
-        $this->categories = $this->formatDataChoicesList($container->get('prestashop.adapter.data_provider.category')->getAllCategoriesName(), 'id_category');
-        $this->nested_categories = $container->get('prestashop.adapter.data_provider.category')->getNestedCategories();
-        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->context = $legacyContext;
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->categoryDataProvider = $categoryDataProvider;
+        $this->productDataProvider = $productDataProvider;
+        $this->manufacturerDataProvider = $manufacturerDataProvider;
+        $this->featureDataProvider = $featureDataProvider;
+
+        $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
+        $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
+        $this->productAdapter = $this->productDataProvider;
+        $this->locales = $this->context->getLanguages();
         $this->manufacturers = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.manufacturer')->getManufacturers(false, 0, true, false, false, false, true),
+            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
             'id_manufacturer'
         );
     }
@@ -155,7 +164,12 @@ class ProductInformation extends CommonModelAbstractType
 
         //FEATURES & ATTRIBUTES
         ->add('features', 'collection', array(
-            'type' => new ProductFeature($this->container),
+            'type' => new ProductFeature(
+                $this->translator,
+                $this->context,
+                $this->router,
+                $this->featureDataProvider
+            ),
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
@@ -193,7 +207,11 @@ class ProductInformation extends CommonModelAbstractType
             'required' =>  true,
             'label' => $this->translator->trans('Default category', [], 'AdminProducts')
         ))
-        ->add('new_category', new SimpleFormCategory($this->container, true), array(
+        ->add('new_category', new SimpleFormCategory(
+            $this->translator,
+            $this->categoryDataProvider,
+            true
+        ), array(
             'required' => false,
             'mapped' => false,
             'constraints' => [],
@@ -206,7 +224,7 @@ class ProductInformation extends CommonModelAbstractType
             'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
         ->add('related_products', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),

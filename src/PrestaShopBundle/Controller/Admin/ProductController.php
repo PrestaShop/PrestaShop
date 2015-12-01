@@ -138,9 +138,9 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
 
             // Category tree
-                $categories = $this->createForm(
-                    new ChoiceCategoriesTreeType('categories', $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(), array(), false)
-                );
+            $categories = $this->createForm(
+                new ChoiceCategoriesTreeType('categories', $this->container->get('prestashop.adapter.data_provider.category')->getNestedCategories(), array(), false)
+            );
             if (!empty($persistedFilterParameters['filter_category'])) {
                 $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
             }
@@ -248,17 +248,62 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $response = new JsonResponse();
-        $modelMapper = new ProductAdminModelAdapter($id, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $id,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
 
         $form = $this->createFormBuilder($modelMapper->getFormDatas())
             ->add('id_product', 'hidden')
-            ->add('step1', new ProductForms\ProductInformation($this->container))
-            ->add('step2', new ProductForms\ProductPrice($this->container))
-            ->add('step3', new ProductForms\ProductQuantity($this->container))
-            ->add('step4', new ProductForms\ProductShipping($this->container))
-            ->add('step5', new ProductForms\ProductSeo($this->container))
-            ->add('step6', new ProductForms\ProductOptions($this->container))
+            ->add('step1', new ProductForms\ProductInformation(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.legacy.context'),
+                $this->container->get('router'),
+                $this->container->get('prestashop.adapter.data_provider.category'),
+                $this->container->get('prestashop.adapter.data_provider.product'),
+                $this->container->get('prestashop.adapter.data_provider.manufacturer'),
+                $this->container->get('prestashop.adapter.data_provider.feature')
+            ))
+            ->add('step2', new ProductForms\ProductPrice(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.data_provider.tax'),
+                $this->container->get('router'),
+                $this->container->get('prestashop.adapter.shop.context'),
+                $this->container->get('prestashop.adapter.data_provider.country'),
+                $this->container->get('prestashop.adapter.data_provider.currency'),
+                $this->container->get('prestashop.adapter.data_provider.group'),
+                $this->container->get('prestashop.adapter.legacy.context')
+            ))
+            ->add('step3', new ProductForms\ProductQuantity(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('router'),
+                $this->container->get('prestashop.adapter.legacy.context')
+            ))
+            ->add('step4', new ProductForms\ProductShipping(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.legacy.context'),
+                $this->container->get('prestashop.adapter.data_provider.warehouse'),
+                $this->container->get('prestashop.adapter.data_provider.carrier')
+            ))
+            ->add('step5', new ProductForms\ProductSeo(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.legacy.context')
+            ))
+            ->add('step6', new ProductForms\ProductOptions(
+                $this->container->get('prestashop.adapter.translator'),
+                $this->container->get('prestashop.adapter.legacy.context'),
+                $this->container->get('prestashop.adapter.data_provider.product'),
+                $this->container->get('prestashop.adapter.data_provider.supplier'),
+                $this->container->get('prestashop.adapter.data_provider.currency')
+            ))
             ->getForm();
 
         $form->handleRequest($request);
@@ -438,14 +483,18 @@ class ProductController extends FrameworkBundleAdminController
                 case 'sort':
                     $productIdList = $request->request->get('mass_edit_action_sorted_products');
                     $productPositionList = $request->request->get('mass_edit_action_sorted_positions');
-                    $hookDispatcher->dispatchMultiple(['actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'],
-                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminSortBefore', 'actionAdminProductsControllerSortBefore'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
+                    );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->sortProductIdList(array_combine($productIdList, $productPositionList), $productProvider->getPersistedFilterParameters());
                     $this->addFlash('success', $translator->trans('Products successfully sorted.', [], 'AdminProducts'));
                     $logger->info('Products sorted: ('.implode(',', $productIdList).') with positions ('.implode(',', $productPositionList).').');
-                    $hookDispatcher->dispatchMultiple(['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
-                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]);
+                    $hookDispatcher->dispatchMultiple(
+                        ['actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'],
+                        ['product_list_id' => $productIdList, 'product_list_position' => $productPositionList]
+                    );
                     break;
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.

@@ -44,16 +44,19 @@ class ProductFeature extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $router
+     * @param object $featureDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $router, $featureDataProvider)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $this->router = $container->get("router");
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
+        $this->router = $router;
+        $this->featureDataProvider = $featureDataProvider;
         $this->features = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.feature')->getFeatures($this->locales[0]['id_lang']),
+            $this->featureDataProvider->getFeatures($this->locales[0]['id_lang']),
             'id_feature'
         );
     }
@@ -88,7 +91,7 @@ class ProductFeature extends CommonModelAbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );
@@ -110,7 +113,7 @@ class ProductFeature extends CommonModelAbstractType
             }
 
             $choices = $this->formatDataChoicesList(
-                $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
+                $this->featureDataProvider->getFeatureValuesWithLang($this->locales[0]['id_lang'], $data['feature']),
                 'id_feature_value',
                 'value'
             );

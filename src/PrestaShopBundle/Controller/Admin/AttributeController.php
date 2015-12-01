@@ -84,7 +84,17 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        $modelMapper = new ProductAdminModelAdapter($product->id, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $product->id,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
 
         //store exisiting product combinations
         $existingCombinationsIds = array_map(function ($o) {
@@ -158,7 +168,17 @@ class AttributeController extends FrameworkBundleAdminController
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
 
         //get combinations
-        $modelMapper = new ProductAdminModelAdapter($idProduct, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $idProduct,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
 
         $combinationList = [];
         foreach ($combinations as $combination) {

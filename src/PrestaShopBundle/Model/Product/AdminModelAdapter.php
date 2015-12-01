@@ -54,22 +54,29 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Set all adapters needed and get product
      *
      * @param int $id The product ID
-     * @param object $container The Sf2 container
+     * @param object $legacyContext
+     * @param object $adminProductWrapper
+     * @param object $toolsAdapter
+     * @param object $productDataProvider
+     * @param object $supplierDataProvider
+     * @param object $warehouseDataProvider
+     * @param object $featureDataProvider
+     * @param object $packDataProvider
      */
-    public function __construct($id, $container)
+    public function __construct($id, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
     {
-        $this->context = $container->get('prestashop.adapter.legacy.context');
+        $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
-        $this->adminProductWrapper = $container->get('prestashop.adapter.admin.wrapper.product');
+        $this->adminProductWrapper = $adminProductWrapper;
         $this->cldrRepository = new cldrRepository($this->contextShop->language);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
-        $this->tools = $container->get('prestashop.adapter.tools');
-        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
-        $this->supplierAdapter = $container->get('prestashop.adapter.data_provider.supplier');
-        $this->warehouseAdapter = $container->get('prestashop.adapter.data_provider.warehouse');
-        $this->featureAdapter = $container->get('prestashop.adapter.data_provider.feature');
-        $this->packAdapter = $container->get('prestashop.adapter.data_provider.pack');
+        $this->tools = $toolsAdapter;
+        $this->productAdapter = $productDataProvider;
+        $this->supplierAdapter = $supplierDataProvider;
+        $this->warehouseAdapter = $warehouseDataProvider;
+        $this->featureAdapter = $featureDataProvider;
+        $this->packAdapter = $packDataProvider;
         $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
         $this->configuration = new Configuration();
@@ -147,6 +154,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         //merge all form steps
         $form_data = array_merge(['id_product' => $form_data['id_product']], $form_data['step1'], $form_data['step2'], $form_data['step3'], $form_data['step4'], $form_data['step5'], $form_data['step6']);
+
+        //add some legacy field to execute some add/update methods
+        $form_data['submitted_tabs'] = ['Shipping'];
+
+        if (!empty($form_data['id_product'])) {
+            $form_data['submitted_tabs'][] = 'Associations';
+        }
 
         //extract description_short from description
         foreach ($this->locales as $locale) {
@@ -271,9 +285,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 }
             }
         }
-
-        //add some legacy filed to execute some add/update methods
-        $form_data['submitted_tabs'] = ['Shipping'];
 
         //map warehouseProductLocations
         $form_data['warehouse_loaded'] = 1;
@@ -649,7 +660,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     {
         $formDataCarriers = [];
         foreach ($this->product->getCarriers() as $carrier) {
-            $formDataCarriers[] = $carrier['id_carrier'];
+            $formDataCarriers[] = $carrier['id_reference'];
         }
 
         return $formDataCarriers;

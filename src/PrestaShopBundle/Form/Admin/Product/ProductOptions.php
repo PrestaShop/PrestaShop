@@ -40,23 +40,26 @@ class ProductOptions extends CommonModelAbstractType
 {
     private $translator;
     private $suppliers;
-    private $container;
     private $context;
     private $productAdapter;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $productDataProvider
+     * @param object $supplierDataProvider
+     * @param object $currencyDataprovider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider)
     {
-        $this->container = $container;
-        $this->context = $container->get('prestashop.adapter.legacy.context');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->productAdapter = $container->get('prestashop.adapter.data_provider.product');
+        $this->context = $legacyContext;
+        $this->translator = $translator;
+        $this->productAdapter = $productDataProvider;
+        $this->currencyDataprovider = $currencyDataprovider;
         $this->suppliers = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.supplier')->getSuppliers(),
+            $supplierDataProvider->getSuppliers(),
             'id_supplier'
         );
     }
@@ -78,7 +81,7 @@ class ProductOptions extends CommonModelAbstractType
             'label' => $this->translator->trans('Redirect when disabled', [], 'AdminProducts'),
         ))
         ->add('id_product_redirected', new TypeaheadProductCollectionType(
-            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'id',
             'name',
             $this->translator->trans('search in catalog...', [], 'AdminProducts'),
@@ -129,7 +132,7 @@ class ProductOptions extends CommonModelAbstractType
 
         foreach ($this->suppliers as $id => $supplier) {
             $builder->add('supplier_combination_'.$id, 'collection', array(
-                'type' => new ProductSupplierCombination($id, $this->container),
+                'type' => new ProductSupplierCombination($id, $this->translator, $this->context, $this->currencyDataprovider),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,

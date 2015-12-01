@@ -42,12 +42,13 @@ class ProductWarehouseCombination extends CommonModelAbstractType
      * Constructor
      *
      * @param int $idWarehouse The warehouse ID
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($idWarehouse, $container)
+    public function __construct($idWarehouse, $translator, $legacyContext)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
+        $this->translator = $translator;
+        $this->contextLegacy = $legacyContext->getContext();
         $this->idWarehouse = $idWarehouse;
     }
 

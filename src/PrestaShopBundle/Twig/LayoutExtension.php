@@ -43,6 +43,7 @@ class LayoutExtension extends \Twig_Extension
      * Keeps the Context to look inside language settings.
      *
      * @param LegacyContext $context
+     * @param Kernel $kernel
      */
     public function __construct(LegacyContext $context, Kernel $kernel)
     {

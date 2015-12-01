@@ -40,20 +40,21 @@ class ProductQuantity extends CommonModelAbstractType
 {
     private $router;
     private $translator;
-    private $container;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $router
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $router, $legacyContext)
     {
-        $this->container = $container;
-        $this->router = $container->get('router');
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->legacyContext = $legacyContext;
         $this->configurationAdapter = new ConfigurationAdapter();
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->locales = $this->legacyContext->getLanguages();
     }
 
     /**
@@ -97,7 +98,10 @@ class ProductQuantity extends CommonModelAbstractType
                 ),
             ))
             ->add('combinations', 'collection', array(
-                'type' => new ProductCombination($this->container),
+                'type' => new ProductCombination(
+                    $this->translator,
+                    $this->legacyContext
+                ),
                 'allow_add' => true,
                 'allow_delete' => true
             ))

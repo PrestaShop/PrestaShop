@@ -35,28 +35,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductShipping extends CommonModelAbstractType
 {
     private $translator;
-    private $container;
     private $carriersChoices;
     private $warehouses;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
+     * @param object $warehouseDataProvider
+     * @param object $carrierDataProvider
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->translator = $translator;
+        $this->legacyContext = $legacyContext;
+        $this->locales = $this->legacyContext->getLanguages();
+        $this->warehouses = $warehouseDataProvider->getWarehouses();
 
-        $carriers = $this->container->get('prestashop.adapter.data_provider.carrier')->getCarriers($this->locales[0]['id_lang'], false, false, false, null, \Carrier::ALL_CARRIERS);
+        $carriers = $carrierDataProvider->getCarriers($this->locales[0]['id_lang'], false, false, false, null, $carrierDataProvider->getAllCarriersConstant());
         $this->carriersChoices = [];
         foreach ($carriers as $carrier) {
-            $this->carriersChoices[$carrier['id_carrier']] = $carrier['name'].' ('.$carrier['delay'].')';
+            $this->carriersChoices[$carrier['id_reference']] = $carrier['name'].' ('.$carrier['delay'].')';
         }
-
-        $this->warehouses = $container->get('prestashop.adapter.data_provider.warehouse')->getWarehouses();
     }
 
     /**
@@ -116,7 +117,7 @@ class ProductShipping extends CommonModelAbstractType
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
-                'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->container),
+                'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->translator, $this->legacyContext),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,

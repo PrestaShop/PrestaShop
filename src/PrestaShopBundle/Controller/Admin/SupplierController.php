@@ -70,7 +70,17 @@ class SupplierController extends FrameworkBundleAdminController
         $adminProductController = $adminProductWrapper->getInstance();
         $adminProductController->processSuppliers($idProduct);
 
-        $modelMapper = new ProductAdminModelAdapter($product->id, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $product->id,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
         $allFormData = $modelMapper->getFormDatas();
 
         $form = $this->createFormBuilder($allFormData);
@@ -82,7 +92,12 @@ class SupplierController extends FrameworkBundleAdminController
             }
 
             $simpleSubForm->add('supplier_combination_'.$idSupplier, 'collection', array(
-                'type' => new ProductSupplierCombination($idSupplier, $this->container),
+                'type' => new ProductSupplierCombination(
+                    $idSupplier,
+                    $this->container->get('prestashop.adapter.translator'),
+                    $this->container->get('prestashop.adapter.legacy.context'),
+                    $this->container->get('prestashop.adapter.data_provider.currency')
+                ),
                 'prototype' => true,
                 'allow_add' => true,
                 'required' => false,

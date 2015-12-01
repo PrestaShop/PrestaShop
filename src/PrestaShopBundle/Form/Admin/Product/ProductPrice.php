@@ -41,15 +41,26 @@ class ProductPrice extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $taxDataProvider
+     * @param object $router
+     * @param object $shopContextAdapter
+     * @param object $countryDataprovider
+     * @param object $currencyDataprovider
+     * @param object $groupDataprovider
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
     {
-        $this->container = $container;
-        $this->translator = $this->container->get('prestashop.adapter.translator');
-
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->shopContextAdapter = $shopContextAdapter;
+        $this->countryDataprovider = $countryDataprovider;
+        $this->currencyDataprovider = $currencyDataprovider;
+        $this->groupDataprovider= $groupDataprovider;
+        $this->legacyContext = $legacyContext;
         $this->tax_rules = $this->formatDataChoicesList(
-            $container->get('prestashop.adapter.data_provider.tax')->getTaxRulesGroups(true),
+            $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
         );
     }
@@ -95,7 +106,15 @@ class ProductPrice extends CommonModelAbstractType
             'required' => false,
             'label' => $this->translator->trans('per', [], 'AdminProducts')
         ))
-        ->add('specific_price', new ProductSpecificPrice($this->container))
+        ->add('specific_price', new ProductSpecificPrice(
+            $this->router,
+            $this->translator,
+            $this->shopContextAdapter,
+            $this->countryDataprovider,
+            $this->currencyDataprovider,
+            $this->groupDataprovider,
+            $this->legacyContext
+        ))
         ->add('specificPricePriorityToAll', 'checkbox', array(
             'required' => false,
             'label' => $this->translator->trans('Apply to all products', [], 'AdminProducts'),
