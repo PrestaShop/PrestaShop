@@ -369,7 +369,7 @@ var stock = (function() {
 				$('#form_step3_qty_0').attr('readonly', 'readonly');
 				$('#product_qty_0_shortcut_div').hide();
 
-				if ($('#form_step3_depends_on_stock_1:checked').length == 1) {
+				if ($('#form_step3_depends_on_stock_1').length == 0 || $('#form_step3_depends_on_stock_1:checked').length == 1) {
 					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').removeAttr('readonly');
 				} else {
 					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').attr('readonly', 'readonly');
@@ -378,7 +378,7 @@ var stock = (function() {
 			} /** else, there is no combinations */
 
 			/** if GSA and if is manual */
-			if ($('#form_step3_depends_on_stock_1:checked').length == 1) {
+			if ($('#form_step3_depends_on_stock_1').length == 0 || $('#form_step3_depends_on_stock_1:checked').length == 1) {
 				$('#form_step3_qty_0').removeAttr('readonly');
 				$('#product_qty_0_shortcut_div').show();
 				return;
