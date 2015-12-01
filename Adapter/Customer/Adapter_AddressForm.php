@@ -161,11 +161,19 @@ class Adapter_AddressForm
             }
         }
 
+        // Checknames
+        if (isset($this->fields_value['lastname']) && $this->fields_value['lastname'] && !Validate::isName($this->fields_value['lastname'])) {
+            $form_errors['lastname'][] = $this->translator->l('Your last name is invalid.', 'Address');
+        }
+        if (isset($this->fields_value['firstname']) && $this->fields_value['firstname'] && !Validate::isName($this->fields_value['firstname'])) {
+            $form_errors['firstname'][] = $this->translator->l('Your first name is invalid.', 'Address');
+        }
+
         // Check phone
-        if (isset($this->fields_value['phone']) && $this->fields_value['phone'] && Validate::isPhoneNumber($this->fields_value['phone'])) {
+        if (isset($this->fields_value['phone']) && $this->fields_value['phone'] && !Validate::isPhoneNumber($this->fields_value['phone'])) {
             $form_errors['phone'][] = $this->translator->l('The phone number is invalid.', 'Address');
         }
-        if (isset($this->fields_value['phone_mobile']) && $this->fields_value['phone_mobile'] && Validate::isPhoneNumber($this->fields_value['phone_mobile'])) {
+        if (isset($this->fields_value['phone_mobile']) && $this->fields_value['phone_mobile'] && !Validate::isPhoneNumber($this->fields_value['phone_mobile'])) {
             $form_errors['phone_mobile'][] = $this->translator->l('The phone number is invalid.', 'Address');
         }
 
