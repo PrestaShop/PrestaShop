@@ -384,11 +384,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         $search = $this->getProductSearchVariables();
 
-        $products = $this->render('catalog/products.tpl', $search);
+        $rendered_products = $this->render('catalog/products.tpl', $search);
 
         $data = [
-            'products'            => $products,
-            'ps_search_facets'   => $search['ps_search_facets'],
+            'products'            => $search['products'],
+            'rendered_products'   => $rendered_products,
+            'ps_search_facets'    => $search['ps_search_facets'],
             'current_url'         => $this->makeURL([
                 'q' => $search['ps_search_encoded_facets']
             ])
