@@ -362,6 +362,12 @@ class OrderControllerCore extends FrontController
                 $this->address = $this->context->customer->getSimpleAddress(0);
             }
 
+            foreach (['firstname', 'lastname'] as $attr) {
+                if (empty($this->address->{$attr})) {
+                    $this->address[$attr] = $this->context->customer->{$attr};
+                }
+            }
+
             $this->context->smarty->assign([
                 'address_form_delivery' => $this->renderAddressFormDelivery(),
                 'address_form_invoice' => $this->renderAddressFormInvoice(),
