@@ -87,6 +87,8 @@ services:
     prestashop.adapter.data_provider.pack:
         class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
 
+    prestashop.adapter.data_provider.module:
+        class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
 
     # Other adapters
     prestashop.adapter.shop.context:
@@ -109,7 +111,7 @@ services:
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
-        arguments: ["@prestashop.hook.dispatcher"]
+        arguments: ["@prestashop.hook.dispatcher", "@prestashop.adapter.data_provider.module"]
         tags:
             - { name: twig.extension }
 

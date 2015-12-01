@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template
@@ -44,9 +45,10 @@ class HookExtension extends \Twig_Extension
      *
      * @param HookDispatcher $hookDispatcher
      */
-    public function __construct(HookDispatcher $hookDispatcher)
+    public function __construct(HookDispatcher $hookDispatcher, ModuleDataProvider $moduleDataProvider)
     {
         $this->hookDispatcher = $hookDispatcher;
+        $this->moduleDataProvider = $moduleDataProvider;
     }
 
     /**
@@ -100,7 +102,16 @@ class HookExtension extends \Twig_Extension
             throw new \Exception('Hook name missing');
         }
         $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
-        return implode('<br class="hook-separator" />', $hookRenders);
+
+        $render = [];
+        foreach ($hookRenders as $module => $hookRender) {
+            $render[] = [
+                'id' => $module,
+                'name' => $this->moduleDataProvider->getModuleName($module),
+                'content' => $hookRender,
+            ];
+        }
+        return $render;
     }
 
     /**

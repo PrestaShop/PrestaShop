@@ -346,7 +346,16 @@
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
                 <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
-                    {{ renderhook('displayAdminProductsExtra', {'id_product': id_product}) }}
+                    {% for module in renderhook('displayAdminProductsExtra', {'id_product': id_product}) %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ module.name }}
+                            </div>
+                            <div class="panel-body" id="module_{{ module.id }}">
+                                {{ module.content|raw }}
+                            </div>
+                        </div>
+                    {% endfor %}
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
                         <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-warning" />
