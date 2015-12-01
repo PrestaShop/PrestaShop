@@ -187,7 +187,6 @@ class AddressControllerCore extends FrontController
         $this->address_fields['alias'] = $this->address_field_alias;
 
         $this->context->smarty->assign(array(
-            'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
