@@ -8,9 +8,6 @@
   <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
     <value>1</value>
   </configuration>
-  <configuration id="PS_ONE_PHONE_AT_LEAST" name="PS_ONE_PHONE_AT_LEAST">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
     <value>1</value>
   </configuration>
