@@ -145,7 +145,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * @param  array  $facets
      * @return string the HTML of the facets
      */
-    protected function renderFacets(array $facets)
+    protected function renderFacets(array $facets, SortOrder $sortOrder)
     {
         $facetsVar = array_map([$this, 'prepareFacetForTemplate'], $facets);
 
@@ -161,7 +161,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return $this->render('catalog/_partials/facets.tpl', [
             'facets'        => $facetsVar,
             'jsEnabled'     => $this->ajax,
-            'activeFilters' => $activeFilters
+            'activeFilters' => $activeFilters,
+            'sort_order'    => $sortOrder->getURLParameter()
         ]);
     }
 
@@ -289,12 +290,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             // with the provider if it wants to
             $ps_search_facets = $provider->renderFacets(
                 $context,
-                $result->getNextQuery()->getFacets()
+                $result->getNextQuery()->getFacets(),
+                $query->getSortOrder()
             );
         } else {
             // with the core
             $ps_search_facets = $this->renderFacets(
-                $result->getNextQuery()->getFacets()
+                $result->getNextQuery()->getFacets(),
+                $query->getSortOrder()
             );
         }
 
