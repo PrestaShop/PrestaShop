@@ -46,7 +46,8 @@ class AddonsDataProvider implements AddonsInterface
     public function downloadModule($module_id)
     {
         $params = [
-            'id_module' => $module_id
+            'id_module' => $module_id,
+            'format' => 'json'
         ];
 
         // Module downloading
