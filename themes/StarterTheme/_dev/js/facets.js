@@ -42,4 +42,9 @@ $(document).ready(function () {
         event.preventDefault();
         makeQuery($(event.target).closest('a').get(0).href);
     });
+
+    $('body').on('change', '#search_filters select', function () {
+        const form = $(event.target).closest('form');
+        makeQuery('?' + form.serialize());
+    });
 });
