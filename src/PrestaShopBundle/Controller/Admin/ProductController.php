@@ -131,7 +131,11 @@ class ProductController extends FrameworkBundleAdminController
         if ((!$hasCategoryFilter && !$hasColumnFilter && $totalFilteredProductCount === 0)
             || ($totalProductCount = $productProvider->countAllProducts()) === 0) {
             // no filter, total filtered == 0, and then total count == 0 too.
-            return $this->render('PrestaShopBundle:Admin/Product:catalogEmpty.html.twig');
+            $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
+            return $this->render('PrestaShopBundle:Admin/Product:catalogEmpty.html.twig', array(
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'import_url' => $legacyUrlGenerator->generate('AdminImport'),
+            ));
         } else {
             // Pagination
             $paginationParameters = $request->attributes->all();
