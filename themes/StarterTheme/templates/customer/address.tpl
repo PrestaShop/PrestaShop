@@ -13,6 +13,7 @@
 
         {block name="address_form_container"}
           {include file="customer/_partials/address-form-fields.tpl"
+          address_fields=$address_fields
           address=$address
           countries=$countries}
         {/block}
