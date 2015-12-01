@@ -38,7 +38,7 @@
 
                     <a
                       href="{$filter.nextEncodedFacetsURL}"
-                      class="js-search-link"
+                      class="js-search-link {if $filter.active} active {/if}"
                     >
                       {$filter.label}
                       {if $filter.magnitude}
