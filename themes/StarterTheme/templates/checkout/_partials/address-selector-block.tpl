@@ -10,7 +10,7 @@
     </label>
 
     <footer>
-      <a href="{url entity="address" id=$address.id}">{l s='Edit'}</a>
+      <a href="{url entity="address" id=$address.id params=['back' => $urls.pages.order]}">{l s='Edit'}</a>
     </footer>
   </article>
 {/foreach}
