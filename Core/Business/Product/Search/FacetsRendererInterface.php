@@ -6,6 +6,7 @@ interface FacetsRendererInterface
 {
     public function renderFacets(
         ProductSearchContext $context,
-        array $facets
+        array $facets,
+        SortOrder $sortOrder
     );
 }
