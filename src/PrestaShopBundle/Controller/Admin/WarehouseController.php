@@ -55,7 +55,17 @@ class WarehouseController extends FrameworkBundleAdminController
         }
         $warehouses = $warehouseAdapter->getWarehouses();
 
-        $modelMapper = new ProductAdminModelAdapter($idProduct, $this->container);
+        $modelMapper = new ProductAdminModelAdapter(
+            $idProduct,
+            $this->container->get('prestashop.adapter.legacy.context'),
+            $this->container->get('prestashop.adapter.admin.wrapper.product'),
+            $this->container->get('prestashop.adapter.tools'),
+            $this->container->get('prestashop.adapter.data_provider.product'),
+            $this->container->get('prestashop.adapter.data_provider.supplier'),
+            $this->container->get('prestashop.adapter.data_provider.warehouse'),
+            $this->container->get('prestashop.adapter.data_provider.feature'),
+            $this->container->get('prestashop.adapter.data_provider.pack')
+        );
         $allFormData = $modelMapper->getFormDatas();
 
         $form = $this->createFormBuilder($allFormData);
@@ -63,7 +73,11 @@ class WarehouseController extends FrameworkBundleAdminController
 
         foreach ($warehouses as $warehouse) {
             $simpleSubForm->add('warehouse_combination_'.$warehouse['id_warehouse'], 'collection', array(
-                'type' => new ProductWarehouseCombination($warehouse['id_warehouse'], $this->container),
+                'type' => new ProductWarehouseCombination(
+                    $warehouse['id_warehouse'],
+                    $this->container->get('prestashop.adapter.translator'),
+                    $this->container->get('prestashop.adapter.legacy.context')
+                ),
                 'allow_add' => true,
                 'required' => false,
                 'label' => $warehouse['name'],

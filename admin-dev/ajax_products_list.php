@@ -55,6 +55,7 @@ if ($excludeIds && $excludeIds != 'NaN') {
 
 // Excluding downloadable products from packs because download from pack is not supported
 $forceJson = Tools::getValue('forceJson', false);
+$disableCombination = Tools::getValue('disableCombination', false);
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', true);
 
@@ -75,7 +76,7 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))) {
+if ($items && ($disableCombination ||$excludeIds || (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))) {
     $results = [];
     foreach ($items as $item) {
         if (!$forceJson) {

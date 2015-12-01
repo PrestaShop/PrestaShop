@@ -40,12 +40,13 @@ class ProductSeo extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
     }
 
     /**

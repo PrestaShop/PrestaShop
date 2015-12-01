@@ -47,21 +47,23 @@ class ProductSpecificPrice extends CommonModelAbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $router
+     * @param object $translator
+     * @param object $shopContextAdapter
+     * @param object $countryDataprovider
+     * @param object $currencyDataprovider
+     * @param object $groupDataprovider
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext)
     {
-        $this->router = $container->get('router');
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $shopContextAdapter = $container->get('prestashop.adapter.shop.context');
-        $countryAdapter = $container->get('prestashop.adapter.data_provider.country');
-        $currencyAdapter = $container->get('prestashop.adapter.data_provider.currency');
-        $groupAdapter = $container->get('prestashop.adapter.data_provider.group');
-        $this->locales = $container->get('prestashop.adapter.legacy.context')->getLanguages();
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->locales = $legacyContext->getLanguages();
         $this->shops = $this->formatDataChoicesList($shopContextAdapter->getShops(), 'id_shop');
-        $this->countries = $this->formatDataChoicesList($countryAdapter->getCountries($this->locales[0]['id_lang']), 'id_country');
-        $this->currencies = $this->formatDataChoicesList($currencyAdapter->getCurrencies(), 'id_currency');
-        $this->groups = $this->formatDataChoicesList($groupAdapter->getGroups($this->locales[0]['id_lang']), 'id_group');
+        $this->countries = $this->formatDataChoicesList($countryDataprovider->getCountries($this->locales[0]['id_lang']), 'id_country');
+        $this->currencies = $this->formatDataChoicesList($currencyDataprovider->getCurrencies(), 'id_currency');
+        $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
     }
 
     /**

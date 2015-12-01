@@ -42,14 +42,15 @@ class SimpleCategory extends AbstractType
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $categoryDataProvider
      * @param bool $ajax If the form is called from ajax query
      */
-    public function __construct($container, $ajax = false)
+    public function __construct($translator, $categoryDataProvider, $ajax = false)
     {
-        $this->translator = $container->get('prestashop.adapter.translator');
+        $this->translator = $translator;
         $this->ajax = $ajax;
-        $this->formatValidList($container->get('prestashop.adapter.data_provider.category')->getNestedCategories());
+        $this->formatValidList($categoryDataProvider->getNestedCategories());
     }
 
     /**

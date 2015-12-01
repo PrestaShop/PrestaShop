@@ -52,4 +52,14 @@ class CarrierDataProvider
     {
         return \CarrierCore::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
     }
+
+    /**
+     * Get the CarrierCore class ALL_CARRIERS constant value
+     *
+     * @return int
+     */
+    public function getAllCarriersConstant()
+    {
+        return \CarrierCore::ALL_CARRIERS;
+    }
 }

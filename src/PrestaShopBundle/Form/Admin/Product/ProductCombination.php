@@ -36,20 +36,19 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 class ProductCombination extends CommonModelAbstractType
 {
     private $translator;
-    private $container;
     private $contextLegacy;
     private $configurationAdapter;
 
     /**
      * Constructor
      *
-     * @param object $container The SF2 container
+     * @param object $translator
+     * @param object $legacyContext
      */
-    public function __construct($container)
+    public function __construct($translator, $legacyContext)
     {
-        $this->container = $container;
-        $this->translator = $container->get('prestashop.adapter.translator');
-        $this->contextLegacy = $container->get('prestashop.adapter.legacy.context')->getContext();
+        $this->translator = $translator;
+        $this->contextLegacy = $legacyContext->getContext();
         $this->configurationAdapter = new Configuration();
     }
 
