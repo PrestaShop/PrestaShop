@@ -116,7 +116,7 @@ class HookDispatcher extends EventDispatcher
     /**
      * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
      *
-     * @param $eventName The hook name.
+     * @param string $eventName The hook name.
      * @param array $parameters Hook parameters
      * @return Event The event that has been passed to each listener. Contains the responses.
      * @throws \Exception
