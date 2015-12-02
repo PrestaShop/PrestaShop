@@ -681,7 +681,7 @@ class AdminPerformanceControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         $this->page_header_toolbar_btn['clear_cache'] = array(
-            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+            'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1&empty_sf2_cache=1',
             'desc' => $this->l('Clear cache'),
             'icon' => 'process-icon-eraser'
         );
@@ -994,6 +994,15 @@ class AdminPerformanceControllerCore extends AdminController
             Tools::clearXMLCache();
             Media::clearCache();
             Tools::generateIndex();
+        }
+
+        if ((bool)Tools::getValue('empty_sf2_cache')) {
+            $redirectAdmin = true;
+
+            $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+            $sf2Refresh->addCacheClear();
+            $sf2Refresh->addAsseticDump();
+            $sf2Refresh->execute();
         }
 
         if (Tools::isSubmit('submitAddconfiguration')) {

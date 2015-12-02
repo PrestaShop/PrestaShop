@@ -211,24 +211,11 @@ class InstallModelInstall extends InstallAbstractModel
             return true;
         }
 
-        umask(0000);
-        set_time_limit(0);
-
-        require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-        $kernel = new AppKernel('prod', false);
-        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
-        $application->setAutoExit(false);
-
-        $commands = [
-            ['command' => 'cache:clear', '--env' => 'prod', '--no-debug' => true],
-            ['command' => 'assetic:dump', '--env' => 'prod', '--no-debug' => true],
-            ['command' => 'doctrine:schema:update', '--env' => 'prod', '--no-debug' => true, '--force' => true]
-        ];
-
-        $output = new \Symfony\Component\Console\Output\NullOutput();
-        foreach ($commands as $command) {
-            $application->run(new \Symfony\Component\Console\Input\ArrayInput($command), $output);
-        }
+        $sf2Refresh = new \PrestaShopBundle\Service\Cache\Refresh();
+        $sf2Refresh->addCacheClear();
+        $sf2Refresh->addAsseticDump();
+        $sf2Refresh->addDoctrineSchemaUpdate();
+        $sf2Refresh->execute();
 
         return true;
     }
