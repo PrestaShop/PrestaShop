@@ -599,6 +599,27 @@ class FrontControllerCore extends Controller
         Tools::redirectLink($this->redirect_after);
     }
 
+    protected function redirectWithNotifications()
+    {
+        $notifications = json_encode([
+            'error' => $this->errors,
+            'warning' => $this->warning,
+            'success' => $this->success,
+            'info' => $this->info,
+        ]);
+
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            $_SESSION['notifications'] = $notifications;
+        } elseif (session_status() == PHP_SESSION_NONE) {
+            session_start();
+            $_SESSION['notifications'] = $notifications;
+        } else {
+            setcookie('notifications', $notifications);
+        }
+
+        return call_user_func_array(['Tools', 'redirect'], func_get_args());
+    }
+
     /**
      * Renders page content.
      * Used for retrocompatibility with PS 1.4
@@ -630,19 +651,12 @@ class FrontControllerCore extends Controller
             }
         }
 
-        $notifications = [
-            'error' => $this->errors,
-            'warning' => $this->warning,
-            'success' => $this->success,
-            'info' => $this->info,
-        ];
-
         $this->context->smarty->assign(array(
             'layout'         => $this->getLayout(),
             'css_files'      => $this->css_files,
             'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
             'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
-            'notifications'  => $notifications,
+            'notifications'  => $this->prepareNotifications(),
             'display_header' => $this->display_header,
             'display_footer' => $this->display_footer,
         ));
@@ -650,6 +664,30 @@ class FrontControllerCore extends Controller
         $this->smartyOutputContent($this->template);
 
         return true;
+    }
+
+    protected function prepareNotifications()
+    {
+        $notifications = [
+            'error' => $this->errors,
+            'warning' => $this->warning,
+            'success' => $this->success,
+            'info' => $this->info,
+        ];
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (session_status() == PHP_SESSION_ACTIVE && isset($_SESSION['notifications'])) {
+            $notifications = array_merge($notifications, json_decode($_SESSION['notifications'], true));
+            unset($_SESSION['notifications']);
+        } elseif (isset($_COOKIE['notifications'])) {
+            $notifications = array_merge($notifications, json_decode($_COOKIE['notifications'], true));
+            unset($_COOKIE['notifications']);
+        }
+
+        return $notifications;
     }
 
     /**
