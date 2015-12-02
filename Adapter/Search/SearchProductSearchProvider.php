@@ -74,7 +74,6 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
 
         $result = new ProductSearchResult;
         $result->setProducts($products);
-        $result->setNextQuery($query);
 
         $pagination = new PaginationResult;
         $pagination
@@ -90,13 +89,5 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         );
 
         return $result;
-    }
-
-    public function addFacetsToQuery(
-        ProductSearchContext $context,
-        $encodedFacets,
-        ProductSearchQuery $query
-    ) {
-        // Nothing to do here.
     }
 }

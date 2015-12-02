@@ -24,9 +24,7 @@ We have analyzed the way search modules work and we offer a set of standard obje
 
 1. The core `CategoryController` executes a hook basically asking modules "hey, does anybody want to fetch the products for the category with `id_category` === 4 or should I do it myself?"
 2. A module (e.g. `blocklayered`) responds by returning an instance of a `ProductSearchProviderInterface` of its choosing
-3. The `CategoryController` notices the `ProductSearchProviderInterface` returned by the module and uses it to get the products (this is the equivalent of what `hookActionProductListOverride` did, only we work with well defined objects that are easy to reason about). It does so in two steps:
-    1. it extracts the `q` parameter from the URL and calls `addFacetsToQuery` on the search provider, passing it the value of `q` and the query object. This provides an opportunity for the module to add its own facets to the query before the search is executed
-    2. it calls `runQuery` on the search provider to execute the query which may or may not contain additional filters depending on the module
+3. The `CategoryController` notices the `ProductSearchProviderInterface` returned by the module and uses it to get the products (this is the equivalent of what `hookActionProductListOverride` did, only we work with well defined objects that are easy to reason about).
 4. The search provider returns a `ProductSearchResult`, it contains:
     - the products, obviously (which may just be an array like `[['id_product' => 2], ['id_product' => 3]]` - the core will add the missing data!)
     - the pagination information (total number of pages, total number or results, etc.) cleanly wrapped inside a `PaginationResult`

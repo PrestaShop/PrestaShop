@@ -8,10 +8,4 @@ interface ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     );
-
-    public function addFacetsToQuery(
-        ProductSearchContext $context,
-        $encodedFacets,
-        ProductSearchQuery $query
-    );
 }
