@@ -5,10 +5,11 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 class ProductSearchResult
 {
     private $products = [];
-    private $nextQuery;
+    private $menu;
     private $encodedFacets;
     private $paginationResult;
     private $availableSortOrders = [];
+    private $currentSortOrder;
 
     public function setProducts(array $products)
     {
@@ -21,15 +22,15 @@ class ProductSearchResult
         return $this->products;
     }
 
-    public function setNextQuery(ProductSearchQuery $nextQuery)
+    public function setFacetsMenu(FacetsMenu $menu)
     {
-        $this->nextQuery = $nextQuery;
+        $this->menu = $menu;
         return $this;
     }
 
-    public function getNextQuery()
+    public function getFacetsMenu()
     {
-        return $this->nextQuery;
+        return $this->menu;
     }
 
     public function setEncodedFacets($encodedFacets)
@@ -74,5 +75,16 @@ class ProductSearchResult
         }
 
         return $this;
+    }
+
+    public function setCurrentSortOrder(SortOrder $currentSortOrder)
+    {
+        $this->currentSortOrder = $currentSortOrder;
+        return $this;
+    }
+
+    public function getCurrentSortOrder()
+    {
+        return $this->currentSortOrder;
     }
 }
