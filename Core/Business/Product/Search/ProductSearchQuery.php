@@ -11,6 +11,7 @@ class ProductSearchQuery
     private $id_supplier;
     private $search_string;
     private $search_tag;
+    private $encodedFacets;
 
     // A default that is multiple of 2, 3 and 4 should be OK for
     // many layouts. 12 is the best number ever.
@@ -19,8 +20,6 @@ class ProductSearchQuery
     private $page = 1;
 
     private $sortOrder;
-
-    private $facets = [];
 
     public function __construct()
     {
@@ -99,31 +98,6 @@ class ProductSearchQuery
         return $this->sortOrder;
     }
 
-    public function addFacet(Facet $facet)
-    {
-        $this->facets[] = $facet;
-        return $this;
-    }
-
-    public function getFacets()
-    {
-        return $this->facets;
-    }
-
-    public function setFacets(array $facets)
-    {
-        $this->facets = [];
-        // We're not directly replacing the $this->facets
-        // array because we want to ensure that $facet
-        // is of type Facet.
-        // Performance impact negligible because $facets
-        // is always a small array.
-        foreach ($facets as $facet) {
-            $this->addFacet($facet);
-        }
-        return $this;
-    }
-
     public function setSearchString($search_string)
     {
         $this->search_string = $search_string;
@@ -144,5 +118,16 @@ class ProductSearchQuery
     public function getSearchTag()
     {
         return $this->search_tag;
+    }
+
+    public function setEncodedFacets($encodedFacets)
+    {
+        $this->encodedFacets = $encodedFacets;
+        return $this;
+    }
+
+    public function getEncodedFacets()
+    {
+        return $this->encodedFacets;
     }
 }
