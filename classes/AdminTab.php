@@ -1014,13 +1014,13 @@ abstract class AdminTabCore
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($language_ids as $id_lang) {
                             if (Tools::getValue($field.'_'.$id_lang) && isset($values['validation'])) {
-                                if (!Validate::$values['validation'](Tools::getValue($field.'_'.$id_lang))) {
+                                if (!Validate::{$values['validation']}(Tools::getValue($field.'_'.$id_lang))) {
                                     $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                                 }
                             }
                         }
                     } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                        if (!Validate::$values['validation'](Tools::getValue($field))) {
+                        if (!Validate::{$values['validation']}(Tools::getValue($field))) {
                             $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                         }
                     }
@@ -1094,7 +1094,7 @@ abstract class AdminTabCore
     {
         if (isset($field['validation'])) {
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && method_exists('Validate', $field['validation'])) {
-                if (!Validate::$field['validation']($value)) {
+                if (!Validate::{$field['validation']}($value)) {
                     $this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }
