@@ -5,6 +5,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\PaginationResult;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInterface;
@@ -145,9 +146,17 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * @param  array  $facets
      * @return string the HTML of the facets
      */
-    protected function renderFacets(array $facets, SortOrder $sortOrder)
+    protected function renderFacets(ProductSearchResult $result)
     {
-        $facetsVar = array_map([$this, 'prepareFacetForTemplate'], $facets);
+        // not all search providers generate menus
+        if (empty($result->getFacetsMenu())) {
+            return '';
+        }
+
+        $facetsVar = array_map(
+            [$this, 'prepareFacetForTemplate'],
+            $result->getFacetsMenu()->getFacets()
+        );
 
         $activeFilters = [];
         foreach ($facetsVar as $facet) {
@@ -162,7 +171,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'facets'        => $facetsVar,
             'jsEnabled'     => $this->ajax,
             'activeFilters' => $activeFilters,
-            'sort_order'    => $sortOrder->getURLParameter()
+            'sort_order'    => $result->getCurrentSortOrder()->getURLParameter()
         ]);
     }
 
@@ -265,14 +274,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
          * if it supports it.
          *
          * Facets are encoded in the "q" URL parameter, which is passed
-         * to the search provider.
+         * to the search provider through the query's encodedFacets property.
          */
 
-        $provider->addFacetsToQuery(
-            $context,
-            $encodedFacets,
-            $query
-        );
+        $query->setEncodedFacets($encodedFacets);
 
         // Now the query contains all facets, that is,
         // additional ways to refine the query that are defined
@@ -285,6 +290,13 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $query
         );
 
+        // sort order is useful for template,
+        // add it if undefined - it should be the same one
+        // as for the query anyway
+        if (!$result->getCurrentSortOrder()) {
+            $result->setCurrentSortOrder($query->getSortOrder());
+        }
+
         // prepare the products
         $products = $this->prepareMultipleProductsForTemplate(
             $result->getProducts()
@@ -295,14 +307,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             // with the provider if it wants to
             $ps_search_facets = $provider->renderFacets(
                 $context,
-                $result->getNextQuery()->getFacets(),
-                $query->getSortOrder()
+                $result
             );
         } else {
             // with the core
             $ps_search_facets = $this->renderFacets(
-                $result->getNextQuery()->getFacets(),
-                $query->getSortOrder()
+                $result
             );
         }
 
