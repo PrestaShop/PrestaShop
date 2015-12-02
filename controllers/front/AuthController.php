@@ -142,17 +142,17 @@ class AuthControllerCore extends FrontController
                 // Login information have changed, so we check if the cart rules still apply
                 CartRule::autoRemoveFromCart($this->context);
                 CartRule::autoAddToCart($this->context);
-
-                if (!$this->ajax) {
-                    $back = Tools::getValue('back', 'my-account');
-
-                    if ($back == Tools::secureReferrer($back)) {
-                        Tools::redirect(html_entity_decode($back));
-                    }
-
-                    Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
-                }
             }
+        }
+
+        if (!$this->ajax) {
+            $back = Tools::getValue('back', 'my-account');
+
+            if ($back == Tools::secureReferrer($back)) {
+                $this->redirectWithNotifications(html_entity_decode($back));
+            }
+
+            $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
         }
     }
 
@@ -219,9 +219,9 @@ class AuthControllerCore extends FrontController
         }
 
         if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
-            Tools::redirect(html_entity_decode($back));
+            $this->redirectWithNotifications(html_entity_decode($back));
         } else {
-            Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
+            $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
         }
     }
 
