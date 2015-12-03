@@ -2,6 +2,8 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Exception;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,10 +51,16 @@ class ModuleController extends Controller
 
         $ret = array();
         if (method_exists($this, $action)) {
-            // ToDo : Check if allowed to call this action
-            $ret[$module] = $this->{$action}($module);
+            try {
+                // ToDo : Check if allowed to call this action
+                $ret[$module] = $this->{$action}($module);
+            } catch (Exception $e) {
+                $ret[$module]['status'] = false;
+                $ret[$module]['msg'] = $e->getMessage();
+            }
         } else {
-            return new JsonResponse('Invalid action', 200);
+            $ret[$module]['status'] = false;
+            $ret[$module]['msg'] = 'Invalid action';
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -61,7 +69,7 @@ class ModuleController extends Controller
 
         // We need a better error handler here. Meanwhile, I throw an exception
         if (! $ret[$module]['status']) {
-            throw new \Exception($ret[$module]['msg']);
+            throw new Exception($ret[$module]['msg']);
         }
         return $this->redirect($this->generateUrl('admin_module_catalog'));
     }
@@ -116,7 +124,7 @@ class ModuleController extends Controller
 
         if (isset($activeMenu)) {
             if (!isset($topMenuData->{$activeMenu})) {
-                throw new \Exception("Menu '$activeMenu' not found in Top Menu data", 1);
+                throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
             } else {
                 $topMenuData->{$activeMenu}->class = 'active';
             }
