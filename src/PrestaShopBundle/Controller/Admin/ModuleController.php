@@ -3,8 +3,8 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -153,10 +153,21 @@ class ModuleController extends Controller
 
     public function uninstallModule($module_name)
     {
-        $status = 'ok';
-        $msg = sprintf('Module %s is now installed', $module_name);
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
-        // sleep(2);
+        // Module uninstall
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->uninstall();
+
+        if ($status) {
+            // Module files deletion
+            $fs = new Filesystem();
+            $fs->remove(_PS_MODULE_DIR_.$module_name);
+
+            $msg = sprintf('Module %s is now uninstalled', $module_name);
+        } else {
+            $msg = sprintf('Could not uninstall module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
