@@ -258,6 +258,7 @@ class ImageManagerCore
             ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
         }
         $write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+        $write_file &= $this->clearImage($dst_file, $file_type);
         @imagedestroy($src_image);
         return $write_file;
     }
@@ -458,6 +459,7 @@ class ImageManagerCore
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+        $return &= $this->clearImage($dst_file, $file_type);
         @imagedestroy($src['ressource']);
         return    $return;
     }
@@ -574,5 +576,35 @@ class ImageManagerCore
         }
 
         return $mime_type;
+    }
+    public static function clearImage($image,$file_type){
+        $image_info = getimagesize($image);
+        $src = array(
+            'width' => $image_info[0],
+            'height' => $image_info[1],
+            'ressource' => ImageManager::create($image_info[2], $image),
+        );
+        
+        $white = imagecolorallocate($src['ressource'], 255, 255, 255);
+        
+        $processHeight = $src['height'];
+        $processWidth = $src['width'];
+        //Travel y axis
+        for($y=0; $y<($processHeight); ++$y){
+            // Travel x axis
+            for($x=0; $x<($processWidth); ++$x){
+                // Change pixel color
+                $colorat=imagecolorat($src['ressource'], $x, $y);
+                $r = ($colorat >> 16) & 0xFF;
+                $g = ($colorat >> 8) & 0xFF;
+                $b = $colorat & 0xFF;
+                if(($r==253 && $g == 253 && $b ==253) || ($r==254 && $g == 254 && $b ==254)) {
+                    imagesetpixel($src['ressource'], $x, $y, $white);
+                }
+            }
+        }
+
+        $return = ImageManager::write($file_type, $src['ressource'], $image);
+        return  $return;
     }
 }
