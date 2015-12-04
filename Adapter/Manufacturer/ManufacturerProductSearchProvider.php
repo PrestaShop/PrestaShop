@@ -55,9 +55,7 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
         $pagination = new PaginationResult;
         $pagination
             ->setTotalResultsCount($count)
-            ->setPage($query->getPage())
             ->setResultsCount(count($products))
-            ->setPagesCount(ceil($count / $query->getResultsPerPage()))
         ;
         $result->setPaginationResult($pagination);
 
