@@ -221,6 +221,25 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * A method that adds page and page count to pagination result
+     * so that users only need to fill totalResultsCount and resultsCount.
+     */
+    private function inferMissingPaginationInformation(
+        ProductSearchQuery $query,
+        PaginationResult $pagination
+    ) {
+        if (!$pagination->getPage()) {
+            $pagination->setPage($query->getPage());
+        }
+
+        if (!$pagination->getPagesCount()) {
+            $pagination->setPagesCount(
+                ceil($pagination->getTotalResultsCount() / $query->getResultsPerPage())
+            );
+        }
+    }
+
+    /**
      * This returns all template variables needed for rendering
      * the product list, the facets, the pagination and the sort orders.
      *
@@ -318,8 +337,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
 
         // prepare the pagination
+        $paginationResult = $result->getPaginationResult();
+        $this->inferMissingPaginationInformation($query, $paginationResult);
         $pagination = $this->getTemplateVarPagination(
-            $result->getPaginationResult()
+            $paginationResult
         );
 
         // prepare the sort orders
