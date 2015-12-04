@@ -7,13 +7,17 @@ function updateDOM ({rendered_products, ps_search_facets}) {
     $('#search_filters').replaceWith(ps_search_facets);
 }
 
+const onpopstate = e => {
+    if (e.state && e.state.rendered_products) {
+        updateDOM(e.state);
+    }
+}
+
 function updateResults (data) {
     pendingQuery = false;
     updateDOM(data);
     window.history.pushState(data, undefined, data.current_url);
-    window.onpopstate = function (e) {
-      updateDOM(e.state);
-    };
+    window.addEventListener('popstate', onpopstate);
 }
 
 function handleError () {
