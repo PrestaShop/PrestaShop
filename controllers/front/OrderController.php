@@ -37,12 +37,6 @@ class OrderControllerCore extends FrontController
     private $address_form;
     private $address_fields;
 
-    private function render($template, array $params)
-    {
-        $this->context->smarty->assign($params);
-        return $this->context->smarty->fetch($template);
-    }
-
     private function getConditionsToApprove()
     {
         $cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
