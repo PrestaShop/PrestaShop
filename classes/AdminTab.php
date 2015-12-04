@@ -1014,13 +1014,15 @@ abstract class AdminTabCore
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($language_ids as $id_lang) {
                             if (Tools::getValue($field.'_'.$id_lang) && isset($values['validation'])) {
-                                if (!Validate::$values['validation'](Tools::getValue($field.'_'.$id_lang))) {
+                                $values_validation = $values['validation'];
+                                if (!Validate::$values_validation(Tools::getValue($field.'_'.$id_lang))) {
                                     $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                                 }
                             }
                         }
                     } elseif (Tools::getValue($field) && isset($values['validation'])) {
-                        if (!Validate::$values['validation'](Tools::getValue($field))) {
+                        $values_validation = $values['validation'];
+                        if (!Validate::$values_validation(Tools::getValue($field))) {
                             $this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
                         }
                     }
