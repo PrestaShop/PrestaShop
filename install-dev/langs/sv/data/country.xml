@@ -82,13 +82,13 @@
     <name>Nya Zeland</name>
   </country>
   <country id="KR">
-    <name>Syd Korea</name>
+    <name>Sydkorea</name>
   </country>
   <country id="IL">
     <name>Israel</name>
   </country>
   <country id="ZA">
-    <name>Syd Afrika</name>
+    <name>Sydafrika</name>
   </country>
   <country id="NG">
     <name>Nigeria</name>
@@ -484,7 +484,7 @@
     <name>Niue</name>
   </country>
   <country id="NF">
-    <name>Norfolk Öarna</name>
+    <name>Norfolkön</name>
   </country>
   <country id="MP">
     <name>Nordmarianerna Öarna</name>
@@ -526,7 +526,7 @@
     <name>Qatar</name>
   </country>
   <country id="RE">
-    <name>Reunion Island</name>
+    <name>Reunion öarna</name>
   </country>
   <country id="RU">
     <name>Ryska Federationen</name>
@@ -715,10 +715,10 @@
     <name>Julön</name>
   </country>
   <country id="CC">
-    <name>Cocos (Keeling) Islands</name>
+    <name>Cocos (Keeling) öarna</name>
   </country>
   <country id="CK">
-    <name>Cook Islands</name>
+    <name>Cook öarna</name>
   </country>
   <country id="GF">
     <name>Franska Guyana</name>
