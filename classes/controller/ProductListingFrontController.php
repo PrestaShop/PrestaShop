@@ -110,6 +110,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return (new ProductSearchContext)
             ->setIdShop($this->context->shop->id)
             ->setIdLang($this->context->language->id)
+            ->setIdCurrency($this->context->currency->id)
+            ->setIdCustomer(
+                $this->context->customer ?
+                    $this->context->customer->id :
+                    null
+            )
         ;
     }
 
