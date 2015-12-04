@@ -701,7 +701,7 @@ class AdminPerformanceControllerCore extends AdminController
                 if (!Tools::getValue('memcachedIp')) {
                     $this->errors[] = Tools::displayError('The Memcached IP is missing.');
                 }
-                if (!Tools::getValue('memcachedPort')) {
+                if (Tools::getValue('memcachedPort') === '') { // port 0 is valid port when using unix socket for host
                     $this->errors[] = Tools::displayError('The Memcached port is missing.');
                 }
                 if (!Tools::getValue('memcachedWeight')) {
@@ -1029,12 +1029,12 @@ class AdminPerformanceControllerCore extends AdminController
             $port = (int)Tools::getValue('sPort', 0);
             $type = Tools::getValue('type', '');
 
-            if ($host != '' && $port != 0) {
+            if ($host != '') {
                 $res = 0;
 
                 if ($type == 'memcached') {
                     if (extension_loaded('memcached') &&
-                        @fsockopen($host, $port)
+                        (strpos($host, '/') === 0 || @fsockopen($host, $port)) //strpos to check whether the value is path (unix socket)
                     ) {
                         $memcache = new Memcached();
                         $memcache->addServer($host, $port);
@@ -1044,7 +1044,7 @@ class AdminPerformanceControllerCore extends AdminController
                 } else {
                     if (function_exists('memcache_get_server_status') &&
                         function_exists('memcache_connect') &&
-                        @fsockopen($host, $port)
+                        (strpos($host, 'unix://') === 0 || @fsockopen($host, $port))
                     ) {
                         $memcache = @memcache_connect($host, $port);
                         $res      = @memcache_get_server_status($memcache, $host, $port);
