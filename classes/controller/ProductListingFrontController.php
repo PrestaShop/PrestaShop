@@ -359,7 +359,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             $query->getSortOrder()->getURLParameter()
         );
 
-        return [
+        $searchVariables = [
             'products'          => $products,
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
@@ -367,6 +367,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'ps_search_encoded_facets' => $result->getEncodedFacets(),
             'jsEnabled'         => $this->ajax
         ];
+
+        Hook::exec('actionProductSearchComplete', $searchVariables);
+
+        return $searchVariables;
     }
 
     /**
