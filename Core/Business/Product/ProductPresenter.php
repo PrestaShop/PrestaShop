@@ -70,7 +70,11 @@ class ProductPresenter
 
 
         if (!isset($presentedProduct['cover'])) {
-            $presentedProduct['cover'] = $presentedProduct['images'][0];
+            if (isset($presentedProduct['images'][0])) {
+                $presentedProduct['cover'] = $presentedProduct['images'][0];
+            } else {
+                $presentedProduct['cover'] = null;
+            }
         }
 
         return $presentedProduct;
@@ -172,6 +176,7 @@ class ProductPresenter
         $colors = $this->productColorsRetriever->getColoredVariants($product['id_product']);
 
         if (!is_array($colors)) {
+            $presentedProduct['main_variants'] = [];
             return $presentedProduct;
         }
 
