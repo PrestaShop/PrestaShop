@@ -67,6 +67,18 @@
             $this->context->language->id
         );
 
+        if (!$this->category->active) {
+            Tools::redirect('index.php?controller=404');
+        }
+
+        if (!$this->category->checkAccess($this->context->customer->id)) {
+            header('HTTP/1.1 403 Forbidden');
+            header('Status: 403 Forbidden');
+            $this->errors[] = $this->l('You do not have access to this category.');
+            $this->setTemplate('catalog/forbidden-category.tpl');
+            return;
+        }
+
         $this->context->smarty->assign([
             'category'      => $this->getTemplateVarCategory(),
             'subcategories' => $this->getTemplateVarSubCategories()
