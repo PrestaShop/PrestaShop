@@ -57,6 +57,23 @@ function hideOrShow () {
   }
 }
 
+function displayAddressEditForm (event) {
+  event.preventDefault();
+  var addressId = this.getAttribute('data-entity-id');
+
+  $.ajax({
+    url: prestashop.urls.pages.address,
+    method: "POST",
+    data: {
+      ajax : true,
+      id_address : addressId,
+      action : 'getAddressEditForm'
+    },
+    dataType: "html"
+  })
+    .done( html => $(this).closest('article').html(html) );
+}
+
 function setupCheckoutScripts () {
   if (!$('body#order')) {
     return;
@@ -68,6 +85,8 @@ function setupCheckoutScripts () {
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
+  $('body').on('click', 'a[data-link-action="edit-address"]', displayAddressEditForm);
+  $('body').on('click', 'button#submitAddress', displayAddressEditForm);
 
   collapsePaymentOptions();
 
