@@ -39,7 +39,7 @@ admin_module_manage_update_all:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
 
 admin_module_import:
-    path:     /import/{module_name}
+    path:     /import
     methods:  [POST]
     defaults:
         module_name:

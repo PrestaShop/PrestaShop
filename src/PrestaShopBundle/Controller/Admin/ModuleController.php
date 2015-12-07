@@ -71,7 +71,6 @@ class ModuleController extends Controller
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action'). 'Module';
         $module = $request->attributes->get('module_name');
 
         $ret = array();
@@ -106,20 +105,21 @@ class ModuleController extends Controller
      */
     public function importModuleAction(Request $request)
     {
-        $action = $request->attributes->get('action');
-        $module_name = $request->attributes->get('module_name').'.zip';
-
-        $file = $request->files->get($module_name);
+        $file = $request->files->get('module_file');
+        $orinal_file_name = $file->getClientOriginalName();
+        $module_name = basename($orinal_file_name, '.'.$file->guessExtension());
 
         if ($file) {
-            $file_name = md5(uniqid()) . '.zip';
+            $file_name = md5(uniqid()).'.zip';
             $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $file_name);
 
             if (!$this->unzipModule($file_name, $module_name)) {
+                // @TODO: clean file
                 return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
             }
 
-            if (!$this->install($module_name)) {
+            if (!$this->installModule($module_name)) {
+                // @TODO: clean file
                 return new JsonResponse(array('status' => false, 'msg' => 'Module Failed to install'), 200, array( 'Content-Type' => 'application/json' ));
             }
 
@@ -132,10 +132,10 @@ class ModuleController extends Controller
 
     final private function unzipModule($file_name, $module_name)
     {
-        $file = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$filename;
+        $file = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$file_name;
 
-        if (file_exist($file)) {
-            $zip_archive = new ZipArchive();
+        if (file_exists($file)) {
+            $zip_archive = new \ZipArchive();
             $ret = $zip_archive->open($file);
 
             if ($ret === true) {
