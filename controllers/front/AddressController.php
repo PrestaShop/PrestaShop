@@ -98,6 +98,9 @@ class AddressControllerCore extends FrontController
     {
         if (Tools::isSubmit('submitAddress')) {
             $this->processSubmitAddress();
+        } elseif (Tools::getValue('action') === 'getAddressEditForm') {
+            $address_form = $this->renderAddressForm();
+            die($address_form);
         } elseif (!Validate::isLoadedObject($this->_address) && Validate::isLoadedObject($this->context->customer)) {
             $_POST['firstname'] = $this->context->customer->firstname;
             $_POST['lastname'] = $this->context->customer->lastname;
@@ -119,9 +122,9 @@ class AddressControllerCore extends FrontController
         $this->address_fields = $this->address_form->getAddressFormatWithErrors();
         // Check if the alias exists
         $alias = Tools::getValue('alias');
-        if (((int)$this->customer->id > 0) && !empty($alias)) {
-            if (Address::aliasExist($alias, (int)$this->fields_value['id_address'], (int)$this->customer->id)) {
-                $this->address_field_alias['errors'][] = sprintf($this->translator->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($alias));
+        if (((int)$this->context->customer->id > 0) && !empty($alias)) {
+            if (Address::aliasExist($alias, (int)Tools::getValue('id_address'), (int)$this->context->customer->id)) {
+                $this->address_field_alias['errors'][] = sprintf($this->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($alias));
             }
         }
 
@@ -168,15 +171,28 @@ class AddressControllerCore extends FrontController
         parent::initContent();
 
         $this->id_country = (int)Tools::getCountry();
+        $this->assignVatNumber();
 
+        if (isset($this->context->cookie->account_created)) {
+            $this->context->smarty->assign('account_created', 1);
+            unset($this->context->cookie->account_created);
+        }
+
+        $this->context->smarty->assign([
+            'address_form' => $this->renderAddressForm(),
+        ]);
+
+        $this->setTemplate('customer/address.tpl');
+    }
+
+    protected function renderAddressForm()
+    {
         $address = $this->context->customer->getSimpleAddress(Tools::getValue('id_address'));
         foreach ($address as $key => $value) {
             if (isset($_POST[$key])) {
                 $address[$key] = $_POST[$key];
             }
         }
-
-        $this->assignVatNumber();
 
         $back = Tools::getValue('back');
         $mod = Tools::getValue('mod');
@@ -186,7 +202,7 @@ class AddressControllerCore extends FrontController
         }
         $this->address_fields['alias'] = $this->address_field_alias;
 
-        $this->context->smarty->assign(array(
+        $vars = [
             'token' => Tools::getToken(false),
             'select_address' => (int)Tools::getValue('select_address'),
             'address' => $address,
@@ -194,14 +210,9 @@ class AddressControllerCore extends FrontController
             'address_fields' => $this->address_fields,
             'back' => Tools::safeOutput($back),
             'mod' => Tools::safeOutput($mod),
-        ));
+        ];
 
-        if (isset($this->context->cookie->account_created)) {
-            $this->context->smarty->assign('account_created', 1);
-            unset($this->context->cookie->account_created);
-        }
-
-        $this->setTemplate('customer/address.tpl');
+        return $this->render('customer/_partials/address-form.tpl', $vars);
     }
 
     /**
