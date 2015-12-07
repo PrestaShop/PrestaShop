@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ModuleController extends Controller
 {
@@ -100,8 +99,6 @@ class ModuleController extends Controller
         $action = $request->attributes->get('action');
         $moduleName = $request->attributes->get('module_name').'.zip';
 
-        $response = new StreamedResponse();
-
         // $file = $request->files->get($moduleName);
 
         $file = 'test';
@@ -115,32 +112,21 @@ class ModuleController extends Controller
             $response->setCallback(function () use ($moduleName, $fileName) {
 
                 if (!$this->unzipTest($fileName)) {
-                    return json_encode(array('status' => false, 'msg' => 'Cannot unzip module'));
+                    return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
                 }
-
-                echo json_encode(array('status' => true, 'msg' => 'module extracted'));
-                ob_flush();
-                flush();
 
                 if (!$this->unzipTest($moduleName)) {
-                    return json_encode(array('status' => false, 'msg' => 'invalid module'));
+                    return new JsonResponse(array('status' => false, 'msg' => 'install module'), 200, array( 'Content-Type' => 'application/json' ));
                 }
-
-                echo json_encode(array('status' => true, 'msg' => 'module ready to intall'));
-                ob_flush();
-                flush();
 
                 if (!$this->unzipTest($fileName)) {
-                    return json_encode(array('status' => false, 'msg' => 'Cannot install module'));
+                    return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
                 }
-               
-                echo json_encode(array('status' => true, 'msg' => 'module isntalled'));
-                ob_flush();
-                flush();
 
             });
 
-            return $response->send();
+            return new JsonResponse(array('status' => true, 'msg' => 'Module successfully installed'), 200, array( 'Content-Type' => 'application/json' ));
+            ;
         }
 
         return new JsonResponse(array('status' => false, 'msg' => 'invalid file'), 200, array( 'Content-Type' => 'application/json' ));
@@ -149,7 +135,7 @@ class ModuleController extends Controller
     final private function unzipTest($fileName)
     {
         sleep(2);
-        // unsip process go here
+        // unzip process go here
         return true;
     }
 

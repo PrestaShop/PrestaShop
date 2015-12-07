@@ -40,7 +40,7 @@ admin_module_manage_update_all:
 
 admin_module_import:
     path:     /import/{module_name}
-    methods:  [POST, GET]
+    methods:  [POST]
     defaults:
         module_name:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::importModuleAction
