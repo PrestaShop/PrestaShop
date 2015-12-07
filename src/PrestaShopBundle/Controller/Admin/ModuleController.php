@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ModuleController extends Controller
 {
@@ -43,6 +44,27 @@ class ModuleController extends Controller
             ));
     }
 
+    /**
+     * Controller resposible for displaying "Catalog" section of Module management pages
+     * @param  Request $request
+     * @return Response
+     */
+    public function importAction(Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['add_module'] = array(
+            'href' => $this->generateUrl('admin_module_import'),
+            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'icon' => 'process-icon-new',
+            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
+        );
+        return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
+            'layoutHeaderToolbarBtn' => $toolbarButtons
+        ));
+    }
+
     public function moduleAction(Request $request)
     {
         $action = $request->attributes->get('action');
@@ -64,25 +86,67 @@ class ModuleController extends Controller
         return $this->redirect($this->generateUrl('admin_module_catalog'));
     }
 
-     /**
-      * Controller resposible for displaying "Catalog" section of Module management pages
-      * @param  Request $request
-      * @return Response
-      */
-    public function importAction(Request $request)
+    /**
+     * Controller resposible for displaying "Catalog" section of Module management pages
+     * @param  Request $request
+     * @return Response
+     */
+    public function importModuleAction(Request $request)
     {
-        $translator = $this->container->get('prestashop.adapter.translator');
-        // toolbarButtons
-        $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
-            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
-            'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
-        );
-        return $this->render('PrestaShopBundle:Admin/Module:import.html.twig', array(
-                'layoutHeaderToolbarBtn' => $toolbarButtons
-            ));
+        $action = $request->attributes->get('action');
+        $moduleName = $request->attributes->get('module_name').'.zip';
+
+        $response = new StreamedResponse();
+
+        // $file = $request->files->get($moduleName);
+
+        $file = 'test';
+        // $file = false;
+
+        if ($file) {
+            // $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $fileName);
+            $fileName = md5(uniqid()) . '.zip';
+
+            ob_flush();
+            $response->setCallback(function () use ($moduleName, $fileName) {
+
+                if (!$this->unzipTest($fileName)) {
+                    return json_encode(array('status' => false, 'msg' => 'Cannot unzip module'));
+                }
+
+                echo json_encode(array('status' => true, 'msg' => 'module extracted'));
+                ob_flush();
+                flush();
+
+                if (!$this->unzipTest($moduleName)) {
+                    return json_encode(array('status' => false, 'msg' => 'invalid module'));
+                }
+
+                echo json_encode(array('status' => true, 'msg' => 'module ready to intall'));
+                ob_flush();
+                flush();
+
+                if (!$this->unzipTest($fileName)) {
+                    return json_encode(array('status' => false, 'msg' => 'Cannot install module'));
+                }
+               
+                echo json_encode(array('status' => true, 'msg' => 'module isntalled'));
+                ob_flush();
+                flush();
+
+            });
+
+            return $response->send();
+        }
+
+        return new JsonResponse(array('status' => false, 'msg' => 'invalid file'), 200, array( 'Content-Type' => 'application/json' ));
+    }
+
+    final private function unzipTest($fileName)
+    {
+        sleep(2);
+        // unsip process go here
+        return true;
     }
 
     final private function createCatalogModuleList(array $moduleFullList)

@@ -39,10 +39,11 @@ admin_module_manage_update_all:
         _controller: PrestaShopBundle\Controller\Admin\ModuleController::moduleAction
 
 admin_module_import:
-    path:     /manage/import
-    methods:  [GET, POST]
+    path:     /import/{module_name}
+    methods:  [POST, GET]
     defaults:
-        _controller: PrestaShopBundle\Controller\Admin\ModuleController::importAction
+        module_name:
+        _controller: PrestaShopBundle\Controller\Admin\ModuleController::importModuleAction
         
 admin_module_notification:
     path:     /notifications
