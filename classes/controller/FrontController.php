@@ -493,6 +493,7 @@ class FrontControllerCore extends Controller
         $this->context->currency = $currency;
 
         $customer = $this->getTemplateVarCustomer();
+        $urls = $this->getTemplateVarUrls();
 
         /**
          * Template vars assignation
@@ -503,14 +504,15 @@ class FrontControllerCore extends Controller
             'language' => $this->objectSerializer->toArray($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
-            'urls' => $this->getTemplateVarUrls(),
+            'urls' => $urls,
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
         ]);
 
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
-            'cart' => ['id_address_delivery' => 1, 'id_address_invoice' => 1, ],
+            'cart' => ['id_address_delivery' => 1, 'id_address_invoice' => 1, ], // StarterTheme: Set proposer ids
+            'urls' => $urls,
         ]]);
     }
 

@@ -30,7 +30,7 @@
 
       {if !$customer.is_logged}
         {block name="checkout_login_form"}
-          <section class="login-form ps-shown-by-js">
+          <section class="login-form -ps-hidden">
             {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
           </section>
         {/block}
