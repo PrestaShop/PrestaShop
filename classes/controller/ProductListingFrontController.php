@@ -295,19 +295,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         /**
          * The controller is agnostic of facets.
-         * It's up to the search module to add facets to the query
-         * if it supports it.
+         * It's up to the search module to use /define them.
          *
          * Facets are encoded in the "q" URL parameter, which is passed
-         * to the search provider through the query's encodedFacets property.
+         * to the search provider through the query's "$encodedFacets" property.
          */
 
         $query->setEncodedFacets($encodedFacets);
 
-        // Now the query contains all facets, that is,
-        // additional ways to refine the query that are defined
-        // by the module but of which the controller knows nothing.
-        //
         // We're ready to run the actual query!
 
         $result = $provider->runQuery(
@@ -344,7 +339,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // prepare the pagination
         $paginationResult = $result->getPaginationResult();
+        // compute total number of pages if not already done by search provider
         $this->inferMissingPaginationInformation($query, $paginationResult);
+        // get it in the correct format for the template
         $pagination = $this->getTemplateVarPagination(
             $paginationResult
         );
