@@ -12,6 +12,10 @@
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
+    {% endstylesheets %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -26,9 +30,17 @@
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    {% javascripts '@PrestaShopBundle/Resources/public/admin/js/module/drop.js'
+    '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js' %}
+    <script src="{{ asset_url|admin_asset_path }}"></script>
+    {% endjavascripts %}
+
+
 {% endblock %}
 
 {% block content %}
+    {# Contains toolbar-nav for module page #}
+    {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_import.html.twig' %}
     {# Contains menu with Selection/Categories/Popular and Tag Search #}
     {% include 'PrestaShopBundle:Admin/Module/_partials:_modules_menu_top.html.twig' with { 'topMenuData': topMenuData } %}
     {# Contains sorting options #}

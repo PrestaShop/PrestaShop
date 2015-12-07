@@ -22,12 +22,16 @@ class ModuleController extends Controller
         // toolbarButtons
         $toolbarButtons = array();
         $toolbarButtons['add_module'] = array(
-            'href' => $this->generateUrl('admin_module_import'),
+            'href' => '#',
             'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
             'icon' => 'process-icon-new',
-            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
+            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'class' => 'slut',
+            'id' => 'test',
+            'test' => 'test'
         );
 
+        //<a class="module-read-more-grid-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more">Read More</a>
         $filter = [];
         if ($keyword !== null) {
             $filter['search'] = $keyword;
