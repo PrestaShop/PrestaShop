@@ -2,11 +2,12 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ModuleController extends Controller
 {
@@ -70,22 +71,31 @@ class ModuleController extends Controller
 
     public function moduleAction(Request $request)
     {
-        $action = $request->attributes->get('action');
-        $modules = array($request->attributes->get('module_name'));
-        $action = implode(array($action, 'Module'));
+        $action = $request->attributes->get('action'). 'Module';
+        $module = $request->attributes->get('module_name');
 
         $ret = array();
         if (method_exists($this, $action)) {
-            $ret = array_combine($modules, array_map(array($this, $action), $modules));
+            try {
+                // ToDo : Check if allowed to call this action
+                $ret[$module] = $this->{$action}($module);
+            } catch (Exception $e) {
+                $ret[$module]['status'] = false;
+                $ret[$module]['msg'] = $e->getMessage();
+            }
         } else {
-            return new Response('Invalid action', 200, array( 'Content-Type' => 'application/json' ));
+            $ret[$module]['status'] = false;
+            $ret[$module]['msg'] = 'Invalid action';
         }
 
         if ($request->isXmlHttpRequest()) {
-            $res = json_encode($ret);
-            return new Response(empty($res) ? '[]' : $res, 200, array( 'Content-Type' => 'application/json' ));
+            return new JsonResponse($ret, 200);
         }
 
+        // We need a better error handler here. Meanwhile, I throw an exception
+        if (! $ret[$module]['status']) {
+            throw new Exception($ret[$module]['msg']);
+        }
         return $this->redirect($this->generateUrl('admin_module_catalog'));
     }
 
@@ -168,7 +178,7 @@ class ModuleController extends Controller
 
         if (isset($activeMenu)) {
             if (!isset($topMenuData->{$activeMenu})) {
-                throw new \Exception("Menu '$activeMenu' not found in Top Menu data", 1);
+                throw new Exception("Menu '$activeMenu' not found in Top Menu data", 1);
             } else {
                 $topMenuData->{$activeMenu}->class = 'active';
             }
@@ -179,20 +189,39 @@ class ModuleController extends Controller
 
     public function installModule($module_name)
     {
-        $status = 'ok!';
-        $msg = sprintf('Module %s is now installed', $module_name);
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        if (! $modulesProvider->isModuleOnDisk($module_name)) {
+            $modulesProvider->setModuleOnDiskFromAddons($module_name);
+        }
 
-        // sleep(2);
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->install();
+        if ($status) {
+            $msg = sprintf('Module %s is now installed', $module_name);
+        } else {
+            $msg = sprintf('Could not install module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
 
     public function uninstallModule($module_name)
     {
-        $status = 'ok';
-        $msg = sprintf('Module %s is now installed', $module_name);
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
-        // sleep(2);
+        // Module uninstall
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->uninstall();
+
+        if ($status) {
+            // Module files deletion
+            $fs = new Filesystem();
+            $fs->remove(_PS_MODULE_DIR_.$module_name);
+
+            $msg = sprintf('Module %s is now uninstalled', $module_name);
+        } else {
+            $msg = sprintf('Could not uninstall module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }

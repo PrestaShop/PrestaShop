@@ -102,6 +102,37 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return $this->catalog_categories;
     }
 
+    public function getModule($name)
+    {
+        $module = \Module::getInstanceByName($name);
+
+        if (!$module) {
+            throw new \Exception('Cannot find module '. $name);
+        }
+
+        return $module;
+    }
+
+    public function isModuleOnDisk($name)
+    {
+        return file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') && (bool)\Module::getInstanceByName($name);
+    }
+
+    public function setModuleOnDiskFromAddons($name)
+    {
+        // Note : Data caching should be handled by the addons data provider
+
+        $addons_provider = new AddonsDataProvider();
+        // Check if the module can be downloaded from addons
+        foreach ($this->getCatalogModules() as $catalog_module) {
+            if ($catalog_module->name == $name) {
+                return $addons_provider->downloadModule($catalog_module->id);
+            }
+        }
+
+        return false;
+    }
+
     protected function applyModuleFilters(array $filters)
     {
         if (! count($filters)) {

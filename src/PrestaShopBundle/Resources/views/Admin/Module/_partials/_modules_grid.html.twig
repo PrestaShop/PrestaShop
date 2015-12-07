@@ -2,7 +2,7 @@
 <div id="modules-grid">
     <div class="row">
         {% for module in modules %}
-                <div class="module-item-grid col-md-3" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
+                <div class="module-item-grid col-lg-3 col-md-4 col-sm-6" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
                 data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
                 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}">
                      <div class="module-item-wrapper-grid">

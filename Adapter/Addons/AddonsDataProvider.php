@@ -43,6 +43,32 @@ class AddonsDataProvider implements AddonsInterface
 {
     protected static $is_addons_up = true;
 
+    public function downloadModule($module_id)
+    {
+        $params = [
+            'id_module' => $module_id,
+            'format' => 'json'
+        ];
+
+        // Module downloading
+        try {
+            $module_data = $this->request('module', $params);
+        } catch (Exception $e) {
+            if (! $this->isAddonsAuthenticated()) {
+                throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
+            } else {
+                throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
+            }
+        }
+
+        $temp_filename = tempnam('', 'mod');
+        if (file_put_contents($temp_filename, $module_data) !== false) {
+            $this->unZip($temp_filename);
+        } else {
+            throw new Exception('Cannot store module content in temporary folder !');
+        }
+    }
+
     /** Does this function should be in a User related class ? **/
     public function isAddonsAuthenticated()
     {
@@ -163,7 +189,7 @@ class AddonsDataProvider implements AddonsInterface
                 continue;
             }
 
-            if ($post_query_data['format'] == 'json') {
+            if ($post_query_data['format'] == 'json' && ctype_print($content)) {
                 $json_result = json_decode($content);
                 if ($json_result === false) {
                     throw new Exception('Cannot decode JSON from Addons');
@@ -191,5 +217,21 @@ class AddonsDataProvider implements AddonsInterface
             'username_addons' => $request->cookies->get('username_addons'),
             'password_addons' => $request->cookies->get('password_addons'),
         ];
+    }
+
+    protected function unZip($filename)
+    {
+        $zip = new \ZipArchive();
+
+        if ($zip->open($filename) === true) {
+            try {
+                $zip->extractTo(_PS_MODULE_DIR_);
+                $zip->close();
+            } catch (Exception $exception) {
+                throw new Exception('Cannot unzip the module', 0, $exception);
+            }
+        } else {
+            throw new Exception('Cannot open the zip file');
+        }
     }
 }
