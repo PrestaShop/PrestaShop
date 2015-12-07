@@ -107,33 +107,21 @@ class ModuleController extends Controller
     public function importModuleAction(Request $request)
     {
         $action = $request->attributes->get('action');
-        $moduleName = $request->attributes->get('module_name').'.zip';
+        $module_name = $request->attributes->get('module_name').'.zip';
 
-        // $file = $request->files->get($moduleName);
-
-        $file = 'test';
-        // $file = false;
+        $file = $request->files->get($module_name);
 
         if ($file) {
-            // $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $fileName);
-            $fileName = md5(uniqid()) . '.zip';
+            $file_name = md5(uniqid()) . '.zip';
+            $file->move(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', $file_name);
 
-            ob_flush();
-            $response->setCallback(function () use ($moduleName, $fileName) {
+            if (!$this->unzipModule($file_name, $module_name)) {
+                return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
+            }
 
-                if (!$this->unzipTest($fileName)) {
-                    return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
-                }
-
-                if (!$this->unzipTest($moduleName)) {
-                    return new JsonResponse(array('status' => false, 'msg' => 'install module'), 200, array( 'Content-Type' => 'application/json' ));
-                }
-
-                if (!$this->unzipTest($fileName)) {
-                    return new JsonResponse(array('status' => false, 'msg' => 'unzip failed'), 200, array( 'Content-Type' => 'application/json' ));
-                }
-
-            });
+            if (!$this->install($module_name)) {
+                return new JsonResponse(array('status' => false, 'msg' => 'Module Failed to install'), 200, array( 'Content-Type' => 'application/json' ));
+            }
 
             return new JsonResponse(array('status' => true, 'msg' => 'Module successfully installed'), 200, array( 'Content-Type' => 'application/json' ));
             ;
@@ -142,10 +130,21 @@ class ModuleController extends Controller
         return new JsonResponse(array('status' => false, 'msg' => 'invalid file'), 200, array( 'Content-Type' => 'application/json' ));
     }
 
-    final private function unzipTest($fileName)
+    final private function unzipModule($file_name, $module_name)
     {
-        sleep(2);
-        // unzip process go here
+        $file = _PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$filename;
+
+        if (file_exist($file)) {
+            $zip_archive = new ZipArchive();
+            $ret = $zip_archive->open($file);
+
+            if ($ret === true) {
+                $zip_archive ->extractTo(_PS_MODULE_DIR_);
+                $zip_archive ->close();
+                return true;
+            }
+        }
+
         return true;
     }
 
