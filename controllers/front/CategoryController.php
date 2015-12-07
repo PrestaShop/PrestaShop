@@ -42,7 +42,10 @@
 
      public function canonicalRedirection($url = '')
      {
-         // FIXME
+         // We don't do canonical redirection because there
+         // are too many possible URLs.
+         // It's no problem, because we have a <link rel="canonical">
+         // on the page.
      }
 
      public function getCanonicalURL()
