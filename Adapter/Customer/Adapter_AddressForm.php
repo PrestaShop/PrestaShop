@@ -34,7 +34,7 @@ class Adapter_AddressForm
     private $ordered_address_fields = [];
     private $required_fields = [];
 
-    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, language $language, Adapter_Translator $translator)
+    public function __construct(Adapter_AddressFormatter $address_formatter, array $fields_value, Language $language, Adapter_Translator $translator)
     {
         $this->address_formatter = $address_formatter;
         $this->language = $language;
@@ -126,7 +126,7 @@ class Adapter_AddressForm
                     $this->ordered_address_fields[$field]['label'] = $this->translator->l('State', 'Address');
                     break;
                 case 'phone':
-                    $this->ordered_address_fields[$field]['label'] = $this->translator->l('Home phone', 'Address');
+                    $this->ordered_address_fields[$field]['label'] = $this->translator->l('Phone', 'Address');
                     break;
                 case 'phone_mobile':
                     $this->ordered_address_fields[$field]['label'] = $this->translator->l('Mobile phone', 'Address');
@@ -161,9 +161,20 @@ class Adapter_AddressForm
             }
         }
 
+        // Checknames
+        if (isset($this->fields_value['lastname']) && $this->fields_value['lastname'] && !Validate::isName($this->fields_value['lastname'])) {
+            $form_errors['lastname'][] = $this->translator->l('Your last name is invalid.', 'Address');
+        }
+        if (isset($this->fields_value['firstname']) && $this->fields_value['firstname'] && !Validate::isName($this->fields_value['firstname'])) {
+            $form_errors['firstname'][] = $this->translator->l('Your first name is invalid.', 'Address');
+        }
+
         // Check phone
-        if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !$this->fields_value['phone'] && !$this->fields_value['phone_mobile']) {
-            $form_errors['phone'][] = $form_errors['phone_mobile'][] = $this->translator->l('You must register at least one phone number.', 'Address');
+        if (isset($this->fields_value['phone']) && $this->fields_value['phone'] && !Validate::isPhoneNumber($this->fields_value['phone'])) {
+            $form_errors['phone'][] = $this->translator->l('The phone number is invalid.', 'Address');
+        }
+        if (isset($this->fields_value['phone_mobile']) && $this->fields_value['phone_mobile'] && !Validate::isPhoneNumber($this->fields_value['phone_mobile'])) {
+            $form_errors['phone_mobile'][] = $this->translator->l('The phone number is invalid.', 'Address');
         }
 
         if ($this->fields_value['id_country']) {

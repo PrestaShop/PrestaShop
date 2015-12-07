@@ -1,9 +1,5 @@
 <section id="checkout-addresses">
 
-  <header>
-    <h1 class="h3">{l s='Addresses'}</h1>
-  </header>
-
   <ul class="actions">
     <li>
       <a  href="{url entity="address" params=['back' => $urls.pages.order]}"
@@ -13,10 +9,10 @@
     </li>
   </ul>
 
-  <form action="{$urls.pages.cart}" method="POST">
+  <form action="{$urls.pages.order}" method="POST">
     <div class="addresses-container">
 
-      <div id="select-delivery-address" class="address-selector">
+      <div id="checkout-address-delivery" class="address-selector">
         <h2 class="h3">{l s='Your delivery address'}</h2>
         {block name="opc_delivery_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
@@ -26,7 +22,11 @@
         {/block}
       </div>
 
-      <div id="select-invoice-address" class="address-selector">
+      {block name="checkout_different_address_checkbox"}
+        {include file="checkout/_partials/form-item-checkout-different-address.tpl"}
+      {/block}
+
+      <div id="checkout-address-invoice" class="address-selector -ps-hidden">
         <h2 class="h3">{l s='Your invoice address'}</h2>
         {block name="opc_invoice_address"}
           {include file="checkout/_partials/address-selector-block.tpl"
