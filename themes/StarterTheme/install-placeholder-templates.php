@@ -20,7 +20,6 @@ $modulesToInclude = [
     'blockpaymentlogo',
     'productpaymentlogos',
     'blocknewsletter',
-    'themeconfigurator',
     'blockbanner',
     'blockbestsellers',
     'blockspecials',
