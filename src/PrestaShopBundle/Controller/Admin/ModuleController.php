@@ -133,7 +133,7 @@ class ModuleController extends Controller
         return (array)$topMenuData;
     }
 
-    public function installModule($module_name)
+    protected function installModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         if (! $modulesProvider->isModuleOnDisk($module_name)) {
@@ -151,7 +151,7 @@ class ModuleController extends Controller
         return array('status' => $status, 'msg' => $msg);
     }
 
-    public function uninstallModule($module_name)
+    protected function uninstallModule($module_name)
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
 
@@ -172,52 +172,87 @@ class ModuleController extends Controller
         return array('status' => $status, 'msg' => $msg);
     }
 
-    public function configureModule($module_name)
+    public function configureModuleAction($module_name)
     {
-        $msg = sprintf('Module %s is now configured', $module_name);
-        $status = 'ok';
+        $modulesProvider    = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $legacyUrlGenerator = $this->container->get('prestashop.core.admin.url_generator_legacy');
 
-        // sleep(2);
+        /* @var $legacyUrlGenerator UrlGeneratorInterface */
+        $redirectionParams = array(
+            // do not transmit limit & offset: go to the first page when redirecting
+            'configure' => $module_name,
+        );
+        return $this->redirect($legacyUrlGenerator->generate('admin_module_configure_action',
+                    $redirectionParams), 302);
+    }
+
+    protected function enableModule($module_name)
+    {
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->enable();
+
+        if ($status) {
+            $msg = sprintf('Module %s is now enabled', $module_name);
+        } else {
+            $msg = sprintf('Could not enable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
 
-    public function enableModule($module_name)
+    protected function disableModule($module_name)
     {
-        $msg = sprintf('Module %s is now enabled', $module_name);
-        $status = 'ok';
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $module = $modulesProvider->getModule($module_name);
+        $status = $module->disable();
 
-        // sleep(2);
+        if ($status) {
+            $msg = sprintf('Module %s is now disabled', $module_name);
+        } else {
+            $msg = sprintf('Could not disable module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
 
-    public function disableModule($module_name)
+    protected function resetModule($module_name)
     {
-        $msg = sprintf('Module %s is now disabled', $module_name);
-        $status = 'ok';
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $request = Request::createFromGlobals();
 
-        // sleep(2);
+        $module = $modulesProvider->getModule($module_name);
+        if ($request->request->has('keep_data') && method_exists($this, 'reset')) {
+            $status = $module->disable();
+        } else {
+            $status = ($module->uninstall() && $module->install());
+        }
+
+        if ($status) {
+            $msg = sprintf('Module %s has been reset', $module_name);
+        } else {
+            $msg = sprintf('Could not reset module %s (Additionnal Information: %s)', $module_name, join(', ', $module->getErrors()));
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }
 
-    public function resetModule($module_name)
+    protected function updateModule($module_name)
     {
-        $msg = sprintf('Module %s is now reseted', $module_name);
-        $status = 'ok';
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $module = $modulesProvider->getModule($module_name);
+        $old_version = $module->version;
 
-        // sleep(2);
+        $modulesProvider->setModuleOnDiskFromAddons($module_name);
+        $module = $modulesProvider->getModule($module_name);
+        $new_version = $module->version;
 
-        return array('status' => $status, 'msg' => $msg);
-    }
-
-    public function updateModule($module_name)
-    {
-        $msg = sprintf('Module %s is now updated', $module_name);
-        $status = 'ok';
-
-        // sleep(2);
+        $status = version_compare($old_version, $new_version, '>');
+        if ($status) {
+            $msg = sprintf('Module %s has been updated from %s to %s', $module_name, $old_version, $new_version);
+        } else {
+            $msg = sprintf('Could not update module %s (Version unchanged)', $module_name);
+        }
 
         return array('status' => $status, 'msg' => $msg);
     }

@@ -201,7 +201,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         if (!$this->catalog_categories || !$this->catalog_modules) {
             $params = ['format' => 'json'];
-            $requests = ['must-have', 'service', 'partner', 'native'];
+            $requests = ['must-have', 'service', 'partner', 'native', 'native_all'];
             if ($addons_provider->isAddonsAuthenticated()) {
                 $requests[] = 'customer';
             }
