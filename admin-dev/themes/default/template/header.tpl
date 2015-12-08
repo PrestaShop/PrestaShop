@@ -306,7 +306,7 @@
 					{/if}
 {if {$base_url}}
 					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
+						<a href="{$base_url|escape:'html':'UTF-8'}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
 						</a>
