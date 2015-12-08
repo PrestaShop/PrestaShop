@@ -68,9 +68,9 @@ class AdminOrdersControllerCore extends AdminController
 
         $this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-		INNER JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
-		INNER JOIN `'._DB_PREFIX_.'country` country ON address.id_country = country.id_country
-		INNER JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int)$this->context->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'address` address ON address.id_address = a.id_address_delivery
+		LEFT JOIN `'._DB_PREFIX_.'country` country ON address.id_country = country.id_country
+		LEFT JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int)$this->context->language->id.')
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
         $this->_orderBy = 'id_order';
