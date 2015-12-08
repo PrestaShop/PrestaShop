@@ -111,7 +111,6 @@
     "prestashop/statsstock": "dev-master",
     "prestashop/statsvisits": "dev-master",
     "prestashop/trackingfront": "dev-master",
-    "prestashop/themeconfigurator": "dev-master",
     "prestashop/vatnumber": "dev-master"
   },
   "require-dev": {

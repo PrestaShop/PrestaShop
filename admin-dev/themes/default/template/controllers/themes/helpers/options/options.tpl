@@ -120,21 +120,6 @@
 				</p>
 				{/if}
 
-				{if isset($cur_theme.tc) && $cur_theme.tc}
-				<hr />
-				<h4>{l s='Customize your theme'}</h4>
-				<div class="row">
-					<div class="col-sm-8">
-						<p>{l s='Customize the main elements of your theme: sliders, banners, colors, etc.'}</p>
-					</div>
-					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|escape:'html':'UTF-8'}&amp;configure=themeconfigurator">
-							<i class="icon icon-list-alt"></i>
-							{l s='Theme Configurator'}
-						</a>
-					</div>
-				</div>
-				{/if}
 				<hr />
 				<h4>{l s='Configure your theme'}</h4>
 				<div class="row">
