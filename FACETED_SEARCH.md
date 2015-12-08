@@ -67,8 +67,7 @@ A facet is represented by the `PrestaShop\PrestaShop\Core\Business\Product\Searc
 We introduce the `PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery` object to hold all search query information.
 
 Basically, this object contains:
-- something that tells modules where the query came from (only `id_category` at the moment, but we may add `id_supplier` for `SupplierController` etc.). This is the minimal filter that the search module is supposed to implement.
-- an array of `Facet`s
+- something that tells modules where the query came from (`id_category`, `id_supplier` for `SupplierController` etc.). This is the minimal filter that the search module is supposed to implement.
 - the `SortOrder` that is requested
 - the `page` number that is requested
 - the `resultsPerPage`, i.e. the number of products per page that is expected
