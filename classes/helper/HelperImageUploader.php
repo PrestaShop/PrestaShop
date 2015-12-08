@@ -46,6 +46,10 @@ class HelperImageUploaderCore extends HelperUploader
     {
         $file['error'] = $this->checkUploadError($file['error']);
 
+        if ($file['error']) {
+            return false;
+        }
+
         $post_max_size = Tools::convertBytes(ini_get('post_max_size'));
 
         $upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
