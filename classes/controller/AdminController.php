@@ -1887,17 +1887,6 @@ class AdminControllerCore extends Controller
             'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
             'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
         ));
-
-        $module = Module::getInstanceByName('themeconfigurator');
-        if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL()) {
-            $request =
-            'live_configurator_token='.$module->getLiveConfiguratorToken()
-            .'&id_employee='.(int)$this->context->employee->id
-            .'&id_shop='.(int)$this->context->shop->id
-            .(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-            .(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
-            $this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
-        }
     }
 
     private function getTabs($parentId = 0, $level = 0)

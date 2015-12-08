@@ -196,10 +196,6 @@ class ThemeCore extends ObjectModel
                 foreach ($xml_theme->author->attributes() as $key => $value) {
                     $theme_arr['author_'.$key] = (string)$value;
                 }
-
-                if ($theme_arr['theme_name'] == 'default-bootstrap') {
-                    $theme_arr['tc'] = Module::isEnabled('themeconfigurator');
-                }
             }
         } else {
             // If no xml we use data from database

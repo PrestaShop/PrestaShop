@@ -75,15 +75,12 @@ DELETE FROM `PREFIX_hook_module` WHERE id_hook = (SELECT id_hook FROM `PREFIX_ho
 
 /* displayHome */
 SET @id_hook = (SELECT id_hook FROM `PREFIX_hook` WHERE name = 'displayHome');
-UPDATE `PREFIX_hook_module` SET position = 1
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
-AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 2
+UPDATE `PREFIX_hook_module` SET position = 1
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockfacebook')
 AND id_hook = @id_hook;
 
-UPDATE `PREFIX_hook_module` SET position = 3
+UPDATE `PREFIX_hook_module` SET position = 2
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockcmsinfo')
 AND id_hook = @id_hook;
 
@@ -120,10 +117,6 @@ WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blocktopm
 AND id_hook = @id_hook;
 
 UPDATE `PREFIX_hook_module` SET position = 4
-WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'themeconfigurator')
-AND id_hook = @id_hook;
-
-UPDATE `PREFIX_hook_module` SET position = 5
 WHERE id_module = (SELECT id_module FROM `PREFIX_module` WHERE name = 'blockwhislist')
 AND id_hook = @id_hook;
 
