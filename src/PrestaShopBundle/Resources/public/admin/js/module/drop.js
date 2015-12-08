@@ -5,7 +5,6 @@ $(document).ready(function() {
 
     var importC = new AdminModuleImport();
     importC.init();
-
 });
 
 /**
@@ -18,7 +17,7 @@ var AdminModuleImport = function() {
      * Initialize all listners and bind everything
      * @method init
      * @memberof AdminModule
-     */
+     f*/
     this.init = function() {
         this.initDropzone();
     };
@@ -41,7 +40,10 @@ var AdminModuleImport = function() {
                 setTimeout(function() {
                     $( ".module-import-loader" ).removeClass( "onclic" );
                     $( ".module-import-loader" ).addClass( "validate" );
+                    $('.configure-message').css('display', 'block');
                 }, 2250 );
+                var obj = jQuery.parseJSON(file.xhr.response);
+                $( ".dropzone" ).attr( "action", "manage/action/configure/" + obj.module_name);
             }
         };
     };

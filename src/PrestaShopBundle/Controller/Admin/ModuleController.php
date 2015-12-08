@@ -123,7 +123,7 @@ class ModuleController extends Controller
                 return new JsonResponse(array('status' => false, 'msg' => 'Module Failed to install'), 200, array( 'Content-Type' => 'application/json' ));
             }
 
-            return new JsonResponse(array('status' => true, 'msg' => 'Module successfully installed'), 200, array( 'Content-Type' => 'application/json' ));
+            return new JsonResponse(array('status' => true, 'msg' => $module_name.' successfully installed', 'module_name' => $module_name), 200, array( 'Content-Type' => 'application/json' ));
             ;
         }
 

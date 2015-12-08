@@ -6,6 +6,15 @@
 
 @charset "UTF-8";
 
+.configure-message {
+    margin-left: 38%;
+    margin-top: 1%;
+    border: 1px solid #000000;
+    color: #000000;
+    background: #DDDDDD;
+    display: none;
+}
+
 .install-message {
     font-size: 17px;
     font-weight: bold;
