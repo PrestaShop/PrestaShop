@@ -2493,11 +2493,12 @@ class AdminImportControllerCore extends AdminController
 
                     if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                         ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
-                        if (!$validateOnly) {
+                        // here, cannot avoid attributeGroup insertion to avoid an error during validation step.
+                        //if (!$validateOnly) {
                             $obj->add();
-                            $obj->associateTo($id_shop_list);
-                            $groups[$group] = $obj->id;
-                        }
+                        $obj->associateTo($id_shop_list);
+                        $groups[$group] = $obj->id;
+                        //}
                     } else {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
                     }
