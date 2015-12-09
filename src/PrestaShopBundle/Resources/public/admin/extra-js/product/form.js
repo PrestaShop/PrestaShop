@@ -357,7 +357,7 @@ var stock = (function() {
 			});
 
 			/** if GSA activation change on 'depend on stock', update quantities fields */
-			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1').on('change', function(e) {
+			$('#form_step3_depends_on_stock_0, #form_step3_depends_on_stock_1, #form_step3_advanced_stock_management').on('change', function(e) {
 				stock.updateQtyFields();
 				warehouseCombinations.refresh();
 			});
@@ -369,7 +369,9 @@ var stock = (function() {
 				$('#form_step3_qty_0').attr('readonly', 'readonly');
 				$('#product_qty_0_shortcut_div').hide();
 
-				if ($('#form_step3_depends_on_stock_1').length == 0 || $('#form_step3_depends_on_stock_1:checked').length == 1) {
+				if ($('#form_step3_depends_on_stock_1').length == 0 ||
+					$('#form_step3_depends_on_stock_1:checked').length == 1 ||
+					$('#form_step3_advanced_stock_management:checked').length == 0) {
 					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').removeAttr('readonly');
 				} else {
 					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').attr('readonly', 'readonly');
@@ -378,7 +380,9 @@ var stock = (function() {
 			} /** else, there is no combinations */
 
 			/** if GSA and if is manual */
-			if ($('#form_step3_depends_on_stock_1').length == 0 || $('#form_step3_depends_on_stock_1:checked').length == 1) {
+			if ($('#form_step3_depends_on_stock_1').length == 0 ||
+				$('#form_step3_depends_on_stock_1:checked').length == 1 ||
+				$('#form_step3_advanced_stock_management:checked').length == 0) {
 				$('#form_step3_qty_0').removeAttr('readonly');
 				$('#product_qty_0_shortcut_div').show();
 				return;
@@ -860,15 +864,29 @@ var form = (function() {
 		});
 	}
 
+	function switchLanguage(iso_code) {
+		$('div.translations.tabbable > div > div.tab-pane:not(.translation-label-'+iso_code+')').removeClass('active');
+		$('div.translations.tabbable > div > div.tab-pane.translation-label-'+iso_code).addClass('active');
+	}
+
 	return {
 		'init': function() {
 			elem.submit(function( event ) {
 				event.preventDefault();
 				send();
 			});
+
+			elem.find('#form_switch_language').change(function( event ) {
+				console.log(event.target.value);
+				event.preventDefault();
+				switchLanguage(event.target.value);
+			});
 		},
 		'send': function() {
 			send();
+		},
+		'switchLanguage': function(iso_code) {
+			switchLanguage(iso_code);
 		}
 	};
 })();

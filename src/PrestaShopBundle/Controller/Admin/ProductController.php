@@ -239,7 +239,8 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
-        $legacyContext = $this->get('prestashop.adapter.legacy.context')->getContext();
+        $legacyContextService = $this->get('prestashop.adapter.legacy.context');
+        $legacyContext = $legacyContextService->getContext();
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
 
         // Redirect to legacy controller (FIXME: temporary behavior)
@@ -373,6 +374,9 @@ class ProductController extends FrameworkBundleAdminController
             return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
         }
 
+        // languages for switch dropdown
+        $languages = $legacyContextService->getLanguages();
+
         return array(
             'form' => $form->createView(),
             'id_product' => $id,
@@ -380,6 +384,11 @@ class ProductController extends FrameworkBundleAdminController
             'asm_globally_activated' => $stockManager->isAsmGloballyActivated(),
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
+            'showContentHeader' => false,
+            'help_link' => 'http://help.prestashop.com/'.$legacyContextService->getEmployeeLanguageIso().'/doc/'
+                .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
+            'languages' => $languages,
+            'default_language_iso' => $languages[0]['iso_code'],
         );
     }
 

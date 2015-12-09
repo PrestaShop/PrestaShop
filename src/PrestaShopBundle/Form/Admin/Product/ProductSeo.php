@@ -59,7 +59,8 @@ class ProductSeo extends CommonModelAbstractType
         $builder->add('meta_title', new TranslateType(
             'text',
             array('required' => false),
-            $this->locales
+            $this->locales,
+            true
         ), array(
             'label' => $this->translator->trans('Meta title', [], 'AdminProducts'),
             'required' => false
@@ -67,7 +68,8 @@ class ProductSeo extends CommonModelAbstractType
         ->add('meta_description', new TranslateType(
             'text',
             array('required' => false),
-            $this->locales
+            $this->locales,
+            true
         ), array(
             'label' => $this->translator->trans('Meta description', [], 'AdminProducts'),
             'required' => false
@@ -75,7 +77,8 @@ class ProductSeo extends CommonModelAbstractType
         ->add('link_rewrite', new TranslateType(
             'text',
             array(),
-            $this->locales
+            $this->locales,
+            true
         ), array('label' => $this->translator->trans('Friendly URL:', [], 'AdminProducts')));
     }
 

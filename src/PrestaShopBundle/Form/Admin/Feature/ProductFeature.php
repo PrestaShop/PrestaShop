@@ -80,7 +80,7 @@ class ProductFeature extends CommonModelAbstractType
             'required' =>  false,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales), array('required' =>  false));
+        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array('required' =>  false));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();

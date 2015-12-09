@@ -115,13 +115,13 @@ class ProductInformation extends CommonModelAbstractType
                     new Assert\NotBlank(),
                     new Assert\Length(array('min' => 3))
                 )
-            ), $this->locales), array(
+            ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Name', [], 'AdminProducts')
             ))
         ->add('description', new TranslateType('textarea', array(
                 'attr' => array('class' => 'autoload_rte'),
                 'required' => false
-            ), $this->locales), array(
+            ), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
                 'required' => false
             ))
