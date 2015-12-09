@@ -90,6 +90,22 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams), 302);
         }
 
+        // If POST, then check/cast POST params formats
+        if ($request->isMethod('POST')) {
+            foreach ($request->request->all() as $param => $value) {
+                switch ($param) {
+                    case 'filter_column_id_product':
+                    case 'filter_category':
+                        if (!is_numeric($value)) {
+                            $request->request->set($param, '');
+                        }
+                        if (is_numeric($value) && $value < 0) {
+                            $request->request->set($param, '');
+                        }
+                }
+            }
+        }
+
         $logger = $this->container->get('logger');
         /* @var $logger LoggerInterface */
 

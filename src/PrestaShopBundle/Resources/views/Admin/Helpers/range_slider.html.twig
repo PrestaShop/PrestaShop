@@ -51,6 +51,11 @@
             value: value,
             id: '{{ input_name }}Slider'
         });
+        {% if on_change_func_name is defined %}
+            sliderInput.on('slideStop', function() {
+                {{ on_change_func_name|raw }}
+            });
+        {% endif %}
     });
 </script>
 <style>
