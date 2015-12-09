@@ -37,6 +37,7 @@ $(document).ready(function() {
 	combinationGenerator.init();
 	specificPrices.init();
 	warehouseCombinations.init();
+	customFieldCollection.init();
 
 	/** update price and shortcut price field on change */
 	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
@@ -869,6 +870,52 @@ var form = (function() {
 		},
 		'send': function() {
 			send();
+		}
+	};
+})();
+
+
+/**
+ * Custom field collection management
+ */
+var customFieldCollection = (function() {
+
+	var collectionHolder = $('ul.customFieldCollection');
+	var newItemBtn = $('<a href="#" class="btn btn-primary btn-xs">+</a>');
+	var newItem = $('<li class="add"></li>').append(newItemBtn);
+	var removeLink = '<a href="#" class="delete btn btn-primary btn-xs">-</a>';
+
+	/** Add a feature */
+	function add(){
+		var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+		newItem.before($('<li></li>').prepend(removeLink, newForm));
+	}
+
+	/**
+	 * Remove a feature
+	 * @param {object} elem - The clicked link
+	 */
+	function remove(elem){
+		elem.parent().remove();
+	}
+
+	return {
+		'init': function() {
+			/** Create add button, and vreate first form */
+			collectionHolder.append(newItem);
+
+			/** Click event on the add button */
+			newItemBtn.on('click', function(e) {
+				e.preventDefault();
+				add();
+			});
+
+			/** Click event on the remove button */
+			$(document).on('click', 'ul.customFieldCollection a.delete', function(e) {
+				e.preventDefault();
+				remove($(this));
+			});
+
 		}
 	};
 })();

@@ -303,6 +303,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             }
         }
 
+        //force customization fields values
+        $form_data['uploadable_files'] = 0;
+        $form_data['text_fields'] = 0;
+
         //map all
         $new_form_data = [];
         foreach ($form_data as $k => $v) {
@@ -395,6 +399,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     'available_for_order' => true,
                     'show_price' => true,
                 ],
+                'custom_fields' => []
             ]
         ];
 
@@ -508,7 +513,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     },
                     $this->supplierAdapter->getProductSuppliers($this->product->id)
                 ),
-                'default_supplier' => $this->product->id_supplier
+                'default_supplier' => $this->product->id_supplier,
+                'custom_fields' => $this->getCustomFields()
             ]
         ];
 
@@ -519,6 +525,36 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations());
 
         return $form_data;
+    }
+
+    /**
+     * Generate form custom fields configuration
+     *
+     * @return array
+     */
+    private function getCustomFields()
+    {
+        $finalCustomFields = [];
+        $customizationFields = [];
+        foreach ($this->product->getCustomizationFields() as $customizationField) {
+            $customizationFields = array_merge($customizationFields, $customizationField);
+        }
+
+        foreach ($customizationFields as $customizationField) {
+            $baseObject = [
+                'label' => [],
+                'type' => $customizationField[$this->locales[0]['id_lang']]['type'],
+                'require' => $customizationField[$this->locales[0]['id_lang']]['required'] == 1 ? true : false,
+            ];
+
+            //add translation name
+            foreach ($this->locales as $locale) {
+                $baseObject['label'][$locale['id_lang']] = $customizationField[$locale['id_lang']]['name'];
+            }
+            $finalCustomFields[] = $baseObject;
+        }
+
+        return $finalCustomFields;
     }
 
     /**

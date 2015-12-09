@@ -31,6 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
 /**
@@ -139,6 +140,17 @@ class ProductOptions extends CommonModelAbstractType
                 'label' => $supplier,
             ));
         }
+
+        $builder->add('custom_fields', 'collection', array(
+            'type' => new ProductCustomField(
+                $this->translator,
+                $this->context
+            ),
+            'label' => $this->translator->trans('Customization', [], 'AdminProducts'),
+            'prototype' => true,
+            'allow_add' => true,
+            'allow_delete' => true
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();

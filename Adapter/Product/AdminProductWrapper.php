@@ -438,4 +438,74 @@ class AdminProductWrapper
 
         return array_values($specific_price_priorities);
     }
+
+    /**
+     * Process customization collection
+     *
+     * @param object $product
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function processProductCustomization($product, $data)
+    {
+        //remove customization field langs
+        foreach ($product->getCustomizationFieldIds() as $customizationFiled) {
+            \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field_lang WHERE `id_customization_field` = '.(int)$customizationFiled['id_customization_field']);
+        }
+
+        //remove customization for the product
+        \Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customization_field WHERE `id_product` = '.(int)$product->id);
+
+        //create new customizations
+        $countFieldText = 0;
+        $countFieldFile = 0;
+        $productCustomizableValue = 0;
+        $hasRequiredField = false;
+        $shopList = \ShopCore::getContextListShopID();
+
+        if ($data) {
+            foreach ($data as $customization) {
+                if ($customization['require']) {
+                    $hasRequiredField = true;
+                }
+
+                //create label
+                \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field` (`id_product`, `type`, `required`)
+                    VALUES ('.(int)$product->id.', '.(int)$customization['type'].', '.($customization['require'] ? 1 : 0).')');
+
+                $id_customization_field = (int)\Db::getInstance()->Insert_ID();
+
+                // Create multilingual label name
+                $langValues = '';
+                foreach (\LanguageCore::getLanguages() as $language) {
+                    $name = $customization['label'][$language['id_lang']];
+                    foreach ($shopList as $id_shop) {
+                        $langValues .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.$id_shop .',\''.$name.'\'), ';
+                    }
+                }
+                \Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES '.rtrim($langValues, ', '));
+
+                if ($customization['type'] == 0) {
+                    $countFieldFile++;
+                } else {
+                    $countFieldText++;
+                }
+            }
+
+            $productCustomizableValue = $hasRequiredField ? 2 : 1;
+        }
+
+        //update product count fields labels
+        \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `customizable` = '.$productCustomizableValue.', `uploadable_files` = '.(int)$countFieldFile.', `text_fields` = '.(int)$countFieldText.' WHERE `id_product` = '.(int)$product->id);
+
+        //update product_shop count fields labels
+        \ObjectModelCore::updateMultishopTable('product', array(
+            'customizable' => $productCustomizableValue,
+            'uploadable_files' => (int)$countFieldFile,
+            'text_fields' => (int)$countFieldText,
+        ), 'a.id_product = '.(int)$product->id);
+
+        \ConfigurationCore::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
+    }
 }
