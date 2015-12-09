@@ -29,8 +29,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public $outPutHtml = '';
     private $headerToolbarBtn = array();
     private $title;
+    private $showContentHeader = true;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true)
     {
         parent::__construct();
 
@@ -40,6 +41,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->controller_name = $_GET['controller'] = $controllerName;
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->headerToolbarBtn = $headerToolbarBtn;
+        $this->showContentHeader = $showContentHeader;
     }
 
     public function viewAccess()
@@ -67,6 +69,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->addHeaderToolbarBtn();
 
         parent::initContent();
+
+        $this->show_page_header_toolbar = (bool) $this->showContentHeader;
 
         if ($this->title) {
             $this->context->smarty->assign(array('title' => $this->title));

@@ -173,7 +173,7 @@
 {% block translatefields_widget %}
     {{ form_errors(form) }}
     <div class="translations tabbable">
-        {% if form|length > 1 %}
+        {% if hideTabs == false and form|length > 1 %}
         <ul class="translationsLocales nav nav-tabs">
             {% for translationsFields in form %}
                 <li {% if defaultLocale.id_lang == translationsFields.vars.name %}class="active"{% endif %}>
@@ -187,7 +187,7 @@
 
         <div class="translationsFields tab-content ">
             {% for translationsFields in form %}
-                <div class="translationsFields-{{ translationsFields.vars.id }} tab-pane {% if form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} {% if not form.vars.valid %}field-error{% endif %}">
+                <div class="translationsFields-{{ translationsFields.vars.id }} tab-pane {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
                     {{ form_errors(translationsFields) }}
                     {{ form_widget(translationsFields) }}
                 </div>

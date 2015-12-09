@@ -125,19 +125,20 @@ class LegacyContext
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
+     * @param bool $showContentHeader Can force header toolbar (buttons and title) to be hidden with false value.
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "")
+    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true)
     {
-        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType);
+        $originCtrl = new \AdminLegacyLayoutControllerCore($controllerName, $title, $headerToolbarBtn, $displayType, $showContentHeader);
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
     }
 
     /**
-     * Returns available languages
+     * Returns available languages. The first one is the employee default one.
      *
      * @param bool     $active   Select only active languages
      * @param int|bool $id_shop  Shop ID
@@ -147,6 +148,27 @@ class LegacyContext
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        return \LanguageCore::getLanguages($active, $id_shop, $ids_only);
+        $languages = \LanguageCore::getLanguages($active, $id_shop, $ids_only);
+        $defaultLanguageFirst = $this->getContext()->employee->id_lang;
+        usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
+            if ($a['id_lang'] == $defaultLanguageFirst) {
+                return -1; // $a is the default one.
+            }
+            if ($b['id_lang'] == $defaultLanguageFirst) {
+                return 1; // $b is the default one.
+            }
+            return 0;
+        });
+        return $languages;
+    }
+
+    /**
+     * Returns language ISO code set for the current employee
+
+     * @return array Languages
+     */
+    public function getEmployeeLanguageIso()
+    {
+        return \LanguageCore::getIsoById($this->getContext()->employee->id_lang);
     }
 }

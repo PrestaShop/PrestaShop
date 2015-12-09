@@ -114,10 +114,10 @@ class ProductQuantity extends CommonModelAbstractType
                     new Assert\Type(array('type' => 'numeric')),
                 ),
             ))
-            ->add('available_now', new TranslateType('text', array(), $this->locales), array(
+            ->add('available_now', new TranslateType('text', array(), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Displayed text when in-stock', [], 'AdminProducts')
             ))
-            ->add('available_later', new TranslateType('text', array(), $this->locales), array(
+            ->add('available_later', new TranslateType('text', array(), $this->locales, true), array(
                 'label' =>  $this->translator->trans('Displayed text when backordering is allowed', [], 'AdminProducts')
             ))
             ->add('available_date', 'text', array(
