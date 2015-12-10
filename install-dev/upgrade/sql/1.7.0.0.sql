@@ -50,3 +50,5 @@ ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 25
 /* PHP:ps1700_stores(); */
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
+
+ALTER TABLE `PREFIX_hook` DROP `live_edit`;
