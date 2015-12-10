@@ -4237,6 +4237,12 @@ class ProductCore extends ObjectModel
 
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
+        Hook::exec('actionGetProductPropertiesBefore', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         if (!$row['id_product']) {
             return false;
         }
@@ -4273,6 +4279,7 @@ class ProductCore extends ObjectModel
 
         // Datas
         $row['category'] = Category::getLinkRewrite((int)$row['id_category_default'], (int)$id_lang);
+        $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM '._DB_PREFIX_.'category_lang WHERE id_shop = '.(int)$context->shop->id.' AND id_lang = '.(int)$id_lang.' AND id_category = '.(int)$row['id_category_default']);
         $row['link'] = $context->link->getProductLink((int)$row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
 
         $row['attribute_price'] = 0;
@@ -4391,6 +4398,13 @@ class ProductCore extends ObjectModel
         }
 
         $row = Product::getTaxesInformations($row, $context);
+
+        Hook::exec('actionGetProductPropertiesAfter', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         self::$producPropertiesCache[$cache_key] = $row;
         return self::$producPropertiesCache[$cache_key];
     }

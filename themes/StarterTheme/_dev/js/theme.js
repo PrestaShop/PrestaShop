@@ -1,9 +1,11 @@
 import $ from 'jquery';
 /* expose jQuery for modules */
 window.$ = $;
+window.jQuery = $;
 
 import './setup-rivets';
 import './checkout';
+import './facets';
 
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
