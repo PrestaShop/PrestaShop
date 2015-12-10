@@ -3,13 +3,13 @@
 namespace PrestaShop\PrestaShop\tests\Unit\Core\Business\Product\Search;
 
 use PHPUnit_Framework_Testcase;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\PaginationResult;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\Pagination;
 
-class PaginationResultTest extends PHPUnit_Framework_Testcase
+class PaginationTest extends PHPUnit_Framework_Testcase
 {
     public function setup()
     {
-        $this->pagination = new PaginationResult;
+        $this->pagination = new Pagination;
     }
 
     public function test_pagination_adds_context_first_and_last_page_and_previous_next()
