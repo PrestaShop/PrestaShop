@@ -2,9 +2,9 @@ import $ from 'jquery';
 
 let pendingQuery = false;
 
-function updateDOM ({rendered_products, ps_search_facets}) {
+function updateDOM ({rendered_products, rendered_facets}) {
     $('#products').replaceWith(rendered_products);
-    $('#search_filters').replaceWith(ps_search_facets);
+    $('#search_filters').replaceWith(rendered_facets);
 }
 
 const onpopstate = e => {
