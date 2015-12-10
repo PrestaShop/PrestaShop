@@ -6,7 +6,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchProviderInte
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\PaginationResult;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Adapter\Translator;
 use Manufacturer;
@@ -52,12 +52,12 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
         $result = new ProductSearchResult;
         $result->setProducts($products);
 
-        $pagination = new PaginationResult;
+        $pagination = new Pagination;
         $pagination
             ->setTotalResultsCount($count)
             ->setResultsCount(count($products))
         ;
-        $result->setPaginationResult($pagination);
+        $result->setPagination($pagination);
 
         $result->setAvailableSortOrders(
             $this->sortOrderFactory->getDefaultSortOrders()
