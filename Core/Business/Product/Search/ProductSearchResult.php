@@ -5,7 +5,7 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 class ProductSearchResult
 {
     private $products = [];
-    private $menu;
+    private $facetCollection;
     private $encodedFacets;
     private $paginationResult;
     private $availableSortOrders = [];
@@ -22,15 +22,15 @@ class ProductSearchResult
         return $this->products;
     }
 
-    public function setFacetsMenu(FacetsMenu $menu)
+    public function setFacetCollection(FacetCollection $facetCollection)
     {
-        $this->menu = $menu;
+        $this->facetCollection = $facetCollection;
         return $this;
     }
 
-    public function getFacetsMenu()
+    public function getFacetCollection()
     {
-        return $this->menu;
+        return $this->facetCollection;
     }
 
     public function setEncodedFacets($encodedFacets)
