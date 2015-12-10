@@ -51,7 +51,7 @@
      public function getCanonicalURL()
      {
          // Canonical URL is the category URL without any parameters.
-        return $this->makeURL(null);
+        return $this->updateQueryString(null);
      }
 
     /**
