@@ -385,7 +385,7 @@
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
                 <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
-                    {% for module in renderhook('displayAdminProductsExtra', {'id_product': id_product}) %}
+                    {% for module in renderhooksarray('displayAdminProductsExtra', {'id_product': id_product}) %}
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 {{ module.name }}
