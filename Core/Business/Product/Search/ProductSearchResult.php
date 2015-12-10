@@ -7,7 +7,7 @@ class ProductSearchResult
     private $products = [];
     private $facetCollection;
     private $encodedFacets;
-    private $paginationResult;
+    private $pagination;
     private $availableSortOrders = [];
     private $currentSortOrder;
 
@@ -44,15 +44,15 @@ class ProductSearchResult
         return $this->encodedFacets;
     }
 
-    public function setPaginationResult(PaginationResult $paginationResult)
+    public function setPagination(Pagination $pagination)
     {
-        $this->paginationResult = $paginationResult;
+        $this->pagination = $pagination;
         return $this;
     }
 
-    public function getPaginationResult()
+    public function getPagination()
     {
-        return $this->paginationResult;
+        return $this->pagination;
     }
 
     public function addAvailableSortOrder(SortOrder $sortOrder)

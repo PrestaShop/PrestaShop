@@ -3,7 +3,7 @@
 use PrestaShop\PrestaShop\Core\Business\Product\ProductPresenter;
 use PrestaShop\PrestaShop\Core\Business\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
-use PrestaShop\PrestaShop\Core\Business\Product\Search\PaginationResult;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchContext;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
@@ -232,7 +232,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     private function inferMissingPaginationInformation(
         ProductSearchQuery $query,
-        PaginationResult $pagination
+        Pagination $pagination
     ) {
         if (!$pagination->getPage()) {
             $pagination->setPage($query->getPage());
@@ -338,12 +338,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
 
         // prepare the pagination
-        $paginationResult = $result->getPaginationResult();
+        $pagination = $result->getPagination();
         // compute total number of pages if not already done by search provider
-        $this->inferMissingPaginationInformation($query, $paginationResult);
+        $this->inferMissingPaginationInformation($query, $pagination);
         // get it in the correct format for the template
         $pagination = $this->getTemplateVarPagination(
-            $paginationResult
+            $pagination
         );
 
         // prepare the sort orders
@@ -377,10 +377,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Generated URLs will include the page number, obviously,
      * but also the sort order and the "q" (facets) parameters.
      *
-     * @param  PaginationResult $result the number of pages etc.
+     * @param  Pagination $result the number of pages etc.
      * @return an array that makes rendering the pagination very easy
      */
-    protected function getTemplateVarPagination(PaginationResult $result)
+    protected function getTemplateVarPagination(Pagination $result)
     {
         return array_map(function ($link) {
             $link['url'] = $this->updateQueryString([
