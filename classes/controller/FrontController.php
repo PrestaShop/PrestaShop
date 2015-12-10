@@ -1528,6 +1528,8 @@ class FrontControllerCore extends Controller
         $page_name = $this->getPageName();
         $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
 
+        $this->context->smarty->assign('page_name', $page_name);
+
         $page = [
             'title' => $meta_tags['meta_title'],
             'description' => $meta_tags['meta_description'],

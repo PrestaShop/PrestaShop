@@ -2,7 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 
-class FacetsMenu
+class FacetCollection
 {
     private $facets = [];
 
