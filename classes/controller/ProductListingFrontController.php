@@ -132,12 +132,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         foreach ($facetsArray['filters'] as &$filter) {
             $filter['facetLabel'] = $facet->getLabel();
             if ($filter['nextEncodedFacets']) {
-                $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
                     'q' => $filter['nextEncodedFacets'],
                     'page' => null
                 ]);
             } else {
-                $filter['nextEncodedFacetsURL'] = $this->makeURL([
+                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
                     'q' => null
                 ]);
             }
@@ -383,7 +383,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function getTemplateVarPagination(PaginationResult $result)
     {
         return array_map(function ($link) {
-            $link['url'] = $this->makeURL([
+            $link['url'] = $this->updateQueryString([
                 'page'  => $link['page']
             ]);
             return $link;
@@ -406,7 +406,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return array_map(function ($sortOrder) use ($currentSortOrderURLParameter) {
             $order = $sortOrder->toArray();
             $order['current'] = $order['urlParameter'] === $currentSortOrderURLParameter;
-            $order['url'] = $this->makeURL([
+            $order['url'] = $this->updateQueryString([
                 'order' => $order['urlParameter'],
                 'page'  => null
             ]);
@@ -433,7 +433,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'products'            => $search['products'],
             'rendered_products'   => $rendered_products,
             'ps_search_facets'    => $search['ps_search_facets'],
-            'current_url'         => $this->makeURL([
+            'current_url'         => $this->updateQueryString([
                 'q' => $search['ps_search_encoded_facets']
             ])
         ];

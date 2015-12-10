@@ -1556,7 +1556,7 @@ class FrontControllerCore extends Controller
      * Otherwise, params from $extraParams that have a null value are stripped,
      * and other params are added. Params not in $extraParams are unchanged.
      */
-    protected function makeURL(array $extraParams = null)
+    protected function updateQueryString(array $extraParams = null)
     {
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
