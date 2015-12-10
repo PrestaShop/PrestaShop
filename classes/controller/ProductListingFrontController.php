@@ -175,7 +175,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/facets.tpl', [
             'facets'        => $facetsVar,
-            'jsEnabled'     => $this->ajax,
+            'js_enabled'    => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order'    => $result->getCurrentSortOrder()->toString()
         ]);
@@ -336,9 +336,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'products'          => $products,
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
-            'rendered_facets' => $rendered_facets,
-            'ps_search_encoded_facets' => $result->getEncodedFacets(),
-            'jsEnabled'         => $this->ajax
+            'rendered_facets'   => $rendered_facets,
+            'js_enabled'        => $this->ajax,
+            'current_url'       => $this->updateQueryString([
+                'q' => $result->getEncodedFacets()
+            ])
         ];
 
         Hook::exec('actionProductSearchComplete', $searchVariables);
@@ -419,10 +421,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $data = [
             'products'            => $search['products'],
             'rendered_products'   => $rendered_products,
-            'rendered_facets'    => $search['rendered_facets'],
-            'current_url'         => $this->updateQueryString([
-                'q' => $search['ps_search_encoded_facets']
-            ])
+            'rendered_facets'     => $search['rendered_facets'],
+            'current_url'         => $search['current_url'],
+            'js_enabled'          => $search['js_enabled']
         ];
 
         return $data;
