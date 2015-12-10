@@ -17,14 +17,7 @@ class Filter
     private $active;
 
     /**
-     * Whether or not the user can interact with the filter.
-     */
-    private $available = true;
-
-    /**
      * Whether or not the filter is displayed.
-     * A filter may be displayed but in a non-interactive state,
-     * that's why we have $available and $displayed.
      */
     private $displayed = true;
 
@@ -39,7 +32,6 @@ class Filter
             'label'             => $this->label,
             'type'              => $this->type,
             'active'            => $this->active,
-            'available'         => $this->available,
             'displayed'         => $this->displayed,
             'properties'        => $this->properties,
             'magnitude'         => $this->magnitude,
