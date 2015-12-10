@@ -49,11 +49,6 @@ class HookCore extends ObjectModel
     public $position = false;
 
     /**
-     * @var bool Is this hook usable with live edit ?
-     */
-    public $live_edit = false;
-
-    /**
      * @var array List of executed hooks on this page
      */
     public static $executed_hooks = array();
@@ -71,7 +66,6 @@ class HookCore extends ObjectModel
             'title' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'description' =>    array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
             'position' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'live_edit' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
         ),
     );
 
@@ -115,7 +109,7 @@ class HookCore extends ObjectModel
 
         if (strpos($hook_name, 'display') === 0) {
             return true;
-        } else if (strpos($hook_name, 'action') === 0) {
+        } elseif (strpos($hook_name, 'action') === 0) {
             return false;
         } else {
             return true;
@@ -199,23 +193,6 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return hook live edit bool from ID
-     */
-    public static function getLiveEditById($hook_id)
-    {
-        $cache_id = 'hook_live_editbyid_'.$hook_id;
-        if (!Cache::isStored($cache_id)) {
-            $result = Db::getInstance()->getValue('
-							SELECT `live_edit`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
-            Cache::store($cache_id, $result);
-            return $result;
-        }
-        return Cache::retrieve($cache_id);
-    }
-
-    /**
      * Get list of hook alias
      *
      * @since 1.5.0
@@ -270,7 +247,7 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_module_list';
         if (!Cache::isStored($cache_id)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
+			SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, active
 			FROM `'._DB_PREFIX_.'hook_module` hm
 			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
 			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
@@ -286,7 +263,6 @@ class HookCore extends ObjectModel
                     'title' => $result['title'],
                     'description' => $result['description'],
                     'hm.position' => $result['position'],
-                    'live_edit' => $result['live_edit'],
                     'm.position' => $result['hm_position'],
                     'id_module' => $result['id_module'],
                     'name' => $result['name'],
@@ -354,7 +330,7 @@ class HookCore extends ObjectModel
 
             // SQL Request
             $sql = new DbQuery();
-            $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
+            $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
             $sql->from('module', 'm');
             if ($hook_name != 'displayBackOfficeHeader') {
                 $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
@@ -404,7 +380,6 @@ class HookCore extends ObjectModel
                         'id_hook' => $row['id_hook'],
                         'module' => $row['module'],
                         'id_module' => $row['id_module'],
-                        'live_edit' => $row['live_edit'],
                     );
                 }
             }
@@ -490,7 +465,6 @@ class HookCore extends ObjectModel
         // Store list of executed hooks on this page
         Hook::$executed_hooks[$id_hook] = $hook_name;
 
-        $live_edit = false;
         $context = Context::getContext();
         if (!isset($hook_args['cookie']) || !$hook_args['cookie']) {
             $hook_args['cookie'] = $context->cookie;
@@ -585,13 +559,7 @@ class HookCore extends ObjectModel
                     $display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
                 }
 
-                // Live edit
-                if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad')
-                    && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'
-                        .(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
-                    $live_edit = true;
-                    $output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
-                } elseif ($array_return) {
+                if ($array_return) {
                     $output[$moduleInstance->name] = $display;
                 } else {
                     $output .= $display;
@@ -614,12 +582,7 @@ class HookCore extends ObjectModel
             $context->shop->setContext($old_context, $shop->id);
         }
 
-        if ($array_return) {
-            return $output;
-        } else {
-            return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
-				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
-        }// Return html string
+        return $output;
     }
 
     public static function coreCallHook($module, $method, $params)
@@ -649,25 +612,11 @@ class HookCore extends ObjectModel
         $memory_end = memory_get_usage(true);
 
         Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+            INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+            VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')
+        ');
 
         return $r;
-    }
-
-    public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
-    {
-        return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
-				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
-				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
-						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
-                .Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
-					<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-					<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
-				</span>'.$display.'</div>';
     }
 
     /**
