@@ -27,7 +27,7 @@ We have analyzed the way search modules work and we offer a set of standard obje
 3. The `CategoryController` notices the `ProductSearchProviderInterface` returned by the module and uses it to get the products (this is the equivalent of what `hookActionProductListOverride` did, only we work with well defined objects that are easy to reason about).
 4. The search provider returns a `ProductSearchResult`, it contains:
     - the products, obviously (which may just be an array like `[['id_product' => 2], ['id_product' => 3]]` - the core will add the missing data!)
-    - the pagination information (total number of pages, total number or results, etc.) cleanly wrapped inside a `PaginationResult`
+    - the pagination information (total number of pages, total number or results, etc.) cleanly wrapped inside a `Pagination`
     - the new, updated filters
     - the sort options that are supported to sort the list (array of `SortOrder`s)
 5. The `CategoryController` hydrates the product list, formats it, renders it. It also renders the filters, the pagination, and the sort options (price ascending, etc.).

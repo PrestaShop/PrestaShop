@@ -2,7 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 
-class PaginationResult
+class Pagination
 {
     /**
      * The total number of pages for this query.
