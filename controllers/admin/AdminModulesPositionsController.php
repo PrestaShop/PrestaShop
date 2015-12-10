@@ -305,14 +305,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             'desc' => $this->l('Transplant a module')
         );
 
-        $live_edit_params = array(
-            'live_edit' => true,
-            'ad' => $admin_dir,
-            'liveToken' => $this->token,
-            'id_employee' => (int)$this->context->employee->id,
-            'id_shop' => (int)$this->context->shop->id
-        );
-
         $this->context->smarty->assign(array(
             'show_toolbar' => true,
             'toolbar_btn' => $this->toolbar_btn,
@@ -322,8 +314,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
             'modules' => $module_instances,
             'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
-            'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-            'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
             'display_key' => $this->display_key,
             'hooks' => $hooks,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
@@ -331,23 +321,6 @@ class AdminModulesPositionsControllerCore extends AdminController
         ));
 
         return $this->createTemplate('list_modules.tpl')->fetch();
-    }
-
-    public function getLiveEditUrl($live_edit_params)
-    {
-        $lang = '';
-
-        $language_ids = Language::getIDs(true);
-        if (Configuration::get('PS_REWRITING_SETTINGS') && !empty($language_ids) && count($language_ids) > 1) {
-            $lang = Language::getIsoById($this->context->employee->id_lang).'/';
-        }
-        unset($language_ids);
-
-        // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
-        $this->context->shop = new Shop((int)$this->context->shop->id);
-        $url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
-
-        return $url;
     }
 
     public function renderForm()
@@ -508,133 +481,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 die('{"hasError" : true, "errors" : "This module cannot be loaded."}');
             }
-        }
-    }
-
-    public function ajaxProcessGetHookableList()
-    {
-        if ($this->tabAccess['view'] === '1') {
-            /* PrestaShop demo mode */
-            if (_PS_MODE_DEMO_) {
-                die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
-            }
-
-            if (!count(Tools::getValue('hooks_list'))) {
-                die('{"hasError" : true, "errors" : ["Live Edit: no module on this page."]}');
-            }
-
-            $modules_list = Tools::getValue('modules_list');
-            $hooks_list = Tools::getValue('hooks_list');
-            $hookableList = array();
-
-            foreach ($modules_list as $module) {
-                $module = trim($module);
-                if (!$module) {
-                    continue;
-                }
-
-                if (!Validate::isModuleName($module)) {
-                    die('{"hasError" : true, "errors" : ["Live Edit: module is invalid."]}');
-                }
-
-                $moduleInstance = Module::getInstanceByName($module);
-                foreach ($hooks_list as $hook_name) {
-                    $hook_name = trim($hook_name);
-                    if (!$hook_name) {
-                        continue;
-                    }
-                    if (!array_key_exists($hook_name, $hookableList)) {
-                        $hookableList[$hook_name] = array();
-                    }
-                    if ($moduleInstance->isHookableOn($hook_name)) {
-                        array_push($hookableList[$hook_name], str_replace('_', '-', $module));
-                    }
-                }
-            }
-            $hookableList['hasError'] = false;
-            die(json_encode($hookableList));
-        }
-    }
-
-    public function ajaxProcessGetHookableModuleList()
-    {
-        if ($this->tabAccess['view'] === '1') {
-            /* PrestaShop demo mode */
-            if (_PS_MODE_DEMO_) {
-                die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
-            }
-            /* PrestaShop demo mode*/
-
-            $hook_name = Tools::getValue('hook');
-            $hookableModulesList = array();
-            $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
-            foreach ($modules as $module) {
-                if (!Validate::isModuleName($module['name'])) {
-                    continue;
-                }
-                if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php')) {
-                    include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
-
-                    /** @var Module $mod */
-                    $mod = new $module['name']();
-                    if ($mod->isHookableOn($hook_name)) {
-                        $hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int)$mod->id));
-                    }
-                }
-            }
-            die(json_encode($hookableModulesList));
-        }
-    }
-    public function ajaxProcessSaveHook()
-    {
-        if ($this->tabAccess['edit'] === '1') {
-            /* PrestaShop demo mode */
-            if (_PS_MODE_DEMO_) {
-                die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
-            }
-
-            $hooks_list = explode(',', Tools::getValue('hooks_list'));
-            $id_shop = (int)Tools::getValue('id_shop');
-            if (!$id_shop) {
-                $id_shop = Context::getContext()->shop->id;
-            }
-
-            $res = true;
-            $hookableList = array();
-            // $_POST['hook'] is an array of id_module
-            $hooks_list = Tools::getValue('hook');
-
-            foreach ($hooks_list as $id_hook => $modules) {
-                // 1st, drop all previous hooked modules
-                $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
-                $res &= Db::getInstance()->execute($sql);
-
-                $i = 1;
-                $value = '';
-                $ids = array();
-                // then prepare sql query to rehook all chosen modules(id_module, id_shop, id_hook, position)
-                // position is i (autoincremented)
-                if (is_array($modules) && count($modules)) {
-                    foreach ($modules as $id_module) {
-                        if ($id_module && !in_array($id_module, $ids)) {
-                            $ids[] = (int)$id_module;
-                            $value .= '('.(int)$id_module.', '.(int)$id_shop.', '.(int)$id_hook.', '.(int)$i.'),';
-                        }
-                        $i++;
-                    }
-
-                    if ($value) {
-                        $value = rtrim($value, ',');
-                        $res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module` (id_module, id_shop, id_hook, position) VALUES '.$value);
-                    }
-                }
-            }
-            if ($res) {
-                $hasError = true;
-            } else {
-                $hasError = false;
-            }
-            die('{"hasError" : false, "errors" : ""}');
         }
     }
 
