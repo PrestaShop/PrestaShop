@@ -305,14 +305,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             'desc' => $this->l('Transplant a module')
         );
 
-        $live_edit_params = array(
-            'live_edit' => true,
-            'ad' => $admin_dir,
-            'liveToken' => $this->token,
-            'id_employee' => (int)$this->context->employee->id,
-            'id_shop' => (int)$this->context->shop->id
-        );
-
         $this->context->smarty->assign(array(
             'show_toolbar' => true,
             'toolbar_btn' => $this->toolbar_btn,
@@ -322,8 +314,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
             'modules' => $module_instances,
             'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
-            'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-            'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
             'display_key' => $this->display_key,
             'hooks' => $hooks,
             'url_submit' => self::$currentIndex.'&token='.$this->token,
@@ -331,23 +321,6 @@ class AdminModulesPositionsControllerCore extends AdminController
         ));
 
         return $this->createTemplate('list_modules.tpl')->fetch();
-    }
-
-    public function getLiveEditUrl($live_edit_params)
-    {
-        $lang = '';
-
-        $language_ids = Language::getIDs(true);
-        if (Configuration::get('PS_REWRITING_SETTINGS') && !empty($language_ids) && count($language_ids) > 1) {
-            $lang = Language::getIsoById($this->context->employee->id_lang).'/';
-        }
-        unset($language_ids);
-
-        // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
-        $this->context->shop = new Shop((int)$this->context->shop->id);
-        $url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
-
-        return $url;
     }
 
     public function renderForm()
