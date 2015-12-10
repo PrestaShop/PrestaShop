@@ -94,10 +94,10 @@ class SortOrderTest extends PHPUnit_Framework_TestCase
     {
         $opt = new SortOrder($data['entity'], $data['field'], $data['direction']);
 
-        $encoded = $opt->getURLParameter();
+        $encoded = $opt->toString();
         $this->assertInternalType('string', $encoded);
 
-        $unserialized = SortOrder::fromURLParameter($encoded);
+        $unserialized = SortOrder::newFromString($encoded);
 
         $arr = $unserialized->toArray();
         $this->assertEquals($data['entity'],    $arr['entity']);
