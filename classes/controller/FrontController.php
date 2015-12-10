@@ -482,10 +482,6 @@ class FrontControllerCore extends Controller
             $this->displayRestrictedCountryPage();
         }
 
-        if (Tools::isSubmit('live_edit') && !$this->checkLiveEditAccess()) {
-            Tools::redirect('index.php?controller=404');
-        }
-
         $this->iso               = $iso;
         $this->context->cart     = $cart;
         $this->context->currency = $currency;
@@ -751,7 +747,7 @@ class FrontControllerCore extends Controller
      */
     protected function canonicalRedirection($canonical_url = '')
     {
-        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit')) {
+        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET') {
             return;
         }
 
@@ -918,45 +914,6 @@ class FrontControllerCore extends Controller
         if ($this->context->language->is_rtl) {
             $this->addCSS(_THEME_CSS_DIR_.'rtl.css');
             $this->addCSS(_THEME_CSS_DIR_.$this->context->language->iso_code.'.css');
-        }
-    }
-
-    /**
-     * Checks if the user can use Live Edit feature
-     *
-     * @return bool
-     */
-    public function checkLiveEditAccess()
-    {
-        if (!Tools::isSubmit('live_edit') || !Tools::getValue('ad') || !Tools::getValue('liveToken')) {
-            return false;
-        }
-
-        if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
-            return false;
-        }
-
-        return is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
-    }
-
-    /**
-     * Renders Live Edit widget
-     *
-     * @return string HTML
-     */
-    public function getLiveEditFooter()
-    {
-        if ($this->checkLiveEditAccess()) {
-            $data = $this->context->smarty->createData();
-            $data->assign(array(
-                'ad'        => Tools::getValue('ad'),
-                'live_edit' => true,
-                'hook_list' => Hook::$executed_hooks,
-                'id_shop'   => $this->context->shop->id
-            ));
-            return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
-        } else {
-            return '';
         }
     }
 

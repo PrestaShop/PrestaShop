@@ -48,10 +48,6 @@ class CategoryControllerCore extends ProductPresentingFrontControllerCore
      */
     public function canonicalRedirection($canonical_url = '')
     {
-        if (Tools::getValue('live_edit')) {
-            return;
-        }
-
         if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY')))) {
             $this->redirect_after = '404';
             $this->redirect();
