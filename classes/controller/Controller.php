@@ -526,11 +526,6 @@ abstract class ControllerCore
         $html = trim($html);
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
-            $live_edit_content = '';
-            if ($this->checkLiveEditAccess()) {
-                $live_edit_content = $this->getLiveEditFooter();
-            }
-
             $dom_available = extension_loaded('dom') ? true : false;
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
@@ -552,7 +547,6 @@ abstract class ControllerCore
             } else {
                 echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html);
             }
-            echo $live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
         } else {
             echo $html;
         }

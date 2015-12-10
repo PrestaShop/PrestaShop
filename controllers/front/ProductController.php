@@ -36,10 +36,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function canonicalRedirection($canonical_url = '')
     {
-        if (Tools::getValue('live_edit')) {
-            return;
-        }
-
         $id_product_attribute = Tools::getValue('id_product_attribute');
         if (Validate::isLoadedObject($this->product)) {
             parent::canonicalRedirection($this->context->link->getProductLink(
