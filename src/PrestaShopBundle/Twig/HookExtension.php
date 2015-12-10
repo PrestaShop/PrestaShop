@@ -60,7 +60,8 @@ class HookExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('renderhook', array($this, 'renderHook'), array('is_safe' => array('html')))
+            new \Twig_SimpleFilter('renderhook', array($this, 'renderHook'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFilter('renderhooksarray', array($this, 'renderHooksArray'), array('is_safe' => array('html')))
         );
     }
 
@@ -73,6 +74,7 @@ class HookExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('renderhook', array($this, 'renderHook'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('renderhooksarray', array($this, 'renderHooksArray'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('hookcount', array($this, 'hookCount'))
         );
     }
@@ -95,9 +97,9 @@ class HookExtension extends \Twig_Extension
      * @param string $hookName The name of the hook to trigger.
      * @param array $hookParameters The parameters to send to the Hook.
      * @throws \Exception If the hookName is missing.
-     * @return string All listener's reponses, concatened in a simple string, ordered by the listeners' priorities.
+     * @return array[string] All listener's reponses, ordered by the listeners' priorities.
      */
-    public function renderHook($hookName, $hookParameters = array())
+    public function renderHooksArray($hookName, $hookParameters = array())
     {
         if ($hookName == '') {
             throw new \Exception('Hook name missing');
@@ -113,6 +115,25 @@ class HookExtension extends \Twig_Extension
             ];
         }
         return $render;
+    }
+
+    /**
+     * Calls the HookDispatcher, and dispatch a RenderingHookEvent.
+     *
+     * The listeners will then return html data to display in the Twig template.
+     *
+     * @param string $hookName The name of the hook to trigger.
+     * @param array $hookParameters The parameters to send to the Hook.
+     * @throws \Exception If the hookName is missing.
+     * @return string All listener's reponses, concatened in a simple string, ordered by the listeners' priorities.
+     */
+    public function renderHook($hookName, $hookParameters = array())
+    {
+        if ($hookName == '') {
+            throw new \Exception('Hook name missing');
+        }
+        $hookRenders = $this->hookDispatcher->renderForParameters($hookName, $hookParameters)->getContent();
+        return implode('<br class="hook-separator" />', $hookRenders);
     }
 
     /**

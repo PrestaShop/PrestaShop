@@ -79,6 +79,7 @@ class PagePreference implements AdminPagePreferenceInterface
      */
     public function getTemporaryShouldAllowUseLegacyPage($page = null)
     {
+        // Dev mode: always shown
         if (_PS_MODE_DEV_) {
             return true;
         }
@@ -90,17 +91,11 @@ class PagePreference implements AdminPagePreferenceInterface
         $installVersion = explode('.', $version);
         $currentVersion = explode('.', _PS_VERSION_);
 
+        // Prod mode, depends on the page
         switch ($page) {
             case 'product':
-                // show only for 1.7.0
-                if ($currentVersion[0] != '1' || $currentVersion[1] != '7' || $currentVersion[2] != '0') {
-                    return false;
-                }
-                // show only if upgrade from older version than 1.7
-                if ($installVersion[0] != '1' || $installVersion[1] >= '7') {
-                    return false;
-                }
-                // no break; !
+                // never show it for Product page in production mode.
+                return false;
             default:
                 // show only for 1.7.x
                 if ($currentVersion[0] != '1' || $currentVersion[1] != '7') {
