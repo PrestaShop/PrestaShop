@@ -27,16 +27,16 @@ class SortOrder
             'field'         => $this->field,
             'direction'     => $this->direction,
             'label'         => $this->label,
-            'urlParameter'  => $this->getURLParameter()
+            'urlParameter'  => $this->toString()
         ];
     }
 
-    public function getURLParameter()
+    public function toString()
     {
         return "{$this->entity}.{$this->field}.{$this->direction}";
     }
 
-    public static function fromURLParameter($paramValue)
+    public static function newFromString($paramValue)
     {
         list($entity, $field, $direction) = explode('.', $paramValue);
         return new SortOrder($entity, $field, $direction);
