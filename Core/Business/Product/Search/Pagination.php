@@ -12,20 +12,6 @@ class Pagination
     private $pagesCount;
 
     /**
-     * The number of results actually retruned.
-     *
-     * @var int
-     */
-    private $resultsCount;
-
-    /**
-     * The total number of results.
-     *
-     * @var int
-     */
-    private $totalResultsCount;
-
-    /**
      * The index of the returned page.
      *
      * @var int
@@ -42,30 +28,6 @@ class Pagination
     public function getPagesCount()
     {
         return $this->pagesCount;
-    }
-
-    public function setTotalResultsCount($totalResultsCount)
-    {
-        $this->totalResultsCount = $totalResultsCount;
-
-        return $this;
-    }
-
-    public function getTotalResultsCount()
-    {
-        return $this->totalResultsCount;
-    }
-
-    public function setResultsCount($resultsCount)
-    {
-        $this->resultsCount = (int) $resultsCount;
-
-        return $this;
-    }
-
-    public function getResultsCount()
-    {
-        return $this->resultsCount;
     }
 
     public function setPage($page)

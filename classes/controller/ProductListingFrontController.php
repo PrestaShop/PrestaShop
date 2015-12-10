@@ -227,25 +227,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
-     * A method that adds page and page count to pagination result
-     * so that users only need to fill totalResultsCount and resultsCount.
-     */
-    private function inferMissingPaginationInformation(
-        ProductSearchQuery $query,
-        Pagination $pagination
-    ) {
-        if (!$pagination->getPage()) {
-            $pagination->setPage($query->getPage());
-        }
-
-        if (!$pagination->getPagesCount()) {
-            $pagination->setPagesCount(
-                ceil($pagination->getTotalResultsCount() / $query->getResultsPerPage())
-            );
-        }
-    }
-
-    /**
      * This returns all template variables needed for rendering
      * the product list, the facets, the pagination and the sort orders.
      *
@@ -336,14 +317,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             );
         }
 
-
-        // prepare the pagination
-        $pagination = $result->getPagination();
-        // compute total number of pages if not already done by search provider
-        $this->inferMissingPaginationInformation($query, $pagination);
-        // get it in the correct format for the template
         $pagination = $this->getTemplateVarPagination(
-            $pagination
+            $query,
+            $result
         );
 
         // prepare the sort orders
@@ -377,17 +353,28 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * Generated URLs will include the page number, obviously,
      * but also the sort order and the "q" (facets) parameters.
      *
-     * @param  Pagination $result the number of pages etc.
+     * @param  ProductSearchQuery  $query
+     * @param  ProductSearchResult $result
      * @return an array that makes rendering the pagination very easy
      */
-    protected function getTemplateVarPagination(Pagination $result)
-    {
+    protected function getTemplateVarPagination(
+        ProductSearchQuery $query,
+        ProductSearchResult $result
+    ) {
+        $pagination = new Pagination;
+        $pagination
+            ->setPage($query->getPage())
+            ->setPagesCount(
+                ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
+            )
+        ;
+
         return array_map(function ($link) {
             $link['url'] = $this->updateQueryString([
                 'page'  => $link['page']
             ]);
             return $link;
-        }, $result->buildLinks());
+        }, $pagination->buildLinks());
     }
 
     /**
