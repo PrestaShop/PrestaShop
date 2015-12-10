@@ -177,7 +177,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'facets'        => $facetsVar,
             'jsEnabled'     => $this->ajax,
             'activeFilters' => $activeFilters,
-            'sort_order'    => $result->getCurrentSortOrder()->getURLParameter()
+            'sort_order'    => $result->getCurrentSortOrder()->toString()
         ]);
     }
 
@@ -285,7 +285,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // set the sort order if provided in the URL
         if (($encodedSortOrder = Tools::getValue('order'))) {
-            $query->setSortOrder(SortOrder::fromURLParameter(
+            $query->setSortOrder(SortOrder::newFromString(
                 $encodedSortOrder
             ));
         }
@@ -353,7 +353,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // to support (e.g. sort by "energy efficiency")
         $sort_orders = $this->getTemplateVarSortOrders(
             $result->getAvailableSortOrders(),
-            $query->getSortOrder()->getURLParameter()
+            $query->getSortOrder()->toString()
         );
 
         $searchVariables = [
