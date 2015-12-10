@@ -38,21 +38,18 @@
     /** @var bool If set to false, customer cannot view the current category. */
     public $customer_access = true;
 
-     protected $category;
+    protected $category;
 
-     public function canonicalRedirection($url = '')
-     {
-         // We don't do canonical redirection because there
-         // are too many possible URLs.
-         // It's no problem, because we have a <link rel="canonical">
-         // on the page.
-     }
+    public function canonicalRedirection($url = '')
+    {
+        // FIXME
+    }
 
-     public function getCanonicalURL()
-     {
-         // Canonical URL is the category URL without any parameters.
+    public function getCanonicalURL()
+    {
+        // Canonical URL is the category URL without any parameters.
         return $this->updateQueryString(null);
-     }
+    }
 
     /**
      * Initializes controller
@@ -90,38 +87,38 @@
         $this->doProductSearch('catalog/category.tpl');
     }
 
-     protected function getProductSearchQuery()
-     {
-         $query = new ProductSearchQuery;
-         $query
+    protected function getProductSearchQuery()
+    {
+        $query = new ProductSearchQuery;
+        $query
             ->setIdCategory($this->category->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'))
         ;
-         return $query;
-     }
+        return $query;
+    }
 
-     protected function getDefaultProductSearchProvider()
-     {
-         $translator = new Translator(new LegacyContext);
-         return new CategoryProductSearchProvider(
+    protected function getDefaultProductSearchProvider()
+    {
+        $translator = new Translator(new LegacyContext);
+        return new CategoryProductSearchProvider(
             $translator,
             $this->category
         );
-     }
+    }
 
-     protected function getTemplateVarCategory()
-     {
-         $category = $this->objectSerializer->toArray($this->category);
-         $category['image'] = $this->getImage(
+    protected function getTemplateVarCategory()
+    {
+        $category = $this->objectSerializer->toArray($this->category);
+        $category['image'] = $this->getImage(
             $this->category,
             $this->category->id_image
         );
-         return $category;
-     }
+        return $category;
+    }
 
-     protected function getTemplateVarSubCategories()
-     {
-         return array_map(function (array $category) {
+    protected function getTemplateVarSubCategories()
+    {
+        return array_map(function (array $category) {
             $object = new Category(
                 $category['id_category'],
                 $this->context->language->id
@@ -138,13 +135,13 @@
             );
             return $category;
         }, $this->category->getSubCategories($this->context->language->id));
-     }
+    }
 
-     protected function getImage($object, $id_image)
-     {
-         $retriever = new Adapter_ImageRetriever(
+    protected function getImage($object, $id_image)
+    {
+        $retriever = new Adapter_ImageRetriever(
             $this->context->link
         );
-         return $retriever->getImage($object, $id_image);
-     }
+        return $retriever->getImage($object, $id_image);
+    }
  }
