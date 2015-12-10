@@ -151,7 +151,8 @@ class PasswordControllerCore extends FrontController
                                     'customer_email' => $customer->email
                                 ]);
                                 $this->success[] = sprintf($this->l('Your password has been successfully reset and a confirmation has been sent to your email address: %s'), $customer->email);
-                                $this->setTemplate('customer/password-infos.tpl');
+                                $this->context->updateCustomer($customer);
+                                $this->redirectWithNotifications('index.php?controller=my-account');
                             } else {
                                 $this->errors[] = $this->l('An error occurred while sending the email.');
                             }
