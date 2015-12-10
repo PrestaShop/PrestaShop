@@ -306,13 +306,13 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // render the facets
         if ($provider instanceof FacetsRendererInterface) {
             // with the provider if it wants to
-            $ps_search_facets = $provider->renderFacets(
+            $rendered_facets = $provider->renderFacets(
                 $context,
                 $result
             );
         } else {
             // with the core
-            $ps_search_facets = $this->renderFacets(
+            $rendered_facets = $this->renderFacets(
                 $result
             );
         }
@@ -336,7 +336,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'products'          => $products,
             'sort_orders'       => $sort_orders,
             'pagination'        => $pagination,
-            'ps_search_facets' => $ps_search_facets,
+            'rendered_facets' => $rendered_facets,
             'ps_search_encoded_facets' => $result->getEncodedFacets(),
             'jsEnabled'         => $this->ajax
         ];
@@ -419,7 +419,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $data = [
             'products'            => $search['products'],
             'rendered_products'   => $rendered_products,
-            'ps_search_facets'    => $search['ps_search_facets'],
+            'rendered_facets'    => $search['rendered_facets'],
             'current_url'         => $this->updateQueryString([
                 'q' => $search['ps_search_encoded_facets']
             ])
