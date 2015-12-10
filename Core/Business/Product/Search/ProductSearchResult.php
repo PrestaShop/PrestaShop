@@ -5,9 +5,9 @@ namespace PrestaShop\PrestaShop\Core\Business\Product\Search;
 class ProductSearchResult
 {
     private $products = [];
+    private $totalProductsCount;
     private $facetCollection;
     private $encodedFacets;
-    private $pagination;
     private $availableSortOrders = [];
     private $currentSortOrder;
 
@@ -20,6 +20,17 @@ class ProductSearchResult
     public function getProducts()
     {
         return $this->products;
+    }
+
+    public function setTotalProductsCount($totalProductsCount)
+    {
+        $this->totalProductsCount = $totalProductsCount;
+        return $this;
+    }
+
+    public function getTotalProductsCount()
+    {
+        return $this->totalProductsCount;
     }
 
     public function setFacetCollection(FacetCollection $facetCollection)
@@ -42,17 +53,6 @@ class ProductSearchResult
     public function getEncodedFacets()
     {
         return $this->encodedFacets;
-    }
-
-    public function setPagination(Pagination $pagination)
-    {
-        $this->pagination = $pagination;
-        return $this;
-    }
-
-    public function getPagination()
-    {
-        return $this->pagination;
     }
 
     public function addAvailableSortOrder(SortOrder $sortOrder)
