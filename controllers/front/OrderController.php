@@ -37,6 +37,8 @@ class OrderControllerCore extends FrontController
     private $address_form;
     private $address_fields;
 
+    private $cart_presented;
+
     private function getConditionsToApprove()
     {
         $cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
@@ -278,9 +280,8 @@ class OrderControllerCore extends FrontController
 
     public function renderCartSummary()
     {
-        $cart_presenter = new Adapter_CartPresenter;
         return $this->render('checkout/_partials/cart-summary.tpl', [
-            'cart' => $cart_presenter->present($this->context->cart)
+            'cart' => $this->cart_presented,
         ]);
     }
 
@@ -334,7 +335,10 @@ class OrderControllerCore extends FrontController
             }
         }
 
+        $this->cart_presented = $this->cart_presenter->present($this->context->cart);
+
         $this->context->smarty->assign([
+            'cart' => $this->cart_presented,
             'payment_options' => $this->renderPaymentOptions(),
             'cart_summary' => $this->renderCartSummary(),
             'delivery_options' => $this->renderDeliveryOptions(),

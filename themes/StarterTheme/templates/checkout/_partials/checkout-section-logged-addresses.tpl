@@ -18,7 +18,7 @@
           {include file="checkout/_partials/address-selector-block.tpl"
           name="id_address_delivery"
           addresses=$customer.addresses
-          selected=$cart.id_address_delivery}
+          selected=$selected_address_delivery}
         {/block}
       </div>
 
@@ -32,7 +32,7 @@
           {include file="checkout/_partials/address-selector-block.tpl"
           name="id_address_invoice"
           addresses=$customer.addresses
-          selected=$cart.id_address_invoice}
+          selected=$selected_address_invoice}
         {/block}
       </div>
 
