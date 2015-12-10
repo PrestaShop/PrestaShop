@@ -48,7 +48,9 @@
 
         {if $customer.is_logged && count($customer.addresses) > 0}
           {block name="checkout_customer_addresses"}
-            {include file="checkout/_partials/checkout-section-logged-addresses.tpl"}
+            {include file="checkout/_partials/checkout-section-logged-addresses.tpl"
+              selected_address_delivery=$cart.id_address_delivery
+              selected_address_invoice=$cart.id_address_invoice}
           {/block}
         {else}
           {block name="checkout_address_forms"}
