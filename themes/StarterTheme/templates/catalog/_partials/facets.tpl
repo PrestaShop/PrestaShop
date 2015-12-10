@@ -22,14 +22,14 @@
                     {if $facet.multipleSelectionAllowed}
                       <input
                         data-search-url="{$filter.nextEncodedFacetsURL}"
-                        {if !$jsEnabled} class="ps-shown-by-js" {/if}
+                        {if !$js_enabled} class="ps-shown-by-js" {/if}
                         type="checkbox"
                         {if $filter.active } checked {/if}
                       >
                     {else}
                       <input
                         data-search-url="{$filter.nextEncodedFacetsURL}"
-                        {if !$jsEnabled} class="ps-shown-by-js" {/if}
+                        {if !$js_enabled} class="ps-shown-by-js" {/if}
                         type="radio"
                         name="filter {$facet.label}"
                         {if $filter.active } checked {/if}
@@ -73,7 +73,7 @@
                 {/if}
               {/foreach}
             </select>
-            {if !$jsEnabled}
+            {if !$js_enabled}
               <button class="ps-hidden-by-js" type="submit">
                 {l s='Filter'}
               </button>
