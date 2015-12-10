@@ -138,6 +138,11 @@ class FrontControllerCore extends Controller
     public $objectSerializer;
 
     /**
+     * @var object CartPresenter
+     */
+    public $cart_presenter;
+
+    /**
      * Controller constructor
      *
      * @global bool $useSSL SSL connection flag
@@ -171,6 +176,7 @@ class FrontControllerCore extends Controller
         }
 
         $this->objectSerializer = new Adapter_ObjectSerializer();
+        $this->cart_presenter = new Adapter_CartPresenter;
     }
 
     /**
