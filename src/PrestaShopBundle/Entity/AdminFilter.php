@@ -185,7 +185,11 @@ class AdminFilter
             'filter_column_name_category' => '',
             'filter_column_price' => '',
             'filter_column_sav_quantity' => '',
-            'filter_column_active' => ''
+            'filter_column_active' => '',
+            'last_offset' => 0,
+            'last_limit' => 20,
+            'last_orderBy' => 'id_product',
+            'last_sortOrder' => 'asc'
         );
     }
 

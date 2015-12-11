@@ -116,6 +116,20 @@ class ProductController extends FrameworkBundleAdminController
 
         // get old values from persistence (before the current update)
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+
+        if ($offset === 'last') {
+            $offset = $persistedFilterParameters['last_offset'];
+        }
+        if ($limit === 'last') {
+            $limit = $persistedFilterParameters['last_limit'];
+        }
+        if ($orderBy === 'last') {
+            $orderBy = $persistedFilterParameters['last_orderBy'];
+        }
+        if ($sortOrder === 'last') {
+            $sortOrder = $persistedFilterParameters['last_sortOrder'];
+        }
+
         // override the old values with the new ones.
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
@@ -571,7 +585,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully deleted.', [], 'AdminProducts'));
-                    $logger->info('Product deleted: ('.$id.').');
+                    $logger->info('Product deleted: (' . $id . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'], $hookEventParameters);
                     break;
                 case 'duplicate':
@@ -579,14 +593,14 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
                     $this->addFlash('success', $translator->trans('Product successfully duplicated.', [], 'AdminProducts'));
-                    $logger->info('Product duplicated: (from '.$id.' to '.$duplicateProductId.').');
+                    $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
                     $hookDispatcher->dispatchMultiple(['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'], $hookEventParameters);
                     // stops here and redirect to the new product's page.
                     return $this->redirectToRoute('admin_product_form', array('id' => $duplicateProductId), 302);
                 default:
                     // should never happens since the route parameters are restricted to a set of action values in YML file.
                     $logger->error('Unit action from ProductController received a bad parameter.');
-                    throw new \Exception('Bad action received from call to ProductController::unitAction: "'.$action.'"', 2002);
+                    throw new \Exception('Bad action received from call to ProductController::unitAction: "' . $action . '"', 2002);
             }
         } catch (DataUpdateException $due) {
             //TODO : need to translate with a domain name
