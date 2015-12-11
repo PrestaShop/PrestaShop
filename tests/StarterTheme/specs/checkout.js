@@ -1,5 +1,7 @@
 /* global describe, it */
 
+import * as checkout from '../helpers/checkout';
+
 describe.only("The Checkout Process", function () {
 
     describe("when the customer doesn't have an account", function () {
