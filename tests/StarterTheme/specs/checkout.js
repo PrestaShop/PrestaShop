@@ -1,12 +1,21 @@
-/* global describe, it */
+/* global describe, it, before, browser */
 
+import fixtures from '../fixtures';
 import * as checkout from '../helpers/checkout';
 
 describe.only("The Checkout Process", function () {
 
+    before(function () {
+        return checkout.addSomeProductToCart().then(
+            () => browser.url(fixtures.urls.checkout)
+        );
+    });
+
     describe("when the customer doesn't have an account", function () {
 
-        it('should show the account creation form');
+        it('should show the account creation form', function () {
+            return browser.waitForVisible('.customer-info-form');
+        });
 
         describe("and chooses to order as guest", function () {
 
