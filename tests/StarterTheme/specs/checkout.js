@@ -2,6 +2,7 @@
 
 import fixtures from '../fixtures';
 import * as checkout from '../helpers/checkout';
+import {getRandomUser} from '../helpers/random-user';
 
 describe.only("The Checkout Process", function () {
 
@@ -19,7 +20,17 @@ describe.only("The Checkout Process", function () {
 
         describe("and chooses to order as guest", function () {
 
-            it('should allow the customer not to write a password');
+            xit("should allow the customer not to write a password", function () {
+                return getRandomUser().then(user => {
+                        return browser
+                            .setValue('.customer-info-form [name=firstname]', user.name.first)
+                            .setValue('.customer-info-form [name=lastname]' , user.name.last)
+                            .setValue('.customer-info-form [name=email]'    , user.email)
+                            .click('.customer-info-form [name=submitCreate]')
+                        ;
+                    }
+                );
+            });
 
             customerHasNoAddresses();
         });
