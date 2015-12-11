@@ -5,28 +5,28 @@ admin_product_catalog:
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::catalogAction
         _legacy_controller: AdminProducts
-        limit: 20
+        limit: last
         offset: 0
-        orderBy: id_product
-        sortOrder: asc
+        orderBy: last
+        sortOrder: last
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
-        offset: \d+
-        sortOrder: asc|desc
+        orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: last|\d+
+        sortOrder: last|asc|desc
 
 admin_product_list:
     path:     /list/{offset}/{limit}/{orderBy}/{sortOrder}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::listAction
-        limit: 20
+        limit: last
         offset: 0
-        orderBy: id_product
-        sortOrder: asc
+        orderBy: last
+        sortOrder: last
     requirements:
-        orderBy: id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
-        offset: \d+
-        sortOrder: asc|desc
+        orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering
+        offset: last|\d+
+        sortOrder: last|asc|desc
 
 admin_product_form:
     path: /form/{id}

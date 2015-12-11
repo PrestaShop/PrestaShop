@@ -141,7 +141,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function combinePersistentCatalogProductFilter($paramsIn = array())
     {
-        $paramsOut = array();
         // retrieve persisted filter parameters
         $persistedParams = $this->getPersistedFilterParameters();
         // merge with new values
@@ -157,7 +156,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $post = array())
     {
-        $filterParams = $this->combinePersistentCatalogProductFilter($post);
+        $filterParams = $this->combinePersistentCatalogProductFilter(array_merge(
+            $post,
+            ['last_offset' => $offset, 'last_limit' => $limit, 'last_orderBy' => $orderBy, 'last_sortOrder' => $sortOrder]
+        ));
+
         $showPositionColumn = $this->isCategoryFiltered();
         if ($orderBy == 'position_ordering' && $showPositionColumn) {
             foreach ($filterParams as $key => $param) {
