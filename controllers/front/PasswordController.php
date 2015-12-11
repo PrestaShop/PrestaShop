@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing;
+
 class PasswordControllerCore extends FrontController
 {
     public $php_self = 'password';
@@ -124,7 +126,7 @@ class PasswordControllerCore extends FrontController
                         $this->errors[] = $this->l('The password change request expired. You should ask for a new one.');
                     } else {
                         try {
-                            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+                            $crypto = new Hashing;
                         } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
                             $this->errors[] = $this->l('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.');
                             return false;
@@ -149,7 +151,8 @@ class PasswordControllerCore extends FrontController
                                     'customer_email' => $customer->email
                                 ]);
                                 $this->success[] = sprintf($this->l('Your password has been successfully reset and a confirmation has been sent to your email address: %s'), $customer->email);
-                                $this->setTemplate('customer/password-infos.tpl');
+                                $this->context->updateCustomer($customer);
+                                $this->redirectWithNotifications('index.php?controller=my-account');
                             } else {
                                 $this->errors[] = $this->l('An error occurred while sending the email.');
                             }
