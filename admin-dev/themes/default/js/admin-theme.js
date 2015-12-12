@@ -511,7 +511,14 @@ $(document).ready(function() {
 		});
 	});
 
+	//order details : show modal to update shipping details
+	$(".edit_shipping_link").click(function() {
+		$('#id_order_carrier').val($(this).attr('data_id_order_carrier'));
+		$('#shipping_tracking_number').val($(this).attr('data_tracking_number'));
+		$('#shipping_carrier option[value='+$(this).attr('data_id_carrier')+']').prop('selected', true);
 
-
+		$('#modal-shipping').modal();
+		return false;
+	});
 
 }); //end dom ready
