@@ -577,9 +577,16 @@ class ProductCore extends ObjectModel
         return $return;
     }
 
+    /**
+     * Init computation of price display method (i.e. price should be including tax or not) for a customer.
+     * If customer Id passed as null then this compute price display method with according of current group.
+     * Otherwise a price display method will compute with according of a customer address (i.e. country).
+     * @see Group::getPriceDisplayMethod()
+     * @param int|null $id_customer
+     */
     public static function initPricesComputation($id_customer = null)
     {
-        if ($id_customer) {
+        if ($id_customer !== null) {
             $customer = new Customer((int)$id_customer);
             if (!Validate::isLoadedObject($customer)) {
                 die(Tools::displayError());
@@ -603,6 +610,12 @@ class ProductCore extends ObjectModel
         }
     }
 
+    /**
+     * Returns price display method for a customer (i.e. price should be including tax or not)
+     * @see initPricesComputation()
+     * @param int|null $id_customer
+     * @return int Returns 0 if tax should be included, otherwise 0 - tax should be excluded
+     */
     public static function getTaxCalculationMethod($id_customer = null)
     {
         if (self::$_taxCalculationMethod === null || $id_customer !== null) {
