@@ -7,12 +7,12 @@
                 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}">
                      <div class="module-item-wrapper-grid">
                         <div class="module-item-heading-grid" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
-                            <img class="module-logo-thumb-grid" height="20" width="20" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+                            <img class="module-logo-thumb-grid" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
                             <div class="text-ellipsis module-name-grid" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
                                 {{ module.displayName }}
                             </div>
-                            <div class="x-small-text module-version-author-grid">
-                                {% if module.productType == "modules" %}
+                            <div class="text-ellipsis x-small-text module-version-author-grid">
+                                {% if module.productType == "module" %}
                                     v{{ module.version }} by {{ module.author }}
                                 {% else %}
                                     Service by {{ module.author }}
@@ -22,14 +22,13 @@
                         <div class="module-quick-description-grid no-padding">
                             {{ module.description }}
                             <div class="module-read-more-grid">
-                                ...
                                 <a class="module-read-more-grid-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
                             </div>
                         </div>
                         <div class="module-quick-action-grid clearfix">
                             <div class="pull-right">
-                                {% if module.price.EUR == 0 %}
-                                    <input type="button" class="light-button module-install-btn" value="Free" />
+                                {% if module.price.EUR == 0 or module.origin == 'customer' %}
+                                    <input type="button" class="light-button module-install-btn" value="Install" />
                                 {% else %}
                                     <input type="button" class="light-button module-install-btn" value="{{module.price.EUR}}"/>
                                 {% endif %}
