@@ -135,19 +135,6 @@ ul.product_list .functional-buttons div.wishlist {
       border-right: 0; }
       ul.product_list .functional-buttons div.wishlist a:before {
         display: none; } }
-ul.product_list .functional-buttons div.compare a:before {
-  content: "\f067";
-  display: inline-block;
-  font-family: "FontAwesome";
-  margin-right: 3px; }
-  @media (min-width: 992px) and (max-width: 1199px) {
-    ul.product_list .functional-buttons div.compare a:before {
-      display: none; } }
-  @media (min-width: 480px) and (max-width: 767px) {
-    ul.product_list .functional-buttons div.compare a:before {
-      display: none; } }
-ul.product_list .functional-buttons div.compare a.checked:before {
-  content: "\f068"; }
 
 /*******************************************************
 Product list(Grid) Styles

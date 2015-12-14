@@ -150,10 +150,4 @@
     <keywords/>
     <url_rewrite>confirmare-comanda</url_rewrite>
   </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>Comparație între produse</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>comparare-produse</url_rewrite>
-  </meta>
 </entity_meta>

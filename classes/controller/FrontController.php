@@ -431,11 +431,6 @@ class FrontControllerCore extends Controller
             $meta_language[] = $lang['iso_code'];
         }
 
-        $compared_products = array();
-        if (Configuration::get('PS_COMPARATOR_MAX_ITEM') && isset($this->context->cookie->id_compare)) {
-            $compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
-        }
-
         /* StarterTheme: Legacy - Should we remove old smarty vars */
         $this->context->smarty->assign(array(
             // Useful for layout.tpl
@@ -469,8 +464,6 @@ class FrontControllerCore extends Controller
             'request'             => $link->getPaginationLink(false, false, false, true),
             'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
             'quick_view'          => (bool)Configuration::get('PS_QUICK_VIEW'),
-            'compared_products'   => is_array($compared_products) ? $compared_products : array(),
-            'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
         ));
 
         /**
@@ -875,10 +868,6 @@ class FrontControllerCore extends Controller
             _THEME_JS_DIR_.'theme.js',
             _THEME_JS_DIR_.'custom.js',
         ]);
-
-        if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0) {
-            $this->addJS(_THEME_JS_DIR_.'products-comparison.js');
-        }
 
         Media::addJsDef(array('full_language_code' => $this->context->language->language_code));
         Media::addJsDef(array('full_cldr_language_code' => $cldrRepository->getCulture()));

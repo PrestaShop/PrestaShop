@@ -150,10 +150,4 @@
     <keywords/>
     <url_rewrite>konfirmasi-pembelian</url_rewrite>
   </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>Products Comparison</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>products-comparison</url_rewrite>
-  </meta>
 </entity_meta>
