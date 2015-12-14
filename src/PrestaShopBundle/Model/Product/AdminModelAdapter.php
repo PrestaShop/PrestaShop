@@ -107,6 +107,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'display_options',
             'features',
             'specific_price',
+            'virtual_product',
         );
 
         //define multishop keys
@@ -384,6 +385,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'minimal_quantity' => 1,
                 'available_date' => '0000-00-00',
                 'pack_stock_type' => 3,
+                'virtual_product' => [
+                    'is_virtual_file' => 0,
+                    'nb_days' => 0,
+                ],
             ],
             'step4' => [
                 'width' => 0,
@@ -482,6 +487,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,
                 'pack_stock_type' => $this->product->pack_stock_type,
+                'virtual_product' => $this->getVirtualProductData(),
             ],
             'step4' => [
                 'width' => $this->product->width,
@@ -525,6 +531,35 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations());
 
         return $form_data;
+    }
+
+    private function getVirtualProductData()
+    {
+        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);
+        if ($id_product_download) {
+            $download = new \ProductDownloadCore($id_product_download);
+            $dateValue = $download->date_expiration == '0000-00-00 00:00:00' ? '' : date('Y-m-d', strtotime($download->date_expiration));
+
+            $res = [
+                'is_virtual_file' => $download->active,
+                'name' => $download->display_filename,
+                'nb_downloable' => $download->nb_downloadable,
+                'expiration_date' => $dateValue,
+                'nb_days' => $download->nb_days_accessible,
+            ];
+
+            if ($download->filename) {
+                $res['filename'] = $download->filename;
+                $res['file_download_link'] = $this->context->getAdminBaseUrl().$download->getTextLink(true);
+            }
+
+            return $res;
+        }
+
+        return [
+            'is_virtual_file' => 0,
+            'nb_days' => 0,
+        ];
     }
 
     /**

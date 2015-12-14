@@ -72,3 +72,28 @@ admin_product_mass_edit_action:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::massEditAction
     requirements:
         action: sort
+
+admin_product_virtual_save_action:
+    path:     /product/virtual/form/save/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::saveAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_virtual_remove_file_action:
+    path:     /product/virtual/remove/file/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeFileAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_virtual_remove_action:
+    path:     /product/virtual/remove/{idProduct}
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\VirtualProductController::removeAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+

@@ -39,6 +39,7 @@ class DropFilesType extends AbstractType
     private $label;
     private $dropzoneOptions;
     private $dropzonePostUrl;
+    private $constraints;
 
     /**
      * Constructor
@@ -46,12 +47,14 @@ class DropFilesType extends AbstractType
      * @param string $label The field label
      * @param string $dropzonePostUrl The url to post files
      * @param array $dropzoneOptions The options to render/translate the dropzone JS lib (see : http://www.dropzonejs.com)
+     * @param array $customFileConstraints To override default constraint
      */
-    public function __construct($label = '', $dropzonePostUrl = '', $dropzoneOptions = null)
+    public function __construct($label = '', $dropzonePostUrl = '', $dropzoneOptions = null, $customFileConstraints = null)
     {
         $this->label = $label;
         $this->dropzoneOptions = $dropzoneOptions;
         $this->dropzonePostUrl = $dropzonePostUrl;
+        $this->constraints = $customFileConstraints;
 
         //create a new cache/tmp/uploads folder
         if (!is_dir(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload')) {
@@ -95,9 +98,7 @@ class DropFilesType extends AbstractType
             'allow_delete' => true,
             'delete_empty' => true,
             'label' => $this->label,
-            'constraints' => array(
-                new DropFile()
-            )
+            'constraints' => array(new DropFile($this->constraints))
         ));
     }
 

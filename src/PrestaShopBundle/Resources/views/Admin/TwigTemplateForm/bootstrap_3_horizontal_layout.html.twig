@@ -40,7 +40,8 @@
     {% spaceless %}
         <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form.files) }}
-            <div class="{{ block('form_group_class') }}">
+
+            <div id="{{ id }}-content" class="{{ block('form_group_class') }}">
                 <script>
                     $(document).ready(function () {
                         Dropzone.autoDiscover = false;
@@ -50,15 +51,22 @@
                             url: '{{ dropzonePostUrl }}',
                             paramName: "form[file]",
                             addRemoveLinks: true,
+                            dictRemoveFile: '{{ trans("Delete", {}, 'AdminProducts') }}',
+                            dictFileTooBig: '{{ trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts') }}',
                             success: function (file, response) {
-                                var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files]['+dropZoneElem.find('.dz-preview').length+']" />').val(response);
+                                var input = $('<input type="hidden" name="{{ form.vars.full_name }}[files]['+dropZoneElem.find('.dz-preview').length+']" />').val(JSON.stringify(response));
                                 $(file.previewElement).append(input);
                             },
                             error: function (file, response) {
-                                response = JSON.parse(response);
+                                var message = '';
+
+                                if($.type(response) === "string"){
+                                    message = response;
+                                }else{
+                                    message = response.message;
+                                }
 
                                 var node, _i, _len, _ref, _results;
-                                var message = response.message;
                                 file.previewElement.classList.add("dz-error");
                                 _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
                                 _results = [];
@@ -88,10 +96,10 @@
                     });
                 </script>
 
-                <div id="{{ id }}" class="col-lg-12 panel text-center dropzone">
-                </div>
+                <div id="{{ id }}" class="col-lg-12 panel text-center dropzone"></div>
 
                 {{ form_errors(form) }}
+                <div id="{{ id }}_files"></div>
             </div>
         </div>
     {% endspaceless %}

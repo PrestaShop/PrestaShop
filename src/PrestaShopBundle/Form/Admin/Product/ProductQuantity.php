@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 
 /**
  * This form class is responsible to generate the product quantity form
@@ -124,6 +125,10 @@ class ProductQuantity extends CommonModelAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Availability date:', [], 'AdminProducts'),
                 'attr' => ['class' => 'date', 'placeholder' => 'YYY-MM-DD']
+            ))
+            ->add('virtual_product', new ProductVirtual($this->translator, $this->legacyContext), array(
+                'required' => false,
+                'label' => $this->translator->trans('Virtual Product', [], 'AdminProducts'),
             ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

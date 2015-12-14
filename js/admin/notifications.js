@@ -12,7 +12,7 @@ $(document).ready(function() {
 		var wrapper_id = $(this).parent().attr("id");
 
 		$.post(
-			"ajax.php",
+			baseAdminDir+"ajax.php",
 			{
 				"updateElementEmployee" : "1",
 				"updateElementEmployeeType" : $(this).parent().attr('data-type')

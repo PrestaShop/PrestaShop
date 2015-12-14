@@ -38,6 +38,7 @@ $(document).ready(function() {
 	specificPrices.init();
 	warehouseCombinations.init();
 	customFieldCollection.init();
+	virtualProduct.init();
 
 	/** update price and shortcut price field on change */
 	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
@@ -50,12 +51,18 @@ $(document).ready(function() {
 
 	/** pack fields display management */
 	$('#form_step1_type_product').change(function(){
-		if($(this).val() == 1){
+		$('#virtual_product').hide();
+		if($(this).val() == 1) {
 			$('#pack_stock_type').show();
 			$('#js_form_step1_inputPackItems').show();
 		}else{
+			$('#virtual_product').hide();
 			$('#pack_stock_type').hide();
 			$('#js_form_step1_inputPackItems').hide();
+
+			if($(this).val() == 2){
+				$('#virtual_product').show();
+			}
 		}
 	});
 	$('#form_step1_type_product').change();
@@ -933,7 +940,108 @@ var customFieldCollection = (function() {
 				e.preventDefault();
 				remove($(this));
 			});
+		}
+	};
+})();
 
+/**
+ * virtual product management
+ */
+var virtualProduct = (function() {
+	return {
+		'init': function() {
+			$(document).on('change', 'input[name="form[step3][virtual_product][is_virtual_file]"]', function() {
+				if($(this).val() == 1){
+					$('#virtual_product_content').show();
+				}else{
+					$('#virtual_product_content').hide();
+
+					//delete virtual product
+					$.ajax({
+						type: 'GET',
+						url: $('#virtual_product').attr('data-action-remove')+'/'+$('#form_id_product').val(),
+						success: function(response){
+							//empty form
+							$('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
+							$('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
+							$('#form_step3_virtual_product_name').val('');
+							$('#form_step3_virtual_product_nb_downloable').val(0);
+							$('#form_step3_virtual_product_expiration_date').val('');
+							$('#form_step3_virtual_product_nb_days').val(0);
+						}
+					});
+				}
+			});
+
+			if($('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val() == 1){
+				$('#virtual_product_content').show();
+			}else{
+				$('#virtual_product_content').hide();
+			}
+
+			/** delete attached file */
+			$('#form_step3_virtual_product_file_details .delete').click(function(e){
+				e.preventDefault();
+				$.ajax({
+					type: 'GET',
+					url: $(this).attr('href')+'/'+$('#form_id_product').val(),
+					success: function(response){
+						$('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
+						$('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
+					}
+				});
+			});
+
+			/** save virtual product */
+			$('#form_step3_virtual_product_save').click(function(){
+				var _this = $(this);
+				var data = new FormData();
+
+				if($('#form_step3_virtual_product_file')[0].files[0]) {
+					data.append('product_virtual[file]', $('#form_step3_virtual_product_file')[0].files[0]);
+				}
+				data.append('product_virtual[is_virtual_file]', $('input[name="form[step3][virtual_product][is_virtual_file]"]:checked').val());
+				data.append('product_virtual[name]', $('#form_step3_virtual_product_name').val());
+				data.append('product_virtual[nb_downloable]', $('#form_step3_virtual_product_nb_downloable').val());
+				data.append('product_virtual[expiration_date]', $('#form_step3_virtual_product_expiration_date').val());
+				data.append('product_virtual[nb_days]', $('#form_step3_virtual_product_nb_days').val());
+
+				$.ajax({
+					type: 'POST',
+					url: $('#virtual_product').attr('data-action')+'/'+$('#form_id_product').val(),
+					data: data,
+					contentType: false,
+					processData: false,
+					beforeSend: function() {
+						_this.prop('disabled', 'disabled');
+						$('.help-block').remove();
+						$('*.has-error').removeClass('has-error');
+					},
+					success: function(response){
+						showSuccessMessage(translate_javascripts['Form update success']);
+						if(response.file_download_link){
+							$('#form_step3_virtual_product_file_details a.download').attr('href', response.file_download_link)
+							$('#form_step3_virtual_product_file_input').removeClass('show').addClass('hide');
+							$('#form_step3_virtual_product_file_details').removeClass('hide').addClass('show');
+						}
+					},
+					error: function(response){
+						$.each(jQuery.parseJSON(response.responseText), function(key, errors){
+							var html = '<span class="help-block"><ul class="list-unstyled">';
+							$.each(errors, function(key, error){
+								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+							});
+							html += '</ul></span>';
+
+							$('#form_step3_virtual_product_'+key).parent().append(html);
+							$('#form_step3_virtual_product_'+key).parent().addClass('has-error');
+						});
+					},
+					complete: function(){
+						_this.removeProp('disabled');
+					}
+				});
+			});
 		}
 	};
 })();
