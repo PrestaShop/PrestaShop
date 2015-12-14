@@ -996,13 +996,23 @@ class AdminCustomersControllerCore extends AdminController
     public function processChangeNewsletterVal()
     {
         $customer = new Customer($this->id_object);
+        
         if (!Validate::isLoadedObject($customer)) {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
+        
         $customer->newsletter = $customer->newsletter ? 0 : 1;
+        
         if (!$customer->update()) {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
+        
+        Hook::exec('actionProcessCustomerNewsletter', array(
+            'active' => (int)$customer->newsletter,
+            'customer' => $customer,
+            'email' => $customer->email
+        ));
+
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
 
@@ -1012,13 +1022,23 @@ class AdminCustomersControllerCore extends AdminController
     public function processChangeOptinVal()
     {
         $customer = new Customer($this->id_object);
+
         if (!Validate::isLoadedObject($customer)) {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
+
         $customer->optin = $customer->optin ? 0 : 1;
+
         if (!$customer->update()) {
             $this->errors[] = Tools::displayError('An error occurred while updating customer information.');
         }
+        
+        Hook::exec('actionProcessCustomerOptin', array(
+            'active' => (int)$customer->optin,
+            'customer' => $customer,
+            'email' => $customer->email
+        ));
+
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
 
