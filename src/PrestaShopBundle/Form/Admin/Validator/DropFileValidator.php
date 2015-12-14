@@ -48,15 +48,14 @@ class DropFileValidator extends ConstraintValidator
     public function validate($files, Constraint $constraint)
     {
         $validator = Validation::createValidator();
-        $constraint = array(new File(array(
-            'maxSize' => '1024k',
-            'mimeTypes' => array(
-                'image/jpeg',
-                'image/jpg',
-                'image/png',
-                'image/gif'
-            )
-        )));
+
+        if ($constraint->customConstraints) {
+            $constraint = $constraint->customConstraints;
+        } else {
+            $constraint = array(new File(array(
+                'maxSize' => '1024k'
+            )));
+        }
 
         if (is_array($files) && !empty($files)) {
             foreach ($files as $file) {

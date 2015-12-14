@@ -32,7 +32,7 @@ use PrestaShopBundle\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -151,30 +151,20 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function uploadAction(Request $request)
     {
-        $response = new Response();
+        $response = new JsonResponse();
         $return_data = [];
-        $constraints = [];
 
-        if ($request->get('file_type') == 'image') {
-            $constraints = array(new \Symfony\Component\Validator\Constraints\Image(array(
-                'maxSize' => '1024k',
-                'mimeTypes' => array(
-                    'image/jpeg',
-                    'image/jpg',
-                    'image/png',
-                    'image/gif'
-                )
-            )));
-        } elseif ($request->get('file_type') == 'file') {
-            $constraints = array( new \Symfony\Component\Validator\Constraints\File(array(
-                'maxSize' => '1024k'
-            )));
+        //create a new cache/tmp/uploads folder
+        if (!is_dir(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload')) {
+            $oldUmask = umask(0000);
+            mkdir(_PS_CACHE_DIR_.'tmp'.DIRECTORY_SEPARATOR.'upload', 0777, true);
+            umask($oldUmask);
         }
 
         $form = $this->createFormBuilder(null, array('csrf_protection' => false))
             ->add('file', 'file', array(
                 'error_bubbling' => true,
-                'constraints' => $constraints
+                'constraints' => [new \Symfony\Component\Validator\Constraints\File()]
             ))
             ->getForm();
 

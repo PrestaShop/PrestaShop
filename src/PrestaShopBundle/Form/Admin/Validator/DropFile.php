@@ -35,4 +35,10 @@ use Symfony\Component\Validator\Constraint;
  */
 class DropFile extends Constraint
 {
+    public $customConstraints;
+
+    public function __construct($customConstraints = null)
+    {
+        $this->customConstraints = $customConstraints;
+    }
 }
