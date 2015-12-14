@@ -204,6 +204,36 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
+                    <div class="form-group" id="virtual_product" data-action="{{ path('admin_product_virtual_save_action') }}" data-action-remove="{{ path('admin_product_virtual_remove_action') }}">
+                        {{ form_label(form.step3.virtual_product) }}
+                        <div class="col-sm-10">
+                            {{ form_widget(form.step3.virtual_product.is_virtual_file) }}
+                            <div id="virtual_product_content">
+                                {{ form_errors(form.step3.virtual_product) }}
+
+                                <div class="form-group">
+                                    {{ form_label(form.step3.virtual_product.file) }}
+                                    <div class="col-sm-10">
+
+                                        <div id="form_step3_virtual_product_file_input" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'hide' : 'show' }}">
+                                            {{ form_widget(form.step3.virtual_product.file) }}
+                                        </div>
+                                        <div id="form_step3_virtual_product_file_details" class="{{ form.step3.virtual_product.vars.value.filename is defined ? 'show' : 'hide' }}">
+                                            <a href="{{ form.step3.virtual_product.vars.value.file_download_link is defined ? form.step3.virtual_product.vars.value.file_download_link : '' }}" class="btn btn-default download">{{ trans('Download file', {}, 'AdminProducts') }}</a>
+                                            <a href="{{ path('admin_product_virtual_remove_file_action') }}" class="btn btn-default delete">{{ trans('Delete this file', {}, 'AdminProducts') }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{ form_row(form.step3.virtual_product.name) }}
+                                {{ form_row(form.step3.virtual_product.nb_downloable) }}
+                                {{ form_row(form.step3.virtual_product.expiration_date) }}
+                                {{ form_row(form.step3.virtual_product.nb_days) }}
+                                {{ form_row(form.step3.virtual_product.save) }}
+                            </div>
+                        </div>
+                    </div>
+
                     {% if asm_globally_activated and form.step1.type_product.vars.value != "2" %}
                         <div class="form-group" id="asm_quantity_management">
                             <label class="col-sm-2 control-label" for="form_step3_advanced_stock_management"></label>
@@ -440,4 +470,8 @@
 {% set js_translatable = {
     "Form update success": trans("Form update success", {}, 'AdminProducts'),
     "Form update errors": trans("Form update errors", {}, 'AdminProducts'),
+    "Delete": trans("Delete", {}, 'AdminProducts'),
+    "ToLargeFile": trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts'),
+
+
 }|merge(js_translatable) %}

@@ -508,4 +508,85 @@ class AdminProductWrapper
 
         \ConfigurationCore::updateGlobalValue('PS_CUSTOMIZATION_FEATURE_ACTIVE', '1');
     }
+
+    /**
+     * Update product download
+     *
+     * @param object $product
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function updateDownloadProduct($product, $data)
+    {
+        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
+        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+
+        if ((int)$data['is_virtual_file'] == 1) {
+            $fileName = null;
+            $file = $data['file'];
+
+            if (!empty($file)) {
+                $fileName = \ProductDownloadCore::getNewFilename();
+                $file->move(_PS_DOWNLOAD_DIR_, $fileName);
+            }
+
+            $product->setDefaultAttribute(0);//reset cache_default_attribute
+
+            $download->id_product = (int)$product->id;
+            $download->display_filename = $data['name'];
+            $download->filename = $fileName ? $fileName : $download->filename;
+            $download->date_add = date('Y-m-d H:i:s');
+            $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'].' 23:59:59' : '';
+            $download->nb_days_accessible = (int)$data['nb_days'];
+            $download->nb_downloadable = (int)$data['nb_downloable'];
+            $download->active = 1;
+            $download->is_shareable = 0;
+
+            if (!$id_product_download) {
+                $download->save();
+            } else {
+                $download->update();
+            }
+        } else {
+            if (!empty($id_product_download)) {
+                $download->date_expiration = date('Y-m-d H:i:s', time() - 1);
+                $download->active = 0;
+                $download->update();
+            }
+        }
+
+        return $download;
+    }
+
+    /**
+     * Delete file from a virtual product
+     *
+     * @param object $product
+     */
+    public function processDeleteVirtualProductFile($product)
+    {
+        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
+        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+
+        if ($download && !empty($download->filename)) {
+            unlink(_PS_DOWNLOAD_DIR_.$download->filename);
+            \Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_download` SET filename = "" WHERE `id_product_download` = '.(int)$download->id);
+        }
+    }
+
+    /**
+     * Delete a virtual product
+     *
+     * @param object $product
+     */
+    public function processDeleteVirtualProduct($product)
+    {
+        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$product->id, false);
+        $download = new \ProductDownloadCore($id_product_download ? $id_product_download : null);
+
+        if ($download) {
+            $download->delete(true);
+        }
+    }
 }
