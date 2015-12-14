@@ -797,7 +797,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round(self::displayPrice($amount, $currency_to), _PS_PRICE_COMPUTE_PRECISION_) ;
+        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_) ;
     }
 
     /**
