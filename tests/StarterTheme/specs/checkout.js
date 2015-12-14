@@ -54,6 +54,14 @@ function runScenario (scenario) {
         });
 
         if (scenario.customerOrdersAsGuest) {
+
+          it('should fail to submit the registration form if there are missing fields', function () {
+            return browser
+              .click('.customer-info-form button')
+              .waitForVisible('.notification-error')
+            ;
+          });
+
           it('should allow filling the personal info form without password', function () {
             return browser
               .setValue('.customer-info-form [name=firstname]', user.name.first)
