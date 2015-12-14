@@ -71,17 +71,13 @@ class ModuleController extends Controller
 
     public function moduleAction(Request $request)
     {
+        $action = $request->attributes->get('action'). 'Module';
         $module = $request->attributes->get('module_name');
 
         $ret = array();
         if (method_exists($this, $action)) {
-            try {
-                // ToDo : Check if allowed to call this action
-                $ret[$module] = $this->{$action}($module);
-            } catch (Exception $e) {
-                $ret[$module]['status'] = false;
-                $ret[$module]['msg'] = $e->getMessage();
-            }
+            // ToDo : Check if allowed to call this action
+            $ret[$module] = $this->{$action}($module);
         } else {
             $ret[$module]['status'] = false;
             $ret[$module]['msg'] = 'Invalid action';
