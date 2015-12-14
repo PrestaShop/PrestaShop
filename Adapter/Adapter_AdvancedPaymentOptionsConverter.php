@@ -9,6 +9,11 @@ class Adapter_AdvancedPaymentOptionsConverter
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
         $rawDisplayPaymentEUOptions = Hook::exec('displayPaymentEU', [], null, true);
+
+        if (!is_array($rawDisplayPaymentEUOptions)) {
+            $rawDisplayPaymentEUOptions = [];
+        }
+
         $displayPaymentEUOptions = array_map(
             ['PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
