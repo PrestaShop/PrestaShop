@@ -90,6 +90,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $this->loadCatalogData();
         }
 
+        shuffle($this->catalog_modules);
+
         return $this->applyModuleFilters($filter);
     }
 
@@ -104,18 +106,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getModule($name)
     {
-        $module = \Module::getInstanceByName($name);
-
-        if (!$module) {
-            throw new \Exception('Cannot find module '. $name);
+        if ($this->isModuleOnDisk($name)) {
+            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
         }
 
-        return $module;
+        throw new \Exception('Module '.$name.' not found');
     }
 
     public function isModuleOnDisk($name)
     {
-        return file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php') && (bool)\Module::getInstanceByName($name);
+        if (file_exists(_PS_MODULE_DIR_.$name.'/'.$name.'.php')) {
+            include_once(_PS_MODULE_DIR_.$name.'/'.$name.'.php');
+            
+            return (bool)\PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
+        }
+
+        return false;
     }
 
     public function setModuleOnDiskFromAddons($name)
@@ -203,13 +209,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $params = ['format' => 'json'];
             $requests = ['must-have', 'service', 'partner', 'native', 'native_all'];
             if ($addons_provider->isAddonsAuthenticated()) {
-                $requests[] = 'customer';
+                // customer is more important, so we set it at the beginning of the array
+                array_unshift($requests, 'customer');
             }
 
             try {
                 $jsons = [];
-                foreach ($requests as $var => $action) {
-                    $jsons = array_merge($jsons, (array) $addons_provider->request($action, $params));
+                // We execute each addons request
+                foreach ($requests as $action) {
+                    // We add the request name in each product returned by Addons,
+                    // so we know whether is bought
+                    $jsons = array_merge_recursive($jsons, array_map(function ($array) use ($action) {
+                        foreach ($array as $elem) {
+                            $elem->origin = $action;
+                        }
+                        return $array;
+                    }, (array) $addons_provider->request($action, $params)));
                 }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
@@ -251,15 +266,15 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected function convertJsonForNewCatalog($original_json)
     {
         $remixed_json = [];
-        $doublons = [];
+        $duplicates = [];
 
         foreach ($original_json as $json_key => $products) {
             foreach ($products as $product) {
-                if (in_array($product->name, $doublons)) {
+                if (in_array($product->name, $duplicates)) {
                     continue;
                 }
 
-                $doublons[] = $product->name;
+                $duplicates[] = $product->name;
 
                 // Add un-implemented properties
                 $product->refs       = (array)$this->getRefFromModuleCategoryName($product->categoryName);
@@ -293,7 +308,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         usort($remixed_json, function ($module1, $module2) {
             return strnatcmp($module1->displayName, $module2->displayName);
         });
-
+        
         return $remixed_json;
     }
 
