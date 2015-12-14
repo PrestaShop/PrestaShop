@@ -136,9 +136,5 @@
 			<page>module-cashondelivery-validation</page>
 			<configurable>0</configurable>
 		</meta>
-		<meta id="products-comparison">
-			<page>products-comparison</page>
-			<configurable>1</configurable>
-		</meta>
 	</entities>
 </entity_meta>
