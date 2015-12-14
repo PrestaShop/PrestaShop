@@ -73,7 +73,9 @@ function runScenario (scenario) {
               );
             });
 
-            it("should not show any addresses");
+            it("should not show any addresses", function () {
+              return browser.isVisible('.address-item').should.become(false);
+            });
 
             it("should show the delivery address form", function () {
               return browser.waitForVisible('#checkout-address-delivery');
@@ -152,7 +154,10 @@ function runScenario (scenario) {
             );
           });
           it("should confirm the payment", function () {
-            return browser.click("#payment-confirmation button").pause(10000);
+            return browser
+              .click("#payment-confirmation button")
+              .waitForVisible(".page-order-confirmation")
+            ;
           });
         });
       });
