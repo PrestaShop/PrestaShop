@@ -113,6 +113,23 @@
 
 		</td>
 	</tr>
+
+	{if isset($order_invoice->note) && $order_invoice->note}
+	<tr>
+		<td colspan="12">
+			<table id="note-tab">
+				<tr>
+					<td class="grey" width="10%">
+						{l s='Note' pdf='true'}
+					</td>
+					<td class="white" width="90%">
+						{$order_invoice->note|nl2br}
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	{/if}
 	
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}
