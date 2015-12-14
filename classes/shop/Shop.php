@@ -35,20 +35,14 @@ class ShopCore extends ObjectModel
     /** @var int ID of shop category */
     public $id_category;
 
-    /** @var int ID of shop theme */
-    public $id_theme;
+    /** @var string directory name of the selected theme */
+    public $theme_directory;
 
     /** @var string Shop name */
     public $name;
 
     public $active = true;
     public $deleted;
-
-    /** @var string Shop theme name (read only) */
-    public $theme_name;
-
-    /** @var string Shop theme directory (read only) */
-    public $theme_directory;
 
     /** @var string Physical uri of main url (read only) */
     public $physical_uri;
@@ -75,8 +69,8 @@ class ShopCore extends ObjectModel
             'active' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'name' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'id_theme' =>        array('type' => self::TYPE_INT, 'required' => true),
             'id_category' =>    array('type' => self::TYPE_INT, 'required' => true),
+            'theme_directory' =>    array('type' => self::TYPE_STRING),
             'id_shop_group' =>    array('type' => self::TYPE_INT, 'required' => true),
         ),
     );
@@ -92,7 +86,6 @@ class ShopCore extends ObjectModel
         'fields' => array(
             'id_shop_group' => array('xlink_resource' => 'shop_groups'),
             'id_category' => array(),
-            'id_theme' => array(),
         ),
     );
 
@@ -120,7 +113,7 @@ class ShopCore extends ObjectModel
     const SHARE_STOCK = 'share_stock';
 
     /**
-     * On shop instance, get its theme and URL data too
+     * On shop instance, get its URL data
      *
      * @param int $id
      * @param int $id_lang
@@ -131,6 +124,7 @@ class ShopCore extends ObjectModel
         parent::__construct($id, $id_lang, $id_shop);
         if ($this->id) {
             $this->setUrl();
+            $this->setTheme();
         }
     }
 
@@ -195,10 +189,9 @@ class ShopCore extends ObjectModel
         $cache_id = 'Shop::setUrl_'.(int)$this->id;
         if (!Cache::isStored($cache_id)) {
             $row = Db::getInstance()->getRow('
-              SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl, t.id_theme, t.name, t.directory
+              SELECT su.physical_uri, su.virtual_uri, su.domain, su.domain_ssl
               FROM '._DB_PREFIX_.'shop s
               LEFT JOIN '._DB_PREFIX_.'shop_url su ON (s.id_shop = su.id_shop)
-              LEFT JOIN '._DB_PREFIX_.'theme t ON (t.id_theme = s.id_theme)
               WHERE s.id_shop = '.(int)$this->id.'
               AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
             Cache::store($cache_id, $row);
@@ -209,9 +202,6 @@ class ShopCore extends ObjectModel
             return false;
         }
 
-        $this->theme_id = $row['id_theme'];
-        $this->theme_name = $row['name'];
-        $this->theme_directory = $row['directory'];
         $this->physical_uri = $row['physical_uri'];
         $this->virtual_uri = $row['virtual_uri'];
         $this->domain = $row['domain'];
@@ -464,13 +454,24 @@ class ShopCore extends ObjectModel
     }
 
     /**
-     * Get shop theme name
-     *
-     * @return string
+     * Set shop theme details from Json data
      */
+    public function setTheme()
+    {
+        $this->theme = json_decode(file_get_contents(
+            _PS_ALL_THEMES_DIR_.$this->theme_directory.'/config/theme.json'
+        ));
+    }
+
+    /**
+    * Get theme directory name
+    *
+    * @return string $this->theme->theme_directory
+    */
     public function getTheme()
     {
-        return $this->theme_directory;
+        Toos::displayAsDeprecated('Please use $this->theme->directory instead');
+        return $this->theme->directory;
     }
 
     /**
@@ -677,8 +678,8 @@ class ShopCore extends ObjectModel
                     'id_shop' =>        $row['id_shop'],
                     'id_shop_group' =>    $row['id_shop_group'],
                     'name' =>            $row['shop_name'],
-                    'id_theme' =>        $row['id_theme'],
                     'id_category' =>    $row['id_category'],
+                    'theme_directory' => $row['theme_directory'],
                     'domain' =>            $row['domain'],
                     'domain_ssl' =>        $row['domain_ssl'],
                     'uri' =>            $row['physical_uri'].$row['virtual_uri'],

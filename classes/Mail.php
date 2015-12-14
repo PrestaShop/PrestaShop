@@ -114,7 +114,7 @@ class MailCore extends ObjectModel
         // Get the path of theme by id_shop if exist
         if (is_numeric($id_shop) && $id_shop) {
             $shop = new Shop((int)$id_shop);
-            $theme_name = $shop->getTheme();
+            $theme_name = $shop->theme->directory;
 
             if (_THEME_NAME_ != $theme_name) {
                 $theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';

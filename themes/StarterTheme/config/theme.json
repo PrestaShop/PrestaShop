@@ -1,4 +1,14 @@
 {
   "name" : "Starter Theme",
-  "directory" : "StarterTheme"
+  "directory" : "StarterTheme",
+  "version" : "1.0.0",
+  "author" : {
+    "name" : "PrestaShop",
+    "email" : "pub@prestashop.com",
+    "url" : "http://www.prestashop.com"
+  },
+  "compatibility" : {
+    "from" : "1.7.0.0",
+    "to" : null
+  }
 }
