@@ -28,38 +28,9 @@
         {$cart_summary nofilter}
       {/block}
 
-      {if !$customer.is_logged}
-        {block name="checkout_login_form"}
-          <section class="login-form -ps-hidden">
-            {include file="customer/_partials/login-form.tpl" back=$urls.pages.order}
-          </section>
-        {/block}
-      {/if}
+      {$personal_information_section nofilter}
 
-      {block name="checkout_basic_information"}
-        {include file="checkout/_partials/personal-details.tpl" customer=$customer}
-      {/block}
-
-      {block name="checkout_addresses"}
-
-        <header>
-          <h1 class="h3">{l s='Addresses'}</h1>
-        </header>
-
-        {if $customer.is_logged && count($customer.addresses) > 0}
-          {block name="checkout_customer_addresses"}
-            {include file="checkout/_partials/checkout-section-logged-addresses.tpl"
-              selected_address_delivery=$cart.id_address_delivery
-              selected_address_invoice=$cart.id_address_invoice}
-          {/block}
-        {else}
-          {block name="checkout_address_forms"}
-            {$address_form_delivery nofilter}
-            {$address_form_invoice nofilter}
-          {/block}
-        {/if}
-
-      {/block}
+      {$addresses_section nofilter}
 
       {$delivery_options nofilter}
 
