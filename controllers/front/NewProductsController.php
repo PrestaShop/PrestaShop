@@ -60,8 +60,7 @@ class NewProductsControllerCore extends FrontController
             'products' => $products,
             'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
             'nbProducts' => (int)$nb_products,
-            'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
-            'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
+            'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
         ));
 
         $this->setTemplate(_PS_THEME_DIR_.'new-products.tpl');
