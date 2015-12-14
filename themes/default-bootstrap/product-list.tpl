@@ -204,19 +204,10 @@
 				{if $page_name != 'index'}
 					<div class="functional-buttons clearfix">
 						{hook h='displayProductListFunctionalButtons' product=$product}
-						{if isset($comparator_max_item) && $comparator_max_item}
-							<div class="compare">
-								<a class="add_to_compare" href="{$product.link|escape:'html':'UTF-8'}" data-id-product="{$product.id_product}">{l s='Add to Compare'}</a>
-							</div>
-						{/if}
 					</div>
 				{/if}
 			</div><!-- .product-container> -->
 		</li>
 	{/foreach}
 	</ul>
-{addJsDefL name=min_item}{l s='Please select at least one product' js=1}{/addJsDefL}
-{addJsDefL name=max_item}{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}{/addJsDefL}
-{addJsDef comparator_max_item=$comparator_max_item}
-{addJsDef comparedProductsIds=$compared_products}
 {/if}

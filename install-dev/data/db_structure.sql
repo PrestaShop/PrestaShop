@@ -426,20 +426,6 @@ CREATE TABLE `PREFIX_cms_category_shop` (
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_compare` (
-  `id_compare` int(10) unsigned NOT NULL auto_increment,
-  `id_customer` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_compare`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_compare_product` (
-  `id_compare` int(10) unsigned NOT NULL,
-  `id_product` int(10) unsigned NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_compare`,`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_configuration` (
   `id_configuration` int(10) unsigned NOT NULL auto_increment,
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
