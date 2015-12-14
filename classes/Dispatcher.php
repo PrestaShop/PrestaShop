@@ -270,9 +270,6 @@ class DispatcherCore
                 if (isset($controllers['auth'])) {
                     $controllers['authentication'] = $controllers['auth'];
                 }
-                if (isset($controllers['compare'])) {
-                    $controllers['productscomparison'] = $controllers['compare'];
-                }
                 if (isset($controllers['contact'])) {
                     $controllers['contactform'] = $controllers['contact'];
                 }
