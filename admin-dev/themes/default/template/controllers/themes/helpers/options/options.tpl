@@ -29,6 +29,7 @@
 		{if $field['can_display_themes']}
 			<div class="col-lg-12">
 				<div class="row">
+
 					{foreach $field.themes as $theme}
 						<div class="col-sm-4 col-lg-3">
 							<div class="theme-container">
@@ -41,7 +42,7 @@
 												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
-												{if $theme->name != 'default-bootstrap' || ($theme->name == 'default-bootstrap'  && $host_mode == 0)}
+
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 													<i class="icon-caret-down"></i>&nbsp;
 												</button>
@@ -52,7 +53,7 @@
 														</a>
 													</li>
 												</ul>
-												{/if}
+
 											</div>
 										</div>
 									</div>
@@ -61,36 +62,7 @@
 							</div>
 						</div>
 					{/foreach}
-					{foreach $field.not_installed as $theme}
-						<div class="col-sm-4 col-lg-3">
-							<div class="theme-container">
-								<h4 class="theme-title">{$theme.name}</h4>
-								<div class="thumbnail-wrapper">
-									<div class="action-wrapper">
-										<div class="action-overlay"></div>
-										<div class="action-buttons">
-											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;installThemeFromFolder&amp;theme_dir={$theme.directory}" class="btn btn-default">
-													<i class="icon-check"></i> {l s='Install this theme'}
-												</a>
-												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<i class="icon-caret-down"></i>&nbsp;
-												</button>
-												<ul class="dropdown-menu">
-													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_dir={$theme.directory}" title="Delete this theme" class="delete">
-															<i class="icon-trash"></i> {l s='Delete this theme'}
-														</a>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<img class="center-block img-thumbnail" src="../themes/{$theme.directory}/themes/{$theme.directory}/preview.jpg" alt="{$theme.name}" />
-								</div>
-							</div>
-						</div>
-					{/foreach}
+
 				</div>
 			</div>
 		{/if}

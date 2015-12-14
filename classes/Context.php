@@ -70,9 +70,6 @@ class ContextCore
     /** @var Shop */
     public $shop;
 
-    /** @var Theme */
-    public $theme;
-
     /** @var Smarty */
     public $smarty;
 

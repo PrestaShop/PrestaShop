@@ -57,3 +57,10 @@ DROP TABLE IF EXISTS PREFIX_compare;
 DROP TABLE IF EXISTS PREFIX_compare_product;
 
 ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL
+
+DROP TABLE `PREFIX_theme`;
+DROP TABLE `PREFIX_theme_meta`;
+DROP TABLE `PREFIX_theme_specific`;
+
+ALTER TABLE `PREFIX_shop` DROP COLUMN `id_theme`;
+ALTER TABLE `PREFIX_shop` ADD COLUMN `theme_directory` VARCHAR(255) AFTER `id_category`;
