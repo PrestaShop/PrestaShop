@@ -53,3 +53,11 @@ ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 25
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
 
 ALTER TABLE `PREFIX_hook` DROP `live_edit`;
+
+/* Remove comparator feature */
+DELETE FROM `PREFIX_hook_alias` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_hook` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_COMPARATOR_MAX_ITEM';
+DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
+DROP TABLE IF EXISTS PREFIX_compare;
+DROP TABLE IF EXISTS PREFIX_compare_product;

@@ -62,6 +62,5 @@ class PricesDropControllerCore extends ProductListingFrontController
         return new PricesDropProductSearchProvider(
             $translator
         );
-
     }
 }
