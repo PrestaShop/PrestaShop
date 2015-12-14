@@ -64,6 +64,43 @@ class OrderControllerCore extends FrontController
         return TermsAndConditions::formatForTemplate($allConditions);
     }
 
+    protected function renderPersonalInformationSection()
+    {
+        $status = 'pending';
+        $show_login_form = Tools::getValue('login');
+        if ($this->context->customer->isGuest() || $this->context->customer->isLogged()) {
+            $status = 'done';
+            $show_login_form = false;
+        }
+
+        return $this->render(
+            'checkout/_partials/personal-information-section.tpl', [
+                'genders'               => $this->renderGenders(),
+                'status'                => $status,
+                'show_login_form'       => $show_login_form,
+                'guest_or_register_url' => $this->updateQueryString(null)
+            ]
+        );
+    }
+
+    protected function renderAddressesSection()
+    {
+        $status = "pending";
+
+        if ((int)$this->context->cart->id_address_delivery > 0 &&
+        (int)$this->context->cart->id_address_invoice > 0) {
+            $status = 'done';
+        }
+
+        return $this->render(
+            'checkout/_partials/addresses-section.tpl', [
+                'status'                => $status,
+                'address_form_delivery' => $this->renderAddressFormDelivery(),
+                'address_form_invoice'  => $this->renderAddressFormInvoice(),
+            ]
+        );
+    }
+
     protected function renderDeliveryOptions()
     {
         if (Tools::getValue('delivery_option')) {
@@ -337,18 +374,30 @@ class OrderControllerCore extends FrontController
 
         $this->cart_presented = $this->cart_presenter->present($this->context->cart);
 
+        $this->assignDate();
+        $this->assignAddressFields();
+
+        // "global" assignments
         $this->context->smarty->assign([
+            'guest_allowed' => (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
             'cart' => $this->cart_presented,
+        ]);
+
+        $this->context->smarty->assign([
+            'personal_information_section' => $this->renderPersonalInformationSection(),
+            'addresses_section' => $this->renderAddressesSection(),
             'payment_options' => $this->renderPaymentOptions(),
             'cart_summary' => $this->renderCartSummary(),
             'delivery_options' => $this->renderDeliveryOptions(),
             'genders' => $this->renderGenders(),
-            'login' => (bool)Tools::getValue('login'),
-            'guest_allowed' => (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
+            'login' => (bool)Tools::getValue('login')
         ]);
 
-        $this->assignDate();
+        $this->setTemplate('checkout/checkout.tpl');
+    }
 
+    private function assignAddressFields()
+    {
         if (!$this->context->customer->isLogged()
             || ($this->context->customer->isLogged() && empty($this->context->customer->getSimpleAddresses()))
         ) {
@@ -365,14 +414,7 @@ class OrderControllerCore extends FrontController
                     $this->address[$attr] = $this->context->customer->{$attr};
                 }
             }
-
-            $this->context->smarty->assign([
-                'address_form_delivery' => $this->renderAddressFormDelivery(),
-                'address_form_invoice' => $this->renderAddressFormInvoice(),
-            ]);
         }
-
-        $this->setTemplate('checkout/checkout.tpl');
     }
 
     public function postProcess()

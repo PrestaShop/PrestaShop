@@ -1,141 +1,160 @@
-/* global describe, it, before, browser */
+/* global describe, it, before, after, browser */
 
 import fixtures from '../fixtures';
 import * as checkout from '../helpers/checkout';
 import {getRandomUser} from '../helpers/random-user';
 
-describe.only("The Checkout Process", function () {
+const defaultScenario = {
+    name: "Guest Checkout",
+    customerOrdersAsGuest: true,
+    deliveryAddressIsInvoiceAddress: true
+};
 
+const scenarios = [defaultScenario];
+
+describe.only("The Checkout Process", function () {
     before(function () {
         return checkout.addSomeProductToCart().then(
             () => browser.url(fixtures.urls.checkout)
         );
     });
 
-    describe("when the customer doesn't have an account", function () {
-
-        it('should show the account creation form', function () {
-            return browser.waitForVisible('.customer-info-form');
-        });
-
-        describe("and chooses to order as guest", function () {
-
-            xit("should allow the customer not to write a password", function () {
-                return getRandomUser().then(user => {
-                        return browser
-                            .setValue('.customer-info-form [name=firstname]', user.name.first)
-                            .setValue('.customer-info-form [name=lastname]' , user.name.last)
-                            .setValue('.customer-info-form [name=email]'    , user.email)
-                            .click('.customer-info-form [name=submitCreate]')
-                        ;
-                    }
-                );
-            });
-
-            customerHasNoAddresses();
-        });
-
-        describe("and chooses to create an account", function () {
-
-            it('should allow the customer to write a password');
-
-            customerHasNoAddresses();
-        });
-
+    after(function () {
+        return browser.deleteCookie().refresh();
     });
 
-    describe("when the customer already has an account", function () {
-
-        function customerAlreadyHasAnAddress () {
-            describe("and already has an address", function () {
-
-                describe("and uses the same address for delivery and invoice", function () {
-                    proceedToShipping();
-                });
-
-                describe("and uses a different address for delivery and invoice", function () {
-                    proceedToShipping();
-                });
-
-                describe("and uses a different, new address for invoice", function () {
-                    proceedToShipping();
-                });
-
-            });
-        }
-
-        function proceedToAddresses () {
-            customerHasNoAddresses();
-            customerAlreadyHasAnAddress();
-        }
-
-        describe("and is already logged-in", function () {
-
-            it("should show step 2 directly");
-
-            proceedToAddresses();
-        });
-
-        describe("and has not yet logged-in", function () {
-
-            it("should log the customer in");
-
-            proceedToAddresses();
-        });
-
-    });
-
+    scenarios.forEach(runScenario);
 });
 
-function customerHasNoAddresses () {
-    describe("and the customer doesn't have an address", function () {
-        it("should not show any addresses");
-        it("should show the delivery address form");
+function runScenario (scenario) {
+  describe(scenario.name, function () {
 
-        describe("and the customer uses the same address for delivery and invoice", function () {
-            it("should show an unchecked checkbox allowing to setup a different address");
-            proceedToShipping();
+    let user;
+    if (scenario.customerOrdersAsGuest) {
+      before(function () {
+        return getRandomUser().then(randomUser => user = randomUser);
+      });
+    }
+
+    describe("by default, customer is expected to order as guest", function () {
+        it('should show the personal information step as "pending"', function () {
+          return browser.waitForVisible(
+            'section#personal-information-section[data-checkout-step-status="pending"]'
+          );
         });
 
-        describe("and the customer uses a different address for invoice", function () {
-            it("should allow adding another address for invoice");
-            proceedToShipping();
+        it('should show the account creation form', function () {
+          return browser.waitForVisible('.customer-info-form');
         });
-    });
-}
 
-function proceedToShipping () {
+        it('should show a link to the login form', function () {
+          return browser.waitForVisible(
+            '.customer-info-form [data-link-action="show-login-form"]'
+          );
+        });
 
-    it("should show delivery options");
+        if (scenario.customerOrdersAsGuest) {
+          it('should allow filling the personal info form without password', function () {
+            return browser
+              .setValue('.customer-info-form [name=firstname]', user.name.first)
+              .setValue('.customer-info-form [name=lastname]' , user.name.last)
+              .setValue('.customer-info-form [name=email]'    , user.email)
+              .click('.customer-info-form button')
+              .waitForVisible(
+                  'section#personal-information-section[data-checkout-step-status="done"]'
+              )
+            ;
+          });
 
-    proceedToPayment();
-}
+          describe('the addresses step', function () {
+            it('should show the addresses step as "pending"', function () {
+              return browser.waitForVisible(
+                'section#addresses-section[data-checkout-step-status="pending"]'
+              );
+            });
 
-function proceedToPayment () {
+            it("should not show any addresses");
 
-    it("should show payment options");
-    it("should show a checkbox to accept the terms and conditions");
-    it("should have a disabled order button");
+            it("should show the delivery address form", function () {
+              return browser.waitForVisible('#checkout-address-delivery');
+            });
 
-    describe("proceeds to payment directly", function () {
-        confirmOrder();
-    });
+            it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
+              return browser
+                .getValue('#checkout-address-delivery [name=firstname]')
+                .should.become(user.name.first)
+                .then(() => browser.getValue('#checkout-address-delivery [name=lastname]'))
+                .should.become(user.name.last)
+              ;
+            });
 
-    describe("but changes their firstname before paying", function () {
-        confirmOrder();
-    });
+            it("should show an unchecked checkbox allowing to setup a different address", function () {
+              return browser
+                .isSelected('#checkout-different-address-for-invoice')
+                .should.become(false);
+            });
 
-    describe("but edits their delivery address before paying", function () {
-        confirmOrder();
-    });
-}
+            it("should fill the address form", function () {
+              browser
+                .setValue('#checkout-address-delivery [name=address1]', user.location.street)
+                .setValue('#checkout-address-delivery [name=city]', user.location.city)
+                .setValue('#checkout-address-delivery [name=postcode]', '00000')
+                .setValue('#checkout-address-delivery [name=phone]', '0123456789')
+                .click('#checkout-address-delivery button')
+                .waitForVisible('#checkout-address-delivery .address-item')
+              ;
+            });
 
-function confirmOrder () {
-    describe("the customer pays", function () {
+            it('should then show the addresses step as "done"', function () {
+              return browser.waitForVisible(
+                'section#addresses-section[data-checkout-step-status="done"]'
+              );
+            });
+          });
+        }
 
-    });
+        describe('the delivery step', function () {
+          it("should show delivery options", function () {
+            return browser.waitForVisible('.delivery-options .delivery-option');
+          });
+        });
 
-    describe("the customer pays but there is an error", function () {
+        describe('the payment step', function () {
+          it("should show a checkbox to accept the terms and conditions", function () {
+            return browser.waitForVisible("#conditions-to-approve");
+          });
 
-    });
+          it("the terms and conditions checkbox should be unchecked", function () {
+            return browser
+              .isSelected('[name="conditions_to_approve[terms-and-conditions]"]')
+              .should.become(false)
+            ;
+          });
+
+          it("should show payment options", function () {
+            return browser.waitForVisible('.advanced-payment-options .advanced-payment-option');
+          });
+
+          it("should have a disabled order button", function () {
+            return browser.isEnabled('#payment-confirmation button')
+              .should.become(false)
+            ;
+          });
+
+          it("should check the terms-and-conditions", function () {
+            return browser.click(
+              'label[for="conditions_to_approve[terms-and-conditions]"'
+            );
+          });
+          it("should choose a payment option", function () {
+            return browser.click(
+              '.advanced-payment-options .advanced-payment-option label'
+            );
+          });
+          it("should confirm the payment", function () {
+            return browser.click("#payment-confirmation button").pause(10000);
+          });
+        });
+      });
+  });
 }
