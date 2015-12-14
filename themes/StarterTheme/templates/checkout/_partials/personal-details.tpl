@@ -1,15 +1,13 @@
 <section class="customer-info-form">
-  <form action="{$urls.pages.authentication}" method="post">
-    <header>
-      <h1 class="h3">{l s='Personal information'}</h1>
-    </header>
-
+  <header>
+    <h1 class="h2">{l s='Order as guest'}</h1>
     {if !$customer.is_logged}
-      <p>{l s='Have an account?'} <a href="{$urls.pages.order_login}">{l s='Log in'}</a></p>
+      <p>{l s='Have an account?'} <a data-link-action="show-login-form" href="{$urls.pages.order_login}">{l s='Log in'}</a></p>
     {else}
-      <p>{l s='Not you?'} <a href="{$urls.actions.logout}">{l s='Log out'}</a></p>
+      <p>{l s='Not you?'} <a data-link-action="logout" href="{$urls.actions.logout}">{l s='Log out'}</a></p>
     {/if}
-
+  </header>
+  <form action="{$urls.pages.authentication}" method="post">
     <section class="form-fields">
 
       {include file="customer/_partials/form-item-gender.tpl" genders=$genders}
