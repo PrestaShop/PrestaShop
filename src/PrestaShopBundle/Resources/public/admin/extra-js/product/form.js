@@ -885,7 +885,6 @@ var form = (function() {
 			});
 
 			elem.find('#form_switch_language').change(function( event ) {
-				console.log(event.target.value);
 				event.preventDefault();
 				switchLanguage(event.target.value);
 			});

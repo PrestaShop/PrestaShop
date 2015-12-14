@@ -30,7 +30,7 @@
             </div>
             <div class="col-lg-1 toolbarBox">
                 <a class="toolbar_btn btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}">
-                    <i class="process-icon-help">&nbsp;{{ trans('Help', [], 'AdminTab') }}</i>
+                    <i class="process-icon-help"></i>
                 </a>
             </div>
 
@@ -86,6 +86,7 @@
 
                     <div class="col-lg-3">
                         <div class="panel">
+                            {{ form_row(form.step1.active) }}
                             <div class="form-group">
                                 {{ form_errors(form.step1.price_shortcut) }}
                                 <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
@@ -436,9 +437,6 @@
             {{ form_widget(form._token) }}
         </form>
     </div>
-    <footer class="panel-footer">
-        {{ form_row(form.step1.active) }}
-    </footer>
 {% endblock %}
 
 {% block stylesheets %}

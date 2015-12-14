@@ -14,3 +14,9 @@
 .capitalize {
   text-transform: capitalize;
 }
+#content.bootstrap{
+  padding-top: 20px;
+}
+#form .toolbarBox a{
+  text-decoration: none;
+}
