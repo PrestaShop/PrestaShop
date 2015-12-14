@@ -237,10 +237,6 @@
       <alias>paymentCCAdded</alias>
       <name>actionPaymentCCAdd</name>
     </hook_alias>
-    <hook_alias id="extraProductComparison">
-      <alias>extraProductComparison</alias>
-      <name>displayProductComparison</name>
-    </hook_alias>
     <hook_alias id="categoryAddition">
       <alias>categoryAddition</alias>
       <name>actionCategoryAdd</name>
