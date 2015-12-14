@@ -196,7 +196,7 @@ abstract class HTMLTemplateCore
     {
         $template = false;
         $default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
-        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
+        $overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->theme->directory.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
         if (file_exists($overridden_template)) {
             $template = $overridden_template;
         } elseif (file_exists($default_template)) {
