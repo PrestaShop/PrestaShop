@@ -97,6 +97,15 @@
 	</tr>
 
 	<tr>
+		<td colspan="6" class="left">
+
+			{$shipping_tab}
+
+		</td>
+		<td colspan="1">&nbsp;</td>
+	</tr>
+
+	<tr>
 		<td colspan="12" height="10">&nbsp;</td>
 	</tr>
 

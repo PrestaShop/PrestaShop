@@ -64,7 +64,8 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
-	table#payment-tab {
+	table#payment-tab,
+	table#shipping-tab {
 		padding: {$table_padding};
 		border: 1px solid {$color_border};
 	}
@@ -115,7 +116,8 @@
 		font-weight: bold;
 	}
 
-	th.payment {
+	th.payment,
+	th.shipping {
 		background-color: {$color_header};
 		vertical-align: middle;
 		font-weight: bold;
