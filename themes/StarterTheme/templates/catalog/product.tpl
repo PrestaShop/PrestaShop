@@ -120,9 +120,9 @@
 
           <div class="product-actions">
             {block name="product_buy"}
-              <form action="{$product.canonical_url}" method="post">
+              <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                 <input type="hidden" name="token" value="{$static_token}" />
-                <input type="hidden" name="refresh_product" value="1" />
+                <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id" />
 
                 {block name="product_prices"}
                   {if $product.show_price}
@@ -192,7 +192,7 @@
                       <div>
                         <label for="group_{$id_attribute_group}">{$group.name}</label>
                         {if $group.group_type == 'select'}
-                          <select name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
+                          <select data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" id="group_{$id_attribute_group}">
                             {foreach from=$group.attributes key=id_attribute item=group_attribute}
                               <option value="{$id_attribute}" title="{$group_attribute.name}"{if $group_attribute.selected} selected="selected"{/if}>{$group_attribute.name}</option>
                             {/foreach}
@@ -201,7 +201,7 @@
                           <ul id="group_{$id_attribute_group}">
                             {foreach from=$group.attributes key=id_attribute item=group_attribute}
                               <li>
-                                <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <input type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
                                 <span style="background-color:{$group_attribute.html_color_code}">{$group_attribute.name}</span>
                               </li>
                             {/foreach}
@@ -210,7 +210,7 @@
                           <ul id="group_{$id_attribute_group}">
                             {foreach from=$group.attributes key=id_attribute item=group_attribute}
                               <li>
-                                <input type="radio" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
+                                <input type="radio" data-product-attribute="{$id_attribute_group}" name="group[{$id_attribute_group}]" value="{$id_attribute}"{if $group_attribute.selected} checked="checked"{/if} />
                                 <span>{$group_attribute.name}</span>
                               </li>
                             {/foreach}
@@ -218,41 +218,40 @@
                         {/if}
                       </div>
                     {/foreach}
+
+                    {block name="product_add_to_cart"}
+                      {if $product.add_to_cart_url}
+                        {*<form class="add-to-cart" action="{$urls.pages.cart}" method="post">*}
+
+                          {block name="product_quantity"}
+                            <p class="product-quantity">
+                              <label for="quantity_wanted">{l s='Quantity'}</label>
+                              <input type="number" min="1" name="qty" id="quantity_wanted" value="{$product.quantity_wanted}" />
+                            </p>
+                          {/block}
+
+                          {block name="product_minimal_quantity"}
+                            {if $product.minimal_quantity > 1}
+                              <p class="product-minimal-quantity">
+                                {l s='The minimum purchase order quantity for the product is %s.' sprintf=$product.minimal_quantity}
+                              </p>
+                            {/if}
+                          {/block}
+
+                          <input class="add-to-cart" type="submit" name="add" value="{l s='Add to cart'}" />
+                        {*</form>*}
+                      {/if}
+                    {/block}
+
                     {block name="product_refresh"}
-                      <input class="product-refresh" type="submit" value="{l s='Refresh'}" />
+                      <input class="product-refresh ps-hidden-by-js" name="refresh" type="submit" value="{l s='Refresh'}" />
                     {/block}
                   </div>
                 {/block}
               </form>
             {/block}
 
-            {block name="product_add_to_cart"}
-              {if $product.add_to_cart_url}
-                <form class="add-to-cart" action="{$urls.pages.cart}" method="post">
-                  <input type="hidden" name="token" value="{$static_token}" />
-                  <input type="hidden" name="add" value="1" />
-                  <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id" />
-                  <input type="hidden" name="id_product_attribute" id="idCombination" value="{$product.id_product_attribute}" />
 
-                  {block name="product_quantity"}
-                    <p class="product-quantity">
-                      <label for="quantity_wanted">{l s='Quantity'}</label>
-                      <input type="number" min="1" name="qty" id="quantity_wanted" value="{$quantityBackup}" />
-                    </p>
-                  {/block}
-
-                  {block name="product_minimal_quantity"}
-                    {if $product.minimal_quantity > 1}
-                      <p class="product-minimal-quantity">
-                        {l s='The minimum purchase order quantity for the product is %s.' sprintf=$product.minimal_quantity}
-                      </p>
-                    {/if}
-                  {/block}
-
-                  <input type="submit" value="{l s='Add to cart'}" />
-                </form>
-              {/if}
-            {/block}
           </div>
 
           {* StarterTheme: Content Only *}
