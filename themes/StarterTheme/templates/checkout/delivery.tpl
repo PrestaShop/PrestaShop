@@ -1,7 +1,7 @@
 <section id='delivery-options'>
 
   <header>
-    <h1 class="h3">{l s='Delivery options'}</h1>
+    <h1 class="h1">{l s='Delivery options'}</h1>
   </header>
 
   <div class="delivery-options-list">

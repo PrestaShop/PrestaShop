@@ -4,20 +4,26 @@ import fixtures from '../fixtures';
 import * as checkout from '../helpers/checkout';
 import {getRandomUser} from '../helpers/random-user';
 
-const defaultScenario = {
+const guestScenario = {
     name: "Guest Checkout",
     customerDoesntHaveAnAccount: true,
     customerOrdersAsGuest: true,
     deliveryAddressIsInvoiceAddress: true
 };
 
-const registrationScenario = Object.assign({}, defaultScenario, {
+const registrationScenario = Object.assign({}, guestScenario, {
   name: "Registration Checkout",
   customerOrdersAsGuest: false
 });
 
+const guestScenarioDifferentAddresses = Object.assign({}, guestScenario, {
+  name: "Guest Checkout With Different Invoice Address",
+  deliveryAddressIsInvoiceAddress: false
+});
+
 const scenarios = [
-  defaultScenario,
+  guestScenarioDifferentAddresses,
+  guestScenario,
   registrationScenario
 ];
 
@@ -124,15 +130,33 @@ function runScenario (scenario) {
           });
 
           it("should fill the address form", function () {
-            browser
+            return browser
               .setValue('#checkout-address-delivery [name=address1]', user.location.street)
               .setValue('#checkout-address-delivery [name=city]', user.location.city)
               .setValue('#checkout-address-delivery [name=postcode]', '00000')
               .setValue('#checkout-address-delivery [name=phone]', '0123456789')
               .click('#checkout-address-delivery button')
-              .waitForVisible('#checkout-address-delivery .address-item')
+              .waitForVisible('#delivery-addresses .address-item')
             ;
           });
+
+          if (!scenario.deliveryAddressIsInvoiceAddress) {
+            it("should open and fill another address form for the invoice address", function () {
+              return browser
+                .click('#checkout-different-address-for-invoice')
+                .waitForVisible('[data-link-action="new-address-invoice"]')
+                .click('[data-link-action="new-address-invoice"]')
+                .setValue('#checkout-address-invoice [name=firstname]', 'Someone')
+                .setValue('#checkout-address-invoice [name=lastname]', 'Else')
+                .setValue('#checkout-address-invoice [name=address1]', user.location.street)
+                .setValue('#checkout-address-invoice [name=city]', user.location.city)
+                .setValue('#checkout-address-invoice [name=postcode]', '11111')
+                .setValue('#checkout-address-invoice [name=phone]', '0123456789')
+                .click('#checkout-address-invoice button')
+                .waitForVisible('#invoice-addresses .address-item')
+              ;
+            });
+          }
 
           it('should then show the addresses step as "done"', function () {
             return browser.waitForVisible(
@@ -191,7 +215,7 @@ function runScenario (scenario) {
       if (!scenario.customerOrdersAsGuest) {
         describe("after the order, when the customer did create an account", function () {
           it('the customer should be logged in', function () {
-            browser
+            return browser
               .waitForVisible('a.logout')
               .waitForVisible('a.account')
             ;
