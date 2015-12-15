@@ -198,10 +198,14 @@ function smartyHook($params, &$smarty)
         $hook_params['smarty'] = $smarty;
         if (!empty($params['mod'])) {
             $module = Module::getInstanceByName($params['mod']);
+            unset($hook_params['mod']);
             if ($module && $module->id) {
                 $id_module = $module->id;
+            } else {
+                unset($hook_params['h']);
+                return '';
             }
-            unset($hook_params['mod']);
+            
         }
         unset($hook_params['h']);
         return Hook::exec($params['h'], $hook_params, $id_module);
