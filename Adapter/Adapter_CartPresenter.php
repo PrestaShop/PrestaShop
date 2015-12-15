@@ -78,6 +78,8 @@ class Adapter_CartPresenter
             $rawProduct['total']
         );
 
+        $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
+
         return $presenter->presentForListing(
             $settings,
             $rawProduct,
