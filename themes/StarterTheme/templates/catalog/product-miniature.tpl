@@ -5,13 +5,14 @@
       <img
         src = "{$product.cover.medium.url}"
         alt = "{$product.cover.legend}"
+        title = "{$product.cover.legend}"
         data-full-size-image-url = "{$product.cover.large.url}"
       >
     </a>
   {/block}
 
   {block name="product_name"}
-    <h1 class="h2" itemprop="name"><a href="{$product.url}">{$product.name}</a></h1>
+    <h1 class="h2" itemprop="name"><a href="{$product.url}" title="{$product.name}">{$product.name}</a></h1>
   {/block}
 
   {block name="product_description_short"}
@@ -25,6 +26,7 @@
             class = "add-to-cart"
             href  = "{$product.add_to_cart_url}"
             rel   = "nofollow"
+            title = "{l s='Add to cart'}"
             data-id-product="{$product.id_product}"
             data-id-product-attribute="{$product.id_product_attribute}"
             data-link-action="add-to-cart"
