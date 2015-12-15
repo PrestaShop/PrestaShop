@@ -246,7 +246,7 @@ class AdminProductsControllerCore extends AdminController
         if (Configuration::get('PS_STOCK_MANAGEMENT')) {
             $this->fields_list['sav_quantity'] = array(
                 'title' => $this->l('Quantity'),
-                'type' => 'int',
+                'type' => 'range',
                 'align' => 'text-right',
                 'filter_key' => 'sav!quantity',
                 'orderby' => true,

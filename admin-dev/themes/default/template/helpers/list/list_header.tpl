@@ -361,6 +361,17 @@
 											{/if}
 										</select>
 									{/if}
+                                {elseif $params.type == 'range'}
+                                    {if isset($params.filter_key)}
+                                        <div class="row">
+                                            <div>
+                                                <input type="text" class="filter form-control" id="{$list_id}Filter_{$params.filter_key}[from]" name="{$list_id}Filter_{$params.filter_key}[from]"  placeholder="{l s='From'}" value="{if isset($params.value.from)}{$params.value.from}{/if}"/>
+                                            </div>
+                                            <div>
+                                                <input type="text" class="filter form-control" id="{$list_id}Filter_{$params.filter_key}[to]" name="{$list_id}Filter_{$params.filter_key}[to]"  placeholder="{l s='To'}" value="{if isset($params.value.to)}{$params.value.to}{/if}"/>
+                                            </div>
+                                        </div>
+                                    {/if}
 								{else}
 									<input type="text" class="filter" name="{$list_id}Filter_{if isset($params.filter_key)}{$params.filter_key}{else}{$key}{/if}" value="{$params.value|escape:'html':'UTF-8'}" {if isset($params.width) && $params.width != 'auto'} style="width:{$params.width}px"{/if} />
 								{/if}

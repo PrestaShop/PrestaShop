@@ -639,6 +639,18 @@ class HelperListCore extends Helper
                     }
                     break;
 
+                case 'range':
+
+                    if (is_string($value)) {
+                        $value = Tools::unSerialize($value);
+                    }
+
+                    if (!Validate::isCleanHtml($value['from']) || !Validate::isCleanHtml($value['to'])) {
+                        $value = '';
+                    }
+
+                    break;
+
                 case 'text':
                     if (!Validate::isCleanHtml($value)) {
                         $value = '';
