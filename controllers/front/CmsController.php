@@ -59,7 +59,7 @@ class CmsControllerCore extends FrontController
         }
 
         if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && $id_cms && Validate::isLoadedObject($this->cms)
-            && in_array($id_cms, array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION')))) {
+            && in_array($id_cms, $this->getSSLCMSPageIds())) {
             $this->ssl = true;
         }
 
@@ -137,5 +137,14 @@ class CmsControllerCore extends FrontController
         }
 
         $this->setTemplate(_PS_THEME_DIR_.'cms.tpl');
+    }
+
+    /**
+     * Return an array of IDs of CMS pages, which shouldn't be forwared to their canonical URLs in SSL environment.
+     * Required for pages which are shown in iframes.
+    */
+    protected function getSSLCMSPageIds()
+    {
+        return array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION'));
     }
 }
