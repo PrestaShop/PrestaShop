@@ -486,7 +486,21 @@ class FrontControllerCore extends Controller
         $this->iso               = $iso;
         $this->context->cart     = $cart;
         $this->context->currency = $currency;
+    }
 
+    /**
+     * Method that is executed after init() and checkAccess().
+     * Used to process user input.
+     *
+     * @see Controller::run()
+     */
+    public function postProcess()
+    {
+    }
+
+
+    protected function assignGeneralPurposeVariables()
+    {
         $customer = $this->getTemplateVarCustomer();
         $urls = $this->getTemplateVarUrls();
 
@@ -503,7 +517,6 @@ class FrontControllerCore extends Controller
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
         ]);
-
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
             'cart' => ['id_address_delivery' => 1, 'id_address_invoice' => 1, ], // StarterTheme: Set proposer ids
@@ -512,21 +525,13 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Method that is executed after init() and checkAccess().
-     * Used to process user input.
-     *
-     * @see Controller::run()
-     */
-    public function postProcess()
-    {
-    }
-
-    /**
      * Initializes common front page content: header, footer and side columns
      */
     public function initContent()
     {
         $this->process();
+
+        $this->assignGeneralPurposeVariables();
 
         if (!isset($this->context->cart)) {
             $this->context->cart = new Cart();
