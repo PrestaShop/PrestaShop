@@ -406,6 +406,9 @@
                         </div>
                     </div>
 
+                    {{ form_row(form.step6.attachment_product) }}
+                    {{ form_row(form.step6.attachments) }}
+
                     <div class="text-right">
                         <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
                         {% if hookcount('displayAdminProductsExtra') > 0 %}

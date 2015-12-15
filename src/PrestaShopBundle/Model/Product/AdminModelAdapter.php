@@ -108,6 +108,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'features',
             'specific_price',
             'virtual_product',
+            'attachment_product',
         );
 
         //define multishop keys
@@ -520,7 +521,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     $this->supplierAdapter->getProductSuppliers($this->product->id)
                 ),
                 'default_supplier' => $this->product->id_supplier,
-                'custom_fields' => $this->getCustomFields()
+                'custom_fields' => $this->getCustomFields(),
+                'attachments' => $this->getProductAttachments(),
             ]
         ];
 
@@ -533,6 +535,26 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         return $form_data;
     }
 
+    /**
+     * Get product attachments
+     *
+     * @return array
+     */
+    private function getProductAttachments()
+    {
+        return array_map(
+            function ($a) {
+                return($a['id_attachment']);
+            },
+            \AttachmentCore::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
+        );
+    }
+
+    /**
+     * Get virtual product data
+     *
+     * @return array
+     */
     private function getVirtualProductData()
     {
         $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);

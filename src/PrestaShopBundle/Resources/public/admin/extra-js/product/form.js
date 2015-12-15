@@ -39,6 +39,7 @@ $(document).ready(function() {
 	warehouseCombinations.init();
 	customFieldCollection.init();
 	virtualProduct.init();
+	attachmentProduct.init();
 
 	/** update price and shortcut price field on change */
 	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
@@ -1038,6 +1039,72 @@ var virtualProduct = (function() {
 					},
 					complete: function(){
 						_this.removeProp('disabled');
+					}
+				});
+			});
+		}
+	};
+})();
+
+/**
+ * attachment product management
+ */
+var attachmentProduct = (function() {
+	return {
+		'init': function() {
+			var buttonSave = $('#form_step6_attachment_product_add');
+
+			/** add attachment */
+			$('#form_step6_attachment_product_add').click(function(){
+				var _this = $(this);
+				var data = new FormData();
+
+				if($('#form_step6_attachment_product_file')[0].files[0]) {
+					data.append('product_attachment[file]', $('#form_step6_attachment_product_file')[0].files[0]);
+				}
+				data.append('product_attachment[name]', $('#form_step6_attachment_product_name').val());
+				data.append('product_attachment[description]', $('#form_step6_attachment_product_description').val());
+
+				$.ajax({
+					type: 'POST',
+					url: $('#form_step6_attachment_product').attr('data-action')+'/'+$('#form_id_product').val(),
+					data: data,
+					contentType: false,
+					processData: false,
+					beforeSend: function() {
+						buttonSave.prop('disabled', 'disabled');
+						$('.help-block').remove();
+						$('*.has-error').removeClass('has-error');
+					},
+					success: function(response){
+						$('#form_step6_attachment_product_file').val('');
+						$('#form_step6_attachment_product_name').val('');
+						$('#form_step6_attachment_product_description').val('');
+
+						//inject new attachment in attachment list
+						if(response.id){
+							$('#form_step6_attachments')
+								.append($('<option></option>')
+									.attr('value', response.id)
+									.text(response.real_name)
+									.prop('selected', true)
+								);
+						}
+					},
+					error: function(response){
+						$.each(jQuery.parseJSON(response.responseText), function(key, errors){
+							var html = '<span class="help-block"><ul class="list-unstyled">';
+							$.each(errors, function(key, error){
+								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+							});
+							html += '</ul></span>';
+
+							$('#form_step6_attachment_product_'+key).parent().append(html);
+							$('#form_step6_attachment_product_'+key).parent().addClass('has-error');
+						});
+					},
+					complete: function(){
+						buttonSave.removeProp('disabled');
 					}
 				});
 			});

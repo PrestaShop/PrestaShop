@@ -97,3 +97,12 @@ admin_product_virtual_remove_action:
         idProduct: 0
     requirements:
         idProduct: \d+
+
+admin_product_attachement_add_action:
+    path:     /product/attachment/form/add/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\AttachementProductController::addAction
+        idProduct: 0
+    requirements:
+        idProduct: \d+

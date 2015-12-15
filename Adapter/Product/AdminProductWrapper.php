@@ -589,4 +589,49 @@ class AdminProductWrapper
             $download->delete(true);
         }
     }
+
+    /**
+     * Add attachement file
+     *
+     * @param object $product
+     * @param array $data
+     * @param array $locales
+     *
+     * @return object|null Attachement
+     */
+    public function processAddAttachment($product, $data, $locales)
+    {
+        $attachment = null;
+
+        $file = $data['file'];
+        if (!empty($file)) {
+            $fileName = sha1(microtime());
+
+            $attachment = new \AttachmentCore();
+            $attachment->name[(int)$locales[0]['id_lang']] = $data['name'];
+            $attachment->description[(int)$locales[0]['id_lang']] = $data['description'];
+            $attachment->file = $fileName;
+            $attachment->mime = $file->getMimeType();
+            $attachment->file_name = $file->getClientOriginalName();
+
+            $file->move(_PS_DOWNLOAD_DIR_, $fileName);
+
+            if ($attachment->add()) {
+                $attachment->attachProduct($product->id);
+            }
+        }
+
+        return $attachment;
+    }
+
+    /**
+     * Process product attachments
+     *
+     * @param object $product
+     * @param array $data
+     */
+    public function processAttachments($product, $data)
+    {
+        \AttachmentCore::attachToProduct($product->id, $data);
+    }
 }

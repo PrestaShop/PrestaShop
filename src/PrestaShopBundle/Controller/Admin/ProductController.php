@@ -337,7 +337,9 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('prestashop.adapter.legacy.context'),
                 $this->container->get('prestashop.adapter.data_provider.product'),
                 $this->container->get('prestashop.adapter.data_provider.supplier'),
-                $this->container->get('prestashop.adapter.data_provider.currency')
+                $this->container->get('prestashop.adapter.data_provider.currency'),
+                $this->container->get('prestashop.adapter.data_provider.attachment'),
+                $this->container->get('router')
             ))
             ->getForm();
 
@@ -378,6 +380,7 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
                     $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
+                    $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
