@@ -70,6 +70,9 @@ services:
     prestashop.adapter.data_provider.product:
         class: PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider
 
+    prestashop.adapter.data_provider.attachment:
+        class: PrestaShop\PrestaShop\Adapter\Product\AttachmentDataProvider
+
     prestashop.adapter.data_provider.feature:
         class: PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider
 

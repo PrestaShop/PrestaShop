@@ -31,6 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
 use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
 use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 
@@ -43,6 +44,7 @@ class ProductOptions extends CommonModelAbstractType
     private $suppliers;
     private $context;
     private $productAdapter;
+    private $router;
 
     /**
      * Constructor
@@ -52,16 +54,25 @@ class ProductOptions extends CommonModelAbstractType
      * @param object $productDataProvider
      * @param object $supplierDataProvider
      * @param object $currencyDataprovider
+     * @param object $attachmentDataprovider
+     * @param object $router
      */
-    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider)
+    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router)
     {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->productAdapter = $productDataProvider;
         $this->currencyDataprovider = $currencyDataprovider;
+        $this->router = $router;
+
         $this->suppliers = $this->formatDataChoicesList(
             $supplierDataProvider->getSuppliers(),
             'id_supplier'
+        );
+
+        $this->attachmentList = $this->formatDataChoicesList(
+            $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']),
+            'id_attachment'
         );
     }
 
@@ -150,6 +161,22 @@ class ProductOptions extends CommonModelAbstractType
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
+        ));
+
+        //Add product attachment form
+        $builder->add('attachment_product', new ProductAttachement($this->translator, $this->context), array(
+            'required' => false,
+            'label' => $this->translator->trans('Attachment', [], 'AdminProducts'),
+            'attr' => ['data-action' => $this->router->generate('admin_product_attachement_add_action')]
+        ));
+
+        //Add attachment selectors
+        $builder->add('attachments', 'choice', array(
+            'expanded'  => false,
+            'multiple'  => true,
+            'choices'  => $this->attachmentList,
+            'required' => false,
+            'label' => $this->translator->trans('Attachments for this product:', [], 'AdminProducts'),
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
