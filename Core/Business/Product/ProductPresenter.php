@@ -2,14 +2,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Business\Product;
 
-use Adapter_ObjectSerializer;
 use Adapter_ImageRetriever;
 use Adapter_PricePresenter;
-use Adapter_ProductPriceCalculator;
+use \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use Adapter_ProductColorsRetriever;
 use Adapter_Translator;
-use PrestaShop\PrestaShop\Core\Business\Price\PricePresenterInterface;
-use Product;
 use Language;
 use Link;
 
@@ -32,6 +29,7 @@ class ProductPresenter
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
         $this->pricePresenter = $pricePresenter;
+        $this->productPriceCalculator = new PriceCalculator();
         $this->productColorsRetriever = $productColorsRetriever;
         $this->translator = $translator;
     }
@@ -90,11 +88,16 @@ class ProductPresenter
         $presentedProduct['discount_type'] = null;
         $presentedProduct['discount_percentage'] = null;
 
-        if ($settings->include_taxes) {
-            $price = $regular_price = $product['price'];
-        } else {
-            $price = $regular_price = $product['price_tax_exc'];
-        }
+        $price = $regular_price = $this->productPriceCalculator->getProductPrice(
+            $product['id_product'],
+            $settings->include_taxes,
+            $product['id_product_attribute'],
+            6,
+            null,
+            false,
+            true,
+            (isset($presentedProduct['quantity_wanted']) ? (int)$presentedProduct['quantity_wanted'] : $presentedProduct['minimal_quantity'])
+        );
 
         if ($product['specific_prices']) {
             $presentedProduct['has_discount'] = true;
