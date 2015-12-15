@@ -1,5 +1,5 @@
 <section id='payment-options'>
-  <h1 class="h3">{l s='Payment Options'}</h1>
+  <h1 class="h1">{l s='Payment Options'}</h1>
 
   {if !$all_conditions_approved}
     {l s='Please accept the Terms & Conditions before proceeding to payment.'}
