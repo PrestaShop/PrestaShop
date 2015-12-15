@@ -35,7 +35,11 @@ class OrderControllerCore extends FrontController
 
     private $address_formatter;
     private $address_form;
-    private $address_fields;
+
+    private $invoice_address_fields;
+    private $invoice_address_values;
+    private $delivery_address_fields;
+    private $delivery_address_values;
 
     private $cart_presented;
 
@@ -87,16 +91,26 @@ class OrderControllerCore extends FrontController
     {
         $status = "pending";
 
-        if ((int)$this->context->cart->id_address_delivery > 0 &&
-        (int)$this->context->cart->id_address_invoice > 0) {
+        $id_address_delivery = (int)$this->context->cart->id_address_delivery;
+        $id_address_invoice  = (int)$this->context->cart->id_address_invoice;
+
+        if ($id_address_delivery > 0 && $id_address_invoice > 0) {
             $status = 'done';
         }
+
+        $new_delivery_address = Tools::getValue('newAddress') === 'delivery';
+        $new_invoice_address  = Tools::getValue('newAddress') === 'invoice';
 
         return $this->render(
             'checkout/_partials/addresses-section.tpl', [
                 'status'                => $status,
                 'address_form_delivery' => $this->renderAddressFormDelivery(),
                 'address_form_invoice'  => $this->renderAddressFormInvoice(),
+                'id_address_delivery'   => $id_address_delivery,
+                'id_address_invoice'    => $id_address_invoice,
+                'checkout_different_address_for_invoice' => Tools::getValue('checkout-different-address-for-invoice') || $new_invoice_address || $id_address_invoice !== $id_address_delivery,
+                'new_delivery_address' => $new_delivery_address,
+                'new_invoice_address' => $new_invoice_address,
             ]
         );
     }
@@ -264,18 +278,24 @@ class OrderControllerCore extends FrontController
 
     protected function renderAddressFormDelivery()
     {
+        foreach (['firstname', 'lastname'] as $attr) {
+            if (empty($this->delivery_address_values[$attr])) {
+                $this->delivery_address_values[$attr] = $this->context->customer->{$attr};
+            }
+        }
+
         return $this->render('checkout/_partials/address-form-delivery.tpl', [
-            'address_fields' => $this->address_fields,
-            'address' => $this->address,
-            'countries' => $this->address_form->getCountryList(),
+            'address_fields' => $this->delivery_address_fields,
+            'address' => $this->delivery_address_values,
+            'countries' => $this->address_form->getCountryList()
         ]);
     }
 
     protected function renderAddressFormInvoice()
     {
         return $this->render('checkout/_partials/address-form-invoice.tpl', [
-            'address_fields' => $this->address_fields,
-            'address' => $this->address,
+            'address_fields' => $this->invoice_address_fields,
+            'address' => $this->invoice_address_values,
             'countries' => $this->address_form->getCountryList(),
         ]);
     }
@@ -398,83 +418,117 @@ class OrderControllerCore extends FrontController
 
     private function assignAddressFields()
     {
-        if (!$this->context->customer->isLogged()
-            || ($this->context->customer->isLogged() && empty($this->context->customer->getSimpleAddresses()))
-        ) {
-            if (empty($this->address_fields)) {
-                $this->address_fields = $this->address_form->getAddressFormat();
-            }
-
-            if (empty($this->address)) {
-                $this->address = $this->context->customer->getSimpleAddress(0);
-            }
-
-            foreach (['firstname', 'lastname'] as $attr) {
-                if (empty($this->address->{$attr})) {
-                    $this->address[$attr] = $this->context->customer->{$attr};
-                }
-            }
+        $this->invoice_address_fields  = $this->address_form->getAddressFormat();
+        $this->invoice_address_values  = [];
+        foreach ($this->invoice_address_fields as $key => $unused) {
+            $this->invoice_address_values[$key] = '';
         }
+
+        $this->delivery_address_fields  = $this->address_form->getAddressFormat();
+        $this->delivery_address_values  = [];
+        foreach ($this->delivery_address_fields as $key => $unused) {
+            $this->delivery_address_values[$key] = '';
+        }
+
+        $this->delivery_address_values['id_country'] = null;
+        $this->invoice_address_values['id_country'] = null;
+    }
+
+    protected function useDifferentInvoiceAddress()
+    {
+        return Tools::getValue('checkout-different-address-for-invoice') && $this->context->cart->id_address_invoice;
     }
 
     public function postProcess()
     {
         parent::postProcess();
 
-        // StarterTheme: Better submit
-        if (Tools::isSubmit('changeAddresses')) {
-            $id_address_delivery = Tools::getValue('id_address_delivery');
-            $this->context->cart->id_address_delivery = $id_address_delivery;
-            if (Tools::getValue('checkout-different-address-for-invoice') === 'on') {
-                $this->context->cart->id_address_invoice = Tools::getValue('id_address_invoice');
+        if (($addressType = Tools::getValue('saveAddress'))) {
+            // Saving an address, either delivery or invoice
+            $res = $this->savePostedAddress();
+            if ($res['ok']) {
+                if ($addressType === 'delivery') {
+                    $this->context->cart->id_address_delivery = $res['address']->id;
+                    if (!$this->useDifferentInvoiceAddress()) {
+                        $this->context->cart->id_address_invoice = $res['address']->id;
+                    }
+                } else {
+                    $this->context->cart->id_address_invoice = $res['address']->id;
+                }
             } else {
+                if ($addressType === 'delivery') {
+                    $this->delivery_address_fields = $res['address_fields'];
+                    $this->delivery_address_values = $res['address_values'];
+                } else {
+                    $this->invoice_address_fields = $res['address_fields'];
+                    $this->invoice_address_values = $res['address_values'];
+                }
+            }
+            $this->context->cart->save();
+        } elseif ($id_address_invoice = (Tools::getValue('id_address_invoice'))) {
+            // We're changing the invoice address
+            // (always just changes the invoice address)
+            $this->context->cart->id_address_invoice = $id_address_invoice;
+            $this->context->cart->save();
+        } elseif ($id_address_delivery = (Tools::getValue('id_address_delivery'))) {
+            // We're changing the delivery address
+            // (may change the invoice address too)
+            $this->context->cart->id_address_delivery = $id_address_delivery;
+            if (Tools::getValue('checkout-different-address-for-invoice')) {
                 $this->context->cart->id_address_invoice = $id_address_delivery;
             }
-        } elseif (Tools::isSubmit('submitAddressDelivery')) {
-            $address_ok = $this->processAddressDelivery();
-            if (!$address_ok) {
-                return true;
-            } else {
-                Tools::redirect(
-                    $this->context->link->getPageLink('order')
-                );
-            }
+            $this->context->cart->save();
         } elseif (Tools::isSubmit('submitPersonalDetails')) {
             $this->processSubmitPersonalDetails();
         }
     }
 
-    public function processAddressDelivery()
+    public function savePostedAddress()
     {
-        $this->address_fields = $this->address_form->getAddressFormatWithErrors();
+        $address_fields = $this->address_form->getAddressFormatWithErrors();
+
+        $address = [
+            'id' => Tools::getValue('id_address'),
+            'id_country' => Tools::getValue('id_country'),
+            'id_state' => Tools::getValue('id_state'),
+        ];
+
+        foreach ($address_fields as $key => $value) {
+            $address[$key] = Tools::getValue($key);
+        }
 
         if ($this->address_form->hasErrors()) {
-            $this->address = [
-                'id' => Tools::getValue('id_address'),
-                'id_country' => Tools::getValue('id_country'),
-                'id_state' => Tools::getValue('id_state'),
+            return [
+                'address'        => null,
+                'address_fields' => $address_fields,
+                'address_values' => $address,
+                'ok'             => false
             ];
-            foreach ($this->address_fields as $key => $value) {
-                $this->address[$key] = Tools::getValue($key);
-            }
-
-            return false;
         }
 
         // Save address
         $addr = new Address(Tools::getValue('id_address'));
-        $addr->alias = $this->l('My address');
-        $addr->id_customer = $this->context->cookie->id_customer;
+        $addr->alias        = $this->l('My address');
+        $addr->id_customer  = $this->context->cookie->id_customer;
         $addr->validateController();
 
         if ($addr->save()) {
-            $this->context->cart->id_address_delivery = $addr->id;
-            $this->context->cart->id_address_invoice = $addr->id;
-            $this->context->cart->update();
-            return true;
+            return [
+                'address'        => $addr,
+                'address_fields' => $address_fields,
+                'address_values' => $address,
+                'ok'             => true
+            ];
+        } else {
+            $this->errors['unexpected'] = $this->l(
+                'An unexpected error occured while saving your data'
+            );
+            return [
+                'address'        => null,
+                'address_fields' => $address_fields,
+                'address_values' => $address,
+                'ok'             => false
+            ];
         }
-
-        $this->errors['unexpected'] = $this->l('An unexpected error occured while saving your data');
-        return false;
     }
 }

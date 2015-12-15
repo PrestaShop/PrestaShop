@@ -18,3 +18,6 @@
     </footer>
   </article>
 {/foreach}
+<p>
+  <button class="ps-hidden-by-js" type="submit">{l s='Save'}</button>
+</p>
