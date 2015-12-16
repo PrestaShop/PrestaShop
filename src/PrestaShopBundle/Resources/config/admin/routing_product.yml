@@ -106,3 +106,18 @@ admin_product_attachement_add_action:
         idProduct: 0
     requirements:
         idProduct: \d+
+
+admin_product_image_upload:
+    path:     /product/image/upload/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductController::uploadImageAction'
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_image_positions:
+    path:     /product/image/positions
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductController::updateImagePositionAction'

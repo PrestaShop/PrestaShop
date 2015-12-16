@@ -634,4 +634,18 @@ class AdminProductWrapper
     {
         \AttachmentCore::attachToProduct($product->id, $data);
     }
+
+    /**
+     * Update images positions
+     *
+     * @param array $data Indexed array with id product/position
+     */
+    public function ajaxProcessUpdateImagePosition($data)
+    {
+        foreach ($data as $id => $position) {
+            $img = new \ImageCore((int)$id);
+            $img->position = (int)$position;
+            $img->update();
+        }
+    }
 }

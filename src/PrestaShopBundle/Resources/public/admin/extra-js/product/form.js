@@ -40,6 +40,7 @@ $(document).ready(function() {
 	customFieldCollection.init();
 	virtualProduct.init();
 	attachmentProduct.init();
+	imagesProduct.init();
 
 	/** update price and shortcut price field on change */
 	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
@@ -1108,6 +1109,124 @@ var attachmentProduct = (function() {
 					}
 				});
 			});
+		}
+	};
+})();
+
+/**
+ * images product management
+ */
+var imagesProduct = (function() {
+	return {
+		'init': function() {
+
+			Dropzone.autoDiscover = false;
+			var dropZoneElem = $('#product-images-dropzone');
+			var errorElem = $('#product-images-dropzone-error');
+
+			//on click image, display custom form
+			$(document).on('click', '#product-images-dropzone .dz-preview', function() {
+				if(!$(this).attr('data-id')){
+					return;
+				}
+			});
+
+			var dropzoneOptions = {
+				url: dropZoneElem.attr('url-upload')+'/'+$('#form_id_product').val(),
+				paramName: "form[file]",
+				maxFilesize: 8,
+				addRemoveLinks: true,
+				clickable: true,
+				thumbnailWidth: 130,
+				thumbnailHeight: null,
+				acceptedFiles: 'image/*',
+				dictDefaultMessage: '<h4>'+translate_javascripts['Drop pictures here']+'</h4>'+translate_javascripts['or select files'],
+				dictRemoveFile: translate_javascripts['Delete'],
+				dictFileTooBig: translate_javascripts['ToLargeFile'],
+				dictCancelUpload: translate_javascripts['Delete'],
+				sending: function (file, response) {
+					errorElem.html('');
+				},
+				queuecomplete: function(){
+					dropZoneElem.sortable('enable');
+				},
+				addedfile: function(){
+					dropZoneElem.sortable('disable');
+				},
+				success: function (file, response) {
+					//manage error on uploaded file
+					if(response.error != 0){
+						errorElem.append('<p>' + file.name + ': ' + response.error + '</p>');
+						this.removeFile(file);
+						return;
+					}
+
+					//define id image to file preview
+					$(file.previewElement).attr('data-id', response.id);
+					$(file.previewElement).addClass('ui-sortable-handle');
+
+					if(response.cover == 1){
+						imagesProduct.updateDisplayCover(response.id);
+					}
+				},
+				error: function (file, response) {
+					var message = '';
+					if($.type(response) === "string"){
+						message = response;
+					}else{
+						message = response.message;
+					}
+
+					//append new error
+					errorElem.append('<p>' + file.name + ': ' + message + '</p>');
+
+					//remove uploaded item
+					this.removeFile(file);
+				},
+				init: function () {
+					//if already images uploaded, mask drop file message
+					if(dropZoneElem.find('.dz-preview').length){
+						dropZoneElem.addClass('dz-started');
+					}
+
+					//init sortable
+					dropZoneElem.sortable({
+						opacity: 0.9,
+						zIndex: 9999,
+						stop: function( event, ui ) {
+							var sort = {};
+							$.each(dropZoneElem.find('.dz-preview'), function( index, value ) {
+								if(!$(value).attr('data-id')) {
+									sort = false;
+									return;
+								}
+								sort[$(value).attr('data-id')] = index+1;
+							});
+
+							//if sortable ok, update it
+							if(sort){
+								$.ajax({
+									type: 'POST',
+									url: dropZoneElem.attr('url-position'),
+									data: {json: JSON.stringify(sort)}
+								});
+							}
+
+						}
+					});
+
+					dropZoneElem.disableSelection();
+				}
+			};
+
+			dropZoneElem.dropzone(jQuery.extend( dropzoneOptions));
+		},
+		'updateDisplayCover': function(id_image) {
+
+			$('#product-images-dropzone .dz-preview .iscover').remove();
+
+			$('#product-images-dropzone .dz-preview[data-id="' + id_image + '"]')
+				.append('<div class="iscover">' + translate_javascripts['Cover'] + '</div>');
 		}
 	};
 })();

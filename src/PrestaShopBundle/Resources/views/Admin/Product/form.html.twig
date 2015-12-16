@@ -62,7 +62,34 @@
                             </div>
                         </div>
                         {{ form_row(form.step1.description) }}
-                        {{ form_row(form.step1.images) }}
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{ trans('Images', {}, 'AdminProducts') }}</label>
+                            <div class="col-sm-10">
+                                <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}">
+                                    <div id="product-images-dropzone-error" class="text-danger"></div>
+                                    {% if form.step1.vars.value.images is defined %}
+                                        {% for image in form.step1.vars.value.images %}
+                                            <div class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle" data-id="{{ image.id }}">
+                                                <div class="dz-image bg" style="background-image: url('{{ image.base_image_url }}-home_default.{{ image.format }}');"></div>
+                                                <div class="dz-details">
+                                                    <div class="dz-size"><span data-dz-size=""></span></div>
+                                                    <div class="dz-filename"><span data-dz-name=""></span></div>
+                                                </div>
+                                                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
+                                                <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+                                                <div class="dz-success-mark"></div>
+                                                <div class="dz-error-mark"></div>
+                                                {% if image.cover == 1 %}
+                                                <div class="iscover">{{ trans('Cover', {}, 'AdminProducts') }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
                         {{ form_row(form.step1.upc) }}
                         {{ form_row(form.step1.ean13) }}
                         {{ form_row(form.step1.isbn) }}
@@ -444,9 +471,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
+    {% stylesheets'../js/vendor/node_modules/dropzone/dist/min/dropzone.min.css'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css'
-    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css' filter='cssrewrite' %}
+    '../js/vendor/node_modules/bootstrap-tokenfield/dist/css/tokenfield-typeahead.min.css'
+    '@PrestaShopBundle/Resources/public/admin/extra-css/product/image-uploader.css' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url|admin_asset_path }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -463,6 +491,7 @@
     '../js/vendor/node_modules/dropzone/dist/min/dropzone.min.js'
     '../js/vendor/node_modules/sprintf-js/dist/sprintf.min.js'
     '../js/vendor/node_modules/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js'
+    '../js/jquery/ui/jquery.ui.sortable.min.js'
     %}
     <script src="{{ asset_url|admin_asset_path }}"></script>
     {% endjavascripts %}
@@ -473,6 +502,7 @@
     "Form update errors": trans("Form update errors", {}, 'AdminProducts'),
     "Delete": trans("Delete", {}, 'AdminProducts'),
     "ToLargeFile": trans("The file is too large ({{filesize}}). Allowed maximum size is {{maxFilesize}}.", {}, 'AdminProducts'),
-
-
+    "Drop pictures here": trans("Drop pictures here", {}, 'AdminProducts'),
+    "or select files": trans("or select files", {}, 'AdminProducts'),
+    "Cover": trans("Cover", {}, 'AdminProducts'),
 }|merge(js_translatable) %}
