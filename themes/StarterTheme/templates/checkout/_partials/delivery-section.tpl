@@ -1,4 +1,4 @@
-<section id='delivery-options' data-checkout-step-status="{$status}">
+<section id='delivery-section' data-checkout-step-status="{$status}">
 
   <header>
     <h1 class="h1">{l s='Delivery options'}</h1>
