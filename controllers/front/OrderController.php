@@ -294,7 +294,7 @@ class OrderControllerCore extends FrontController
             $all_conditions_approved = true;
         }
 
-        return $this->render('checkout/payment.tpl', [
+        return $this->render('checkout/_partials/payment-section.tpl', [
             'payment_options' => $payment_options,
             'conditions_to_approve' => $this->getConditionsToApprove(),
             'approved_conditions' => $this->getSubmittedConditionsApproval(),

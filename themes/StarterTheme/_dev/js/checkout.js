@@ -8,7 +8,7 @@ function collapsePaymentOptions() {
 }
 
 function getSelectedPaymentOption () {
-  return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
+  return $('#payment-section input[name="advanced-payment-option"]:checked').attr('id');
 }
 
 function enableOrDisableOrderButton() {
@@ -76,7 +76,7 @@ function setupCheckoutScripts () {
   }
 
   $('#payment-confirmation button').on('click', confirmPayment);
-  $('#payment-options input[type="checkbox"][disabled]').attr('disabled', false);
+  $('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
