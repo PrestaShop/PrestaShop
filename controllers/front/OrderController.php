@@ -236,6 +236,7 @@ class OrderControllerCore extends FrontController
                     'delivery_option_list' => $delivery_option_list,
                     'delivery_option' => $delivery_option
                 ]),
+                'status' => 'pending'
             ];
 
             Cart::addExtraCarriers($vars);
@@ -247,7 +248,8 @@ class OrderControllerCore extends FrontController
         } else {
             return $this->render('checkout/delivery.tpl', [
                 'HOOK_BEFORECARRIER' => null,
-                'carriers_available' => []
+                'carriers_available' => [],
+                'status'             => 'pending'
             ]);
         }
     }
@@ -297,7 +299,8 @@ class OrderControllerCore extends FrontController
             'conditions_to_approve' => $this->getConditionsToApprove(),
             'approved_conditions' => $this->getSubmittedConditionsApproval(),
             'all_conditions_approved' => $all_conditions_approved,
-            'selected_payment_option' => $selected_payment_option
+            'selected_payment_option' => $selected_payment_option,
+            'status'                  => 'pending'
         ]);
     }
 
