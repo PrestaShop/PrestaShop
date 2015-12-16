@@ -69,6 +69,34 @@ class ModuleController extends Controller
         ));
     }
 
+    public function manageAction(Request $request, $category = null, $keyword = null)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        // toolbarButtons
+        $toolbarButtons = array();
+        $toolbarButtons['add_module'] = array(
+            'href' => $this->generateUrl('admin_module_import'),
+            'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
+            'icon' => 'process-icon-new',
+            'help' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller'))
+        );
+
+        $filter = [];
+        if ($keyword !== null) {
+            $filter['search'] = $keyword;
+        }
+        if ($category !== null) {
+            $filter['category'] = $category;
+        }
+        
+        return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
+                'layoutHeaderToolbarBtn' => $toolbarButtons,
+                'modules' => $modulesProvider->getManageModules($filter),
+                'topMenuData' => $this->getTopMenuData()
+            ));
+    }
+
     public function moduleAction(Request $request)
     {
         $action = $request->attributes->get('action'). 'Module';

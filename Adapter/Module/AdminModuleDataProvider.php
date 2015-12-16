@@ -45,10 +45,12 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     const _CACHEFILE_CATEGORIES_ = 'catalog_categories.json';
     const _CACHEFILE_MODULES_ = 'catalog_modules.json';
 
+    const _CACHEFILE_INSTALLED_CATEGORIES_ = 'catalog_installed_categories.json';
+    const _CACHEFILE_INSTALLED_MODULES_ = 'catalog_installed_modules.json';
+
     /* Cache for One Day */
     const _WATCH_DOG_ = 86400;
 
-    private $is_employee_addons_logged = false;
     private $kernel;
 
     private $cache_dir;
@@ -56,15 +58,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
     protected $catalog_categories      = [];
     protected $catalog_modules         = [];
 
+    protected $manage_categories      = [];
+    protected $manage_modules         = [];
+
     public function __construct(\AppKernel $kernel)
     {
         $this->kernel = $kernel;
         $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
-        $context = \Context::getContext();
-        if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
-            && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)) {
-            $this->is_employee_addons_logged = true;
-        }
     }
 
     public function clearCache()
@@ -79,9 +79,16 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     public function getAllModules()
     {
+        $addons_provider = new AddonsDataProvider();
+
         return \Module::getModulesOnDisk(true,
-                (bool)$this->is_employee_addons_logged,
+                $addons_provider->isAddonsAuthenticated(),
                 (int)\Context::getContext()->employee->id);
+    }
+
+    public function getAllInstalledModules()
+    {
+        return \Module::getModulesInstalled();
     }
 
     public function getCatalogModules(array $filter = [])
@@ -92,7 +99,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         shuffle($this->catalog_modules);
 
-        return $this->applyModuleFilters($filter);
+        return $this->applyModuleFilters($this->catalog_modules, $this->catalog_modules, $filter);
     }
 
     public function getCatalogCategories()
@@ -102,6 +109,24 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         return $this->catalog_categories;
+    }
+
+    public function getManageModules(array $filter = [])
+    {
+        if (count($this->manage_modules) === 0) {
+            $this->loadManageData();
+        }
+
+        return $this->applyModuleFilters($this->manage_modules, $this->manage_categories, $filter);
+    }
+
+    public function getManageCategories()
+    {
+        if (count($this->manage_categories) === 0) {
+            $this->loadManageData();
+        }
+
+        return $this->manage_categories;
     }
 
     public function getModule($name)
@@ -139,13 +164,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return false;
     }
 
-    protected function applyModuleFilters(array $filters)
+    protected function applyModuleFilters(array $products, $categories, array $filters)
     {
         if (! count($filters)) {
-            return $this->catalog_modules;
+            return $products;
         }
 
-        $module_ids = array_keys($this->catalog_modules);
+        $module_ids = array_keys($products);
 
         // We get our module IDs to keep
         foreach ($filters as $filter_name => $value) {
@@ -155,8 +180,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 case 'category':
                     $ref = $this->getRefFromModuleCategoryName($value);
                     // We get the IDs list from the category
-                    $search_result = isset($this->catalog_categories->categories->subMenu->{$ref}) ?
-                        $this->catalog_categories->categories->subMenu->{$ref}->modulesRef :
+                    $search_result = isset($categories->categories->subMenu->{$ref}) ?
+                        $categories->categories->subMenu->{$ref}->modulesRef :
                         [];
                     break;
                 case 'search':
@@ -171,7 +196,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         // Instead of looping on the whole module list, we use $module_ids which can already be reduced
                         // thanks to the previous array_intersect(...)
                         foreach ($module_ids as $key) {
-                            $module = $this->catalog_modules[$key];
+                            $module = $products[$key];
                             if (strpos($module->displayName, $keyword) !== false
                                 || strpos($module->name, $keyword) !== false
                                 || strpos($module->description, $keyword) !== false) {
@@ -189,13 +214,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         // We apply the filter results
-        foreach ($this->catalog_modules as $key => $module) {
+        foreach ($products as $key => $module) {
             if (! in_array($key, $module_ids)) {
-                unset($this->catalog_modules[$key]);
+                unset($products[$key]);
             }
         }
 
-        return $this->catalog_modules;
+        return $products;
     }
 
     protected function loadCatalogData()
@@ -228,18 +253,74 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 }
 
                 $this->catalog_modules    = $this->convertJsonForNewCatalog($jsons);
-                $this->catalog_categories = $this->getCategoriesFromModules();
+                $this->catalog_categories = $this->getCategoriesFromModules($this->catalog_modules);
                 $this->registerModuleCache(self::_CACHEFILE_CATEGORIES_, $this->catalog_categories);
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } catch (\Exception $e) {
-                if (! $this->fallbackOnCache()) {
+                if (! $this->fallbackOnCatalogCache()) {
                     throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache", 0, $e);
                 }
             }
         }
     }
 
-    protected function getCategoriesFromModules()
+    protected function loadManageData()
+    {
+        $this->manage_categories = $this->getModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_);
+        $this->manage_modules    = $this->getModuleCache(self::_CACHEFILE_INSTALLED_MODULES_);
+
+        if (!$this->manage_categories || !$this->manage_modules) {
+            try {
+                // We need to load the catalog to get native modules later
+                $this->getCatalogModules();
+
+                $this->manage_modules = [];
+                $all_modules = $this->getAllModules();
+                $all_installed_modules = $this->getAllInstalledModules();
+
+                // Why all these foreach ? Because we need to join data from 3 different arrays.
+                foreach ($all_installed_modules as $installed_module) {
+                    //
+                    foreach ($this->catalog_modules as $catalog_module) {
+                        if ($catalog_module->name === $installed_module['name']) {
+                            $installed_module = array_merge($installed_module, (array)$catalog_module);
+                            continue;
+                        }
+                    }
+
+                    foreach ($all_modules as $module) {
+                        if ($module->name === $installed_module['name']) {
+                            $installed_module = array_merge($installed_module, (array)$module);
+                            continue;
+                        }
+                    }
+
+                    if (isset($catalog_module->refs[0]) && $catalog_module->refs[0] == 'natif') {
+                        $row = 'native_modules';
+                    } elseif (0 /* ToDo: insert condition for theme related modules*/) {
+                        $row = 'theme_bundle';
+                    } else {
+                        $row= 'modules';
+                    }
+                    $this->manage_modules[$row][] = $installed_module;
+                }
+
+                ddd($this->manage_modules);
+
+                /*$this->manage_modules    = $this->convertJsonForNewCatalog($jsons);*/
+                $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
+
+                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
+                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
+            } catch (\Exception $e) {
+                if (! $this->fallbackOnManageCache()) {
+                    throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
+                }
+            }
+        }
+    }
+
+    protected function getCategoriesFromModules($modules)
     {
         $categories = new \stdClass;
 
@@ -247,8 +328,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $categories->categories = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($this->catalog_modules as $module_key => $module) {
-            $name = $module->categoryName;
+        foreach ($modules as $module_key => $module) {
+            $name = !empty($module->categoryName)?
+                $module->categoryName:
+                'unknown';
             $ref  = $this->getRefFromModuleCategoryName($name);
 
             if (!isset($ref, $categories->categories->subMenu->{$ref})) {
@@ -277,7 +360,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $duplicates[] = $product->name;
 
                 // Add un-implemented properties
-                $product->refs       = (array)$this->getRefFromModuleCategoryName($product->categoryName);
+                $product->refs       = (array)(!empty($product->categoryName)
+                    ?$this->getRefFromModuleCategoryName($product->categoryName)
+                    :'unknown'
+                );
                 if (! isset($product->product_type)) {
                     $product->productType = isset($json_key)?rtrim($json_key, 's'):'module';
                 } else {
@@ -291,7 +377,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 ];
                 $product->scoring    = 0;
                 $product->media      = (object)[
-                        'img' => $product->img,
+                        'img' => isset($product->img)?$product->img:'',
                         'badges' => isset($product->badges)?$product->badges:[],
                         'cover' => isset($product->cover)?$product->cover:[],
                         'screenshotsUrls' => [],
@@ -327,13 +413,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         return str_replace([' '], ['_'], strtolower(\Tools::replaceAccentedChars($name)));
     }
 
-    protected function fallbackOnCache()
+    protected function fallbackOnCatalogCache()
     {
         // Fallback on data from cache if exists
         $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_, false);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_, false);
 
         return ($this->catalog_categories && $this->catalog_modules);
+    }
+
+    protected function fallbackOnManageCache()
+    {
+        // Fallback on data from cache if exists
+        $this->manage_categories = $this->getModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, false);
+        $this->manage_modules    = $this->getModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, false);
+
+        return ($this->manage_categories && $this->manage_modules);
     }
 
     private function getModuleCache($file, $check_freshness = true)

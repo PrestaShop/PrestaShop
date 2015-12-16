@@ -152,7 +152,7 @@
     display: inline-block;
     width: 75%;
     margin-left: 5px;
-    margin-top: 0.5em;
+    /*margin-top: 0.5em;*/
 }
 .module-item-heading-grid {
     display: inline-block;
