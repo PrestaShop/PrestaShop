@@ -1,4 +1,4 @@
-<section id='payment-options'>
+<section id='payment-section'>
   <h1 class="h1">{l s='Payment Options'}</h1>
 
   {if !$all_conditions_approved}
