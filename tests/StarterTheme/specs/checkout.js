@@ -41,7 +41,7 @@ function runScenario (scenario) {
     });
 
     after(function () {
-        return browser.deleteCookie().refresh();
+        return browser.deleteCookie().url('/');
     });
 
     let user;
