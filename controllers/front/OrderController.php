@@ -174,7 +174,7 @@ class OrderControllerCore extends FrontController
         );
     }
 
-    protected function renderDeliveryOptions()
+    protected function renderDeliverySection()
     {
         if (Tools::getValue('delivery_option')) {
             $this->context->cart->setDeliveryOption(Tools::getValue('delivery_option'));
@@ -240,13 +240,13 @@ class OrderControllerCore extends FrontController
             ];
 
             Cart::addExtraCarriers($vars);
-            return $this->render('checkout/delivery.tpl', array_merge([
+            return $this->render('checkout/_partials/delivery-section.tpl', array_merge([
                 'carriers_available' => $carriers_available,
                 'id_address' => $this->context->cart->id_address_delivery,
                 'delivery_option' => current($delivery_option),
             ], $vars));
         } else {
-            return $this->render('checkout/delivery.tpl', [
+            return $this->render('checkout/_partials/delivery-section.tpl', [
                 'HOOK_BEFORECARRIER' => null,
                 'carriers_available' => [],
                 'status'             => 'pending'
@@ -263,7 +263,7 @@ class OrderControllerCore extends FrontController
 
     protected function selectDeliveryOptionAction()
     {
-        return $this->renderDeliveryOptions();
+        return $this->renderDeliverySection();
     }
 
     protected function isFreeShipping($cart, array $carrier)
@@ -467,7 +467,7 @@ class OrderControllerCore extends FrontController
             'addresses_section' => $this->renderAddressesSection(),
             'payment_options' => $this->renderPaymentOptions(),
             'cart_summary' => $this->renderCartSummary(),
-            'delivery_options' => $this->renderDeliveryOptions(),
+            'delivery_options' => $this->renderDeliverySection(),
             'genders' => $this->renderGenders(),
             'login' => (bool)Tools::getValue('login')
         ]);
