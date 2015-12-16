@@ -31,15 +31,14 @@ class OrderControllerCore extends FrontController
     public $ssl = true;
     public $php_self = 'order';
     public $page_name = 'checkout';
-    public $address;
 
     private $address_formatter;
     private $address_form;
 
-    private $invoice_address_fields;
-    private $invoice_address_values;
-    private $delivery_address_fields;
-    private $delivery_address_values;
+    private $address_fields;
+    private $address;
+    private $address_form_has_errors = false;
+    private $address_type = null;
 
     private $cart_presented;
 
@@ -87,31 +86,91 @@ class OrderControllerCore extends FrontController
         );
     }
 
+    private function getCustomerAddressesCount()
+    {
+        return count($this->context->customer->getSimpleAddresses(
+            $this->context->language->id
+        ));
+    }
+
     protected function renderAddressesSection()
     {
-        $status = "pending";
+        /**
+         * $status is one of:
+         * - "pending"
+         * - "complete"
+         */
+        $status   = "pending";
 
-        $id_address_delivery = (int)$this->context->cart->id_address_delivery;
-        $id_address_invoice  = (int)$this->context->cart->id_address_invoice;
+        /**
+         * $ui_state is one of:
+         * - "new delivery address"
+         * - "new invoice address"
+         * - "edit delivery address"
+         * - "edit invoice address"
+         * - "choose delivery address"
+         * - "choose invoice address"
+         */
+        $ui_state = null;
 
-        if ($id_address_delivery > 0 && $id_address_invoice > 0) {
-            $status = 'done';
+        $customerAddressesCount = $this->getCustomerAddressesCount();
+        $id_address_delivery = $this->context->cart->id_address_delivery;
+        $id_address_invoice  = $this->context->cart->id_address_invoice;
+
+        if ($customerAddressesCount === 0) {
+            // if the customer doesn't have any addresses,
+            // then they must create at least one.
+            $ui_state = "new delivery address";
+        } elseif (($address_type = Tools::getValue("newAddress"))) {
+            $ui_state = "new $address_type address";
+        } elseif ($this->address) {
+            if (Tools::getValue('id_address')) {
+                $action = "edit";
+            } else {
+                $action = "new";
+            }
+            // customer has an address
+            $ui_state = "$action {$this->address_type} address";
+        } elseif (Tools::isSubmit('setupInvoiceAddress')) {
+            if ($customerAddressesCount < 2) {
+                $ui_state = "new invoice address";
+            } else {
+                $ui_state = "choose invoice address";
+            }
+        } else {
+            if ($id_address_invoice > 0 && ($id_address_invoice !== $id_address_delivery)) {
+                $ui_state = "choose invoice address";
+            } else {
+                $ui_state = "choose delivery address";
+            }
         }
 
-        $new_delivery_address = Tools::getValue('newAddress') === 'delivery';
-        $new_invoice_address  = Tools::getValue('newAddress') === 'invoice';
+        if ($id_address_invoice > 0 && $id_address_delivery > 0) {
+            $status = "done";
+        }
 
+        /**
+         * The necessary smarty variables.
+         */
+
+        $this->prepareAddressForm();
+
+        $params = [
+            'status'              => $status,
+            'ui_state'            => $ui_state,
+            'address_fields'      => $this->address_fields,
+            'address'             => $this->address,
+            'countries'           => $this->address_form->getCountryList(),
+            'id_address_delivery' => $id_address_delivery,
+            'id_address_invoice'  => $id_address_invoice
+        ];
+
+         /**
+          * Finally render the thing.
+          */
         return $this->render(
-            'checkout/_partials/addresses-section.tpl', [
-                'status'                => $status,
-                'address_form_delivery' => $this->renderAddressFormDelivery(),
-                'address_form_invoice'  => $this->renderAddressFormInvoice(),
-                'id_address_delivery'   => $id_address_delivery,
-                'id_address_invoice'    => $id_address_invoice,
-                'checkout_different_address_for_invoice' => Tools::getValue('checkout-different-address-for-invoice') || $new_invoice_address || $id_address_invoice !== $id_address_delivery,
-                'new_delivery_address' => $new_delivery_address,
-                'new_invoice_address' => $new_invoice_address,
-            ]
+            'checkout/_partials/addresses-section.tpl',
+            $params
         );
     }
 
@@ -276,28 +335,26 @@ class OrderControllerCore extends FrontController
             ]]);
     }
 
-    protected function renderAddressFormDelivery()
+    protected function prepareAddressForm()
     {
-        foreach (['firstname', 'lastname'] as $attr) {
-            if (empty($this->delivery_address_values[$attr])) {
-                $this->delivery_address_values[$attr] = $this->context->customer->{$attr};
+        if (null === $this->address_fields) {
+            $this->address_fields = $this->address_form->getAddressFormat();
+        }
+
+        if (null === $this->address) {
+            $this->address         = [
+                'id_country' => $this->context->country->id
+            ];
+            foreach ($this->address_fields as $key => $unused) {
+                $this->address[$key] = '';
             }
         }
 
-        return $this->render('checkout/_partials/address-form-delivery.tpl', [
-            'address_fields' => $this->delivery_address_fields,
-            'address' => $this->delivery_address_values,
-            'countries' => $this->address_form->getCountryList()
-        ]);
-    }
-
-    protected function renderAddressFormInvoice()
-    {
-        return $this->render('checkout/_partials/address-form-invoice.tpl', [
-            'address_fields' => $this->invoice_address_fields,
-            'address' => $this->invoice_address_values,
-            'countries' => $this->address_form->getCountryList(),
-        ]);
+        foreach (['firstname', 'lastname'] as $attr) {
+            if (empty($this->address[$attr])) {
+                $this->address[$attr] = $this->context->customer->{$attr};
+            }
+        }
     }
 
     /**
@@ -395,7 +452,6 @@ class OrderControllerCore extends FrontController
         $this->cart_presented = $this->cart_presenter->present($this->context->cart);
 
         $this->assignDate();
-        $this->assignAddressFields();
 
         // "global" assignments
         $this->context->smarty->assign([
@@ -416,55 +472,45 @@ class OrderControllerCore extends FrontController
         $this->setTemplate('checkout/checkout.tpl');
     }
 
-    private function assignAddressFields()
+    protected function useSameAddressForInvoice()
     {
-        $this->invoice_address_fields  = $this->address_form->getAddressFormat();
-        $this->invoice_address_values  = [];
-        foreach ($this->invoice_address_fields as $key => $unused) {
-            $this->invoice_address_values[$key] = '';
-        }
-
-        $this->delivery_address_fields  = $this->address_form->getAddressFormat();
-        $this->delivery_address_values  = [];
-        foreach ($this->delivery_address_fields as $key => $unused) {
-            $this->delivery_address_values[$key] = '';
-        }
-
-        $this->delivery_address_values['id_country'] = null;
-        $this->invoice_address_values['id_country'] = null;
-    }
-
-    protected function useDifferentInvoiceAddress()
-    {
-        return Tools::getValue('checkout-different-address-for-invoice') && $this->context->cart->id_address_invoice;
+        return !$this->context->cart->id_address_invoice || (
+            $this->context->cart->id_address_delivery === $this->context->cart->id_address_invoice
+        );
     }
 
     public function postProcess()
     {
         parent::postProcess();
 
-        if (($addressType = Tools::getValue('saveAddress'))) {
+        $this->address_type = null;
+        if (($address_type = Tools::getValue('saveAddress'))) {
+            $this->address_type = $address_type;
             // Saving an address, either delivery or invoice
             $res = $this->savePostedAddress();
             if ($res['ok']) {
-                if ($addressType === 'delivery') {
-                    $this->context->cart->id_address_delivery = $res['address']->id;
-                    if (!$this->useDifferentInvoiceAddress()) {
-                        $this->context->cart->id_address_invoice = $res['address']->id;
+                if ($address_type === 'delivery') {
+                    $this->context->cart->id_address_delivery = $res['address_object']->id;
+                    if ($this->useSameAddressForInvoice()) {
+                        $this->context->cart->id_address_invoice = $res['address_object']->id;
                     }
                 } else {
-                    $this->context->cart->id_address_invoice = $res['address']->id;
+                    $this->context->cart->id_address_invoice = $res['address_object']->id;
                 }
+                $this->address = null;
+                $this->address_fields = null;
+                $this->address_form_has_errors = false;
             } else {
-                if ($addressType === 'delivery') {
-                    $this->delivery_address_fields = $res['address_fields'];
-                    $this->delivery_address_values = $res['address_values'];
-                } else {
-                    $this->invoice_address_fields = $res['address_fields'];
-                    $this->invoice_address_values = $res['address_values'];
-                }
+                $this->address = $res['address'];
+                $this->address_fields = $res['address_fields'];
+                $this->address_form_has_errors = true;
             }
             $this->context->cart->save();
+        } elseif (($address_type =  Tools::getValue('editAddress'))) {
+            $this->address_type = $address_type;
+            $this->address = $this->context->customer->getSimpleAddress(
+                Tools::getValue('id_address')
+            );
         } elseif ($id_address_invoice = (Tools::getValue('id_address_invoice'))) {
             // We're changing the invoice address
             // (always just changes the invoice address)
@@ -474,7 +520,7 @@ class OrderControllerCore extends FrontController
             // We're changing the delivery address
             // (may change the invoice address too)
             $this->context->cart->id_address_delivery = $id_address_delivery;
-            if (Tools::getValue('checkout-different-address-for-invoice')) {
+            if ($this->useSameAddressForInvoice()) {
                 $this->context->cart->id_address_invoice = $id_address_delivery;
             }
             $this->context->cart->save();
@@ -499,9 +545,9 @@ class OrderControllerCore extends FrontController
 
         if ($this->address_form->hasErrors()) {
             return [
-                'address'        => null,
+                'address'        => $address,
                 'address_fields' => $address_fields,
-                'address_values' => $address,
+                'address_object' => null,
                 'ok'             => false
             ];
         }
@@ -514,9 +560,9 @@ class OrderControllerCore extends FrontController
 
         if ($addr->save()) {
             return [
-                'address'        => $addr,
+                'address'        => $address,
                 'address_fields' => $address_fields,
-                'address_values' => $address,
+                'address_object' => $addr,
                 'ok'             => true
             ];
         } else {
