@@ -117,7 +117,11 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $this->loadManageData();
         }
 
-        return $this->applyModuleFilters($this->manage_modules, $this->manage_categories, $filter);
+        foreach ($this->manage_modules as $key => $modules) {
+            $this->manage_modules->$key = $this->applyModuleFilters($modules, $this->manage_categories, $filter);
+        }
+
+        return $this->manage_modules;
     }
 
     public function getManageCategories()
@@ -295,19 +299,17 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         }
                     }
 
-                    if (isset($catalog_module->refs[0]) && $catalog_module->refs[0] == 'natif') {
+                    if (isset($installed_module['origin']) && $installed_module['origin'] === 'native') {
                         $row = 'native_modules';
                     } elseif (0 /* ToDo: insert condition for theme related modules*/) {
                         $row = 'theme_bundle';
                     } else {
                         $row= 'modules';
                     }
-                    $this->manage_modules[$row][] = $installed_module;
+                    $this->manage_modules[$row][] = (object)$installed_module;
                 }
 
-                ddd($this->manage_modules);
-
-                /*$this->manage_modules    = $this->convertJsonForNewCatalog($jsons);*/
+                /*$this->manage_modules    = $this->convertJsonForNewCatalog($this->manage_modules);*/
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
                 $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
