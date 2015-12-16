@@ -123,12 +123,6 @@ function runScenario (scenario) {
             ;
           });
 
-          it("should show an unchecked checkbox allowing to setup a different address", function () {
-            return browser
-              .isSelected('#checkout-different-address-for-invoice')
-              .should.become(false);
-          });
-
           it("should fill the address form", function () {
             return browser
               .setValue('#checkout-address-delivery [name=address1]', user.location.street)
@@ -143,9 +137,7 @@ function runScenario (scenario) {
           if (!scenario.deliveryAddressIsInvoiceAddress) {
             it("should open and fill another address form for the invoice address", function () {
               return browser
-                .click('#checkout-different-address-for-invoice')
-                .waitForVisible('[data-link-action="new-address-invoice"]')
-                .click('[data-link-action="new-address-invoice"]')
+                .click('[data-link-action="setup-invoice-address"]')
                 .setValue('#checkout-address-invoice [name=firstname]', 'Someone')
                 .setValue('#checkout-address-invoice [name=lastname]', 'Else')
                 .setValue('#checkout-address-invoice [name=address1]', user.location.street)
