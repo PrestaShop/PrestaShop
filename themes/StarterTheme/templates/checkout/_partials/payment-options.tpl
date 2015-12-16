@@ -1,4 +1,4 @@
-<div class="advanced-payment-options">
+<div class="advanced-payment-options" data-checkout-step-status="{$status}">
   {foreach from=$payment_options item="options"}
     {foreach from=$options item="option"}
       <div>
