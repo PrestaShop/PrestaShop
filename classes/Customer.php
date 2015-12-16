@@ -334,7 +334,8 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        if (isset($passwd) && !$crypto->checkHash($passwd, $hash, _COOKIE_KEY_)) {
+        if (isset($passwd)
+            && !($checked_hash = $crypto->checkHash($passwd, $hash, array('cookie_key' => _COOKIE_KEY_)))) {
             return false;
         }
 
@@ -358,8 +359,9 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+        // Upgrade password if the hash was upgraded
+        if (is_string($checked_hash)) {
+            $this->passwd = $checked_hash;
             $this->update();
         }
 
@@ -800,7 +802,7 @@ class CustomerCore extends ObjectModel
 
         $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
         $this->is_guest = 0;
-        $this->passwd = $crypto->encrypt($password, _COOKIE_KEY_);
+        $this->passwd = $crypto->hash($password);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
         if ($this->update()) {
@@ -835,7 +837,7 @@ class CustomerCore extends ObjectModel
         $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
 
         if ($this->id == 0 || $this->passwd != $passwd) {
-            $this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+            $this->passwd = $crypto->hash($passwd);
         }
         return true;
     }
@@ -929,7 +931,7 @@ class CustomerCore extends ObjectModel
         $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
 
         if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->encrypt($value, _COOKIE_KEY_);
+            $this->passwd = $crypto->hash($value);
         }
 
         return $errors;

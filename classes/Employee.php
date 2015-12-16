@@ -108,7 +108,7 @@ class EmployeeCore extends ObjectModel
             'firstname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
             'id_lang' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 255),
             'last_passwd_gen' =>            array('type' => self::TYPE_STRING),
             'active' =>                    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'optin' =>                        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -284,15 +284,34 @@ class EmployeeCore extends ObjectModel
             die(Tools::displayError());
         }
 
+        if (isset($passwd)) {
+            try {
+                $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+            } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
+                return false;
+            }
+
+            $hash = Db::getInstance()->getValue('SELECT `passwd`
+				FROM `'._DB_PREFIX_.'employee`
+				WHERE `email` = \''.pSQL($email).'\'
+				'.($active_only ? ' AND active = 1' : ''));
+
+            $checked_hash = $crypto->checkHash($passwd, $hash, array('cookie_key' => _COOKIE_KEY_));
+            if (!$checked_hash) {
+                return false;
+            }
+        }
+
         $result = Db::getInstance()->getRow('
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.($active_only ? ' AND `active` = 1' : '')
-        .($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		.($passwd !== null ? ' AND `passwd` = \''.pSQL($hash).'\'' : ''));
         if (!$result) {
             return false;
         }
+
         $this->id = $result['id_employee'];
         $this->id_profile = $result['id_profile'];
         foreach ($result as $key => $value) {
@@ -300,6 +319,13 @@ class EmployeeCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
+
+        // Update stored hash if needed
+        if (is_string($checked_hash)) {
+            $this->passwd = $checked_hash;
+            $this->update();
+        }
+
         return $this;
     }
 
@@ -327,12 +353,19 @@ class EmployeeCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->getValue('
-		SELECT `id_employee`
-		FROM `'._DB_PREFIX_.'employee`
-		WHERE `id_employee` = '.(int)$id_employee.'
-		AND `passwd` = \''.pSQL($passwd).'\'
-		AND `active` = 1');
+        try {
+            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+        } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
+            return false;
+        }
+        $hash = Db::getInstance()->getValue('SELECT `passwd`
+			FROM `'._DB_PREFIX_.'employee`
+			WHERE `id_employee` = \''.(int)$id_employee.'\'
+			AND `active` = 1');
+
+        // We're checking our database hash against the cookie hash
+        /* FIXME: This might need a constant-time check */
+        return ($passwd === $hash);
     }
 
     public static function countProfile($id_profile, $active_only = false)
@@ -354,6 +387,13 @@ class EmployeeCore extends ObjectModel
 
     public function setWsPasswd($passwd)
     {
+        try {
+            $crypto = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Crypto\\Hashing');
+        } catch (\PrestaShop\PrestaShop\Adapter\CoreException $e) {
+            return false;
+        }
+
+        /* FIXME: This needs to be routed through Crypto\Hashing */
         if ($this->id != 0) {
             if ($this->passwd != $passwd) {
                 $this->passwd = Tools::encrypt($passwd);

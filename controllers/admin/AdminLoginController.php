@@ -182,6 +182,7 @@ class AdminLoginControllerCore extends AdminController
     public function processLogin()
     {
         /* Check fields validity */
+        Hook::exec('actionEmployeeAuthenticationBefore');
         $passwd = trim(Tools::getValue('passwd'));
         $email = trim(Tools::getValue('email'));
         if (empty($email)) {
@@ -224,6 +225,8 @@ class AdminLoginControllerCore extends AdminController
                 }
 
                 $cookie->write();
+
+                Hook::exec('actionEmployeeAuthenticationSuccess', array('employee' => $this->context->employee));
 
                 // If there is a valid controller name submitted, redirect to it
                 if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect'])) {
