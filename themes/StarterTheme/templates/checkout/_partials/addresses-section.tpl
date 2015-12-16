@@ -1,98 +1,62 @@
 <section id="addresses-section" data-checkout-step-status="{$status}">
+  <h1 class="h1">{l s='Addresses'}</h1>
 
-  <header>
-    <h1 class="h1">{l s='Addresses'}</h1>
-  </header>
+  <section id="delivery-addresses">
+    <h1 class="h2>">{l s='Your delivery address'}</h1>
 
-  <form action  = {$urls.pages.order}
-        id      = "delivery-addresses"
-        method  = "POST"
-  >
+    {include  addresses  = $customer.addresses
+              file       = "checkout/_partials/address-selector-block.tpl"
+              name       = "id_address_delivery"
+              selected   = $id_address_delivery
+              type       = "delivery"
+    }
+    <a href="?newAddress=delivery" data-link-action="new-address-delivery">
+      {l s='Add another address'}
+    </a>
 
-    <input  name  = "token"
-            type  = "hidden"
-            value = "{$static_token}"
-    >
+    {if $ui_state === 'new delivery address' or $ui_state === 'edit delivery address'}
+      <form action="{$urls.pages.order}" method="POST" id="checkout-address-delivery">
+        {include  address         = $address
+                  address_fields  = $address_fields
+                  file            = "customer/_partials/address-form-fields.tpl"
+                  countries       = $countries
+        }
+        <footer class="form-footer">
+          <button name="saveAddress" value="delivery">{l s='Save'}</button>
+        </footer>
+      </form>
+    {/if}
+  </section>
 
-    <h2 class="h2">{l s='Your delivery address'}</h2>
+  <p>{l s='Please click [1]here[/1] if you want to use a different address for billing.' tags=["<a data-link-action='setup-invoice-address' href='?setupInvoiceAddress'>"]}</p>
 
-    {if $customer.addresses|count and !$new_delivery_address}
+  {if $ui_state === 'new invoice address' or $ui_state === 'edit invoice address' or $ui_state === 'choose invoice address'}
+    <section id="invoice-addresses">
+      <h1 class="h2>">{l s='Your billing address'}</h1>
 
-      <h2 class="h3">{l s='Choose from your existing addresses'}</h2>
-
-      {include  file       = "checkout/_partials/address-selector-block.tpl"
-                name       = "id_address_delivery"
-                addresses  = $customer.addresses
-                selected   = $id_address_delivery
+      {include  addresses  = $customer.addresses
+                file       = "checkout/_partials/address-selector-block.tpl"
+                name       = "id_address_invoice"
+                selected   = $id_address_invoice
+                type       = "invoice"
       }
-
-      <a  data-link-action  = "new-address-delivery"
-          href              = "?newAddress=delivery"
-      >
-        {l s='Add an address'}
+      <a href="?newAddress=invoice" data-link-action="new-address-invoice">
+        {l s='Add another address'}
       </a>
 
-    {else}
-
-      <h2 class="h3">{l s='Create a new address'}</h2>
-      {$address_form_delivery nofilter}
-
-    {/if}
-
-    <label class  = "ps-shown-by-js"
-           for    = "checkout-different-address-for-invoice"
-    >
-
-      <input  type   = "checkbox"
-              name   = "checkout-different-address-for-invoice"
-              id     = "checkout-different-address-for-invoice"
-              data-action        = "hideOrShow"
-              data-action-target = "invoice-addresses"
-              {if $checkout_different_address_for_invoice}
-                checked
-              {/if}
-      >
-
-      {l s='Use a different address for invoice'}
-
-    </label>
-  </form>
-
-  <form action  = {$urls.pages.order}
-        id      = "invoice-addresses"
-        method  = "POST"
-        {if !$checkout_different_address_for_invoice}
-          class="ps-hidden-by-js"
-        {/if}
-  >
-    <input  name  = "token"
-            type  = "hidden"
-            value = "{$static_token}"
-    >
-
-      <h2 class="h2">{l s='Your invoice address'}</h2>
-
-      {if $customer.addresses|count and !$new_invoice_address}
-        <h2 class="h3">{l s='Choose from your existing addresses'}</h2>
-
-        {include
-          file      = "checkout/_partials/address-selector-block.tpl"
-          name      = "id_address_invoice"
-          addresses = $customer.addresses
-          selected  = $id_address_invoice
-        }
-
-        <a  data-link-action  = "new-address-invoice"
-            href              = "?newAddress=invoice"
-        >
-          {l s='Add an address'}
-        </a>
-
-      {else}
-
-        <h2 class="h3">{l s='Create a new address'}</h2>
-        {$address_form_invoice nofilter}
-
+      {if $ui_state === 'new invoice address' or $ui_state === 'edit invoice address'}
+        <form action="{$urls.pages.order}" method="POST" id="checkout-address-invoice">
+          {include  address         = $address
+                    address_fields  = $address_fields
+                    file            = "customer/_partials/address-form-fields.tpl"
+                    countries       = $countries
+          }
+          <footer class="form-footer">
+            <button name="saveAddress" value="invoice">{l s='Save'}</button>
+          </footer>
+        </form>
       {/if}
-  </form>
-</div>
+    </section>
+  {/if}
+
+</section>

@@ -46,3 +46,7 @@
   {/if}
 
 {/foreach}
+
+{if isset($address.id)}
+  <input type="hidden" name="id_address" value="{$address.id}">
+{/if}
