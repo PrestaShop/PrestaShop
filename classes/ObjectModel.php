@@ -346,6 +346,9 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 if ((!empty($data['lang']) || (!empty($data['shop']) && $data['shop'] != 'both')) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang])))) {
                     continue;
                 }
+                if(!isset($this->update_fields[$field])) {
+                    continue;
+                }
             }
 
             // Get field value, if value is multilang and field is empty, use value from default lang
@@ -673,7 +676,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 $where = $this->def['primary'].' = '.(int)$this->id.' AND id_shop = '.(int)$id_shop;
 
                 // A little explanation of what we do here : we want to create multishop entry when update is called, but
-                // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
+                // only if we are in a shop context (if we are in all context, we just want to update entries that already exists)
                 $shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
                 if ($shop_exists) {
                     $result &= Db::getInstance()->update($this->def['table'].'_shop', $fields, $where, 0, $null_values);
@@ -1589,7 +1592,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
     }
 
     /**
-     * Updates a table and splits the common datas and the shop datas.
+     * Updates a table and splits the common data and the shop data.
      *
      * @since 1.5.0.1
      * @param string $classname
@@ -1629,6 +1632,7 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
 				SET '.implode(', ', $update_data).
                 (!empty($where) ? ' WHERE '.$where : '');
+
 
         return Db::getInstance()->execute($sql);
     }
