@@ -1603,6 +1603,11 @@ class FrontControllerCore extends Controller
             $this->getTemplateVarUrls()
         );
 
+        $form
+            ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
+            ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
+        ;
+
         $form->setAction($this->updateQueryString(null));
 
         return $form;
