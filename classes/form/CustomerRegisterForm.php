@@ -2,6 +2,10 @@
 
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * StarterTheme TODO: B2B fields, Genders, CSRF
+ */
+
 class CustomerRegisterFormCore extends AbstractForm
 {
     private $context;
@@ -68,7 +72,7 @@ class CustomerRegisterFormCore extends AbstractForm
         return $this->ask_for_newsletter;
     }
 
-    public function setAskForParterOptin($ask_for_partner_optin)
+    public function setAskForPartnerOptin($ask_for_partner_optin)
     {
         $this->ask_for_partner_optin = $ask_for_partner_optin;
         return $this;
@@ -261,6 +265,7 @@ class CustomerRegisterFormCore extends AbstractForm
             'birthdate'     => $this->birthdate,
             'newsletter'    => $this->newsletter,
             'partner_optin' => $this->partner_optin,
+            'hook_create_account_form'  => Hook::exec('displayCustomerAccountForm'),
             'ask_for_birthdate'     => $this->ask_for_birthdate,
             'ask_for_newsletter'    => $this->ask_for_newsletter,
             'ask_for_partner_optin' => $this->ask_for_partner_optin,

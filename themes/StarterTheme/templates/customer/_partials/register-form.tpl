@@ -39,7 +39,7 @@
       {include file="_partials/form-field-errors.tpl" errors=$errors.password}
     {/if}
 
-
+    {$hook_create_account_form nofilter}
 
     {if $ask_for_birthdate}
       <label>
