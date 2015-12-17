@@ -87,6 +87,14 @@ class OrderControllerCore extends FrontController
     {
         parent::initContent();
 
+        if (!$this->checkoutProcess->hasErrors()) {
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
+                return $this->redirectWithNotifications(
+                    $this->updateQueryString(null)
+                );
+            }
+        }
+
         $rendered_checkout = $this->checkoutProcess->render();
 
         $this->context->smarty->assign([
