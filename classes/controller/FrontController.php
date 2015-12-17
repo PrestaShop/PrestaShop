@@ -24,7 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Cldr;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class FrontControllerCore extends Controller
 {
@@ -529,9 +530,9 @@ class FrontControllerCore extends Controller
      */
     public function initContent()
     {
+        $this->assignGeneralPurposeVariables();
         $this->process();
 
-        $this->assignGeneralPurposeVariables();
 
         if (!isset($this->context->cart)) {
             $this->context->cart = new Cart();
@@ -858,12 +859,6 @@ class FrontControllerCore extends Controller
      */
     public function setMedia()
     {
-        $cldrRepository = new Cldr\Repository($this->context->language->language_code);
-        $this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5.0.1
-        $this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
-        $this->addCSS(_THEME_CSS_DIR_ . DIRECTORY_SEPARATOR . 'theme.css');
-        $this->addJquery();
-        $this->addJqueryPlugin('easing');
         $this->addCSS([
             _THEME_CSS_DIR_ . 'theme.css',
             _THEME_CSS_DIR_ . 'custom.css',
@@ -873,9 +868,6 @@ class FrontControllerCore extends Controller
             _THEME_JS_DIR_.'theme.js',
             _THEME_JS_DIR_.'custom.js',
         ]);
-
-        Media::addJsDef(array('full_language_code' => $this->context->language->language_code));
-        Media::addJsDef(array('full_cldr_language_code' => $cldrRepository->getCulture()));
 
         // Execute Hook FrontController SetMedia
         Hook::exec('actionFrontControllerSetMedia', array());
@@ -1581,5 +1573,24 @@ class FrontControllerCore extends Controller
         );
 
         return $tpl->fetch();
+    }
+
+    protected function getTranslator()
+    {
+        return new Translator(new LegacyContext);
+    }
+
+    protected function getLoginForm()
+    {
+        $form = new CustomerLoginForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            $this->getTemplateVarUrls()
+        );
+
+        $form->setAction($this->updateQueryString(null));
+
+        return $form;
     }
 }

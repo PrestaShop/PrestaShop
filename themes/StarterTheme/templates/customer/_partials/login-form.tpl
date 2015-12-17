@@ -1,24 +1,36 @@
-<form action="{$urls.pages.authentication}" method="post">
+{foreach from=$errors[null] item=error}
+  <p>{$error}</p>
+{/foreach}
+
+<form action="{$action}" method="post">
 
   <section class="form-fields">
 
     <label>
       <span>{l s='Email address'}</span>
-      <input type="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" />
+      <input type="email" name="email" value="{$email}">
     </label>
+    {include file="_partials/form-field-errors.tpl" errors=$errors.email}
 
     <label>
       <span>{l s='Password'}</span>
-      <input type="password" data-validate="isPasswd" name="passwd" value="" />
+      <input type="password" name="password" value="">
     </label>
-    <p class="lost_password"><a href="{$urls.pages.password}" rel="nofollow">{l s='Forgot your password?'}</a></p>
+    {include file="_partials/form-field-errors.tpl" errors=$errors.password}
+
+    <p class="lost_password">
+      <a href="{$urls.pages.password}" rel="nofollow">
+        {l s='Forgot your password?'}
+      </a>
+    </p>
 
   </section>
 
   <footer class="form-footer">
-    <input type="hidden" name="back" value="{$back}">
+    {if $back}
+      <input type="hidden" name="back" value="{$back}">
+    {/if}
     <input type="hidden" name="SubmitLogin" value="1">
-
     <button type="submit">{l s='Sign in'}</button>
   </footer>
 
