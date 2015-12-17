@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+
 class FrontControllerCore extends Controller
 {
     /**
@@ -527,9 +530,9 @@ class FrontControllerCore extends Controller
      */
     public function initContent()
     {
+        $this->assignGeneralPurposeVariables();
         $this->process();
 
-        $this->assignGeneralPurposeVariables();
 
         if (!isset($this->context->cart)) {
             $this->context->cart = new Cart();
@@ -1572,5 +1575,24 @@ class FrontControllerCore extends Controller
         );
 
         return $tpl->fetch();
+    }
+
+    protected function getTranslator()
+    {
+        return new Translator(new LegacyContext);
+    }
+
+    protected function getLoginForm()
+    {
+        $form = new CustomerLoginForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            $this->getTemplateVarUrls()
+        );
+
+        $form->setAction($this->updateQueryString(null));
+
+        return $form;
     }
 }
