@@ -25,12 +25,27 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->show_login_form = array_key_exists('login', $requestParameters);
 
         $this->loginForm->handleRequest($requestParameters);
-        $this->registerForm->handleRequest($requestParameters);
 
         if ($this->loginForm->wasSubmitted()) {
             if ($this->loginForm->hasErrors()) {
                 $this->show_login_form = true;
-            } else {
+                $this->getCheckoutProcess()->setHasErrors(true);
+            }
+        }
+
+        $this->registerForm
+            ->fillFromCustomer(
+                $this
+                    ->getCheckoutProcess()
+                    ->getCheckoutSession()
+                    ->getCustomer()
+            )
+            ->handleRequest($requestParameters)
+        ;
+
+        if ($this->registerForm->wasSubmitted()) {
+            if ($this->registerForm->hasErrors()) {
+                $this->getCheckoutProcess()->setHasErrors(true);
             }
         }
 

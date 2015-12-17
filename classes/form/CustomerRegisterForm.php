@@ -94,6 +94,18 @@ class CustomerRegisterFormCore extends AbstractForm
         return $this->guest_allowed;
     }
 
+    public function fillFromCustomer(Customer $customer)
+    {
+        return $this->fillWith([
+            'firstname'     => $customer->firstname,
+            'lastname'      => $customer->lastname,
+            'email'         => $customer->email,
+            'birthdate'     => $customer->birthday,
+            'newsletter'    => $customer->newsletter,
+            'partner_optin' => $customer->optin
+        ]);
+    }
+
     public function fillWith(array $params = [])
     {
         $fields = [
@@ -134,10 +146,20 @@ class CustomerRegisterFormCore extends AbstractForm
 
     public function submit()
     {
+        $this->submitted = true;
+
         if (!Validate::isEmail($this->email)) {
             $this->errors['email'][] = $this->translator->trans('Invalid email address.', [], 'Customer');
         } elseif (Customer::customerExists($this->email)) {
             $this->errors['email'][] = $this->translator->trans('An account using this email address has already been registered.', [], 'Customer');
+        }
+
+        if (!Validate::isName($this->firstname)) {
+            $this->errors['firstname'][] = $this->translator->trans('Invalid name.', [], 'Customer');
+        }
+
+        if (!Validate::isName($this->lastname)) {
+            $this->errors['lastname'][] = $this->translator->trans('Invalid name.', [], 'Customer');
         }
 
         $create_guest = false;
