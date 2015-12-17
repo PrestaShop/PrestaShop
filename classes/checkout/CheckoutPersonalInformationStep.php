@@ -5,16 +5,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 {
     private $loginForm;
+    private $registerForm;
 
     private $show_login_form = false;
 
     public function __construct(
         Smarty $smarty,
         TranslatorInterface $translator,
-        CustomerLoginForm $loginForm
+        CustomerLoginForm $loginForm,
+        CustomerRegisterForm $registerForm
     ) {
         parent::__construct($smarty, $translator);
         $this->loginForm = $loginForm;
+        $this->registerForm = $registerForm;
     }
 
     public function init(array $requestParameters = [])
@@ -22,6 +25,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->show_login_form = array_key_exists('login', $requestParameters);
 
         $this->loginForm->handleRequest($requestParameters);
+        $this->registerForm->handleRequest($requestParameters);
 
         if ($this->loginForm->wasSubmitted()) {
             if ($this->loginForm->hasErrors()) {
@@ -49,9 +53,10 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     {
         return $this->renderTemplate(
             'checkout/personal-information-step.tpl', [
-                'logged_in'           => $this->logged_in,
-                'show_login_form'     => $this->show_login_form,
-                'rendered_login_form' => $this->loginForm->render()
+                'logged_in'                 => $this->logged_in,
+                'show_login_form'           => $this->show_login_form,
+                'rendered_login_form'       => $this->loginForm->render(),
+                'rendered_register_form'    => $this->registerForm->render()
             ]
         );
     }
