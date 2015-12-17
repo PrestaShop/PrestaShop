@@ -4,6 +4,7 @@ class CheckoutProcessCore
 {
     private $steps = [];
     private $checkoutSession;
+    private $has_errors;
 
     public function __construct(CheckoutSession $checkoutSession)
     {
@@ -42,5 +43,16 @@ class CheckoutProcessCore
         return implode('', array_map(function (CheckoutStepInterface $step) {
             return $step->render();
         }, $this->getSteps()));
+    }
+
+    public function setHasErrors($has_errors = true)
+    {
+        $this->has_errors = $has_errors;
+        return $this;
+    }
+
+    public function hasErrors()
+    {
+        return $this->has_errors;
     }
 }
