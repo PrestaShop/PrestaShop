@@ -7,7 +7,7 @@ use \PrestaShop\PrestaShop\Core\ConfigurationInterface;
 class ThemeManager
 {
     private $all_themes_dir = '';
-    private $configuration = null;
+    private $configurator = null;
     private $shop = null;
     private $themes = [];
 
@@ -30,9 +30,15 @@ class ThemeManager
         $this->themes = $themes;
     }
 
-    public function setShop(Shop $shop)
+    public function setShop(\Shop $shop)
     {
         $this->shop = $shop;
+        return $this;
+    }
+
+    public function setConfigurator(ConfigurationInterface $configurator)
+    {
+        $this->$configurator = $configurator;
         return $this;
     }
 
@@ -61,6 +67,7 @@ class ThemeManager
 
         if ($success) {
             $this->shop->theme_directory = $theme_directory;
+            ddd($this->shop);
             return $this->shop->save();
         } else {
             return false;
@@ -70,13 +77,16 @@ class ThemeManager
     private function updateConfiguration($theme_dir)
     {
         $success = true;
+        $config_file = $this->all_themes_dir.$theme_dir.'/config/configuration.json';
 
-        $theme_config = json_decode(file_get_contents(
-            $this->all_themes_dir.$theme_dir.'/config/configuration.json'
-        ), true);
+        if (!file_exists($config_file)) {
+            return true;
+        }
+
+        $theme_config = json_decode(file_get_contents($config_file), true);
 
         foreach ($theme_config as $key => $value) {
-            $success &= $this->configuration->set($key, $value);
+            $success &= $this->configurator->set($key, $value);
         }
 
         return $success;
