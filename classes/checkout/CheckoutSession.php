@@ -26,4 +26,9 @@ class CheckoutSessionCore
     {
         return $this->context->customer->isLogged();
     }
+
+    public function getCustomer()
+    {
+        return $this->context->customer;
+    }
 }
