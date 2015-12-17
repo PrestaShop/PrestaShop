@@ -737,7 +737,7 @@ class HookCore extends ObjectModel
      */
     public static function preloadHookModulesCache()
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Hook::getHookModuleList() instead');
 
         if (!is_null(self::$_hook_modules_cache)) {
             return false;
@@ -757,7 +757,7 @@ class HookCore extends ObjectModel
      */
     public static function get($hook_name)
     {
-        Tools::displayAsDeprecated();
+        Tools::displayAsDeprecated('Use Hook::getIdByName() instead');
         if (!Validate::isHookName($hook_name)) {
             die(Tools::displayError());
         }
