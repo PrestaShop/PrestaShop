@@ -67,14 +67,14 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
     }
 
-    public function clearCache()
+    public function clearCatalogCache()
     {
-        foreach ([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_] as $file) {
-            $path = $this->cache_dir . $file;
-            if (file_exists($path)) {
-                unlink($path);
-            }
-        }
+        $this->clearCache([self::_CACHEFILE_CATEGORIES_, self::_CACHEFILE_MODULES_]);
+    }
+
+    public function clearManageCache()
+    {
+        $this->clearCache([self::_CACHEFILE_INSTALLED_CATEGORIES_, self::_CACHEFILE_INSTALLED_MODULES_]);
     }
 
     public function getAllModules()
@@ -117,9 +117,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             $this->loadManageData();
         }
 
-        foreach ($this->manage_modules as $key => $modules) {
+        /*foreach ($this->manage_modules as $key => $modules) {
             $this->manage_modules->$key = $this->applyModuleFilters($modules, $this->manage_categories, $filter);
-        }
+        }*/
 
         return $this->manage_modules;
     }
@@ -225,6 +225,16 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         return $products;
+    }
+
+    protected function clearCache(array $files)
+    {
+        foreach ($files as $file) {
+            $path = $this->cache_dir . $file;
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
     }
 
     protected function loadCatalogData()

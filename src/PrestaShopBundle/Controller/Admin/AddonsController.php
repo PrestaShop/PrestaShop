@@ -39,7 +39,7 @@ class AddonsController extends Controller
             $response->headers->setCookie(new Cookie('is_contributor', (int)$json->is_contributor));
 
             $response->setData(['success' => 1, 'message' => '']);
-            $modulesProvider->clearCache();
+            $modulesProvider->clearCatalogCache();
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
@@ -58,7 +58,7 @@ class AddonsController extends Controller
     public function logoutAction()
     {
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
-        $modulesProvider->clearCache();
+        $modulesProvider->clearCatalogCache();
 
         $response = new JsonResponse();
         $response->headers->clearCookie('username_addons');
