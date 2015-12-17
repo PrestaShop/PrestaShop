@@ -2,23 +2,18 @@
 
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerLoginFormCore
+class CustomerLoginFormCore extends AbstractForm
 {
-    private $smarty;
     private $context;
     private $translator;
     private $urls;
-
-    private $templatePath = 'customer/_partials/login-form.tpl';
-
-    private $action;
 
     private $email;
     private $password;
     private $back;
 
     private $submitted;
-    private $errors = [
+    protected $errors = [
         null        => [],
         'email'     => [],
         'password'  => []
@@ -30,21 +25,11 @@ class CustomerLoginFormCore
         TranslatorInterface $translator,
         array $urls
     ) {
-        $this->smarty = $smarty;
+        parent::__construct($smarty);
+
         $this->context = $context;
         $this->translator = $translator;
         $this->urls = $urls;
-    }
-
-    public function setAction($action)
-    {
-        $this->action = $action;
-        return $this;
-    }
-
-    public function getAction()
-    {
-        return $this->action;
     }
 
     public function fillWith(array $params = [])
@@ -113,22 +98,12 @@ class CustomerLoginFormCore
         }
     }
 
-    public function getErrors()
+    public function getTemplatePath()
     {
-        return $this->errors;
+        return 'customer/_partials/login-form.tpl';
     }
 
-    public function hasErrors()
-    {
-        foreach ($this->errors as $errors) {
-            if (!empty($errors)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function getTemplateVariables()
+    public function getTemplateVariables()
     {
         return [
             'action' => $this->action,
@@ -137,21 +112,5 @@ class CustomerLoginFormCore
             'urls'   => $this->urls,
             'back'   => $this->back
         ];
-    }
-
-    public function render()
-    {
-        $scope = $this->smarty->createData(
-            $this->smarty
-        );
-
-        $scope->assign($this->getTemplateVariables());
-
-        $tpl = $this->smarty->createTemplate(
-            $this->templatePath,
-            $scope
-        );
-
-        return $tpl->fetch();
     }
 }
