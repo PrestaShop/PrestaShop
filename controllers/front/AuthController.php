@@ -41,6 +41,9 @@ class AuthControllerCore extends FrontController
         if (Tools::getValue('create_account')) {
             $this->setTemplate('customer/_partials/register-form.tpl');
         } else {
+            $this->context->smarty->assign(
+                'rendered_login_form', $this->loginForm->render()
+            );
             $this->setTemplate('customer/authentication.tpl');
         }
 
@@ -78,6 +81,11 @@ class AuthControllerCore extends FrontController
      */
     public function postProcess()
     {
+        $this->loginForm = $this
+            ->getLoginForm()
+            ->fillWith(Tools::getAllValues())
+        ;
+
         if (Tools::isSubmit('submitCreate')) {
             $this->processSubmitCreate();
         }
@@ -92,39 +100,9 @@ class AuthControllerCore extends FrontController
      */
     protected function processSubmitLogin()
     {
-        Hook::exec('actionAuthenticationBefore');
+        $this->loginForm->submit();
 
-        $email = trim(Tools::getValue('email'));
-        $passwd = trim(Tools::getValue('passwd'));
-        $_POST['passwd'] = null;
-
-        if (empty($email)) {
-            $this->errors[] = $this->l('An email address required.');
-        } elseif (!Validate::isEmail($email)) {
-            $this->errors[] = $this->l('Invalid email address.');
-        } elseif (empty($passwd)) {
-            $this->errors[] = $this->l('Password is required.');
-        } elseif (!Validate::isPasswd($passwd)) {
-            $this->errors[] = $this->l('Invalid password.');
-        } else {
-            $customer = new Customer();
-            $authentication = $customer->getByEmail($email, $passwd);
-            if (isset($authentication->active) && !$authentication->active) {
-                $this->errors[] = $this->l('Your account isn\'t available at this time, please contact us');
-            } elseif (!$authentication || !$customer->id) {
-                $this->errors[] = $this->l('Authentication failed.');
-            } else {
-                $this->context->updateCustomer($customer);
-
-                Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
-
-                // Login information have changed, so we check if the cart rules still apply
-                CartRule::autoRemoveFromCart($this->context);
-                CartRule::autoAddToCart($this->context);
-            }
-        }
-
-        if (!$this->ajax) {
+        if (!$this->ajax && !$this->loginForm->hasErrors()) {
             $back = Tools::getValue('back', 'my-account');
 
             if ($back == Tools::secureReferrer($back)) {
