@@ -1,76 +1,77 @@
-{extends "page.tpl"}
+{foreach from=$errors[null] item=error}
+  <p>{$error}</p>
+{/foreach}
 
-{block name="page_header_container"}{/block}
+<form action="{$action}" method="post">
 
-{block name="page_content_container"}
-  <section id="content" class="page-content page-authentication">
-    {block name="register_form_container"}
-      <section class="register-form">
-        {block name="register_form"}
-          <form action="{$urls.pages.authentication}" method="post">
-            <header>
-              <h1 class="h3">{l s='Create an account'}</h1>
-            </header>
+  <section class="form-fields">
 
-            {$hook_create_account_top}
+    <label class="required">
+      <span>{l s='First name'}</span>
+      <input required type="text" name="firstname" value="{$firstname}" />
+    </label>
+    {include file="_partials/form-field-errors.tpl" errors=$errors.firstname}
 
-            <section class="form-fields">
+    <label class="required">
+      <span>{l s='Last name'}</span>
+      <input required type="text" name="lastname" value="{$lastname}" />
+    </label>
+    {include file="_partials/form-field-errors.tpl" errors=$errors.lastname}
 
-              {include file="customer/_partials/form-item-gender.tpl" genders=$genders}
+    <label>
+      <span>{l s='Email address'}</span>
+      <input required type="email" name="email" value="{$email}">
+    </label>
+    {include file="_partials/form-field-errors.tpl" errors=$errors.email}
 
-              <label class="required">
-                <span>{l s='First name'}</span>
-                <input type="text" id="firstname" name="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
-              </label>
+    {if $guest_allowed}
+      <p>{l s='Set a password to create an account and save time on the next order (optional)'}</p>
+      <label>
+        <span>{l s='Password'}</span>
+        <input type="password" name="password" value="">
+      </label>
+      {include file="_partials/form-field-errors.tpl" errors=$errors.password}
+    {else}
+      <label>
+        <span>{l s='Password'}</span>
+        <input required type="password" name="password" value="">
+      </label>
+      {include file="_partials/form-field-errors.tpl" errors=$errors.password}
+    {/if}
 
-              <label class="required">
-                <span>{l s='Last name'}</span>
-                <input type="text" name="lastname" id="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
-              </label>
 
-              <label class="required">
-                <span>{l s='E-mail address'}</span>
-                <input type="email" name="email" id="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
-              </label>
 
-              <label for="passwd">
-                <span>{l s='Password'}</span>
-                <input type="password" name="passwd" id="passwd" />
-              </label>
+    {if $ask_for_birthdate}
+      <label>
+        <span>{l s='Birthdate'}</span>
+        <input type="date" name="birthdate" value="{$birthdate}">
+      </label>
+      {include file="_partials/form-field-errors.tpl" errors=$errors.birthdate}
+    {/if}
 
-              <label for="birthdate">
-                <span>{l s='Date of Birth'}</span>
-                {block name="form_item_date"}
-                  {include file="customer/_partials/form-item-date.tpl" dates=$birthday_dates}
-                {/block}
-              </label>
+    {if $ask_for_newsletter}
+      <label>
+        <input type="checkbox" name="newsletter" value="1" {if $newsletter} checked {/if}>
+        <span>{l s='Sign up for our newsletter!'}</span>
+      </label>
+    {/if}
 
-              {if $feature_active.newsletter}
-                <label class="{if array_key_exists('newsletter', $field_required)}required{/if}">
-                  <input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if}/>
-                  <span>{l s='Sign up for our newsletter!'}</span>
-                </label>
-              {/if}
+    {if $ask_for_partner_optin}
+      <label>
+        <input type="checkbox" name="partner_optin" value="1" {if $partner_optin} checked {/if}>
+        <span>{l s='Receive offers from our partners'}</span>
+      </label>
+    {/if}
 
-              {if $feature_active.optin}
-                <label class="{if array_key_exists('optin', $field_required)}required{/if}">
-                  <input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if}/>
-                  <span>{l s='Receive special offers from our partners!'}</span>
-                </label>
-              {/if}
-
-            </section>
-
-            {$hook_create_account_form}
-
-            <footer class="form-footer">
-              <input type="hidden" name="create_account" value="1">
-              <button type="submit" name="submitCreate">{l s='Register'}</button>
-            </footer>
-
-          </form>
-        {/block}
-      </section>
-    {/block}
   </section>
-{/block}
+
+  <footer class="form-footer">
+    {if $back}
+      <input type="hidden" name="back" value="{$back}">
+    {/if}
+    <button type="submit" name="submitCreate" value="1">
+      {l s='Save'}
+    </button>
+  </footer>
+
+</form>
