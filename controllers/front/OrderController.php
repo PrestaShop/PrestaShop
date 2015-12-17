@@ -61,7 +61,8 @@ class OrderControllerCore extends FrontController
             ->addStep(new CheckoutPersonalInformationStep(
                 $this->context->smarty,
                 $translator,
-                $this->getLoginForm()
+                $this->getLoginForm(),
+                $this->getRegisterForm()
             ))
             ->addStep(new CheckoutAddressesStep(
                 $this->context->smarty,
