@@ -1593,4 +1593,18 @@ class FrontControllerCore extends Controller
 
         return $form;
     }
+
+    protected function getRegisterForm()
+    {
+        $form = new CustomerRegisterForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            $this->getTemplateVarUrls()
+        );
+
+        $form->setAction($this->updateQueryString(null));
+
+        return $form;
+    }
 }
