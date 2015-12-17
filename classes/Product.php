@@ -4185,8 +4185,16 @@ class ProductCore extends ObjectModel
 
     public static function defineProductImage($row, $id_lang)
     {
-        if (isset($row['id_image']) && $row['id_image']) {
-            return $row['id_product'].'-'.$row['id_image'];
+        $id_image = (int)$row['id_image'];
+        if (empty($id_image)) {
+            // Try to get product cover
+            $cover = Product::getCover((int)$row['id_product']);
+            if (!empty($cover['id_image'])) {
+                $id_image = (int)$cover['id_image'];
+            }
+        }
+        if (!empty($id_image)) {
+            return $row['id_product'].'-'.$id_image;
         }
 
         return Language::getIsoById((int)$id_lang).'-default';
