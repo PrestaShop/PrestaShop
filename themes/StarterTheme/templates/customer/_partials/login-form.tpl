@@ -2,6 +2,8 @@
   <p>{$error}</p>
 {/foreach}
 
+{* TODO StarterTheme: HOOKS!!! *}
+
 <form action="{$action}" method="post">
 
   <section class="form-fields">
