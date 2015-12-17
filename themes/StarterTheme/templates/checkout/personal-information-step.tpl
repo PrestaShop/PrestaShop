@@ -9,6 +9,6 @@
     {$rendered_login_form nofilter}
   {else}
     <a href="?login">{l s='Already have an account?'}</a>
-    <p>Register form.</p>
+    {$rendered_register_form nofilter}
   {/if}
 {/block}
