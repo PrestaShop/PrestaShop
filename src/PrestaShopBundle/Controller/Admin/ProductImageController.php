@@ -81,7 +81,7 @@ class ProductImageController extends FrameworkBundleAdminController
             }
         }
 
-        return $response->setContent(json_encode($return_data));
+        return $response->setData($return_data);
     }
 
     /**
@@ -97,11 +97,9 @@ class ProductImageController extends FrameworkBundleAdminController
         $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
         $json = $request->request->get('json');
 
-        if (empty($json) || !$request->isXmlHttpRequest()) {
-            return $response;
+        if (!empty($json) && $request->isXmlHttpRequest()) {
+            $adminProductWrapper->ajaxProcessUpdateImagePosition(json_decode($json, true));
         }
-
-        $adminProductWrapper->ajaxProcessUpdateImagePosition(json_decode($json, 1));
 
         return $response;
     }

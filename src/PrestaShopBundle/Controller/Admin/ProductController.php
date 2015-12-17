@@ -405,7 +405,7 @@ class ProductController extends FrameworkBundleAdminController
 
         //If context shop is define to a group shop, disable the form
         if ($legacyContext->shop->getContext() == $shopContext->getShopContextGroupConstant()) {
-            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig');
+            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig', ['showContentHeader' => false]);
         }
 
         // languages for switch dropdown
