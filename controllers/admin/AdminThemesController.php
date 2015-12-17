@@ -118,7 +118,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                 ),
                 'after_tabs' => array(
-                    'cur_theme' => (array)$this->context->shop->theme,
+                    'cur_theme' => $this->context->shop->theme,
                 ),
                 'submit' => array('title' => $this->l('Save')),
                 'buttons' => array(
@@ -313,23 +313,15 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme')
-            && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme')) {
-            $this->display = 'ChooseThemeModule';
-        } elseif (Tools::isSubmit('installThemeFromFolder') && ($this->context->mode != Context::MODE_HOST)) {
-            $theme_dir = Tools::getValue('theme_dir');
-            $this->installTheme($theme_dir);
-        } else {
-            // new check compatibility theme feature (1.4) :
-            $val = Tools::getValue('PS_THEME');
-            Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
-            if (!empty($val) && !$this->_isThemeCompatible($val)) { // don't submit if errors
-                unset($_POST['submitThemes'.$this->table]);
-            }
-            Tools::clearCache($this->context->smarty);
-
-            return parent::postProcess();
+        if (Tools::isSubmit('switchTheme')) {
+            $theme_dir = urldecode(Tools::getValue('theme_directory'));
+            $this->theme_manager
+                ->setShop($this->context->shop)
+                ->setConfigurator(new AdapterConfiguration($this->context->shop))
+                ->switchTheme($theme_dir);
         }
+
+        return parent::postProcess();
     }
 
     /**

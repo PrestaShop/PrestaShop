@@ -39,7 +39,7 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;switchTheme&amp;theme_directory={$theme->directory|urlencode}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 
@@ -48,7 +48,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme->id}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_directory={$theme->directory|urlencode}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -80,15 +80,15 @@
 
 			<div class="col-md-3">
 				<a href="{$base_url}" class="_blank">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg" alt="{$cur_theme.theme_name}" />
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme->directory}/preview.jpg" alt="{$cur_theme->name}" />
 				</a>
 			</div>
 
 			<div id="js_theme_form_container" class="col-md-9">
-				<h2>{$cur_theme.theme_name} {if isset($cur_theme.theme_version)}<small>version {$cur_theme.theme_version}</small>{/if}</h2>
-				{if isset($cur_theme.author_name)}
+				<h2>{$cur_theme->name} {if isset($cur_theme->version)}<small>version {$cur_theme->version}</small>{/if}</h2>
+				{if isset($cur_theme->author->name)}
 				<p>
-					{l s='Designed by %s' sprintf=$cur_theme.author_name}
+					{l s='Designed by %s' sprintf=$cur_theme->author->name}
 				</p>
 				{/if}
 
@@ -99,7 +99,7 @@
 						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;updatetheme&amp;id_theme={$cur_theme.theme_id}">
+						<a class="btn btn-default pull-right" href="TODO">
 							<i class="icon icon-cog"></i>
 							{l s='Advanced settings'}
 						</a>
