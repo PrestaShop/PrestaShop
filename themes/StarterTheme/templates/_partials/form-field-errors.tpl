@@ -1,3 +1,5 @@
-{foreach $errors as $error}
-  <p>{$error}</p>
-{/foreach}
+<ul>
+  {foreach $errors as $error}
+    <li>{$error}</li>
+  {/foreach}
+</ul>
