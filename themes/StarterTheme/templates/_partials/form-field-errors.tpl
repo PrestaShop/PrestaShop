@@ -1,5 +1,7 @@
-<ul>
-  {foreach $errors as $error}
-    <li>{$error}</li>
-  {/foreach}
-</ul>
+{if $errors|count}
+  <ul>
+    {foreach $errors as $error}
+      <li>{$error}</li>
+    {/foreach}
+  </ul>
+{/if}
