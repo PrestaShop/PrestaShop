@@ -24,17 +24,7 @@
     {block name="content"}
     <section id="content">
 
-      {block name="cart_summary_section"}
-        {$cart_summary nofilter}
-      {/block}
-
-      {$personal_information_section nofilter}
-
-      {$addresses_section nofilter}
-
-      {$delivery_options nofilter}
-
-      {$payment_options nofilter}
+      {$rendered_checkout nofilter}
 
     </section>
     {/block}
