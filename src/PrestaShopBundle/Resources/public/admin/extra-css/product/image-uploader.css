@@ -1,6 +1,10 @@
 #product-images-dropzone{
   width: 100%;
-  min-height:200px;
+  min-height:400px;
+  display: none;
+}
+#product-images-disable{
+  display: none;
 }
 #product-images-dropzone.dropzone .dz-preview{
   width: 130px;
@@ -53,4 +57,15 @@
   transform: none;
   -webkit-filter: none;
   filter: none;
+}
+
+#product-images-form-container{
+
+  position: absolute!important;
+  z-index: 1000;
+  min-height:200px;
+  right: 0;
+  top:0;
+  cursor: default !important;
+  display: none;
 }

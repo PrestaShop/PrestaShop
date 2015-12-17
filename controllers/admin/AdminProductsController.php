@@ -1687,12 +1687,14 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
-    public function ajaxProcessDeleteProductImage()
+    public function ajaxProcessDeleteProductImage($id_image = null)
     {
         $this->display = 'content';
         $res = true;
         /* Delete product image */
-        $image = new Image((int)Tools::getValue('id_image'));
+        $id_image = $id_image ? $id_image : (int)Tools::getValue('id_image');
+
+        $image = new Image($id_image);
         $this->content['id'] = $image->id;
         $res &= $image->delete();
         // if deleted image was the cover, change it to the first one

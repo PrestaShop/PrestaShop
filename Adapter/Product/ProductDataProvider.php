@@ -97,7 +97,7 @@ class ProductDataProvider
                 'id' => $imageData->id,
                 'id_product' => $imageData->id_product,
                 'position' => $imageData->position,
-                'cover' => $imageData->cover,
+                'cover' => $imageData->cover ? true : false,
                 'legend' => $imageData->legend,
                 'format' => $imageData->image_format,
                 'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
@@ -105,5 +105,27 @@ class ProductDataProvider
         }
 
         return $data;
+    }
+
+    /**
+     * Get an image
+     *
+     * @param int $id_image
+     *
+     * @return object
+     */
+    public function getImage($id_image)
+    {
+        $imageData = new \ImageCore((int)$id_image);
+
+        return [
+            'id' => $imageData->id,
+            'id_product' => $imageData->id_product,
+            'position' => $imageData->position,
+            'cover' => $imageData->cover ? true : false,
+            'legend' => $imageData->legend,
+            'format' => $imageData->image_format,
+            'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
+        ];
     }
 }

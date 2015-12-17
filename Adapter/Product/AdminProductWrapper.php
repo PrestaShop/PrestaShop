@@ -648,4 +648,25 @@ class AdminProductWrapper
             $img->update();
         }
     }
+
+    /**
+     * Update image legend and cover
+     *
+     * @param int $idImage
+     * @param array $data
+     *
+     * @return object image
+     */
+    public function ajaxProcessUpdateImage($idImage, $data)
+    {
+        $img = new \ImageCore((int)$idImage);
+        if ($data['cover']) {
+            \ImageCore::deleteCover((int)$img->id_product);
+            $img->cover = 1;
+        }
+        $img->legend = $data['legend'];
+        $img->update();
+
+        return $img;
+    }
 }

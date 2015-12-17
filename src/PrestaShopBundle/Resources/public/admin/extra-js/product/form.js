@@ -841,6 +841,12 @@ var form = (function() {
 			success: function(response){
 				$('#form_id_product').val(response.product.id);
 				showSuccessMessage(translate_javascripts['Form update success']);
+
+				//display image manager and hide display message to need product save
+				imagesProduct.init();
+
+				$('#product-images-dropzone').show();
+				$('#product-images-disable').hide();
 			},
 			error: function(response){
 				var tabsWithErrors = [];
@@ -1117,18 +1123,35 @@ var attachmentProduct = (function() {
  * images product management
  */
 var imagesProduct = (function() {
+	var isInit = false;
+
 	return {
 		'init': function() {
+
+			//if this was already initalized, exit
+			if(isInit){
+				return;
+			}
 
 			Dropzone.autoDiscover = false;
 			var dropZoneElem = $('#product-images-dropzone');
 			var errorElem = $('#product-images-dropzone-error');
+
+			//if product id is define, display image manager, also display message to need product save
+			if($('#form_id_product').val() != 0){
+				isInit = true;
+				dropZoneElem.show();
+			}else{
+				$('#product-images-disable').show();
+				return;
+			}
 
 			//on click image, display custom form
 			$(document).on('click', '#product-images-dropzone .dz-preview', function() {
 				if(!$(this).attr('data-id')){
 					return;
 				}
+				formImagesProduct.form($(this).attr('data-id'));
 			});
 
 			var dropzoneOptions = {
@@ -1150,7 +1173,7 @@ var imagesProduct = (function() {
 				queuecomplete: function(){
 					dropZoneElem.sortable('enable');
 				},
-				addedfile: function(){
+				processing: function(){
 					dropZoneElem.sortable('disable');
 				},
 				success: function (file, response) {
@@ -1173,8 +1196,12 @@ var imagesProduct = (function() {
 					var message = '';
 					if($.type(response) === "string"){
 						message = response;
-					}else{
+					}else if(response.message){
 						message = response.message;
+					}
+
+					if(message == ''){
+						return;
 					}
 
 					//append new error
@@ -1192,8 +1219,7 @@ var imagesProduct = (function() {
 					//init sortable
 					dropZoneElem.sortable({
 						opacity: 0.9,
-						zIndex: 9999,
-						stop: function( event, ui ) {
+						stop: function(event, ui) {
 							var sort = {};
 							$.each(dropZoneElem.find('.dz-preview'), function( index, value ) {
 								if(!$(value).attr('data-id')) {
@@ -1211,7 +1237,11 @@ var imagesProduct = (function() {
 									data: {json: JSON.stringify(sort)}
 								});
 							}
-
+						},
+						start: function(event, ui) {
+							//init zindex
+							dropZoneElem.find('.dz-preview').css('zIndex', 1);
+							ui.item.css('zIndex', 10);
 						}
 					});
 
@@ -1219,14 +1249,77 @@ var imagesProduct = (function() {
 				}
 			};
 
-			dropZoneElem.dropzone(jQuery.extend( dropzoneOptions));
+			dropZoneElem.dropzone(jQuery.extend(dropzoneOptions));
 		},
 		'updateDisplayCover': function(id_image) {
-
 			$('#product-images-dropzone .dz-preview .iscover').remove();
-
 			$('#product-images-dropzone .dz-preview[data-id="' + id_image + '"]')
 				.append('<div class="iscover">' + translate_javascripts['Cover'] + '</div>');
+		}
+	};
+})();
+
+
+var formImagesProduct = (function() {
+	var dropZoneElem = $('#product-images-dropzone');
+	var formZoneElem = $('#product-images-form-container');
+
+	return {
+		'form': function(id) {
+			$.ajax({
+				url: dropZoneElem.attr('url-update')+'/'+id,
+				success: function(response){
+					formZoneElem.find('#product-images-form').html(response);
+				},
+				complete: function(){
+					formZoneElem.show();
+				}
+			});
+		},
+		'send': function(id) {
+			$.ajax({
+				type: 'POST',
+				url: dropZoneElem.attr('url-update')+'/'+id,
+				data: formZoneElem.find('input').serialize(),
+				beforeSend: function() {
+					formZoneElem.find('.actions button').prop('disabled', 'disabled');
+					formZoneElem.find('.help-block').remove();
+					formZoneElem.find('*.has-error').removeClass('has-error');
+				},
+				success: function(response){
+					if(formZoneElem.find('#form_image_cover:checked').length){
+						imagesProduct.updateDisplayCover(id);
+					}
+				},
+				error: function(response){
+					$.each(jQuery.parseJSON(response.responseText), function(key, errors){
+						var html = '<span class="help-block"><ul class="list-unstyled">';
+						$.each(errors, function(key, error){
+							html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+						});
+						html += '</ul></span>';
+
+						$('#form_image_'+key).parent().append(html);
+						$('#form_image_'+key).parent().addClass('has-error');
+					});
+				},
+				complete: function(){
+					formZoneElem.find('.actions button').removeAttr('disabled');
+				}
+			});
+		},
+		'delete': function(id) {
+			$.ajax({
+				url: dropZoneElem.attr('url-delete')+'/'+id,
+				complete: function(){
+					formZoneElem.find('.close').click();
+					dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
+				}
+			});
+		},
+		'close': function() {
+			formZoneElem.find('#product-images-form').html('');
+			formZoneElem.hide();
 		}
 	};
 })();
