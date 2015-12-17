@@ -317,7 +317,7 @@ class ContextCore
         }
         $this->cart->id_customer = (int)$customer->id;
 
-        if ($this->ajax && isset($id_carrier) && $id_carrier) {
+        if (isset($id_carrier) && $id_carrier) {
             $delivery_option = [$this->cart->id_address_delivery => $id_carrier.','];
             $this->cart->setDeliveryOption($delivery_option);
         }
