@@ -25,19 +25,18 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductCombination extends CommonModelAbstractType
+class ProductCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;
-    private $configurationAdapter;
+    private $configuration;
 
     /**
      * Constructor
@@ -49,7 +48,7 @@ class ProductCombination extends CommonModelAbstractType
     {
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
-        $this->configurationAdapter = new Configuration();
+        $this->configuration = $this->getConfiguration();
     }
 
     /**
@@ -118,7 +117,7 @@ class ProductCombination extends CommonModelAbstractType
         ))
         ->add('attribute_weight', 'number', array(
             'required' => false,
-            'label' => $this->translator->trans($this->configurationAdapter->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
+            'label' => $this->translator->trans($this->configuration->get('PS_WEIGHT_UNIT'), [], 'AdminProducts')
         ))
         ->add('attribute_unit_impact', 'choice', array(
             'choices'  => array(

@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Feature;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\FormEvents;
@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormEvent;
 /**
  * This form class is responsible to generate the product options form
  */
-class ProductFeature extends CommonModelAbstractType
+class ProductFeature extends CommonAbstractType
 {
     private $translator;
     private $locales;

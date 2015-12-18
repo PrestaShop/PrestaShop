@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -41,7 +41,7 @@ use Symfony\Component\Form\FormError;
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductInformation extends CommonModelAbstractType
+class ProductInformation extends CommonAbstractType
 {
     private $router;
     private $context;

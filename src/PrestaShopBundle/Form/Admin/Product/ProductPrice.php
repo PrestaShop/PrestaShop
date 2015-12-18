@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
@@ -33,7 +33,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice;
 /**
  * This form class is responsible to generate the product price form
  */
-class ProductPrice extends CommonModelAbstractType
+class ProductPrice extends CommonAbstractType
 {
     private $translator;
     private $tax_rules;

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormEvent;
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductSpecificPrice extends CommonModelAbstractType
+class ProductSpecificPrice extends CommonAbstractType
 {
     private $translator;
     private $locales;

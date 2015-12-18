@@ -1,6 +1,7 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+
     <div>
         {% if is_multishop_context %}
             <div class="alert alert-info" role="alert">{{ trans('Be carefull, you are in a multishop context, all modifcation will be apply to each shop or group shop', {}, 'AdminProducts') }}</div>
@@ -67,7 +68,7 @@
                             <label class="col-sm-2 control-label">{{ trans('Images', {}, 'AdminProducts') }}</label>
                             <div class="col-sm-10">
                                 <div id="product-images-container">
-                                    <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}">
+                                    <div id="product-images-dropzone" class="panel dropzone ui-sortable" url-upload="{{ path('admin_product_image_upload') }}" url-position="{{ path('admin_product_image_positions') }}" url-update="{{ path('admin_product_image_form') }}" url-delete="{{ path('admin_product_image_delete') }}" data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}">
                                         <div id="product-images-dropzone-error" class="text-danger"></div>
                                         {% if form.step1.vars.value.images is defined %}
                                             {% for image in form.step1.vars.value.images %}
@@ -334,7 +335,7 @@
                         <hr/>
                         {% endif %}
 
-                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ ps_configuration.weight_unit }}">
+                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}">
                             {% for combination in form.step3.combinations %}
                             <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}">
                                 <div class="panel-title">
@@ -344,7 +345,7 @@
                                         </a>
                                     </div>
                                     <div class="col-lg-4 pull-left">
-                                        <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} {{ ps_configuration.weight_unit }}</span>
+                                        <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</span>
                                         <span class="small col-lg-4 attribute-price-display">{{ combination.vars.value.attribute_price_display }}</span>
                                         <span class="small col-lg-4 attribute-quantity">{{ combination.vars.value.attribute_quantity }}</span>
                                     </div>

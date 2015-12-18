@@ -1162,7 +1162,7 @@ var imagesProduct = (function() {
 			var dropzoneOptions = {
 				url: dropZoneElem.attr('url-upload')+'/'+$('#form_id_product').val(),
 				paramName: "form[file]",
-				maxFilesize: 8,
+				maxFilesize: dropZoneElem.attr('data-max-size'),
 				addRemoveLinks: true,
 				clickable: true,
 				thumbnailWidth: 130,

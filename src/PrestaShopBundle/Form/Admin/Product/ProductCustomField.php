@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * This form class is responsible to generate the product custom fields configuration form
  */
-class ProductCustomField extends CommonModelAbstractType
+class ProductCustomField extends CommonAbstractType
 {
     private $translator;
     private $locales;

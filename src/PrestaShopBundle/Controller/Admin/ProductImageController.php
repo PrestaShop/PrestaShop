@@ -61,7 +61,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 'error_bubbling' => true,
                 'constraints' => [
                     new Assert\NotNull(array('message' => $translator->trans('Please select a file', [], 'AdminProducts'))),
-                    new Assert\Image(array('maxSize' => '8M')),
+                    new Assert\Image(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
                 ]
             ))
             ->getForm();

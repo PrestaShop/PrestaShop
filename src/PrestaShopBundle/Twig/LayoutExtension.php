@@ -49,7 +49,7 @@ class LayoutExtension extends \Twig_Extension
     {
         $this->context = $context;
         $this->environment = $kernel->getEnvironment();
-        $this->configurationAdapter = new Configuration();
+        $this->configuration = new Configuration();
     }
 
     public function getGlobals()
@@ -57,9 +57,6 @@ class LayoutExtension extends \Twig_Extension
         return array(
             "root_url" => $this->context->getRootUrl(),
             "js_translatable" => [],
-            "ps_configuration" => [
-                "weight_unit" => $this->configurationAdapter->get('PS_WEIGHT_UNIT'),
-            ]
         );
     }
 
@@ -72,6 +69,7 @@ class LayoutExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('admin_asset_path', array($this, 'getAdminAssetPath')),
+            new \Twig_SimpleFilter('configuration', array($this, 'getConfiguration')),
         );
     }
 
@@ -85,6 +83,18 @@ class LayoutExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('getLegacyLayout', array($this, 'getLegacyLayout')),
         );
+    }
+
+    /**
+     * Returns a legacy configuration key
+     *
+     * @param string $key
+     *
+     * @return array An array of functions
+     */
+    public function getConfiguration($key)
+    {
+        return $this->configuration->get($key);
     }
 
     /**

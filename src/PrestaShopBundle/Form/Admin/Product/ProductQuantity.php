@@ -25,22 +25,22 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 
 /**
  * This form class is responsible to generate the product quantity form
  */
-class ProductQuantity extends CommonModelAbstractType
+class ProductQuantity extends CommonAbstractType
 {
     private $router;
     private $translator;
+    private $configuration;
 
     /**
      * Constructor
@@ -54,8 +54,8 @@ class ProductQuantity extends CommonModelAbstractType
         $this->router = $router;
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
-        $this->configurationAdapter = new ConfigurationAdapter();
         $this->locales = $this->legacyContext->getLanguages();
+        $this->configuration = $this->getConfiguration();
     }
 
     /**
@@ -136,7 +136,7 @@ class ProductQuantity extends CommonModelAbstractType
 
             //Manage out_of_stock field with contextual values/label
             $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').' (';
-            $defaultChoiceLabel .= $this->configurationAdapter->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
+            $defaultChoiceLabel .= $this->configuration->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
                 $this->translator->trans('Allow orders', [], 'AdminProducts') :
                 $this->translator->trans('Deny orders', [], 'AdminProducts');
             $defaultChoiceLabel .= ')';
@@ -153,7 +153,7 @@ class ProductQuantity extends CommonModelAbstractType
             ));
 
             //Manage out_of_stock field with contextual values/label
-            $pack_stock_type = $this->configurationAdapter->get('PS_PACK_STOCK_TYPE');
+            $pack_stock_type = $this->configuration->get('PS_PACK_STOCK_TYPE');
             $defaultChoiceLabel = $this->translator->trans('Default', [], 'AdminProducts').': ';
             if ($pack_stock_type == 0) {
                 $defaultChoiceLabel .= $this->translator->trans('Decrement pack only.', [], 'AdminProducts');

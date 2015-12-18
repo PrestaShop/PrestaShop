@@ -26,12 +26,23 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 
 /**
  * This subclass contains common functions for PrestaShop needs.
  */
-abstract class CommonModelAbstractType extends AbstractType
+abstract class CommonAbstractType extends AbstractType
 {
+    /**
+     * Get the configuration adapter
+     *
+     * @return object Configuration adapter
+     */
+    protected function getConfiguration()
+    {
+        return new Configuration();
+    }
+
     /**
      * Format legacy data list to mapping SF2 form field choice
      *
