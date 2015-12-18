@@ -10,6 +10,9 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 
     private $title;
 
+    protected $step_is_reachable = false;
+    protected $step_is_complete  = false;
+
     public function __construct(Smarty $smarty, TranslatorInterface $translator)
     {
         $this->smarty = $smarty;
@@ -24,7 +27,9 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     protected function renderTemplate($template, array $params = [])
     {
         $defaultParams = [
-            'title' => $this->getTitle()
+            'title' => $this->getTitle(),
+            'step_is_complete' => (int)$this->isComplete(),
+            'step_is_reachable' => (int)$this->isReachable()
         ];
 
         $scope = $this->smarty->createData(
@@ -61,5 +66,16 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function getCheckoutProcess()
     {
         return $this->checkoutProcess;
+    }
+
+    public function isReachable()
+    {
+        return $this->step_is_reachable;
+    }
+
+    public function isComplete()
+    {
+        return $this->step_is_complete;
+        ;
     }
 }
