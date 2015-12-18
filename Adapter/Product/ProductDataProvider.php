@@ -91,17 +91,7 @@ class ProductDataProvider
     {
         $data = [];
         foreach (\ImageCore::getImages($id_lang, $id_product) as $image) {
-            $imageData = new \ImageCore($image['id_image']);
-
-            $data[] = [
-                'id' => $imageData->id,
-                'id_product' => $imageData->id_product,
-                'position' => $imageData->position,
-                'cover' => $imageData->cover ? true : false,
-                'legend' => $imageData->legend,
-                'format' => $imageData->image_format,
-                'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
-            ];
+            $data[] = $this->getImage($image['id_image']);
         }
 
         return $data;
