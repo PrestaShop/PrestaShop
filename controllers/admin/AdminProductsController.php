@@ -1687,12 +1687,14 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
-    public function ajaxProcessDeleteProductImage()
+    public function ajaxProcessDeleteProductImage($id_image = null)
     {
         $this->display = 'content';
         $res = true;
         /* Delete product image */
-        $image = new Image((int)Tools::getValue('id_image'));
+        $id_image = $id_image ? $id_image : (int)Tools::getValue('id_image');
+
+        $image = new Image($id_image);
         $this->content['id'] = $image->id;
         $res &= $image->delete();
         // if deleted image was the cover, change it to the first one
@@ -4106,10 +4108,21 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
-    public function ajaxProcessaddProductImage()
+    /**
+     * Ajax process upload images
+     *
+     * @param int|null $idProduct
+     * @param string $inputFileName
+     * @param bool $die If method must die or return values
+     *
+     * @return array
+     */
+    public function ajaxProcessaddProductImage($idProduct = null, $inputFileName='file', $die = true)
     {
+        $idProduct = $idProduct ? $idProduct : Tools::getValue('id_product');
+
         self::$currentIndex = 'index.php?tab=AdminProducts';
-        $product = new Product((int)Tools::getValue('id_product'));
+        $product = new Product((int)$idProduct);
         $legends = Tools::getValue('legend');
 
         if (!is_array($legends)) {
@@ -4121,7 +4134,7 @@ class AdminProductsControllerCore extends AdminController
             $files[0]['error'] = Tools::displayError('Cannot add image because product creation failed.');
         }
 
-        $image_uploader = new HelperImageUploader('file');
+        $image_uploader = new HelperImageUploader($inputFileName);
         $image_uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'))->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
 
@@ -4230,7 +4243,11 @@ class AdminProductsControllerCore extends AdminController
             }
         }
 
-        die(json_encode(array($image_uploader->getName() => $files)));
+        if ($die) {
+            die(json_encode(array($image_uploader->getName() => $files)));
+        } else {
+            return $files;
+        }
     }
 
     /**

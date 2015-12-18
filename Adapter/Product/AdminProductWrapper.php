@@ -634,4 +634,39 @@ class AdminProductWrapper
     {
         \AttachmentCore::attachToProduct($product->id, $data);
     }
+
+    /**
+     * Update images positions
+     *
+     * @param array $data Indexed array with id product/position
+     */
+    public function ajaxProcessUpdateImagePosition($data)
+    {
+        foreach ($data as $id => $position) {
+            $img = new \ImageCore((int)$id);
+            $img->position = (int)$position;
+            $img->update();
+        }
+    }
+
+    /**
+     * Update image legend and cover
+     *
+     * @param int $idImage
+     * @param array $data
+     *
+     * @return object image
+     */
+    public function ajaxProcessUpdateImage($idImage, $data)
+    {
+        $img = new \ImageCore((int)$idImage);
+        if ($data['cover']) {
+            \ImageCore::deleteCover((int)$img->id_product);
+            $img->cover = 1;
+        }
+        $img->legend = $data['legend'];
+        $img->update();
+
+        return $img;
+    }
 }

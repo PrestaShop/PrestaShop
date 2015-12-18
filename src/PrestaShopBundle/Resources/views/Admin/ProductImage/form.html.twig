@@ -1,0 +1,14 @@
+<button type="button" class="pull-right close" onclick="formImagesProduct.close()">X</button>
+{{ form_row(form.legend) }}
+{{ form_row(form.cover) }}
+<div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-10"><a href="{{ image.base_image_url }}.{{ image.format }}" class="open-image" target="_blank">{{ trans('Enlarge image', {}, 'AdminProducts') }}</a></div>
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-10 actions">
+        <button type="button" class="btn btn-primary" onclick="formImagesProduct.send({{ image.id }})">{{ trans('Save', {}, 'AdminProducts') }}</button>
+        <button type="button" class="btn btn-danger" onclick="formImagesProduct.delete({{ image.id }})">{{ trans('Delete', {}, 'AdminProducts') }}</button>
+    </div>
+</div>

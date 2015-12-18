@@ -78,4 +78,54 @@ class ProductDataProvider
     {
         return \ProductCore::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
     }
+
+    /**
+     * Get associated images to product
+     *
+     * @param int $id_product
+     * @param int $id_lang
+     *
+     * @return array
+     */
+    public function getImages($id_product, $id_lang)
+    {
+        $data = [];
+        foreach (\ImageCore::getImages($id_lang, $id_product) as $image) {
+            $imageData = new \ImageCore($image['id_image']);
+
+            $data[] = [
+                'id' => $imageData->id,
+                'id_product' => $imageData->id_product,
+                'position' => $imageData->position,
+                'cover' => $imageData->cover ? true : false,
+                'legend' => $imageData->legend,
+                'format' => $imageData->image_format,
+                'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get an image
+     *
+     * @param int $id_image
+     *
+     * @return object
+     */
+    public function getImage($id_image)
+    {
+        $imageData = new \ImageCore((int)$id_image);
+
+        return [
+            'id' => $imageData->id,
+            'id_product' => $imageData->id_product,
+            'position' => $imageData->position,
+            'cover' => $imageData->cover ? true : false,
+            'legend' => $imageData->legend,
+            'format' => $imageData->image_format,
+            'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
+        ];
+    }
 }

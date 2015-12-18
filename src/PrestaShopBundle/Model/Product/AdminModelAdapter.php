@@ -457,7 +457,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                         )
                     )
                 ],
-                'features' => $this->getFormFeatures()
+                'features' => $this->getFormFeatures(),
+                'images' => $this->productAdapter->getImages($this->product->id, $this->locales[0]['id_lang'])
             ],
             'step2' => [
                 'price' => $this->product->price,

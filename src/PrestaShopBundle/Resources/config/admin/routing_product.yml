@@ -106,3 +106,34 @@ admin_product_attachement_add_action:
         idProduct: 0
     requirements:
         idProduct: \d+
+
+admin_product_image_upload:
+    path:     /product/image/upload/{idProduct}
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::uploadImageAction'
+        idProduct: 0
+    requirements:
+        idProduct: \d+
+
+admin_product_image_positions:
+    path:     /product/image/positions
+    methods:  [POST]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::updateImagePositionAction'
+
+admin_product_image_form:
+    path:     /product/image/form/{idImage}
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::formAction'
+        idImage: 0
+    requirements:
+        idImage: \d+
+
+admin_product_image_delete:
+    path:     /product/image/delete/{idImage}
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\ProductImageController::deleteAction'
+        idImage: 0
+    requirements:
+        idImage: \d+

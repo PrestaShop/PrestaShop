@@ -40,8 +40,3 @@ admin_common_pagination:
         offset: \d+
         limit: \d+
         total: \d+
-
-admin_common_upload:
-    path:     /common/upload
-    methods:  [POST]
-    defaults: { _controller: 'PrestaShopBundle\Controller\Admin\CommonController::uploadAction'}
