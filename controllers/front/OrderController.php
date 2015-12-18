@@ -118,6 +118,8 @@ class OrderControllerCore extends FrontController
             $this->checkoutProcess->setNextStepReachable();
         }
 
+        $this->checkoutProcess->markCurrentStep();
+
         $this->persist($this->checkoutProcess);
 
         if (!$this->checkoutProcess->hasErrors()) {
