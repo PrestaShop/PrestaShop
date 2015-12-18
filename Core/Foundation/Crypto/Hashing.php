@@ -37,7 +37,7 @@ class Hashing
     private function initHashMethods()
     {
         $this->hash_methods = [
-                'BCryptSHA256' => [
+                'bcrypt' => [
                     'option' => [],
                     'encrypt' => function ($passwd, $cookie_key, $option) {
                         return password_hash($passwd, PASSWORD_BCRYPT);
