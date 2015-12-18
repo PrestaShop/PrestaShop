@@ -36,6 +36,7 @@ class PDFGeneratorCore extends TCPDF
 
     public $header;
     public $footer;
+    public $pagination;
     public $content;
     public $font;
 
@@ -126,21 +127,33 @@ class PDFGeneratorCore extends TCPDF
     }
 
     /**
+     *
+     * create the PDF pagination
+     *
+     * @param string $pagination HTML
+     */
+    public function createPagination($pagination)
+    {
+        $this->pagination = $pagination;
+    }
+
+    /**
      * Change the font
      *
      * @param string $iso_lang
      */
     public function setFontForLang($iso_lang)
     {
-        $this->font = PDFGenerator::DEFAULT_FONT;
         if (array_key_exists($iso_lang, $this->font_by_lang)) {
             $this->font = $this->font_by_lang[$iso_lang];
+        }else {
+            $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
-        $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN));
+        $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
+        $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
 
-        $this->setFont($this->font);
+        $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
     }
 
     /**
@@ -157,6 +170,8 @@ class PDFGeneratorCore extends TCPDF
     public function Footer()
     {
         $this->writeHTML($this->footer);
+        $this->FontFamily = self::DEFAULT_FONT;
+        $this->writeHTML($this->pagination);
     }
 
     /**
@@ -198,7 +213,7 @@ class PDFGeneratorCore extends TCPDF
     public function writePage()
     {
         $this->SetHeaderMargin(5);
-        $this->SetFooterMargin(18);
+        $this->SetFooterMargin(21);
         $this->setMargins(10, 40, 10);
         $this->AddPage();
         $this->writeHTML($this->content, true, false, true, false, '');
