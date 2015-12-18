@@ -40,10 +40,10 @@ class Hashing
                 'BCryptSHA256' => [
                     'option' => [],
                     'encrypt' => function ($passwd, $cookie_key, $option) {
-                        return password_hash($cookie_key.$passwd, PASSWORD_BCRYPT);
+                        return password_hash($passwd, PASSWORD_BCRYPT);
                     },
                     'verify' => function ($passwd, $hash, $cookie_key) {
-                        return password_verify($cookie_key.$passwd, $hash);
+                        return password_verify($passwd, $hash);
                     }
                 ],
                 'md5' => [
