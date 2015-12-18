@@ -60,3 +60,5 @@ DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_COMPARATOR_MAX_ITEM';
 DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
 DROP TABLE IF EXISTS PREFIX_compare;
 DROP TABLE IF EXISTS PREFIX_compare_product;
+
+ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL
