@@ -12,8 +12,8 @@
     {form form=$register_form template='customer/_partials/register-form.tpl'}
   {/if}
 
-  <form method="GET">
-    <button type="submit" class="continue" {if !$step_is_complete}disabled{/if}>
+  <form method="POST">
+    <button type="submit" class="continue" name="continue" value="1" {if !$step_is_complete}disabled{/if}>
       {l s='Continue'}
     </button>
   </form>
