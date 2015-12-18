@@ -77,15 +77,15 @@ class OrderControllerCore extends FrontController
                 $translator
             ))
         ;
-
-        $this->checkoutProcess->init(
-            Tools::getAllValues()
-        );
     }
 
     public function initContent()
     {
         parent::initContent();
+
+        $this->checkoutProcess->handleRequest(
+            Tools::getAllValues()
+        );
 
         if (!$this->checkoutProcess->hasErrors()) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
