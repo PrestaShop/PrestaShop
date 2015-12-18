@@ -8,7 +8,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerRegisterFormCore extends AbstractForm
 {
-    protected $templatePath = 'customer/_partials/register-form.tpl';
+    protected $template = 'customer/_partials/register-form.tpl';
 
     private $context;
     private $translator;

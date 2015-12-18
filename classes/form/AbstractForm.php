@@ -5,7 +5,7 @@ abstract class AbstractFormCore implements FormInterface
     private $smarty;
     protected $action;
     protected $errors = [];
-    protected $templatePath;
+    protected $template;
 
     public function __construct(Smarty $smarty)
     {
@@ -40,15 +40,15 @@ abstract class AbstractFormCore implements FormInterface
 
     abstract public function getTemplateVariables();
 
-    public function setTemplatePath($templatePath)
+    public function setTemplate($template)
     {
-        $this->templatePath = $templatePath;
+        $this->template = $template;
         return $this;
     }
 
-    public function getTemplatePath()
+    public function getTemplate()
     {
-        return $this->templatePath;
+        return $this->template;
     }
 
     public function render()
@@ -60,10 +60,15 @@ abstract class AbstractFormCore implements FormInterface
         $scope->assign($this->getTemplateVariables());
 
         $tpl = $this->smarty->createTemplate(
-            $this->getTemplatePath(),
+            $this->getTemplate(),
             $scope
         );
 
         return $tpl->fetch();
+    }
+
+    public function getProxy()
+    {
+        return new FormTemplateProxy($this);
     }
 }

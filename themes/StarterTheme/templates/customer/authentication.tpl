@@ -10,7 +10,7 @@
         <span><a href="{$urls.pages.register}" data-link-action="display-register-form">{l s='No account ? Create one here'}</a></span>
       </header>
       <section class="login-form">
-        {$rendered_login_form nofilter}
+        {form form=$login_form template='customer/_partials/login-form.tpl'}
       </section>
     {/block}
   </section>

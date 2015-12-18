@@ -8,7 +8,7 @@ class CustomerLoginFormCore extends AbstractForm
     private $translator;
     private $urls;
 
-    protected $templatePath = 'customer/_partials/login-form.tpl';
+    protected $template = 'customer/_partials/login-form.tpl';
 
     private $email;
     private $password;
