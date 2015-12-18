@@ -9,4 +9,5 @@ interface CheckoutStepInterface
     public function getCheckoutProcess();
     public function isReachable();
     public function isComplete();
+    public function getIdentifier();
 }
