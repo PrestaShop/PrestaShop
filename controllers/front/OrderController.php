@@ -66,7 +66,8 @@ class OrderControllerCore extends FrontController
             ))
             ->addStep(new CheckoutAddressesStep(
                 $this->context->smarty,
-                $translator
+                $translator,
+                $this->getAddressForm()
             ))
             ->addStep(new CheckoutDeliveryStep(
                 $this->context->smarty,
