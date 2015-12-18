@@ -1,4 +1,10 @@
-<section class="checkout-step {if $step_is_current}current{/if}" data-step-is-reachable="{$step_is_reachable}" data-step-is-complete="{$step_is_complete}">
+<section class="{[
+    'checkout-step' => true,
+    '-current'      => $step_is_current,
+    '-reachable'    => $step_is_reachable,
+    '-complete'     => $step_is_complete
+  ]|classnames}"
+>
   <h1>{$title}</h1>
   <div class="content">
     {block "step_content"}DUMMY STEP CONTENT{/block}
