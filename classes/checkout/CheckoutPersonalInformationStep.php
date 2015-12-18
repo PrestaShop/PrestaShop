@@ -22,6 +22,9 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 
     public function handleRequest(array $requestParameters = [])
     {
+        // personal info step is always reachable
+        $this->step_is_reachable = true;
+
         $this->show_login_form = array_key_exists('login', $requestParameters);
 
         $this->loginForm->handleRequest($requestParameters);
