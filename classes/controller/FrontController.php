@@ -1612,4 +1612,17 @@ class FrontControllerCore extends Controller
 
         return $form;
     }
+
+    protected function getAddressForm()
+    {
+        $form = new CustomerAddressForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator()
+        );
+
+        $form->setAction($this->updateQueryString(null));
+
+        return $form;
+    }
 }
