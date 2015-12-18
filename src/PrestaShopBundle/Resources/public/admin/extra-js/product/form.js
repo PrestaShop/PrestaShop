@@ -194,6 +194,8 @@ var formCategory = (function() {
 			},
 			success: function(response){
 				$('#form_step1_new_category_name').val('');
+
+				//inject new category into category tree
 				var html = '<li><div class="checkbox"><label><input type="checkbox" name="form[step1][categories][tree][]" value="'+response.category.id+'">'+response.category.name[1]+'</label></div></li>';
 				var parentElement = $('#form_step1_categories input[value='+response.category.id_parent+']').parent().parent();
 				if(parentElement.next('ul').length === 0){
@@ -202,6 +204,9 @@ var formCategory = (function() {
 				}else{
 					parentElement.next('ul').append(html);
 				}
+
+				//inject new category in parent category selector
+				$('#form_step1_new_category_id_parent').append('<option value="' + response.category.id + '">' + response.category.name[1] + '</option>');
 			},
 			error: function(response){
 				$.each(jQuery.parseJSON(response.responseText), function(key, errors){
