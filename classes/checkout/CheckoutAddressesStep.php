@@ -2,7 +2,7 @@
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
 {
-    public function init(array $requestParams = [])
+    public function handleRequest(array $requestParams = [])
     {
         $this->setTitle(
             $this->getTranslator()->trans(

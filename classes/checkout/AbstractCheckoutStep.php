@@ -21,10 +21,6 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->translator;
     }
 
-    public function init(array $requestParameters = [])
-    {
-    }
-
     protected function renderTemplate($template, array $params = [])
     {
         $defaultParams = [
