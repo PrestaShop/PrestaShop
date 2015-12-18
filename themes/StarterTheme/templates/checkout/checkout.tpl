@@ -24,6 +24,7 @@
     {block name="content"}
     <section id="content">
 
+      {$rendered_cart_summary nofilter}
       {$rendered_checkout nofilter}
 
     </section>
