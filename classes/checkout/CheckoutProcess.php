@@ -55,4 +55,31 @@ class CheckoutProcessCore
     {
         return $this->has_errors;
     }
+
+    public function getDataToPersist()
+    {
+        $data = [];
+        foreach ($this->getSteps() as $step) {
+            $stepData = [
+                'step_is_reachable' => $step->isReachable(),
+                'step_is_complete'  => $step->isComplete()
+            ];
+            $data[$step->getIdentifier()] = $stepData;
+        }
+        return $data;
+    }
+
+    public function restorePersistedData(array $data)
+    {
+        foreach ($this->getSteps() as $step) {
+            $id = $step->getIdentifier();
+            if (array_key_exists($id, $data)) {
+                $stepData = $data[$id];
+                $step
+                    ->setReachable($stepData['step_is_reachable'])
+                    ->setComplete($stepData['step_is_complete'])
+                ;
+            }
+        }
+    }
 }
