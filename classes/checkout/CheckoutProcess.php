@@ -82,4 +82,18 @@ class CheckoutProcessCore
             }
         }
     }
+
+    public function setNextStepReachable()
+    {
+        foreach ($this->getSteps() as $step) {
+            if (!$step->isReachable()) {
+                $step->setReachable(true);
+                break;
+            }
+            if (!$step->isComplete()) {
+                break;
+            }
+        }
+        return $this;
+    }
 }
