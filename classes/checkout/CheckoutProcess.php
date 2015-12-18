@@ -11,10 +11,10 @@ class CheckoutProcessCore
         $this->checkoutSession = $checkoutSession;
     }
 
-    public function init(array $requestParameters = [])
+    public function handleRequest(array $requestParameters = [])
     {
         foreach ($this->getSteps() as $step) {
-            $step->init($requestParameters);
+            $step->handleRequest($requestParameters);
         }
 
         return $this;
