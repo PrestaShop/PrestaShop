@@ -82,6 +82,9 @@ function setupCheckoutScripts () {
   $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
   $('body').on('change', '.js-address-selector input', selectAddress);
+  $('body').on('click', '.checkout-step[data-step-is-reachable=1]', function (event) {
+    $(event.target).closest('.checkout-step').toggleClass('-js-current');
+  });
 
   collapsePaymentOptions();
 
