@@ -79,13 +79,31 @@ class OrderControllerCore extends FrontController
         ;
     }
 
+    private function persist(CheckoutProcess $process)
+    {
+        $data = $process->getDataToPersist();
+        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'" WHERE id_cart = '.(int)$this->context->cart->id);
+    }
+
+    private function load(CheckoutProcess $process)
+    {
+        $rawData = Db::getInstance()->getValue('SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int)$this->context->cart->id);
+        $data = json_decode($rawData, true);
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $process->restorePersistedData($data);
+    }
+
     public function initContent()
     {
         parent::initContent();
 
+        $this->load($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
         );
+        $this->persist($this->checkoutProcess);
 
         if (!$this->checkoutProcess->hasErrors()) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
