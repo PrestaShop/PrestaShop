@@ -20,7 +20,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->registerForm = $registerForm;
     }
 
-    public function init(array $requestParameters = [])
+    public function handleRequest(array $requestParameters = [])
     {
         $this->show_login_form = array_key_exists('login', $requestParameters);
 
