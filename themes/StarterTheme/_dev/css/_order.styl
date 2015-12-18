@@ -79,9 +79,15 @@ body#checkout
   border 1px solid cta-color
   color cta-color
 
-.checkout-step[data-step-is-reachable="0"]
+.checkout-step
   .content
     display none
+.checkout-step[data-step-is-reachable="1"]
+  > h1
+    cursor pointer
+.checkout-step[data-step-is-reachable="1"][data-step-is-complete="0"], .checkout-step.-js-current
+  .content
+    display block
 .checkout-step
     button.continue
       padding 15px 30px 15px 30px
