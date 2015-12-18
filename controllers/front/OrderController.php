@@ -103,6 +103,11 @@ class OrderControllerCore extends FrontController
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
         );
+
+        if (Tools::getValue('continue')) {
+            $this->checkoutProcess->setNextStepReachable();
+        }
+
         $this->persist($this->checkoutProcess);
 
         if (!$this->checkoutProcess->hasErrors()) {
