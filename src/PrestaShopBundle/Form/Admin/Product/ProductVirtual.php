@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -34,10 +34,11 @@ use Symfony\Component\Form\FormEvent;
 /**
  * This form class is responsible to generate the virtual product
  */
-class ProductVirtual extends CommonModelAbstractType
+class ProductVirtual extends CommonAbstractType
 {
     private $translator;
     private $legacyContext;
+    private $configuration;
 
     /**
      * Constructor
@@ -49,6 +50,7 @@ class ProductVirtual extends CommonModelAbstractType
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
+        $this->configuration = $this->getConfiguration();
     }
 
     /**
@@ -71,7 +73,7 @@ class ProductVirtual extends CommonModelAbstractType
             'required' => false,
             'label' => $this->translator->trans('File', [], 'AdminProducts'),
             'constraints' => array(
-                new Assert\File(array('maxSize' => '8M')),
+                new Assert\File(array('maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE').'M')),
             )
         ))
         ->add('name', 'text', array(

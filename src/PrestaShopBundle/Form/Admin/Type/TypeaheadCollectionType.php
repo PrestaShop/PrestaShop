@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormInterface;
 /**
  * This form class is responsible to create generic typeahed field
  */
-class TypeaheadCollectionType extends AbstractType
+class TypeaheadCollectionType extends CommonAbstractType
 {
     private $remote_url;
     private $mapping_value;

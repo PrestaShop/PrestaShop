@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormInterface;
 /**
  * This form class is responsible to create a translatable form
  */
-class TranslateType extends AbstractType
+class TranslateType extends CommonAbstractType
 {
     private $type;
     private $options;

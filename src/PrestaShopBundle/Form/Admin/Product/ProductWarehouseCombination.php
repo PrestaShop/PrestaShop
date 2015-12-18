@@ -25,14 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the basic product information form
  */
-class ProductWarehouseCombination extends CommonModelAbstractType
+class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
     private $contextLegacy;

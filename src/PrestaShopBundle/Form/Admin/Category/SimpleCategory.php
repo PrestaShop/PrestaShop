@@ -25,7 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Category;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * This form class is responsible to generate the basic category form
  * Name (not translated), and parent category selector
  */
-class SimpleCategory extends AbstractType
+class SimpleCategory extends CommonAbstractType
 {
     private $translator;
     private $categories;

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -38,7 +38,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductSupplierCombination;
 /**
  * This form class is responsible to generate the product options form
  */
-class ProductOptions extends CommonModelAbstractType
+class ProductOptions extends CommonAbstractType
 {
     private $translator;
     private $suppliers;

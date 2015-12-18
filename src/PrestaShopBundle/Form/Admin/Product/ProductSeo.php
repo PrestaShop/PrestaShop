@@ -25,14 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShopBundle\Form\Admin\Type\CommonModelAbstractType;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 
 /**
  * This form class is responsible to generate the product SEO form
  */
-class ProductSeo extends CommonModelAbstractType
+class ProductSeo extends CommonAbstractType
 {
     private $translator;
     private $locales;
