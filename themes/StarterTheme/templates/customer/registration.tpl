@@ -12,7 +12,7 @@
 
       {$hook_create_account_top nofilter}
       <section class="register-form">
-        {$rendered_register_form nofilter}
+        {form form=$register_form template='customer/_partials/register-form.tpl'}
       </section>
     {/block}
   </section>
