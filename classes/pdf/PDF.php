@@ -102,6 +102,7 @@ class PDFCore
 
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());
+            $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
             $render = true;
