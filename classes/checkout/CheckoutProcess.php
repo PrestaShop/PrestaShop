@@ -99,6 +99,10 @@ class CheckoutProcessCore
 
     public function markCurrentStep()
     {
+        foreach ($this->getSteps() as $step) {
+            $step->setCurrent(false);
+        }
+
         foreach (array_reverse($this->getSteps()) as $step) {
             if ($step->isReachable()) {
                 $step->setCurrent(true);
