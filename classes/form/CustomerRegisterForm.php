@@ -8,6 +8,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerRegisterFormCore extends AbstractForm
 {
+    protected $templatePath = 'customer/_partials/register-form.tpl';
+
     private $context;
     private $translator;
     private $urls;
@@ -266,11 +268,6 @@ class CustomerRegisterFormCore extends AbstractForm
             $customer->email,
             $customer->firstname.' '.$customer->lastname
         );
-    }
-
-    public function getTemplatePath()
-    {
-        return 'customer/_partials/register-form.tpl';
     }
 
     public function getTemplateVariables()

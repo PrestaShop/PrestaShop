@@ -8,6 +8,8 @@ class CustomerLoginFormCore extends AbstractForm
     private $translator;
     private $urls;
 
+    protected $templatePath = 'customer/_partials/login-form.tpl';
+
     private $email;
     private $password;
     private $back;
@@ -96,11 +98,6 @@ class CustomerLoginFormCore extends AbstractForm
                 CartRule::autoAddToCart($this->context);
             }
         }
-    }
-
-    public function getTemplatePath()
-    {
-        return 'customer/_partials/login-form.tpl';
     }
 
     public function getTemplateVariables()
