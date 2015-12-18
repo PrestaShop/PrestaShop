@@ -6,9 +6,9 @@
     <p>{l s='Not you? [1]Log out[/1]' tags=["<a href='{$urls.actions.logout}'>"]}</p>
   {else if $show_login_form}
     <a href="{$urls.pages.order}">{l s='No account?'}</a>
-    {$rendered_login_form nofilter}
+    {form form=$login_form template='customer/_partials/login-form.tpl'}
   {else}
     <a href="?login">{l s='Already have an account?'}</a>
-    {$rendered_register_form nofilter}
+    {form form=$register_form template='customer/_partials/register-form.tpl'}
   {/if}
 {/block}

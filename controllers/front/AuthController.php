@@ -54,7 +54,7 @@ class AuthControllerCore extends FrontController
 
         if (Tools::getValue('create_account') || Tools::isSubmit('submitCreate')) {
             $this->context->smarty->assign([
-                'rendered_register_form'  => $this->registerForm->render(),
+                'register_form'  => $this->registerForm->getProxy(),
                 'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
             ]);
             $this->setTemplate('customer/registration.tpl');
@@ -66,7 +66,7 @@ class AuthControllerCore extends FrontController
                 $this->processSubmitLogin();
             }
             $this->context->smarty->assign([
-                'rendered_login_form' => $this->loginForm->render()
+                'login_form' => $this->loginForm->getProxy()
             ]);
             $this->setTemplate('customer/authentication.tpl');
         }
