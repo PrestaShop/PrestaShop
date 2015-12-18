@@ -68,14 +68,31 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->checkoutProcess;
     }
 
+    public function setReachable($step_is_reachable)
+    {
+        $this->step_is_reachable = $step_is_reachable;
+        return $this;
+    }
+
     public function isReachable()
     {
         return $this->step_is_reachable;
+    }
+
+    public function setComplete($step_is_complete)
+    {
+        $this->step_is_complete = $step_is_complete;
+        return $this;
     }
 
     public function isComplete()
     {
         return $this->step_is_complete;
         ;
+    }
+
+    public function getIdentifier()
+    {
+        return get_class($this);
     }
 }

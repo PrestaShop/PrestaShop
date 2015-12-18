@@ -11,4 +11,10 @@
     <a href="?login">{l s='Already have an account?'}</a>
     {form form=$register_form template='customer/_partials/register-form.tpl'}
   {/if}
+
+  <form method="GET">
+    <button type="submit" class="continue" {if !$step_is_complete}disabled{/if}>
+      {l s='Continue'}
+    </button>
+  </form>
 {/block}
