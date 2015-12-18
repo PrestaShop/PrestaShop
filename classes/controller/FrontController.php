@@ -1618,7 +1618,10 @@ class FrontControllerCore extends Controller
         $form = new CustomerAddressForm(
             $this->context->smarty,
             $this->context,
-            $this->getTranslator()
+            $this->getTranslator(),
+            new Adapter_AddressFormatter(
+                $this->context->country
+            )
         );
 
         $form->setAction($this->updateQueryString(null));
