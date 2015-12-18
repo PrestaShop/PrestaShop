@@ -33,6 +33,8 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             if ($this->loginForm->hasErrors()) {
                 $this->show_login_form = true;
                 $this->getCheckoutProcess()->setHasErrors(true);
+            } else {
+                $this->step_is_complete = true;
             }
         }
 
@@ -49,6 +51,8 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         if ($this->registerForm->wasSubmitted()) {
             if ($this->registerForm->hasErrors()) {
                 $this->getCheckoutProcess()->setHasErrors(true);
+            } else {
+                $this->step_is_complete = true;
             }
         }
 
