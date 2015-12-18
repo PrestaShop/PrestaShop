@@ -10,4 +10,5 @@ interface FormInterface
     public function getErrors();
     public function hasErrors();
     public function render();
+    public function setTemplatePath($templatePath);
 }
