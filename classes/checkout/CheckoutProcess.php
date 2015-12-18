@@ -96,4 +96,14 @@ class CheckoutProcessCore
         }
         return $this;
     }
+
+    public function markCurrentStep()
+    {
+        foreach (array_reverse($this->getSteps()) as $step) {
+            if ($step->isReachable()) {
+                $step->setCurrent(true);
+                break;
+            }
+        }
+    }
 }
