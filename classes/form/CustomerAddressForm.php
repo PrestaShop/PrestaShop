@@ -6,6 +6,7 @@ class CustomerAddressFormCore extends AbstractForm
 {
     private $context;
     private $translator;
+    private $addressFormatter;
 
     protected $template = 'customer/_partials/address-form.tpl';
 
@@ -20,12 +21,14 @@ class CustomerAddressFormCore extends AbstractForm
     public function __construct(
         Smarty $smarty,
         Context $context,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Adapter_AddressFormatter $addressFormatter
     ) {
         parent::__construct($smarty);
 
         $this->context = $context;
         $this->translator = $translator;
+        $this->addressFormatter = $addressFormatter;
     }
 
     public function fillWith(array $params = [])
