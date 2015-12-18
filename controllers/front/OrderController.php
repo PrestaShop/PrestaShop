@@ -95,6 +95,16 @@ class OrderControllerCore extends FrontController
         $process->restorePersistedData($data);
     }
 
+    private function renderCartSummary()
+    {
+        $cart = $this->cart_presenter->present(
+            $this->context->cart
+        );
+        return $this->render('checkout/_partials/cart-summary.tpl', [
+            'cart' => $cart,
+        ]);
+    }
+
     public function initContent()
     {
         parent::initContent();
@@ -118,10 +128,9 @@ class OrderControllerCore extends FrontController
             }
         }
 
-        $rendered_checkout = $this->checkoutProcess->render();
-
         $this->context->smarty->assign([
-            'rendered_checkout' => $rendered_checkout
+            'rendered_checkout' => $this->checkoutProcess->render(),
+            'rendered_cart_summary' => $this->renderCartSummary()
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }
