@@ -127,7 +127,7 @@ class ProductImageController extends FrameworkBundleAdminController
         $image = $productAdapter->getImage((int)$idImage);
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
-            ->add('legend', new TranslateType('text', array(), $locales, false), array(
+            ->add('legend', new TranslateType('text', array(), $locales), array(
                 'label' => $translator->trans('Legend', [], 'AdminProducts'),
                 'required' => false,
             ))
