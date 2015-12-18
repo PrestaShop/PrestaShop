@@ -164,17 +164,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['submitted_tabs'][] = 'Associations';
         }
 
-        //extract description_short from description
-        foreach ($this->locales as $locale) {
-            if ($form_data['description'][$locale['id_lang']] && false !== strpos($form_data['description'][$locale['id_lang']], '<p><!-- excerpt --></p>')) {
-                $description_full = explode('<p><!-- excerpt --></p>', $form_data['description'][$locale['id_lang']]);
-                $form_data['description'][$locale['id_lang']] = isset($description_full[1]) ? $description_full[1] : $description_full[0];
-                $form_data['description_short'][$locale['id_lang']] = isset($description_full[1]) ? $description_full[0] : '';
-            } else {
-                $form_data['description_short'][$locale['id_lang']] = '';
-            }
-        }
-
         //map translatable
         foreach ($this->translatableKeys as $field) {
             foreach ($form_data[$field] as $lang_id => $translate_value) {
@@ -433,8 +422,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     )
                 ],
                 'name' => $this->product->name,
-                'description' => $this->getFormFullDescription($this->product->description, $this->product->description_short),
-                //images
+                'description' => $this->product->description,
+                'description_short' => $this->product->description_short,
                 'upc' => $this->product->upc,
                 'ean13' => $this->product->ean13,
                 'isbn' => $this->product->isbn,
@@ -693,33 +682,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         return $dataWarehousesCombinations;
-    }
-
-    /**
-     * get form Full product Description with description short
-     * Map object model to form data
-     *
-     * @param array $descriptionLangs the translated descriptions
-     * @param array $descriptionShortLangs the translated short descriptions
-     *
-     * @return array full translated description with excerpt tag
-     */
-    private function getFormFullDescription(array $descriptionLangs, array $descriptionShortLangs)
-    {
-        $full_descriptions = [];
-
-        foreach ($this->locales as $locale) {
-            if (strlen($descriptionShortLangs[$locale['id_lang']]) > 0) {
-                $full_descriptions[$locale['id_lang']] =
-                    $descriptionShortLangs[$locale['id_lang']].
-                    '<p><!-- excerpt --></p>'.
-                    $descriptionLangs[$locale['id_lang']];
-            } else {
-                $full_descriptions[$locale['id_lang']] = $descriptionLangs[$locale['id_lang']];
-            }
-        }
-
-        return $full_descriptions;
     }
 
     /**

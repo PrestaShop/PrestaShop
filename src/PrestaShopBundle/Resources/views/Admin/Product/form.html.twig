@@ -62,7 +62,19 @@
                                 </ul>
                             </div>
                         </div>
-                        {{ form_row(form.step1.description) }}
+
+                        <ul class="nav nav-tabs">
+                            <li><a href="#description_short" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                            <li><a href="#description" data-toggle="tab">{{ trans('Short description', {}, 'AdminProducts') }}</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane panel panel-default active" id="description_short">
+                                {{ form_widget(form.step1.description_short) }}
+                            </div>
+                            <div class="tab-pane panel panel-default" id="description">
+                                {{ form_widget(form.step1.description) }}
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ trans('Images', {}, 'AdminProducts') }}</label>
@@ -496,7 +508,7 @@
     {% javascripts '@PrestaShopBundle/Resources/public/admin/extra-js/product/form.js'
     '@PrestaShopBundle/Resources/public/admin/extra-js/category-tree.js'
     '../js/tiny_mce/tiny_mce.js'
-    '../js/admin/tinymce.product.inc.js'
+    '../js/admin/tinymce.inc.js'
     '../js/admin/tinymce_loader.js'
     '../js/vendor/node_modules/typeahead.js/dist/typeahead.jquery.min.js'
     '../js/vendor/node_modules/typeahead.js/dist/bloodhound.min.js'

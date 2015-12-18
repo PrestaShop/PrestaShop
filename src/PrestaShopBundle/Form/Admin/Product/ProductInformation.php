@@ -124,6 +124,13 @@ class ProductInformation extends CommonAbstractType
                 'label' =>  $this->translator->trans('Description', [], 'AdminProducts'),
                 'required' => false
             ))
+        ->add('description_short', new TranslateType('textarea', array(
+            'attr' => array('class' => 'autoload_rte'),
+            'required' => false
+        ), $this->locales, true), array(
+            'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
+            'required' => false
+        ))
         ->add('upc', 'text', array(
             'required' => false,
             'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
