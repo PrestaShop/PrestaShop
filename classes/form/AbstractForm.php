@@ -30,7 +30,7 @@ abstract class AbstractFormCore implements FormInterface
 
     public function hasErrors()
     {
-        foreach ($this->errors as $errors) {
+        foreach ($this->getErrors() as $errors) {
             if (!empty($errors)) {
                 return true;
             }
