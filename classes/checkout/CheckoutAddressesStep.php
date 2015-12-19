@@ -17,6 +17,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function handleRequest(array $requestParams = [])
     {
+        $this->addressForm->handleRequest($requestParams);
+
+        if ($this->addressForm->wasSubmitted()) {
+            $this->getCheckoutProcess()->setHasErrors(true);
+        }
+
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Addresses',
