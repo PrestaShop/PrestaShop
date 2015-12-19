@@ -1615,12 +1615,21 @@ class FrontControllerCore extends Controller
 
     protected function getAddressForm()
     {
+        if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
+            $availableCountries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
+        } else {
+            $availableCountries = Country::getCountries($this->context->language->id, true);
+        }
+
+
         $form = new CustomerAddressForm(
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
-            new Adapter_AddressFormatter(
-                $this->context->country
+            new CustomerAddressFormatter(
+                $this->context->country,
+                $this->getTranslator(),
+                $availableCountries
             )
         );
 
