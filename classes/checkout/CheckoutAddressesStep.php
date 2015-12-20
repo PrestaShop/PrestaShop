@@ -39,6 +39,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->use_same_address = (bool)$requestParams['use_same_address'];
         }
 
+        // Can't really hurt to set the firstname and lastname.
+        $this->addressForm->fillWith([
+            'firstname' => $this->getCheckoutSession()->getCustomer()->firstname,
+            'lastname'  => $this->getCheckoutSession()->getCustomer()->lastname
+        ]);
+
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
@@ -71,10 +77,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         } elseif (isset($requestParams['newAddress'])) {
             if ($requestParams['newAddress'] === 'delivery') {
                 $this->show_delivery_address_form = true;
-                $this->addressForm->fillWith([
-                    'firstname' => $this->getCheckoutSession()->getCustomer()->firstname,
-                    'lastname'  => $this->getCheckoutSession()->getCustomer()->lastname
-                ]);
             } else {
                 $this->show_invoice_address_form = true;
             }
