@@ -11,15 +11,11 @@ class CustomerAddressFormCore extends AbstractForm
 
     protected $template = 'customer/_partials/address-form.tpl';
 
-
     private $submitted;
     private $back;
 
-    private $formItems = [];
-
-    protected $errors = [
-
-    ];
+    private $formItems;
+    private $address;
 
     public function __construct(
         Smarty $smarty,
@@ -37,6 +33,39 @@ class CustomerAddressFormCore extends AbstractForm
         );
     }
 
+    public function setIdAddress($id_address)
+    {
+        $address = new Address($id_address, $this->context->language->id);
+        $formItems = $this->addressFormatter->getFormat();
+        foreach ($formItems as $key => $formItem) {
+            if ($formItem['name'] === 'id_address') {
+                // I love the fact the our "ORM" has "id" internally
+                // but the DB has "id_address".
+                $formItems[$key]['value'] = $address->id;
+                continue;
+            }
+            $formItems[$key]['value'] = $address->{$formItem['name']};
+        }
+
+        $this->setNewFormItems($formItems);
+
+        return $this;
+    }
+
+    private function setNewFormItems(array $formItems)
+    {
+        if (is_array($this->formItems)) {
+            foreach ($formItems as $name => $formItem) {
+                if ($formItem['value'] === null && isset($this->formItems[$name])) {
+                    $formItems[$name]['value'] = $this->formItems[$name]['value'];
+                }
+            }
+        }
+
+        $this->formItems = $formItems;
+        return $this;
+    }
+
     public function fillWith(array $params = [])
     {
         // This form is very tricky: fields may change depending on which
@@ -49,13 +78,15 @@ class CustomerAddressFormCore extends AbstractForm
             ));
         }
 
-        $this->formItems = $this->addressFormatter->getFormat();
+        $formItems = $this->addressFormatter->getFormat();
 
-        foreach ($this->formItems as $formItem) {
+        foreach ($formItems as $formItem) {
             if (array_key_exists($formItem['name'], $params)) {
-                $this->formItems[$formItem['name']]['value'] = $params[$formItem['name']];
+                $formItems[$formItem['name']]['value'] = $params[$formItem['name']];
             }
         }
+
+        $this->setNewFormItems($formItems);
 
         return $this;
     }
@@ -93,7 +124,8 @@ class CustomerAddressFormCore extends AbstractForm
             $this->context->language->id
         );
 
-        if ($address->id_customer && $address->id_customer !== $this->context->customer->id) {
+        if ($address->id_customer && (int)$address->id_customer !== (int)$this->context->customer->id) {
+            throw new Exception('Security Thing.');
             // cannot update somebody else's address
             return false;
         }
@@ -110,7 +142,14 @@ class CustomerAddressFormCore extends AbstractForm
             $address->id_customer = $this->context->customer->id;
         }
 
+        $this->address = $address;
+
         return $address->save();
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
     }
 
     private function validateFormItem(array $formItem)
