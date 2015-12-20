@@ -100,6 +100,8 @@ class CustomerRegisterFormCore extends AbstractForm
     {
         $birthdate = $customer->birthday;
         if ($birthdate === '0000-00-00') {
+            // this is just because '0000-00-00' is not a valid
+            // value for an <input type="date">
             $birthdate = null;
         }
 
