@@ -1,4 +1,4 @@
-<form method="POST" action="{$urls.pages.order}" class="js-address-selector">
+<form method="POST" action="{$urls.pages.order}" class="address-selector js-address-selector">
   {foreach $addresses as $address}
     <article id="{$name|classname}-address-{$address.id}" class="address-item">
       <header class="h4">

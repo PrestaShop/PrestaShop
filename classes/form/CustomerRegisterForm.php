@@ -30,7 +30,7 @@ class CustomerRegisterFormCore extends AbstractForm
     private $lastname;
     private $email;
     private $password;
-    private $birthdate;
+    private $birthdate = '0000-00-00';
     private $newsletter;
     private $partner_optin;
 
@@ -98,11 +98,16 @@ class CustomerRegisterFormCore extends AbstractForm
 
     public function fillFromCustomer(Customer $customer)
     {
+        $birthdate = $customer->birthday;
+        if ($birthdate === '0000-00-00') {
+            $birthdate = null;
+        }
+
         return $this->fillWith([
             'firstname'     => $customer->firstname,
             'lastname'      => $customer->lastname,
             'email'         => $customer->email,
-            'birthdate'     => $customer->birthday,
+            'birthdate'     => $birthdate,
             'newsletter'    => $customer->newsletter,
             'partner_optin' => $customer->optin
         ]);
