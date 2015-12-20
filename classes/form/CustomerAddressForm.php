@@ -2,6 +2,16 @@
 
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * StarterTheme TODO: FIXME:
+ * In the old days, when updating an address, we actually:
+ * - checked if the address was used by an order
+ * - if so, just mark it as deleted and create a new one
+ * - otherwise, update it like a normal entity
+ * I *think* this is not necessary now because the invoicing thing
+ * does its own historization. But this should be checked more thoroughly.
+ */
+
 class CustomerAddressFormCore extends AbstractForm
 {
     private $context;
