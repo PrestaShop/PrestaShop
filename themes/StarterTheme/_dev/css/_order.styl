@@ -3,19 +3,21 @@ body#checkout
   margin auto
 
 .address-selector
-  clearfix()
+  display flex
+  flex-wrap wrap
+  justify-content space-between
   .address-item
-    float left
-    min-width 220px
+    width 220px
     background-color grey-lighter
     padding medium-padding
-    margin-left spacing-unit
-   &:nth-child-last()
-     margin-left: 0
+    margin-top spacing-unit
 
 #checkout-cart-summary
   float right
   width 30%
+
+.checkout-step
+  width 70%
 
 #conditions-to-approve
   margin-top small-padding
