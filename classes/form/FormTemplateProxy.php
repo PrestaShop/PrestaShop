@@ -15,8 +15,8 @@ class FormTemplateProxyCore
         return $this;
     }
 
-    public function render()
+    public function render(array $extraParams = [])
     {
-        return $this->form->render();
+        return $this->form->render($extraParams);
     }
 }
