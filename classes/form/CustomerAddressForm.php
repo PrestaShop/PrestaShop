@@ -69,7 +69,7 @@ class CustomerAddressFormCore extends AbstractForm
     public function fillWith(array $params = [])
     {
         // This form is very tricky: fields may change depending on which
-        // country is submitted!
+        // country is being submitted!
         // So we first update the format if a new id_country was set.
         if (isset($params['id_country']) && $params['id_country'] != $this->addressFormatter->getCountry()->id) {
             $this->addressFormatter->setCountry(new Country(
