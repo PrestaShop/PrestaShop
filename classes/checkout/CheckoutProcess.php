@@ -60,10 +60,13 @@ class CheckoutProcessCore
     {
         $data = [];
         foreach ($this->getSteps() as $step) {
-            $stepData = [
+            $defaultStepData = [
                 'step_is_reachable' => $step->isReachable(),
                 'step_is_complete'  => $step->isComplete()
             ];
+
+            $stepData = array_merge($defaultStepData, $step->getDataToPersist());
+
             $data[$step->getIdentifier()] = $stepData;
         }
         return $data;
@@ -78,6 +81,7 @@ class CheckoutProcessCore
                 $step
                     ->setReachable($stepData['step_is_reachable'])
                     ->setComplete($stepData['step_is_complete'])
+                    ->restorePersistedData($stepData)
                 ;
             }
         }

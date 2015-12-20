@@ -11,4 +11,6 @@ interface CheckoutStepInterface
     public function isComplete();
     public function isCurrent();
     public function getIdentifier();
+    public function getDataToPersist();
+    public function restorePersistedData(array $data);
 }
