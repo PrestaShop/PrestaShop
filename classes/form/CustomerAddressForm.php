@@ -209,6 +209,15 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function getTemplateVariables()
     {
+        if (!$this->formItems) {
+            // This is usually done by fillWith but the form may be
+            // rendered before fillWith is called.
+            // I don't want to assign formItems in the constructor
+            // because it accesses the DB and a constructor should not
+            // have side effects.
+            $this->formItems = $this->addressFormatter->getFormat();
+        }
+
         return [
             'action'    => $this->action,
             'back'      => $this->back,
