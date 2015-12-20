@@ -9,6 +9,6 @@ interface FormInterface
     public function submit();
     public function getErrors();
     public function hasErrors();
-    public function render();
+    public function render(array $extraVariables = []);
     public function setTemplate($template);
 }

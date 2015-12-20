@@ -51,12 +51,13 @@ abstract class AbstractFormCore implements FormInterface
         return $this->template;
     }
 
-    public function render()
+    public function render(array $extraVariables = [])
     {
         $scope = $this->smarty->createData(
             $this->smarty
         );
 
+        $scope->assign($extraVariables);
         $scope->assign($this->getTemplateVariables());
 
         $tpl = $this->smarty->createTemplate(

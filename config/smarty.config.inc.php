@@ -280,7 +280,7 @@ function smartyForm($params, &$smarty)
         $form->setTemplate($params['template']);
     }
 
-    return $form->render();
+    return $form->render($params);
 }
 
 function smartyWidgetBlock($params, $content, &$smarty)
