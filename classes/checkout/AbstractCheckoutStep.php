@@ -70,6 +70,11 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->checkoutProcess;
     }
 
+    public function getCheckoutSession()
+    {
+        return $this->getCheckoutProcess()->getCheckoutSession();
+    }
+
     public function setReachable($step_is_reachable)
     {
         $this->step_is_reachable = $step_is_reachable;
@@ -107,5 +112,15 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     public function getIdentifier()
     {
         return get_class($this);
+    }
+
+    public function getDataToPersist()
+    {
+        return [];
+    }
+
+    public function restorePersistedData(array $data)
+    {
+        return $this;
     }
 }
