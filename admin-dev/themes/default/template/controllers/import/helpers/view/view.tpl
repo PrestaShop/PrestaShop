@@ -58,9 +58,9 @@
 		});
 	</script>
 	<div id="container-customer" class="panel">
-		<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
+		<h3><i class="icon-list-alt"></i> {l s='Match your data'}</h3>
 		<div class="alert alert-info">
-			<p>{l s='Please match each column of your source CSV file to one of the destination columns.'}</p>
+			<p>{l s='Please match each column of your source file to one of the destination columns.'}</p>
 		</div>
 		<div class="form-horizontal">
 			<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
@@ -111,10 +111,10 @@
 			<input type="hidden" name="separator" value="{$fields_value.separator}" />
 			<input type="hidden" name="multiple_value_separator" value="{$fields_value.multiple_value_separator}" />
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="skip">{l s='Lines to skip'}</label>
+				<label class="control-label col-lg-3" for="skip">{l s='Rows to skip'}</label>
 				<div class="col-lg-9">
 					<input class="fixed-width-sm" type="text" name="skip" id="skip" value="1" />
-					<p class="help-block">{l s='This number indicates how many of the first lines of your CSV file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
+					<p class="help-block">{l s='Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'}</p>
 				</div>
 			</div>
 			<div class="form-group">
@@ -138,7 +138,7 @@
 				</button>
 				<button id="import" name="import" type="submit" onclick="return (validateImportation(new Array({$res})));"  class="btn btn-default pull-right">
 					<i class="process-icon-ok text-success"></i>
-					{l s='Import .CSV data'}
+					{l s='Import'}
 				</button>
 			</div>
 		</form>
