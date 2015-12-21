@@ -15,6 +15,6 @@
 {/block}
 
 {block "form_buttons"}
-  <a href="?">{l s='Cancel'}</a>
+  <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
   <button type="submit">{l s='Save Address'}</button>
 {/block}
