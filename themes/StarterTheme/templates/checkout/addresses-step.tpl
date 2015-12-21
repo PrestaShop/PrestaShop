@@ -20,9 +20,6 @@
       <p>
         {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.'}
       </p>
-      <p>
-        <a href="?use_same_address=0">{l s='Use a different address for invoice?'}</a>
-      </p>
     {/if}
 
     {include  addresses  = $customer.addresses
@@ -33,6 +30,12 @@
     }
 
     <a href="?newAddress=delivery">{l s='Add another address'}</a>
+
+    {if $use_same_address}
+      <p>
+        <a href="?use_same_address=0">{l s='Use a different address for invoice?'}</a>
+      </p>
+    {/if}
 
   {/if}
 
