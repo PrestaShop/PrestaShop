@@ -76,6 +76,9 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             $this->tests['optional'] = $this->model_system->checkOptionalTests();
         }
 
+        $testsRequiredsf2 = $this->model_system->checkSf2Requirements();
+        $testsOptionalsf2 = $this->model_system->checkSf2Recommendations();
+
         if (!is_callable('getenv') || !($user = @getenv('APACHE_RUN_USER'))) {
             $user = 'Apache';
         }
@@ -117,8 +120,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp
                         'translations_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/translations/'),
                         'customizable_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/upload/'),
                         'virtual_products_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/download/'),
-                        'app_cache_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/app/cache/'),
-                        'app_logs_dir' => $this->l('Recursive write permissions for %1$s user on %2$s', $user, '~/app/logs/'),
                     )
                 ),
             ),
@@ -139,12 +140,27 @@ class InstallControllerHttpSystem extends InstallControllerHttp
             ),
         );
 
+        //Inject Sf2 errors to test render required
+        foreach ($testsRequiredsf2 as $error) {
+            $this->tests_render['required'][2]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
+        //Inject Sf2 optionnal config to test render optional
+        foreach ($testsOptionalsf2 as $error) {
+            $this->tests_render['optional'][0]['checks'][] = $this->l($error->getHelpHtml());
+        }
+
         foreach ($this->tests_render['required'] as &$category) {
             foreach ($category['checks'] as $id => $check) {
-                if ($this->tests['required']['checks'][$id] != 'ok') {
+                if (!isset($this->tests['required']['checks'][$id]) || $this->tests['required']['checks'][$id] != 'ok') {
                     $category['success'] = 0;
                 }
             }
+        }
+
+        //if sf2 requirement error found, force the required success to false
+        if (count($testsRequiredsf2) > 0) {
+            $this->tests['required']['success'] = false;
         }
 
         // If required tests failed, disable next button
