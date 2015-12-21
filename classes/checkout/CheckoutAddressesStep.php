@@ -99,6 +99,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->addressForm->setIdAddress($requestParams['id_address']);
         }
 
+        $this->step_is_complete = $this->getCheckoutSession()->getIdAddressInvoice() && $this->getCheckoutSession()->getIdAddressDelivery();
+
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Addresses',
