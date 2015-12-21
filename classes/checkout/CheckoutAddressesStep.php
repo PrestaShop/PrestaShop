@@ -39,6 +39,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->use_same_address = (bool)$requestParams['use_same_address'];
         }
 
+        if (isset($requestParams['cancelAddress']) && $requestParams['cancelAddress'] === 'invoice') {
+            if ($this->getCheckoutSession()->getCustomerAddressesCount() < 2) {
+                $this->use_same_address = true;
+            }
+        }
+
         // Can't really hurt to set the firstname and lastname.
         $this->addressForm->fillWith([
             'firstname' => $this->getCheckoutSession()->getCustomer()->firstname,
@@ -64,6 +70,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 } else {
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
                 }
+            }
+            if ($requestParams['saveAddress'] === 'delivery') {
+                $this->use_same_address = isset($requestParams['use_same_address']);
             }
         } elseif (isset($requestParams['id_address_delivery'])) {
             $id_address = $requestParams['id_address_delivery'];
