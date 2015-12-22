@@ -20,3 +20,11 @@
 #form .toolbarBox a{
   text-decoration: none;
 }
+
+.product-combination-image{
+  display: inline-block;
+  margin: 5px;
+}
+.product-combination-image img{
+  border: 1px solid #ccc
+}

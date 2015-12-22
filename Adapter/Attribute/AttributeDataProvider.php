@@ -71,4 +71,21 @@ class AttributeDataProvider
 
         return $combinations;
     }
+
+    /**
+     * Get combination images ids
+     *
+     * @param int $idAttribute
+     *
+     * @return array
+     */
+    public function getImages($idAttribute)
+    {
+        return \DbCore::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT a.`id_image` as id
+			FROM `'._DB_PREFIX_.'product_attribute_image` a
+			'.\ShopCore::addSqlAssociation('product_attribute', 'a').'
+			WHERE a.`id_product_attribute` = '.(int)$idAttribute.'
+		');
+    }
 }

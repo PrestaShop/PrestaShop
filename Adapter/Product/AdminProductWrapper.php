@@ -68,6 +68,7 @@ class AdminProductWrapper
     public function processProductAttribute($product, $combinationValues)
     {
         $id_product_attribute = (int)$combinationValues['id_product_attribute'];
+        $images = [];
 
         if (!\CombinationCore::isFeatureActive() || $id_product_attribute == 0) {
             return;
@@ -88,6 +89,9 @@ class AdminProductWrapper
         if ($combinationValues['attribute_default']) {
             $product->deleteDefaultAttributes();
         }
+        if (!empty($combinationValues['id_image_attr'])) {
+            $images = $combinationValues['id_image_attr'];
+        }
 
         $product->updateAttribute(
             $id_product_attribute,
@@ -96,7 +100,7 @@ class AdminProductWrapper
             $combinationValues['attribute_weight'] * $combinationValues['attribute_weight_impact'],
             $combinationValues['attribute_unity'] * $combinationValues['attribute_unit_impact'],
             $combinationValues['attribute_ecotax'],
-            null,
+            $images,
             $combinationValues['attribute_reference'],
             $combinationValues['attribute_ean13'],
             $combinationValues['attribute_default'],

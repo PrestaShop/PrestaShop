@@ -482,7 +482,7 @@ var combinationGenerator = (function() {
 			var combinationsLength = $('#accordion_combinations').children().length;
 			var form = $('#accordion_combinations').attr('data-prototype').replace(/__name__/g, combinationsLength);
 
-			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__">\
+			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__" data="__id_attribute__" data-index="___index__">\
 				<div class="panel-title">\
 					<div class="col-lg-4 pull-left">\
 						<a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">__combination_name__</a>\
@@ -504,6 +504,7 @@ var combinationGenerator = (function() {
 			</div>';
 
 			var newRow = row.replace(/__name__/g, combinationsLength)
+				.replace(/___index__/g, combinationsLength)
 				.replace(/__combination_name__/g, attribute.name)
 				.replace(/__delete_link__/g, $('#accordion_combinations').attr('data-action-delete')+'/'+attribute.id_product_attribute+'/'+$('#form_id_product').val())
 				.replace(/__id_attribute__/g, attribute.id_product_attribute)
@@ -635,6 +636,37 @@ var combinations = (function() {
 			/** on change price impact, update price row */
 			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
 				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
+			});
+
+			this.refreshImagesCombination();
+		},
+		'refreshImagesCombination': function() {
+			var target = $('#accordion_combinations');
+
+			if(target.find('.combination').length == 0){
+				return;
+			}
+
+			$.ajax({
+				type: 'GET',
+			 	url: target.attr('data-action-refresh-images')+'/' + $('#form_id_product').val(),
+			 	success: function(response){
+					$.each(response, function(id, combinationImages){
+						var combinationElem = target.find('.combination[data="'+ id +'"]');
+						var imagesElem = combinationElem.find('.images');
+						var index = combinationElem.attr('data-index');
+
+						imagesElem.html('');
+						$.each(combinationImages, function(key, image){
+
+							var row = '<div class="product-combination-image">\
+					 			<input type="checkbox" name="form[step3][combinations][' + index + '][id_image_attr][]" value="' + image.id + '" '+ (image.id_image_attr ? 'checked="checked"' : '') +'>\
+					 			<img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
+					 		</div>';
+							imagesElem.append(row);
+						});
+					});
+			 	}
 			});
 		}
 	};
@@ -1196,6 +1228,8 @@ var imagesProduct = (function() {
 					if(response.cover == 1){
 						imagesProduct.updateDisplayCover(response.id);
 					}
+
+					combinations.refreshImagesCombination();
 				},
 				error: function (file, response) {
 					var message = '';
@@ -1319,6 +1353,7 @@ var formImagesProduct = (function() {
 				complete: function(){
 					formZoneElem.find('.close').click();
 					dropZoneElem.find('.dz-preview[data-id="' + id + '"]').remove();
+					combinations.refreshImagesCombination();
 				}
 			});
 		},

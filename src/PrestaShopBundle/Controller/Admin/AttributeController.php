@@ -190,4 +190,54 @@ class AttributeController extends FrameworkBundleAdminController
 
         return $response;
     }
+
+    /**
+     * get the images form for a product combinations
+     *
+     * @param int $idProduct The product id
+     * @param Request $request The request
+     *
+     * @return string Json
+     */
+    public function getFormImagesAction($idProduct, Request $request)
+    {
+        $response = new JsonResponse();
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
+
+        //get product
+        $product = $productAdapter->getProduct((int)$idProduct, true);
+
+        //get product images
+        $productImages = $productAdapter->getImages($idProduct, $locales[0]['id_lang']);
+
+        if (!$request->isXmlHttpRequest() || !is_object($product) || empty($product->id)) {
+            $response->setStatusCode(400);
+            return $response;
+        }
+
+        $data = [];
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+        foreach ($combinations as $combination) {
+            //get combination images
+            $combinationImages = array_map(function ($o) {
+                return $o['id'];
+            }, $attributeAdapter->getImages($combination['id_product_attribute']));
+
+            $newProductImages = $productImages;
+            foreach ($newProductImages as $k => $image) {
+                $newProductImages[$k]['id_image_attr'] = false;
+                if (in_array($image['id'], $combinationImages)) {
+                    $newProductImages[$k]['id_image_attr'] = true;
+                }
+            }
+
+            $data[$combination['id_product_attribute']] = $newProductImages;
+        }
+
+        $response->setData($data);
+
+        return $response;
+    }
 }
