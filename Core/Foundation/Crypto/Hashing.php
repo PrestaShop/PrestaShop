@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Crypto;
 
 class Hashing
 {
-    /** @var array should contain encryption methods */
+    /** @var array should contain hashing methods */
     private $hash_methods = [];
 
     /**
@@ -37,18 +37,18 @@ class Hashing
     private function initHashMethods()
     {
         $this->hash_methods = [
-                'BCryptSHA256' => [
+                'bcrypt' => [
                     'option' => [],
-                    'encrypt' => function ($passwd, $cookie_key, $option) {
-                        return password_hash($cookie_key.$passwd, PASSWORD_BCRYPT);
+                    'hash' => function ($passwd, $cookie_key, $option) {
+                        return password_hash($passwd, PASSWORD_BCRYPT);
                     },
                     'verify' => function ($passwd, $hash, $cookie_key) {
-                        return password_verify($cookie_key.$passwd, $hash);
+                        return password_verify($passwd, $hash);
                     }
                 ],
                 'md5' => [
                     'option' => [],
-                    'encrypt' => function ($passwd, $cookie_key, $option) {
+                    'hash' => function ($passwd, $cookie_key, $option) {
                         return md5($cookie_key.$passwd);
                     },
                     'verify' => function ($passwd, $hash, $cookie_key) {
@@ -59,7 +59,7 @@ class Hashing
     }
 
     /**
-     * check if it's the first function of the array that was used for encryption
+     * check if it's the first function of the array that was used for hashing
      * @param  string  $passwd     the password you want to check
      * @param  string  $hash       the hash you want to check
      * @param  string  $cookie_key the define _COOKIE_KEY_
@@ -99,9 +99,9 @@ class Hashing
     }
 
     /**
-     * encrypt the $passwd string and return the result of the 1st encryption method
+     * hash the $passwd string and return the result of the 1st hashing method
      * contained in \PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing::hash_methods
-     * @param  string  $passwd     the password you want to encrypt
+     * @param  string  $passwd     the password you want to hash
      * @param  string  $cookie_key the define _COOKIE_KEY_
      * @return string
      */
@@ -113,6 +113,6 @@ class Hashing
 
         $closure = reset($this->hash_methods);
 
-        return $closure['encrypt']($passwd, $cookie_key, $closure['option']);
+        return $closure['hash']($passwd, $cookie_key, $closure['option']);
     }
 }
