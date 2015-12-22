@@ -3,11 +3,12 @@
 class CheckoutSessionCore
 {
     private $context;
+    private $deliveryOptionsFinder;
 
-    public function setContext(Context $context)
+    public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)
     {
         $this->context = $context;
-        return $this;
+        $this->deliveryOptionsFinder = $deliveryOptionsFinder;
     }
 
     public function customerHasLoggedIn()
@@ -47,5 +48,21 @@ class CheckoutSessionCore
     public function getIdAddressInvoice()
     {
         return $this->context->cart->id_address_invoice;
+    }
+
+    public function setDeliveryOption($option)
+    {
+        $this->context->cart->setDeliveryOption($option);
+        return $this->context->cart->update();
+    }
+
+    public function getSelectedDeliveryOption()
+    {
+        return $this->deliveryOptionsFinder->getSelectedDeliveryOption();
+    }
+
+    public function getDeliveryOptions()
+    {
+        return $this->deliveryOptionsFinder->getDeliveryOptions();
     }
 }
