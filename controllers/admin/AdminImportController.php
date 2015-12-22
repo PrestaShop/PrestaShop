@@ -586,7 +586,7 @@ class AdminImportControllerCore extends AdminController
     public function renderForm()
     {
         if (!is_dir(AdminImportController::getPath())) {
-            return !($this->errors[] = Tools::displayError('The import directory does not exist.'));
+            return !($this->errors[] = Tools::displayError('The import directory doesn\'t exist. Please check your file path.'));
         }
 
         if (!is_writable(AdminImportController::getPath())) {
@@ -850,7 +850,7 @@ class AdminImportControllerCore extends AdminController
             if (Tools::getValue('csv')) {
                 $this->content .= $this->renderView();
             } else {
-                $this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
+                $this->errors[] = $this->l('To proceed, please upload a file first.');
                 $this->content .= $this->renderForm();
             }
         } else {
@@ -1271,7 +1271,7 @@ class AdminImportControllerCore extends AdminController
     {
         $tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
         if (isset($info['id']) && in_array((int)$info['id'], $tab_categ)) {
-            $this->errors[] = Tools::displayError('The category ID cannot be the same as the Root category ID or the Home category ID.');
+            $this->errors[] = Tools::displayError('The category ID must be unique. It can\'t be the same as the one for Root or Home category.');
             return;
         }
         AdminImportController::setDefaultValues($info);
@@ -1293,7 +1293,7 @@ class AdminImportControllerCore extends AdminController
             // Validation for parenting itself
             if ($validateOnly && ($category->parent == $category->id) || (isset($info['id']) && $category->parent == (int)$info['id'])) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('A category cannot be its own parent (ID: %1$s)'),
+                    Tools::displayError('The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).'),
                     (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
                 );
                 return;
@@ -1306,7 +1306,7 @@ class AdminImportControllerCore extends AdminController
             // Validation for parenting itself
             if ($validateOnly && isset($category->name) && ($category->parent == $category->name)) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('A category cannot be its own parent (Name: %1$s)'),
+                    Tools::displayError('A category can\'t be its own parent. You should rename it (current name: %1$s).'),
                     $category->parent
                 );
                 return;
@@ -1367,7 +1367,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$valid_link) {
             $this->informations[] = sprintf(
-                Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
+                Tools::displayError('Rewrite link for %1$s (ID %2$s): re-written as %3$s.'),
                 $bak,
                 (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
                 $category->link_rewrite[$default_language_id]
@@ -1393,7 +1393,7 @@ class AdminImportControllerCore extends AdminController
 
             if ($category->id && $category->id == $category->id_parent) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('A category cannot be its own parent, or the parent category is unknown (ID: %1$s)'),
+                    Tools::displayError('A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).'),
                     (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
                 );
                 return;
@@ -1661,7 +1661,7 @@ class AdminImportControllerCore extends AdminController
                 $this->addProductWarning(
                     'id_tax_rules_group',
                     $product->id_tax_rules_group,
-                    Tools::displayError('Invalid tax rule group ID. You first need to create a group with this ID.')
+                    Tools::displayError('Unknown tax rule group ID. You need to create a group with this ID first.')
                 );
             }
         }
@@ -1821,7 +1821,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$valid_link) {
             $this->informations[] = sprintf(
-                Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
+                Tools::displayError('Rewrite link for %1$s (ID %2$s): re-written as %3$s.'),
                 $product->name[$id_lang],
                 (isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
                 $link_rewrite
@@ -2663,14 +2663,14 @@ class AdminImportControllerCore extends AdminController
                 // now adds the attributes in the attribute_combination table
                 if ($id_product_attribute_update) {
                     Db::getInstance()->execute('
-    					DELETE FROM '._DB_PREFIX_.'product_attribute_combination
-    					WHERE id_product_attribute = '.(int)$id_product_attribute);
+						DELETE FROM '._DB_PREFIX_.'product_attribute_combination
+						WHERE id_product_attribute = '.(int)$id_product_attribute);
                 }
 
                 foreach ($attributes_to_add as $attribute_to_add) {
                     Db::getInstance()->execute('
-    					INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-    					VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
+						INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
+						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
                 }
             }
 
@@ -3758,7 +3758,7 @@ class AdminImportControllerCore extends AdminController
             $error = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
         }
         if (!Validate::isDateFormat($date_delivery_expected)) {
-            $error = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
+            $error = sprintf($this->l('Date format (%s) is not valid (at line %d). It should be: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
         } elseif (new DateTime($date_delivery_expected) <= new DateTime('yesterday')) {
             $error = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
         }
@@ -4318,7 +4318,7 @@ class AdminImportControllerCore extends AdminController
 
             Db::getInstance()->enableCache();
         } else {
-            $this->errors[] = $this->l('You must upload a file in order to proceed to the next step');
+            $this->errors[] = $this->l('To proceed, please upload a file first.');
         }
     }
 
@@ -4427,7 +4427,7 @@ class AdminImportControllerCore extends AdminController
                 (int)$this->context->shop->id
             );
             if (!$mailSuccess) {
-                $results['warnings'][] = $this->l('The confirmation mail failed to be sent but the import finished succefully.');
+                $results['warnings'][] = $this->l('The confirmation email couldn\'t be sent, but the import is successfull. Yay!');
             }
         }
 
@@ -4441,7 +4441,7 @@ class AdminImportControllerCore extends AdminController
         $this->modals[] = array(
              'modal_id' => 'importProgress',
              'modal_class' => 'modal-md',
-             'modal_title' => $this->l('Processing import...'),
+             'modal_title' => $this->l('Importing...'),
              'modal_content' => $modal_content
          );
     }

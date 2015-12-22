@@ -49,7 +49,7 @@
 			<hr />
 			<form id="preview_import" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
-					<label for="entity" class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
+					<label for="entity" class="control-label col-lg-4">{l s='What do want to import?'} </label>
 					<div class="col-lg-8">
 						<select name="entity" id="entity" class="fixed-width-xxl form-control">
 							{foreach $entities AS $entity => $i }
@@ -71,12 +71,12 @@
 				</div>
 				<hr />
 				<div class="form-group" id="csv_file_uploader">
-					<label for="file" class="control-label col-lg-4">{l s='Select a CSV file to import'}</label>
+					<label for="file" class="control-label col-lg-4">{l s='Select a file to import'}</label>
 					<div class="col-lg-8">
 						<input id="file" type="file" name="file" data-url="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-folder-open"></i>
-							{l s='Upload a file'}
+							{l s='Upload'}
 						</button>
 						{l s='or'}
 						<button class="btn btn-default csv-history-btn" type="button">
@@ -93,7 +93,7 @@
 				<div class="form-group" id="csv_files_history" style="display:none;" >
 					<div class="panel">
 						<div class="panel-heading">
-							{l s='History of uploaded .CSV'}
+							{l s='History of uploaded files'}
 							<span class="csv-history-nb badge">{$files_to_import|count}</span>
 							<button type="button" class="btn btn-link pull-right csv-history-btn">
 								<i class="icon-remove"></i>
@@ -256,7 +256,7 @@
 				</div>
 				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
-						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID number will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
 							{l s='Force all ID numbers'}
 						</span>
 					</label>
