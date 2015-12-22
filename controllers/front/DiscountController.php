@@ -48,6 +48,10 @@ class DiscountControllerCore extends FrontController
                                             new Currency((int)$discount['reduction_currency']),
                                             new Currency((int)$this->context->cart->id_currency)
                                         );
+            if ($discount['gift_product'] !== 0) {
+                $product = new Product((int) $discount['gift_product']);
+                $discount['gift_product'] = current($product->name);
+            }
         }
 
         $this->context->smarty->assign(array(
