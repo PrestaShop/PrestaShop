@@ -42,9 +42,17 @@ class OrderControllerCore extends FrontController
 
     private function getCheckoutSession()
     {
-        $session = new CheckoutSession;
+        $deliveryOptionsFinder = new DeliveryOptionsFinder(
+            $this->context,
+            $this->getTranslator(),
+            $this->objectSerializer,
+            new Adapter_PricePresenter
+        );
 
-        $session->setContext($this->context);
+        $session = new CheckoutSession(
+            $this->context,
+            $deliveryOptionsFinder
+        );
 
         return $session;
     }
