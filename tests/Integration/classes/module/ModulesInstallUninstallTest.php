@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use Module;
+use ModuleCore;
 use Context;
 use Employee;
 
@@ -36,7 +36,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        Module::updateTranslationsAfterInstall(false);
+        ModuleCore::updateTranslationsAfterInstall(false);
         Context::getContext()->employee = new Employee();
         Context::getContext()->employee->id = 1;
         Context::getContext()->employee->id_profile = _PS_ADMIN_PROFILE_;
@@ -63,7 +63,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
      */
     public function testInstallationAndUnInstallation($moduleName)
     {
-        $module = Module::getInstanceByName($moduleName);        
+        $module = ModuleCore::getInstanceByName($moduleName);
         if ($module->id) {
             $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
             $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
