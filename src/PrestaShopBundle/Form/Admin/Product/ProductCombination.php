@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\Product;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -156,6 +158,14 @@ class ProductCombination extends CommonAbstractType
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric')),
             )
+        ))
+        ->add('id_image_attr', 'choice', array(
+            'choices'  => array(),
+            'required' => false,
+            'expanded' => true,
+            'multiple' => true,
+            'label' => $this->translator->trans('Images', [], 'AdminProducts'),
+            'attr' => array('class' => 'images'),
         ));
 
         //set default minimal values for collection prototype
@@ -168,6 +178,25 @@ class ProductCombination extends CommonAbstractType
             'available_date_attribute' => '0000-00-00',
             'attribute_quantity' => 0,
         ]);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $choices = [];
+            if (!empty($data['id_image_attr'])) {
+                foreach ($data['id_image_attr'] as $id) {
+                    $choices[$id] = $id;
+                }
+            }
+
+            $form->add('id_image_attr', 'choice', array(
+                'choices' => $choices,
+                'required' => false,
+                'expanded' => true,
+                'multiple' => true,
+            ));
+        });
     }
 
     /**

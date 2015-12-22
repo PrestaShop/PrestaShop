@@ -347,9 +347,9 @@
                         <hr/>
                         {% endif %}
 
-                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}">
+                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
                             {% for combination in form.step3.combinations %}
-                            <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}">
+                            <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}" data="{{ combination.vars.value.id_product_attribute }}" data-index="{{ loop.index0 }}">
                                 <div class="panel-title">
                                     <div class="col-lg-4 pull-left">
                                         <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">
