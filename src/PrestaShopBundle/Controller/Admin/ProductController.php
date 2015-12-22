@@ -156,7 +156,7 @@ class ProductController extends FrameworkBundleAdminController
         $hasColumnFilter = $productProvider->isColumnFiltered();
 
         // Alternative layout for empty list
-        $totalFilteredProductCount = count($products);
+        $totalFilteredProductCount = (count($products)>0) ? $products[0]['total'] : 0;
         $totalProductCount = 0;
         if ((!$hasCategoryFilter && !$hasColumnFilter && $totalFilteredProductCount === 0)
             || ($totalProductCount = $productProvider->countAllProducts()) === 0) {

@@ -143,8 +143,9 @@ class AdminProductDataUpdater implements ProductInterface
     /* (non-PHPdoc)
      * @see \PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface::duplicateProduct()
      */
-    public function duplicateProduct($productId)
+    public function duplicateProduct($productId, $namePattern = 'copy of %s')
     {
+        //TODO : use the $namePattern var to input translated version of 'copy of %s', if translation requested.
         $product = new \ProductCore($productId);
         if (!\ValidateCore::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
@@ -165,6 +166,16 @@ class AdminProductDataUpdater implements ProductInterface
         unset($product->id_product);
         $product->indexed = 0;
         $product->active = 0;
+
+        // change product name to prefix it
+        foreach ($product->name as $langKey => $oldName) {
+            if (!preg_match('/^' . str_replace('%s', '.*', preg_quote($namePattern, '/') . '$/'), $oldName)) {
+                $newName = sprintf($namePattern, $oldName);
+                if (mb_strlen($newName, 'UTF-8') <= 127) {
+                    $product->name[$langKey] = $newName;
+                }
+            }
+        }
 
         if ($product->add()
             && \CategoryCore::duplicateProductCategories($id_product_old, $product->id)
