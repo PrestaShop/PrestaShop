@@ -43,6 +43,11 @@ class DiscountControllerCore extends FrontController
         $nb_cart_rules = count($cart_rules);
 
         foreach ($cart_rules as $key => &$discount ) {
+            if ($discount['quantity_for_user'] === 0) {
+                unset($cart_rules[$key]);
+            }
+
+
             $discount['value'] = Tools::convertPriceFull(
                                             $discount['value'],
                                             new Currency((int)$discount['reduction_currency']),
