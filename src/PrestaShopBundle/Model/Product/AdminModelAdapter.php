@@ -77,12 +77,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
-        $this->product = $id ? $this->productAdapter->getProduct($id, true) : null;
+        $this->product = $this->productAdapter->getProduct($id, true);
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
         $this->configuration = new Configuration();
-        if ($this->product != null) {
-            $this->product->loadStockData();
-        }
+        $this->product->loadStockData();
 
         //define translatable key
         $this->translatableKeys = array(
@@ -159,10 +157,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //add some legacy field to execute some add/update methods
         $form_data['submitted_tabs'] = ['Shipping'];
-
-        if (!empty($form_data['id_product'])) {
-            $form_data['submitted_tabs'][] = 'Associations';
-        }
+        $form_data['submitted_tabs'][] = 'Associations';
 
         //map translatable
         foreach ($this->translatableKeys as $field) {
@@ -214,17 +209,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //if empty categories, set default one
         if (empty($form_data['categoryBox'])) {
-            $form_data['categoryBox'][] = $this->context->shop->id_category;
+            $form_data['categoryBox'][] = $this->contextShop->shop->id_category;
         }
 
         //if default category not define, set the default one
         if (empty($form_data['id_category_default'])) {
-            $form_data['id_category_default'] = $this->context->shop->id_category;
+            $form_data['id_category_default'] = $this->contextShop->shop->id_category;
         }
 
         //map suppliers
         $form_data['supplier_loaded'] = 1;
-        if (!empty($form_data['id_product']) && !empty($form_data['suppliers'])) {
+        if (!empty($form_data['suppliers'])) {
             foreach ($form_data['suppliers'] as $id_supplier) {
                 $form_data['check_supplier_'.$id_supplier] = 1;
 
@@ -279,18 +274,16 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //map warehouseProductLocations
         $form_data['warehouse_loaded'] = 1;
-        if (!empty($form_data['id_product'])) {
-            $warehouses = $this->warehouseAdapter->getWarehouses();
-            foreach ($warehouses as $warehouse) {
-                foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
-                    $key = $combination['warehouse_id'] . '_' . $combination['product_id'] . '_' . $combination['id_product_attribute'];
-                    if ($combination['activated']) {
-                        $form_data['check_warehouse_' . $key] = '1';
-                    }
-                    $form_data['location_warehouse_' . $key] = $combination['location'];
-
-                    unset($form_data['warehouse_combination_' . $warehouse['id_warehouse']]);
+        $warehouses = $this->warehouseAdapter->getWarehouses();
+        foreach ($warehouses as $warehouse) {
+            foreach ($form_data['warehouse_combination_' . $warehouse['id_warehouse']] as $combination) {
+                $key = $combination['warehouse_id'] . '_' . $combination['product_id'] . '_' . $combination['id_product_attribute'];
+                if ($combination['activated']) {
+                    $form_data['check_warehouse_' . $key] = '1';
                 }
+                $form_data['location_warehouse_' . $key] = $combination['location'];
+
+                unset($form_data['warehouse_combination_' . $warehouse['id_warehouse']]);
             }
         }
 
@@ -342,67 +335,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     public function getFormDatas()
     {
-        $default_data = [
-            'id_product' => 0,
-            'step1' => [
-                'type_product' => 0,
-                'condition' => 'new',
-                'active' => 0,
-                'price_shortcut' => 0,
-                'qty_0_shortcut' => 0,
-                'categories' => ['tree' => [$this->contextShop->shop->id_category]]
-            ],
-            'step2' => [
-                'id_tax_rules_group' => $this->productAdapter->getIdTaxRulesGroup(),
-                'price' => 0,
-                'specific_price' => [
-                    'sp_from_quantity' => 1,
-                    'sp_reduction' => 0,
-                    'sp_reduction_tax' => 1,
-                    'leave_bprice' => true,
-                ],
-                'specificPricePriority_0' => $this->productPricePriority[0],
-                'specificPricePriority_1' => $this->productPricePriority[1],
-                'specificPricePriority_2' => $this->productPricePriority[2],
-                'specificPricePriority_3' => $this->productPricePriority[3],
-                'specificPricePriorityToAll' => false,
-            ],
-            'step3' => [
-                'advanced_stock_management' => ($this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT') == "1"),
-                'depends_on_stock' => $this->configuration->get('PS_FORCE_ASM_NEW_PRODUCT'),
-                'qty_0' => 0,
-                'out_of_stock' => 2,
-                'minimal_quantity' => 1,
-                'available_date' => '0000-00-00',
-                'pack_stock_type' => 3,
-                'virtual_product' => [
-                    'is_virtual_file' => 0,
-                    'nb_days' => 0,
-                ],
-            ],
-            'step4' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
-                'additional_shipping_cost' => 0,
-            ],
-            'step6' => [
-                'redirect_type' => '404',
-                'visibility' => 'both',
-                'display_options' => [
-                    'available_for_order' => true,
-                    'show_price' => true,
-                ],
-                'custom_fields' => []
-            ]
-        ];
-
-        //if empty model_data, return the default value object
-        if (!$this->product) {
-            return $default_data;
-        }
-
         $form_data = [
             'id_product' => $this->product->id,
             'step1' => [

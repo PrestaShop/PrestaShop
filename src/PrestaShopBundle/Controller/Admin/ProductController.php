@@ -144,7 +144,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
         $toolbarButtons['add'] = array(
-            'href' => $this->generateUrl('admin_product_form'),
+            'href' => $this->generateUrl('admin_product_new'),
             'desc' => $translator->trans('Add new product', array(), 'AdminProducts'),
             'icon' => 'process-icon-new'
         );
@@ -256,6 +256,35 @@ class ProductController extends FrameworkBundleAdminController
             'products' => $products,
             'product_count' => $totalCount
         );
+    }
+
+    /**
+     * Create a new basic product
+     * Then return to form action
+     *
+     * @return RedirectResponse
+     */
+    public function newAction()
+    {
+        $contextAdapter = $this->get('prestashop.adapter.legacy.context');
+        $context = $contextAdapter->getContext();
+        $toolsAdapter = $this->container->get('prestashop.adapter.tools');
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $defaultLocale = $contextAdapter->getLanguages()[0]['id_lang'];
+
+        $name = $translator->trans('Product name', [], 'NewProduct');
+
+        $product = $productAdapter->getProductInstance();
+        $product->name = [$defaultLocale => $name];
+        $product->active = 0;
+        $product->id_category_default = $context->shop->id_category;
+        $product->link_rewrite = [$defaultLocale => $toolsAdapter->link_rewrite($name)];
+        $product->save();
+
+        $product->addToCategories([$context->shop->id_category]);
+
+        return $this->redirectToRoute('admin_product_form', ['id' => $product->id]);
     }
 
     /**
