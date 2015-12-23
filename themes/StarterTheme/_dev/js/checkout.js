@@ -8,7 +8,7 @@ function collapsePaymentOptions() {
 }
 
 function getSelectedPaymentOption () {
-  return $('#payment-section input[name="advanced-payment-option"]:checked').attr('id');
+  return $('input[name="payment-option"]:checked').attr('id');
 }
 
 function enableOrDisableOrderButton() {
@@ -79,7 +79,7 @@ function setupCheckoutScripts () {
   $('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
-  $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
+  $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
   $('body').on('change', '.js-address-selector input', selectAddress);
   $('body').on('click', '.checkout-step.-reachable h1', function (event) {
