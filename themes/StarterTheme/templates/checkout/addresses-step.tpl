@@ -6,6 +6,12 @@
     <h2 class="h2">{l s='Your Delivery Address'}</h2>
   {/if}
 
+  {if $use_same_address}
+    <p>
+      {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.'}
+    </p>
+  {/if}
+
   {if $show_delivery_address_form}
     {form form                      = $address_form
           template                  = "checkout/_partials/address-form.tpl"
@@ -14,12 +20,6 @@
           form_has_continue_button  = $form_has_continue_button
     }
   {elseif $customer.addresses|count > 0}
-
-    {if $use_same_address}
-      <p>
-        {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.'}
-      </p>
-    {/if}
 
     {include  addresses  = $customer.addresses
               file       = "checkout/_partials/address-selector-block.tpl"
