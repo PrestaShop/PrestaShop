@@ -309,7 +309,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                         }
                     }
 
-                    if (isset($installed_module['origin']) && $installed_module['origin'] === 'native') {
+                    if (isset($installed_module['origin']) && $installed_module['origin'] === 'native' && $installed_module['author'] === 'PrestaShop') {
                         $row = 'native_modules';
                     } elseif (0 /* ToDo: insert condition for theme related modules*/) {
                         $row = 'theme_bundle';
@@ -319,7 +319,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $this->manage_modules[$row][] = (object)$installed_module;
                 }
 
-                /*$this->manage_modules    = $this->convertJsonForNewCatalog($this->manage_modules);*/
+                foreach ($this->manage_modules as $key => $row) {
+                    $this->manage_modules[$key] = $this->convertJsonForNewCatalog(['products' => $row]);
+                }
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
                 $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
@@ -382,6 +384,22 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->productType = $product->product_type;
                     unset($product->product_type);
                 }
+                if (! isset($product->price)) {
+                    $product->price = new \stdClass;
+                    $product->price->EUR = 0;
+                    $product->price->USD = 0;
+                    $product->price->GBP = 0;
+                }
+                // ToDo: Does this test should be in the Addon service ?
+                if (isset($product->installed) && $product->installed == 1) {
+                    foreach (['logo.png', 'logo.gif'] as $logo) {
+                        $logo_path = _PS_MODULE_DIR_.$product->name.DIRECTORY_SEPARATOR.$logo;
+                        if (file_exists($logo_path)) {
+                            $product->img = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$product->name.DIRECTORY_SEPARATOR.$logo;
+                            break;
+                        }
+                    }
+                }
                 $product->conditions = [];
                 $product->rating     = (object)[
                         'score' => 0.0,
@@ -389,7 +407,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 ];
                 $product->scoring    = 0;
                 $product->media      = (object)[
-                        'img' => isset($product->img)?$product->img:'',
+                        'img' => isset($product->img)?$product->img:'../../img/questionmark.png',
                         'badges' => isset($product->badges)?$product->badges:[],
                         'cover' => isset($product->cover)?$product->cover:[],
                         'screenshotsUrls' => [],

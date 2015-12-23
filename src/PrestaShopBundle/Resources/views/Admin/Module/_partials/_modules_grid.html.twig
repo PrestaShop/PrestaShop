@@ -1,34 +1,54 @@
 {#{ dump(modules) }#}
-<div id="modules-grid">
+{% if display_type is not defined %}
+    {% set display_type = 'grid' %}
+{% endif %}
+
+{% if display_type == 'list' %}
+    {% set col_lg = 'col-lg-12' %}
+{% else %}
+    {% set col_lg = 'col-lg-3 col-md-4 col-sm-6' %}
+{% endif %}
+
+<div id="modules-{{display_type}}">
     <div class="row">
         {% for module in modules %}
-                <div class="module-item-grid col-lg-3 col-md-4 col-sm-6" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
+                <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
                 data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
                 data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}">
-                     <div class="module-item-wrapper-grid">
-                        <div class="module-item-heading-grid" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
-                            <img class="module-logo-thumb-grid" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
-                            <div class="text-ellipsis module-name-grid" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
+                     <div class="module-item-wrapper-{{display_type}}">
+                        <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
+                            <img class="module-logo-thumb-{{display_type}}" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+                            <div class="text-ellipsis module-name-{{display_type}}" data-toggle="tooltip" data-placement="top" title="{{ module.displayName }}">
                                 {{ module.displayName }}
                             </div>
-                            <div class="text-ellipsis x-small-text module-version-author-grid">
-                                {% if module.productType == "module" %}
-                                    v{{ module.version }} by {{ module.author }}
-                                {% else %}
+                            <div class="text-ellipsis x-small-text module-version-author-{{display_type}}">
+                                {% if module.productType == "service" %}
                                     Service by {{ module.author }}
+                                {% else %}
+                                    v{{ module.version }} by {{ module.author }}
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="module-quick-description-grid no-padding">
+                        <div class="module-quick-description-{{display_type}} no-padding">
                             {{ module.description }}
-                            <div class="module-read-more-grid">
-                                <a class="module-read-more-grid-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
+                            <div class="module-read-more-{{display_type}}">
+                                <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
                             </div>
                         </div>
-                        <div class="module-quick-action-grid clearfix">
+                        <div class="module-quick-action-{{display_type}} clearfix">
                             <div class="pull-right">
-                                {% if module.price.EUR == 0 or module.origin == 'customer' %}
-                                    <input type="button" class="light-button module-install-btn" value="Install" />
+                                {% if module.installed is defined and module.installed == 1 %}
+                                    {% if module.active == 0 %}
+                                        <input type="button" class="light-button module-install-btn" value="Enable" data-url="{{module.urls.enable}}" />
+                                    {% elseif module.is_configurable == 1 %}
+                                        <a class="btn light-button module-install-btn" href="{{module.urls.configure}}">Configure</a>
+                                    {% else %}
+                                        <input type="button" class="light-button module-install-btn" value="Disable" data-url="{{module.urls.disable}}" />
+                                    {% endif %}
+                                {% elseif module.productType == 'service' %}
+                                    <input type="button" class="light-button module-install-btn" value="Discover" />
+                                {% elseif module.price.EUR == 0 or module.origin == 'customer' %}
+                                    <input type="button" class="light-button module-install-btn" value="Install" data-url="{{module.urls.install}}" />
                                 {% else %}
                                     <input type="button" class="light-button module-install-btn" value="{{module.price.EUR}}"/>
                                 {% endif %}

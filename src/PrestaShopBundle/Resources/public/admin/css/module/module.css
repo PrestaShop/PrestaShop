@@ -32,7 +32,7 @@
 }
 .module-install-loader {
     position: relative;
-    bottom: -20px;
+    /*bottom: -20px;*/
     right: 40px;
     display: none;
 }
@@ -106,6 +106,7 @@
     font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
     font-weight: bold;
     font-size: 14px;
+    margin-bottom: 1em;
 }
 .module-addons-search {
     font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
@@ -229,8 +230,8 @@
     max-height: 50px;
     height: 50px;
  }
- .module-item-list-grey {
-     background-color: #EBEDEF !important;
+ .module-item-list:nth-child(even) {
+     background-color: #f5f8f9 !important;
  }
 .module-item-list img {
     float:left;

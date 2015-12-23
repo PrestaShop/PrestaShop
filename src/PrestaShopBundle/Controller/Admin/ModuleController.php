@@ -43,7 +43,7 @@ class ModuleController extends Controller
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->createCatalogModuleList($modulesProvider->getCatalogModules($filter)),
+                'modules' => $this->generateProductUrls($this->createCatalogModuleList($modulesProvider->getCatalogModules($filter))),
                 'topMenuData' => $this->getTopMenuData()
             ));
     }
@@ -89,10 +89,15 @@ class ModuleController extends Controller
         if ($category !== null) {
             $filter['category'] = $category;
         }
+
+        $products = $modulesProvider->getManageModules($filter);
+        foreach ($products as $product_label => $products_part) {
+            $products->$product_label = $this->generateProductUrls($products_part);
+        }
         
-        return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
+        return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $modulesProvider->getManageModules($filter),
+                'modules' => $products,
                 'topMenuData' => $this->getTopMenuData()
             ));
     }
@@ -119,7 +124,7 @@ class ModuleController extends Controller
         if (! $ret[$module]['status']) {
             throw new Exception($ret[$module]['msg']);
         }
-        return $this->redirect($this->generateUrl('admin_module_catalog'));
+        return $this->redirect($request->server->get('HTTP_REFERER'));
     }
 
     /**
@@ -191,6 +196,24 @@ class ModuleController extends Controller
         }
 
         return $moduleFullList;
+    }
+
+    final private function generateProductUrls(array $products)
+    {
+        foreach ($products as &$product) {
+            $product->urls = new \stdClass;
+            foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
+                $product->urls->$action = $this->generateUrl('admin_module_manage_action', [
+                    'action' => $action,
+                    'module_name' => $product->name,
+                ]);
+            }
+            $product->urls->configure = $this->generateUrl('admin_module_configure_action', [
+                    'module_name' => $product->name,
+                ]);
+        }
+
+        return $products;
     }
 
     final private function getTopMenuData($activeMenu = null)

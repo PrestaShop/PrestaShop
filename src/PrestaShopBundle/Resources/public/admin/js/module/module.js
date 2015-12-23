@@ -34,7 +34,7 @@ var AdminModule = function() {
     this.addonsSearchSelector = '.module-addons-search';
     this.addonsSearchLinkSelector = '.module-addons-search-link';
     this.categoryResetBtnSelector = '.module-category-reset';
-    this.moduleInstallBtnSelector = '.module-install-btn';
+    this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleInstallLoaderSelector = '.module-install-loader';
 
 /**
@@ -46,10 +46,10 @@ var AdminModule = function() {
     this.initSortingDisplaySwitch();
     this.initSearchBlock();
     this.initCategorySelect();
-    this.initInstallModule();
+    this.initActionButtons();
   };
 
-  this.initInstallModule = function() {
+  this.initActionButtons = function() {
       var selector = (
             this.currentDisplay == 'grid' ?
             this.moduleItemGridSelector :
@@ -62,9 +62,17 @@ var AdminModule = function() {
         /*  var currentModuleItem = $(this).parents().find(selector+':first');
           var moduleName = currentModuleItem.attr('data-name');*/
           var _that = _this;
-          $(this).fadeOut(function() {
-              $(this).next().fadeIn();
-          });
+          var next = $(this).next();
+          $(this).hide();
+          $(next).show();
+          $.ajax({
+                url: $(this).attr("data-url"),
+                dataType: 'json',
+            }).done(function() {
+                $(next).fadeOut();
+            });
+
+          
       });
   };
 
@@ -320,11 +328,6 @@ var AdminModule = function() {
               $(this.moduleListSelector).addClass('module-sort-active');
               $(this).removeClass();
               $(this).addClass('module-item-list col-md-12');
-              // Add grey background for LIST (half of them)
-              var needGreyBackground = index % 2;
-              if (needGreyBackground) {
-                  $(this).addClass('module-item-list-grey');
-              }
               _this.setNewDisplay($(this), '-grid', '-list');
           });
       } else {
