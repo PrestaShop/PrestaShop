@@ -87,6 +87,9 @@ body#checkout
 .checkout-step.-reachable
   > h1
     cursor pointer
+.checkout-step.-complete
+  > h1
+    color green
 .checkout-step.-current, .checkout-step.-js-current
   .content
     display block
@@ -96,3 +99,5 @@ body#checkout
       margin-top 2*small-padding
       &[disabled]
         opacity 0.5
+    .step-number
+      margin-right small-padding
