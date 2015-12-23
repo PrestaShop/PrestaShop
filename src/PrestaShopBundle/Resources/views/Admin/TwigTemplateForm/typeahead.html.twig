@@ -13,7 +13,7 @@
     </ul>
     <script>
         $( document ).ready(function() {
-            var limit = {{ limit }}
+            var limit = {{ limit }};
 
             //remove collection item
             $(document).on( 'click', '#{{ form.vars.id }}-data a.delete', function() {
@@ -113,10 +113,12 @@
             $('#{{ form.vars.id }}').typeahead({
                 limit: 20,
                 minLength: 2,
-                highlight: true
+                highlight: true,
+                cache: false
             }, {
                 display: '{{ mapping_name }}',
-                source: this['{{ form.vars.id }}_source']
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30
             }).bind('typeahead:select', function(ev, suggestion) {
 
                 //if collection length is up to limit, return
@@ -225,7 +227,8 @@
                 highlight: true
             }, {
                 display: '{{ mapping_name }}',
-                source: this['{{ form.vars.id }}_source']
+                source: this['{{ form.vars.id }}_source'],
+                limit: 30
             }).bind('typeahead:select', function(ev, suggestion) {
                 $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
             });
