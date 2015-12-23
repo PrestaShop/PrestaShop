@@ -24,32 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class PricesDropControllerCore extends FrontController
+use PrestaShop\PrestaShop\Core\Business\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Business\Product\Search\SortOrder;
+use PrestaShop\PrestaShop\Adapter\PricesDrop\PricesDropProductSearchProvider;
+use PrestaShop\PrestaShop\Adapter\Translator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+
+class PricesDropControllerCore extends ProductListingFrontController
 {
     public $php_self = 'prices-drop';
 
     /**
-     * Assign template vars related to page content
-     * @see FrontController::initContent()
+     * Initializes controller
+     *
+     * @see FrontController::init()
+     * @throws PrestaShopException
      */
-    public function initContent()
+    public function init()
     {
-        parent::initContent();
+        parent::init();
+        $this->doProductSearch('catalog/prices-drop.tpl');
+    }
 
-        $this->productSort();
-        $nbProducts = Product::getPricesDrop($this->context->language->id, null, null, true);
-        $this->pagination($nbProducts);
+    protected function getProductSearchQuery()
+    {
+        $query = new ProductSearchQuery;
+        $query
+            //->setQueryType('prices-drop')
+            ->setSortOrder(new SortOrder('product', 'name', 'asc'))
+        ;
+        return $query;
+    }
 
-        $products = Product::getPricesDrop($this->context->language->id, (int)$this->p - 1, (int)$this->n, false, $this->orderBy, $this->orderWay);
-        $this->addColorsToProductList($products);
-
-        $this->context->smarty->assign(array(
-            'products' => $products,
-            'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            'nbProducts' => $nbProducts,
-            'homeSize' => Image::getSize(ImageType::getFormatedName('home'))
-        ));
-
-        $this->setTemplate(_PS_THEME_DIR_.'prices-drop.tpl');
+    protected function getDefaultProductSearchProvider()
+    {
+        $translator = new Translator(new LegacyContext);
+        return new PricesDropProductSearchProvider(
+            $translator
+        );
     }
 }
