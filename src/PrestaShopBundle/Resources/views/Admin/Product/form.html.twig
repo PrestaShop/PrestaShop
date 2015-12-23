@@ -182,10 +182,6 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
-                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step2">
                     {{ form_row(form.step2.price) }}
@@ -242,11 +238,6 @@
 
                             {{ form_widget(form.step2.specificPricePriorityToAll) }}
                         </div>
-                    </div>
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        <input type="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step3">
@@ -375,11 +366,6 @@
                     {{ form_row(form.step3.available_now) }}
                     {{ form_row(form.step3.available_later) }}
                     {{ form_row(form.step3.available_date) }}
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        <input type="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
-                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step4">
                     {{ form_row(form.step4.width) }}
@@ -396,20 +382,9 @@
                             {{ include('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', { 'warehouses': warehouses, 'form': form.step4 }) }}
                         {% endif %}
                     </div>
-
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
-                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step5">
                     {{ form_widget(form.step5) }}
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
-                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane panel panel-default" id="step6">
                     <div class="form-group js-redirect-strategy" id="redirect-type">
@@ -453,14 +428,6 @@
 
                     {{ form_row(form.step6.attachment_product) }}
                     {{ form_row(form.step6.attachments) }}
-
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        {% if hookcount('displayAdminProductsExtra') > 0 %}
-                            <a class="btn btn-primary btn-next">{{ trans('CONTINUE', {}, 'AdminProducts') }}</a>
-                        {% endif %}
-                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-submit btn-warning" />
-                    </div>
                 </div>
                 {% if hookcount('displayAdminProductsExtra') > 0 %}
                 <div role="tabpanel" class="tab-pane panel panel-default" id="hooks">
@@ -474,15 +441,27 @@
                             </div>
                         </div>
                     {% endfor %}
-                    <div class="text-right">
-                        <a class="btn btn-primary btn-prev">{{ trans('PREVIOUS', {}, 'AdminProducts') }}</a>
-                        <input type="submit" id="submit" value="{{ trans('SAVE', {}, 'AdminProducts') }}" class="btn btn-warning" />
-                    </div>
                 </div>
                 {% endif %}
             </div>
             {{ form_widget(form.id_product) }}
             {{ form_widget(form._token) }}
+
+            <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
+                <div class="form-action-bar">
+                    <div class="col-xs-5 pull-left">
+                        <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default"><i class="icon-trash"></i></a>
+                        <a href="{{ preview_link }}" target="_blank" class="btn btn-default">{{ trans('PREVIEW', {}, 'AdminProducts') }}</a>
+                    </div>
+                    <div class="col-xs-5 pull-right text-right">
+                        <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default">{{ trans('DUPLICATE', {}, 'AdminProducts') }}</a>
+                        <button type="button" class="btn btn-default btn-submit" data-redirect="{{ path('admin_product_catalog') }}">{{ trans('SAVE & CATALOG', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit" data-redirect="{{ path('admin_product_new') }}">{{ trans('SAVE & NEW', {}, 'AdminProducts')|raw }}</button>
+                        <input id="submit" type="submit" class="btn btn-primary" value="{{ trans('SAVE', {}, 'AdminProducts') }}" />
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </nav>
         </form>
     </div>
 {% endblock %}

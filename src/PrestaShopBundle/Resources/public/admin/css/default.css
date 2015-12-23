@@ -20,7 +20,6 @@
 #form .toolbarBox a{
   text-decoration: none;
 }
-
 .product-combination-image{
   display: inline-block;
   margin: 5px;
@@ -35,4 +34,15 @@
 }
 .tt-suggestion{
   cursor: pointer
+}
+
+
+.sf-toolbar{display:none!important;}
+
+.navbar-form-footer{
+  padding:15px;
+  border-top: 1px solid #ccc !important;
+}
+.form-action-bar{
+  margin-left:210px
 }

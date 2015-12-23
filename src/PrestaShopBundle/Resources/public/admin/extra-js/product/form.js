@@ -432,14 +432,6 @@ var nav = (function() {
 				}
 			});
 
-			$('.btn-next').click(function(){
-				$('#form-nav > .active').next('li').find('a').trigger('click');
-			});
-
-			$('.btn-prev').click(function(){
-				$('#form-nav > .active').prev('li').find('a').trigger('click');
-			});
-
 			/** on tab switch */
 			function onTabSwitch(currentTab){
 				if (currentTab == '#step2'){
@@ -866,17 +858,21 @@ var warehouseCombinations = (function() {
 var form = (function() {
 	var elem = $('#form');
 
-	function send() {
+	function send(redirect) {
 		var data = $('input, textarea, select', elem).not(':input[type=button], :input[type=submit], :input[type=reset]').serialize();
 		$.ajax({
 			type: 'POST',
 			data: data,
 			beforeSend: function() {
+				$('#submit', elem).attr('disabled', 'disabled');
 				$('.btn-submit', elem).attr('disabled', 'disabled');
 				$('.help-block').remove();
 				$('*.has-error').removeClass('has-error');
 			},
 			success: function(response){
+				if(redirect){
+					window.location = redirect;
+				}
 				showSuccessMessage(translate_javascripts['Form update success']);
 			},
 			error: function(response){
@@ -906,6 +902,7 @@ var form = (function() {
 				}, 500);
 			},
 			complete: function(){
+				$('#submit', elem).removeAttr('disabled');
 				$('.btn-submit', elem).removeAttr('disabled');
 			}
 		});
@@ -927,6 +924,13 @@ var form = (function() {
 				event.preventDefault();
 				switchLanguage(event.target.value);
 			});
+
+			//on save with duplicate|new
+			$('.btn-submit', elem).click(function(){
+				send($(this).attr('data-redirect'));
+			});
+
+
 		},
 		'send': function() {
 			send();
