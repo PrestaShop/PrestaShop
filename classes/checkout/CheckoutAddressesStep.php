@@ -39,10 +39,13 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->use_same_address = (bool)$requestParams['use_same_address'];
         }
 
-        if (isset($requestParams['cancelAddress']) && $requestParams['cancelAddress'] === 'invoice') {
-            if ($this->getCheckoutSession()->getCustomerAddressesCount() < 2) {
-                $this->use_same_address = true;
+        if (isset($requestParams['cancelAddress'])) {
+            if ($requestParams['cancelAddress'] === 'invoice') {
+                if ($this->getCheckoutSession()->getCustomerAddressesCount() < 2) {
+                    $this->use_same_address = true;
+                }
             }
+            $this->step_is_current = true;
         }
 
         // Can't really hurt to set the firstname and lastname.
