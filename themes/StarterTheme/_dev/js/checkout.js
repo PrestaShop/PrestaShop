@@ -83,6 +83,7 @@ function setupCheckoutScripts () {
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
   $('body').on('change', '.js-address-selector input', selectAddress);
   $('body').on('click', '.checkout-step.-reachable h1', function (event) {
+    $('.-js-current, .-current').removeClass('-js-current -current');
     $(event.target).closest('.checkout-step').toggleClass('-js-current');
   });
 

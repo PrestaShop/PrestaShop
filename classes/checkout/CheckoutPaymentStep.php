@@ -32,10 +32,10 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         );
     }
 
-    public function render()
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/payment-step.tpl', [
+            'checkout/payment-step.tpl', $extraParams, [
                 'payment_options' => $this
                     ->paymentOptionsFinder
                     ->getPaymentOptionsForTemplate(),
