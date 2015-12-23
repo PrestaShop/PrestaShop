@@ -878,12 +878,6 @@ var form = (function() {
 			},
 			success: function(response){
 				showSuccessMessage(translate_javascripts['Form update success']);
-
-				//display image manager and hide display message to need product save
-				imagesProduct.init();
-
-				$('#product-images-dropzone').show();
-				$('#product-images-disable').hide();
 			},
 			error: function(response){
 				var tabsWithErrors = [];
@@ -1168,7 +1162,6 @@ var imagesProduct = (function() {
 
 	return {
 		'init': function() {
-
 			Dropzone.autoDiscover = false;
 			var dropZoneElem = $('#product-images-dropzone');
 			var errorElem = $('#product-images-dropzone-error');
@@ -1321,16 +1314,18 @@ var formImagesProduct = (function() {
 					}
 				},
 				error: function(response){
-					$.each(jQuery.parseJSON(response.responseText), function(key, errors){
-						var html = '<span class="help-block"><ul class="list-unstyled">';
-						$.each(errors, function(key, error){
-							html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
-						});
-						html += '</ul></span>';
+					if(response && response.responseText != '') {
+						$.each(jQuery.parseJSON(response.responseText), function (key, errors) {
+							var html = '<span class="help-block"><ul class="list-unstyled">';
+							$.each(errors, function (key, error) {
+								html += '<li><span class="glyphicon glyphicon-exclamation-sign"></span> ' + error + '</li>';
+							});
+							html += '</ul></span>';
 
-						$('#form_image_'+key).parent().append(html);
-						$('#form_image_'+key).parent().addClass('has-error');
-					});
+							$('#form_image_' + key).parent().append(html);
+							$('#form_image_' + key).parent().addClass('has-error');
+						});
+					}
 				},
 				complete: function(){
 					formZoneElem.find('.actions button').removeAttr('disabled');
