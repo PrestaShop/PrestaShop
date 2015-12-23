@@ -131,7 +131,6 @@
 
                     <div class="col-lg-3">
                         <div class="panel">
-                            {{ form_row(form.step1.active) }}
                             <div class="form-group">
                                 {{ form_errors(form.step1.price_shortcut) }}
                                 <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
@@ -452,6 +451,16 @@
                     <div class="col-xs-5 pull-left">
                         <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default"><i class="icon-trash"></i></a>
                         <a href="{{ preview_link }}" target="_blank" class="btn btn-default">{{ trans('PREVIEW', {}, 'AdminProducts') }}</a>
+
+                        <div class="checkbox-active">
+                            {{ trans('Enabled', {}, 'AdminProducts') }}
+                            <div class="checkbox titatoggle unchecked-red checkbox-slider--b-flat" >
+                                <label>
+                                    <input type="checkbox" id="form_step1_active" name="form[step1][active]" value="1" {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}>
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-xs-5 pull-right text-right">
                         <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default">{{ trans('DUPLICATE', {}, 'AdminProducts') }}</a>

@@ -76,14 +76,14 @@ $(document).ready(function() {
 var redirectionStrategy = (function() {
 	var redirectStrategyElems = $('.js-redirect-strategy', '#step6');
 	var redirectTypeElem = $('#form_step6_redirect_type');
-	var activeElem = $('input[name="form[step1][active]"]', '#step1');
+	var activeElem = $('#form_step1_active');
 
 	/**
 	 * Hide or show all redirect fields
 	 * @param {int} active - If product is active or not
 	 */
 	function hideShowRedirectElems(active){
-		if(active == 1){
+		if(active){
 			redirectStrategyElems.hide();
 		}else{
 			redirectStrategyElems.show();
@@ -103,7 +103,7 @@ var redirectionStrategy = (function() {
 
 	return {
 		'init': function() {
-			if($('input[name="form[step1][active]"]:checked', '#step1').val() == 1){
+			if(activeElem.is(':checked')){
 				redirectStrategyElems.hide();
 			}else{
 				hideShowRedirectToProduct();
@@ -111,7 +111,7 @@ var redirectionStrategy = (function() {
 
 			/** On active button change */
 			activeElem.change(function(){
-				hideShowRedirectElems($(this).val());
+				hideShowRedirectElems($(this).is(':checked'));
 			});
 
 			/** On redirect type select change */
@@ -925,12 +925,15 @@ var form = (function() {
 				switchLanguage(event.target.value);
 			});
 
-			//on save with duplicate|new
+			/** on save with duplicate|new */
 			$('.btn-submit', elem).click(function(){
 				send($(this).attr('data-redirect'));
 			});
 
-
+			/** on active field change, send form */
+			$('#form_step1_active', elem).change(function(){
+				send();
+			});
 		},
 		'send': function() {
 			send();

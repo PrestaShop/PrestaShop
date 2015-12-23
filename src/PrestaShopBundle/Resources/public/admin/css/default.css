@@ -35,14 +35,20 @@
 .tt-suggestion{
   cursor: pointer
 }
-
-
-.sf-toolbar{display:none!important;}
-
 .navbar-form-footer{
   padding:15px;
   border-top: 1px solid #ccc !important;
 }
 .form-action-bar{
   margin-left:210px
+}
+.form-action-bar .checkbox-active{
+  margin-left:10px;
+  display: inline-block
+}
+.form-action-bar .checkbox-active .checkbox{
+  display: inline-block
+}
+.checkbox-active .titatoggle input + span:after{
+  margin-top: 7px
 }
