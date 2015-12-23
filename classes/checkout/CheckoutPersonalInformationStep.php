@@ -71,10 +71,10 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         );
     }
 
-    public function render()
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/personal-information-step.tpl', [
+            'checkout/personal-information-step.tpl', $extraParams, [
                 'logged_in'        => $this->logged_in,
                 'show_login_form'  => $this->show_login_form,
                 'login_form'       => $this->loginForm->getProxy(),
