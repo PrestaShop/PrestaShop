@@ -54,6 +54,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         if ($this->registerForm->wasSubmitted()) {
             if ($this->registerForm->hasErrors()) {
                 $this->getCheckoutProcess()->setHasErrors(true);
+                $this->step_is_current = true;
             } else {
                 $this->step_is_complete = true;
             }
