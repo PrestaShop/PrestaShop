@@ -6,15 +6,14 @@
     <h2 class="h2">{l s='Your Delivery Address'}</h2>
   {/if}
 
-  {if $customer.addresses|count === 0 || $show_delivery_address_form}
-
-    {form form              = $address_form
-          template          = "checkout/_partials/address-form.tpl"
-          use_same_address  = $use_same_address
-          type              = "delivery"
+  {if $show_delivery_address_form}
+    {form form                      = $address_form
+          template                  = "checkout/_partials/address-form.tpl"
+          use_same_address          = $use_same_address
+          type                      = "delivery"
+          form_has_continue_button  = $form_has_continue_button
     }
-
-  {else if $customer.addresses|count > 0}
+  {elseif $customer.addresses|count > 0}
 
     {if $use_same_address}
       <p>
@@ -39,13 +38,18 @@
 
   {/if}
 
-  {if !$use_same_address || $show_invoice_address_form}
+  {if !$use_same_address}
 
     <h2 class="h2">{l s='Your Invoice Address'}</h2>
 
-    {if $customer.addresses|count < 2 || $show_invoice_address_form}
+    {if $show_invoice_address_form}
 
-      {form form=$address_form template="checkout/_partials/address-form.tpl" type="invoice"}
+      {form form                      = $address_form
+            template                  = "checkout/_partials/address-form.tpl"
+            use_same_address          = $use_same_address
+            type                      = "invoice"
+            form_has_continue_button  = $form_has_continue_button
+      }
 
     {else}
 
@@ -62,7 +66,7 @@
 
   {/if}
 
-  {if $customer.addresses|count}
+  {if !$form_has_continue_button}
     <form>
       <button type="submit" class="continue" name="continue" value="1">
           {l s='Continue'}
