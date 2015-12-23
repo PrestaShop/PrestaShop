@@ -68,7 +68,7 @@
 						{if $discountDetail.minimal == 0}
 							{l s='None'}
 						{else}
-							{convertPrice price=$discountDetail.minimal}
+							{convertPrice price=$discountDetail.minimal} ({if $discountDetail.minimum_amount_tax == 1}{l s='Tax included'}{else}{l s='Tax excluded'}{/if})
 						{/if}
 					</td>
 					<td class="discount_cumulative">
