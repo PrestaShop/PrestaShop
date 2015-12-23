@@ -55,6 +55,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
                 $this->getCheckoutProcess()->setHasErrors(true);
+                $this->step_is_current = true;
                 if ($requestParams['saveAddress'] === 'delivery') {
                     $this->show_delivery_address_form = true;
                 } else {
@@ -84,6 +85,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $id_address = $requestParams['id_address_invoice'];
             $this->getCheckoutSession()->setIdAddressInvoice($id_address);
         } elseif (isset($requestParams['newAddress'])) {
+            // while a form is open, do not go to next step
+            $this->step_is_current = true;
             if ($requestParams['newAddress'] === 'delivery') {
                 $this->show_delivery_address_form = true;
             } else {
@@ -91,6 +94,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             }
             $this->addressForm->fillWith($requestParams);
         } elseif (isset($requestParams['editAddress']) && isset($requestParams['id_address'])) {
+            // while a form is open, do not go to next step
+            $this->step_is_current = true;
             if ($requestParams['editAddress'] === 'delivery') {
                 $this->show_delivery_address_form = true;
             } else {
@@ -101,6 +106,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
         $this->step_is_complete = $this->getCheckoutSession()->getIdAddressInvoice() && $this->getCheckoutSession()->getIdAddressDelivery();
 
+        if (!$this->use_same_address && $this->getCheckoutSession()->getCustomerAddressesCount() < 2) {
+            $this->step_is_complete = false;
+        }
+
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Addresses',
@@ -110,10 +119,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         );
     }
 
-    public function render()
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/addresses-step.tpl', [
+            'checkout/addresses-step.tpl', $extraParams, [
                 'address_form'          => $this->addressForm->getProxy(),
                 'use_same_address'      => $this->use_same_address,
                 'id_address_delivery'   => $this

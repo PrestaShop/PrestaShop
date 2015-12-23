@@ -25,6 +25,13 @@
           <button type="submit">{l s='Ok'}</button>
         </div>
       </form>
+
+      <form>
+        <input type="hidden" name="confirmDeliveryOption" value="1">
+        <button type="submit" class="continue" name="continue" value="1">
+            {l s='Continue'}
+        </button>
+      </form>
     {else}
       <p class="warning">{l s='Unfortunately, there are no carriers available for your delivery address.'}</p>
     {/if}
