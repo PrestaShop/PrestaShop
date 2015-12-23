@@ -40,8 +40,12 @@ class CheckoutProcessCore
 
     public function render()
     {
-        return implode('', array_map(function (CheckoutStepInterface $step) {
-            return $step->render();
+        $position = 0;
+        return implode('', array_map(function (CheckoutStepInterface $step) use (&$position) {
+            ++$position;
+            return $step->render([
+                'position' => $position
+            ]);
         }, $this->getSteps()));
     }
 
@@ -104,13 +108,18 @@ class CheckoutProcessCore
     public function markCurrentStep()
     {
         foreach ($this->getSteps() as $step) {
-            $step->setCurrent(false);
+            if ($step->isCurrent()) {
+                // If a step marked itself as current
+                // then we assume it has a good reason
+                // to do so and we don't auto-advance.
+                return $this;
+            }
         }
 
-        foreach (array_reverse($this->getSteps()) as $step) {
-            if ($step->isReachable()) {
+        foreach ($this->getSteps() as $step) {
+            if ($step->isReachable() && (!$step->isComplete())) {
                 $step->setCurrent(true);
-                break;
+                return $this;
             }
         }
     }

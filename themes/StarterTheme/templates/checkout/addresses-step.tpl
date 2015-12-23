@@ -62,4 +62,12 @@
 
   {/if}
 
+  {if $customer.addresses|count}
+    <form>
+      <button type="submit" class="continue" name="continue" value="1">
+          {l s='Continue'}
+      </button>
+    </form>
+  {/if}
+
 {/block}
