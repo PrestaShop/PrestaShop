@@ -39,10 +39,10 @@ class DiscountControllerCore extends FrontController
     {
         parent::initContent();
 
-        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false);
+        $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, true, true);
         $nb_cart_rules = count($cart_rules);
 
-        foreach ($cart_rules as &$discount) {
+        foreach ($cart_rules as $key => &$discount ) {
             $discount['value'] = Tools::convertPriceFull(
                                             $discount['value'],
                                             new Currency((int)$discount['reduction_currency']),
@@ -50,7 +50,9 @@ class DiscountControllerCore extends FrontController
                                         );
             if ($discount['gift_product'] !== 0) {
                 $product = new Product((int) $discount['gift_product']);
-                $discount['gift_product'] = current($product->name);
+                if (isset($product->name)) {
+                    $discount['gift_product_name'] = current($product->name);
+                }
             }
         }
 

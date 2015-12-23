@@ -59,9 +59,9 @@
 							{if $discountDetail.reduction_percent > 0 || $discountDetail.reduction_amount > 0} + {/if}
 							{l s='Free shipping'}
 						{/if}
-						{if $discountDetail.gift_product !== 0}
+						{if $discountDetail.gift_product > 0}
 							{if $discountDetail.reduction_percent > 0 || $discountDetail.reduction_amount > 0 || $discountDetail.gift_product} + {/if}
-							{$discountDetail.gift_product} {l s='free'}!
+							{$discountDetail.gift_product_name} {l s='free'}!
 						{/if}
 					</td>
 					<td class="discount_minimum" data-value="{if $discountDetail.minimal == 0}0{else}{$discountDetail.minimal}{/if}">
