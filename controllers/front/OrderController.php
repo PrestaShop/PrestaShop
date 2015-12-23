@@ -83,7 +83,12 @@ class OrderControllerCore extends FrontController
             ))
             ->addStep(new CheckoutPaymentStep(
                 $this->context->smarty,
-                $translator
+                $translator,
+                new PaymentOptionsFinder,
+                new ConditionsToApproveFinder(
+                    $this->context,
+                    $translator
+                )
             ))
         ;
     }
