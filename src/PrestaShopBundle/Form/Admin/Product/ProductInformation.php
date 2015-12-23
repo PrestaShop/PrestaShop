@@ -37,6 +37,8 @@ use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory as SimpleFormCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use Symfony\Component\Form\FormError;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -50,6 +52,7 @@ class ProductInformation extends CommonAbstractType
     private $locales;
     private $nested_categories;
     private $productAdapter;
+    private $configuration;
 
     /**
      * Constructor
@@ -71,6 +74,7 @@ class ProductInformation extends CommonAbstractType
         $this->productDataProvider = $productDataProvider;
         $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->featureDataProvider = $featureDataProvider;
+        $this->configuration = new Configuration();
 
         $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
         $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
@@ -126,6 +130,19 @@ class ProductInformation extends CommonAbstractType
             ))
         ->add('description_short', new TranslateType('textarea', array(
             'attr' => array('class' => 'autoload_rte'),
+            'constraints' => array(
+                new Assert\Callback(function ($str, ExecutionContextInterface $context) {
+                    $str = strip_tags($str);
+                    $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+
+                    if (strlen($str) > $limit) {
+                        $context->addViolation(
+                            $this->translator->trans('This value is too long. It should have {{ limit }} characters or less.', [], 'AdminProducts'),
+                            array('{{ limit }}' => $limit)
+                        );
+                    }
+                }),
+            ),
             'required' => false
         ), $this->locales, true), array(
             'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
