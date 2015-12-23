@@ -282,6 +282,11 @@
  */
 .module-modal-title {
     display: inline-block;
+    padding-left: 1em;
+    display: table-cell;
+    vertical-align: top;
+}
+.module-modal-title > h4 {
     color: #1E2024 !important;
     font-family: "Open Sans", Helvetica, Arial,sans-serif !important;
     font-weight: bold !important;
@@ -290,9 +295,20 @@
 .module-modal-header {
     border: 0;
 }
+.module-modal-header > div {
+    display: table-row;
+}
 .module-modal-footer {
     border: 0;
 }
 .module-big-cover {
     text-align: center;
+}
+
+.module-modal-badges {
+    margin-top: 1em;
+}
+
+.module-modal-badges > img {
+    margin-right: 1em;
 }

@@ -201,16 +201,33 @@ class ModuleController extends Controller
     final private function generateProductUrls(array $products)
     {
         foreach ($products as &$product) {
-            $product->urls = new \stdClass;
+            $product->urls = [];
             foreach (['install', 'uninstall', 'enable', 'disable', 'reset', 'update'] as $action) {
-                $product->urls->$action = $this->generateUrl('admin_module_manage_action', [
+                $product->urls[$action] = $this->generateUrl('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $product->name,
                 ]);
             }
-            $product->urls->configure = $this->generateUrl('admin_module_configure_action', [
+            $product->urls['configure'] = $this->generateUrl('admin_module_configure_action', [
                     'module_name' => $product->name,
                 ]);
+
+            // Which button should be displayed first ?
+            $product->url_active = '';
+            if (isset($product->installed) && $product->installed == 1) {
+                if ($product->active == 0) {
+                    $product->url_active = 'enable';
+                }
+                elseif ($product->is_configurable == 1) {
+                    $product->url_active = 'configure';
+                }
+                else {
+                    $product->url_active = 'disable';
+                }
+            }
+            elseif (in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
+                $product->url_active = 'install';
+            }
         }
 
         return $products;

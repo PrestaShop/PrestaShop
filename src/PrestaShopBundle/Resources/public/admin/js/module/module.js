@@ -61,6 +61,7 @@ var AdminModule = function() {
       $(this.moduleInstallBtnSelector).on('click', function(event){
         /*  var currentModuleItem = $(this).parents().find(selector+':first');
           var moduleName = currentModuleItem.attr('data-name');*/
+          event.preventDefault();
           var _that = _this;
           var next = $(this).next();
           $(this).hide();

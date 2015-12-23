@@ -3,17 +3,26 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header module-modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <img class="module-logo-thumb" height="15" width="15" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
-        <h4 class="modal-title module-modal-title">{{ module.displayName }} - Read More</h4>
-        <div class="x-small-text">
-            v{{ module.version }} by {{ module.author }}
+        <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div>
+            <img class="module-logo-thumb" height="57" width="57" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
+            <div class="modal-title module-modal-title">
+                <h4>{{ module.displayName }}</h4>
+                <div class="x-small-text">
+                    v{{ module.version }} by {{ module.author }}
+                </div>
+            </div>
         </div>
       </div>
       <div class="modal-body">
           <div class="row">
               <div class="col-md-6">
-                  <p>{{ module.description }}</p>
+                    <p>{{ module.description }}</p>
+                    <div class="module-modal-badges">
+                    {% for badge in module.media.badges %}
+                        <img alt="{{badge.label}}" src="{{badge.img}}" data-toggle="tooltip" title="{{badge.label}}">
+                    {% endfor %}
+                    </div>
               </div>
               <div class="col-md-6 module-big-cover">
                   <img src="{% if module.media.cover.big is defined %}{{module.media.cover.big}}{% else %}https://cdn4.iconfinder.com/data/icons/ballicons-2-free/100/box-512.png{% endif %}" height="200"/>

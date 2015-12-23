@@ -37,21 +37,18 @@
                         </div>
                         <div class="module-quick-action-{{display_type}} clearfix">
                             <div class="pull-right">
-                                {% if module.installed is defined and module.installed == 1 %}
-                                    {% if module.active == 0 %}
-                                        <input type="button" class="light-button module-install-btn" value="Enable" data-url="{{module.urls.enable}}" />
-                                    {% elseif module.is_configurable == 1 %}
-                                        <a class="btn light-button module-install-btn" href="{{module.urls.configure}}">Configure</a>
-                                    {% else %}
-                                        <input type="button" class="light-button module-install-btn" value="Disable" data-url="{{module.urls.disable}}" />
-                                    {% endif %}
-                                {% elseif module.productType == 'service' %}
-                                    <input type="button" class="light-button module-install-btn" value="Discover" />
-                                {% elseif module.price.EUR == 0 or module.origin == 'customer' %}
-                                    <input type="button" class="light-button module-install-btn" value="Install" data-url="{{module.urls.install}}" />
-                                {% else %}
-                                    <input type="button" class="light-button module-install-btn" value="{{module.price.EUR}}"/>
+                                {% for module_action, module_url in module.urls %}
+                                    <form action="{{module_url}}" data-action="{{module_action}}" {% if module.url_active is not defined or module.url_active  != module_action %}style="display: none;"{% endif %}>
+                                        <input type="submit" class="light-button {% if module_action  != 'configure' %}module-install-btn{% endif %}" value="{{module_action|capitalize}}" data-url="{{module_url}}" />
+                                    </form>
+                                {% endfor %}
+                                
+                                {% if module.url is defined %}
+                                <form action="{{module.url}}">
+                                        <input type="submit" {% if module.url_active is not defined or module.url_active  != '' %}style="display: none;"{% endif %} class="light-button" value="{% if module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}" data-url="{{module.url}}" />
+                                </form>
                                 {% endif %}
+                                
                                 <div class="loader module-install-loader">
                                     <svg class="circular" viewBox="25 25 50 50">
                                         <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
