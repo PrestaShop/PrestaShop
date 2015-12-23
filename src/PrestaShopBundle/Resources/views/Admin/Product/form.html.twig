@@ -64,15 +64,15 @@
                         </div>
 
                         <ul class="nav nav-tabs">
-                            <li><a href="#description_short" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
-                            <li><a href="#description" data-toggle="tab">{{ trans('Short description', {}, 'AdminProducts') }}</a></li>
+                            <li><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                            <li><a href="#description_short" data-toggle="tab">{{ trans('Short description', {}, 'AdminProducts') }}</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane panel panel-default active" id="description_short">
-                                {{ form_widget(form.step1.description_short) }}
-                            </div>
                             <div class="tab-pane panel panel-default" id="description">
                                 {{ form_widget(form.step1.description) }}
+                            </div>
+                            <div class="tab-pane panel panel-default active" id="description_short">
+                                {{ form_widget(form.step1.description_short) }}
                             </div>
                         </div>
 

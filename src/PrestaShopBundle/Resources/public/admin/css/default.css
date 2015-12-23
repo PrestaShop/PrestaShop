@@ -28,3 +28,11 @@
 .product-combination-image img{
   border: 1px solid #ccc
 }
+.tt-menu{
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.tt-suggestion{
+  cursor: pointer
+}
