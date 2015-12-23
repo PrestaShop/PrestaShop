@@ -26,6 +26,9 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->step_is_reachable = true;
 
         $this->show_login_form = array_key_exists('login', $requestParameters);
+        if ($this->show_login_form) {
+            $this->step_is_current = true;
+        }
 
         $this->loginForm->handleRequest($requestParameters);
 
@@ -61,6 +64,10 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             ->getCheckoutSession()
             ->customerHasLoggedIn()
         ;
+
+        if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
+            $this->step_is_complete = true;
+        }
 
         $this->setTitle(
             $this->getTranslator()->trans(
