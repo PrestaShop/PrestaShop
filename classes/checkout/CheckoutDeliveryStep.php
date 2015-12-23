@@ -10,6 +10,14 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             );
         }
 
+        if ($this->step_is_reachable) {
+            // we're done if
+            // - the step was reached (= all previous steps complete)
+            // - there are delivery options
+            // - the is a selected delivery option
+            $this->step_is_complete = !empty($this->getCheckoutSession()->getDeliveryOptions()) && $this->getCheckoutSession()->getSelectedDeliveryOption();
+        }
+
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Delivery Method',
