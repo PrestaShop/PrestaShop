@@ -128,9 +128,7 @@ class OrderControllerCore extends FrontController
             Tools::getAllValues()
         );
 
-        if (Tools::getValue('continue')) {
-            $this->checkoutProcess->setNextStepReachable();
-        }
+        $this->checkoutProcess->setNextStepReachable();
 
         $this->checkoutProcess->markCurrentStep();
 
