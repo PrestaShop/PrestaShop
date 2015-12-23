@@ -124,7 +124,7 @@ class CartControllerCore extends FrontController
                     }
                 }
             }
-        } elseif (!$this->isTokenValid()) {
+        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show') {
             Tools::redirect('index.php');
         }
     }
