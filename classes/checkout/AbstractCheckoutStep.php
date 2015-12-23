@@ -25,7 +25,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->translator;
     }
 
-    protected function renderTemplate($template, array $params = [])
+    protected function renderTemplate($template, array $extraParams = [], array $params = [])
     {
         $defaultParams = [
             'title' => $this->getTitle(),
@@ -38,7 +38,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
             $this->smarty
         );
 
-        $scope->assign(array_merge($defaultParams, $params));
+        $scope->assign(array_merge($defaultParams, $extraParams, $params));
 
         $tpl = $this->smarty->createTemplate(
             $template,
