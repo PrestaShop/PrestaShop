@@ -49,9 +49,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             $this->getCheckoutSession()->setIdAddressInvoice($id_address);
         }
 
-
         if (array_key_exists('use_same_address', $requestParams)) {
             $this->use_same_address = (bool)$requestParams['use_same_address'];
+            $this->step_is_current  = true;
         }
 
         if (isset($requestParams['cancelAddress'])) {
@@ -110,7 +110,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 $this->show_invoice_address_form = true;
             }
             $this->addressForm->fillWith($requestParams);
-            $this->form_has_continue_button = true;
+            $this->form_has_continue_button = $this->use_same_address;
         } elseif (isset($requestParams['editAddress'])) {
             // while a form is open, do not go to next step
             $this->step_is_current = true;
@@ -130,9 +130,16 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         $addresses_count = $this->getCheckoutSession()->getCustomerAddressesCount();
-        if (!$this->use_same_address && $addresses_count < 2) {
+        if ($addresses_count === 0) {
+            $this->show_delivery_address_form = true;
+            $this->form_has_continue_button   = true;
+        } elseif (!$this->use_same_address && $addresses_count < 2) {
             $this->step_is_complete = false;
-            $this->show_invoice_address_form = true;
+            $this->show_invoice_address_form  = true;
+            $this->form_has_continue_button   = true;
+        }
+
+        if ($this->show_invoice_address_form) {
             $this->form_has_continue_button = true;
         }
 
