@@ -174,7 +174,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         }
 
         //if product is disable, remove rediretion strategy fields
-        if ($form_data['active'] == 1) {
+        if ($form_data['active']) {
             $form_data['redirect_type'] = '';
             $form_data['id_product_redirected'] = 0;
         } else {
@@ -361,7 +361,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'isbn' => $this->product->isbn,
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
-                'active' => $this->product->active,
+                'active' => $this->product->active == 0 ? false : true,
                 'price_shortcut' => $this->product->price,
                 'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
                 'categories' => ['tree' => $this->product->getCategories()],

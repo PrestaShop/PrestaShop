@@ -63,7 +63,7 @@ admin_product_bulk_action:
 
 admin_product_unit_action:
     path:     /unit/{action}/{id}
-    methods:  [POST]
+    methods:  [POST|GET]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\ProductController::unitAction
     requirements:

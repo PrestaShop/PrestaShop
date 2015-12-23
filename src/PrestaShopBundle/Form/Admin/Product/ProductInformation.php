@@ -195,12 +195,9 @@ class ProductInformation extends CommonAbstractType
         ))
 
         //RIGHT COL
-        ->add('active', 'choice', array(
-            'choices'  => array( 1 => $this->translator->trans('Yes', [], 'AdminProducts'), 0 => $this->translator->trans('No', [], 'AdminProducts')),
-            'expanded' => true,
+        ->add('active', 'checkbox', array(
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
-            'required' => true,
-            'multiple' => false,
+            'required' => false,
         ))
         ->add('price_shortcut', 'number', array(
             'required' => false,
