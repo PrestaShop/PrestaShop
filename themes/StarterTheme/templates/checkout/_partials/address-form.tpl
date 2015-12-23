@@ -15,14 +15,14 @@
 {/block}
 
 {block "form_buttons"}
-  {if $customer.addresses|count > 0}
+  {if !$form_has_continue_button}
     <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
     <button type="submit">{l s='Save Address'}</button>
   {else}
-  <form>
-    <button type="submit" class="continue" name="continue" value="1">
-        {l s='Continue'}
-    </button>
-  </form>
+    <form>
+      <button type="submit" class="continue" name="continue" value="1">
+          {l s='Continue'}
+      </button>
+    </form>
   {/if}
 {/block}
