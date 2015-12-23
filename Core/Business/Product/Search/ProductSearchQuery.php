@@ -6,6 +6,7 @@ use PrestaShop\PrestaShop\Core\Business\Product\Search\Facet;
 
 class ProductSearchQuery
 {
+    private $query_type;
     private $id_category;
     private $id_manufacturer;
     private $id_supplier;
@@ -24,6 +25,17 @@ class ProductSearchQuery
     public function __construct()
     {
         $this->setSortOrder(new SortOrder('product', 'name', 'ASC'));
+    }
+
+    public function setQueryType($query_type)
+    {
+        $this->query_type = $query_type;
+        return $this;
+    }
+
+    public function getQueryType()
+    {
+        return $this->query_type;
     }
 
     public function setIdCategory($id_category)
