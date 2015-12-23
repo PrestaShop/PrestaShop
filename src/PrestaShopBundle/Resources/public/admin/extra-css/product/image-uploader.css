@@ -1,10 +1,6 @@
 #product-images-dropzone{
   width: 100%;
   min-height:400px;
-  display: none;
-}
-#product-images-disable{
-  display: none;
 }
 #product-images-dropzone.dropzone .dz-preview{
   width: 130px;

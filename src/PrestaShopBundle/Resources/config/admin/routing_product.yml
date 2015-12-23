@@ -28,11 +28,16 @@ admin_product_list:
         offset: last|\d+
         sortOrder: last|asc|desc
 
+admin_product_new:
+    path: /new
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle\Controller\Admin\ProductController::newAction
+
 admin_product_form:
     path: /form/{id}
     methods:  [GET, POST]
     defaults:
-        id: 0
         _controller: PrestaShopBundle\Controller\Admin\ProductController::formAction
         _legacy_controller: AdminProducts
         _legacy_param_mapper_class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider

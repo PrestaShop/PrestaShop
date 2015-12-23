@@ -33,6 +33,16 @@ use Symfony\Component\Process\Exception\LogicException;
 class ProductDataProvider
 {
     /**
+     * Get a new ProductCore instance
+     *
+     * @return object product
+     */
+    public function getProductInstance()
+    {
+        return new \ProductCore();
+    }
+
+    /**
      * Get a product
      *
      * @param int $id_product

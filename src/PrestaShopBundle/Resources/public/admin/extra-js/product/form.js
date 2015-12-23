@@ -329,12 +329,13 @@ var supplier = (function() {
  * Suppliercombination collection management
  */
 var supplierCombinations = (function() {
+	var id_product = $('#form_id_product').val();
 	var collectionHolder = $('#supplier_combination_collection');
 
 	return {
 		'refresh': function() {
 			var suppliers = $('#form_step6_suppliers input[name="form[step6][suppliers][]"]:checked').map(function(){return $(this).val();}).get();
-			var url = collectionHolder.attr('data-url')+'/'+$('#form_id_product').val()+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
+			var url = collectionHolder.attr('data-url')+'/'+id_product+(suppliers.length > 0 ? '/'+suppliers.join('-') : '');
 
 			$.ajax({
 				url: url,
@@ -421,10 +422,10 @@ var nav = (function() {
 			var hash = document.location.hash;
 			var prefix = 'tab-';
 			if (hash) {
-				$('.nav-tabs a[href=' + hash.replace(prefix,'') + ']').tab('show');
+				$('#form-nav a[href=' + hash.replace(prefix,'') + ']').tab('show');
 			}
 
-			$('.nav-tabs a').on('shown.bs.tab', function (e) {
+			$('#form-nav a').on('shown.bs.tab', function (e) {
 				if(e.target.hash) {
 					onTabSwitch(e.target.hash);
 					window.location.hash = e.target.hash.replace('#', '#' + prefix);
@@ -432,18 +433,16 @@ var nav = (function() {
 			});
 
 			$('.btn-next').click(function(){
-				$('.nav-tabs > .active').next('li').find('a').trigger('click');
+				$('#form-nav > .active').next('li').find('a').trigger('click');
 			});
 
 			$('.btn-prev').click(function(){
-				$('.nav-tabs > .active').prev('li').find('a').trigger('click');
+				$('#form-nav > .active').prev('li').find('a').trigger('click');
 			});
 
-			/** auto save form on switching tabs (if form is not processing and product id is not defined) */
+			/** on tab switch */
 			function onTabSwitch(currentTab){
-				if(currentTab != '#step1' && $('#form .btn-submit').attr('disabled') != 'disabled' && $('#form_id_product').val() === '0'){
-					form.send();
-				} else if (currentTab == '#step2' && $('#form_id_product').val() !== 0){
+				if (currentTab == '#step2'){
 					/** each switch to price tab, reload combinations into specific price form */
 					specificPrices.refreshCombinationsList();
 				}
@@ -456,6 +455,7 @@ var nav = (function() {
  * Combinations creator management
  */
 var combinationGenerator = (function() {
+	var id_product = $('#form_id_product').val();
 
 	/** Create Bloodhound engine */
 	function getEngine(){
@@ -473,12 +473,12 @@ var combinationGenerator = (function() {
 
 	/** Generate combinations */
 	function generate(){
-
 		/**
 		 * Combination row maker
 		 * @param {object} attribute
 		 */
 		var combinationRowMaker = function(attribute){
+
 			var combinationsLength = $('#accordion_combinations').children().length;
 			var form = $('#accordion_combinations').attr('data-prototype').replace(/__name__/g, combinationsLength);
 
@@ -506,7 +506,7 @@ var combinationGenerator = (function() {
 			var newRow = row.replace(/__name__/g, combinationsLength)
 				.replace(/___index__/g, combinationsLength)
 				.replace(/__combination_name__/g, attribute.name)
-				.replace(/__delete_link__/g, $('#accordion_combinations').attr('data-action-delete')+'/'+attribute.id_product_attribute+'/'+$('#form_id_product').val())
+				.replace(/__delete_link__/g, $('#accordion_combinations').attr('data-action-delete')+'/'+attribute.id_product_attribute+'/'+id_product)
 				.replace(/__id_attribute__/g, attribute.id_product_attribute)
 				.replace(/__form__/g, form);
 
@@ -571,6 +571,8 @@ var combinationGenerator = (function() {
  * Combination management
  */
 var combinations = (function() {
+	var id_product = $('#form_id_product').val();
+
 	/**
 	 * Remove a combination
 	 * @param {object} elem - The clicked link
@@ -649,7 +651,7 @@ var combinations = (function() {
 
 			$.ajax({
 				type: 'GET',
-			 	url: target.attr('data-action-refresh-images')+'/' + $('#form_id_product').val(),
+			 	url: target.attr('data-action-refresh-images')+'/' + id_product,
 			 	success: function(response){
 					$.each(response, function(id, combinationImages){
 						var combinationElem = target.find('.combination[data="'+ id +'"]');
@@ -676,16 +678,14 @@ var combinations = (function() {
  * Specific prices management
  */
 var specificPrices = (function() {
+	var id_product = $('#form_id_product').val();
 	var elem = $('#js-specific-price-list');
 
 	/** Get all specific prices */
 	function getAll() {
-		if($('#form_id_product').val() === '0') {
-			return;
-		}
 		$.ajax({
 			type: 'GET',
-			url: elem.attr('data')+'/'+$('#form_id_product').val(),
+			url: elem.attr('data')+'/'+id_product,
 			success: function(specific_prices){
 				var tbody = elem.find('tbody');
 				tbody.find('tr').remove();
@@ -771,7 +771,7 @@ var specificPrices = (function() {
 	/** refresh combinations list selector for specific price form */
 	function refreshCombinationsList() {
 		var elem = $('#form_step2_specific_price_sp_id_product_attribute');
-		var url = elem.attr('data-action')+'/'+$('#form_id_product').val();
+		var url = elem.attr('data-action')+'/'+id_product;
 
 		$.ajax({
 			type: 'GET',
@@ -815,6 +815,7 @@ var specificPrices = (function() {
  * Warehouse combination collection management (ASM only)
  */
 var warehouseCombinations = (function() {
+	var id_product = $('#form_id_product').val();
 	var collectionHolder = $('#warehouse_combination_collection');
 
 	return {
@@ -843,7 +844,7 @@ var warehouseCombinations = (function() {
 		'refresh': function() {
 			var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
 			if (show) {
-				var url = collectionHolder.attr('data-url') + '/' + $('#form_id_product').val();
+				var url = collectionHolder.attr('data-url') + '/' + id_product;
 				$.ajax({
 					url: url,
 					success: function (response) {
@@ -876,7 +877,6 @@ var form = (function() {
 				$('*.has-error').removeClass('has-error');
 			},
 			success: function(response){
-				$('#form_id_product').val(response.product.id);
 				showSuccessMessage(translate_javascripts['Form update success']);
 
 				//display image manager and hide display message to need product save
@@ -904,7 +904,7 @@ var form = (function() {
 
 				/** find first tab with error, then switch to it */
 				var tabIndexError = tabsWithErrors[0].split('_')[0];
-				$('.nav-tabs li a[href="#'+tabIndexError+'"]').tab('show');
+				$('#form-nav li a[href="#'+tabIndexError+'"]').tab('show');
 
 				/** scroll to 1st error */
 				$('html, body').animate({
@@ -992,6 +992,8 @@ var customFieldCollection = (function() {
  * virtual product management
  */
 var virtualProduct = (function() {
+	var id_product = $('#form_id_product').val();
+
 	return {
 		'init': function() {
 			$(document).on('change', 'input[name="form[step3][virtual_product][is_virtual_file]"]', function() {
@@ -1003,7 +1005,7 @@ var virtualProduct = (function() {
 					//delete virtual product
 					$.ajax({
 						type: 'GET',
-						url: $('#virtual_product').attr('data-action-remove')+'/'+$('#form_id_product').val(),
+						url: $('#virtual_product').attr('data-action-remove')+'/'+id_product,
 						success: function(response){
 							//empty form
 							$('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
@@ -1028,7 +1030,7 @@ var virtualProduct = (function() {
 				e.preventDefault();
 				$.ajax({
 					type: 'GET',
-					url: $(this).attr('href')+'/'+$('#form_id_product').val(),
+					url: $(this).attr('href')+'/'+id_product,
 					success: function(response){
 						$('#form_step3_virtual_product_file_input').removeClass('hide').addClass('show');
 						$('#form_step3_virtual_product_file_details').removeClass('show').addClass('hide');
@@ -1052,7 +1054,7 @@ var virtualProduct = (function() {
 
 				$.ajax({
 					type: 'POST',
-					url: $('#virtual_product').attr('data-action')+'/'+$('#form_id_product').val(),
+					url: $('#virtual_product').attr('data-action')+'/'+id_product,
 					data: data,
 					contentType: false,
 					processData: false,
@@ -1094,6 +1096,8 @@ var virtualProduct = (function() {
  * attachment product management
  */
 var attachmentProduct = (function() {
+	var id_product = $('#form_id_product').val();
+
 	return {
 		'init': function() {
 			var buttonSave = $('#form_step6_attachment_product_add');
@@ -1111,7 +1115,7 @@ var attachmentProduct = (function() {
 
 				$.ajax({
 					type: 'POST',
-					url: $('#form_step6_attachment_product').attr('data-action')+'/'+$('#form_id_product').val(),
+					url: $('#form_step6_attachment_product').attr('data-action')+'/'+id_product,
 					data: data,
 					contentType: false,
 					processData: false,
@@ -1160,28 +1164,14 @@ var attachmentProduct = (function() {
  * images product management
  */
 var imagesProduct = (function() {
-	var isInit = false;
+	var id_product = $('#form_id_product').val();
 
 	return {
 		'init': function() {
 
-			//if this was already initalized, exit
-			if(isInit){
-				return;
-			}
-
 			Dropzone.autoDiscover = false;
 			var dropZoneElem = $('#product-images-dropzone');
 			var errorElem = $('#product-images-dropzone-error');
-
-			//if product id is define, display image manager, also display message to need product save
-			if($('#form_id_product').val() != 0){
-				isInit = true;
-				dropZoneElem.show();
-			}else{
-				$('#product-images-disable').show();
-				return;
-			}
 
 			//on click image, display custom form
 			$(document).on('click', '#product-images-dropzone .dz-preview', function() {
@@ -1192,7 +1182,7 @@ var imagesProduct = (function() {
 			});
 
 			var dropzoneOptions = {
-				url: dropZoneElem.attr('url-upload')+'/'+$('#form_id_product').val(),
+				url: dropZoneElem.attr('url-upload')+'/'+id_product,
 				paramName: "form[file]",
 				maxFilesize: dropZoneElem.attr('data-max-size'),
 				addRemoveLinks: true,

@@ -40,7 +40,7 @@
                     {{ form_errors(form) }}
                 </div>
             </div>
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" id="form-nav" role="tablist">
                 <li class="active"><a href="#step1" role="tab" data-toggle="tab">{{ trans('Main information', {}, 'AdminProducts') }}</a></li>
                 <li><a href="#step2" role="tab" data-toggle="tab">{{ trans('Advanced Price', {}, 'AdminProducts') }}</a></li>
                 <li><a href="#step3" role="tab" data-toggle="tab">{{ trans('Variations and quantity', {}, 'AdminProducts') }}</a></li>
@@ -64,14 +64,14 @@
                         </div>
 
                         <ul class="nav nav-tabs">
-                            <li><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
+                            <li class="active"><a href="#description" data-toggle="tab">{{ trans('Description', {}, 'AdminProducts') }}</a></li>
                             <li><a href="#description_short" data-toggle="tab">{{ trans('Short description', {}, 'AdminProducts') }}</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane panel panel-default" id="description">
+                            <div class="tab-pane panel panel-default active" id="description">
                                 {{ form_widget(form.step1.description) }}
                             </div>
-                            <div class="tab-pane panel panel-default active" id="description_short">
+                            <div class="tab-pane panel panel-default " id="description_short">
                                 {{ form_widget(form.step1.description_short) }}
                             </div>
                         </div>
@@ -100,12 +100,6 @@
                                                 </div>
                                             {% endfor %}
                                         {% endif %}
-                                    </div>
-                                    <div id="product-images-disable">
-                                        <div class="alert alert-info" role="alert">
-                                            {{ trans('Please save your product before adding images:', {}, 'AdminProducts') }}
-                                            <button class="btn btn-xs btn-primary">{{ trans('Save', {}, 'AdminProducts') }}</button>
-                                        </div>
                                     </div>
                                     <div id="product-images-form-container" class="col-lg-5 panel">
                                         <div id="product-images-form" class="col-lg-12"></div>
