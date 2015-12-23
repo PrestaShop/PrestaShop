@@ -107,7 +107,9 @@ class CheckoutProcessCore
 
     public function markCurrentStep()
     {
-        foreach ($this->getSteps() as $step) {
+        $steps = $this->getSteps();
+
+        foreach ($steps as $step) {
             if ($step->isCurrent()) {
                 // If a step marked itself as current
                 // then we assume it has a good reason
@@ -116,8 +118,13 @@ class CheckoutProcessCore
             }
         }
 
-        foreach ($this->getSteps() as $step) {
-            if ($step->isReachable() && (!$step->isComplete())) {
+        foreach ($steps as $position => $step) {
+            $nextStep = $position < count($steps) - 1 ?
+                $steps[$position + 1] :
+                null
+            ;
+
+            if ($step->isReachable() && (!$step->isComplete() || ($nextStep && !$nextStep->isReachable()))) {
                 $step->setCurrent(true);
                 return $this;
             }
