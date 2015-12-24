@@ -487,7 +487,7 @@ class CustomerCore extends ObjectModel
         return Cache::retrieve($cache_id);
     }
 
-    public function getSimpleAddresses($id_lang = null)
+    public function getSimpleAddresses($id_lang = null, $no_cache = false)
     {
         if (!$this->id) {
             return [];
@@ -499,14 +499,16 @@ class CustomerCore extends ObjectModel
 
         $share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
         $cache_id = 'Customer::getSimpleAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
-        if (!Cache::isStored($cache_id)) {
+        if ($no_cache || !Cache::isStored($cache_id)) {
             $sql = $this->getSimpleAddressSql(null, $id_lang);
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
             $addresses = [];
             foreach ($result as $addr) {
                 $addresses[$addr['id']] = $addr;
             }
-            Cache::store($cache_id, $result);
+            if (!$no_cache) {
+                Cache::store($cache_id, $result);
+            }
             return $addresses;
         }
         return Cache::retrieve($cache_id);
