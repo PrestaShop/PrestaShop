@@ -2,7 +2,7 @@
   <p>{$error}</p>
 {/foreach}
 
-<form action="{$action}" method="post">
+<form action="{$action}" id="customer-register-form" method="post">
 
   <section class="form-fields">
     {block "form_fields"}

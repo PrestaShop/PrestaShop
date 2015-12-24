@@ -8,7 +8,7 @@
     <a href="{$urls.pages.order}">{l s='No account?'}</a>
     {form form=$login_form template='checkout/_partials/login-form.tpl'}
   {else}
-    <a href="?login">{l s='Already have an account?'}</a>
+    <a data-link-action="show-login-form" href="?login">{l s='Already have an account?'}</a>
     {form form=$register_form template='checkout/_partials/register-form.tpl'}
   {/if}
 {/block}

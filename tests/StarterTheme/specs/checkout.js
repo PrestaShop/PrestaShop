@@ -22,8 +22,8 @@ const guestScenarioDifferentAddresses = Object.assign({}, guestScenario, {
 });
 
 const scenarios = [
-  guestScenarioDifferentAddresses,
   guestScenario,
+  guestScenarioDifferentAddresses,
   registrationScenario
 ];
 
@@ -52,30 +52,23 @@ function runScenario (scenario) {
     }
 
     describe("by default, customer is expected to order as guest", function () {
-        it('should show the personal information step as "pending"', function () {
+        it('should show the personal information step as reachable', function () {
           return browser.waitForVisible(
-            'section#personal-information-section[data-checkout-step-status="pending"]'
+            '#checkout-personal-information-step.-reachable'
           );
         });
 
         it('should show the account creation form', function () {
-          return browser.waitForVisible('.customer-info-form');
+          return browser.waitForVisible('#customer-register-form');
         });
 
         it('should show a link to the login form', function () {
           return browser.waitForVisible(
-            '.customer-info-form [data-link-action="show-login-form"]'
+            '#checkout-personal-information-step [data-link-action="show-login-form"]'
           );
         });
 
         describe('the personal information step', function () {
-          it('should fail to submit the registration form if there are missing fields', function () {
-            return browser
-              .click('.customer-info-form button')
-              .waitForVisible('.notification-error')
-            ;
-          });
-
           let infoFormTestText = 'should allow filling the personal info form';
           if (scenario.customerOrdersAsGuest) {
             infoFormTestText += ' without password';
@@ -83,26 +76,26 @@ function runScenario (scenario) {
 
           it(infoFormTestText, function () {
             return browser
-              .setValue('.customer-info-form [name=firstname]', user.name.first)
-              .setValue('.customer-info-form [name=lastname]' , user.name.last)
-              .setValue('.customer-info-form [name=email]'    , user.email)
+              .setValue('#customer-register-form [name=firstname]', user.name.first)
+              .setValue('#customer-register-form [name=lastname]' , user.name.last)
+              .setValue('#customer-register-form [name=email]'    , user.email)
               .then(() => {
                 if (!scenario.customerOrdersAsGuest) {
-                  return browser.setValue('.customer-info-form [name=passwd]', '123456789');
+                  return browser.setValue('#customer-register-form [name=password]', '123456789');
                 }
               })
-              .click('.customer-info-form button')
+              .click('#customer-register-form button')
               .waitForVisible(
-                  'section#personal-information-section[data-checkout-step-status="done"]'
+                  '#checkout-personal-information-step.-reachable.-complete'
               )
             ;
           });
         });
 
         describe('the addresses step', function () {
-          it('should show the addresses step as "pending"', function () {
+          it('should show the addresses step as reachable', function () {
             return browser.waitForVisible(
-              'section#addresses-section[data-checkout-step-status="pending"]'
+              '#checkout-addresses-step.-reachable'
             );
           });
 
@@ -111,55 +104,67 @@ function runScenario (scenario) {
           });
 
           it("should show the delivery address form", function () {
-            return browser.waitForVisible('#checkout-address-delivery');
+            return browser.waitForVisible('#delivery-address form');
           });
 
           it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
             return browser
-              .getValue('#checkout-address-delivery [name=firstname]')
+              .getValue('#delivery-address [name=firstname]')
               .should.become(user.name.first)
-              .then(() => browser.getValue('#checkout-address-delivery [name=lastname]'))
+              .then(() => browser.getValue('#delivery-address [name=lastname]'))
               .should.become(user.name.last)
             ;
           });
 
-          it("should fill the address form", function () {
+          it("should fill the address form and go to delivery step", function () {
             return browser
-              .setValue('#checkout-address-delivery [name=address1]', user.location.street)
-              .setValue('#checkout-address-delivery [name=city]', user.location.city)
-              .setValue('#checkout-address-delivery [name=postcode]', '00000')
-              .setValue('#checkout-address-delivery [name=phone]', '0123456789')
-              .click('#checkout-address-delivery button')
-              .waitForVisible('#delivery-addresses .address-item')
+              .setValue('#delivery-address [name=address1]', user.location.street)
+              .setValue('#delivery-address [name=city]', user.location.city)
+              .setValue('#delivery-address [name=postcode]', '00000')
+              .setValue('#delivery-address [name=phone]', '0123456789')
+              .click('#delivery-address button')
+              .waitForVisible('#checkout-delivery-step.-reachable')
             ;
           });
 
           if (!scenario.deliveryAddressIsInvoiceAddress) {
             it("should open and fill another address form for the invoice address", function () {
               return browser
-                .click('[data-link-action="setup-invoice-address"]')
-                .setValue('#checkout-address-invoice [name=firstname]', 'Someone')
-                .setValue('#checkout-address-invoice [name=lastname]', 'Else')
-                .setValue('#checkout-address-invoice [name=address1]', user.location.street)
-                .setValue('#checkout-address-invoice [name=city]', user.location.city)
-                .setValue('#checkout-address-invoice [name=postcode]', '11111')
-                .setValue('#checkout-address-invoice [name=phone]', '0123456789')
-                .click('#checkout-address-invoice button')
-                .waitForVisible('#invoice-addresses .address-item')
+                .click('#checkout-addresses-step')
+                .click('[data-link-action="different-invoice-address"]')
+                .setValue('#invoice-address [name=firstname]', 'Someone')
+                .setValue('#invoice-address [name=lastname]', 'Else')
+                .setValue('#invoice-address [name=address1]', user.location.street)
+                .setValue('#invoice-address [name=city]', user.location.city)
+                .setValue('#invoice-address [name=postcode]', '11111')
+                .setValue('#invoice-address [name=phone]', '0123456789')
+                .click('#invoice-address button')
               ;
+            });
+
+            it('should have gone to the next step after clicking on the button in the invoice address form', function () {
+              return browser.waitForVisible('#checkout-delivery-step.-current');
             });
           }
 
-          it('should then show the addresses step as "done"', function () {
+          it('should show the addresses step as "done"', function () {
             return browser.waitForVisible(
-              'section#addresses-section[data-checkout-step-status="done"]'
+              '#checkout-addresses-step.-complete'
             );
           });
         });
 
         describe('the delivery step', function () {
           it("should show delivery options", function () {
-            return browser.waitForVisible('.delivery-options .delivery-option');
+            return browser
+              .waitForVisible('.delivery-options .delivery-option')
+            ;
+          });
+          it('should be marked as complete after user has clicked continue', function () {
+            return browser
+              .click('#checkout-delivery-step button')
+              .waitForVisible('#checkout-delivery-step.-complete')
+            ;
           });
         });
 
@@ -176,7 +181,7 @@ function runScenario (scenario) {
           });
 
           it("should show payment options", function () {
-            return browser.waitForVisible('.advanced-payment-options .advanced-payment-option');
+            return browser.waitForVisible('.payment-options .payment-option');
           });
 
           it("should have a disabled order button", function () {
@@ -187,12 +192,12 @@ function runScenario (scenario) {
 
           it("should check the terms-and-conditions", function () {
             return browser.click(
-              'label[for="conditions_to_approve[terms-and-conditions]"'
+              '[name="conditions_to_approve[terms-and-conditions]"]'
             );
           });
           it("should choose a payment option", function () {
             return browser.click(
-              '.advanced-payment-options .advanced-payment-option label'
+              '.payment-options .payment-option label'
             );
           });
           it("should confirm the payment", function () {

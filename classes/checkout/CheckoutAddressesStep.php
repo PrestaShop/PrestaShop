@@ -36,6 +36,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function handleRequest(array $requestParams = [])
     {
+        if (array_key_exists('use_same_address', $requestParams)) {
+            $this->use_same_address = (bool)$requestParams['use_same_address'];
+        }
+
         if (isset($requestParams['id_address_delivery'])) {
             $id_address = $requestParams['id_address_delivery'];
             $this->getCheckoutSession()->setIdAddressDelivery($id_address);
@@ -47,11 +51,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (isset($requestParams['id_address_invoice'])) {
             $id_address = $requestParams['id_address_invoice'];
             $this->getCheckoutSession()->setIdAddressInvoice($id_address);
-        }
-
-        if (array_key_exists('use_same_address', $requestParams)) {
-            $this->use_same_address = (bool)$requestParams['use_same_address'];
-            $this->step_is_current  = true;
         }
 
         if (isset($requestParams['cancelAddress'])) {
@@ -70,14 +69,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         ]);
 
         if (isset($requestParams['saveAddress'])) {
-            if (isset($requestParams['id_address'])) {
-                // if customer was editing an address,
-                // they probably want to click 'continue'
-                // themselves and not have the step
-                // magically complete.
-                $this->step_is_complete = false;
-            }
-
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
                 $this->step_is_current = true;
@@ -88,6 +79,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                     $this->show_invoice_address_form = true;
                 }
             } else {
+                if ($requestParams['saveAddress'] === 'delivery') {
+                    $this->use_same_address = isset($requestParams['use_same_address']);
+                }
                 $id_address = $this->addressForm->getAddress()->id;
                 if ($requestParams['saveAddress'] === 'delivery') {
                     $this->getCheckoutSession()->setIdAddressDelivery($id_address);
@@ -97,9 +91,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 } else {
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
                 }
-            }
-            if ($requestParams['saveAddress'] === 'delivery') {
-                $this->use_same_address = isset($requestParams['use_same_address']);
             }
         } elseif (isset($requestParams['newAddress'])) {
             // while a form is open, do not go to next step
