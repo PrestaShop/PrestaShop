@@ -65,6 +65,16 @@ class OrderControllerCore extends FrontController
 
         $this->checkoutProcess = new CheckoutProcess($session);
 
+        $checkoutDeliveryStep = new CheckoutDeliveryStep(
+            $this->context->smarty,
+            $translator
+        );
+        $checkoutDeliveryStep->setRecyclablePackAllowed((bool)Configuration::get('PS_RECYCLABLE_PACK'));
+        $checkoutDeliveryStep->setGiftAllowed((bool)Configuration::get('PS_GIFT_WRAPPING'));
+        $checkoutDeliveryStep->setIncludeTaxes(!Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX'));
+        $checkoutDeliveryStep->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value);
+        $checkoutDeliveryStep->setGiftCost($this->context->cart->getGiftWrappingPrice($checkoutDeliveryStep->getIncludeTaxes()));
+
         $this->checkoutProcess
             ->addStep(new CheckoutPersonalInformationStep(
                 $this->context->smarty,
@@ -77,10 +87,7 @@ class OrderControllerCore extends FrontController
                 $translator,
                 $this->getAddressForm()
             ))
-            ->addStep(new CheckoutDeliveryStep(
-                $this->context->smarty,
-                $translator
-            ))
+            ->addStep($checkoutDeliveryStep)
             ->addStep(new CheckoutPaymentStep(
                 $this->context->smarty,
                 $translator,
