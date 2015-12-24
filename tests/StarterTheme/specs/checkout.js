@@ -128,10 +128,24 @@ function runScenario (scenario) {
           });
 
           if (!scenario.deliveryAddressIsInvoiceAddress) {
-            it("should open and fill another address form for the invoice address", function () {
+            it("should open another address form for the invoice address", function () {
               return browser
                 .click('#checkout-addresses-step')
                 .click('[data-link-action="different-invoice-address"]')
+                .waitForVisible('#invoice-address form')
+              ;
+            });
+
+            it("should still show the delivery address", function () {
+              return browser.waitForVisible('#delivery-addresses .address-item');
+            });
+
+            it("but without edit button", function () {
+              return browser.isVisible('#delivery-addresses .address-item [data-link-action="edit-address"]').should.become(false);
+            });
+
+            it("should fill the invoice address form", function () {
+              return browser
                 .setValue('#invoice-address [name=firstname]', 'Someone')
                 .setValue('#invoice-address [name=lastname]', 'Else')
                 .setValue('#invoice-address [name=address1]', user.location.street)

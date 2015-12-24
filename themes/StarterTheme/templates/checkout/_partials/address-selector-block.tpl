@@ -11,13 +11,17 @@
       </label>
 
       <footer>
-        <a href="?editAddress={$type}&amp;id_address={$address.id}">
-          {l s='Edit'}
-        </a>
+        {if $interactive}
+          <a data-link-action="edit-address" href="?editAddress={$type}&amp;id_address={$address.id}">
+            {l s='Edit'}
+          </a>
+        {/if}
       </footer>
     </article>
   {/foreach}
-  <p>
-    <button class="ps-hidden-by-js" type="submit">{l s='Save'}</button>
-  </p>
+  {if $interactive}
+    <p>
+      <button class="ps-hidden-by-js" type="submit">{l s='Save'}</button>
+    </p>
+  {/if}
 </form>
