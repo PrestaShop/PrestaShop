@@ -44,6 +44,7 @@ class CheckoutProcessCore
         return implode('', array_map(function (CheckoutStepInterface $step) use (&$position) {
             ++$position;
             return $step->render([
+                'identifier' => $step->getIdentifier(),
                 'position' => $position
             ]);
         }, $this->getSteps()));
