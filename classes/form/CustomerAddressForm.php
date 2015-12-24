@@ -52,8 +52,6 @@ class CustomerAddressFormCore extends AbstractForm
         $formItems = $this->addressFormatter->getFormat();
         foreach ($formItems as $key => $formItem) {
             if ($formItem['name'] === 'id_address') {
-                // I love the fact the our "ORM" has "id" internally
-                // but the DB has "id_address".
                 $formItems[$key]['value'] = $address->id;
                 continue;
             }
