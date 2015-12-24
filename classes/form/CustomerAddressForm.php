@@ -14,8 +14,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerAddressFormCore extends AbstractForm
 {
-    private $context;
+    private $language;
     private $translator;
+    private $persister;
     private $addressFormatter;
     private $constraintTranslator;
 
@@ -29,14 +30,16 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function __construct(
         Smarty $smarty,
-        Context $context,
+        Language $language,
         TranslatorInterface $translator,
+        CustomerAddressPersister $persister,
         CustomerAddressFormatter $addressFormatter
     ) {
         parent::__construct($smarty);
 
-        $this->context = $context;
+        $this->language = $language;
         $this->translator = $translator;
+        $this->persister = $persister;
         $this->addressFormatter = $addressFormatter;
         $this->constraintTranslator = new ValidateConstraintTranslator(
             $this->translator
@@ -45,7 +48,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function setIdAddress($id_address)
     {
-        $address = new Address($id_address, $this->context->language->id);
+        $address = new Address($id_address, $this->language->id);
         $formItems = $this->addressFormatter->getFormat();
         foreach ($formItems as $key => $formItem) {
             if ($formItem['name'] === 'id_address') {
@@ -54,9 +57,13 @@ class CustomerAddressFormCore extends AbstractForm
                 $formItems[$key]['value'] = $address->id;
                 continue;
             }
+            if (!property_exists($address, $formItem['name'])) {
+                continue;
+            }
             $formItems[$key]['value'] = $address->{$formItem['name']};
         }
 
+        $this->address = $address;
         $this->setNewFormItems($formItems);
 
         return $this;
@@ -84,7 +91,7 @@ class CustomerAddressFormCore extends AbstractForm
         if (isset($params['id_country']) && $params['id_country'] != $this->addressFormatter->getCountry()->id) {
             $this->addressFormatter->setCountry(new Country(
                 $params['id_country'],
-                $this->context->language->id
+                $this->language->id
             ));
         }
 
@@ -131,14 +138,8 @@ class CustomerAddressFormCore extends AbstractForm
 
         $address = new Address(
             $this->formItems['id_address']['value'],
-            $this->context->language->id
+            $this->language->id
         );
-
-        if ($address->id_customer && (int)$address->id_customer !== (int)$this->context->customer->id) {
-            throw new Exception('Security Thing.');
-            // cannot update somebody else's address
-            return false;
-        }
 
         foreach ($this->formItems as $formItem) {
             $address->{$formItem['name']} = $formItem['value'];
@@ -148,13 +149,12 @@ class CustomerAddressFormCore extends AbstractForm
             $address->alias = $this->translator->trans('My Address', [], 'Address');
         }
 
-        if (empty($address->id_customer)) {
-            $address->id_customer = $this->context->customer->id;
-        }
-
         $this->address = $address;
 
-        return $address->save();
+        return $this->persister->save(
+            $this->address,
+            $this->formItems['token']['value']
+        );
     }
 
     public function getAddress()
@@ -227,6 +227,8 @@ class CustomerAddressFormCore extends AbstractForm
             // have side effects.
             $this->formItems = $this->addressFormatter->getFormat();
         }
+
+        $this->formItems['token']['value'] = $this->persister->getToken();
 
         return [
             'action'    => $this->action,
