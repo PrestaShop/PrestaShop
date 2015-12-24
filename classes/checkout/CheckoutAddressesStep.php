@@ -38,6 +38,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     {
         if (array_key_exists('use_same_address', $requestParams)) {
             $this->use_same_address = (bool)$requestParams['use_same_address'];
+            if (!$this->use_same_address) {
+                $this->step_is_current = true;
+            }
         }
 
         if (isset($requestParams['id_address_delivery'])) {
