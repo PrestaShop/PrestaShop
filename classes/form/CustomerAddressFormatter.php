@@ -81,6 +81,15 @@ class CustomerAddressFormatterCore
                 'value'     => null,
                 'values'    => null,
                 'errors'    => []
+            ],
+            'token' => [
+                'name'      => 'token',
+                'type'      => 'hidden',
+                'required'  => true,
+                'label'     => '',
+                'value'     => null,
+                'values'    => null,
+                'errors'    => []
             ]
         ];
 
