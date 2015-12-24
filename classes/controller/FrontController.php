@@ -1615,6 +1615,15 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
+    protected function getAddressPersister()
+    {
+        return new CustomerAddressPersister(
+            $this->context->customer,
+            $this->context->cart,
+            Tools::getToken(true, $this->context)
+        );
+    }
+
     protected function getAddressForm()
     {
         if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
@@ -1626,8 +1635,9 @@ class FrontControllerCore extends Controller
 
         $form = new CustomerAddressForm(
             $this->context->smarty,
-            $this->context,
+            $this->context->language,
             $this->getTranslator(),
+            $this->getAddressPersister(),
             new CustomerAddressFormatter(
                 $this->context->country,
                 $this->getTranslator(),
