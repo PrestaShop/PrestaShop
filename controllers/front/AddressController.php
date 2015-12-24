@@ -32,18 +32,8 @@ class AddressControllerCore extends FrontController
     public $authRedirection = 'addresses';
     public $ssl = true;
 
-    /**
-     * @var Address Current address
-     */
-    protected $_address;
-    protected $id_country;
-
-    protected $address_form;
-    protected $address_formatter;
-    protected $address_fields = [];
-    protected $address_field_alias;
-
-    public $form_errors = [];
+    private $address_form;
+    private $should_redirect = false;
 
     /**
      * Initialize address controller
@@ -52,42 +42,8 @@ class AddressControllerCore extends FrontController
     public function init()
     {
         parent::init();
-
-        $id_address = (int)Tools::getValue('id_address', 0);
-        $this->_address = new Address($id_address);
-
-        if (Validate::isLoadedObject($this->_address) && !Customer::customerHasAddress($this->context->customer->id, $id_address)) {
-            Tools::redirect('index.php?controller=addresses');
-        }
-
-        if (Tools::isSubmit('delete')) {
-            if ($this->_address->delete()) {
-                if ($this->context->cart->id_address_invoice == $this->_address->id) {
-                    unset($this->context->cart->id_address_invoice);
-                }
-                if ($this->context->cart->id_address_delivery == $this->_address->id) {
-                    unset($this->context->cart->id_address_delivery);
-                    $this->context->cart->updateAddressId($this->_address->id, (int)Address::getFirstCustomerAddressId(Context::getContext()->customer->id));
-                }
-
-                Tools::redirect('index.php?controller=addresses');
-            } else {
-                $this->errors[] = Tools::displayError('This address cannot be deleted.');
-            }
-        }
-
-        $this->address_formatter = new Adapter_AddressFormatter(new Country(is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country));
-        $this->address_form = new Adapter_AddressForm(
-            $this->address_formatter,
-            Tools::getAllValues(),
-            $this->context->language,
-            new Adapter_Translator()
-        );
-        $this->address_field_alias = [
-            'label' => $this->l('Address alias'),
-            'errors' => [],
-            'required' => true,
-        ];
+        $this->address_form = $this->getAddressForm();
+        $this->context->smarty->assign('address_form', $this->address_form->getProxy());
     }
 
     /**
@@ -96,69 +52,35 @@ class AddressControllerCore extends FrontController
      */
     public function postProcess()
     {
-        if (Tools::isSubmit('submitAddress')) {
-            $this->processSubmitAddress();
-        } elseif (Tools::getValue('action') === 'getAddressEditForm') {
-            $address_form = $this->renderAddressForm();
-            die($address_form);
-        } elseif (!Validate::isLoadedObject($this->_address) && Validate::isLoadedObject($this->context->customer)) {
-            $_POST['firstname'] = $this->context->customer->firstname;
-            $_POST['lastname'] = $this->context->customer->lastname;
-            $_POST['company'] = $this->context->customer->company;
-        }
-    }
-
-    /**
-     * Process changes on an address
-     */
-    protected function processSubmitAddress()
-    {
-        // Check page token
-        if ($this->context->customer->isLogged() && !$this->isTokenValid()) {
-            $this->errors[] = Tools::displayError('Invalid token.');
-            return false;
-        }
-
-        $this->address_fields = $this->address_form->getAddressFormatWithErrors();
-        // Check if the alias exists
-        $alias = Tools::getValue('alias');
-        if (((int)$this->context->customer->id > 0) && !empty($alias)) {
-            if (Address::aliasExist($alias, (int)Tools::getValue('id_address'), (int)$this->context->customer->id)) {
-                $this->address_field_alias['errors'][] = sprintf($this->l('The alias "%s" has already been used. Please select another one.', 'Address'), Tools::safeOutput($alias));
+        $this->context->smarty->assign('editing', false);
+        $this->address_form->handleRequest(Tools::getAllValues());
+        if ($this->address_form->wasSubmitted()) {
+            if ($this->address_form->hasErrors()) {
+                $this->errors[] = $this->l('Something\'s not right...');
+            } else {
+                if (Tools::getValue('id_address')) {
+                    $this->success[] = $this->l('Address successfully updated!');
+                } else {
+                    $this->success[] = $this->l('Address successfully added!');
+                }
+                $this->should_redirect = true;
             }
-        }
-
-        if ($this->address_form->hasErrors() || !empty($this->address_field_alias['errors'])) {
-            return false;
-        }
-
-        //  StarterTheme: Save data
-        $errors = $this->_address->validateController();
-        $this->errors = array_merge($this->errors, $errors);
-
-        if (!empty($this->errors)) {
-            return false;
-        }
-
-        $this->_address->id_customer = $this->context->customer->id;
-        $saved = $this->_address->save();
-
-        if (!$saved) {
-            $this->errors[] = $this->l('An error occurred while updating your address.');
-            return false;
-        }
-
-        // StarterTheme: Handle ajax for address validation !
-
-        // Redirect to old page or current page
-        if ($back = Tools::getValue('back')) {
-            if ($back == Tools::secureReferrer(Tools::getValue('back'))) {
-                Tools::redirect(html_entity_decode($back));
+        } elseif (($id_address = (int)Tools::getValue('id_address'))) {
+            if (Tools::getValue('delete')) {
+                $ok = $this->getAddressPersister()->delete(
+                    new Address($id_address, $this->context->language->id),
+                    Tools::getValue('token')
+                );
+                if ($ok) {
+                    $this->success[] = $this->l('Address successfully deleted!');
+                    $this->should_redirect = true;
+                } else {
+                    $this->errors[] = $this->l('Could not delete address.');
+                }
+            } else {
+                $this->address_form->setIdAddress($id_address);
+                $this->context->smarty->assign('editing', true);
             }
-            $mod = Tools::getValue('mod');
-            Tools::redirect('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
-        } else {
-            Tools::redirect('index.php?controller=addresses');
         }
     }
 
@@ -168,87 +90,21 @@ class AddressControllerCore extends FrontController
      */
     public function initContent()
     {
-        parent::initContent();
-
-        $this->id_country = (int)Tools::getCountry();
-        $this->assignVatNumber();
-
-        if (isset($this->context->cookie->account_created)) {
-            $this->context->smarty->assign('account_created', 1);
-            unset($this->context->cookie->account_created);
-        }
-
-        $this->context->smarty->assign([
-            'address_form' => $this->renderAddressForm(),
-        ]);
-
-        $this->setTemplate('customer/address.tpl');
-    }
-
-    protected function renderAddressForm()
-    {
-        $address = $this->context->customer->getSimpleAddress(Tools::getValue('id_address'));
-        foreach ($address as $key => $value) {
-            if (isset($_POST[$key])) {
-                $address[$key] = $_POST[$key];
+        if ($this->ajax) {
+            $this->ajaxDie(json_encode([
+                'hasError'  => !empty($this->errors),
+                'errors'    => $this->errors
+            ]));
+        } elseif ($this->should_redirect) {
+            if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
+                $mod = Tools::getValue('mod');
+                $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
+            } else {
+                $this->redirectWithNotifications('index.php?controller=addresses');
             }
         }
 
-        $back = Tools::getValue('back');
-        $mod = Tools::getValue('mod');
-
-        if (empty($this->address_fields)) {
-            $this->address_fields = $this->address_form->getAddressFormat();
-        }
-        $this->address_fields['alias'] = $this->address_field_alias;
-
-        $vars = [
-            'token' => Tools::getToken(false),
-            'select_address' => (int)Tools::getValue('select_address'),
-            'address' => $address,
-            'countries' => $this->address_form->getCountryList(),
-            'address_fields' => $this->address_fields,
-            'back' => Tools::safeOutput($back),
-            'mod' => Tools::safeOutput($mod),
-        ];
-
-        return $this->render('customer/_partials/address-form.tpl', $vars);
-    }
-
-    /**
-     * Assign template vars related to vat number
-     * @todo move this in vatnumber module !
-     */
-    protected function assignVatNumber()
-    {
-        $vat_number_exists = file_exists(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
-        $vat_number_management = Configuration::get('VATNUMBER_MANAGEMENT');
-        if ($vat_number_management && $vat_number_exists) {
-            include_once(_PS_MODULE_DIR_.'vatnumber/vatnumber.php');
-        }
-
-        if ($vat_number_management && $vat_number_exists && VatNumber::isApplicable((int)Tools::getCountry())) {
-            $vat_display = 2;
-        } elseif ($vat_number_management) {
-            $vat_display = 1;
-        } else {
-            $vat_display = 0;
-        }
-
-        $this->context->smarty->assign(array(
-            'vatnumber_ajax_call' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
-            'vat_display' => $vat_display,
-        ));
-    }
-
-    public function displayAjax()
-    {
-        if (count($this->errors)) {
-            $return = array(
-                'hasError' => !empty($this->errors),
-                'errors' => $this->errors
-            );
-            $this->ajaxDie(json_encode($return));
-        }
+        parent::initContent();
+        $this->setTemplate('customer/address.tpl');
     }
 }
