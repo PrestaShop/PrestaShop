@@ -84,6 +84,7 @@ function hookModule($moduleName, $hookName)
 }
 
 // disableModule('blocklayered');
+disableModule('cheque'); // not yet working
 hookModule('blocktopmenu', 'displayTop');
 hookModule('blocklanguages', 'displayNav');
 hookModule('blockcurrencies', 'displayNav');
