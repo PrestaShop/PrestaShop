@@ -17,7 +17,11 @@
       <div class="modal-body">
           <div class="row">
               <div class="col-md-6">
-                    <p>{{ module.fullDescription|raw }}</p>
+                    {% if module.fullDescription is defined %}
+                        <p>{{ module.fullDescription|raw }}</p>
+                    {% else %}
+                        <p>{{ module.description|raw }}</p>
+                    {% endif %}
                     <div class="module-modal-badges">
                     {% for badge in module.media.badges %}
                         <img alt="{{badge.label}}" src="{{badge.img}}" data-toggle="tooltip" title="{{badge.label}}">

@@ -22,6 +22,12 @@ class ModuleController extends Controller
         $translator = $this->container->get('prestashop.adapter.translator');
         // toolbarButtons
         $toolbarButtons = array();
+        $toolbarButtons['manage_module'] = array(
+            'href' => $this->generateUrl('admin_module_manage'),
+            'desc' => $translator->trans('[TEMP] Manage my modules', array(), $request->attributes->get('_legacy_controller')),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Manage', array(), $request->attributes->get('_legacy_controller')),
+        );
         $toolbarButtons['add_module'] = array(
             'href' => '#',
             'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
@@ -75,6 +81,12 @@ class ModuleController extends Controller
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         // toolbarButtons
         $toolbarButtons = array();
+        $toolbarButtons['catalog_module'] = array(
+            'href' => $this->generateUrl('admin_module_catalog'),
+            'desc' => $translator->trans('[TEMP] Modules catalog', array(), $request->attributes->get('_legacy_controller')),
+            'icon' => 'icon-share-square',
+            'help' => $translator->trans('Catalog', array(), $request->attributes->get('_legacy_controller')),
+        );
         $toolbarButtons['add_module'] = array(
             'href' => $this->generateUrl('admin_module_import'),
             'desc' => $translator->trans('Add a module', array(), $request->attributes->get('_legacy_controller')),
@@ -116,6 +128,11 @@ class ModuleController extends Controller
             $ret[$module]['msg'] = 'Invalid action';
         }
 
+        if ($ret[$module]['status']) {
+            $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+            $modulesProvider->clearManageCache();
+        }
+
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($ret, 200);
         }
@@ -124,7 +141,12 @@ class ModuleController extends Controller
         if (! $ret[$module]['status']) {
             throw new Exception($ret[$module]['msg']);
         }
-        return $this->redirect($request->server->get('HTTP_REFERER'));
+        
+        if ($request->server->get('HTTP_REFERER')) {
+            return $this->redirect($request->server->get('HTTP_REFERER'));
+        } else {
+            return $this->redirect($this->generateUrl('admin_module_catalog'));
+        }
     }
 
     /**
@@ -209,23 +231,20 @@ class ModuleController extends Controller
                 ]);
             }
             $product->urls['configure'] = $this->generateUrl('admin_module_configure_action', [
-                    'module_name' => $product->name,
-                ]);
+                'module_name' => $product->name,
+            ]);
 
             // Which button should be displayed first ?
             $product->url_active = '';
             if (isset($product->installed) && $product->installed == 1) {
                 if ($product->active == 0) {
                     $product->url_active = 'enable';
-                }
-                elseif ($product->is_configurable == 1) {
+                } elseif ($product->is_configurable == 1) {
                     $product->url_active = 'configure';
-                }
-                else {
+                } else {
                     $product->url_active = 'disable';
                 }
-            }
-            elseif (in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
+            } elseif (in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 $product->url_active = 'install';
             }
         }

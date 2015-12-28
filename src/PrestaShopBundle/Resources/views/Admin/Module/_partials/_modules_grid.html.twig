@@ -31,23 +31,32 @@
                         </div>
                         <div class="module-quick-description-{{display_type}} no-padding">
                             {{ module.description|raw }}
+                            {% if module.fullDescription is defined and module.description|length < module.fullDescription|length %}
+                                ...
+                            {% endif %}
                             <div class="module-read-more-{{display_type}}">
                                 <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
                             </div>
                         </div>
                         <div class="module-quick-action-{{display_type}} clearfix">
-                            <div class="pull-right">
+                            <div class="pull-right btn-group">
                                 {% for module_action, module_url in module.urls %}
-                                    <form action="{{module_url}}" data-action="{{module_action}}" {% if module.url_active is not defined or module.url_active  != module_action %}style="display: none;"{% endif %}>
-                                        <input type="submit" class="light-button {% if module_action  != 'configure' %}module-install-btn{% endif %}" value="{{module_action|capitalize}}" data-url="{{module_url}}" />
-                                    </form>
+                                    {% if module.url_active is not defined or module.url_active  == module_action %}
+                                        <a class="btn btn-default  btn-xs light-button {% if module_action  != 'configure' %}module-install-btn{% endif %}" href="{{module_url}}">{{module_action|capitalize}}</a>
+                                    {% endif %}
                                 {% endfor %}
-                                
-                                {% if module.url is defined %}
-                                <form action="{{module.url}}">
-                                        <input type="submit" {% if module.url_active is not defined or module.url_active  != '' %}style="display: none;"{% endif %} class="light-button" value="{% if module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}" data-url="{{module.url}}" />
-                                </form>
+                                {% if module.url is defined and  module.url_active is not defined or module.url_active  == '' %}
+                                    <a class="btn btn-default btn-xs light-button" href="{{module.url}}">{% if module.price.EUR > 0 %}{{module.price.EUR}}{% else %}Discover{% endif %}</a>
                                 {% endif %}
+                                <button type="button" class="btn btn-default dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <span class="caret"></span>
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                {% for module_action, module_url in module.urls %}
+                                    <li><a href="{{module_url}}" class="{% if module_action  != 'configure' %}module-install-btn{% endif %}">{{module_action|capitalize}}</a></li>
+                                {% endfor %}
+                                </ul>
                                 
                                 <div class="loader module-install-loader">
                                     <svg class="circular" viewBox="25 25 50 50">

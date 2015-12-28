@@ -255,7 +255,7 @@
 }
 .module-quick-description-list {
     line-height: 50px;
-    max-width: 66%;
+    max-width: 50%;
     float: left;
     height: 50px;
     text-overflow: ellipsis;

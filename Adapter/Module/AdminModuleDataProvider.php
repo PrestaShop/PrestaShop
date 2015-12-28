@@ -160,7 +160,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $addons_provider = new AddonsDataProvider();
         // Check if the module can be downloaded from addons
         foreach ($this->getCatalogModules() as $catalog_module) {
-            if ($catalog_module->name == $name) {
+            if ($catalog_module->name == $name && in_array($catalog_module->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 return $addons_provider->downloadModule($catalog_module->id);
             }
         }
@@ -288,7 +288,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 // We need to load the catalog to get native modules later
                 $this->getCatalogModules();
 
-                $this->manage_modules = [];
+                $this->manage_modules = new \stdClass;
                 $all_modules = $this->getAllModules();
                 $all_installed_modules = $this->getAllInstalledModules();
 
@@ -316,11 +316,11 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     } else {
                         $row= 'modules';
                     }
-                    $this->manage_modules[$row][] = (object)$installed_module;
+                    $this->manage_modules->{$row}[] = (object)$installed_module;
                 }
 
                 foreach ($this->manage_modules as $key => $row) {
-                    $this->manage_modules[$key] = $this->convertJsonForNewCatalog(['products' => $row]);
+                    $this->manage_modules->$key = $this->convertJsonForNewCatalog(['products' => $row]);
                 }
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
@@ -422,7 +422,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         }
 
         usort($remixed_json, function ($module1, $module2) {
-            return strnatcmp($module1->displayName, $module2->displayName);
+            return strnatcasecmp($module1->displayName, $module2->displayName);
         });
         
         return $remixed_json;
