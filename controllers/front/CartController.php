@@ -53,7 +53,8 @@ class CartControllerCore extends FrontController
         parent::init();
 
         // Send noindex to avoid ghost carts by bots
-        header('X-Robots-Tag: noindex, nofollow', true);
+        // TODO: StarterTheme: Investigate: the following seems to fail on PHP5.6 on Travis
+        // header('X-Robots-Tag: noindex, nofollow', true);
 
         // Get page main parameters
         $this->id_product = (int)Tools::getValue('id_product', null);
