@@ -10,6 +10,8 @@
 
 {block name="page_content_container"}
   <section id="content" class="page-content page-address">
+    <div class="address-form">
       {form form=$address_form template="customer/_partials/address-form.tpl"}
+    </div>
   </section>
 {/block}

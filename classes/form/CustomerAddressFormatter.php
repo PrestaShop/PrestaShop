@@ -90,6 +90,15 @@ class CustomerAddressFormatterCore
                 'value'     => null,
                 'values'    => null,
                 'errors'    => []
+            ],
+            'alias' => [
+                'name'      => 'alias',
+                'type'      => 'text',
+                'required'  => false,
+                'label'     => $this->getFieldLabel('alias'),
+                'value'     => null,
+                'values'    => null,
+                'errors'    => []
             ]
         ];
 
@@ -147,6 +156,8 @@ class CustomerAddressFormatterCore
         $field = explode(':', $field)[0];
 
         switch ($field) {
+            case 'alias':
+                return $this->translator->trans('Alias', [], 'Address');
             case 'firstname':
                 return $this->translator->trans('First name', [], 'Address');
             case 'lastname':
