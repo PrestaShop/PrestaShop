@@ -34,22 +34,18 @@ describe("The Checkout Process", function () {
 function runScenario (scenario) {
   describe(scenario.name, function () {
 
+    let user;
+
     before(function () {
-        return checkout.addSomeProductToCart().then(
-            () => browser.url(fixtures.urls.checkout)
-        );
+      return Promise.all([
+        checkout.addSomeProductToCart(),
+        getRandomUser().then(randomUser => user = randomUser)
+      ]).then(() => browser.url(fixtures.urls.checkout));
     });
 
     after(function () {
         return browser.deleteCookie().url('/');
     });
-
-    let user;
-    if (scenario.customerDoesntHaveAnAccount) {
-      before(function () {
-        return getRandomUser().then(randomUser => user = randomUser);
-      });
-    }
 
     describe("by default, customer is expected to order as guest", function () {
         it('should show the personal information step as reachable', function () {
