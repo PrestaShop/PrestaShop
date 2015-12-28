@@ -154,15 +154,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function renderFacets(ProductSearchResult $result)
     {
-        $facetCollection = $result->getFacetCollection();
         // not all search providers generate menus
-        if (empty($facetCollection)) {
+        if (empty($result->getFacetCollection())) {
             return '';
         }
 
         $facetsVar = array_map(
             [$this, 'prepareFacetForTemplate'],
-            $facetCollection->getFacets()
+            $result->getFacetCollection()->getFacets()
         );
 
         $activeFilters = [];
