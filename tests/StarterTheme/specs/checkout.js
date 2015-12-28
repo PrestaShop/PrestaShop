@@ -27,7 +27,7 @@ const scenarios = [
   registrationScenario
 ];
 
-describe.only("The Checkout Process", function () {
+describe("The Checkout Process", function () {
     scenarios.forEach(runScenario);
 });
 
