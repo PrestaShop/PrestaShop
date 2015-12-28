@@ -66,3 +66,6 @@ script:
   - DISPLAY=:10 npm run selenium &> /dev/null &
   - sleep 5
   - npm test
+
+after_failure:
+  - cat /var/log/apache2/error.log
