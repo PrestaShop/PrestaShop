@@ -84,13 +84,7 @@ describe('The product page', function () {
     });
 
     it('should not display the add to cart button, because the product is not customized yet', function () {
-      return browser.element('form.add-to-cart')
-        .then(function () {
-          throw new Error('Add to cart button should not have been displayed until product is customized.');
-        })
-        .catch(function () {
-          // this is expected!
-        });
+      return browser.isVisible('form.add-to-cart').should.become(false);
     });
 
     it('should display the add to cart button once the product is customized', function () {
