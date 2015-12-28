@@ -17,8 +17,7 @@ describe('Order history page', function () {
         .url(fixtures.urls.orderhistory)
         .elements('.page-content a.order-detail-link')
         .then(function (elements) {
-          initialOrdersCount = elements.value.length;
-          initialOrdersCount.should.be.greaterThan(0);
+          elements.value.length.should.be.greaterThan(0);
         })
       ;
   });
