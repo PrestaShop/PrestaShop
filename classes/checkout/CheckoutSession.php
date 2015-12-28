@@ -68,4 +68,31 @@ class CheckoutSessionCore
     {
         return $this->deliveryOptionsFinder->getDeliveryOptions();
     }
+
+    public function setRecyclable($option)
+    {
+        $this->context->cart->recyclable = (int)$option;
+        return $this->context->cart->update();
+    }
+
+    public function isRecyclable()
+    {
+        return $this->context->cart->recyclable;
+    }
+
+    public function setGift($gift, $gift_message)
+    {
+        $this->context->cart->gift = (int)$gift;
+        $this->context->cart->gift_message = $gift_message;
+
+        return $this->context->cart->update();
+    }
+
+    public function getGift()
+    {
+        return [
+            'isGift'    => $this->context->cart->gift,
+            'message'   => $this->context->cart->gift_message
+        ];
+    }
 }
