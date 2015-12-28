@@ -68,4 +68,4 @@ script:
   - npm test
 
 after_failure:
-  - cat /var/log/apache2/error.log
+  - sudo cat /var/log/apache2/error.log
