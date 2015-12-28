@@ -11,7 +11,7 @@ export function getRandomUser () {
       } else {
         const user = body.results[0].user;
         // sometimes we get weird e-mails from the API
-        user.email = user.email.replace(/\s+/g, '_');
+        user.email = user.email.replace(/[^a-z@.]/g, '_');
         resolve(user);
       }
     });
