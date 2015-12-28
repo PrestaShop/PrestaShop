@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="module-quick-description-{{display_type}} no-padding">
-                            {{ module.description }}
+                            {{ module.description|raw }}
                             <div class="module-read-more-{{display_type}}">
                                 <a class="module-read-more-{{display_type}}-btn" href="#" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">Read More</a>
                             </div>

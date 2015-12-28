@@ -17,7 +17,7 @@
       <div class="modal-body">
           <div class="row">
               <div class="col-md-6">
-                    <p>{{ module.description }}</p>
+                    <p>{{ module.fullDescription|raw }}</p>
                     <div class="module-modal-badges">
                     {% for badge in module.media.badges %}
                         <img alt="{{badge.label}}" src="{{badge.img}}" data-toggle="tooltip" title="{{badge.label}}">
