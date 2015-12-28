@@ -67,5 +67,5 @@ script:
   - sleep 5
   - npm test
 
-after_failure:
+after_script:
   - sudo cat /var/log/apache2/error.log
