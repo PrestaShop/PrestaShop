@@ -1,5 +1,13 @@
 {extends "customer/_partials/address-form.tpl"}
 
+{block "form_field"}
+  {if $formItem.name eq "alias"}
+    {* we don't ask for alias here *}
+  {else}
+    {$smarty.block.parent}
+  {/if}
+{/block}
+
 {block "form_fields" append}
   <input type="hidden" name="saveAddress" value="{$type}">
   {if $type === "delivery"}
