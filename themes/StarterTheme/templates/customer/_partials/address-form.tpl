@@ -1,8 +1,8 @@
 <form method="POST" action="{$action}">
-  <section class="form-fields">
+  <section class="form-fields" bob="lapinou">
     {block "form_fields"}
       {foreach from=$formItems item="formItem"}
-        {block name="form_field_{$formItem.name}"}
+        {block name="form_field"}
           {if $formItem.type !== 'select'}
             <label>
               <span>{$formItem.label}</span>
