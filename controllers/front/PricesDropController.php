@@ -45,6 +45,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         parent::init();
         $this->doProductSearch('catalog/prices-drop.tpl');
     }
+
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery;
@@ -54,6 +55,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         ;
         return $query;
     }
+
     protected function getDefaultProductSearchProvider()
     {
         $translator = new Translator(new LegacyContext);

@@ -566,9 +566,6 @@ function reloadContent(params_plus)
 			if (typeof(ajaxCart) != "undefined")
 				ajaxCart.overrideButtonsInThePage();
 
-			if (typeof(reloadProductComparison) == 'function')
-				reloadProductComparison();
-
 			filters = result.filters;
 			initFilters();
 			initSliders();
