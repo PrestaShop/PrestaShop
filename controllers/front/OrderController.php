@@ -111,13 +111,13 @@ class OrderControllerCore extends FrontController
         ;
     }
 
-    private function persist(CheckoutProcess $process)
+    private function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'" WHERE id_cart = '.(int)$this->context->cart->id);
     }
 
-    private function load(CheckoutProcess $process)
+    private function restorePersistedData(CheckoutProcess $process)
     {
         $rawData = Db::getInstance()->getValue('SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int)$this->context->cart->id);
         $data = json_decode($rawData, true);
@@ -141,7 +141,7 @@ class OrderControllerCore extends FrontController
     {
         parent::initContent();
 
-        $this->load($this->checkoutProcess);
+        $this->restorePersistedData($this->checkoutProcess);
         $this->checkoutProcess->handleRequest(
             Tools::getAllValues()
         );
@@ -150,7 +150,7 @@ class OrderControllerCore extends FrontController
 
         $this->checkoutProcess->markCurrentStep();
 
-        $this->persist($this->checkoutProcess);
+        $this->saveDataToPersist($this->checkoutProcess);
 
         if (!$this->checkoutProcess->hasErrors()) {
             if ($_SERVER['REQUEST_METHOD'] !== 'GET' && !$this->ajax) {
