@@ -111,8 +111,8 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 
     public function getIdentifier()
     {
-        // SomeClassNameLikeThis => some-class-name-like-this 
-        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1-$2', get_class($this)));
+        // SomeClassNameLikeThis => some-class-name-like-this
+        return Tools::camelCaseToKebabCase(get_class($this));
     }
 
     public function getDataToPersist()
