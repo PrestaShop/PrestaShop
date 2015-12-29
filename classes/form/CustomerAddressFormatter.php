@@ -175,7 +175,7 @@ class CustomerAddressFormatterCore
             case 'State':
                 return $this->translator->trans('State', [], 'Address');
             case 'phone':
-                return $this->ordered_address_fields[$field]['label'] = $this->translator->trans('Phone', [], 'Address');
+                return $this->translator->trans('Phone', [], 'Address');
             case 'phone_mobile':
                 return $this->translator->trans('Mobile phone', [], 'Address');
             case 'company':
