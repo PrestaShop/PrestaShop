@@ -113,7 +113,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             } else {
                 $this->show_invoice_address_form = true;
             }
-            $this->addressForm->setIdAddress($requestParams['id_address']);
+            $this->addressForm->loadAddressById($requestParams['id_address']);
         }
 
         if (!$this->step_is_complete) {
