@@ -1,5 +1,5 @@
 <form method="POST" action="{$action}">
-  <section class="form-fields" bob="lapinou">
+  <section class="form-fields">
     {block "form_fields"}
       {foreach from=$formItems item="formItem"}
         {block name="form_field"}
