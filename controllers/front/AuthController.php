@@ -30,78 +30,65 @@ class AuthControllerCore extends FrontController
     public $php_self = 'authentication';
     public $auth = false;
 
-    private $loginForm;
-    private $registerForm;
-
-    /**
-     * Start forms process
-     * @see FrontController::postProcess()
-     */
-    public function postProcess()
+    public function initContent()
     {
-        if (Tools::getValue('create_account') || Tools::isSubmit('submitCreate')) {
-            $this->registerForm = $this
+        parent::initContent();
+        $should_redirect = false;
+
+        if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
+            $register_form = $this
                 ->makeRegisterForm()
                 ->setGuestAllowed(false)
                 ->fillWith(Tools::getAllValues())
             ;
-        } else {
-            $this->loginForm = $this
-                ->makeLoginForm()
-                ->fillWith(Tools::getAllValues())
-            ;
-        }
 
-        if (Tools::getValue('create_account') || Tools::isSubmit('submitCreate')) {
+            if (Tools::isSubmit('submitCreate')) {
+                if ($register_form->submit()) {
+                    $should_redirect = true;
+                }
+            }
+
             $this->context->smarty->assign([
-                'register_form'  => $this->registerForm->getProxy(),
+                'register_form'  => $register_form->getProxy(),
                 'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
             ]);
             $this->setTemplate('customer/registration.tpl');
-            if (Tools::isSubmit('submitCreate')) {
-                $this->processSubmitCreate();
-            }
         } else {
-            if (Tools::isSubmit('SubmitLogin')) {
-                $this->processSubmitLogin();
+            $login_form = $this->makeLoginForm()->fillWith(
+                Tools::getAllValues()
+            );
+
+            if (Tools::isSubmit('submitLogin')) {
+                if ($login_form->submit()) {
+                    $should_redirect = true;
+                }
             }
+
             $this->context->smarty->assign([
-                'login_form' => $this->loginForm->getProxy()
+                'login_form' => $login_form->getProxy()
             ]);
             $this->setTemplate('customer/authentication.tpl');
         }
-    }
 
-    /**
-     * Process login
-     */
-    protected function processSubmitLogin()
-    {
-        $this->loginForm->submit();
+        if ($should_redirect && !$this->ajax) {
+            $back = urldecode(Tools::getValue('back'));
 
-        if (!$this->ajax && !$this->loginForm->hasErrors()) {
-            $back = Tools::getValue('back', 'my-account');
-
-            if ($back == Tools::secureReferrer($back)) {
-                $this->redirectWithNotifications(html_entity_decode($back));
+            if (Tools::secureReferrer($back)) {
+                // Checks to see if "back" is a fully qualified
+                // URL that is on OUR domain, with the right protocol
+                $this->redirectWithNotifications($back);
             } else {
-                $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
-            }
-        }
-    }
-
-    /**
-    * Process submit on a creation
-    */
-    protected function processSubmitCreate()
-    {
-        $this->registerForm->submit();
-
-        if (!$this->ajax && !$this->registerForm->hasErrors()) {
-            if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
-                $this->redirectWithNotifications(html_entity_decode($back));
-            } else {
-                $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
+                // Well we're not redirecting to a URL,
+                // so...
+                if ($this->authRedirection) {
+                    // We may need to go there if defined
+                    $back = $this->authRedirection;
+                } elseif (!preg_match('/^[\w\-]+$/', $back)) {
+                    // Otherwise, check that "back" matches a controller name
+                    // and set a default if not.
+                    $back = 'my-account';
+                }
+                $this->redirectWithNotifications('index.php?controller='.urlencode($back));
             }
         }
     }
