@@ -297,7 +297,6 @@ class ContextCore
     {
         $this->customer = $customer;
         $this->cookie->id_customer = (int)$customer->id;
-        $this->cookie->id_compare = isset($this->cookie->id_compare) ? $this->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
         $this->cookie->passwd = $customer->passwd;
