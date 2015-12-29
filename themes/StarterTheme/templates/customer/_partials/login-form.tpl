@@ -32,7 +32,7 @@
     {if $back}
       <input type="hidden" name="back" value="{$back}">
     {/if}
-    <input type="hidden" name="SubmitLogin" value="1">
+    <input type="hidden" name="submitLogin" value="1">
     {block "form_buttons"}
       <button type="submit">{l s='Sign in'}</button>
     {/block}
