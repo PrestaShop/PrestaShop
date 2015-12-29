@@ -69,11 +69,22 @@ class OrderControllerCore extends FrontController
             $this->context->smarty,
             $translator
         );
-        $checkoutDeliveryStep->setRecyclablePackAllowed((bool)Configuration::get('PS_RECYCLABLE_PACK'));
-        $checkoutDeliveryStep->setGiftAllowed((bool)Configuration::get('PS_GIFT_WRAPPING'));
-        $checkoutDeliveryStep->setIncludeTaxes(!Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX'));
-        $checkoutDeliveryStep->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')) && $this->context->smarty->tpl_vars['display_tax_label']->value);
-        $checkoutDeliveryStep->setGiftCost($this->context->cart->getGiftWrappingPrice($checkoutDeliveryStep->getIncludeTaxes()));
+
+        $checkoutDeliveryStep->setRecyclablePackAllowed(
+            (bool)Configuration::get('PS_RECYCLABLE_PACK')
+        )->setGiftAllowed(
+            (bool)Configuration::get('PS_GIFT_WRAPPING')
+        )->setIncludeTaxes(
+            !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer) && (int)Configuration::get('PS_TAX')
+        )->setDisplayTaxesLabel(
+            (Configuration::get('PS_TAX')
+            && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'))
+            && $this->context->smarty->tpl_vars['display_tax_label']->value
+        )->setGiftCost(
+            $this->context->cart->getGiftWrappingPrice(
+                $checkoutDeliveryStep->getIncludeTaxes()
+            )
+        );
 
         $this->checkoutProcess
             ->addStep(new CheckoutPersonalInformationStep(
