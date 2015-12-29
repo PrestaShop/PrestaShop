@@ -42,7 +42,7 @@ class AddressControllerCore extends FrontController
     public function init()
     {
         parent::init();
-        $this->address_form = $this->getAddressForm();
+        $this->address_form = $this->makeAddressForm();
         $this->context->smarty->assign('address_form', $this->address_form->getProxy());
     }
 
@@ -67,7 +67,7 @@ class AddressControllerCore extends FrontController
             }
         } elseif (($id_address = (int)Tools::getValue('id_address'))) {
             if (Tools::getValue('delete')) {
-                $ok = $this->getAddressPersister()->delete(
+                $ok = $this->makeAddressPersister()->delete(
                     new Address($id_address, $this->context->language->id),
                     Tools::getValue('token')
                 );
