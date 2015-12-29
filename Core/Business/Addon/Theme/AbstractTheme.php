@@ -27,13 +27,34 @@ namespace PrestaShop\PrestaShop\Core\Business\Addon\Theme;
 
 abstract class AbstractTheme implements AddonInterface
 {
+    public function onInstall()
+    {
+        return true;
+    }
+
+    public function onUninstall()
+    {
+        return true;
+    }
+
     /**
-     * Switch the current theme of the selected shop.
-     * This will update configuration, enable/disable modules...
+    * Execute up files. You can update configuration, update sql schema.
+    * No file modification.
+    *
+    * @return bool true for success
+    */
+    public function onUpgrade(string $version)
+    {
+        return true;
+    }
+
+    /**
+     * Called when switching the current theme of the selected shop.
+     * You can update configuration, enable/disable modules...
      *
      * @return bool true for success
      */
-    public function enable()
+    public function onEnable()
     {
         return true;
     }
@@ -41,33 +62,16 @@ abstract class AbstractTheme implements AddonInterface
     /**
      * Not necessarily the opposite of enable. Use this method if
      * something must be done when switching to another theme (like uninstall
-     * very specific modules)
+     * very specific modules for example)
      *
      * @return bool true for success
      */
-    public function disable()
+    public function onDisable()
     {
         return true;
     }
 
-    /**
-     * Execute migration files. You can update configuration, update sql schema.
-     * No file modification.
-     *
-     * @return bool true for success
-     */
-    public function migrate(string $version)
-    {
-        return true;
-    }
-
-    /**
-     * This is supposed to be the opposite if migrate.
-     * This method will allow you to rollback modification made by migrate()
-     *
-     * @return bool true for success
-     */
-    public function rollback(string $version)
+    public function onReset()
     {
         return true;
     }

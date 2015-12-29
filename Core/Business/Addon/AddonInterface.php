@@ -27,11 +27,11 @@ namespace PrestaShop\PrestaShop\Core\Business\Addon;
 
 interface AddonInterface
 {
-    public function enable();
-    public function disable();
+    public function onInstall();
+    public function onUninstall();
+    public function onEnable();
+    public function onDisable();
+    public function onReset();
 
-    public function upgrade(string $version);
-    public function rollback(string $version);
-
-    public function getVersion();
+    public function onUpgrade(string $version);
 }

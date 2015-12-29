@@ -27,9 +27,10 @@ namespace PrestaShop\PrestaShop\Core\Business\Addon;
 
 interface AddonManagerInterface
 {
-    public function add(string $source);
-    public function remove(Addon $addon);
-
-    public function migrate(Addon $addon, string $version, string $source = null);
-    public function rollback(Addon $addon, string $version);
+    public function install(string $source);
+    public function uninstall(string $name);
+    public function upgrade(string $name, string $version, string $source = null);
+    public function enable(string $name);
+    public function disable(string $name);
+    public function reset(string $name);
 }
