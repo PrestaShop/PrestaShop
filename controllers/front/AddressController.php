@@ -53,9 +53,9 @@ class AddressControllerCore extends FrontController
     public function postProcess()
     {
         $this->context->smarty->assign('editing', false);
-        $this->address_form->handleRequest(Tools::getAllValues());
-        if ($this->address_form->wasSubmitted()) {
-            if ($this->address_form->hasErrors()) {
+        $this->address_form->fillWith(Tools::getAllValues());
+        if (Tools::isSubmit('submitAddress')) {
+            if (!$this->address_form->submit()) {
                 $this->errors[] = $this->l('Something\'s not right...');
             } else {
                 if (Tools::getValue('id_address')) {
