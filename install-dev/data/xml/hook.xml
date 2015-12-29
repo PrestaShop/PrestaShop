@@ -210,9 +210,6 @@
     <hook id="actionPaymentCCAdd">
       <name>actionPaymentCCAdd</name><title>Payment CC added</title><description/>
     </hook>
-    <hook id="displayProductComparison">
-      <name>displayProductComparison</name><title>Extra product comparison</title><description/>
-    </hook>
     <hook id="actionCategoryAdd">
       <name>actionCategoryAdd</name><title>Category creation</title><description>This hook is displayed when a category is created</description>
     </hook>

@@ -150,10 +150,4 @@
     <keywords/>
     <url_rewrite>אימות-הזמנה</url_rewrite>
   </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>השוואת מוצרים</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>השוואת-מוצרים</url_rewrite>
-  </meta>
 </entity_meta>

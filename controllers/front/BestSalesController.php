@@ -44,7 +44,6 @@ class BestSalesControllerCore extends ProductListingFrontController
     {
         if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             parent::init();
-
             $this->doProductSearch('catalog/best-sales.tpl');
         } else {
             Tools::redirect('index.php?controller=404');

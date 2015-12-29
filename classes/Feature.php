@@ -231,37 +231,6 @@ class FeatureCore extends ObjectModel
         }
     }
 
-    public static function getFeaturesForComparison($list_ids_product, $id_lang)
-    {
-        if (!Feature::isFeatureActive()) {
-            return false;
-        }
-
-        $ids = '';
-        foreach ($list_ids_product as $id) {
-            $ids .= (int)$id.',';
-        }
-
-        $ids = rtrim($ids, ',');
-
-        if (empty($ids)) {
-            return false;
-        }
-
-        return Db::getInstance()->executeS('
-			SELECT f.*, fl.*
-			FROM `'._DB_PREFIX_.'feature` f
-			LEFT JOIN `'._DB_PREFIX_.'feature_product` fp
-				ON f.`id_feature` = fp.`id_feature`
-			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
-				ON f.`id_feature` = fl.`id_feature`
-			WHERE fp.`id_product` IN ('.$ids.')
-			AND `id_lang` = '.(int)$id_lang.'
-			GROUP BY f.`id_feature`
-			ORDER BY f.`position` ASC
-		');
-    }
-
     /**
      * This metohd is allow to know if a feature is used or active
      * @since 1.5.0.1
