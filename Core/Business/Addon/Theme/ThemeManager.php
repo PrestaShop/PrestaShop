@@ -34,10 +34,9 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
-     *
      * @return bool true for success
      */
-    public function add(string $source)
+    public function install(string $source)
     {
         return true;
     }
@@ -47,29 +46,59 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param Addon $theme The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
-     *
      * @return bool true for success
      */
-    public function remove(Addon $theme)
+    public function uninstall(Addon $theme)
     {
         return true;
     }
 
     /**
-     * Download new files from source, backup old files, replace files with new ones
-     * and execute all necessary migration scripts form current version to the new one.
-     *
-     * @param Addon $theme the theme you want to upgrade
-     * @param string $version the version you want to up upgrade to
-     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
-     * @return bool true for success
-     */
-    public function migrate(Addon $theme, string $version, string $source = null)
+    * Download new files from source, backup old files, replace files with new ones
+    * and execute all necessary migration scripts form current version to the new one.
+    *
+    * @param Addon $theme the theme you want to upgrade
+    * @param string $version the version you want to up upgrade to
+    * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
+    * @return bool true for success
+    */
+    public function upgrade(Addon $theme, string $version, string $source = null)
     {
         return true;
     }
 
-    public function rollback(Addon $theme, string $version)
+    /**
+     * Actions to perform when switching from another theme to this one.
+     * Example:
+     * 	- update configuration
+     * 	- enable/disable modules
+     *
+     * @param  string $name The theme name to enable
+     * @return bool         True for success
+     */
+    public function enable(string $name)
+    {
+        return true;
+    }
+
+    /**
+     * Actions to perform when switchig from this theme to another one.
+     *
+     * @param  string $name The theme name to enable
+     * @return bool         True for success
+     */
+    public function disable(string $name)
+    {
+        return true;
+    }
+
+    /**
+     * Actions to perform to restaure default settings
+     *
+     * @param  string $name The theme name to reset
+     * @return bool         True for success
+     */
+    public function reset(string $name)
     {
         return true;
     }
