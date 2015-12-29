@@ -26,9 +26,9 @@
 
  use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
 
-class HookCore extends ObjectModel
-{
-    /**
+ class HookCore extends ObjectModel
+ {
+     /**
      * @var string Hook name identifier
      */
     public $name;
@@ -53,7 +53,7 @@ class HookCore extends ObjectModel
      */
     public static $executed_hooks = array();
 
-    public static $native_module;
+     public static $native_module;
 
     /**
      * @see ObjectModel::$definition
@@ -79,42 +79,42 @@ class HookCore extends ObjectModel
      */
     protected static $_hook_modules_cache_exec = null;
 
-    public function add($autodate = true, $null_values = false)
-    {
-        Cache::clean('hook_idsbyname');
-        return parent::add($autodate, $null_values);
-    }
+     public function add($autodate = true, $null_values = false)
+     {
+         Cache::clean('hook_idsbyname');
+         return parent::add($autodate, $null_values);
+     }
 
-    public static function normalizeHookName($hookName)
-    {
-        if (strtolower($hookName) == 'displayheader') {
-            return 'displayHeader';
-        }
-        $hookAliasList = Hook::getHookAliasList();
-        if (isset($hookAliasList[strtolower($hookName)])) {
-            return $hookAliasList[strtolower($hookName)];
-        }
-        return $hookName;
-    }
+     public static function normalizeHookName($hookName)
+     {
+         if (strtolower($hookName) == 'displayheader') {
+             return 'displayHeader';
+         }
+         $hookAliasList = Hook::getHookAliasList();
+         if (isset($hookAliasList[strtolower($hookName)])) {
+             return $hookAliasList[strtolower($hookName)];
+         }
+         return $hookName;
+     }
 
-    public static function isDisplayHookName($hook_name)
-    {
-        $hook_name = strtolower(self::normalizeHookName($hook_name));
+     public static function isDisplayHookName($hook_name)
+     {
+         $hook_name = strtolower(self::normalizeHookName($hook_name));
 
-        if ($hook_name === 'header') {
-            // this hook is to add resources to the <head> section of the page
+         if ($hook_name === 'header') {
+             // this hook is to add resources to the <head> section of the page
             // so it doesn't display anything by itself
             return false;
-        }
+         }
 
-        if (strpos($hook_name, 'display') === 0) {
-            return true;
-        } elseif (strpos($hook_name, 'action') === 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+         if (strpos($hook_name, 'display') === 0) {
+             return true;
+         } elseif (strpos($hook_name, 'action') === 0) {
+             return false;
+         } else {
+             return true;
+         }
+     }
 
     /**
      * Return Hooks List
@@ -523,8 +523,7 @@ class HookCore extends ObjectModel
 
                 //Backward compatibility of controller names
                 $matching_name = array(
-                    'authentication' => 'auth',
-                    'productscomparison' => 'compare'
+                    'authentication' => 'auth'
                 );
                 if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions)) {
                     continue;
@@ -585,9 +584,9 @@ class HookCore extends ObjectModel
         return $output;
     }
 
-    public static function coreCallHook($module, $method, $params)
-    {
-        // Define if we will log modules performances for this session
+     public static function coreCallHook($module, $method, $params)
+     {
+         // Define if we will log modules performances for this session
         if (Module::$_log_modules_perfs === null) {
             $modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
             Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
@@ -603,21 +602,21 @@ class HookCore extends ObjectModel
 
         // Store time and memory before and after hook call and save the result in the database
         $time_start = microtime(true);
-        $memory_start = memory_get_usage(true);
+         $memory_start = memory_get_usage(true);
 
         // Call hook
         $r = $module->{$method}($params);
 
-        $time_end = microtime(true);
-        $memory_end = memory_get_usage(true);
+         $time_end = microtime(true);
+         $memory_end = memory_get_usage(true);
 
-        Db::getInstance()->execute('
+         Db::getInstance()->execute('
             INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
             VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')
         ');
 
-        return $r;
-    }
+         return $r;
+     }
 
     /**
      * @deprecated 1.5.0
@@ -816,4 +815,4 @@ class HookCore extends ObjectModel
         Tools::displayAsDeprecated();
         return Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
     }
-}
+ }
