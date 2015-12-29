@@ -1580,7 +1580,7 @@ class FrontControllerCore extends Controller
         return new Translator(new LegacyContext);
     }
 
-    protected function getLoginForm()
+    protected function makeLoginForm()
     {
         $form = new CustomerLoginForm(
             $this->context->smarty,
@@ -1594,7 +1594,7 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function getRegisterForm()
+    protected function makeRegisterForm()
     {
         $form = new CustomerRegisterForm(
             $this->context->smarty,
@@ -1613,7 +1613,7 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function getAddressPersister()
+    protected function makeAddressPersister()
     {
         return new CustomerAddressPersister(
             $this->context->customer,
@@ -1622,7 +1622,7 @@ class FrontControllerCore extends Controller
         );
     }
 
-    protected function getAddressForm()
+    protected function makeAddressForm()
     {
         if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES')) {
             $availableCountries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
@@ -1635,7 +1635,7 @@ class FrontControllerCore extends Controller
             $this->context->smarty,
             $this->context->language,
             $this->getTranslator(),
-            $this->getAddressPersister(),
+            $this->makeAddressPersister(),
             new CustomerAddressFormatter(
                 $this->context->country,
                 $this->getTranslator(),
