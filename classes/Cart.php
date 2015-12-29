@@ -488,18 +488,14 @@ class CartCore extends ObjectModel
         if (!$this->id) {
             return array();
         }
+
+        $key = (int)$id_product.'-'.(int)$id_country;
+
         // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
         if ($this->_products !== null && !$refresh) {
             // Return product row with specified ID if it exists
-            if (is_int($id_product)) {
-                foreach ($this->_products as $product) {
-                    if ($product['id_product'] == $id_product) {
-                        return array($product);
-                    }
-                }
-                return array();
-            }
-            return $this->_products;
+            if(isset($this->_products[$key]))
+                return $this->_products[$key];
         }
 
         // Build query
@@ -602,7 +598,7 @@ class CartCore extends ObjectModel
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
-        $this->_products = array();
+        $this->_products[$key] = array();
         if (empty($result)) {
             return array();
         }
@@ -738,10 +734,10 @@ class CartCore extends ObjectModel
 
             $row = Product::getTaxesInformations($row, $cart_shop_context);
 
-            $this->_products[] = $row;
+            $this->_products[$key][] = $row;
         }
 
-        return $this->_products;
+        return $this->_products[$key];
     }
 
     public static function cacheSomeAttributesLists($ipa_list, $id_lang)
@@ -1067,7 +1063,7 @@ class CartCore extends ObjectModel
         }
 
         // refresh cache of self::_products
-        $this->_products = $this->getProducts(true);
+        $this->getProducts(true);
         $this->update();
         $context = Context::getContext()->cloneContext();
         $context->cart = $this;
@@ -1133,7 +1129,7 @@ class CartCore extends ObjectModel
             }
         }
         // refresh cache of self::_products
-        $this->_products = $this->getProducts(true);
+        $this->getProducts(true);
         $this->update();
         return true;
     }
@@ -1280,7 +1276,7 @@ class CartCore extends ObjectModel
             }
 
             // refresh cache of self::_products
-            $this->_products = $this->getProducts(true);
+            $this->getProducts(true);
             return ($customization_quantity == $product_total_quantity && $this->deleteProduct((int)$id_product, (int)$id_product_attribute, null, (int)$id_address_delivery));
         }
 
@@ -1318,7 +1314,7 @@ class CartCore extends ObjectModel
         if ($result) {
             $return = $this->update();
             // refresh cache of self::_products
-            $this->_products = $this->getProducts(true);
+            $this->getProducts(true);
             CartRule::autoRemoveFromCart();
             CartRule::autoAddToCart();
 
