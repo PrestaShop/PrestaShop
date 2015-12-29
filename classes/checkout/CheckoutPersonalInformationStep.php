@@ -30,16 +30,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             $this->step_is_current = true;
         }
 
-        $this->loginForm->handleRequest($requestParameters);
-
-        if ($this->loginForm->wasSubmitted()) {
-            if ($this->loginForm->hasErrors()) {
-                $this->show_login_form = true;
-                $this->getCheckoutProcess()->setHasErrors(true);
-            } else {
-                $this->step_is_complete = true;
-            }
-        }
+        $this->loginForm->fillWith($requestParameters);
 
         $this->registerForm
             ->fillFromCustomer(
@@ -48,15 +39,20 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                     ->getCheckoutSession()
                     ->getCustomer()
             )
-            ->handleRequest($requestParameters)
+            ->fillWith($requestParameters)
         ;
 
-        if ($this->registerForm->wasSubmitted()) {
-            if ($this->registerForm->hasErrors()) {
-                $this->getCheckoutProcess()->setHasErrors(true);
-                $this->step_is_current = true;
-            } else {
+        if (isset($requestParameters['submitCreate'])) {
+            if ($this->registerForm->submit()) {
                 $this->step_is_complete = true;
+            } else {
+                $this->getCheckoutProcess()->setHasErrors(true);
+            }
+        } elseif (isset($requestParameters['submitLogin'])) {
+            if ($this->loginForm->submit()) {
+                $this->step_is_complete = true;
+            } else {
+                $this->getCheckoutProcess()->setHasErrors(true);
             }
         }
 
