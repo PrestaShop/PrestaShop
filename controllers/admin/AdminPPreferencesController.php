@@ -53,14 +53,6 @@ class AdminPPreferencesControllerCore extends AdminController
                         'required' => false,
                         'type' => 'bool'
                     ),
-                    'PS_COMPARATOR_MAX_ITEM' => array(
-                        'title' => $this->l('Product comparison'),
-                        'hint' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.'),
-                        'validation' => 'isUnsignedId',
-                        'required' => true,
-                        'cast' => 'intval',
-                        'type' => 'text'
-                    ),
                     'PS_NB_DAYS_NEW_PRODUCT' => array(
                         'title' => $this->l('Number of days for which the product is considered \'new\''),
                         'validation' => 'isUnsignedInt',

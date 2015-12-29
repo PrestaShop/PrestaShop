@@ -34,7 +34,6 @@
 			{include file="./nbr-product-page.tpl"}
 		</div>
     	<div class="top-pagination-content clearfix">
-        	{include file="./product-compare.tpl"}
             {include file="$tpl_dir./pagination.tpl" no_follow=1}
         </div>
 	</div>
@@ -43,7 +42,6 @@
 
 	<div class="content_sortPagiBar">
         <div class="bottom-pagination-content clearfix">
-        	{include file="./product-compare.tpl"}
 			{include file="./pagination.tpl" no_follow=1 paginationId='bottom'}
         </div>
 	</div>
