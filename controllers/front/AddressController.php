@@ -78,7 +78,7 @@ class AddressControllerCore extends FrontController
                     $this->errors[] = $this->l('Could not delete address.');
                 }
             } else {
-                $this->address_form->setIdAddress($id_address);
+                $this->address_form->loadAddressById($id_address);
                 $this->context->smarty->assign('editing', true);
             }
         }
