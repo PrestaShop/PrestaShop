@@ -29,6 +29,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
   - sudo cp -Rf $TRAVIS_BUILD_DIR /var/www/prestashop.unit.test
