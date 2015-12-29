@@ -16,7 +16,6 @@ class CustomerRegisterFormCore extends AbstractForm
 
     private $back;
 
-    private $submitted;
     protected $errors = [
         null            => [],
         'firstname'     => [],
@@ -137,26 +136,8 @@ class CustomerRegisterFormCore extends AbstractForm
         return $this;
     }
 
-    public function handleRequest(array $params = [])
-    {
-        $this->fillWith($params);
-
-        if (array_key_exists('submitCreate', $params)) {
-            return $this->submit();
-        } else {
-            return true;
-        }
-    }
-
-    public function wasSubmitted()
-    {
-        return $this->submitted;
-    }
-
     public function submit()
     {
-        $this->submitted = true;
-
         if (!Validate::isEmail($this->email)) {
             $this->errors['email'][] = $this->translator->trans('Invalid email address.', [], 'Customer');
         } elseif (Customer::customerExists($this->email)) {

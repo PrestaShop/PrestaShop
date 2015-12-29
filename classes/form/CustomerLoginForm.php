@@ -14,7 +14,6 @@ class CustomerLoginFormCore extends AbstractForm
     private $password;
     private $back;
 
-    private $submitted;
     protected $errors = [
         null        => [],
         'email'     => [],
@@ -51,26 +50,8 @@ class CustomerLoginFormCore extends AbstractForm
         return $this;
     }
 
-    public function handleRequest(array $params = [])
-    {
-        $this->fillWith($params);
-
-        if (isset($params['SubmitLogin'])) {
-            return $this->submit();
-        } else {
-            return true;
-        }
-    }
-
-    public function wasSubmitted()
-    {
-        return $this->submitted;
-    }
-
     public function submit()
     {
-        $this->submitted = true;
-
         Hook::exec('actionAuthenticationBefore');
 
         if (empty($this->email)) {
@@ -98,6 +79,8 @@ class CustomerLoginFormCore extends AbstractForm
                 CartRule::autoAddToCart($this->context);
             }
         }
+
+        return !$this->hasErrors();
     }
 
     public function getTemplateVariables()
