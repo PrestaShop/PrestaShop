@@ -61,6 +61,10 @@ class AdminThemesControllerCore extends AdminController
         parent::init();
         $this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 
+        if (Tools::isSubmit('configureLayouts')) {
+            $this->initConfigureLayouts();
+        }
+
         libxml_use_internal_errors(true);
 
         // Download user themes from Addons
@@ -507,5 +511,15 @@ class AdminThemesControllerCore extends AdminController
         if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme') {
             $this->addJS(_PS_JS_DIR_.'admin/addons.js');
         }
+    }
+
+    public function initConfigureLayouts()
+    {
+        $this->content->smarty->assign([
+            'pages' => $pages,
+            'available_layouts' => $this->context->shop->theme->layouts,
+        ]);
+
+        $this->setTemplate('controllers/themes/configurelayouts.tpl');
     }
 }
