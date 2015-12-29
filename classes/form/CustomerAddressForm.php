@@ -46,7 +46,7 @@ class CustomerAddressFormCore extends AbstractForm
         );
     }
 
-    public function setIdAddress($id_address)
+    public function loadAddressById($id_address)
     {
         $address = new Address($id_address, $this->language->id);
         $formItems = $this->addressFormatter->getFormat();
