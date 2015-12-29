@@ -41,13 +41,13 @@ class AuthControllerCore extends FrontController
     {
         if (Tools::getValue('create_account') || Tools::isSubmit('submitCreate')) {
             $this->registerForm = $this
-                ->getRegisterForm()
+                ->makeRegisterForm()
                 ->setGuestAllowed(false)
                 ->fillWith(Tools::getAllValues())
             ;
         } else {
             $this->loginForm = $this
-                ->getLoginForm()
+                ->makeLoginForm()
                 ->fillWith(Tools::getAllValues())
             ;
         }
