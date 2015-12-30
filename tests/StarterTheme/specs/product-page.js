@@ -32,8 +32,15 @@ function chooseValueInGroup (valueId, groupId) {
 }
 
 function chooseVariant (variant) {
-  return q.all(_.map(variant, chooseValueInGroup)).then(function () {
-    return browser.click('.product-variants .product-refresh');
+  return q.all(_.map(variant, chooseValueInGroup)).then(() => {
+    const noJSButton = '.product-variants .product-refresh';
+    return browser.isVisible(noJSButton).then(
+      visible => {
+        if (visible) {
+          return browser.click(noJSButton);
+        }
+      }
+    );
   });
 }
 
@@ -63,10 +70,8 @@ describe('The product page', function () {
 
       return browser
         .productPage(fixtures.aProductWithVariants.id)
-        .then(function () {
-          return chooseVariant(variant);
-        })
-        .then(checkVariantIsSelected.bind(undefined, variant))
+        .then(() => chooseVariant(variant))
+        .then(() => checkVariantIsSelected(variant))
       ;
     });
   });
@@ -91,7 +96,7 @@ describe('The product page', function () {
       return browser
         .setValue('.product-customization textarea', 'a cool text')
         .click('[name="submitCustomizedDatas"]')
-        .element('form.add-to-cart')
+        .element('form .add-to-cart')
       ;
     });
   });
