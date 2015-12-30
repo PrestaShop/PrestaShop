@@ -1600,6 +1600,7 @@ class FrontControllerCore extends Controller
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
+            new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
             $this->getTemplateVarUrls()
         );
 
