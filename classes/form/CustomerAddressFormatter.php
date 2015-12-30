@@ -64,49 +64,25 @@ class CustomerAddressFormatterCore
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'id_address'  => [
-                'name'      => 'id_address',
-                'type'      => 'hidden',
-                'required'  => false,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'id_customer' => [
-                'name'      => 'id_customer',
-                'type'      => 'hidden',
-                'required'  => true,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'token' => [
-                'name'      => 'token',
-                'type'      => 'hidden',
-                'required'  => true,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'alias' => [
-                'name'      => 'alias',
-                'type'      => 'text',
-                'required'  => false,
-                'label'     => $this->getFieldLabel('alias'),
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ]
+            'id_address'  => (new FormField)
+                ->setName('id_address')
+                ->setType('hidden'),
+            'id_customer' => (new FormField)
+                ->setName('id_customer')
+                ->setType('hidden'),
+            'token'       => (new FormField)
+                ->setName('token')
+                ->setType('hidden'),
+            'alias'       => (new FormField)
+                ->setName('alias')
+                ->setLabel(
+                    $this->getFieldLabel('alias')
+                )
         ];
 
         foreach ($fields as $field) {
-            $type   = 'text';
-            $value  = null;
-            $values = null;
-            $name   = $field;
+            $formField = new FormField;
+            $formField->setName($field);
 
             $fieldParts = explode(':', $field, 2);
 
@@ -116,36 +92,38 @@ class CustomerAddressFormatterCore
                 // Fields specified using the Entity:field
                 // notation are actually references to other
                 // entities, so they should be displayed as a select
-                $type = 'select';
+                $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $name = 'id_'.strtolower($entity);
+                $formField->setName('id_'.strtolower($entity));
 
                 if ($entity === 'Country') {
-                    $value = $this->country->id;
-                    $values = [];
+                    $formField->setValue($this->country->id);
                     foreach ($this->availableCountries as $country) {
-                        $values[$country['id_country']] = $country[$entityField];
+                        $formField->addAvailableValue(
+                            $country['id_country'],
+                            $country[$entityField]
+                        );
                     }
                 } elseif ($entity === 'State') {
                     $states = State::getStatesByIdCountry($this->country->id);
-                    $values = [];
                     foreach ($states as $state) {
-                        $values[$state['id_state']] = $state[$entityField];
+                        $formField->addAvailableValue(
+                            $state['id_state'],
+                            $state[$entityField]
+                        );
                     }
                 }
             }
 
-            $format[$name] = [
-                'name'     => $name,
-                'type'     => $type,
-                'required' => array_key_exists($field, $required),
-                'label'    => $this->getFieldLabel($field),
-                'value'    => $value,
-                'values'   => $values,
-                'errors'   => []
-            ];
+            $formField
+                ->setRequired(array_key_exists($field, $required))
+                ->setLabel($this->getFieldLabel($field))
+            ;
+
+            $format[$formField->getName()] = $formField;
         }
+
         return $format;
     }
 
