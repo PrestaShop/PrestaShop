@@ -4287,11 +4287,22 @@ class ProductCore extends ObjectModel
             $row['attribute_price'] = (float)Combination::getPrice($id_product_attribute);
         }
 
+        if (isset($row['quantity_wanted'])) {
+            // 'quantity_wanted' may very well be zero even if set
+            $quantity = max(1, (int)$row['quantity_wanted']);
+        } else {
+            $quantity = 1;
+        }
+
         $row['price_tax_exc'] = Product::getPriceStatic(
             (int)$row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6),
+            null,
+            false,
+            true,
+            $quantity
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
@@ -4300,7 +4311,11 @@ class ProductCore extends ObjectModel
                 (int)$row['id_product'],
                 true,
                 $id_product_attribute,
-                6
+                6,
+                null,
+                false,
+                true,
+                $quantity
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int)$row['id_product'],
@@ -4309,7 +4324,8 @@ class ProductCore extends ObjectModel
                 2,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         } else {
             $row['price'] = Tools::ps_round(
@@ -4317,7 +4333,11 @@ class ProductCore extends ObjectModel
                     (int)$row['id_product'],
                     true,
                     $id_product_attribute,
-                    6
+                    6,
+                    null,
+                    false,
+                    true,
+                    $quantity
                 ),
                 (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION')
             );
@@ -4328,7 +4348,8 @@ class ProductCore extends ObjectModel
                 6,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         }
 
@@ -4340,7 +4361,7 @@ class ProductCore extends ObjectModel
             null,
             true,
             true,
-            1,
+            $quantity,
             true,
             null,
             null,
