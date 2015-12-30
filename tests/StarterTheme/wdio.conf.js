@@ -1,3 +1,5 @@
+require("babel-polyfill");
+
 exports.config = {
     user: process.env.SAUCE_USERNAME,
     key: process.env.SAUCE_ACCESS_KEY,
@@ -96,7 +98,8 @@ exports.config = {
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd'
+        ui: 'bdd',
+        compilers: ['js:babel-register']
     },
 
     //

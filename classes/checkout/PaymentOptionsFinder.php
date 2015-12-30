@@ -3,12 +3,17 @@
 use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOptionFormDecorator;
 use PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption;
 
-class Adapter_AdvancedPaymentOptionsConverter
+class PaymentOptionsFinderCore
 {
     public function getPaymentOptions()
     {
         // Payment options coming from intermediate, deprecated version of the Advanced API
         $rawDisplayPaymentEUOptions = Hook::exec('displayPaymentEU', [], null, true);
+
+        if (!is_array($rawDisplayPaymentEUOptions)) {
+            $rawDisplayPaymentEUOptions = [];
+        }
+
         $displayPaymentEUOptions = array_map(
             ['PrestaShop\PrestaShop\Core\Business\Payment\PaymentOption', 'convertLegacyOption'],
             $rawDisplayPaymentEUOptions
@@ -39,7 +44,7 @@ class Adapter_AdvancedPaymentOptionsConverter
             return array_map(function (PaymentOption $option) use (&$id) {
                 ++$id;
                 $formattedOption = $option->toArray();
-                $formattedOption['id'] = 'advanced-payment-option-' . $id;
+                $formattedOption['id'] = 'payment-option-' . $id;
 
                 if ($formattedOption['form']) {
                     $decorator = new PaymentOptionFormDecorator;
