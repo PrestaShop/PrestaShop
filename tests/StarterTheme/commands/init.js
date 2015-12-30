@@ -25,7 +25,7 @@ module.exports = function initializePrestaShopBrowserCommands (browser) {
     return browser
       .url(fixtures.urls.login)
       .setValue('.login-form input[name=email]', fixtures.customer.email)
-      .setValue('.login-form input[name=passwd]', fixtures.customer.password)
+      .setValue('.login-form input[name=password]', fixtures.customer.password)
       .submitForm('.login-form form')
     ;
   });

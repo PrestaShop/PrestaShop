@@ -36,20 +36,4 @@ class TermsAndConditionsTest extends UnitTestCase
             $this->terms->setText('hello [world]')->format()
         );
     }
-
-    public function test_FormatForTemplate_Overrides_Conditions()
-    {
-        $a = new TermsAndConditions;
-        $b = new TermsAndConditions;
-        $newA = new TermsAndConditions;
-
-        $a->setIdentifier('a')->setText('a');
-        $b->setIdentifier('b')->setText('b');
-        $newA->setIdentifier('a')->setText('newA');
-
-        $this->assertEquals(
-            ['a' => 'newA', 'b' => 'b'],
-            TermsAndConditions::formatForTemplate([[$a, $b], $newA])
-        );
-    }
 }

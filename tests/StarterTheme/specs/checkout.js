@@ -1,222 +1,234 @@
-/* global describe, it, browser, before, after */
+/* global describe, it, before, after, browser */
 
-var fixtures = require('../fixtures');
-var q        = require('q');
-var _        = require('underscore');
+import fixtures from '../fixtures';
+import * as checkout from '../helpers/checkout';
+import {getRandomUser} from '../helpers/random-user';
 
-function toggleAllTermsCheckboxes () {
-  return browser.elements('#conditions-to-approve label').then(function (elements) {
-    return q.all(elements.value.map(function (element) {
-      return browser.elementIdClick(element.ELEMENT);
-    }));
-  });
-}
+const guestScenario = {
+    name: "Guest Checkout",
+    customerDoesntHaveAnAccount: true,
+    customerOrdersAsGuest: true,
+    deliveryAddressIsInvoiceAddress: true
+};
 
-describe('The One Page Checkout', function () {
-  describe('The customer is already logged in', function () {
+const registrationScenario = Object.assign({}, guestScenario, {
+  name: "Registration Checkout",
+  customerOrdersAsGuest: false
+});
+
+const guestScenarioDifferentAddresses = Object.assign({}, guestScenario, {
+  name: "Guest Checkout With Different Invoice Address",
+  deliveryAddressIsInvoiceAddress: false
+});
+
+const scenarios = [
+  guestScenario,
+  guestScenarioDifferentAddresses,
+  registrationScenario
+];
+
+describe("The Checkout Process", function () {
+    scenarios.forEach(runScenario);
+});
+
+function runScenario (scenario) {
+  describe(scenario.name, function () {
+
+    let user;
+
     before(function () {
-      return browser.loginDefaultCustomer().then(function () {
-        return browser.url('/').click('.menu a').click('a[data-link-action="add-to-cart"]').pause(500);
-      });
+      return Promise.all([
+        checkout.addSomeProductToCart(),
+        getRandomUser().then(randomUser => user = randomUser)
+      ]).then(() => browser.url(fixtures.urls.checkout));
     });
 
     after(function () {
-      return browser.logout();
+        return browser.deleteCookie().url('/');
     });
 
-    describe('Addresses management', function () {
-      var initialAddressesCount = 0;
-
-      it('should display customer addresses', function () {
-        return browser
-          .url(fixtures.urls.checkout)
-          .elements('.address-selector .address-item')
-          .then(function (elements) {
-            initialAddressesCount = elements.value.length;
-            initialAddressesCount.should.be.greaterThan(0);
-          })
-        ;
-      });
-
-      var newlyCreatedAddressId;
-      it('should allow customer to create a new address', function () {
-        return browser
-          .click('a[data-link-action="add-new-address"]')
-          .pause(500)
-          .setValue('.address-form input[name=address1]', '12 rue d\'Amsterdam')
-          .setValue('.address-form input[name=city]', 'Paris City')
-          .setValue('.address-form input[name=postcode]', '75009')
-          .setValue('.address-form input[name=phone]', '1234567890')
-          .setValue('.address-form input[name=alias]', 'Selenium address '+_.now())
-          .submitForm('.address-form form')
-          .elements('.address-selector .address-item')
-          .then(function (elements) {
-            var newAddressesCount = elements.value.length;
-            newAddressesCount.should.be.greaterThan(initialAddressesCount);
-          })
-          .getValue('#select-delivery-address .address-item:last-child [name="id_address_delivery"]')
-          .then(function (id) {
-            newlyCreatedAddressId = id;
-          });
-        ;
-      });
-
-      it('should save the new selected address', function () {
-        return browser
-          .click('#id-address-delivery-address-' + newlyCreatedAddressId + ' label')
-          .submitForm('#checkout-addresses form')
-          .url(fixtures.urls.checkout)
-          .getValue('input[name="id_address_delivery"]:checked')
-          .then(function (value) {
-            value.should.equal(newlyCreatedAddressId);
-          })
-        ;
-      });
-
-    });
-
-
-    function selectAddressesForOrder () {
-      return browser
-        .click('#select-delivery-address [name="id_address_delivery"]')
-        .click('#select-invoice-address [name="id_address_invoice"]')
-        .click('#checkout-addresses button[type="submit"]')
-      ;
-    }
-
-    describe('Delivery options', function () {
-
-      describe('with JS', function () {
-        before(function () {
-          return browser.url(fixtures.urls.checkout).then(selectAddressesForOrder);
+    describe("by default, customer is expected to order as guest", function () {
+        it('should show the personal information step as reachable', function () {
+          return browser.waitForVisible(
+            '#checkout-personal-information-step.-reachable'
+          );
         });
 
-        it('should display carriers', function () {
-          return browser.element('#delivery-method');
+        it('should show the account creation form', function () {
+          return browser.waitForVisible('#customer-register-form');
         });
 
-        it('should have one and only one carrier selected', function () {
-          return browser.elements('#delivery-method input:checked').then(function (elements) {
-            elements.value.length.should.equal(1);
+        it('should show a link to the login form', function () {
+          return browser.waitForVisible(
+            '#checkout-personal-information-step [data-link-action="show-login-form"]'
+          );
+        });
+
+        describe('the personal information step', function () {
+          let infoFormTestText = 'should allow filling the personal info form';
+          if (scenario.customerOrdersAsGuest) {
+            infoFormTestText += ' without password';
+          }
+
+          it(infoFormTestText, function () {
+            return browser
+              .setValue('#customer-register-form [name=firstname]', user.name.first)
+              .setValue('#customer-register-form [name=lastname]' , user.name.last)
+              .setValue('#customer-register-form [name=email]'    , user.email)
+              .then(() => {
+                if (!scenario.customerOrdersAsGuest) {
+                  return browser.setValue('#customer-register-form [name=password]', '123456789');
+                }
+              })
+              .click('#customer-register-form button')
+              .waitForVisible(
+                  '#checkout-personal-information-step.-reachable.-complete'
+              )
+            ;
           });
         });
 
-        it('should remember carrier selected after reload', function () {
-          var firstDeliveryMethodSelected;
-          return browser
-            .click('#delivery-method input:not(:checked)')
-            .getAttribute('#delivery-method input:checked', 'id')
-            .then(function (deliveryMethodSelected) {
-              firstDeliveryMethodSelected = deliveryMethodSelected;
-            })
-            .pause(1000)
-            .refresh()
-            .getAttribute('#delivery-method input:checked', 'id')
-            .then(function (deliveryMethodSelected) {
-              deliveryMethodSelected.should.equal(firstDeliveryMethodSelected);
-            })
-          ;
-        });
-      });
+        describe('the addresses step', function () {
+          it('should show the addresses step as reachable', function () {
+            return browser.waitForVisible(
+              '#checkout-addresses-step.-reachable'
+            );
+          });
 
-      describe('without JS', function () {
-        before(function () {
-          return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1').then(selectAddressesForOrder);
-        });
+          it("should not show any addresses", function () {
+            return browser.isVisible('.address-item').should.become(false);
+          });
 
-        it('should display carriers', function () {
-          return browser.element('#delivery-method');
-        });
+          it("should show the delivery address form", function () {
+            return browser.waitForVisible('#delivery-address form');
+          });
 
-        it('should have one and only one carrier selected', function () {
-          return browser.elements('#delivery-method input:checked').then(function (elements) {
-            elements.value.length.should.equal(1);
+          it("the delivery address form should have the customer firstname and lastname pre-filled", function () {
+            return browser
+              .getValue('#delivery-address [name=firstname]')
+              .should.become(user.name.first)
+              .then(() => browser.getValue('#delivery-address [name=lastname]'))
+              .should.become(user.name.last)
+            ;
+          });
+
+          it("should fill the address form and go to delivery step", function () {
+            return browser
+              .setValue('#delivery-address [name=address1]', user.location.street)
+              .setValue('#delivery-address [name=city]', user.location.city)
+              .setValue('#delivery-address [name=postcode]', '00000')
+              .setValue('#delivery-address [name=phone]', '0123456789')
+              .click('#delivery-address button')
+              .waitForVisible('#checkout-delivery-step.-reachable')
+            ;
+          });
+
+          if (!scenario.deliveryAddressIsInvoiceAddress) {
+            it("should open another address form for the invoice address", function () {
+              return browser
+                .click('#checkout-addresses-step')
+                .click('[data-link-action="different-invoice-address"]')
+                .waitForVisible('#invoice-address form')
+              ;
+            });
+
+            it("should still show the delivery address", function () {
+              return browser.waitForVisible('#delivery-addresses .address-item');
+            });
+
+            it("but without edit button", function () {
+              return browser.isVisible('#delivery-addresses .address-item [data-link-action="edit-address"]').should.become(false);
+            });
+
+            it("should fill the invoice address form", function () {
+              return browser
+                .setValue('#invoice-address [name=firstname]', 'Someone')
+                .setValue('#invoice-address [name=lastname]', 'Else')
+                .setValue('#invoice-address [name=address1]', user.location.street)
+                .setValue('#invoice-address [name=city]', user.location.city)
+                .setValue('#invoice-address [name=postcode]', '11111')
+                .setValue('#invoice-address [name=phone]', '0123456789')
+                .click('#invoice-address button')
+              ;
+            });
+
+            it('should have gone to the next step after clicking on the button in the invoice address form', function () {
+              return browser.waitForVisible('#checkout-delivery-step.-current');
+            });
+          }
+
+          it('should show the addresses step as "done"', function () {
+            return browser.waitForVisible(
+              '#checkout-addresses-step.-complete'
+            );
           });
         });
 
-        it('should remember carrier selected after reload', function () {
-          var firstDeliveryMethodSelected;
-          return browser
-            .click('#delivery-method input:not(:checked)')
-            .getAttribute('#delivery-method input:checked', 'id')
-            .then(function (deliveryMethodSelected) {
-              firstDeliveryMethodSelected = deliveryMethodSelected;
-            })
-            .submitForm('#delivery-method')
-            .url(browser.url) // reload with a GET
-            .getAttribute('#delivery-method input:checked', 'id')
-            .then(function (deliveryMethodSelected) {
-              deliveryMethodSelected.should.equal(firstDeliveryMethodSelected);
-            })
-          ;
+        describe('the delivery step', function () {
+          it("should show delivery options", function () {
+            return browser
+              .waitForVisible('.delivery-options .delivery-option')
+            ;
+          });
+          it('should be marked as complete after user has clicked continue', function () {
+            return browser
+              .click('#checkout-delivery-step button')
+              .waitForVisible('#checkout-delivery-step.-complete')
+            ;
+          });
         });
-      });
-    });
 
-    describe('payment and conditions with JS', function () {
-      before(function () {
-        return browser
-          .url(fixtures.urls.checkout)
-        ;
-      });
+        describe('the payment step', function () {
+          it("should show a checkbox to accept the terms and conditions", function () {
+            return browser.waitForVisible("#conditions-to-approve");
+          });
 
-      it('should display terms and conditions', function () {
-        return browser.element('#conditions-to-approve');
-      });
+          it("the terms and conditions checkbox should be unchecked", function () {
+            return browser
+              .isSelected('[name="conditions_to_approve[terms-and-conditions]"]')
+              .should.become(false)
+            ;
+          });
 
-      it('should display payment options', function () {
-        return browser.elements('.advanced-payment-option').then(function (elements) {
-          elements.value.length.should.be.greaterThan(0);
-        });
-      });
+          it("should show payment options", function () {
+            return browser.waitForVisible('.payment-options .payment-option');
+          });
 
-      it('should display a disabled order confirmation button until the checkboxes are checked', function () {
-        return browser
-          .isEnabled('#payment-confirmation button')
-          .should.eventually.equal(false)
-        ;
-      });
+          it("should have a disabled order button", function () {
+            return browser.isEnabled('#payment-confirmation button')
+              .should.become(false)
+            ;
+          });
 
-      it('should enable the order confirmation button when all the checkboxes are checked', function () {
-        return toggleAllTermsCheckboxes()
-          .click('.advanced-payment-option:first-of-type label')
-          .waitForEnabled('#payment-confirmation button')
-        ;
-      });
-    });
-
-    describe('payment and conditions without JS', function () {
-      before(function () {
-        return browser.url(fixtures.urls.checkout + '?debug-disable-javascript=1');
-      });
-
-      it('should not display payment module selection buttons upon reaching the page', function () {
-        return browser.element('[name="select_payment_option"]').then(function () {
-          throw new Error('Payment modules should not be selectable at this stage of the order.');
-        }).catch(function () {
-          // OK
+          it("should check the terms-and-conditions", function () {
+            return browser.click(
+              '[name="conditions_to_approve[terms-and-conditions]"]'
+            );
+          });
+          it("should choose a payment option", function () {
+            return browser.click(
+              '.payment-options .payment-option label'
+            );
+          });
+          it("should confirm the payment", function () {
+            return browser
+              .click("#payment-confirmation button")
+              .waitForVisible(".page-order-confirmation")
+            ;
+          });
         });
       });
 
-      it('should display a button to approve all terms and conditions...', function () {
-        return browser.element('#approve-terms');
-      });
+      if (!scenario.customerOrdersAsGuest) {
+        describe("after the order, when the customer did create an account", function () {
+          it('the customer should be logged in', function () {
+            return browser
+              .waitForVisible('a.logout')
+              .waitForVisible('a.account')
+            ;
+          });
+        });
+      }
 
-
-      it('...that should turn into a disapprove button once conditions are approved', function () {
-        return toggleAllTermsCheckboxes()
-          .click('#approve-terms')
-          .waitForVisible('#disapprove-terms')
-        ;
-      });
-
-      it('should allow selecting a payment method once terms are approved', function () {
-        return browser.click('[name="select_payment_option"][value="advanced-payment-option-1"]');
-      });
-
-      it('should now allow paying with the selected option', function () {
-        return browser.element('#payment-confirmation label[for="pay-with-advanced-payment-option-1"]');
-      });
-    });
   });
-});
+}
