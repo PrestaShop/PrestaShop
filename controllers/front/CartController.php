@@ -89,6 +89,23 @@ class CartControllerCore extends FrontController
             }
             // Make redirection
             if (!$this->errors) {
+                if (Tools::getValue('refresh')) {
+                    $url = $this->context->link->getProductLink(
+                        $this->id_product,
+                        null,
+                        null,
+                        null,
+                        $this->context->language->id,
+                        null,
+                        (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group')),
+                        false,
+                        false,
+                        true,
+                        ['quantity_wanted' => (int)$this->qty]
+                    );
+                    return Tools::redirect($url);
+                }
+
                 if ($back = Tools::getValue('back')) {
                     Tools::redirect(urldecode($back));
                 }
