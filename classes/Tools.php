@@ -2061,6 +2061,17 @@ class ToolsCore
         return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
     }
 
+    /**
+     * Converts SomethingLikeThis to something-like-this
+     * The name comes from Perl, we like Perl.
+     */
+    public static function camelCaseToKebabCase($string)
+    {
+        return Tools::strtolower(
+            preg_replace('/([a-z])([A-Z])/', '$1-$2', $string)
+        );
+    }
+
     public static function getBrightness($hex)
     {
         if (Tools::strtolower($hex) == 'transparent') {

@@ -3,29 +3,31 @@ body#checkout
   margin auto
 
 .address-selector
-  clearfix()
+  display flex
+  flex-wrap wrap
+  justify-content space-between
   .address-item
-    float left
-    min-width 220px
+    width 220px
     background-color grey-lighter
     padding medium-padding
-    margin-left spacing-unit
-   &:nth-child-last()
-     margin-left: 0
+    margin-top spacing-unit
 
 #checkout-cart-summary
   float right
   width 30%
 
+.checkout-step
+  width 70%
+
 #conditions-to-approve
   margin-top small-padding
+  margin-bottom 2*small-padding
   ul
     margin 0
     padding 0
     list-style none
     li
       padding 2*small-padding
-      background-color background-color
       border-bottom 1px solid border-color
       margin-bottom small-padding
       width 50%
@@ -35,10 +37,14 @@ body#checkout
     padding small-padding
     margin small-padding
 
-.advanced-payment-options, .delivery-options
+.payment-options, .delivery-options, .order-options
   max-width 50%
 
-.advanced-payment-option, .delivery-option
+.order-options
+  label
+    margin-top 2*small-padding
+
+.payment-option, .delivery-option
   border-bottom 1px solid border-color
   padding-left 2*small-padding
   margin-top small-padding
@@ -48,17 +54,17 @@ body#checkout
   label span
     text-align center
     margin 2*small-padding
-.advanced-payment-option, .delivery-option, .advanced-payment-option label, .delivery-option label
+.payment-option, .delivery-option, .payment-option label, .delivery-option label
   display flex
   flex-direction row
   align-items center
-.advanced-payment-option label, .delivery-option label
+.payment-option label, .delivery-option label
   flex-grow 1
   span
     flex-grow 1
 #payment-confirmation
   button, label
-    margin small-padding
+    margin-top small-padding
     display inline-block
     cursor pointer
     padding 3*small-padding
@@ -69,7 +75,7 @@ body#checkout
     &:disabled
       background-color disabled-cta-background-color
       cursor default
-.advanced-payment-options
+.payment-options
   .warning
     color orange
 .selected-payment-option, [name="select_payment_option"]
@@ -78,3 +84,24 @@ body#checkout
   background-color cta-background-color
   border 1px solid cta-color
   color cta-color
+
+.checkout-step
+  .content
+    display none
+.checkout-step.-reachable
+  > h1
+    cursor pointer
+.checkout-step.-complete
+  > h1
+    color green
+.checkout-step.-current, .checkout-step.-js-current
+  .content
+    display block
+.checkout-step
+    button.continue
+      padding 15px 30px 15px 30px
+      margin-top 2*small-padding
+      &[disabled]
+        opacity 0.5
+    .step-number
+      margin-right small-padding

@@ -30,253 +30,66 @@ class AuthControllerCore extends FrontController
     public $php_self = 'authentication';
     public $auth = false;
 
-    /**
-     * Assign template vars related to page content
-     * @see FrontController::initContent()
-     */
     public function initContent()
     {
         parent::initContent();
+        $should_redirect = false;
 
-        if (Tools::getValue('create_account')) {
-            $this->setTemplate('customer/_partials/register-form.tpl');
+        if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
+            $register_form = $this
+                ->makeRegisterForm()
+                ->setGuestAllowed(false)
+                ->fillWith(Tools::getAllValues())
+            ;
+
+            if (Tools::isSubmit('submitCreate')) {
+                if ($register_form->submit()) {
+                    $should_redirect = true;
+                }
+            }
+
+            $this->context->smarty->assign([
+                'register_form'  => $register_form->getProxy(),
+                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop')
+            ]);
+            $this->setTemplate('customer/registration.tpl');
         } else {
+            $login_form = $this->makeLoginForm()->fillWith(
+                Tools::getAllValues()
+            );
+
+            if (Tools::isSubmit('submitLogin')) {
+                if ($login_form->submit()) {
+                    $should_redirect = true;
+                }
+            }
+
+            $this->context->smarty->assign([
+                'login_form' => $login_form->getProxy()
+            ]);
             $this->setTemplate('customer/authentication.tpl');
         }
 
-        $genders = [];
-        $collec = Gender::getGenders();
-        foreach ($collec as $g) {
-            $genders[] = $this->objectSerializer->toArray($g);
-        }
+        if ($should_redirect && !$this->ajax) {
+            $back = urldecode(Tools::getValue('back'));
 
-        $back = Tools::getValue('back');
-        $key = Tools::safeOutput(Tools::getValue('key'));
-
-        if (!empty($key)) {
-            $back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
-        }
-
-        if ($back == Tools::secureReferrer(Tools::getValue('back'))) {
-            $this->context->smarty->assign('back', html_entity_decode($back));
-        } else {
-            $this->context->smarty->assign('back', Tools::safeOutput($back));
-        }
-
-        $this->assignDate();
-
-        $this->context->smarty->assign([
-            'hook_create_account_form' => Hook::exec('displayCustomerAccountForm'),
-            'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
-            'genders' => $genders,
-        ]);
-    }
-
-    /**
-     * Start forms process
-     * @see FrontController::postProcess()
-     */
-    public function postProcess()
-    {
-        if (Tools::isSubmit('submitCreate')) {
-            $this->processSubmitCreate();
-        }
-
-        if (Tools::isSubmit('SubmitLogin')) {
-            $this->processSubmitLogin();
-        }
-    }
-
-    /**
-     * Process login
-     */
-    protected function processSubmitLogin()
-    {
-        Hook::exec('actionAuthenticationBefore');
-
-        $email = trim(Tools::getValue('email'));
-        $passwd = trim(Tools::getValue('passwd'));
-        $_POST['passwd'] = null;
-
-        if (empty($email)) {
-            $this->errors[] = $this->l('An email address required.');
-        } elseif (!Validate::isEmail($email)) {
-            $this->errors[] = $this->l('Invalid email address.');
-        } elseif (empty($passwd)) {
-            $this->errors[] = $this->l('Password is required.');
-        } elseif (!Validate::isPasswd($passwd)) {
-            $this->errors[] = $this->l('Invalid password.');
-        } else {
-            $customer = new Customer();
-            $authentication = $customer->getByEmail($email, $passwd);
-            if (isset($authentication->active) && !$authentication->active) {
-                $this->errors[] = $this->l('Your account isn\'t available at this time, please contact us');
-            } elseif (!$authentication || !$customer->id) {
-                $this->errors[] = $this->l('Authentication failed.');
+            if (Tools::secureReferrer($back)) {
+                // Checks to see if "back" is a fully qualified
+                // URL that is on OUR domain, with the right protocol
+                $this->redirectWithNotifications($back);
             } else {
-                $this->context->updateCustomer($customer);
-
-                Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
-
-                // Login information have changed, so we check if the cart rules still apply
-                CartRule::autoRemoveFromCart($this->context);
-                CartRule::autoAddToCart($this->context);
-            }
-        }
-
-        if (!$this->ajax) {
-            $back = Tools::getValue('back', 'my-account');
-
-            if ($back == Tools::secureReferrer($back)) {
-                $this->redirectWithNotifications(html_entity_decode($back));
-            }
-
-            $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
-        }
-    }
-
-    /**
-    * Process submit on a creation
-    */
-    protected function processSubmitCreate()
-    {
-        $create_guest = false;
-
-        if (Tools::getValue('create_from') == 'order' && (bool)Configuration::get('PS_GUEST_CHECKOUT_ENABLED') && !Tools::getValue('passwd')) {
-            $create_guest = true;
-            $_POST['passwd'] = md5(time()._COOKIE_KEY_);
-        }
-
-        Hook::exec('actionSubmitAccountBefore');
-
-        $email = trim(Tools::getValue('email'));
-
-        if (!Validate::isEmail($email) || empty($email)) {
-            $this->errors[] = $this->l('Invalid email address.');
-        } elseif (Customer::customerExists($email)) {
-            $this->errors[] = $this->l('An account using this email address has already been registered.');
-        }
-
-        if (!count($this->errors)) {
-            // Preparing customer
-            $customer = new Customer();
-            $customer->getByEmail($email, null, false);
-
-            $customer->is_guest = $create_guest;
-
-            $this->errors = array_unique(array_merge($this->errors, $customer->validateController(), $customer->validateFieldsRequiredDatabase()));
-
-            if (!count($this->errors)) {
-                $this->processCustomerNewsletter($customer);
-
-                if ($create_guest && (int)Tools::getValue('years') != 0 && (int)Tools::getValue('months') != 0 && (int)Tools::getValue('days') != 0) {
-                    $customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
+                // Well we're not redirecting to a URL,
+                // so...
+                if ($this->authRedirection) {
+                    // We may need to go there if defined
+                    $back = $this->authRedirection;
+                } elseif (!preg_match('/^[\w\-]+$/', $back)) {
+                    // Otherwise, check that "back" matches a controller name
+                    // and set a default if not.
+                    $back = 'my-account';
                 }
-
-                if (!Validate::isBirthDate($customer->birthday)) {
-                    $this->errors[] = $this->l('Invalid date of birth.');
-                }
-
-                if (!count($this->errors)) {
-                    if ($customer->save()) {
-                        if (!$this->sendConfirmationMail($customer)) {
-                            $this->errors[] = $this->l('The email cannot be sent.');
-                        }
-
-                        $this->context->updateCustomer($customer);
-                        $this->context->cart->update();
-
-                        Hook::exec('actionCustomerAccountAdd', [
-                            '_POST' => $_POST,
-                            'newCustomer' => $customer
-                        ]);
-                    } else {
-                        $this->errors[] = $this->l('An error occurred while creating your account.');
-                    }
-                }
+                $this->redirectWithNotifications('index.php?controller='.urlencode($back));
             }
         }
-
-        if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back)) {
-            $this->redirectWithNotifications(html_entity_decode($back));
-        } else {
-            $this->redirectWithNotifications('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
-        }
-    }
-
-    /**
-     * Process the newsletter settings and set the customer infos.
-     *
-     * @param Customer $customer Reference on the customer Object.
-     *
-     * @note At this point, the email has been validated.
-     */
-    protected function processCustomerNewsletter(&$customer)
-    {
-        $blocknewsletter = Module::isInstalled('blocknewsletter') && $module_newsletter = Module::getInstanceByName('blocknewsletter');
-        if ($blocknewsletter && $module_newsletter->active && !Tools::getValue('newsletter')) {
-            if (is_callable([$module_newsletter, 'isNewsletterRegistered']) && $module_newsletter->isNewsletterRegistered(Tools::getValue('email')) == $module_newsletter::GUEST_REGISTERED) {
-                /* Force newsletter registration as customer as already registred as guest */
-                $_POST['newsletter'] = true;
-            }
-        }
-
-        if (Tools::getValue('newsletter')) {
-            $customer->newsletter = true;
-            $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
-            $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-            /** @var Blocknewsletter $module_newsletter */
-            if ($blocknewsletter && $module_newsletter->active) {
-                $module_newsletter->confirmSubscription(Tools::getValue('email'));
-            }
-        }
-    }
-
-    /**
-     * Assign date var to smarty
-     */
-    protected function assignDate()
-    {
-        $selectedYears = (int)(Tools::getValue('years', 0));
-        $years = Tools::dateYears();
-        $selectedMonths = (int)(Tools::getValue('months', 0));
-        $months = Tools::dateMonths();
-        $selectedDays = (int)(Tools::getValue('days', 0));
-        $days = Tools::dateDays();
-
-        $this->context->smarty->assign([
-            'birthday_dates' => [
-                'years' => $years,
-                'sl_year' => $selectedYears,
-                'months' => $months,
-                'sl_month' => $selectedMonths,
-                'days' => $days,
-                'sl_day' => $selectedDays
-            ]]);
-    }
-
-    /**
-     * sendConfirmationMail
-     * @param Customer $customer
-     * @return bool
-     */
-    protected function sendConfirmationMail(Customer $customer)
-    {
-        if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-            return true;
-        }
-
-        return Mail::Send(
-            $this->context->language->id,
-            'account',
-            Mail::l('Welcome!'),
-            [
-                '{firstname}' => $customer->firstname,
-                '{lastname}' => $customer->lastname,
-                '{email}' => $customer->email,
-            ],
-            $customer->email,
-            $customer->firstname.' '.$customer->lastname
-        );
     }
 }
