@@ -24,7 +24,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     private $back;
 
-    private $formItems;
+    private $formFields;
     private $address;
 
     public function __construct(
@@ -48,35 +48,35 @@ class CustomerAddressFormCore extends AbstractForm
     public function loadAddressById($id_address)
     {
         $address = new Address($id_address, $this->language->id);
-        $formItems = $this->addressFormatter->getFormat();
-        foreach ($formItems as $key => $formItem) {
-            if ($formItem['name'] === 'id_address') {
-                $formItems[$key]['value'] = $address->id;
+        $formFields = $this->addressFormatter->getFormat();
+        foreach ($formFields as $key => $formField) {
+            if ($formField->getName() === 'id_address') {
+                $formField->setValue($address->id);
                 continue;
             }
-            if (!property_exists($address, $formItem['name'])) {
+            if (!property_exists($address, $formField->getName())) {
                 continue;
             }
-            $formItems[$key]['value'] = $address->{$formItem['name']};
+            $formField->setValue($address->{$formField->getName()});
         }
 
         $this->address = $address;
-        $this->setNewFormItems($formItems);
+        $this->setNewFormFields($formFields);
 
         return $this;
     }
 
-    private function setNewFormItems(array $formItems)
+    private function setNewFormFields(array $formFields)
     {
-        if (is_array($this->formItems)) {
-            foreach ($formItems as $name => $formItem) {
-                if ($formItem['value'] === null && isset($this->formItems[$name])) {
-                    $formItems[$name]['value'] = $this->formItems[$name]['value'];
+        if (is_array($this->formFields)) {
+            foreach ($formFields as $name => $formField) {
+                if ($formField->getValue() === null && isset($this->formFields[$name])) {
+                    $formField->setValue($this->formFields[$name]->getValue());
                 }
             }
         }
 
-        $this->formItems = $formItems;
+        $this->formFields = $formFields;
         return $this;
     }
 
@@ -92,23 +92,23 @@ class CustomerAddressFormCore extends AbstractForm
             ));
         }
 
-        $formItems = $this->addressFormatter->getFormat();
+        $formFields = $this->addressFormatter->getFormat();
 
-        foreach ($formItems as $formItem) {
-            if (array_key_exists($formItem['name'], $params)) {
-                $formItems[$formItem['name']]['value'] = $params[$formItem['name']];
+        foreach ($formFields as $formField) {
+            if (array_key_exists($formField->getName(), $params)) {
+                $formField->setValue($params[$formField->getName()]);
             }
         }
 
-        $this->setNewFormItems($formItems);
+        $this->setNewFormFields($formFields);
 
         return $this;
     }
 
     public function submit()
     {
-        foreach ($this->formItems as $key => $formItem) {
-            $this->formItems[$key]['errors'] = $this->validateFormItem($formItem);
+        foreach ($this->formFields as $key => $formField) {
+            $this->formFields[$key]->setErrors($this->validateFormField($formField));
         }
 
         if ($this->hasErrors()) {
@@ -116,12 +116,12 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $address = new Address(
-            $this->formItems['id_address']['value'],
+            $this->formFields['id_address']->getValue(),
             $this->language->id
         );
 
-        foreach ($this->formItems as $formItem) {
-            $address->{$formItem['name']} = $formItem['value'];
+        foreach ($this->formFields as $formField) {
+            $address->{$formField->getName()} = $formField->getValue();
         }
 
         if (empty($address->alias)) {
@@ -132,7 +132,7 @@ class CustomerAddressFormCore extends AbstractForm
 
         return $this->persister->save(
             $this->address,
-            $this->formItems['token']['value']
+            $this->formFields['token']->getValue()
         );
     }
 
@@ -141,19 +141,19 @@ class CustomerAddressFormCore extends AbstractForm
         return $this->address;
     }
 
-    private function validateFormItem(array $formItem)
+    private function validateFormField(FormField $formField)
     {
-        $field  = $formItem['name'];
-        $value  = $formItem['value'];
+        $field  = $formField->getName();
+        $value  = $formField->getValue();
         $errors = [];
 
-        if ($formItem['type'] === 'hidden') {
+        if ($formField->getType() === 'hidden') {
             // There is no point validating a hidden field,
             // what could the user do about it?
             return [];
         }
 
-        if ($formItem['required'] && empty($value)) {
+        if ($formField->isRequired() && empty($value)) {
             $errors[] = $this->constraintTranslator->translate('required');
         }
 
@@ -186,11 +186,11 @@ class CustomerAddressFormCore extends AbstractForm
     public function getErrors()
     {
         $errors = [];
-        foreach ($this->formItems as $formItem) {
-            if (!empty($formItem['errors'])) {
-                $errors[$formItem['name']] = $formItem['errors'];
+        foreach ($this->formFields as $formField) {
+            if (!empty($formField->getErrors())) {
+                $errors[$formField->getName()] = $formField->getErrors();
             } else {
-                $errors[$formItem['name']] = [];
+                $errors[$formField->getName()] = [];
             }
         }
         return $errors;
@@ -198,21 +198,26 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function getTemplateVariables()
     {
-        if (!$this->formItems) {
+        if (!$this->formFields) {
             // This is usually done by fillWith but the form may be
             // rendered before fillWith is called.
-            // I don't want to assign formItems in the constructor
+            // I don't want to assign formFields in the constructor
             // because it accesses the DB and a constructor should not
             // have side effects.
-            $this->formItems = $this->addressFormatter->getFormat();
+            $this->formFields = $this->addressFormatter->getFormat();
         }
 
-        $this->formItems['token']['value'] = $this->persister->getToken();
+        $this->formFields['token']->setValue($this->persister->getToken());
 
         return [
             'action'    => $this->action,
             'back'      => $this->back,
-            'formItems' => $this->formItems
+            'formFields' => array_map(
+                function (FormField $item) {
+                    return $item->toArray();
+                },
+                $this->formFields
+            )
         ];
     }
 }
