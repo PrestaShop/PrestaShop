@@ -296,10 +296,13 @@ function smartyFormField($params, &$smarty)
 
     $scope->assign($params);
 
-    $tpl = $smarty->createTemplate(
-        '_partials/form-field.tpl',
-        $scope
-    );
+    $file = '_partials/form-field.tpl';
+
+    if (isset($params['file'])) {
+        $file = $params['file'];
+    }
+
+    $tpl = $smarty->createTemplate($file, $scope);
 
     return $tpl->fetch();
 }
