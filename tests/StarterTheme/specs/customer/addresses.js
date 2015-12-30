@@ -62,6 +62,8 @@ describe('Customer account: Addresses', function () {
         .element('a[data-link-action="add-address"]')
         .click()
         .pause(500)
+        .setValue('.address-form input[name=firstname]', 'Yolo')
+        .setValue('.address-form input[name=lastname]', 'Really')
         .setValue('.address-form input[name=address1]', '12 rue d\'Amsterdam')
         .setValue('.address-form input[name=city]', 'Paris City')
         .setValue('.address-form input[name=postcode]', '75009')

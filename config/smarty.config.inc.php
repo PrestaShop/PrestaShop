@@ -87,6 +87,7 @@ smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
+smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
@@ -269,6 +270,21 @@ function smartyWidget($params, &$smarty)
     return withWidget($params, function ($widget, $params) {
         return $widget->renderWidget(null, $params);
     });
+}
+
+function smartyRender($params, &$smarty)
+{
+    $ui = $params['ui'];
+
+    if (array_key_exists('template', $params)) {
+        $ui->setTemplate($params['template']);
+    }
+
+    return implode('', [
+        '<!-- begin '.$ui->getTemplate().'-->',
+        $ui->render($params),
+        '<!-- end '.$ui->getTemplate().'-->'
+    ]);
 }
 
 function smartyWidgetBlock($params, $content, &$smarty)

@@ -47,26 +47,4 @@ class TermsAndConditions
     {
         return $this->identifier;
     }
-
-    /**
-     * Takes a list of terms and conditions and return them in
-     * the format templates expect.
-     * @param  array  $conditions An array of TermsAndConditions
-     * @return An associative array with condition identifiers as keys and HTML (text + links) as values
-     */
-    public static function formatForTemplate(array $conditions)
-    {
-        $formatted = [];
-
-        foreach ($conditions as $arrayOfConditions) {
-            if (!is_array($arrayOfConditions)) {
-                $arrayOfConditions = [$arrayOfConditions];
-            }
-            foreach ($arrayOfConditions as $condition) {
-                $formatted[$condition->getIdentifier()] = $condition->format();
-            }
-        }
-
-        return $formatted;
-    }
 }
