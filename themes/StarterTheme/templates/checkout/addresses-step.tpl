@@ -14,11 +14,11 @@
 
   {if $show_delivery_address_form}
     <div id="delivery-address">
-      {form form                      = $address_form
-            template                  = "checkout/_partials/address-form.tpl"
-            use_same_address          = $use_same_address
-            type                      = "delivery"
-            form_has_continue_button  = $form_has_continue_button
+      {render ui                        = $address_form
+              template                  = "checkout/_partials/address-form.tpl"
+              use_same_address          = $use_same_address
+              type                      = "delivery"
+              form_has_continue_button  = $form_has_continue_button
       }
     </div>
   {elseif $customer.addresses|count > 0}
@@ -48,11 +48,11 @@
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
-        {form form                      = $address_form
-              template                  = "checkout/_partials/address-form.tpl"
-              use_same_address          = $use_same_address
-              type                      = "invoice"
-              form_has_continue_button  = $form_has_continue_button
+        {render ui                        = $address_form
+                template                  = "checkout/_partials/address-form.tpl"
+                use_same_address          = $use_same_address
+                type                      = "invoice"
+                form_has_continue_button  = $form_has_continue_button
         }
       </div>
     {else}

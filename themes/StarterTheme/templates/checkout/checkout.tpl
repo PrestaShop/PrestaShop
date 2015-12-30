@@ -24,8 +24,13 @@
     {block name="content"}
     <section id="content">
 
-      {$rendered_cart_summary nofilter}
-      {$rendered_checkout nofilter}
+      {include  cart          = $cart
+                file          = 'checkout/_partials/cart-summary.tpl'
+      }
+
+      {render   template  = "checkout/checkout-process.tpl"
+                ui        = $checkout_process
+      }
 
     </section>
     {/block}

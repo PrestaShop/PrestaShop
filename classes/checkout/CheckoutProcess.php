@@ -1,14 +1,28 @@
 <?php
 
-class CheckoutProcessCore
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+
+class CheckoutProcessCore implements RenderableInterface
 {
-    private $steps = [];
+    private $smarty;
     private $checkoutSession;
+    private $steps = [];
     private $has_errors;
 
-    public function __construct(CheckoutSession $checkoutSession)
-    {
+    private $template = 'checkout/checkout-process.tpl';
+
+    public function __construct(
+        Smarty $smarty,
+        CheckoutSession $checkoutSession
+    ) {
+        $this->smarty = $smarty;
         $this->checkoutSession = $checkoutSession;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
     }
 
     public function handleRequest(array $requestParameters = [])
@@ -38,16 +52,35 @@ class CheckoutProcessCore
         return $this->steps;
     }
 
-    public function render()
+    public function setTemplate($templatePath)
     {
-        $position = 0;
-        return implode('', array_map(function (CheckoutStepInterface $step) use (&$position) {
-            ++$position;
-            return $step->render([
-                'identifier' => $step->getIdentifier(),
-                'position' => $position
-            ]);
-        }, $this->getSteps()));
+        $this->template = $templatePath;
+        return $this;
+    }
+
+    public function render(array $extraParams = [])
+    {
+        $scope = $this->smarty->createData(
+            $this->smarty
+        );
+
+        $params = [
+            'steps' => array_map(function (CheckoutStepInterface $step) {
+                return [
+                    'identifier' => $step->getIdentifier(),
+                    'ui'         => new RenderableProxy($step)
+                ];
+            }, $this->getSteps())
+        ];
+
+        $scope->assign(array_merge($extraParams, $params));
+
+        $tpl = $this->smarty->createTemplate(
+            $this->template,
+            $scope
+        );
+
+        return $tpl->fetch();
     }
 
     public function setHasErrors($has_errors = true)

@@ -4,6 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 {
+    protected $template = 'checkout/personal-information-step.tpl';
     private $loginForm;
     private $registerForm;
 
@@ -78,7 +79,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/personal-information-step.tpl', $extraParams, [
+            $this->template, $extraParams, [
                 'logged_in'        => $this->logged_in,
                 'show_login_form'  => $this->show_login_form,
                 'login_form'       => $this->loginForm->getProxy(),
