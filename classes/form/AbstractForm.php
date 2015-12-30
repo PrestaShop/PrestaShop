@@ -1,5 +1,7 @@
 <?php
 
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+
 abstract class AbstractFormCore implements FormInterface
 {
     private $smarty;
@@ -70,6 +72,6 @@ abstract class AbstractFormCore implements FormInterface
 
     public function getProxy()
     {
-        return new FormTemplateProxy($this);
+        return new RenderableProxy($this);
     }
 }

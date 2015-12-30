@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Business\Checkout\TermsAndConditions;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class OrderControllerCore extends FrontController
 {
@@ -63,7 +63,10 @@ class OrderControllerCore extends FrontController
 
         $session = $this->getCheckoutSession();
 
-        $this->checkoutProcess = new CheckoutProcess($session);
+        $this->checkoutProcess = new CheckoutProcess(
+            $this->context->smarty,
+            $session
+        );
 
         $checkoutDeliveryStep = new CheckoutDeliveryStep(
             $this->context->smarty,
@@ -161,8 +164,10 @@ class OrderControllerCore extends FrontController
         }
 
         $this->context->smarty->assign([
-            'rendered_checkout' => $this->checkoutProcess->render(),
-            'rendered_cart_summary' => $this->renderCartSummary()
+            'checkout_process'  => new RenderableProxy($this->checkoutProcess),
+            'cart'              => $this->cart_presenter->present(
+                                        $this->context->cart
+                                    )
         ]);
         $this->setTemplate('checkout/checkout.tpl');
     }
