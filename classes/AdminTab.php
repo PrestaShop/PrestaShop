@@ -1095,8 +1095,9 @@ abstract class AdminTabCore
     protected function validateField($value, $field)
     {
         if (isset($field['validation'])) {
+            $field_validation = $field['validation'];
             if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && method_exists('Validate', $field['validation'])) {
-                if (!Validate::$field['validation']($value)) {
+                if (!Validate::$field_validation($value)) {
                     $this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
                     return false;
                 }
