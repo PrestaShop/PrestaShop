@@ -268,14 +268,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
             }
 
-            $quantity = 1;
-            if (isset($_POST['quantityBackup'])) {
-                $quantity = (int)$_POST['quantityBackup'];
-            } elseif ($this->product->minimal_quantity) {
-                $quantity = (int)$this->product->minimal_quantity;
-            }
-            $this->context->smarty->assign('quantityBackup', $quantity);
-
             $product_for_template = $this->getTemplateVarProduct();
 
             $this->context->smarty->assign(array(
@@ -750,8 +742,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $row['save'] = $pricePresenter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
         }
-        // d($price);
-        // d($specific_prices);
+
         return $specific_prices;
     }
 
@@ -771,19 +762,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['id_product'] = (int)$this->product->id;
         $product['out_of_stock'] = (int)$this->product->out_of_stock;
         $product['new'] = (int)$this->product->new;
-
-        if (Tools::getValue('refresh_product')) {
-            $product['id_product_attribute'] = (int)$this->product->getIdProductAttributesByIdAttributes((int)$this->product->id, Tools::getValue('group'));
-            $url = $this->context->link->getProductLink(
-                $product['id_product'], null, null, null,
-                $this->context->language->id, null,
-                $product['id_product_attribute'],
-                false, false, true
-            );
-            return Tools::redirect($url);
-        } else {
-            $product['id_product_attribute'] = (int)Tools::getValue('id_product_attribute');
-        }
+        $product['quantity_wanted'] = (int)Tools::getValue('quantity_wanted', $this->product->minimal_quantity);
+        $product['id_product_attribute'] = (int)Tools::getValue('id_product_attribute');
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
