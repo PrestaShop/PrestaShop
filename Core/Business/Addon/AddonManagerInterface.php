@@ -33,4 +33,7 @@ interface AddonManagerInterface
     public function enable(string $name);
     public function disable(string $name);
     public function reset(string $name);
+
+    public function getInstanceByName(string $name);
+    public function getAddonList(AddonListFilter $filter);
 }
