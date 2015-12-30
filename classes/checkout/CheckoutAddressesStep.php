@@ -4,6 +4,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
 {
+    protected $template = 'checkout/addresses-step.tpl';
+
     private $addressForm;
     private $use_same_address = true;
     private $show_delivery_address_form = false;
@@ -149,7 +151,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/addresses-step.tpl', $extraParams, [
+            $this->template, $extraParams, [
                 'address_form'          => $this->addressForm->getProxy(),
                 'use_same_address'      => $this->use_same_address,
                 'id_address_delivery'   => $this
