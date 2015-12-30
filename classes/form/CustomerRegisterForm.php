@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing as Crypto;
 
 /**
  * StarterTheme TODO: B2B fields, Genders, CSRF
@@ -8,6 +9,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerRegisterFormCore extends AbstractForm
 {
+    private $crypto;
+
     protected $template = 'customer/_partials/register-form.tpl';
 
     private $context;
@@ -42,12 +45,14 @@ class CustomerRegisterFormCore extends AbstractForm
         Smarty $smarty,
         Context $context,
         TranslatorInterface $translator,
+        Crypto $crypto,
         array $urls
     ) {
         parent::__construct($smarty);
 
         $this->context = $context;
         $this->translator = $translator;
+        $this->crypto = $crypto;
         $this->urls = $urls;
     }
 
@@ -193,10 +198,12 @@ class CustomerRegisterFormCore extends AbstractForm
                  * customer that is a guest is not allowed to login.
                  * This needs to be checked though.
                  */
-                 $customer->passwd = md5(microtime()._COOKIE_KEY_);
+                 $clearPasswd = md5(microtime()._COOKIE_KEY_);
             } else {
-                $customer->passwd = $this->password;
+                $clearPasswd = $this->password;
             }
+
+            $customer->passwd = $this->crypto->encrypt($clearPasswd, _COOKIE_KEY_);
 
             $customer->firstname = $this->firstname;
             $customer->lastname  = $this->lastname;
