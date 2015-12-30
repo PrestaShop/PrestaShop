@@ -88,16 +88,11 @@ class ProductPresenter
         $presentedProduct['discount_type'] = null;
         $presentedProduct['discount_percentage'] = null;
 
-        $price = $regular_price = $this->productPriceCalculator->getProductPrice(
-            $product['id_product'],
-            $settings->include_taxes,
-            $product['id_product_attribute'],
-            6,
-            null,
-            false,
-            true,
-            (isset($presentedProduct['quantity_wanted']) ? (int)$presentedProduct['quantity_wanted'] : $presentedProduct['minimal_quantity'])
-        );
+        if ($settings->include_taxes) {
+            $price = $regular_price = $product['price'];
+        } else {
+            $price = $regular_price = $product['price_tax_exc'];
+        }
 
         if ($product['specific_prices']) {
             $presentedProduct['has_discount'] = true;
