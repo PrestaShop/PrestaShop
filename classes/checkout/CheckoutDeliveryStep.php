@@ -2,6 +2,8 @@
 
 class CheckoutDeliveryStepCore extends AbstractCheckoutStep
 {
+    protected $template = 'checkout/delivery-step.tpl';
+
     private $recyclablePackAllowed = false;
     private $giftAllowed = false;
     private $giftCost = 0;
@@ -127,7 +129,7 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
     public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
-            'checkout/delivery-step.tpl',
+            $this->template,
             $extraParams,
             [
                 'id_address'            => $this->getCheckoutSession()->getIdAddressDelivery(),
