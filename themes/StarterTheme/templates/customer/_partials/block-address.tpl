@@ -13,7 +13,7 @@
         </a>
       </li>
       <li>
-        <a href="{url entity=address id=$address.id params=['delete' => 1]}" data-link-action="delete-address">
+        <a href="{url entity=address id=$address.id params=['delete' => 1, 'token' => $token]}" data-link-action="delete-address">
           {l s='Delete'}
         </a>
       </li>

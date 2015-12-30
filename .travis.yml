@@ -4,34 +4,32 @@ env:
   global:
   - secure: sE9hGYohi3f5w+bPHkxCYVUJfuZz1LQQUwXBO5RqWE+poZlQIpnyQg0t5AxRFIXdXF3myO48rubHuuju4jzkC4L3IZxbRmYmR86qD5pOVIloRPhaQbJChdXJMMqoVTn09I+32O4Odc+jkZfokFRKzouiNAmkLUPx95ZPqvOypNw=
   - secure: YZ3nMLBHRfE90l+shXJZq/Z7oThLjS/00+g9VS2whM4Z89TyA9FifeALB2yyT/sjie0kr8fokI77vaM+tbcrqxjZkwNamdUxDlz9Hw6HkbTTcXpbMM5ChQ83RPWClhTrYGvMy3N6WRnDA6xyk9jWki6ksd/c6poUUl533xrTXSc=
-
+  - TRAVIS_NODE_VERSION="4"
 addons:
   sauce_connect: true
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
-  - 7.0
+  - 5.5
 
 matrix:
   fast_finish: true
-  allow_failures:
-  - php: 5.4
-  - php: 5.5
-  - php: 7.0
 
 before_install:
   - sudo apt-get update
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16"
+  # install node version
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 
 before_script:
   - sudo apt-get install firefox
   - sudo apt-get install apache2 libapache2-mod-fastcgi
   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
     version-name)/etc/php-fpm.conf
+  - phpenv config-rm xdebug.ini
   - sudo a2enmod rewrite actions fastcgi alias
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
   - sudo cp -f tests/travis-ci-apache-vhost /etc/apache2/sites-available/default
   - sudo cp -Rf $TRAVIS_BUILD_DIR /var/www/prestashop.unit.test
@@ -69,3 +67,6 @@ script:
   - DISPLAY=:10 npm run selenium &> /dev/null &
   - sleep 5
   - npm test
+
+after_script:
+  - sudo cat /var/log/apache2/error.log

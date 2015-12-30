@@ -8,7 +8,7 @@ function collapsePaymentOptions() {
 }
 
 function getSelectedPaymentOption () {
-  return $('#payment-options input[name="advanced-payment-option"]:checked').attr('id');
+  return $('input[name="payment-option"]:checked').attr('id');
 }
 
 function enableOrDisableOrderButton() {
@@ -57,21 +57,17 @@ function hideOrShow () {
   }
 }
 
-function displayAddressEditForm (event) {
-  event.preventDefault();
-  var addressId = this.getAttribute('data-entity-id');
-
-  $.ajax({
-    url: prestashop.urls.pages.address,
-    method: "POST",
-    data: {
-      ajax : true,
-      id_address : addressId,
-      action : 'getAddressEditForm'
-    },
-    dataType: "html"
-  })
-    .done( html => $(this).closest('article').html(html) );
+function selectAddress (event) {
+  const form = $(event.target).closest('form');
+  $
+    .post('', form.serialize(), null, 'json')
+    .then(resp => {
+      // TODO
+    })
+    .fail(resp => {
+      // TODO
+    })
+  ;
 }
 
 function setupCheckoutScripts () {
@@ -80,13 +76,16 @@ function setupCheckoutScripts () {
   }
 
   $('#payment-confirmation button').on('click', confirmPayment);
-  $('#payment-options input[type="checkbox"][disabled]').attr('disabled', false);
+  $('#payment-section input[type="checkbox"][disabled]').attr('disabled', false);
   $('body').on('change', '#delivery-method input[type="radio"]', refreshDeliveryOptions);
   $('body').on('change', '#conditions-to-approve input[type="checkbox"]', enableOrDisableOrderButton);
-  $('body').on('change', 'input[name="advanced-payment-option"]', enableOrDisableOrderButton);
+  $('body').on('change', 'input[name="payment-option"]', enableOrDisableOrderButton);
   $('body').on('change', 'input[type="checkbox"][data-action="hideOrShow"]', hideOrShow);
-  $('body').on('click', 'a[data-link-action="edit-address"]', displayAddressEditForm);
-  $('body').on('click', 'button#submitAddress', displayAddressEditForm);
+  $('body').on('change', '.js-address-selector input', selectAddress);
+  $('body').on('click', '.checkout-step.-reachable h1', function (event) {
+    $('.-js-current, .-current').removeClass('-js-current -current');
+    $(event.target).closest('.checkout-step').toggleClass('-js-current');
+  });
 
   collapsePaymentOptions();
 

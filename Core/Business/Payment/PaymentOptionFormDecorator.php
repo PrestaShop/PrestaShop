@@ -33,9 +33,9 @@ class PaymentOptionFormDecorator
         $hiddenSubmitButton->appendChild($idAttr);
         $hiddenSubmitButton->appendChild($typeAttr);
 
-        $forms[0]->appendChild($hiddenSubmitButton);
+        $forms->item(0)->appendChild($hiddenSubmitButton);
 
-        $body = $doc->getElementsByTagName('body')[0];
+        $body = $doc->getElementsByTagName('body')->item(0);
         $html = '';
 
         foreach ($body->childNodes as $node) {
