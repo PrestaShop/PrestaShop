@@ -154,6 +154,13 @@ abstract class ControllerCore
         // Usage of ajax parameter is deprecated
         $this->ajax = Tools::getValue('ajax') || Tools::isSubmit('ajax');
 
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $this->ajax = $this->ajax || preg_match(
+                '#\bapplication/json\b#',
+                $_SERVER['HTTP_ACCEPT']
+            );
+        }
+
         if (!headers_sent()
             && isset($_SERVER['HTTP_USER_AGENT'])
             && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
@@ -372,32 +379,19 @@ abstract class ControllerCore
      */
     public function addJS($js_uri, $check_path = true)
     {
-        if (is_array($js_uri)) {
-            foreach ($js_uri as $js_file) {
-                $js_file = explode('?', $js_file);
-                $version = '';
-                if (isset($js_file[1]) && $js_file[1]) {
-                    $version = $js_file[1];
-                }
-                $js_path = $js_file = $js_file[0];
-                if ($check_path) {
-                    $js_path = Media::getJSPath($js_file);
-                }
+        if (!is_array($js_uri)) {
+            $js_uri = [$js_uri];
+        }
 
-                // $key = is_array($js_path) ? key($js_path) : $js_path;
-                if ($js_path && !in_array($js_path, $this->js_files)) {
-                    $this->js_files[] = $js_path.($version ? '?'.$version : '');
-                }
-            }
-        } else {
-            $js_uri = explode('?', $js_uri);
+        foreach ($js_uri as $js_file) {
+            $js_file = explode('?', $js_file);
             $version = '';
-            if (isset($js_uri[1]) && $js_uri[1]) {
-                $version = $js_uri[1];
+            if (isset($js_file[1]) && $js_file[1]) {
+                $version = $js_file[1];
             }
-            $js_path = $js_uri = $js_uri[0];
+            $js_path = $js_file = $js_file[0];
             if ($check_path) {
-                $js_path = Media::getJSPath($js_uri);
+                $js_path = Media::getJSPath($js_file);
             }
 
             if ($js_path && !in_array($js_path, $this->js_files)) {
@@ -532,11 +526,6 @@ abstract class ControllerCore
         $html = trim($html);
 
         if (in_array($this->controller_type, array('front', 'modulefront')) && !empty($html) && $this->getLayout()) {
-            $live_edit_content = '';
-            if (!$this->useMobileTheme() && $this->checkLiveEditAccess()) {
-                $live_edit_content = $this->getLiveEditFooter();
-            }
-
             $dom_available = extension_loaded('dom') ? true : false;
             $defer = (bool)Configuration::get('PS_JS_DEFER');
 
@@ -558,7 +547,6 @@ abstract class ControllerCore
             } else {
                 echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html);
             }
-            echo $live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
         } else {
             echo $html;
         }

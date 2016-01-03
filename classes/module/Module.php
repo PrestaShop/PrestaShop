@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Business\Module\WidgetInterface;
+
 abstract class ModuleCore
 {
     /** @var int Module ID */
@@ -336,15 +338,6 @@ abstract class ModuleCore
         $result = Module::isInstalled($this->name);
         if ($result) {
             $this->_errors[] = Tools::displayError('This module has already been installed.');
-            return false;
-        }
-
-        // Install overrides
-        try {
-            $this->installOverrides();
-        } catch (Exception $e) {
-            $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
-            $this->uninstallOverrides();
             return false;
         }
 
@@ -734,7 +727,14 @@ abstract class ModuleCore
         }
 
         if ($this->getOverrides() != null) {
-            $this->installOverrides();
+            // Install overrides
+            try {
+                $this->installOverrides();
+            } catch (Exception $e) {
+                $this->_errors[] = sprintf(Tools::displayError('Unable to install override: %s'), $e->getMessage());
+                $this->uninstallOverrides();
+                return false;
+            }
         }
 
         // Enable module in the shop where it is not enabled yet
@@ -892,8 +892,6 @@ abstract class ModuleCore
                 $new_hook = new Hook();
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
-                $new_hook->live_edit = (bool)preg_match('/^display/i', $new_hook->name);
-                $new_hook->position = (bool)$new_hook->live_edit;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
                 if (!$id_hook) {
@@ -1366,7 +1364,7 @@ abstract class ModuleCore
 
                     // If (false) is a trick to not load the class with "eval".
                     // This way require_once will works correctly
-                    if (eval('if (false){	'.$file."\n".' }') !== false) {
+                    if (eval('if (false){	'.preg_replace('/\n[\s\t]*?use\s.*?;/', '', $file).' }') !== false) {
                         require_once(_PS_MODULE_DIR_.$module.'/'.$module.'.php');
                     } else {
                         $errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($file_path, strlen(_PS_ROOT_DIR_)));
@@ -1946,8 +1944,8 @@ abstract class ModuleCore
         }
 
         $hook_payment = 'Payment';
-        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'displayPayment\'')) {
-            $hook_payment = 'displayPayment';
+        if (Db::getInstance()->getValue('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook` WHERE `name` = \'paymentOptions\'')) {
+            $hook_payment = 'paymentOptions';
         }
 
         $list = Shop::getContextListShopID();
@@ -2311,10 +2309,6 @@ abstract class ModuleCore
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
             return Tools::displayError('No template found for module').' '.basename($file, '.php');
         } else {
-            if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
-                $cache_id = null;
-            }
-
             $this->smarty->assign(array(
                 'module_dir' =>    __PS_BASE_URI__.'modules/'.basename($file, '.php').'/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__).'modules/'.basename($file, '.php').'/',
@@ -2395,9 +2389,6 @@ abstract class ModuleCore
 
     public function isCached($template, $cache_id = null, $compile_id = null)
     {
-        if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token')) {
-            return false;
-        }
         Tools::enableCache();
         $new_tpl = $this->getTemplatePath($template);
         $is_cached = $this->getCurrentSubTemplate($template, $cache_id, $compile_id)->isCached($new_tpl, $cache_id, $compile_id);
@@ -2507,6 +2498,10 @@ abstract class ModuleCore
      */
     public function isHookableOn($hook_name)
     {
+        if ($this instanceof WidgetInterface) {
+            return Hook::isDisplayHookName($hook_name);
+        }
+
         $retro_hook_name = Hook::getRetroHookName($hook_name);
         return (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))));
     }
@@ -3072,6 +3067,11 @@ abstract class ModuleCore
         return true;
     }
 
+    private function getWidgetHooks()
+    {
+        return array_values(Hook::getHooks(false, true));
+    }
+
     /**
      * Return the hooks list where this module can be hooked.
      *
@@ -3079,6 +3079,10 @@ abstract class ModuleCore
      */
     public function getPossibleHooksList()
     {
+        if ($this instanceof WidgetInterface) {
+            return $this->getWidgetHooks();
+        }
+
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
         foreach ($hooks_list as &$current_hook) {

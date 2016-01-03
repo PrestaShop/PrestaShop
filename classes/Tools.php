@@ -650,7 +650,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int)$currency);
         }
 
-        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository(Context::getContext()->language);
+        $cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository($context->language);
 
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
@@ -772,7 +772,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round(self::displayPrice($amount, $currency_to), _PS_PRICE_COMPUTE_PRECISION_) ;
+        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_) ;
     }
 
     /**
@@ -2059,6 +2059,17 @@ class ToolsCore
         // 'CMSCategories' => 'cms_categories'
         // 'RangePrice' => 'range_price'
         return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
+    }
+
+    /**
+     * Converts SomethingLikeThis to something-like-this
+     * The name comes from Perl, we like Perl.
+     */
+    public static function camelCaseToKebabCase($string)
+    {
+        return Tools::strtolower(
+            preg_replace('/([a-z])([A-Z])/', '$1-$2', $string)
+        );
     }
 
     public static function getBrightness($hex)

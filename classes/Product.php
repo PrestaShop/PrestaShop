@@ -4237,6 +4237,12 @@ class ProductCore extends ObjectModel
 
     public static function getProductProperties($id_lang, $row, Context $context = null)
     {
+        Hook::exec('actionGetProductPropertiesBefore', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         if (!$row['id_product']) {
             return false;
         }
@@ -4273,6 +4279,7 @@ class ProductCore extends ObjectModel
 
         // Datas
         $row['category'] = Category::getLinkRewrite((int)$row['id_category_default'], (int)$id_lang);
+        $row['category_name'] = Db::getInstance()->getValue('SELECT name FROM '._DB_PREFIX_.'category_lang WHERE id_shop = '.(int)$context->shop->id.' AND id_lang = '.(int)$id_lang.' AND id_category = '.(int)$row['id_category_default']);
         $row['link'] = $context->link->getProductLink((int)$row['id_product'], $row['link_rewrite'], $row['category'], $row['ean13']);
 
         $row['attribute_price'] = 0;
@@ -4280,11 +4287,22 @@ class ProductCore extends ObjectModel
             $row['attribute_price'] = (float)Combination::getPrice($id_product_attribute);
         }
 
+        if (isset($row['quantity_wanted'])) {
+            // 'quantity_wanted' may very well be zero even if set
+            $quantity = max(1, (int)$row['quantity_wanted']);
+        } else {
+            $quantity = 1;
+        }
+
         $row['price_tax_exc'] = Product::getPriceStatic(
             (int)$row['id_product'],
             false,
             $id_product_attribute,
-            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6)
+            (self::$_taxCalculationMethod == PS_TAX_EXC ? 2 : 6),
+            null,
+            false,
+            true,
+            $quantity
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
@@ -4293,7 +4311,11 @@ class ProductCore extends ObjectModel
                 (int)$row['id_product'],
                 true,
                 $id_product_attribute,
-                6
+                6,
+                null,
+                false,
+                true,
+                $quantity
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int)$row['id_product'],
@@ -4302,7 +4324,8 @@ class ProductCore extends ObjectModel
                 2,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         } else {
             $row['price'] = Tools::ps_round(
@@ -4310,7 +4333,11 @@ class ProductCore extends ObjectModel
                     (int)$row['id_product'],
                     true,
                     $id_product_attribute,
-                    6
+                    6,
+                    null,
+                    false,
+                    true,
+                    $quantity
                 ),
                 (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION')
             );
@@ -4321,7 +4348,8 @@ class ProductCore extends ObjectModel
                 6,
                 null,
                 false,
-                false
+                false,
+                $quantity
             );
         }
 
@@ -4333,7 +4361,7 @@ class ProductCore extends ObjectModel
             null,
             true,
             true,
-            1,
+            $quantity,
             true,
             null,
             null,
@@ -4384,7 +4412,20 @@ class ProductCore extends ObjectModel
             }
         }
 
+        $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+
+        foreach ($attributes as $attribute) {
+            $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+        }
+
         $row = Product::getTaxesInformations($row, $context);
+
+        Hook::exec('actionGetProductPropertiesAfter', [
+            'id_lang'   => $id_lang,
+            'product'   => $row,
+            'context'   => $context
+        ]);
+
         self::$producPropertiesCache[$cache_key] = $row;
         return self::$producPropertiesCache[$cache_key];
     }
@@ -5690,6 +5731,21 @@ class ProductCore extends ObjectModel
 			WHERE pa.`id_product` = '.(int)$id_product);
         }
         return $result;
+    }
+
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes)
+    {
+        if (!is_array($id_attributes)) {
+            return 0;
+        }
+
+        return Db::getInstance()->getValue('
+        SELECT pac.`id_product_attribute`
+        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', $id_attributes).')
+        GROUP BY id_product_attribute
+        HAVING COUNT(id_product) = '.count($id_attributes));
     }
 
     /**

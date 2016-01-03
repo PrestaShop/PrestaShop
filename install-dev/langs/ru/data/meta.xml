@@ -138,22 +138,10 @@
     <keywords/>
     <url_rewrite>stores</url_rewrite>
   </meta>
-  <meta id="order-opc" id_shop="1">
-    <title>Быстрый заказ</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>quick-order</url_rewrite>
-  </meta>
   <meta id="guest-tracking" id_shop="1">
     <title>Отслеживание посещений</title>
     <description/>
     <keywords/>
     <url_rewrite>guest-tracking</url_rewrite>
-  </meta>
-  <meta id="products-comparison" id_shop="1">
-    <title>Products Comparison</title>
-    <description/>
-    <keywords/>
-    <url_rewrite>products-comparison</url_rewrite>
   </meta>
 </entity_meta>

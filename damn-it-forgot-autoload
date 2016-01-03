@@ -1,0 +1,3 @@
+#!/bin/bash
+rm cache/class_index.php
+php composer.phar dump-autoload

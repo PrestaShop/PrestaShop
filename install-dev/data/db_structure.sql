@@ -188,6 +188,7 @@ CREATE TABLE `PREFIX_cart` (
   `allow_seperated_package` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `checkout_session_data` MEDIUMTEXT NULL,
   PRIMARY KEY (`id_cart`),
   KEY `cart_customer` (`id_customer`),
   KEY `id_address_delivery` (`id_address_delivery`),
@@ -312,7 +313,7 @@ CREATE TABLE `PREFIX_cart_product` (
   `id_product` int(10) unsigned NOT NULL,
   `id_address_delivery` int(10) UNSIGNED DEFAULT '0',
   `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
-  `id_product_attribute` int(10) unsigned DEFAULT '0',
+  `id_product_attribute` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_cart`,`id_product`,`id_product_attribute`,`id_address_delivery`),
@@ -425,20 +426,6 @@ CREATE TABLE `PREFIX_cms_category_shop` (
   PRIMARY KEY (`id_cms_category`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_compare` (
-  `id_compare` int(10) unsigned NOT NULL auto_increment,
-  `id_customer` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id_compare`)
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
-CREATE TABLE `PREFIX_compare_product` (
-  `id_compare` int(10) unsigned NOT NULL,
-  `id_product` int(10) unsigned NOT NULL,
-  `date_add` datetime NOT NULL,
-  `date_upd` datetime NOT NULL,
-  PRIMARY KEY (`id_compare`,`id_product`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_configuration` (
   `id_configuration` int(10) unsigned NOT NULL auto_increment,
@@ -894,7 +881,6 @@ CREATE TABLE `PREFIX_hook` (
   `title` varchar(64) NOT NULL,
   `description` text,
   `position` tinyint(1) NOT NULL DEFAULT '1',
-  `live_edit` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

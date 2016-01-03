@@ -1,6 +1,9 @@
 SET NAMES 'utf8';
 
 INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`) VALUES ('PS_SMARTY_LOCAL', '0', NOW(), NOW());
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ORDER_PROCESS_TYPE';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ADVANCED_PAYMENT_API';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_ONE_PHONE_AT_LEAST';
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('actionCartUpdateQuantityBefore', 'actionBeforeCartUpdateQty');
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('actionAjaxDieBefore', 'actionBeforeAjaxDie');
@@ -34,3 +37,23 @@ ALTER TABLE  `PREFIX_supply_order_detail` ADD  `isbn` VARCHAR( 13 ) NULL DEFAULT
 /* Add Payment Preferences tab. SuperAdmin profile is the only one to access it. */
 /* PHP:ps_1701_add_payment_preferences_tab(); */;
 UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.`class_name` = 'AdminPaymentPreferences' LIMIT 1) AND `id_profile` > 1;
+
+
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_title` VARCHAR( 255 ) NOT NULL;
+ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 255 ) NOT NULL;
+
+/* PHP:ps1700_stores(); */
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
+
+ALTER TABLE `PREFIX_hook` DROP `live_edit`;
+
+/* Remove comparator feature */
+DELETE FROM `PREFIX_hook_alias` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_hook` WHERE `name` = 'displayProductComparison';
+DELETE FROM `PREFIX_configuration` WHERE `name` = 'PS_COMPARATOR_MAX_ITEM';
+DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
+DROP TABLE IF EXISTS PREFIX_compare;
+DROP TABLE IF EXISTS PREFIX_compare_product;
+
+ALTER TABLE `PREFIX_cart` ADD `checkout_session_data` MEDIUMTEXT NULL

@@ -1,0 +1,37 @@
+remove-symbol()
+  text-indent 100%
+  display inline-block
+  overflow hidden
+  vertical-align middle
+  text-decoration none
+  color inherit
+  font-weight bold
+  width 2em
+  white-space nowrap
+  &::before
+    content 'X'
+    text-indent 0px
+    border 1px solid #ccc
+    border-radius 100%
+    width 1em
+    height 1em
+    padding 2px
+    text-align center
+    background-color #333
+    color white
+    float left
+
+then-clear-both()
+  &::after
+    clear both
+    content "\00a0"
+    font-size 0px
+
+clearfix()
+  zoom 1
+  &:after
+  &:before
+    content ""
+    display table
+  &:after
+    clear both

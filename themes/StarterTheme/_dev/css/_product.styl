@@ -1,0 +1,116 @@
+#product
+  .product-cover
+    img
+      border-bottom 1px solid border-color
+  ul.product-images
+    width 100%
+    overflow auto
+    margin 0
+    padding 0
+    li
+      list-style none
+      float left
+      &:not(:first-child)
+        margin-left small-padding
+      img
+        border-bottom 1px solid border-color
+  .product-cover
+    float left
+  .images-container
+    float left
+    width 30%
+  #product-reference, #product-condition
+    label
+      display inline
+      font-weight bold
+    display block
+    text-align right
+    margin 0
+    margin-right 20px
+  .product-information
+    float left
+    width 50%
+    padding-left 20px
+    padding-right 20px
+  .product-actions
+    background-color background-color
+    padding small-padding*2
+    border-bottom 1px solid border-color
+    float right
+    width 20%
+    ul
+      margin 0
+      list-style none
+    .product-price
+      text-align center
+      span
+        display block
+        font-weight bold
+        font-size 25px
+    form:first-child input[type="submit"]
+      float right
+    +*
+      clear both
+  .product-variants
+    label
+      display inline
+    > div > label + *
+      float right
+    > div
+      margin-bottom small-padding*4
+      clear both
+  .product-quantity
+    label
+      margin-bottom 0
+  .add-to-cart
+    margin-left small-padding
+  .product-discounts
+    clear both
+    ul
+      margin 0
+      padding 0
+      list-style none
+      li
+        background-color background-color
+        margin-bottom small-padding
+        padding small-padding
+        border-bottom 1px solid border-color
+  #product-quantities, #product-availability
+    font-weight bold
+  .product-customization
+    form
+      background-color background-color
+      padding small-padding
+    padding-top 0
+    textarea
+      width "calc(100% - 200px - %s)" % (2 * small-padding)
+    ul
+      label-width = 200px
+      margin 0
+      padding 0
+      list-style none
+      li
+        margin-bottom small-padding
+      img
+        border 1px solid border-color
+      label
+        font-weight bold
+        width label-width
+        display inline-block
+        vertical-align top
+      input[type=file]
+        display block
+        margin-left label-width
+      .remove-image
+        remove-symbol()
+        vertical-align top
+  .product-features
+    ul
+      list-style none
+      margin 0
+      padding 0
+      li
+        margin-bottom small-padding
+        padding small-padding
+        background-color background-color
+        border-bottom 1px solid border-color

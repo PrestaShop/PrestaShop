@@ -140,7 +140,7 @@
 					</div>
 				</form>
 			</div>
-			
+
 			<div class="front forgot_confirm" style="display: none">
 				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.'}<br/><br/>{l s='A link to reset your password has been sent to you.'}</h4>
 			</div>

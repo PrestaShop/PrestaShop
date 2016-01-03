@@ -1,0 +1,132 @@
+a.add-to-cart, a.add-to-cart:hover
+  display inline-block
+  margin small-padding
+  text-decoration none
+  color cta-color
+  border 1px solid cta-color
+  padding small-padding
+  background-color cta-background-color
+  font-weight bold
+
+.category-cover img
+  width 100%
+
+.subcategories > ul
+  display flex
+  flex-wrap wrap
+  align-items stretch
+  justify-content flex-start
+
+.product-miniature, .category-miniature
+  background-color white
+
+.subcategories > ul > li
+  overflow hidden
+  margin-bottom 25px
+  margin-right 25px
+  max-width 300px
+  text-align center
+  border 1px solid #ccc
+  padding 15px
+  flex-grow 1
+  background-color white
+
+.category-miniature img
+  max-width 100%
+
+.category-miniature .category-description
+  text-align left
+
+.products
+  display flex
+  flex-wrap wrap
+  align-items stretch
+  justify-content space-between
+
+@media (max-width breakpoint-small)
+  .products, .subcategories > ul
+    justify-content space-around
+
+  .product-miniature
+    margin-left 25px
+
+.product-miniature
+  max-width 420px
+  text-align center
+  border 1px solid border-color
+  padding 15px
+  flex-grow 1
+  margin-bottom 25px
+
+.product-miniature img
+  max-width 100%
+
+.regular-price
+  text-decoration line-through
+  color #ccc
+
+.discount-percentage
+  display inline-block
+  padding small-padding
+  color white
+  background-color red
+  font-weight bold
+
+.variant-links a, .variant-links a:hover
+  text-decoration none
+  color inherit
+
+.variant-links a.color
+  display inline-block
+  text-indent 100%
+  white-space nowrap
+  overflow hidden
+  width 24px
+  height 24px
+  border 1px solid border-color
+
+ul.product-labels
+  margin 0
+  padding 0
+
+ul.product-labels li
+  list-style none
+  display inline-block
+  margin small-padding
+  text-transform capitalize
+
+.product-availability.available
+  color green
+  font-weight bold
+
+.product-availability.unavailable
+  color red
+  font-weight bold
+
+.products-sort-by a, .products-sort-by a:hover
+  text-decoration none
+  color inherit
+
+.products-sort-by ul
+  margin 0
+  padding 0
+  display inline-block
+
+.products-sort-by li
+  list-style none
+  display inline-block
+  padding-left small-padding
+  padding-right small-padding
+
+.product-description-short
+  text-align left
+
+.products-sort-by li.current
+  font-weight bold
+
+.products-sort-by a:hover
+  font-style italic
+
+.products-sort-by li.current a:hover
+  font-style inherit
+  cursor default

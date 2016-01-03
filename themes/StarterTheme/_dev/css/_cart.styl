@@ -1,0 +1,126 @@
+.cart-preview
+  float right
+  position relative
+  a, a:hover, a:visited
+    text-decoration none
+    color inherit
+
+.cart-preview .header
+  display block
+  font-weight bold
+  border 1px solid border-color
+  padding small-padding
+  cursor pointer
+  background-color background-color
+
+.cart-preview .body
+  display none
+  width 400px
+  background-color white
+  right 0
+
+.cart-preview:hover .body
+  display block
+  position absolute
+
+.cart-preview.cart-overview
+  width 100%
+  position inherit
+
+.cart-preview.cart-overview .body
+  display block
+  position inherit
+  width 100%
+
+.cart-preview .header > :first-child
+  float left
+
+.cart-preview .header > :last-child
+  float right
+
+/* this is to make the containers take up vertical space */
+.cart-preview .header::after, .cart-preview .cart-totals > div::after
+  clear both
+  content "\00a0"
+
+.cart-preview .body
+  border 1px solid border-color
+  padding tiny-padding
+
+.cart-preview ul
+  margin 0
+  padding 0
+  margin-top 20px
+  margin-bottom 20px
+
+.cart-preview li
+  list-style none
+  margin-bottom 15px
+
+.cart-preview li > *
+  display inline-block
+  vertical-align top
+
+.cart-preview li .product-quantity
+  color faded-color
+  width 10%
+
+.cart-preview .product-quantity::after
+  content 'x'
+
+.cart-preview li .product-name
+  width 50%
+
+.cart-preview li .product-price
+  width 20%
+
+.cart-preview li .remove-from-cart
+  remove-symbol()
+  float right
+
+.cart-preview .cart-totals .label
+  float left
+
+.cart-preview .cart-totals .value
+  float right
+
+.cart-preview .cart-totals > div
+  clear both
+  border-bottom 1px solid #ccc
+
+.cart-preview .cart-totals > div:not(:last-child)
+  margin-bottom 5px
+
+.cart-totals .label
+  font-weight bold
+
+#blockcart-modal
+  position fixed
+  background-color rgba(255,255,255,0.1)
+  top 0
+  left 0
+  bottom 0
+  right 0
+  text-align center
+
+#blockcart-modal > div
+  padding 20px
+  display inline-block
+  min-width 50%
+  min-height 400px
+  margin-top 200px
+  text-align left
+  background-color white
+  z-index 100
+  border 1px solid #ccc
+
+.customizations
+  margin-top small-padding
+  margin-left 15%
+  padding small-padding
+  border 1px solid border-color
+  width 70%
+  ul
+    margin 0
+  label
+    font-weight bold

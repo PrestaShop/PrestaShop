@@ -31,12 +31,6 @@ class MyAccountControllerCore extends FrontController
     public $authRedirection = 'my-account';
     public $ssl = true;
 
-    public function setMedia()
-    {
-        parent::setMedia();
-        $this->addCSS(_THEME_CSS_DIR_.'my-account.css');
-    }
-
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -45,14 +39,12 @@ class MyAccountControllerCore extends FrontController
     {
         parent::initContent();
 
-        $has_address = $this->context->customer->getAddresses($this->context->language->id);
-        $this->context->smarty->assign(array(
-            'has_customer_an_address' => empty($has_address),
-            'voucherAllowed' => (int)CartRule::isFeatureActive(),
-            'returnAllowed' => (int)Configuration::get('PS_ORDER_RETURN')
-        ));
-        $this->context->smarty->assign('HOOK_CUSTOMER_ACCOUNT', Hook::exec('displayCustomerAccount'));
+        $this->context->smarty->assign([
+            'feature_active'=> [
+                'voucher' => (int)CartRule::isFeatureActive(),
+                'return' => (int)Configuration::get('PS_ORDER_RETURN'),
+        ]]);
 
-        $this->setTemplate(_PS_THEME_DIR_.'my-account.tpl');
+        $this->setTemplate('customer/my-account.tpl');
     }
 }

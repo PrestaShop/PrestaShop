@@ -196,10 +196,6 @@ class ThemeCore extends ObjectModel
                 foreach ($xml_theme->author->attributes() as $key => $value) {
                     $theme_arr['author_'.$key] = (string)$value;
                 }
-
-                if ($theme_arr['theme_name'] == 'default-bootstrap') {
-                    $theme_arr['tc'] = Module::isEnabled('themeconfigurator');
-                }
             }
         } else {
             // If no xml we use data from database
@@ -218,6 +214,14 @@ class ThemeCore extends ObjectModel
         foreach (glob(_PS_ALL_THEMES_DIR_.'*', GLOB_ONLYDIR) as $theme_dir) {
             $dir = basename($theme_dir);
             $config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
+
+            if ($dir === 'StarterTheme' && !in_array($dir, $installed_theme_directories)) {
+                $sql = "INSERT INTO `ps_theme` (`name`, `directory`, `responsive`, `default_left_column`, `default_right_column`, `product_per_page`)
+                          VALUES ('Starter Theme', 'StarterTheme', '0', '0', '0', '12')";
+                Db::getInstance()->execute($sql);
+                Tools::redirectAdmin((new Link())->getAdminLink('AdminThemes'));
+            }
+
             if (!in_array($dir, $installed_theme_directories) && @filemtime($config_file)) {
                 if ($xml_theme = @simplexml_load_file($config_file)) {
                     $theme = array();

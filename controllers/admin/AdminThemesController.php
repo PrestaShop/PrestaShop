@@ -81,16 +81,6 @@ class AdminThemesControllerCore extends AdminController
             'error' => 'This theme may not correctly use PrestaShop\'s "guest checkout" feature.',
             'tab' => 'AdminPreferences',
         ),
-        'one_page_checkout' => array(
-            'attributes' => array(
-                'available' => array(
-                    'value' => 'true',
-                    'check_if_not_valid' => array('PS_ORDER_PROCESS_TYPE' => 0),
-                ),
-            ),
-            'error' => 'This theme may not correctly use PrestaShop\'s "one-page checkout" feature.',
-            'tab' => 'AdminPreferences',
-        ),
         'store_locator' => array(
             'attributes' => array(
                 'available' => array(
@@ -2098,7 +2088,6 @@ class AdminThemesControllerCore extends AdminController
             'statssearch',
             'statsstock',
             'statsvisits',
-            'themeconfigurator',
             'trackingfront',
             'vatnumber',
             'watermark'
@@ -2864,6 +2853,8 @@ class AdminThemesControllerCore extends AdminController
             $result = Db::getInstance()->execute($sql);
         }
 
+        $result .= Tools::clearSmartyCache();
+
         if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
         } else {
@@ -2901,6 +2892,8 @@ class AdminThemesControllerCore extends AdminController
             $sql = 'UPDATE '._DB_PREFIX_.'theme_meta SET right_column='.(int)!(bool)$theme_meta['right_column'].' WHERE id_theme_meta='.(int)Tools::getValue('id_theme_meta');
             $result = Db::getInstance()->execute($sql);
         }
+
+        $result .= Tools::clearSmartyCache();
 
         if ($result) {
             echo json_encode(array('success' => 1, 'text' => $this->l('The status has been updated successfully.')));
