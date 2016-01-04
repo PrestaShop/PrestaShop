@@ -56,50 +56,50 @@
                             </th>
                             <th>
                                 {{ trans("ID", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="id_product" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'id_product' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="id_product" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'id_product' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Image", {}, 'AdminProducts') }}
                             </th>
                             <th>
                                 {{ trans("Name", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="name" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="name" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Reference", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="reference" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'reference' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="reference" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'reference' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Category", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="name_category" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'name_category' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="name_category" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'name_category' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Base price", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="price" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'price' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="price" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'price' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Final price", {}, 'AdminProducts') }}
                             </th>
                             <th>
                                 {{ trans("Quantity", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="sav_quantity" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="sav_quantity" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'sav_quantity' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             <th>
                                 {{ trans("Status", {}, 'AdminProducts') }}
-                                &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up"></span>
-                                &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down"></span>
+                                &nbsp;<span psorderby="active" psorderway="asc" class="icon-caret-up icon-caret {% if orderBy == 'active' and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                &nbsp;<span psorderby="active" psorderway="desc" class="icon-caret-down icon-caret {% if orderBy == 'active' and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                             </th>
                             {% if has_category_filter == true %}
                                 <th>
                                     {{ trans("Position", {}, 'AdminProducts') }}
-                                    &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up"></span>
-                                    &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down"></span>
+                                    &nbsp;<span psorderby="position" psorderway="asc" class="icon-caret-up icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'asc' %}icon-caret-selected{% endif %}"></span>
+                                    &nbsp;<span psorderby="position" psorderway="desc" class="icon-caret-down icon-caret {% if (orderBy == 'position' or orderBy == 'position_ordering') and sortOrder == 'desc' %}icon-caret-selected{% endif %}"></span>
                                 </th>
                             {% endif %}
                             <th>&nbsp;</th>

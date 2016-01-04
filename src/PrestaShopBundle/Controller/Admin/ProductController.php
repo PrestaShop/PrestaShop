@@ -586,7 +586,12 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // redirect after success
-        return $this->redirect($request->request->get('redirect_url'), 302);
+        if ($request->request->has('redirect_url')) {
+            return $this->redirect($request->request->get('redirect_url'), 302);
+        } else {
+            $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+            return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+        }
     }
 
     /**
@@ -643,7 +648,12 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // redirect after success
-        return $this->redirect($request->get('redirect_url'), 302);
+        if ($request->request->has('redirect_url')) {
+            return $this->redirect($request->get('redirect_url'), 302);
+        } else {
+            $urlGenerator = $this->container->get('prestashop.core.admin.url_generator');
+            return $this->redirect($urlGenerator->generate('admin_product_catalog'), 302);
+        }
     }
 
     /**

@@ -466,8 +466,23 @@ class HelperListCore extends Helper
             self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
         }
 
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
+                }
+                break;
+            default:
+        }
+
         $tpl->assign(array(
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Edit'],
             'id' => $id
         ));
@@ -498,9 +513,24 @@ class HelperListCore extends Helper
             $name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
         }
 
+        $href = $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token);
+
+        switch ($this->currentIndex) {
+            case 'index.php?controller=AdminProducts':
+                // New architecture modification: temporary behavior to switch between old and new controllers.
+                global $kernel; // sf kernel
+                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                if (!$redirectLegacy && $this->identifier == 'id_product') {
+                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);
+                }
+                break;
+            default:
+        }
+
         $data = array(
             $this->identifier => $id,
-            'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['Delete'],
         );
 
