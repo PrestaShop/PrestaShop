@@ -61,7 +61,19 @@ class ProductDataProvider
             throw new LogicException('You need to provide a product id', null, 5002);
         }
 
-        return new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
+        $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
+        if ($product) {
+            if (!is_array($product->link_rewrite)) {
+                $linkRewrite = $product->link_rewrite;
+            } else {
+                $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
+            }
+
+            $cover = \ProductCore::getCover($product->id);
+            $product->image = \Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
+        }
+
+        return $product;
     }
 
     /**
