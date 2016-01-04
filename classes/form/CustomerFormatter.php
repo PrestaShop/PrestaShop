@@ -115,7 +115,7 @@ class CustomerFormatterCore
         }
 
         if ($this->ask_for_birthdate) {
-            $format['birthdate'] = (new FormField)
+            $format['birthday'] = (new FormField)
                 ->setName('birthday')
                 ->setType('date')
                 ->setLabel(
