@@ -168,6 +168,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //Product type
         if ($form_data['type_product'] == 2) {
+            $form_data['condition'] = 'new';
             $form_data['is_virtual'] = 1;
         } else {
             $form_data['is_virtual'] = 0;
