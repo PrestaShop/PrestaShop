@@ -94,7 +94,7 @@ class OrderControllerCore extends FrontController
                 $this->context->smarty,
                 $translator,
                 $this->makeLoginForm(),
-                $this->makeRegisterForm()
+                $this->makeCustomerForm()
             ))
             ->addStep(new CheckoutAddressesStep(
                 $this->context->smarty,

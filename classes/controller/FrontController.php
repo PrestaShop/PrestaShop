@@ -160,6 +160,8 @@ class FrontControllerCore extends Controller
             $this->ssl = true;
         }
 
+        $this->guestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+
         if (isset($useSSL)) {
             $this->ssl = $useSSL;
         } else {
@@ -1625,20 +1627,32 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function makeRegisterForm()
+    protected function makeCustomerFormatter()
     {
-        $form = new CustomerRegisterForm(
+        $formatter = new CustomerFormatter(
+            $this->getTranslator()
+        );
+
+        $formatter
+            ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
+            ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
+        ;
+
+        return $formatter;
+    }
+
+    protected function makeCustomerForm()
+    {
+        $form = new CustomerForm(
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
             new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
+            $this->makeCustomerFormatter(),
             $this->getTemplateVarUrls()
         );
 
-        $form
-            ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
-            ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
-        ;
+        $form->setGuestAllowed($this->guestAllowed);
 
         $form->setAction($this->updateQueryString(null));
 
