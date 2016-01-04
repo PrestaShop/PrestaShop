@@ -306,60 +306,63 @@
                         </div>
                     </div>
 
-                    <div class="form-group" id="attributes-generator">
-                        {{ form_label(form.step3.attributes) }}
-                        <div class="col-sm-8">
-                            {{ form_errors(form.step3.attributes) }}
-                            {{ form_widget(form.step3.attributes) }}
+                    <div id="combinations">
+                        <div class="form-group" id="attributes-generator">
+                            {{ form_label(form.step3.attributes) }}
+                            <div class="col-sm-8">
+                                {{ form_errors(form.step3.attributes) }}
+                                {{ form_widget(form.step3.attributes) }}
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
+                            </div>
                         </div>
-                        <div class="col-sm-2">
-                            <input type="button" id="create-combinations" class="btn btn-primary" value="Create"/>
+
+                        <div class="form-group">
+                            {{ form_errors(form.step3.combinations) }}
+                            {% if form.step3.combinations|length > 0 %}
+                            <div class="uppercase">
+                                <div class="col-lg-4 pull-left">{{ trans('Product', {}, 'AdminProducts') }}</div>
+                                <div class="col-lg-4 pull-left">
+                                    <span class="col-lg-4">{{ trans('Impact on weight', {}, 'AdminProducts') }}</span>
+                                    <span class="col-lg-4">{{ trans('Impact on price', {}, 'AdminProducts') }}</span>
+                                    <span class="col-lg-4">{{ trans('Quantity', {}, 'AdminProducts') }}</span>
+                                </div>
+                            </div>
+                            <hr/>
+                            {% endif %}
+
+                            <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
+                                {% for combination in form.step3.combinations %}
+                                <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}" data="{{ combination.vars.value.id_product_attribute }}" data-index="{{ loop.index0 }}">
+                                    <div class="panel-title">
+                                        <div class="col-lg-4 pull-left">
+                                            <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">
+                                                {{ combination.vars.value.name }}
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-4 pull-left">
+                                            <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                            <span class="small col-lg-4 attribute-price-display">{{ combination.vars.value.attribute_price_display }}</span>
+                                            <span class="small col-lg-4 attribute-quantity">{{ combination.vars.value.attribute_quantity }}</span>
+                                        </div>
+                                        <div class="col-lg-2 pull-right text-right">
+                                            <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">Open</a>
+                                            <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ combination.vars.value.id_product_attribute }}">delete</a>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="combination_form_{{ combination.vars.value.id_product_attribute }}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            {{ form_widget(combination) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {{ form_errors(form.step3.combinations) }}
-                        {% if form.step3.combinations|length > 0 %}
-                        <div class="uppercase">
-                            <div class="col-lg-4 pull-left">{{ trans('Product', {}, 'AdminProducts') }}</div>
-                            <div class="col-lg-4 pull-left">
-                                <span class="col-lg-4">{{ trans('Impact on weight', {}, 'AdminProducts') }}</span>
-                                <span class="col-lg-4">{{ trans('Impact on price', {}, 'AdminProducts') }}</span>
-                                <span class="col-lg-4">{{ trans('Quantity', {}, 'AdminProducts') }}</span>
-                            </div>
-                        </div>
-                        <hr/>
-                        {% endif %}
-
-                        <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
-                            {% for combination in form.step3.combinations %}
-                            <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}" data="{{ combination.vars.value.id_product_attribute }}" data-index="{{ loop.index0 }}">
-                                <div class="panel-title">
-                                    <div class="col-lg-4 pull-left">
-                                        <a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">
-                                            {{ combination.vars.value.name }}
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-4 pull-left">
-                                        <span class="small col-lg-4 attribute-weight">{{ combination.vars.value.attribute_weight }} {{ 'PS_WEIGHT_UNIT'|configuration }}</span>
-                                        <span class="small col-lg-4 attribute-price-display">{{ combination.vars.value.attribute_price_display }}</span>
-                                        <span class="small col-lg-4 attribute-quantity">{{ combination.vars.value.attribute_quantity }}</span>
-                                    </div>
-                                    <div class="col-lg-2 pull-right text-right">
-                                        <a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form_{{ combination.vars.value.id_product_attribute }}">Open</a>
-                                        <a href="{{ path('admin_delete_attribute', {'idAttribute': combination.vars.value.id_product_attribute, 'idProduct': id_product}) }}" class="btn btn-default btn-sm delete" data="{{ combination.vars.value.id_product_attribute }}">delete</a>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div id="combination_form_{{ combination.vars.value.id_product_attribute }}" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        {{ form_widget(combination) }}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
                     {{ form_row(form.step3.out_of_stock) }}
                     {{ form_row(form.step3.minimal_quantity) }}
                     {{ form_row(form.step3.available_now) }}
