@@ -166,7 +166,7 @@
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
                 <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
-                    {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
+                    <img src="{{ item.image }}" style="width:50px" /> {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
                     <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
                 </li>
             {% endfor %}
@@ -188,6 +188,7 @@
                     var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
                     var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
+                    html += '<img src="' + data.image +'" style="width:50px" /> ';
                     html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
                     html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                     html += '</li>';
@@ -239,11 +240,16 @@
             $('#{{ form.vars.id }}').typeahead({
                 limit: 20,
                 minLength: 2,
-                highlight: true
+                highlight: true,
             }, {
                 display: '{{ mapping_name }}',
                 source: this['{{ form.vars.id }}_source'],
-                limit: 30
+                limit: 30,
+                templates: {
+                    suggestion: function(item){
+                        return '<div><img src="'+ item.image +'" style="width:50px" /> '+ item.name +'</div>'
+                    }
+                }
             }).bind('typeahead:select', function(ev, suggestion) {
                 $('#{{ form.vars.id }}-curPackItemAdd').data('currentItem', suggestion);
             });

@@ -348,6 +348,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                                 "name" => $p->name,
                                 "ref" => $p->reference,
                                 "quantity" => $p->pack_quantity,
+                                "image" => $p->image,
                             ];
                         },
                         $this->packAdapter->getItems($this->product->id, $this->locales[0]['id_lang'])

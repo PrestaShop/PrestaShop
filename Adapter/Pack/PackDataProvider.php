@@ -38,6 +38,13 @@ class PackDataProvider
      */
     public function getItems($id_product, $id_lang)
     {
-        return \PackCore::getItems($id_product, $id_lang);
+        $packItems = \PackCore::getItems($id_product, $id_lang);
+
+        foreach ($packItems as $k => $packItem) {
+            $cover = $packItem->id_pack_product_attribute ? \Product::getCombinationImageById($packItem->id_pack_product_attribute, $id_lang) : \Product::getCover($packItem->id);
+            $packItem->image = \Context::getContext()->link->getImageLink($packItem->link_rewrite, $cover ? $cover['id_image'] : '', 'home_default');
+        }
+
+        return $packItems;
     }
 }
