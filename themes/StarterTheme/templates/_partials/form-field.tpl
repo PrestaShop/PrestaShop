@@ -9,19 +9,18 @@
   </label>
 {else}
   <label>
-    <span>{$field.label}</span>
+    {if $field.type !== 'checkbox'}
+      <span>{$field.label}</span>
+    {/if}
     <input  {if $field.required} required {/if}
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
     >
+    {if $field.type === 'checkbox'}
+      <span>{$field.label}</span>
+    {/if}
   </label>
 {/if}
 
-{if $field.errors|count}
-  <ul>
-    {foreach $field.errors as $error}
-      <li>{$error nofilter}</li>
-    {/foreach}
-  </ul>
-{/if}
+{include file="_partials/form-field-errors.tpl" errors=$field.errors}
