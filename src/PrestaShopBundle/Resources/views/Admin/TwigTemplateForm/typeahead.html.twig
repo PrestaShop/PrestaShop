@@ -165,7 +165,7 @@
     <ul id="{{ form.vars.id }}-data">
         {% if collection is defined and collection|length > 0 %}
             {% for item in collection %}
-                <li>
+                <li data-product="{{ item.id }}-{{ item.id_product_attribute }}">
                     {{ template_collection|format(item.name, item.ref, item.quantity)|raw }}
                     <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.quantity }}x{{ item.id }}x{{ item.id_product_attribute }}" />
                 </li>
@@ -187,7 +187,7 @@
                     var data = $(this).data('currentItem');
                     var value = number + 'x' + data.id + 'x' + (data.id_product_attribute ? data.id_product_attribute : 0);
 
-                    var html = '<li>';
+                    var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '">';
                     html += sprintf('{{ template_collection|raw }}', data.{{ mapping_name }}, data.ref, number);
                     html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                     html += '</li>';
@@ -212,10 +212,25 @@
                     cache: false,
                     wildcard: '%QUERY',
                     transform: function(response){
+                        var newResponse = [];
+
                         if(!response){
-                            return [];
+                            return newResponse;
                         }
-                        return response;
+
+                        //generate excludes IDs and filter results
+                        var excludeIds = [];
+                        $.each($('#{{ form.vars.id }}-data li'), function(key, val){
+                            excludeIds.push($(val).attr('data-product'));
+                        });
+
+                        $.each(response, function(key, item){
+                            if(excludeIds.indexOf(item.id + '-' + item.id_product_attribute) === -1){
+                                newResponse.push(item);
+                            }
+                        });
+
+                        return newResponse;
                     }
                 }
             });
