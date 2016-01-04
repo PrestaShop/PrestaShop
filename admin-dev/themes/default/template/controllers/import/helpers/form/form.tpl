@@ -49,7 +49,7 @@
 			<hr />
 			<form id="preview_import" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
-					<label for="entity" class="control-label col-lg-4">{l s='What do want to import?'} </label>
+					<label for="entity" class="control-label col-lg-4">{l s='What do you want to import?'} </label>
 					<div class="col-lg-8">
 						<select name="entity" id="entity" class="fixed-width-xxl form-control">
 							{foreach $entities AS $entity => $i }
