@@ -14,7 +14,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         Smarty $smarty,
         TranslatorInterface $translator,
         CustomerLoginForm $loginForm,
-        CustomerRegisterForm $registerForm
+        CustomerForm $registerForm
     ) {
         parent::__construct($smarty, $translator);
         $this->loginForm = $loginForm;
@@ -48,6 +48,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 $this->step_is_complete = true;
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
+                $this->step_is_complete = false;
             }
         } elseif (isset($requestParameters['submitLogin'])) {
             if ($this->loginForm->submit()) {
@@ -83,7 +84,8 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 'logged_in'        => $this->logged_in,
                 'show_login_form'  => $this->show_login_form,
                 'login_form'       => $this->loginForm->getProxy(),
-                'register_form'    => $this->registerForm->getProxy()
+                'register_form'    => $this->registerForm->getProxy(),
+                'guest_allowed'    => $this->getCheckoutSession()->isGuestAllowed()
             ]
         );
     }
