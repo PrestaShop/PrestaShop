@@ -128,7 +128,7 @@ class ProductQuantity extends CommonAbstractType
             ))
             ->add('virtual_product', new ProductVirtual($this->translator, $this->legacyContext), array(
                 'required' => false,
-                'label' => $this->translator->trans('Virtual Product', [], 'AdminProducts'),
+                'label' => $this->translator->trans('Does this product have an associated file?', [], 'AdminProducts'),
             ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
