@@ -195,10 +195,12 @@ $(document).ready(function () {
 	</div>
 	<div class="form-group" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
 		<label class="control-label col-lg-3" for="priceTI">{l s='Retail price with tax'}</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->sign}</span>
-			<input id="priceType" name="priceType" type="hidden" value="TE" />
-			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="27" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
+		<div class="col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->sign}</span>
+				<input id="priceType" name="priceType" type="hidden" value="TE" />
+				<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="27" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
+			</div>
 		</div>
 		{if isset($pack) && $pack->isPack($product->id)}<p class="col-lg-9 col-lg-offset-3 help-block">{l s='The sum of prices of the products in the pack is %s%s%s' sprintf=[$currency->sign,{toolsConvertPrice price=$pack->noPackPrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->sign]}</p>{/if}
 	</div>
