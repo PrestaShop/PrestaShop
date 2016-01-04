@@ -79,9 +79,16 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //Need choice list hack for workaround with legacy : allow user to create x categories with same name
+        //SF2 form choice options dont allow that, the key/values must be uniques
+        $list = $this->valid_list;
+        foreach ($list as $k => $item) {
+            $list[$k] = $item.'-'.$k;
+        }
+
         $builder->add('tree', 'choice', array(
             'label' => false,
-            'choices' => $this->valid_list,
+            'choices' => $list,
             'required' => false,
             'multiple'  => true,
             'expanded'  => true,
