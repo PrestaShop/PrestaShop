@@ -95,4 +95,9 @@ class CheckoutSessionCore
             'message'   => $this->context->cart->gift_message
         ];
     }
+
+    public function isGuestAllowed()
+    {
+        return Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+    }
 }
