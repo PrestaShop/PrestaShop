@@ -190,13 +190,22 @@ class CustomerFormCore extends AbstractForm
             }
 
             if (!$this->hasErrors()) {
+                $is_update = $customer->id > 0;
+
                 if ($customer->save()) {
-                    $this->sendConfirmationMail($customer);
                     $this->context->updateCustomer($customer);
                     $this->context->cart->update();
-                    Hook::exec('actionCustomerAccountAdd', [
-                        'newCustomer' => $customer
-                    ]);
+
+                    if ($is_update) {
+                        Hook::exec('actionCustomerAccountAdd', [
+                            'newCustomer' => $customer
+                        ]);
+                    } else {
+                        $this->sendConfirmationMail($customer);
+                        Hook::exec('actionCustomerAccountUpdate', array(
+                            'customer' => $customer
+                        ));
+                    }
                     return true;
                 } else {
                     $this->errors[''] = $this->translator->trans(
