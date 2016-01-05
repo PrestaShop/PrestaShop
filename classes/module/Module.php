@@ -342,6 +342,7 @@ abstract class ModuleCore
         }
 
         if (!$this->installControllers()) {
+            $this->_errors[] = Tools::displayError('Could not install module controllers.');
             return false;
         }
 
