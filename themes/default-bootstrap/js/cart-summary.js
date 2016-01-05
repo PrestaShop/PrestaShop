@@ -916,9 +916,9 @@ function updateCartSummary(json)
 					if (json.discounts[i].value_real !== '!')
 					{
 						if (priceDisplayMethod !== 0)
-							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_tax_exc * -1, currencyFormat, currencySign, currencyBlank));
+							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html('-' + formatCurrency(json.discounts[i].value_tax_exc, currencyFormat, currencySign, currencyBlank));
 						else
-							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html(formatCurrency(json.discounts[i].value_real * -1, currencyFormat, currencySign, currencyBlank));
+							$('#cart_discount_' + idElmt + ' td.cart_discount_price span.price-discount').html('-' + formatCurrency(json.discounts[i].value_real, currencyFormat, currencySign, currencyBlank));
 					}
 					toDelete = false;
 				}
