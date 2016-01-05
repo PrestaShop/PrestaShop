@@ -27,7 +27,7 @@
 <div id="box-clients" class="col-lg-3 box-stats color1" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
-	</div>	
+	</div>
 	<span class="title">{l s='Customers'}</span>
 	<span class="value">4 589</span>
 </div>
@@ -35,7 +35,7 @@
 <div id="box-orders" class="col-lg-3 box-stats color2">
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
-	</div>	
+	</div>
 	<span class="title">{l s='Orders'}</span>
 	<span class="value">789</span>
 </div>
@@ -57,7 +57,7 @@
 <div id="box-line" class="col-lg-3 box-stats color1" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
-	</div>	
+	</div>
 	<span class="title">{l s='Traffic'}</span>
 	<span class="value">4 589</span>
 </div>
@@ -65,7 +65,7 @@
 <div id="box-spline" class="col-lg-3 box-stats color2" >
 	<div class="boxchart-overlay">
 		<div class="boxchart"></div>
-	</div>	
+	</div>
 	<span class="title">{l s='Conversion'}</span>
 	<span class="value">4 589</span>
 </div>
@@ -111,7 +111,7 @@
 <script>
 	var myColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
 	d3.scale.myColors = function() {
-		  return d3.scale.ordinal().range(myColors);
+		return d3.scale.ordinal().range(myColors);
 	};
 
 	var data = [53245, 28479, 19697, 24037, 30245];

@@ -396,7 +396,7 @@
 {if !$is_guest}
 	{if count($messages)}
 	<h3 class="page-heading">{l s='Messages'}</h3>
-	 <div class="table_block">
+	<div class="table_block">
 		<table class="detail_step_by_step table table-bordered">
 			<thead>
 				<tr>

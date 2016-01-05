@@ -80,7 +80,7 @@
 		<p class="radio">
 			<label for="apply_discount_to_order">
 				<input type="radio" name="apply_discount_to" id="apply_discount_to_order" value="order"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == 0} checked="checked"{/if} />
-				 {l s='Order (without shipping)'}
+				{l s='Order (without shipping)'}
 			</label>
 		</p>
 		<p class="radio">
@@ -92,7 +92,7 @@
 		<p class="radio">
 			<label for="apply_discount_to_cheapest">
 				<input type="radio" name="apply_discount_to" id="apply_discount_to_cheapest" value="cheapest"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -1} checked="checked"{/if} />
-				 {l s='Cheapest product'}
+				{l s='Cheapest product'}
 			</label>
 		</p>
 		<p class="radio">

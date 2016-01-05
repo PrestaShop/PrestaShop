@@ -41,25 +41,25 @@
 <div class="addresses clearfix">
 	<input type="hidden" name="id_address_delivery" id="id_address_delivery" value="{$cart->id_address_delivery}"/>
 	<p id="address_invoice_form" class="select" {if $cart->id_address_invoice == $cart->id_address_delivery}style="display: none;"{/if}>
-	
+
 	{if $addresses|@count >= 1}
-    <div class="form-group selector1">
+	<div class="form-group selector1">
 		<label for="id_address_invoice" class="strong">{l s='Choose a billing address:'}</label>
 		<select name="id_address_invoice" id="id_address_invoice" class="address_select form-control">
 		{section loop=$addresses step=-1 name=address}
 			<option value="{$addresses[address].id_address|intval}" {if $addresses[address].id_address == $cart->id_address_invoice && $cart->id_address_delivery != $cart->id_address_invoice}selected="selected"{/if}>{$addresses[address].alias|escape:'html':'UTF-8'}</option>
 		{/section}
 		</select>
-    </div>
+	</div>
 	{else}
 		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 	{/if}
 	</p>
 	<div class="row">
-    	<div class="col-sm-12 col-md-6">
-            <ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
-            </ul>
-        </div>
+		<div class="col-sm-12 col-md-6">
+			<ul class="address alternate_item {if $cart->isVirtualCart()}full_width{/if} box" id="address_invoice">
+			</ul>
+		</div>
 	</div>
 	<p class="address_add submit">
 		<a href="{$link->getPageLink('address', true, NULL, "back={$back_order_page}?step=1{'&multi-shipping=1'|urlencode}{if $back}&mod={$back|urlencode}{/if}")|escape:'html':'UTF-8'}" title="{l s='Add'}" class="button button-small btn btn-default"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
@@ -80,7 +80,7 @@
 				{else}
 					<a href="{$link->getPageLink('order', true, NULL)|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 				{/if}
-		        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
+				<button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 			</p>
 		</form>
 {else}

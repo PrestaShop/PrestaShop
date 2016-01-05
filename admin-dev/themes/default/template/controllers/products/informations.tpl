@@ -175,7 +175,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="isbn">
 			<span class="label-tooltip" data-toggle="tooltip"
-				  title="{l s='ISBN code'}">
+				title="{l s='ISBN code'}">
 				{$bullet_common_field} {l s='ISBN'}
 			</span>
 		</label>

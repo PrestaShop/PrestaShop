@@ -46,8 +46,8 @@
 						id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
 					{/if}
 					class="{strip}{if !$no_link}pointer{/if}
-						   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
-						   {if isset($params.align)} {$params.align}{/if}{/strip}"
+						{if isset($params.position) && $order_by == 'position'} dragHandle{/if}
+						{if isset($params.align)} {$params.align}{/if}{/strip}"
 
 				{if (!isset($params.position) && !$no_link)}
 					onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table}&amp;token={$token|escape:'html':'UTF-8'}'">{if isset($params.prefix)}{$params.prefix}{/if}
@@ -55,7 +55,7 @@
 					>
 				{/if}
 				{if isset($params.active)}
-				    {$tr.$key}
+					{$tr.$key}
 				{elseif isset($params.activeVisu)}
 					<img src="../img/admin/{if $tr.$key}enabled.gif{else}disabled.gif{/if}"
 					alt="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" title="{if $tr.$key}{l s='Enabled'}{else}{l s='Disabled'}{/if}" />
@@ -75,7 +75,7 @@
 					{$tr.$key}
 				{elseif (isset($params.icon))}
 					<img src="../img/admin/{$tr[$key]}" alt="{$tr[$key]}" title="{$tr[$key]}" />
-	            {elseif isset($params.price)}
+				{elseif isset($params.price)}
 					{$tr.$key}
 				{elseif isset($params.float)}
 					{$tr.$key}

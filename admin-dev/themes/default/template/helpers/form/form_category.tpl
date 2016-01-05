@@ -35,7 +35,7 @@
 <div class="panel">
 	<div class="category-filter panel-heading">
 		<a href="#" id="collapse_all" class="btn btn-link"><i class="icon-collapse-alt icon-large"></i> {$categories.trads['Collapse All']}</a>
-	 	<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a> 
+		<a href="#" id="expand_all" class="btn btn-link"><i class="icon-expand-alt icon-large"></i> {$categories.trads['Expand All']}</a>
 		{if !$categories.use_radio}
 		<a href="#" id="check_all" class="btn btn-link"><i class="icon-check-sign"></i> {$categories.trads['Check All']}</a>
 		<a href="#" id="uncheck_all" class="btn btn-link"><i class="icon-check-empty"></i> {$categories.trads['Uncheck All']}</a>
@@ -81,7 +81,7 @@
 			</span>
 			<ul>
 				<li><span class="placeholder">&nbsp;</span></li>
-		  	</ul>
+			</ul>
 		</li>
 	</ul>
 	{if $categories.use_radio}

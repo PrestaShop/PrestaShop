@@ -1092,12 +1092,12 @@
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-			 							<tr id="total_taxes">
-			 								<td class="text-right">{l s='Taxes'}</td>
-			 								<td class="amount text-right nowrap" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
-			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
-			 							</tr>
-			 							{/if}
+										<tr id="total_taxes">
+											<td class="text-right">{l s='Taxes'}</td>
+											<td class="amount text-right nowrap" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
+											<td class="partial_refund_fields current-edit" style="display:none;"></td>
+										</tr>
+										{/if}
 										{assign var=order_total_price value=$order->total_paid_tax_incl}
 										<tr id="total_order">
 											<td class="text-right"><strong>{l s='Total'}</strong></td>

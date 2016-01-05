@@ -57,7 +57,7 @@
 	{/if}
 	{if isset($use_search) && $use_search == true}
 		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
-		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($(this).val() == datum.id_category)
