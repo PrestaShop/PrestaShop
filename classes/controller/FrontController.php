@@ -1493,60 +1493,59 @@ class FrontControllerCore extends Controller
     public function getBreadcrumb()
     {
         $breadcrumb = [];
-        $context = Context::getContext();
 
         $breadcrumb[] = [
             'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
-            'url'   => $context->link->getPageLink('index', true)
+            'url'   => $this->context->link->getPageLink('index', true)
         ];
 
-        if ($context->controller->php_self == 'category') {
-            foreach ($context->controller->category->getAllParents() as $category) {
+        if ($this->php_self == 'category') {
+            foreach ($this->context->controller->category->getAllParents() as $category) {
                 if ($category->id_parent != 0 && !$category->is_root_category) {
-                    $breadcrumb[] = $this->getCategoryPath($category, $context);
+                    $breadcrumb[] = $this->getCategoryPath($category);
                 }
             }
-        } elseif ($context->controller->php_self == 'product') {
-            $categoryDefault = new Category($context->controller->product->id_category_default);
+        } elseif ($this->php_self == 'product') {
+            $categoryDefault = new Category($this->context->controller->product->id_category_default);
 
             foreach ($categoryDefault->getAllParents() as $category) {
                 if ($category->id_parent != 0 && !$category->is_root_category) {
-                    $breadcrumb[] = $this->getCategoryPath($category, $context);
+                    $breadcrumb[] = $this->getCategoryPath($category);
                 }
             }
 
             $breadcrumb[] = [
-                'title' => $context->controller->product->name,
-                'url' => $context->link->getProductLink($context->controller->product)
+                'title' => $this->context->controller->product->name,
+                'url' => $this->context->link->getProductLink($this->context->controller->product)
             ];
-        } elseif ($context->controller->php_self == 'cms') {
-            $cmsCategory = new CMSCategory($context->controller->cms->id_cms_category);
+        } elseif ($this->php_self == 'cms') {
+            $cmsCategory = new CMSCategory($this->context->controller->cms->id_cms_category);
 
             if ($cmsCategory->id_parent != 0) {
                 foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
                     $cmsSubCategory = new CMSCategory($category['id_cms_category']);
                     $breadcrumb[] = [
                         'title' => $cmsSubCategory->getName(),
-                        'url' => $context->link->getCMSCategoryLink($cmsSubCategory)
+                        'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory)
                     ];
                 }
             }
 
             $breadcrumb[] = [
-                'title' => $context->controller->cms->meta_title,
-                'url' => $context->link->getCMSLink($context->controller->cms)
+                'title' => $this->context->controller->cms->meta_title,
+                'url' => $this->context->link->getCMSLink($this->context->controller->cms)
             ];
         }
 
         return $breadcrumb;
     }
 
-    private function getCategoryPath($category, $context)
+    private function getCategoryPath($category)
     {
         if ($category->id_parent != 0 && !$category->is_root_category) {
             return [
                 'title' => $category->name,
-                'url' => $context->link->getCategoryLink($category)
+                'url' => $this->context->link->getCategoryLink($category)
             ];
         }
     }
