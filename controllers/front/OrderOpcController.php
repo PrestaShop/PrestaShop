@@ -577,7 +577,11 @@ class OrderOpcControllerCore extends ParentOrderController
 
         /* If some products have disappear */
         if (is_array($product = $this->context->cart->checkQuantities(true))) {
-            return '<p class="warning">'.sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'), $product['name']).'</p>';
+            $errors = '';
+            foreach ($products as $product) {
+                $errors .= '<p class="warning">'.sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity (%s available). You cannot proceed with your order until the quantity is adjusted.'), $product['name'], $product['stock_quantity']).'</p>';
+            }
+            return $errors;
         }
 
         if ((int)$id_product = $this->context->cart->checkProductsAccess()) {
