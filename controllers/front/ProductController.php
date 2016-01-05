@@ -458,6 +458,7 @@ class ProductControllerCore extends FrontController
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int)$row['id_product_attribute']])) {
+                    $combination_specific_price = null;
                     Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
                     $combination_prices_set[(int)$row['id_product_attribute']] = true;
                     $combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
