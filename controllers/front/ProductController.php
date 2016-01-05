@@ -559,7 +559,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         // Assign category to the template
         if (($this->category === false || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop()) && Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
-            ddd('b');
             $this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
         }
 
