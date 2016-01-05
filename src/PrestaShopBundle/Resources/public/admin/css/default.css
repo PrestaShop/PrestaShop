@@ -35,20 +35,33 @@
 .tt-suggestion{
   cursor: pointer
 }
-.navbar-form-footer{
+#form .navbar-form-footer{
   padding:15px;
   border-top: 1px solid #ccc !important;
+  z-index: 400 !important;
 }
-.form-action-bar{
-  margin-left:210px
+#form .form-action-bar{
+  padding-left:210px
 }
-.form-action-bar .checkbox-active{
+body.page-sidebar-closed #form .form-action-bar{
+  padding-left:50px
+}
+body.mobile-nav #form .form-action-bar{
+  padding-left:0
+}
+#form .form-action-bar .checkbox-active{
   margin-left:10px;
   display: inline-block
 }
-.form-action-bar .checkbox-active .checkbox{
+#form .form-action-bar .checkbox-active .checkbox{
   display: inline-block
 }
 .checkbox-active .titatoggle input + span:after{
   margin-top: 7px
+}
+
+@media (max-width: 768px){
+  #form .form-action-bar{
+    padding-left:50px;
+  }
 }

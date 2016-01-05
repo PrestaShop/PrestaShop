@@ -451,9 +451,9 @@
 
             <nav class="navbar navbar-default navbar-fixed-bottom navbar-form-footer">
                 <div class="form-action-bar">
-                    <div class="col-xs-5 pull-left">
+                    <div class="col-xs-6 pull-left">
                         <a href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default"><i class="icon-trash"></i></a>
-                        <a href="{{ preview_link }}" target="_blank" class="btn btn-default">{{ trans('PREVIEW', {}, 'AdminProducts') }}</a>
+                        <a href="{{ preview_link }}" target="_blank" class="btn btn-default hidden-xs">{{ trans('PREVIEW', {}, 'AdminProducts') }}</a>
 
                         <div class="checkbox-active">
                             {{ trans('Enabled', {}, 'AdminProducts') }}
@@ -465,10 +465,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-5 pull-right text-right">
-                        <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default">{{ trans('DUPLICATE', {}, 'AdminProducts') }}</a>
-                        <button type="button" class="btn btn-default btn-submit" data-redirect="{{ path('admin_product_catalog') }}">{{ trans('SAVE & CATALOG', {}, 'AdminProducts')|raw }}</button>
-                        <button type="button" class="btn btn-default btn-submit" data-redirect="{{ path('admin_product_new') }}">{{ trans('SAVE & NEW', {}, 'AdminProducts')|raw }}</button>
+                    <div class="col-xs-6 pull-right text-right">
+                        <a href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}?redirect_url={{ path('admin_product_catalog') }}" class="btn btn-default hidden-xs">{{ trans('DUPLICATE', {}, 'AdminProducts') }}</a>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs" data-redirect="{{ path('admin_product_catalog') }}">{{ trans('SAVE & CATALOG', {}, 'AdminProducts')|raw }}</button>
+                        <button type="button" class="btn btn-default btn-submit hidden-xs" data-redirect="{{ path('admin_product_new') }}">{{ trans('SAVE & NEW', {}, 'AdminProducts')|raw }}</button>
                         <input id="submit" type="submit" class="btn btn-primary" value="{{ trans('SAVE', {}, 'AdminProducts') }}" />
                     </div>
                     <div class="clearfix"></div>
