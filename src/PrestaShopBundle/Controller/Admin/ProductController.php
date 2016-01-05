@@ -298,7 +298,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($id);
+        $product = $productAdapter->getProduct($id, true);
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
         }
@@ -319,7 +319,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $modelMapper = new ProductAdminModelAdapter(
-            $id,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),

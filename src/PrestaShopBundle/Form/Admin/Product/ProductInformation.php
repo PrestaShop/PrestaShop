@@ -168,6 +168,11 @@ class ProductInformation extends CommonAbstractType
                 new Assert\Type(array('type' => 'float'))
             )
         ))
+        ->add('price_ttc_shortcut', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'mapped' => false,
+        ))
         ->add('qty_0_shortcut', 'number', array(
             'required' => false,
             'label' => $this->translator->trans('Quantity', [], 'AdminProducts'),

@@ -53,7 +53,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param int $id The product ID
+     * @param object $product The product object
      * @param object $legacyContext
      * @param object $adminProductWrapper
      * @param object $toolsAdapter
@@ -63,7 +63,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param object $featureDataProvider
      * @param object $packDataProvider
      */
-    public function __construct($id, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
+    public function __construct($product, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
     {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -77,8 +77,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
-        $this->product = $this->productAdapter->getProduct($id, true);
-        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
+        $this->product = $product;
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
         $this->configuration = new Configuration();
         $this->product->loadStockData();
 
@@ -138,6 +138,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'on_sale',
             'minimal_quantity',
             'available_date',
+            'ecotax',
         );
     }
 
@@ -379,6 +380,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             ],
             'step2' => [
                 'price' => $this->product->price,
+                'ecotax' => $this->product->ecotax,
                 'id_tax_rules_group' => $this->product->id_tax_rules_group,
                 'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,

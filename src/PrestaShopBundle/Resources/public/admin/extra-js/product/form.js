@@ -41,15 +41,7 @@ $(document).ready(function() {
 	virtualProduct.init();
 	attachmentProduct.init();
 	imagesProduct.init();
-
-	/** update price and shortcut price field on change */
-	$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
-		if($(this).attr('id') === 'form_step1_price_shortcut'){
-			$('#form_step2_price').val($(this).val());
-		}else{
-			$('#form_step1_price_shortcut').val($(this).val());
-		}
-	});
+	priceCalculation.init();
 
 	/** pack fields display management */
 	$('#form_step1_type_product').change(function(){
@@ -1358,6 +1350,146 @@ var formImagesProduct = (function() {
 		'close': function() {
 			formZoneElem.find('#product-images-form').html('');
 			formZoneElem.hide();
+		}
+	};
+})();
+
+/**
+ * Price calculation
+ */
+var priceCalculation = (function() {
+	var priceHTElem = $('#form_step2_price');
+	var priceHTShortcutElem = $('#form_step1_price_shortcut');
+	var priceTTCElem = $('#form_step2_price_ttc');
+	var priceTTCShorcutElem = $('#form_step1_price_ttc_shortcut');
+	var ecoTaxElem = $('#form_step2_ecotax');
+	var taxElem = $('#form_step2_id_tax_rules_group');
+	var displayPricePrecision = priceHTElem.attr('data-display-price-precision');
+	var ecoTaxRate = ecoTaxElem.attr('data-eco-tax-rate');
+
+	/**
+	 * Add taxes to a price
+	 * @param {float} Price without tax
+	 * @param {array} Rates rates to apply
+	 * @param {int} computation_method The computation calculate method
+	 */
+	function addTaxes(price, rates, computation_method) {
+		var price_with_taxes = price;
+		if (computation_method == 0) {
+			for (i in rates) {
+				price_with_taxes *= (1 + rates[i] / 100);
+				break;
+			}
+		} else if (computation_method == 1) {
+			var rate = 0;
+			for (i in rates) {
+				rate += rates[i];
+			}
+			price_with_taxes *= (1 + rate / 100);
+		} else if (computation_method == 2) {
+			for (i in rates) {
+				price_with_taxes *= (1 + rates[i] / 100);
+			}
+		}
+
+		return price_with_taxes;
+	}
+
+	/**
+	 * Remove taxes from a price
+	 * @param {float} Price with tax
+	 * @param {array} Rates rates to apply
+	 * @param {int} computation_method The computation calculate method
+	 */
+	function removeTaxes(price, rates, computation_method)
+	{
+		if (computation_method == 0) {
+			for (i in rates) {
+				price /= (1 + rates[i] / 100);
+				break;
+			}
+		} else if (computation_method == 1) {
+			var rate = 0;
+			for (i in rates) {
+				rate += rates[i];
+			}
+			price /= (1 + rate / 100);
+		} else if (computation_method == 2) {
+			for (i in rates) {
+				price /= (1 + rates[i] / 100);
+			}
+		}
+
+		return price;
+	}
+
+	function getEcotaxTaxIncluded()
+	{
+		var ecotax_tax_excl =  ecoTaxElem.val() / (1 + ecoTaxRate);
+		return ps_round(ecotax_tax_excl * (1 + ecoTaxRate), 2);
+	}
+
+	function getEcotaxTaxExcluded()
+	{
+		return ecoTaxElem.val() / (1 + ecoTaxRate);
+	}
+
+	return {
+		'init': function() {
+			/** update without tax price and shortcut price field on change */
+			$('#form_step1_price_shortcut, #form_step2_price').keyup(function(){
+				if($(this).attr('id') === 'form_step1_price_shortcut'){
+					$('#form_step2_price').val($(this).val());
+				}else{
+					$('#form_step1_price_shortcut').val($(this).val());
+				}
+
+				priceCalculation.taxInclude();
+			});
+
+			/** update HT price and shortcut price field on change */
+			$('#form_step1_price_ttc_shortcut, #form_step2_price_ttc').keyup(function(){
+				if($(this).attr('id') === 'form_step1_price_ttc_shortcut'){
+					$('#form_step2_price_ttc').val($(this).val());
+				}else{
+					$('#form_step1_price_ttc_shortcut').val($(this).val());
+				}
+
+				priceCalculation.taxExclude();
+			});
+
+			/** update HT price and shortcut price field on change */
+			$('#form_step2_ecotax').keyup(function(){
+				priceCalculation.taxExclude();
+			});
+
+			priceCalculation.taxInclude();
+		},
+		'taxInclude': function() {
+			var price = parseFloat(priceHTElem.val().replace(/,/g, '.'));
+			if(isNaN(price)){
+				return 0;
+			}
+
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(addTaxes(price, rates, computation_method), displayPricePrecision) + getEcotaxTaxIncluded();
+
+			priceTTCElem.val(newPrice);
+			priceTTCShorcutElem.val(newPrice);
+		},
+		'taxExclude': function() {
+			var price = parseFloat(priceTTCElem.val().replace(/,/g, '.'));
+			if(isNaN(price)){
+				return 0;
+			}
+
+			var rates = taxElem.find('option:selected').attr('data-rates').split(',');
+			var computation_method = taxElem.find('option:selected').attr('data-computation-method');
+			var newPrice = ps_round(removeTaxes(ps_round(price - getEcotaxTaxIncluded(), displayPricePrecision), rates, computation_method), displayPricePrecision);
+
+			priceHTElem.val(newPrice);
+			priceHTShortcutElem.val(newPrice);
 		}
 	};
 })();

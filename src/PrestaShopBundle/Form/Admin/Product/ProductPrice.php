@@ -37,6 +37,9 @@ class ProductPrice extends CommonAbstractType
 {
     private $translator;
     private $tax_rules;
+    private $tax_rules_rates;
+    private $configuration;
+    private $eco_tax_rate;
 
     /**
      * Constructor
@@ -54,11 +57,14 @@ class ProductPrice extends CommonAbstractType
     {
         $this->translator = $translator;
         $this->router = $router;
+        $this->configuration = $this->getConfiguration();
         $this->shopContextAdapter = $shopContextAdapter;
         $this->countryDataprovider = $countryDataprovider;
         $this->currencyDataprovider = $currencyDataprovider;
         $this->groupDataprovider= $groupDataprovider;
         $this->legacyContext = $legacyContext;
+        $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
+        $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
         $this->tax_rules = $this->formatDataChoicesList(
             $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -75,20 +81,36 @@ class ProductPrice extends CommonAbstractType
         $builder->add('price', 'number', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('id_tax_rules_group', 'choice', array(
-            'choices' =>  $this->tax_rules,
-            'required' => true,
-            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
-        ))
         ->add('price_ttc', 'number', array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+        ))
+        ->add('ecotax', 'number', array(
+            'required' => false,
+            'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\NotBlank(),
+                new Assert\Type(array('type' => 'float'))
+            ),
+            'attr' => ['data-eco-tax-rate' => $this->eco_tax_rate],
+        ))
+        ->add('id_tax_rules_group', 'choice', array(
+            'choices' =>  $this->tax_rules,
+            'required' => true,
+            'choice_attr' => function ($val) {
+                return [
+                    'data-rates' => implode(',', $this->tax_rules_rates[$val]['rates']),
+                    'data-computation-method' => $this->tax_rules_rates[$val]['computation_method'],
+                ];
+            },
+            'label' => $this->translator->trans('Tax rule:', [], 'AdminProducts'),
         ))
         ->add('on_sale', 'checkbox', array(
             'required' => false,
