@@ -8,10 +8,6 @@ $language   = Context::getContext()->language;
 $shop       = Context::getContext()->shop;
 $dbPrefix   = _DB_PREFIX_;
 
-// Enable the StarterTheme
-
-Db::getInstance()->execute("UPDATE {$dbPrefix}shop SET theme_name='StarterTheme'");
-
 // Enable URL rewriting
 
 function enableURLRewriting()
