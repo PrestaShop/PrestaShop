@@ -558,16 +558,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected function assignCategory()
     {
         // Assign category to the template
-        if ($this->category !== false && Validate::isLoadedObject($this->category) && $this->category->inShop() && $this->category->isAssociatedToShop()) {
-            $path = Tools::getPath($this->category->id, $this->product->name, true);
-        } elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
+        if (($this->category === false || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop()) && Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
+            ddd('b');
             $this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
-            if (Validate::isLoadedObject($this->category) && $this->category->active && $this->category->isAssociatedToShop()) {
-                $path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
-            }
-        }
-        if (!isset($path) || !$path) {
-            $path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
         }
 
         $sub_categories = array();
@@ -576,7 +569,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             // various assignements before Hook::exec
             $this->context->smarty->assign(array(
-                'path' => $path,
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
                 'id_category_current' => (int)$this->category->id,
