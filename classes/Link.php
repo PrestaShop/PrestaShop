@@ -385,10 +385,14 @@ class LinkCore
      *
      * @param string $controller
      * @param bool $with_token include or not the token in the url
+     * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string.
+     *
      * @return string url
      */
-    public function getAdminLink($controller, $with_token = true)
+    public function getAdminLink($controller, $with_token = true, $sfRouteParams = array())
     {
+        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
+
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -396,13 +400,21 @@ class LinkCore
                 $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
+                    if (array_key_exists('id_product', $sfRouteParams)) {
+                        if (array_key_exists('deleteproduct', $sfRouteParams)) {
+                            return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/unit/delete/' . $sfRouteParams['id_product'];
+                        }
+                        //default: if (array_key_exists('updateproduct', $sfRouteParams))
+                        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/form/' . $sfRouteParams['id_product'];
+                    }
                     return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/product/catalog';
+                } else {
+                    $params = array_merge($params, $sfRouteParams);
                 }
                 break;
         }
 
         $id_lang = Context::getContext()->language->id;
-        $params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 
         return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }

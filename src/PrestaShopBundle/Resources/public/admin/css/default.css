@@ -1,3 +1,5 @@
+/* Common */
+
 .token-input{
   border:0 !important;
   padding: 0 !important;
@@ -14,7 +16,7 @@
 .capitalize {
   text-transform: capitalize;
 }
-#content.bootstrap{
+#content.bootstrap.no-header-toolbar{
   padding-top: 20px;
 }
 #form .toolbarBox a{
@@ -64,4 +66,15 @@ body.mobile-nav #form .form-action-bar{
   #form .form-action-bar{
     padding-left:50px;
   }
+}
+
+
+/* Listings */
+
+.icon-caret{
+  cursor: pointer;
+  color: #00aff0;
+}
+.icon-caret-selected{
+  color: #000000 !important;
 }
