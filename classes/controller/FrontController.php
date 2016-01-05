@@ -517,6 +517,7 @@ class FrontControllerCore extends Controller
             'urls' => $urls,
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
+            'breadcrumb' => $this->getBreadcrumb(),
         ]);
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
@@ -1487,6 +1488,67 @@ class FrontControllerCore extends Controller
         ];
 
         return $page;
+    }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = [];
+        $context = Context::getContext();
+
+        $breadcrumb[] = [
+            'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
+            'url'   => $context->link->getPageLink('index', true)
+        ];
+
+        if ($context->controller->php_self == 'category') {
+            foreach ($context->controller->category->getAllParents() as $category) {
+                if ($category->id_parent != 0 && !$category->is_root_category) {
+                    $breadcrumb[] = $this->getCategoryPath($category, $context);
+                }
+            }
+        } elseif ($context->controller->php_self == 'product') {
+            $categoryDefault = new Category($context->controller->product->id_category_default);
+
+            foreach ($categoryDefault->getAllParents() as $category) {
+                if ($category->id_parent != 0 && !$category->is_root_category) {
+                    $breadcrumb[] = $this->getCategoryPath($category, $context);
+                }
+            }
+
+            $breadcrumb[] = [
+                'title' => $context->controller->product->name,
+                'url' => $context->link->getProductLink($context->controller->product)
+            ];
+        } elseif ($context->controller->php_self == 'cms') {
+            $cmsCategory = new CMSCategory($context->controller->cms->id_cms_category);
+
+            if ($cmsCategory->id_parent != 0) {
+                foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
+                    $cmsSubCategory = new CMSCategory($category['id_cms_category']);
+                    $breadcrumb[] = [
+                        'title' => $cmsSubCategory->getName(),
+                        'url' => $context->link->getCMSCategoryLink($cmsSubCategory)
+                    ];
+                }
+            }
+
+            $breadcrumb[] = [
+                'title' => $context->controller->cms->meta_title,
+                'url' => $context->link->getCMSLink($context->controller->cms)
+            ];
+        }
+
+        return $breadcrumb;
+    }
+
+    private function getCategoryPath($category, $context)
+    {
+        if ($category->id_parent != 0 && !$category->is_root_category) {
+            return [
+                'title' => $category->name,
+                'url' => $context->link->getCategoryLink($category)
+            ];
+        }
     }
 
     public function getCanonicalURL()
