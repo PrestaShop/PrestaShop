@@ -48,7 +48,6 @@ class ProductInformation extends CommonAbstractType
     private $router;
     private $context;
     private $translator;
-    private $manufacturers;
     private $locales;
     private $nested_categories;
     private $productAdapter;
@@ -62,17 +61,15 @@ class ProductInformation extends CommonAbstractType
      * @param object $router
      * @param object $categoryDataProvider
      * @param object $productDataProvider
-     * @param object $manufacturerDataProvider
      * @param object $featureDataProvider
      */
-    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $manufacturerDataProvider, $featureDataProvider)
+    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $featureDataProvider)
     {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->router = $router;
         $this->categoryDataProvider = $categoryDataProvider;
         $this->productDataProvider = $productDataProvider;
-        $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->featureDataProvider = $featureDataProvider;
         $this->configuration = new Configuration();
 
@@ -80,10 +77,6 @@ class ProductInformation extends CommonAbstractType
         $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
         $this->productAdapter = $this->productDataProvider;
         $this->locales = $this->context->getLanguages();
-        $this->manufacturers = $this->formatDataChoicesList(
-            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
-            'id_manufacturer'
-        );
     }
 
     /**
@@ -148,38 +141,6 @@ class ProductInformation extends CommonAbstractType
             'label' =>  $this->translator->trans('Short description', [], 'AdminProducts'),
             'required' => false
         ))
-        ->add('upc', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,12}$/"),
-            )
-        ))
-        ->add('ean13', 'text', array(
-            'required' => false,
-            'error_bubbling' => true,
-            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
-            'constraints' => array(
-                new Assert\Regex("/^[0-9]{0,13}$/"),
-            )
-        ))
-        ->add('isbn', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
-        ))
-        ->add('reference', 'text', array(
-            'required' => false,
-            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
-        ))
-        ->add('condition', 'choice', array(
-            'choices'  => array(
-                'new' => $this->translator->trans('New', [], 'AdminProducts'),
-                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
-                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
-            ),
-            'required' => true,
-            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
-        ))
 
         //FEATURES & ATTRIBUTES
         ->add('features', 'collection', array(
@@ -233,11 +194,6 @@ class ProductInformation extends CommonAbstractType
             'constraints' => [],
             'label' => $this->translator->trans('Add a new category', [], 'AdminProducts'),
             'attr' => ['data-action' => $this->router->generate('admin_category_simple_add_form')]
-        ))
-        ->add('id_manufacturer', 'choice', array(
-            'choices' => $this->manufacturers,
-            'required' => false,
-            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
         ->add('related_products', new TypeaheadProductCollectionType(
             $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',

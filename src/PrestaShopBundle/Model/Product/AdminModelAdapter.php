@@ -358,17 +358,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'name' => $this->product->name,
                 'description' => $this->product->description,
                 'description_short' => $this->product->description_short,
-                'upc' => $this->product->upc,
-                'ean13' => $this->product->ean13,
-                'isbn' => $this->product->isbn,
-                'reference' => $this->product->reference,
-                'condition' => $this->product->condition,
                 'active' => $this->product->active == 0 ? false : true,
                 'price_shortcut' => $this->product->price,
                 'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
-                'id_manufacturer' => $this->product->id_manufacturer,
                 'related_products' => [
                     'data' => array_map(
                         function ($p) {
@@ -438,6 +432,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     'show_price' => (bool) $this->product->show_price,
                     'online_only' => (bool) $this->product->online_only,
                 ],
+                'upc' => $this->product->upc,
+                'ean13' => $this->product->ean13,
+                'isbn' => $this->product->isbn,
+                'reference' => $this->product->reference,
+                'condition' => $this->product->condition,
+                'id_manufacturer' => $this->product->id_manufacturer,
                 'suppliers' => array_map(
                     function ($s) {
                         return($s->id_supplier);

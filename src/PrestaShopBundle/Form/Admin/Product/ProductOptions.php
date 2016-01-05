@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
 use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
@@ -42,6 +43,7 @@ class ProductOptions extends CommonAbstractType
 {
     private $translator;
     private $suppliers;
+    private $manufacturers;
     private $context;
     private $productAdapter;
     private $router;
@@ -56,13 +58,15 @@ class ProductOptions extends CommonAbstractType
      * @param object $currencyDataprovider
      * @param object $attachmentDataprovider
      * @param object $router
+     * @param object $manufacturerDataProvider
      */
-    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router)
+    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router, $manufacturerDataProvider)
     {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->productAdapter = $productDataProvider;
         $this->currencyDataprovider = $currencyDataprovider;
+        $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->router = $router;
 
         $this->suppliers = $this->formatDataChoicesList(
@@ -73,6 +77,11 @@ class ProductOptions extends CommonAbstractType
         $this->attachmentList = $this->formatDataChoicesList(
             $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']),
             'id_attachment'
+        );
+
+        $this->manufacturers = $this->formatDataChoicesList(
+            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
+            'id_manufacturer'
         );
     }
 
@@ -129,6 +138,43 @@ class ProductOptions extends CommonAbstractType
                     'required' => false,
                 ))
         )
+        ->add('upc', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,12}$/"),
+            )
+        ))
+        ->add('ean13', 'text', array(
+            'required' => false,
+            'error_bubbling' => true,
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,13}$/"),
+            )
+        ))
+        ->add('isbn', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+        ))
+        ->add('reference', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+        ))
+        ->add('condition', 'choice', array(
+            'choices'  => array(
+                'new' => $this->translator->trans('New', [], 'AdminProducts'),
+                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
+                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
+            ),
+            'required' => true,
+            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+        ))
+        ->add('id_manufacturer', 'choice', array(
+            'choices' => $this->manufacturers,
+            'required' => false,
+            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
+        ))
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,
             'expanded' =>  true,

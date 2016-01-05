@@ -108,11 +108,6 @@
                             </div>
                         </div>
 
-                        {{ form_row(form.step1.upc) }}
-                        {{ form_row(form.step1.ean13) }}
-                        {{ form_row(form.step1.isbn) }}
-                        {{ form_row(form.step1.reference) }}
-                        {{ form_row(form.step1.condition) }}
                         <div class="form-group">
                             {{ form_label(form.step1.features) }}
                             <div class="col-sm-10">
@@ -163,13 +158,6 @@
                                     {{ form_widget(form.step1.new_category.id_parent) }}
                                     {{ form_widget(form.step1.new_category.save) }}
                                 </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading">{{ trans("Manufacturer", {}, 'AdminProducts') }}</div>
-                            <div class="panel-body">
-                                {{ form_errors(form.step1.id_manufacturer) }}
-                                {{ form_widget(form.step1.id_manufacturer) }}
                             </div>
                         </div>
                         <div class="panel">
@@ -406,6 +394,12 @@
 
                     {{ form_row(form.step6.visibility) }}
                     {{ form_row(form.step6.display_options) }}
+                    {{ form_row(form.step6.upc) }}
+                    {{ form_row(form.step6.ean13) }}
+                    {{ form_row(form.step6.isbn) }}
+                    {{ form_row(form.step6.reference) }}
+                    {{ form_row(form.step6.condition) }}
+                    {{ form_row(form.step6.id_manufacturer) }}
                     {{ form_row(form.step6.suppliers) }}
                     {{ form_row(form.step6.default_supplier) }}
 
