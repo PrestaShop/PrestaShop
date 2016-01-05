@@ -125,6 +125,8 @@ class StockManager
             // The product is not a pack
             $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
             $stockAvailable->id_product = (int)$product->id;
+            if(empty($stockAvailable->id_product_attribute))
+                $stockAvailable->id_product_attribute = 0;
             $stockAvailable->update();
 
             // Decrease case only: the stock of linked packs should be decreased too.
