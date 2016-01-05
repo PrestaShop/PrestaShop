@@ -297,6 +297,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct($id);
+        if (!$product || empty($product->id)) {
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
         $legacyContext = $legacyContextService->getContext();
@@ -317,7 +323,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
+            $productAdapter,
             $this->container->get('prestashop.adapter.data_provider.supplier'),
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
@@ -332,7 +338,7 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('prestashop.adapter.legacy.context'),
                 $this->container->get('router'),
                 $this->container->get('prestashop.adapter.data_provider.category'),
-                $this->container->get('prestashop.adapter.data_provider.product'),
+                $productAdapter,
                 $this->container->get('prestashop.adapter.data_provider.manufacturer'),
                 $this->container->get('prestashop.adapter.data_provider.feature')
             ))
@@ -364,7 +370,7 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step6', new ProductForms\ProductOptions(
                 $this->container->get('prestashop.adapter.translator'),
                 $this->container->get('prestashop.adapter.legacy.context'),
-                $this->container->get('prestashop.adapter.data_provider.product'),
+                $productAdapter,
                 $this->container->get('prestashop.adapter.data_provider.supplier'),
                 $this->container->get('prestashop.adapter.data_provider.currency'),
                 $this->container->get('prestashop.adapter.data_provider.attachment'),
