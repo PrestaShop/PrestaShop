@@ -97,10 +97,10 @@ class HookCore extends ObjectModel
      */
     public static function getHooks($position = false)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT * FROM `'._DB_PREFIX_.'hook` h
-			'.($position ? 'WHERE h.`position` = 1' : '').'
-			ORDER BY `name`'
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT * FROM `'._DB_PREFIX_.'hook` h
+            '.($position ? 'WHERE h.`position` = 1' : '').'
+            ORDER BY `name`'
         );
     }
 
@@ -123,12 +123,12 @@ class HookCore extends ObjectModel
             $hook_ids = array();
             $db = Db::getInstance();
             $result = $db->ExecuteS('
-			SELECT `id_hook`, `name`
-			FROM `'._DB_PREFIX_.'hook`
-			UNION
-			SELECT `id_hook`, ha.`alias` as name
-			FROM `'._DB_PREFIX_.'hook_alias` ha
-			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name', false);
+            SELECT `id_hook`, `name`
+            FROM `'._DB_PREFIX_.'hook`
+            UNION
+            SELECT `id_hook`, ha.`alias` as name
+            FROM `'._DB_PREFIX_.'hook_alias` ha
+            INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name', false);
             while ($row = $db->nextRow($result)) {
                 $hook_ids[strtolower($row['name'])] = $row['id_hook'];
             }
@@ -148,9 +148,9 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_namebyid_'.$hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
-							SELECT `name`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
+                            SELECT `name`
+                            FROM `'._DB_PREFIX_.'hook`
+                            WHERE `id_hook` = '.(int)$hook_id);
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -165,9 +165,9 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_live_editbyid_'.$hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
-							SELECT `live_edit`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
+                            SELECT `live_edit`
+                            FROM `'._DB_PREFIX_.'hook`
+                            WHERE `id_hook` = '.(int)$hook_id);
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -229,11 +229,11 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_module_list';
         if (!Cache::isStored($cache_id)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
-			FROM `'._DB_PREFIX_.'hook_module` hm
-			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
-			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
-			ORDER BY hm.position');
+            SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
+            FROM `'._DB_PREFIX_.'hook_module` hm
+            STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+            STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
+            ORDER BY hm.position');
             $list = array();
             foreach ($results as $result) {
                 if (!isset($list[$result['id_hook']])) {
@@ -323,9 +323,9 @@ class HookCore extends ObjectModel
             $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
             if ($hook_name != 'displayPayment') {
                 $sql->where('h.name != "displayPayment"');
-            }
-            // For payment modules, we check that they are available in the contextual country
-            elseif ($frontend) {
+            } elseif ($frontend) {
+                // For payment modules, we check that they are available in the contextual country
+
                 if (Validate::isLoadedObject($context->country)) {
                     $sql->where('(h.name = "displayPayment" AND (SELECT id_country FROM '._DB_PREFIX_.'module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 }
@@ -418,9 +418,15 @@ class HookCore extends ObjectModel
      *
      * @return string/array modules output
      */
-    public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true,
-                                $use_push = false, $id_shop = null)
-    {
+    public static function exec(
+        $hook_name,
+        $hook_args = array(),
+        $id_module = null,
+        $array_return = false,
+        $check_exceptions = true,
+        $use_push = false,
+        $id_shop = null
+    ) {
         if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }
@@ -567,7 +573,7 @@ class HookCore extends ObjectModel
             return $output;
         } else {
             return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
-				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
+                <div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');
         }// Return html string
     }
 
@@ -598,8 +604,8 @@ class HookCore extends ObjectModel
         $memory_end = memory_get_usage(true);
 
         Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+        INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+        VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
 
         return $r;
     }
@@ -607,16 +613,16 @@ class HookCore extends ObjectModel
     public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
     {
         return '<script type="text/javascript"> modules_list.push(\''.Tools::safeOutput($moduleInstance->name).'\');</script>
-				<div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
-				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
-					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
-						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
+                <div id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
+                class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
+                    <span style="font-family: Georgia;font-size:13px;font-style:italic;">
+                        <img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
                 .Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
-					<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-					<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
-				</span>'.$display.'</div>';
+                <a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
+                    <img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
+                <a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
+                    <img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
+                </span>'.$display.'</div>';
     }
 
     /**
