@@ -1568,6 +1568,12 @@ class FrontControllerCore extends Controller
         $queryString = str_replace('%2F', '/', http_build_query($params));
         return $url . ($queryString ? "?$queryString" : '');
     }
+
+    protected function getCurrentURL()
+    {
+        return Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    }
+
     public function getPageName()
     {
         // Are we in a payment module

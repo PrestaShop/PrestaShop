@@ -97,6 +97,8 @@ class CustomerFormCore extends AbstractForm
             if (array_key_exists($field->getName(), $params)) {
                 // overwrite it if necessary
                 $field->setValue($params[$field->getName()]);
+            } elseif ($field->getType() === 'checkbox') {
+                $field->setValue(false);
             }
         }
 
@@ -118,31 +120,35 @@ class CustomerFormCore extends AbstractForm
             }
         }
 
-        if (Customer::customerExists($this->formFields['email']->getValue())) {
-            $this->formFields['email']->addError(
-                $this->translator->trans(
-                    'An account using this email address has already been registered.',
-                    [],
-                    'Customer'
-                )
-            );
-        }
-
         $create_guest = false;
         if ($this->guest_allowed && !$this->formFields['password']->getValue()) {
             $create_guest = true;
         }
 
         if (!$this->hasErrors()) {
-            $emailField = $this->formFields['email'];
+            $emailField     = $this->formFields['email'];
+            $passwordField  = $this->formFields['password'];
 
             // Preparing customer
             $customer = new Customer();
-            $customer->getByEmail(
+            $passwordOK = $customer->getByEmail(
                 $emailField->getValue(),
-                null,
+                $passwordField->getValue() ? $passwordField->getValue() : null,
                 false
             );
+
+            if (!$passwordOK) {
+                if (Customer::customerExists($emailField->getValue())) {
+                    $emailField->addError(
+                        $this->translator->trans(
+                            'An account using this email address has already been registered.',
+                            [],
+                            'Customer'
+                        )
+                    );
+                    return false;
+                }
+            }
 
             /**
              * FIXME TODO SECURITY
@@ -184,7 +190,7 @@ class CustomerFormCore extends AbstractForm
                 }
             }
 
-            if ($customer->partner_optin || $customer->newsletter) {
+            if ($customer->optin || $customer->newsletter) {
                 $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
                 $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
             }
