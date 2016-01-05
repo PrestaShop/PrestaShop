@@ -7,19 +7,24 @@
       {/foreach}
     </select>
   </label>
+{elseif $field.type === 'checkbox'}
+  <label>
+    <input  {if $field.required} required {/if}
+            name="{$field.name}"
+            type="{$field.type}"
+            value="1"
+            {if $field.value} checked {/if}
+    >
+    <span>{$field.label}</span>
+  </label>
 {else}
   <label>
-    {if $field.type !== 'checkbox'}
-      <span>{$field.label}</span>
-    {/if}
+    <span>{$field.label}</span>
     <input  {if $field.required} required {/if}
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
     >
-    {if $field.type === 'checkbox'}
-      <span>{$field.label}</span>
-    {/if}
   </label>
 {/if}
 
