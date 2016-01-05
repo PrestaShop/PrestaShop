@@ -415,7 +415,7 @@
 						</thead>
 						<tbody>
 							{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-							<tr id="quantityDiscount_{$quantity_discount.id_product_attribute}" class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
+							<tr class="quantityDiscount_{$quantity_discount.id_product_attribute}" data-discount-type="{$quantity_discount.reduction_type}" data-discount="{$quantity_discount.real_value|floatval}" data-discount-quantity="{$quantity_discount.quantity|intval}">
 								<td>
 									{$quantity_discount.quantity|intval}
 								</td>
