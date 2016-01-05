@@ -2344,6 +2344,12 @@ class AdminProductsControllerCore extends AdminController
      */
     public function updateDownloadProduct($product, $edit = 0)
     {
+        //legacy/sf2 form workaround
+        //if is_virtual_file parameter was not send (SF2 form case), don't process virtual file
+        if (Tools::getValue('is_virtual_file') === false) {
+            return false;
+        }
+
         if ((int)Tools::getValue('is_virtual_file') == 1) {
             if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0) {
                 $virtual_product_filename = ProductDownload::getNewFilename();

@@ -168,6 +168,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //Product type
         if ($form_data['type_product'] == 2) {
+            $form_data['condition'] = 'new';
             $form_data['is_virtual'] = 1;
         } else {
             $form_data['is_virtual'] = 0;
@@ -348,6 +349,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                                 "name" => $p->name,
                                 "ref" => $p->reference,
                                 "quantity" => $p->pack_quantity,
+                                "image" => $p->image,
                             ];
                         },
                         $this->packAdapter->getItems($this->product->id, $this->locales[0]['id_lang'])

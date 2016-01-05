@@ -56,14 +56,20 @@ $(document).ready(function() {
 		$('#virtual_product').hide();
 		if($(this).val() == 1) {
 			$('#pack_stock_type').show();
+			$('#combinations').hide();
 			$('#js_form_step1_inputPackItems').show();
 		}else{
 			$('#virtual_product').hide();
 			$('#pack_stock_type').hide();
 			$('#js_form_step1_inputPackItems').hide();
+			$('#form-nav a[href="#step4"]').show();
 
 			if($(this).val() == 2){
+				$('#combinations').hide();
 				$('#virtual_product').show();
+				$('#form-nav a[href="#step4"]').hide();
+			}else{
+				$('#combinations').show();
 			}
 		}
 	});

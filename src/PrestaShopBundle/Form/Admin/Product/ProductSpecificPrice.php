@@ -73,13 +73,25 @@ class ProductSpecificPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('sp_id_shop', 'choice', array(
-            'choices' =>  $this->shops,
-            'required' =>  false,
-            'label' =>  false,
-            'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
-        ))
-        ->add('sp_id_currency', 'choice', array(
+        //If context multi-shop, hide shop selector
+        //Else show selector
+        if (count($this->shops) == 1) {
+            $builder->add('sp_id_shop', 'hidden', array(
+                'required' =>  false,
+            ));
+        } else {
+            $builder->add('sp_id_shop', 'choice', array(
+                'choices' =>  $this->shops,
+                'required' =>  false,
+                'label' =>  false,
+                'placeholder' => $this->translator->trans('All shops', [], 'AdminProducts'),
+                'attr' => [
+                    'class' => count($this->shops) >= 1 ? 'hide2' : ''
+                ]
+            ));
+        }
+
+        $builder->add('sp_id_currency', 'choice', array(
             'choices' =>  $this->currencies,
             'required' =>  false,
             'label' =>  false,
