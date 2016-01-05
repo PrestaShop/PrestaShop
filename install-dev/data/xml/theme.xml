@@ -10,8 +10,8 @@
     </fields>
     <entities>
         <theme id="default">
-            <name>default-bootstrap</name>
-            <directory>default-bootstrap</directory>
+            <name>Classic</name>
+            <directory>classic</directory>
             <responsive>1</responsive>
             <default_left_column>1</default_left_column>
             <default_right_column>0</default_right_column>
@@ -19,5 +19,3 @@
         </theme>
     </entities>
 </entity_theme>
-
-
