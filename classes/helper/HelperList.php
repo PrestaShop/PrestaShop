@@ -470,6 +470,7 @@ class HelperListCore extends Helper
 
         switch ($this->currentIndex) {
             case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
                 global $kernel; // sf kernel
                 $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
@@ -517,6 +518,7 @@ class HelperListCore extends Helper
 
         switch ($this->currentIndex) {
             case 'index.php?controller=AdminProducts':
+            case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
                 global $kernel; // sf kernel
                 $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
