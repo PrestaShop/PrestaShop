@@ -806,7 +806,11 @@ class InstallModelInstall extends InstallAbstractModel
 
             $module = Module::getInstanceByName($module_name);
             if (!$module->install()) {
-                $errors[] = $this->language->l('Cannot install module "%s"', $module_name);
+                $module_errors = $module->getErrors();
+                if (empty($module_errors)) {
+                    $module_errors = [$this->language->l('Cannot install module "%s"', $module_name)];
+                }
+                $errors[$module_name] = $module_errors;
             }
         }
 
