@@ -21,11 +21,13 @@ module.exports = function initializePrestaShopBrowserCommands (browser) {
     ;
   });
 
-  browser.addCommand('loginDefaultCustomer', function loginDefaultCustomer () {
+  browser.addCommand('loginDefaultCustomer', function loginDefaultCustomer (params) {
+    const customer = Object.assign({}, fixtures.customer, params);
+
     return browser
       .url(fixtures.urls.login)
-      .setValue('.login-form input[name=email]', fixtures.customer.email)
-      .setValue('.login-form input[name=password]', fixtures.customer.password)
+      .setValue('.login-form input[name=email]', customer.email)
+      .setValue('.login-form input[name=password]', customer.password)
       .submitForm('.login-form form')
     ;
   });

@@ -42,6 +42,11 @@ class IdentityControllerCore extends FrontController
 
         $customer_form = $this->makeCustomerForm();
 
+        $customer_form->getFormatter()
+            ->setAskForNewPassword(true)
+            ->setPasswordRequired(true)
+        ;
+
         if (Tools::isSubmit('submitCreate')) {
             $customer_form->fillWith(Tools::getAllValues());
             if ($customer_form->submit()) {

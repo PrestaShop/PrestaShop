@@ -22,7 +22,8 @@ module.exports = {
       checkout: '/en/order',
       orderhistory: '/en/order-history',
       orderdetail: '/en/index.php?controller=order-detail&id_order=5',
-      aCategoryWithProducts: '/en/3-women'
+      aCategoryWithProducts: '/en/3-women',
+      identity: '/en/identity'
     },
     customer: {
       email: 'pub@prestashop.com',
