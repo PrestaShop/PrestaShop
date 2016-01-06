@@ -72,14 +72,7 @@ class CustomerFormCore extends AbstractForm
             $birthday = null;
         }
 
-        return $this->fillWith([
-            'firstname'     => $customer->firstname,
-            'lastname'      => $customer->lastname,
-            'email'         => $customer->email,
-            'birthday'      => $birthday,
-            'newsletter'    => $customer->newsletter,
-            'optin'         => $customer->optin
-        ]);
+        return $this->fillWith(get_object_vars($customer));
     }
 
     public function fillWith(array $params = [])
@@ -110,6 +103,15 @@ class CustomerFormCore extends AbstractForm
     public function submit()
     {
         foreach ($this->formFields as $field) {
+            if ($field->isRequired() && !$field->getValue()) {
+                $field->addError(
+                    $this->constraintTranslator->translate('required')
+                );
+                continue;
+            } elseif (!$field->isRequired() && !$field->getValue()) {
+                continue;
+            }
+
             if (isset(Customer::$definition['fields'][$field->getName()]['validate'])) {
                 $constraint = Customer::$definition['fields'][$field->getName()]['validate'];
                 if (!Validate::$constraint($field->getValue())) {
@@ -194,7 +196,6 @@ class CustomerFormCore extends AbstractForm
                 $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
                 $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
             }
-
             if (!$this->hasErrors()) {
                 $is_update = $customer->id > 0;
 
