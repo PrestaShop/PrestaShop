@@ -355,4 +355,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
         return $params;
     }
+
+    /* (non-PHPdoc)
+     * @see \PrestaShopBundle\Service\DataProvider\Admin\ProductInterface::getPaginationLimitChoices()
+     */
+    public function getPaginationLimitChoices()
+    {
+        $paginationLimitChoices = [20, 50, 100];
+
+        $memory = \ToolsCore::getMemoryLimit();
+
+        if ($memory >= 512*1024*1024) {
+            $paginationLimitChoices[] = 300;
+        }
+        if ($memory >= 1536*1024*1024) {
+            $paginationLimitChoices[] = 1000;
+        }
+
+        return $paginationLimitChoices;
+    }
 }

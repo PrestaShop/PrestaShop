@@ -92,4 +92,13 @@ interface ProductInterface
      * @return integer The product count on the current shop
      */
     public function countAllProducts();
+
+    /**
+     * Because pagination is tied to memory available on the server side, the choices can vary from one to another platform,
+     * depending on the memory_limit allocated to PHP.
+     * This will return Elements per page that are recommended to fetch products on the Admin catalog page.
+     *
+     * @return array[int] A list of pagination limits to show in the select dropbox in paginator component.
+     */
+    public function getPaginationLimitChoices();
 }

@@ -206,7 +206,8 @@ class ProductController extends FrameworkBundleAdminController
                 'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'categories' => $categories->createView()
+                'categories' => $categories->createView(),
+                'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
             )
         );
     }
