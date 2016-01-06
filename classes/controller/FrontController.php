@@ -1636,7 +1636,8 @@ class FrontControllerCore extends Controller
     protected function makeCustomerFormatter()
     {
         $formatter = new CustomerFormatter(
-            $this->getTranslator()
+            $this->getTranslator(),
+            $this->context->language
         );
 
         $formatter
