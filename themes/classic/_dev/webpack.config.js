@@ -1,4 +1,6 @@
 var webpack = require('webpack');
+var path    = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var plugins = [];
 
@@ -14,6 +16,14 @@ if (production) {
     );
 }
 
+plugins.push(
+    new ExtractTextPlugin(
+        path.join(
+            '..', 'css', 'theme.css'
+        )
+    )
+);
+
 module.exports = {
     entry: [
       './js/theme.js'
@@ -25,11 +35,22 @@ module.exports = {
     module: {
         loaders: [
             {test: /\.js$/     , loaders: ['babel-loader']},
+            {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract(
+                    "style-loader",
+                    "css-loader",
+                    "sass-loader"
+                )
+            }
         ]
     },
     externals: {
         prestashop: 'prestashop'
     },
     devtool: 'source-map',
-    plugins: plugins
+    plugins: plugins,
+    resolve: {
+        extensions: ['', '.js', '.scss']
+    }
 };
