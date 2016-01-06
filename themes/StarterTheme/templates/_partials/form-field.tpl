@@ -1,5 +1,5 @@
 {if $field.type === 'select'}
-  <label>
+  <label class='select-field'>
     <span>{$field.label}</span>
     <select {if $field.required} required {/if} name="{$field.name}">
       {foreach from=$field.availableValues item="label" key="value"}
@@ -8,22 +8,22 @@
     </select>
   </label>
 {else if $field.type === 'radio-buttons'}
-  <label>
+  <label class='radio-field'>
     <span>{$field.label}</span>
     {foreach from=$field.availableValues item="label" key="value"}
       <label>
-        {$label}
         <input  name  = "{$field.name}"
                 type  = "radio"
                 value = "{$value}"
                 {if $field.required} required {/if}
                 {if $value eq $field.value} checked {/if}
         >
+        {$label}
       </label>
     {/foreach}
   </label>
   {elseif $field.type === 'checkbox'}
-  <label>
+  <label class='checkbox-field'>
     <input  {if $field.required} required {/if}
             name="{$field.name}"
             type="{$field.type}"
