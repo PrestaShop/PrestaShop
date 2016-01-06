@@ -11,7 +11,7 @@ class CustomerFormatterCore
     private $ask_for_partner_optin          = true;
     private $ask_for_password               = true;
     private $password_is_required           = true;
-    private $ask_for_password_confirmation  = false;
+    private $ask_for_new_password           = false;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -45,9 +45,9 @@ class CustomerFormatterCore
         return $this;
     }
 
-    public function setAskForPasswordConfirmation($ask_for_password_confirmation)
+    public function setAskForNewPassword($ask_for_new_password)
     {
-        $this->ask_for_password_confirmation = $ask_for_password_confirmation;
+        $this->ask_for_new_password = $ask_for_new_password;
         return $this;
     }
 
@@ -60,6 +60,11 @@ class CustomerFormatterCore
     public function getFormat()
     {
         $format = [];
+
+        $format['id_customer'] = (new FormField)
+            ->setName('id_customer')
+            ->setType('hidden')
+        ;
 
         $genderField = (new FormField)
             ->setName('id_gender')
@@ -119,16 +124,15 @@ class CustomerFormatterCore
             ;
         }
 
-        if ($this->ask_for_password_confirmation) {
-            $format['password_confirmation'] = (new FormField)
-                ->setName('password_confirmation')
+        if ($this->ask_for_new_password) {
+            $format['new_password'] = (new FormField)
+                ->setName('new_password')
                 ->setType('password')
                 ->setLabel(
                     $this->translator->trans(
-                        'Password confirmation', [], 'Customer'
+                        'New password', [], 'Customer'
                     )
                 )
-                ->setRequired($this->password_is_required)
             ;
         }
 

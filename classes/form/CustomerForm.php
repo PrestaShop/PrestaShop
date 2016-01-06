@@ -1,7 +1,6 @@
 <?php
 
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing as Crypto;
 
 /**
  * StarterTheme TODO: B2B fields, Genders, CSRF
@@ -9,8 +8,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing as Crypto;
 
 class CustomerFormCore extends AbstractForm
 {
-    private $crypto;
-
     protected $template = 'customer/_partials/customer-form.tpl';
 
     private $context;
@@ -19,6 +16,7 @@ class CustomerFormCore extends AbstractForm
     private $urls;
 
     private $customerFormatter;
+    private $customerPersister;
 
     private $formFields = [];
 
@@ -30,20 +28,25 @@ class CustomerFormCore extends AbstractForm
         Smarty $smarty,
         Context $context,
         TranslatorInterface $translator,
-        Crypto $crypto,
         CustomerFormatter $customerFormatter,
+        CustomerPersister $customerPersister,
         array $urls
     ) {
         parent::__construct($smarty);
 
         $this->context = $context;
         $this->translator = $translator;
-        $this->crypto = $crypto;
         $this->customerFormatter = $customerFormatter;
         $this->urls = $urls;
         $this->constraintTranslator = new ValidateConstraintTranslator(
             $this->translator
         );
+        $this->customerPersister = $customerPersister;
+    }
+
+    public function getFormatter()
+    {
+        return $this->customerFormatter;
     }
 
     public function setGuestAllowed($guest_allowed = true)
@@ -72,7 +75,10 @@ class CustomerFormCore extends AbstractForm
             $birthday = null;
         }
 
-        return $this->fillWith(get_object_vars($customer));
+        $params = get_object_vars($customer);
+        $params['id_customer'] = $customer->id;
+
+        return $this->fillWith($params);
     }
 
     public function fillWith(array $params = [])
@@ -100,7 +106,30 @@ class CustomerFormCore extends AbstractForm
         return $this;
     }
 
-    public function submit()
+    private function getCustomer()
+    {
+        if (isset($this->formFields['id_customer'])) {
+            $id_customer = $this->formFields['id_customer']->getValue();
+        } else {
+            $id_customer = null;
+        }
+
+        $customer = new Customer($id_customer);
+
+        foreach ($this->formFields as $field) {
+            $customerField = $field->getName();
+            if ($customerField === 'id_customer') {
+                $customerField = 'id';
+            }
+            if (property_exists($customer, $customerField)) {
+                $customer->$customerField = $field->getValue();
+            }
+        }
+
+        return $customer;
+    }
+
+    private function validate()
     {
         foreach ($this->formFields as $field) {
             if ($field->isRequired() && !$field->getValue()) {
@@ -122,127 +151,38 @@ class CustomerFormCore extends AbstractForm
             }
         }
 
-        $create_guest = false;
-        if ($this->guest_allowed && !$this->formFields['password']->getValue()) {
-            $create_guest = true;
-        }
+        return !$this->hasErrors();
+    }
 
-        if (!$this->hasErrors()) {
-            $emailField     = $this->formFields['email'];
-            $passwordField  = $this->formFields['password'];
+    public function submit()
+    {
+        if ($this->validate()) {
+            $clearTextPassword = '';
+            $newPassword = '';
+            if (isset($this->formFields['password'])) {
+                $clearTextPassword = (string)$this->formFields['password']->getValue();
+            }
 
-            // Preparing customer
-            $customer = new Customer();
-            $passwordOK = $customer->getByEmail(
-                $emailField->getValue(),
-                $passwordField->getValue() ? $passwordField->getValue() : null,
-                false
+            if (isset($this->formFields['new_password'])) {
+                $newPassword = $this->formFields['new_password']->getValue();
+            }
+
+            $ok = $this->customerPersister->save(
+                $this->getCustomer(),
+                $clearTextPassword,
+                $newPassword
             );
 
-            if (!$passwordOK) {
-                if (Customer::customerExists($emailField->getValue())) {
-                    $emailField->addError(
-                        $this->translator->trans(
-                            'An account using this email address has already been registered.',
-                            [],
-                            'Customer'
-                        )
-                    );
-                    return false;
+            if (!$ok) {
+                foreach ($this->customerPersister->getErrors() as $field => $errors) {
+                    $this->formFields[$field]->setErrors($errors);
                 }
             }
 
-            /**
-             * FIXME TODO SECURITY
-             * We need to make sure that when updating an account without
-             * using a password (guest) we are not updating somebody
-             * else's account.
-             */
-            if ($customer->id && $customer->id != $this->context->cookie->id_customer) {
-                $emailField->addError(
-                    $this->translator->trans(
-                        'An account using this email address has already been registered.',
-                        [],
-                        'Customer'
-                    )
-                );
-                return false;
-            }
-
-            $customer->is_guest = $create_guest;
-
-            if ($create_guest) {
-                /**
-                 * FIXME TODO SECURITY
-                 * This is NOT cryptographically safe.
-                 * It should not cause a security breach if a
-                 * customer that is a guest is not allowed to login.
-                 * This needs to be checked though.
-                 */
-                 $clearPasswd = md5(microtime()._COOKIE_KEY_);
-            } else {
-                $clearPasswd = $this->formFields['password']->getValue();
-            }
-
-            $customer->passwd = $this->crypto->encrypt($clearPasswd, _COOKIE_KEY_);
-
-            foreach ($this->formFields as $field) {
-                if (property_exists($customer, $field->getName())) {
-                    $customer->{$field->getName()} = $field->getValue();
-                }
-            }
-
-            if ($customer->optin || $customer->newsletter) {
-                $customer->ip_registration_newsletter = pSQL(Tools::getRemoteAddr());
-                $customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
-            }
-            if (!$this->hasErrors()) {
-                $is_update = $customer->id > 0;
-
-                if ($customer->save()) {
-                    $this->context->updateCustomer($customer);
-                    $this->context->cart->update();
-
-                    if ($is_update) {
-                        Hook::exec('actionCustomerAccountAdd', [
-                            'newCustomer' => $customer
-                        ]);
-                    } else {
-                        $this->sendConfirmationMail($customer);
-                        Hook::exec('actionCustomerAccountUpdate', array(
-                            'customer' => $customer
-                        ));
-                    }
-                    return true;
-                } else {
-                    $this->errors[''] = $this->translator->trans(
-                        'An error occurred while creating your account.', [], 'Customer'
-                    );
-                }
-            }
+            return $ok;
         }
 
         return false;
-    }
-
-    private function sendConfirmationMail(Customer $customer)
-    {
-        if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
-            return true;
-        }
-
-        return Mail::Send(
-            $this->context->language->id,
-            'account',
-            Mail::l('Welcome!'),
-            [
-                '{firstname}' => $customer->firstname,
-                '{lastname}' => $customer->lastname,
-                '{email}' => $customer->email,
-            ],
-            $customer->email,
-            $customer->firstname.' '.$customer->lastname
-        );
     }
 
     public function getTemplateVariables()
