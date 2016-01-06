@@ -4,6 +4,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerFormatterCore
 {
     private $translator;
+    private $language;
 
     private $ask_for_birthdate              = true;
     private $ask_for_newsletter             = true;
@@ -12,9 +13,12 @@ class CustomerFormatterCore
     private $password_is_required           = true;
     private $ask_for_password_confirmation  = false;
 
-    public function __construct(TranslatorInterface $translator)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        Language $language
+    ) {
         $this->translator = $translator;
+        $this->language = $language;
     }
 
     public function setAskForBirthdate($ask_for_birthdate)
@@ -56,6 +60,20 @@ class CustomerFormatterCore
     public function getFormat()
     {
         $format = [];
+
+        $genderField = (new FormField)
+            ->setName('id_gender')
+            ->setType('radio-buttons')
+            ->setLabel(
+                $this->translator->trans(
+                    'Social title', [], 'Customer'
+                )
+            )
+        ;
+        foreach (Gender::getGenders($this->language->id) as $gender) {
+            $genderField->addAvailableValue($gender->id, $gender->name);
+        }
+        $format[$genderField->getName()] = $genderField;
 
         $format['firstname'] = (new FormField)
             ->setName('firstname')
@@ -150,7 +168,6 @@ class CustomerFormatterCore
             ;
         }
 
-        // TODO: Gender
         // TODO: TVA etc.?
 
         return $format;
