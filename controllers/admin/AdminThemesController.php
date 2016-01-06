@@ -63,6 +63,8 @@ class AdminThemesControllerCore extends AdminController
 
         if (Tools::isSubmit('configureLayouts')) {
             $this->initConfigureLayouts();
+        } elseif (Tools::isSubmit('submitConfigureLayouts')) {
+            $this->processSubmitConfigureLayouts();
         }
 
         libxml_use_internal_errors(true);
@@ -515,11 +517,18 @@ class AdminThemesControllerCore extends AdminController
 
     public function initConfigureLayouts()
     {
-        $this->content->smarty->assign([
+        $pages = Meta::getPages();
+
+        $this->context->smarty->assign([
             'pages' => $pages,
             'available_layouts' => $this->context->shop->theme->layouts,
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
+    }
+
+    public function processSubmitConfigureLayouts()
+    {
+        //        $this->context->shop->theme->setXXX(Tools::getValue('layouts'));
     }
 }

@@ -10,5 +10,8 @@
   "compatibility" : {
     "from" : "1.7.0.0",
     "to" : null
-  }
+  },
+  "layouts" : [
+    "layout-full-width", "layout-2c-right"
+  ]
 }
