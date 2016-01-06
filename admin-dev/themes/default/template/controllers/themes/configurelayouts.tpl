@@ -29,15 +29,46 @@
     {l s='Choose layouts'}
   </div>
 
-  <div class="form-wrapper">
-    <div class="form-group">
+  <form action="{$link->getAdminLink('AdminThemes')}" method="post">
+    <div class="form-wrapper clearfix">
+      <div class="form-group">
 
-      <div class="col-lg-12">
+        <div class="col-lg-12">
+          <table class="table table-stripped">
+
+            <tr>
+              <th>Page</th>
+              <th>Layout</th>
+            </tr>
+
+            {foreach $pages as $page_name => $page_key}
+              <tr>
+                <td>
+                  {$page_name}
+                </td>
+                <td>
+                  <select name="layouts[{$page_key}]" id="">
+                    {foreach $available_layouts as $layout}
+                      <option value="{$layout}">{$layout}</option>
+                    {/foreach}
+                  </select>
+                </td>
+              </tr>
+            {/foreach}
+
+          </table>
+        </div>
 
       </div>
+    </div><!-- /.form-wrapper -->
 
-
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-default pull-right" name="submitConfigureLayouts">
+        <i class="process-icon-save"></i> Save
+      </button>
     </div>
-  </div><!-- /.form-wrapper -->
+
+  </form>
+
 
 </div>
