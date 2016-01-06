@@ -9,6 +9,7 @@ class FormFieldCore
     private $value              = null;
     private $availableValues    = [];
     private $errors             = [];
+    private $constraints        = [];
 
     public function toArray()
     {
@@ -114,5 +115,22 @@ class FormFieldCore
     {
         $this->errors[] = $errorString;
         return $this;
+    }
+
+    public function setConstraints(array $contraints)
+    {
+        $this->constraints = $constraints;
+        return $this;
+    }
+
+    public function addConstraint($constraint)
+    {
+        $this->constraints[] = $constraint;
+        return $this;
+    }
+
+    public function getConstraints()
+    {
+        return $this->constraints;
     }
 }
