@@ -134,10 +134,8 @@ function productCategoryFilterReset(div) {
 function productColumnFilterReset(tr) {
 	$('input:text', tr).val('');
 	$('select option:selected', tr).prop("selected", false);
-	$('input#filter_column_price', tr).bootstrapSlider('setValue', [
-	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'min'),
-	    $('input#filter_column_price', tr).bootstrapSlider('getAttribute', 'max')
-	]);
+	$('input#filter_column_price', tr).attr('sql', '');
+	$('input#filter_column_sav_quantity', tr).attr('sql', '');
 	$('form#product_catalog_list').submit();
 }
 

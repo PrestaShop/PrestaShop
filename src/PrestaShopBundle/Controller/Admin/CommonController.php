@@ -124,6 +124,7 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => $limit
             )
         ));
+        $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
 
         // Template vars injection
         return array(
@@ -139,6 +140,7 @@ class CommonController extends FrameworkBundleAdminController
             'next_url' => $nextPageUrl,
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
+            'limit_choices' => $limitChoices,
         );
     }
 }
