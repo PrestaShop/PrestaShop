@@ -3,6 +3,8 @@ import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
 
+import '../css/theme';
+
 import './setup-rivets';
 import './checkout';
 import './facets';
