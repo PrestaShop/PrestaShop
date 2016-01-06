@@ -455,6 +455,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_multishop_context' => $isMultiShopContext,
             'showContentHeader' => false,
             'preview_link' => $legacyContextService->getFrontUrl('product') . '&id_product='.$id,
+            'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
             'help_link' => 'http://help.prestashop.com/'.$legacyContextService->getEmployeeLanguageIso().'/doc/'
                 .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
             'languages' => $languages,

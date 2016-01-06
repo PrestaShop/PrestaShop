@@ -24,6 +24,10 @@
 /* Form */
 #form .toolbarBox a{
   text-decoration: none;
+  display: inline-block;
+}
+#form .toolbarBox a i{
+  font-size: 22px;
 }
 .product-combination-image{
   display: inline-block;

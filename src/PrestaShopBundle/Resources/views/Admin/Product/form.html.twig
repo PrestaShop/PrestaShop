@@ -8,7 +8,7 @@
         {% endif %}
         <form name="form" id="form" method="post" class="form-horizontal" novalidate="novalidate">
 
-            <div class="col-lg-11">
+            <div class="col-lg-10">
                 <div class="col-lg-1">
                     <select id="form_switch_language" class="form-control">
                         {% for language in languages %}
@@ -29,7 +29,10 @@
                     <br/>
                 </div>
             </div>
-            <div class="col-lg-1 toolbarBox">
+            <div class="col-lg-2 toolbarBox pull-right text-right">
+                <a class="toolbar_btn btn-sales" href="{{ stats_link }}" target="_blank" title="{{ trans('Sales', [], 'AdminTab') }}">
+                    <i class="process-icon-stats"></i>
+                </a>
                 <a class="toolbar_btn btn-help" href="{{ help_link }}" title="{{ trans('Help', [], 'AdminTab') }}">
                     <i class="process-icon-help"></i>
                 </a>
