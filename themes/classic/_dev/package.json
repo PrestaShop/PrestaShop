@@ -4,20 +4,20 @@
   "description": "Tools to help while developing the starter theme",
   "main": "index.js",
   "scripts": {
-    "watch": "npm run watch-css & npm run watch-js",
-    "build-css": "stylus --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
-    "watch-css": "stylus --watch --compress --sourcemap --include-css css/dev.styl -o ../assets/css",
-    "build-js": "webpack",
-    "watch-js": "webpack -w"
+    "watch": "webpack -w",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "babel-loader": "^5.3.2",
+    "bootstrap": "^4.0.0-alpha.2",
+    "bourbon": "^4.2.6",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.0",
     "jquery": "^2.1.4",
     "node-sass": "^3.4.2",
+    "postcss-loader": "^0.8.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "stylus": "^0.52.4",
