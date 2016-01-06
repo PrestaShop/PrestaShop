@@ -26,13 +26,6 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         // personal info step is always reachable
         $this->step_is_reachable = true;
 
-        $this->show_login_form = array_key_exists('login', $requestParameters);
-        if ($this->show_login_form) {
-            $this->step_is_current = true;
-        }
-
-        $this->loginForm->fillWith($requestParameters);
-
         $this->registerForm
             ->fillFromCustomer(
                 $this
@@ -40,10 +33,10 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                     ->getCheckoutSession()
                     ->getCustomer()
             )
-            ->fillWith($requestParameters)
         ;
 
         if (isset($requestParameters['submitCreate'])) {
+            $this->registerForm->fillWith($requestParameters);
             if ($this->registerForm->submit()) {
                 $this->step_is_complete = true;
             } else {
@@ -51,11 +44,15 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 $this->step_is_complete = false;
             }
         } elseif (isset($requestParameters['submitLogin'])) {
+            $this->loginForm->fillWith($requestParameters);
             if ($this->loginForm->submit()) {
                 $this->step_is_complete = true;
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
             }
+        } elseif (array_key_exists('login', $requestParameters)) {
+            $this->show_login_form = true;
+            $this->step_is_current = true;
         }
 
         $this->logged_in = $this
