@@ -1654,8 +1654,13 @@ class FrontControllerCore extends Controller
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
-            new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
             $this->makeCustomerFormatter(),
+            new CustomerPersister(
+                $this->context,
+                new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
+                $this->getTranslator(),
+                $this->guestAllowed
+            ),
             $this->getTemplateVarUrls()
         );
 
