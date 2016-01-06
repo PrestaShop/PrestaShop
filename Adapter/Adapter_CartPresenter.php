@@ -198,6 +198,14 @@ class Adapter_CartPresenter
             ];
         }
 
+        if ($cart->gift) {
+            $subtotals['gift_wrapping'] = [
+                'type'   => 'gift_wrapping',
+                'label'  => $this->translator->l('Gift wrapping', 'Cart'),
+                'amount' => $cart->getGiftWrappingPrice($this->includeTaxes()) != 0 ? $this->pricePresenter->convertAndFormat($cart->getGiftWrappingPrice($this->includeTaxes())) : $this->translator->l('Free', 'Cart')
+            ];
+        }
+
         $shipping_cost = $cart->getTotalShippingCost(null, $this->includeTaxes());
         $subtotals['shipping'] = [
             'type'   => 'shipping',
