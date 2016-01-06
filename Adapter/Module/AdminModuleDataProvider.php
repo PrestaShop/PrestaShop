@@ -293,7 +293,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $all_installed_modules = $this->getAllInstalledModules();
 
                 // Why all these foreach ? Because we need to join data from 3 different arrays.
-                foreach ($all_installed_modules as $installed_module) {
+                foreach ($all_installed_modules as &$installed_module) {
                     //
                     foreach ($this->catalog_modules as $catalog_module) {
                         if ($catalog_module->name === $installed_module['name']) {
@@ -308,20 +308,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                             continue;
                         }
                     }
-
-                    if (isset($installed_module['origin']) && $installed_module['origin'] === 'native' && $installed_module['author'] === 'PrestaShop') {
-                        $row = 'native_modules';
-                    } elseif (0 /* ToDo: insert condition for theme related modules*/) {
-                        $row = 'theme_bundle';
-                    } else {
-                        $row= 'modules';
-                    }
-                    $this->manage_modules->{$row}[] = (object)$installed_module;
                 }
-
-                foreach ($this->manage_modules as $key => $row) {
-                    $this->manage_modules->$key = $this->convertJsonForNewCatalog(['products' => $row]);
-                }
+                $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $all_installed_modules]);
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
                 $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
@@ -343,18 +331,20 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
             'Categories');
 
         foreach ($modules as $module_key => $module) {
-            $name = !empty($module->categoryName)?
-                $module->categoryName:
-                'unknown';
-            $ref  = $this->getRefFromModuleCategoryName($name);
+            foreach ($module->refs as $name) {
+                /*$name = !empty($module->categoryName)?
+                    $module->categoryName:
+                    'unknown';*/
+                $ref  = $this->getRefFromModuleCategoryName($name);
 
-            if (!isset($ref, $categories->categories->subMenu->{$ref})) {
-                $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
-                    $name
-                );
+                if (!isset($ref, $categories->categories->subMenu->{$ref})) {
+                    $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
+                        $name
+                    );
+                }
+
+                $categories->categories->subMenu->{$ref}->modulesRef[] = $module_key;
             }
-
-            $categories->categories->subMenu->{$ref}->modulesRef[] = $module_key;
         }
 
         return $categories;
@@ -367,6 +357,10 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         foreach ($original_json as $json_key => $products) {
             foreach ($products as $product) {
+                if (is_array($product)) {
+                    $product = (object)$product;
+                }
+
                 if (in_array($product->name, $duplicates)) {
                     continue;
                 }

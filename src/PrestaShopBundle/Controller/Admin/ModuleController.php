@@ -102,7 +102,18 @@ class ModuleController extends Controller
             $filter['category'] = $category;
         }
 
-        $products = $modulesProvider->getManageModules($filter);
+        $products = new \stdClass;
+        foreach ($modulesProvider->getManageModules($filter) as $installed_product) {
+            if (isset($installed_product->origin) && $installed_product->origin === 'native' && $installed_product->author === 'PrestaShop') {
+                $row = 'native_modules';
+            } elseif (0 /* ToDo: insert condition for theme related modules*/) {
+                $row = 'theme_bundle';
+            } else {
+                $row= 'modules';
+            }
+            $products->{$row}[] = (object)$installed_product;
+        }
+
         foreach ($products as $product_label => $products_part) {
             $products->$product_label = $this->generateProductUrls($products_part);
         }
