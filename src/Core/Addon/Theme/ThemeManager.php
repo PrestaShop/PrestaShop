@@ -67,7 +67,6 @@ class ThemeManager
 
         if ($success) {
             $this->shop->theme_directory = $theme_directory;
-            ddd($this->shop);
             return $this->shop->save();
         } else {
             return false;
