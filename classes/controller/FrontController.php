@@ -1498,49 +1498,11 @@ class FrontControllerCore extends Controller
             'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
             'url'   => $this->context->link->getPageLink('index', true)
         ];
-
-        if ($this->php_self == 'category') {
-            foreach ($this->context->controller->category->getAllParents() as $category) {
-                if ($category->id_parent != 0 && !$category->is_root_category) {
-                    $breadcrumb[] = $this->getCategoryPath($category);
-                }
-            }
-        } elseif ($this->php_self == 'product') {
-            $categoryDefault = new Category($this->context->controller->product->id_category_default);
-
-            foreach ($categoryDefault->getAllParents() as $category) {
-                if ($category->id_parent != 0 && !$category->is_root_category) {
-                    $breadcrumb[] = $this->getCategoryPath($category);
-                }
-            }
-
-            $breadcrumb[] = [
-                'title' => $this->context->controller->product->name,
-                'url' => $this->context->link->getProductLink($this->context->controller->product)
-            ];
-        } elseif ($this->php_self == 'cms') {
-            $cmsCategory = new CMSCategory($this->context->controller->cms->id_cms_category);
-
-            if ($cmsCategory->id_parent != 0) {
-                foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
-                    $cmsSubCategory = new CMSCategory($category['id_cms_category']);
-                    $breadcrumb[] = [
-                        'title' => $cmsSubCategory->getName(),
-                        'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory)
-                    ];
-                }
-            }
-
-            $breadcrumb[] = [
-                'title' => $this->context->controller->cms->meta_title,
-                'url' => $this->context->link->getCMSLink($this->context->controller->cms)
-            ];
-        }
-
+        
         return $breadcrumb;
     }
 
-    private function getCategoryPath($category)
+    protected function getCategoryPath($category)
     {
         if ($category->id_parent != 0 && !$category->is_root_category) {
             return [
