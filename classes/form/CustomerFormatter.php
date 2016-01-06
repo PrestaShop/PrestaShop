@@ -174,6 +174,21 @@ class CustomerFormatterCore
 
         // TODO: TVA etc.?
 
+        return $this->addConstraints($format);
+    }
+
+    private function addConstraints(array $format)
+    {
+        $constraints = Customer::$definition['fields'];
+
+        foreach ($format as $field) {
+            if (!empty($constraints[$field->getName()]['validate'])) {
+                $field->addConstraint(
+                    $constraints[$field->getName()]['validate']
+                );
+            }
+        }
+
         return $format;
     }
 }
