@@ -67,7 +67,7 @@ class CustomerLoginFormCore extends AbstractForm
             $authentication = $customer->getByEmail($this->email, $this->password);
             if (isset($authentication->active) && !$authentication->active) {
                 $this->errors[null][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Customer');
-            } elseif (!$authentication || !$customer->id) {
+            } elseif (!$authentication || !$customer->id || $customer->is_guest) {
                 $this->errors[null][] = $this->translator->trans('Authentication failed.', [], 'Customer');
             } else {
                 $this->context->updateCustomer($customer);
