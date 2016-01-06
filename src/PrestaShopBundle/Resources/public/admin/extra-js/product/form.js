@@ -43,12 +43,12 @@ $(document).ready(function() {
 	imagesProduct.init();
 	priceCalculation.init();
 
-	/** pack fields display management */
+	/** Type product fields display management */
 	$('#form_step1_type_product').change(function(){
 		$('#virtual_product').hide();
 		if($(this).val() == 1) {
 			$('#pack_stock_type').show();
-			$('#combinations').hide();
+			$('#show_variations_selector').hide();
 			$('#js_form_step1_inputPackItems').show();
 		}else{
 			$('#virtual_product').hide();
@@ -57,15 +57,17 @@ $(document).ready(function() {
 			$('#form-nav a[href="#step4"]').show();
 
 			if($(this).val() == 2){
-				$('#combinations').hide();
+				$('#show_variations_selector').hide();
 				$('#virtual_product').show();
 				$('#form-nav a[href="#step4"]').hide();
 			}else{
-				$('#combinations').show();
+				$('#show_variations_selector').show();
 			}
 		}
 	});
+
 	$('#form_step1_type_product').change();
+
 });
 
 /**
@@ -629,6 +631,42 @@ var combinations = (function() {
 			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
 				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
 			});
+
+			/** Combinations fields display management */
+			$('#combinations').hide();
+			$('#show_variations_selector input').change(function(){
+				if($(this).val() == 1){
+					$('#combinations').show();
+				}else{
+					//if combination(s) exists, alert user for deleting it
+					if($('#accordion_combinations .combination').length > 0){
+						modalConfirmation.create(translate_javascripts['Are you sure to disable variations ? they will all be deleted'], null,{
+							onCancel: function(){
+								$('#show_variations_selector input[value="1"]').attr('checked', true);
+								$('#combinations').show();
+							},
+							onContinue: function(){
+								$.ajax({
+									type: 'GET',
+									url: $('#accordion_combinations').attr('data-action-delete-all') + '/' + $('#form_id_product').val(),
+									success: function(response){
+										$('#accordion_combinations .combination').remove();
+										stock.updateQtyFields();
+									}, error: function(response){
+										showErrorMessage(jQuery.parseJSON(response.responseText).message);
+									},
+								});
+							}
+						}).show();
+					}
+
+					$('#combinations').hide();
+				}
+			});
+
+			if($('#show_variations_selector input:checked').val() == 1){
+				$('#combinations').show();
+			}
 
 			this.refreshImagesCombination();
 		},
@@ -1490,6 +1528,54 @@ var priceCalculation = (function() {
 
 			priceHTElem.val(newPrice);
 			priceHTShortcutElem.val(newPrice);
+		}
+	};
+})();
+
+
+/**
+ * modal confirmation management
+ */
+var modalConfirmation = (function() {
+	var modal = $('#confirmation_modal');
+	var actionsCallbacks = {
+		onCancel: function(){
+			return;
+		},
+		onContinue: function(){
+			return;
+		}
+	};
+
+	modal.find('button.cancel').click(function(){
+		actionsCallbacks.onCancel();
+		modalConfirmation.hide();
+	});
+
+	modal.find('button.continue').click(function(){
+		actionsCallbacks.onContinue();
+		modalConfirmation.hide();
+	});
+
+
+	return {
+		'create': function(content, title, callbacks) {
+			if(title != null){
+				console.log('aa')
+				modal.find('.modal-title').html(title);
+			}
+			if(content != null){
+				modal.find('.modal-body').html(content);
+			}
+
+			actionsCallbacks = callbacks;
+			return this;
+		},
+		'show': function() {
+			modal.modal('show');
+		},
+		'hide': function() {
+			modal.modal('hide');
 		}
 	};
 })();

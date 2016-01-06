@@ -129,6 +129,14 @@
 
                     <div class="col-lg-3">
                         <div class="panel">
+                            <div class="form-group" id="show_variations_selector">
+                                <div class="radio">
+                                    <label><input type="radio" name="show_variations" value="0" {% if not has_combinations %}checked="checked"{% endif %}>{{ trans("Product without variations", {}, 'AdminProducts') }}</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" name="show_variations" value="1" {% if has_combinations %}checked="checked"{% endif %}>{{ trans("Product with variations", {}, 'AdminProducts') }}</label>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 {{ form_errors(form.step1.price_shortcut) }}
                                 <label class="col-xs-6 control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
@@ -338,7 +346,7 @@
                             <hr/>
                             {% endif %}
 
-                            <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
+                            <div class="panel-group accordion" id="accordion_combinations" data-prototype="{{ form_widget(form.step3.combinations.vars.prototype)|e }}" data-action-delete="{{ path('admin_delete_attribute') }}" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
                                 {% for combination in form.step3.combinations %}
                                 <div class="panel panel-default combination" id="attribute_{{ combination.vars.value.id_product_attribute }}" data="{{ combination.vars.value.id_product_attribute }}" data-index="{{ loop.index0 }}">
                                     <div class="panel-title">
@@ -488,6 +496,28 @@
             </nav>
         </form>
     </div>
+
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+        'id': 'confirmation_modal',
+        'title': trans("Warning", {}, 'AdminTabs'),
+        'closable': false,
+        'actions': [
+            {
+                'type': 'button',
+                'label': trans("Yes", {}, 'AdminTabs'),
+                'class': 'btn btn-danger continue'
+            },{
+                'type': 'button',
+                'label': trans("No", {}, 'AdminTabs'),
+                'class': 'btn btn-default cancel'
+            }
+        ],
+    } %}
+        {% block content %}
+            <div class="modal-body"></div>
+        {% endblock %}
+    {% endembed %}
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -526,4 +556,5 @@
     "Drop pictures here": trans("Drop pictures here", {}, 'AdminProducts'),
     "or select files": trans("or select files", {}, 'AdminProducts'),
     "Cover": trans("Cover", {}, 'AdminProducts'),
+    "Are you sure to disable variations ? they will all be deleted": trans("Are you sure to disable variations ? they will all be deleted", {}, 'AdminProducts'),
 }|merge(js_translatable) %}
