@@ -769,6 +769,26 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         );
     }
 
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $categoryDefault = new Category($this->product->id_category_default);
+
+        foreach ($categoryDefault->getAllParents() as $category) {
+            if ($category->id_parent != 0 && !$category->is_root_category) {
+                $breadcrumb[] = $this->getCategoryPath($category);
+            }
+        }
+
+        $breadcrumb[] = [
+            'title' => $this->context->controller->product->name,
+            'url' => $this->context->link->getProductLink($this->context->controller->product)
+        ];
+
+        return $breadcrumb;
+    }
+
     protected function addProductCustomizationData(array $product_full)
     {
         if ($product_full['customizable']) {
