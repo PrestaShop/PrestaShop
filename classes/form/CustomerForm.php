@@ -141,8 +141,7 @@ class CustomerFormCore extends AbstractForm
                 continue;
             }
 
-            if (isset(Customer::$definition['fields'][$field->getName()]['validate'])) {
-                $constraint = Customer::$definition['fields'][$field->getName()]['validate'];
+            foreach ($field->getConstraints() as $constraint) {
                 if (!Validate::$constraint($field->getValue())) {
                     $field->addError(
                         $this->constraintTranslator->translate($constraint)
