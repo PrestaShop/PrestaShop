@@ -166,7 +166,8 @@ class ProductInformation extends CommonAbstractType
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
-            )
+            ),
+            'attr' => []
         ))
         ->add('price_ttc_shortcut', 'number', array(
             'required' => false,

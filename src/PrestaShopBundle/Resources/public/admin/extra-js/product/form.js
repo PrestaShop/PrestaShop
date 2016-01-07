@@ -1226,7 +1226,7 @@ var imagesProduct = (function() {
 				thumbnailWidth: 130,
 				thumbnailHeight: null,
 				acceptedFiles: 'image/*',
-				dictDefaultMessage: '<h4>'+translate_javascripts['Drop pictures here']+'</h4>'+translate_javascripts['or select files'],
+				dictDefaultMessage: '<h4>'+translate_javascripts['Drop pictures here']+'</h4>'+translate_javascripts['or select files']+'<div>' + translate_javascripts['files recommandations'] + '</div>',
 				dictRemoveFile: translate_javascripts['Delete'],
 				dictFileTooBig: translate_javascripts['ToLargeFile'],
 				dictCancelUpload: translate_javascripts['Delete'],

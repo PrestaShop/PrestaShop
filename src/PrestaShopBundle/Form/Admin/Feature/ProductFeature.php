@@ -69,6 +69,7 @@ class ProductFeature extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('feature', 'choice', array(
+            'label' => $this->translator->trans('Feature', [], 'AdminProducts'),
             'choices' =>  $this->features,
             'required' =>  false,
             'attr' => array(
@@ -77,10 +78,14 @@ class ProductFeature extends CommonAbstractType
             )
         ))
         ->add('value', 'choice', array(
+            'label' => $this->translator->trans('Value', [], 'AdminProducts'),
             'required' =>  false,
             'attr' => array('class' => 'feature-value-selector')
         ))
-        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array('required' =>  false));
+        ->add('custom_value', new TranslateType('text', array(), $this->locales, true), array(
+            'required' =>  false,
+            'label' => $this->translator->trans('Custom value', [], 'AdminProducts'),
+        ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();

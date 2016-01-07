@@ -460,6 +460,7 @@ class ProductController extends FrameworkBundleAdminController
                 .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
+            'currency' => $legacyContext->currency,
         );
     }
 
