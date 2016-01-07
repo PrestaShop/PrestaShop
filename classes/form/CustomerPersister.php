@@ -83,8 +83,19 @@ class CustomerPersisterCore
             }
         }
 
-        if ($customer->is_guest) {
-            // guest cannot update their email to that of a real customer
+        $guest_to_customer = false;
+
+        if ($clearTextPassword && $customer->is_guest) {
+            $guest_to_customer = true;
+            $customer->is_guest = false;
+            $customer->passwd = $this->crypto->encrypt(
+                $clearTextPassword,
+                _COOKIE_KEY_
+            );
+        }
+
+        if ($customer->is_guest || $guest_to_customer) {
+            // guest cannot update their email to that of an existing real customer
             if (Customer::customerExists($customer->email, false, true)) {
                 $this->errors['email'][] = $this->translator->trans(
                     'An account was already registed with this email address',
@@ -103,6 +114,9 @@ class CustomerPersisterCore
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer
             ]);
+            if ($guest_to_customer) {
+                $this->sendConfirmationMail($customer);
+            }
         }
 
         return $ok;
