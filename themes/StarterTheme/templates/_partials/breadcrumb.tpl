@@ -1,11 +1,11 @@
 <nav>
-  <ol vocab="http://schema.org/" typeof="BreadcrumbList">
+  <ol itemscope itemtype="http://schema.org/BreadcrumbList">
     {foreach from=$breadcrumb item=path name=breadcrumb}
-      <li property="itemListElement" typeof="ListItem">
-        <a property="item" typeof="WebPage" href="{$path.url}">
-          <span property="name">{$path.title}</span>
+      <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <a itemprop="item" href="{$path.url}">
+          <span itemprop="name">{$path.title}</span>
         </a>
-        <meta property="position" content="{$smarty.foreach.breadcrumb.iteration}">
+        <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
       </li>
     {/foreach}
   </ol>
