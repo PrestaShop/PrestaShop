@@ -70,8 +70,7 @@ class CustomerAddressFormCore extends AbstractForm
             return false;
         }
 
-        if (isset($this->formFields['postcode'])) {
-            $postcode   = $this->formFields['postcode'];
+        if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
                 $country    = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
@@ -98,7 +97,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $address = new Address(
-            $this->formFields['id_address']->getValue(),
+            $this->getValue('id_address'),
             $this->language->id
         );
 
@@ -134,7 +133,7 @@ class CustomerAddressFormCore extends AbstractForm
             $this->formFields = $this->formatter->getFormat();
         }
 
-        $this->formFields['token']->setValue($this->persister->getToken());
+        $this->setValue('token', $this->persister->getToken());
 
         return [
             'action'    => $this->action,
