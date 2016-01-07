@@ -56,7 +56,7 @@ describe('Customer Identity', function () {
     });
   });
 
-  describe('the guest form during checkout', function () {
+  describe.only('the guest form during checkout', function () {
 
     function initCheckout () {
       return checkout
@@ -82,22 +82,43 @@ describe('Customer Identity', function () {
       ;
     }
 
-    it('should fill the personal information step as a guest', fillGuestInfo);
+    describe("the form can be filled a first time with an email address", function () {
+      it('should fill the personal information step as a guest', fillGuestInfo);
+    });
 
     describe("there can be 2 guests using the same e-mail address", function () {
-      before(cleanUp);
-      before(initCheckout);
+      before(() => cleanUp().then(initCheckout));
       it('should let another guest use the same e-mail address', fillGuestInfo);
     });
 
+    describe("updating the guest account during checkout", function () {
+      it('should let the guest update their lastname', function () {
+        return browser
+          .click("#checkout-personal-information-step h1")
+          .setValue("#customer-form [name=lastname]", "a Ghost")
+          .click("#checkout-personal-information-step button")
+          .waitForVisible("#checkout-personal-information-step.-complete")
+        ;
+      });
 
-    it('should let the guest update their lastname', function () {
-      return browser
-        .click("#checkout-personal-information-step h1")
-        .setValue("#customer-form [name=lastname]", "a Ghost")
-        .click("#checkout-personal-information-step button")
-        .waitForVisible("#checkout-personal-information-step.-complete")
-      ;
+      it('should not let the guest change their email address to that of a real customer', function () {
+        return browser
+          .click("#checkout-personal-information-step h1")
+          .setValue("#customer-form [name=email]", "pub@prestashop.com")
+          .click("#checkout-personal-information-step button")
+          .isVisible("#checkout-personal-information-step.-complete")
+          .should.become(false);
+        ;
+      });
+
+      it('should let the guest change their email address if not used by a customer', function () {
+        return browser
+          .click("#checkout-personal-information-step h1")
+          .setValue("#customer-form [name=email]", "guest.guest@example.com")
+          .click("#checkout-personal-information-step button")
+          .waitForVisible("#checkout-personal-information-step.-complete")
+        ;
+      });
     });
   });
 });
