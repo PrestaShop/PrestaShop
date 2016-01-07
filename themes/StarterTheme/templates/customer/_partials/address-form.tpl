@@ -1,3 +1,5 @@
+{include file="_partials/form-errors.tpl" errors=$errors['']}
+
 <form method="POST" action="{$action}">
   <section class="form-fields">
     {block "form_fields"}
@@ -10,9 +12,6 @@
   </section>
 
   <footer class="form-footer">
-    {if $back}
-      <input type="hidden" name="back" value="{$back}">
-    {/if}
     <input type="hidden" name="submitAddress" value="1">
     {block "form_buttons"}
       <button type="submit">{l s='Save'}</button>

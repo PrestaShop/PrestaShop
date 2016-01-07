@@ -5,70 +5,47 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CustomerLoginFormCore extends AbstractForm
 {
     private $context;
-    private $translator;
     private $urls;
 
     protected $template = 'customer/_partials/login-form.tpl';
-
-    private $email;
-    private $password;
-    private $back;
-
-    protected $errors = [
-        null        => [],
-        'email'     => [],
-        'password'  => []
-    ];
 
     public function __construct(
         Smarty $smarty,
         Context $context,
         TranslatorInterface $translator,
+        CustomerLoginFormatter $formatter,
         array $urls
     ) {
-        parent::__construct($smarty);
+        parent::__construct(
+            $smarty,
+            $translator,
+            $formatter
+        );
 
         $this->context = $context;
         $this->translator = $translator;
+        $this->formatter = $formatter;
         $this->urls = $urls;
-    }
-
-    public function fillWith(array $params = [])
-    {
-        if (isset($params['email'])) {
-            $this->email = $params['email'];
-        }
-
-        if (isset($params['password'])) {
-            $this->password = $params['password'];
-        }
-
-        if (isset($params['back'])) {
-            $this->back = $params['back'];
-        }
-
-        return $this;
+        $this->constraintTranslator = new ValidateConstraintTranslator(
+            $this->translator
+        );
     }
 
     public function submit()
     {
-        Hook::exec('actionAuthenticationBefore');
+        if ($this->validate()) {
+            Hook::exec('actionAuthenticationBefore');
 
-        if (empty($this->email)) {
-            $this->errors['email'][] = $this->translator->trans('Email address is required.', [], 'Customer');
-        } elseif (!Validate::isEmail($this->email)) {
-            $this->errors['email'][] = $this->translator->trans('Invalid email address.', [], 'Customer');
-        } elseif (empty($this->password)) {
-            $this->errors['password'][] = $this->translator->trans('Password is required.', [], 'Customer');
-        } elseif (!Validate::isPasswd($this->password)) {
-            $this->errors['password'][] = $this->translator->trans('Invalid password.', [], 'Customer');
-        } else {
             $customer = new Customer();
-            $authentication = $customer->getByEmail($this->email, $this->password);
+            $authentication = $customer->getByEmail(
+                $this->getValue('email'),
+                $this->getValue('password')
+            );
+
             if (isset($authentication->active) && !$authentication->active) {
-                $this->errors[null][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Customer');
+                $this->errors[''][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Customer');
             } elseif (!$authentication || !$customer->id || $customer->is_guest) {
-                $this->errors[null][] = $this->translator->trans('Authentication failed.', [], 'Customer');
+                $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Customer');
             } else {
                 $this->context->updateCustomer($customer);
 
@@ -86,11 +63,15 @@ class CustomerLoginFormCore extends AbstractForm
     public function getTemplateVariables()
     {
         return [
-            'action' => $this->action,
-            'email'  => $this->email,
-            'errors' => $this->getErrors(),
-            'urls'   => $this->urls,
-            'back'   => $this->back
+            'action'        => $this->action,
+            'urls'          => $this->urls,
+            'formFields'    => array_map(
+                function (FormField $field) {
+                    return $field->toArray();
+                },
+                $this->formFields
+            ),
+            'errors' => $this->getErrors()
         ];
     }
 }

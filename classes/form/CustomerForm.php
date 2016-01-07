@@ -11,59 +11,37 @@ class CustomerFormCore extends AbstractForm
     protected $template = 'customer/_partials/customer-form.tpl';
 
     private $context;
-    private $translator;
-    private $constraintTranslator;
     private $urls;
 
-    private $customerFormatter;
     private $customerPersister;
-
-    private $formFields = [];
-
     private $guest_allowed;
-
-    protected $errors = ['' => []];
 
     public function __construct(
         Smarty $smarty,
         Context $context,
         TranslatorInterface $translator,
-        CustomerFormatter $customerFormatter,
+        CustomerFormatter $formatter,
         CustomerPersister $customerPersister,
         array $urls
     ) {
-        parent::__construct($smarty);
+        parent::__construct(
+            $smarty,
+            $translator,
+            $formatter
+        );
 
         $this->context = $context;
-        $this->translator = $translator;
-        $this->customerFormatter = $customerFormatter;
         $this->urls = $urls;
-        $this->constraintTranslator = new ValidateConstraintTranslator(
-            $this->translator
-        );
         $this->customerPersister = $customerPersister;
-    }
-
-    public function getFormatter()
-    {
-        return $this->customerFormatter;
     }
 
     public function setGuestAllowed($guest_allowed = true)
     {
         if ($guest_allowed) {
-            $this->customerFormatter->setPasswordRequired(false);
+            $this->formatter->setPasswordRequired(false);
         }
         $this->guest_allowed = $guest_allowed;
         return $this;
-    }
-
-    public function getErrors()
-    {
-        foreach ($this->formFields as $field) {
-            $this->errors[$field->getName()] = $field->getErrors();
-        }
-        return $this->errors;
     }
 
     public function fillFromCustomer(Customer $customer)
@@ -81,32 +59,7 @@ class CustomerFormCore extends AbstractForm
         return $this->fillWith($params);
     }
 
-    public function fillWith(array $params = [])
-    {
-        $newFields = $this->customerFormatter->getFormat();
-
-        foreach ($newFields as $field) {
-            if (isset($this->formFields[$field->getName()])) {
-                // keep current value if set
-                if ($this->formFields[$field->getName()]->getValue()) {
-                    $field->setValue($this->formFields[$field->getName()]->getValue());
-                }
-            }
-
-            if (array_key_exists($field->getName(), $params)) {
-                // overwrite it if necessary
-                $field->setValue($params[$field->getName()]);
-            } elseif ($field->getType() === 'checkbox') {
-                $field->setValue(false);
-            }
-        }
-
-        $this->formFields = $newFields;
-
-        return $this;
-    }
-
-    private function getCustomer()
+    public function getCustomer()
     {
         if (isset($this->formFields['id_customer'])) {
             $id_customer = $this->formFields['id_customer']->getValue();
@@ -127,30 +80,6 @@ class CustomerFormCore extends AbstractForm
         }
 
         return $customer;
-    }
-
-    private function validate()
-    {
-        foreach ($this->formFields as $field) {
-            if ($field->isRequired() && !$field->getValue()) {
-                $field->addError(
-                    $this->constraintTranslator->translate('required')
-                );
-                continue;
-            } elseif (!$field->isRequired() && !$field->getValue()) {
-                continue;
-            }
-
-            foreach ($field->getConstraints() as $constraint) {
-                if (!Validate::$constraint($field->getValue())) {
-                    $field->addError(
-                        $this->constraintTranslator->translate($constraint)
-                    );
-                }
-            }
-        }
-
-        return !$this->hasErrors();
     }
 
     public function submit()
