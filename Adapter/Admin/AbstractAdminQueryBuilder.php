@@ -40,6 +40,8 @@ abstract class AbstractAdminQueryBuilder
     const FILTERING_EQUAL_NUMERIC = '= %s';
     const FILTERING_EQUAL_STRING = '= \'%s\'';
 
+    private $lastCompiledSql = null;
+
     final private function compileSqlWhere(array $whereArray)
     {
         $operator = 'AND';
@@ -173,6 +175,17 @@ abstract class AbstractAdminQueryBuilder
             $sql[] = 'LIMIT '.$limit.PHP_EOL;
         }
 
-        return implode(' '.PHP_EOL, $sql).';';
+        $this->lastCompiledSql = implode(' '.PHP_EOL, $sql).';';
+        return $this->lastCompiledSql;
+    }
+
+    /**
+     * Returns the last SQL query that was compiled on this Provider.
+     *
+     * @return string The last SQL query that was compiled with $this->compileSqlQuery()
+     */
+    public function getLastCompiledSql()
+    {
+        return $this->lastCompiledSql;
     }
 }

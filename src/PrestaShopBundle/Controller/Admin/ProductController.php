@@ -151,6 +151,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Fetch product list (and cache it into view subcall to listAction)
         $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $lastSql = $productProvider->getLastCompiledSql();
         $logger->info('Product catalog filters stored.');
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
         $hasColumnFilter = $productProvider->isColumnFiltered();
@@ -201,6 +202,7 @@ class ProductController extends FrameworkBundleAdminController
                 'has_category_filter' => $hasCategoryFilter,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
+                'last_sql' => $lastSql,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
                 'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
@@ -208,6 +210,9 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categories->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
+                'export_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminProducts', true, ['exportproduct' => 1]), // TODO: to reimplement in sF controller
+                'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
+                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
             )
         );
     }
@@ -227,16 +232,20 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc')
     {
+        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
+        /* @var $productProvider ProductInterfaceProvider */
         $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
         /* @var $legacyContext LegacyContext */
         $previewUrlFactory = $legacyContext->getFrontUrl('product') . '&id_product=';
         $totalCount = 0;
+
         $products = $request->attributes->get('products', null); // get from action subcall data, if any
-        $productProvider = $this->container->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
+        $lastSql = $request->attributes->get('last_sql', null); // get from action subcall data, if any
+
         if ($products === null) {
             // 2 hooks are triggered here: actionAdminProductsListingFieldsModifier and actionAdminProductsListingResultsModifier
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
+            $lastSql = $productProvider->getLastCompiledSql();
         }
         $hasColumnFilter = $productProvider->isColumnFiltered();
 
@@ -255,7 +264,8 @@ class ProductController extends FrameworkBundleAdminController
         return array(
             'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
             'products' => $products,
-            'product_count' => $totalCount
+            'product_count' => $totalCount,
+            'last_sql_query' => $lastSql,
         );
     }
 

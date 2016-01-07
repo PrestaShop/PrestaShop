@@ -40,6 +40,28 @@
         <div class="panel-heading">
             {{ trans("Products", {}, 'AdminProducts') }} {% if has_category_filter == true and activate_drag_and_drop == true %} {{ trans("(ordering)", {}, 'AdminProducts') }} {%else%} {% if has_filter == true %} {{ trans("(filtered)", {}, 'AdminProducts') }} {% endif %} {% endif %}
             <span class="badge">{% if has_filter == true %}{{ product_count_filtered }} / {% endif %}{{ product_count }}</span>
+            <span class="panel-heading-action">
+                <a id="desc-product-export" class="list-toolbar-btn" href="{{ export_link }}">
+                    <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Export", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                        <i class="process-icon-export"></i>
+                    </span>
+                </a>
+                <a id="desc-product-import" class="list-toolbar-btn" href="{{ import_link }}">
+                    <span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{{ trans("Import", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                        <i class="process-icon-import"></i>
+                    </span>
+                </a>
+                <a class="list-toolbar-btn" href="javascript:void(0);" onclick="showLastSqlQuery();">
+                    <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Show SQL query", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                        <i class="process-icon-terminal"></i>
+                    </span>
+                </a>
+                <a class="list-toolbar-btn" href="javascript:void(0);" onclick="sendLastSqlQuery(createSqlQueryName());">
+                    <span class="label-tooltip" data-toggle="tooltip" data-original-title="{{ trans("Export to SQL Manager", {}, 'AdminTab') }}" data-html="true" data-placement="top">
+                        <i class="process-icon-database"></i>
+                    </span>
+                </a>
+            </span>
         </div>
     
         <form name="product_catalog_list" id="product_catalog_list" method="post"
@@ -161,7 +183,7 @@
                         </tr>
                     </thead>
                     {% render controller('PrestaShopBundle\\Controller\\Admin\\ProductController::listAction',
-                      {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products})
+                      {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder, 'products': products, 'last_sql': last_sql})
                     %}
                     <tfooter>
 
@@ -257,4 +279,48 @@
             </div>
         {% endblock %}
     {% endembed %}
+
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+        'id': "catalog_deletion_modal",
+        'title': trans("Please confirm deletion", {}, 'AdminProducts'),
+        'closable': true,
+        'actions': [
+            {
+                'type': 'button',
+                'label': trans("Delete now", {}, 'AdminProducts'),
+                'value': 'confirm',
+                'class': 'btn btn-warning',
+            }
+        ],
+    } %}
+        {% block content %}
+            <div class="modal-body">
+                {{ trans('Deletion is permanent. Please confirm.', {}, 'AdminProducts') }}
+            </div>
+        {% endblock %}
+    {% endembed %}
+
+    {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+        'id': "catalog_sql_query_modal",
+        'title': trans("SQL query", {}, 'AdminProducts'),
+        'closable': true,
+        'actions': [
+            {
+            'type': 'button',
+            'label': trans("Export to SQL Manager", {}, 'AdminTab'),
+            'value': 'sql_manager',
+            'class': 'btn',
+            }
+        ],
+    } %}
+        {% block content %}
+            <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">
+                <div class="modal-body">
+                    <textarea name="sql" rows="20" cols="70"></textarea>
+                    <input type="hidden" name="name" value="" />
+                </div>
+            </form>
+        {% endblock %}
+    {% endembed %}
+
 {% endblock %}

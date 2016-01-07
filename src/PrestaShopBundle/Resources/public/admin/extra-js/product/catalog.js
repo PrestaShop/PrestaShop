@@ -87,6 +87,13 @@ $(document).ready(function() {
 	    return false;
 	});
 
+	/*
+	 * Send to SQL manager button on modal
+	 */
+	$('#catalog_sql_query_modal button[value="sql_manager"]').on('click', function() {
+		sendLastSqlQuery(createSqlQueryName());
+	});
+
 	updateBulkMenu();
 	updateFilterMenu();
 });
@@ -191,10 +198,33 @@ function bulkProductAction(element, action) {
 	var redirectUrl = '';
 
 	switch (action) {
-		// these cases needs checkboxes to be checked.
+		case 'delete_all':
+			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
+				return false;
+			}
+
+			var urlHandler = $(element).closest('[bulkurl]');
+			postUrl = urlHandler.attr('bulkurl').replace(/activate_all/, action);
+			redirectUrl = urlHandler.attr('redirecturl');
+
+			// Confirmation popup and callback...
+			$('#catalog_deletion_modal').modal('show');
+			$('#catalog_deletion_modal button[value="confirm"]').off('click');
+			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
+
+				var redirectionInput = $('<input>')
+					.attr('type', 'hidden')
+					.attr('name', 'redirect_url').val(redirectUrl);
+				form.append($(redirectionInput));
+				form.attr('action', postUrl);
+				form.submit();
+
+				$('#catalog_deletion_modal').modal('hide');
+			});
+
+			return; // No break, but RETURN, to avoid code after switch block :)
 		case 'activate_all':
 		case 'deactivate_all':
-		case 'delete_all':
 			if ($('input:checked[name="bulk_action_selected_products[]"]', form).size() == 0) {
 				return false;
 			}
@@ -205,6 +235,7 @@ function bulkProductAction(element, action) {
 		// this case will brings to the next page
 		case 'edition_next':
 			redirectUrl = $(element).closest('[massediturl]').attr('redirecturlnextpage');
+			// no break !
 		// this case will post inline edition command
 		case 'edition':
 			var editionAction = $('#bulk_edition_toolbar input:submit').attr('editionaction');
@@ -255,6 +286,26 @@ function unitProductAction(element, action) {
 	var redirectionInput = $('<input>')
 		.attr('type', 'hidden')
 		.attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
+
+	switch (action) {
+		case 'delete':
+			// Confirmation popup and callback...
+			$('#catalog_deletion_modal').modal('show');
+			$('#catalog_deletion_modal button[value="confirm"]').off('click');
+			$('#catalog_deletion_modal button[value="confirm"]').on('click', function() {
+
+				form.append($(redirectionInput));
+				var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
+				form.attr('action', url);
+				form.submit();
+
+				$('#catalog_deletion_modal').modal('hide');
+			});
+			return;
+		// Other cases, nothing to do, continue.
+		//default:
+	}
+
 	form.append($(redirectionInput));
 	var url = urlHandler.attr('uniturl').replace(/duplicate/, action);
 	form.attr('action', url);
@@ -315,4 +366,15 @@ function bulkProductEdition(element, action) {
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', false);
 			break;
 	}
+}
+
+function showLastSqlQuery() {
+	$('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody[last_sql]').attr('last_sql'));
+	$('#catalog_sql_query_modal').modal('show');
+}
+
+function sendLastSqlQuery(name) {
+	$('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody[last_sql]').attr('last_sql'));
+	$('#catalog_sql_query_modal_content input[name="name"]').val(name);
+	$('#catalog_sql_query_modal_content').submit();
 }

@@ -101,4 +101,11 @@ interface ProductInterface
      * @return array[int] A list of pagination limits to show in the select dropbox in paginator component.
      */
     public function getPaginationLimitChoices();
+
+    /**
+     * Returns the last SQL query that was compiled on this Provider.
+     *
+     * @return string The last SQL query that was compiled with $this->compileSqlQuery()
+     */
+    public function getLastCompiledSql();
 }
