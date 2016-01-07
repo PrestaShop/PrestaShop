@@ -83,6 +83,17 @@ class CustomerPersisterCore
             }
         }
 
+        if ($customer->is_guest) {
+            // guest cannot update their email to that of a real customer
+            if (Customer::customerExists($customer->email, false, true)) {
+                $this->errors['email'][] = $this->translator->trans(
+                    'An account was already registed with this email address',
+                    [],
+                    'Customer'
+                );
+                return false;
+            }
+        }
 
         $ok = $customer->save();
 
