@@ -1,4 +1,5 @@
-<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}>
+<tbody {% if activate_drag_and_drop %}class="sortable"{% endif %}
+        last_sql="{{ last_sql_query|escape('html_attr') }}">
     {% for product in products %}
         <tr uniturl="{{ product.unit_action_url|default('#') }}" productid="{{ product.id_product }}">
             <td class="checkbox-column">
