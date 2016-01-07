@@ -1512,6 +1512,14 @@ class FrontControllerCore extends Controller
         }
     }
 
+    protected function addMyAccountToBreadcrumb()
+    {
+        return [
+            'title' => $this->getTranslator()->trans('My account', [], 'Breadcrumb'),
+            'url' => $this->context->link->getPageLink('my-account', true)
+        ];
+    }
+
     public function getCanonicalURL()
     {
         return null;
