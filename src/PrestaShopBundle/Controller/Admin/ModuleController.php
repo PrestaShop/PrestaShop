@@ -47,10 +47,19 @@ class ModuleController extends Controller
             $filter['category'] = $category;
         }
 
+        try {
+            $products = $modulesProvider->getCatalogModules($filter);
+            shuffle($products);
+            $topMenuData = $this->getTopMenuData();
+        } catch (Exception $e) {
+            $products = [];
+            $topMenuData = [];
+        }
+
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'modules' => $this->generateProductUrls($this->createCatalogModuleList($modulesProvider->getCatalogModules($filter))),
-                'topMenuData' => $this->getTopMenuData()
+                'modules' => $this->generateProductUrls($this->createCatalogModuleList($products)),
+                'topMenuData' => $topMenuData
             ));
     }
 
@@ -103,6 +112,10 @@ class ModuleController extends Controller
         }
 
         $products = new \stdClass;
+        foreach (['native_modules', 'theme_bundle', 'modules'] as $subpart) {
+            $products->{$subpart} = [];
+        }
+
         foreach ($modulesProvider->getManageModules($filter) as $installed_product) {
             if (isset($installed_product->origin) && $installed_product->origin === 'native' && $installed_product->author === 'PrestaShop') {
                 $row = 'native_modules';
@@ -255,7 +268,7 @@ class ModuleController extends Controller
                 } else {
                     $product->url_active = 'disable';
                 }
-            } elseif (in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
+            } elseif (isset($product->origin) && in_array($product->origin, ['native', 'native_all', 'partner', 'customer'])) {
                 $product->url_active = 'install';
             }
         }

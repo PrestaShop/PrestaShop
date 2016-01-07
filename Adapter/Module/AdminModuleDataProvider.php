@@ -55,14 +55,20 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
     private $cache_dir;
 
-    protected $catalog_categories      = [];
-    protected $catalog_modules         = [];
+    protected $catalog_categories;
+    protected $catalog_modules;
 
-    protected $manage_categories      = [];
-    protected $manage_modules         = [];
+    protected $manage_categories;
+    protected $manage_modules;
 
     public function __construct(\AppKernel $kernel)
     {
+        $this->catalog_categories      = new \stdClass;
+        $this->catalog_modules         = [];
+
+        $this->manage_categories      = new \stdClass;
+        $this->manage_modules         = [];
+
         $this->kernel = $kernel;
         $this->cache_dir = $this->kernel->getCacheDir().'/modules/';
     }
@@ -96,8 +102,6 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         if (count($this->catalog_modules) === 0) {
             $this->loadCatalogData();
         }
-
-        shuffle($this->catalog_modules);
 
         return $this->applyModuleFilters(
                 $this->catalog_modules, $this->catalog_categories, $filter
@@ -273,6 +277,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $this->registerModuleCache(self::_CACHEFILE_MODULES_, $this->catalog_modules);
             } catch (\Exception $e) {
                 if (! $this->fallbackOnCatalogCache()) {
+                    $this->catalog_categories = new \stdClass;
+                    $this->catalog_modules = [];
                     throw new \Exception("Data from PrestaShop Addons is invalid, and cannot fallback on cache", 0, $e);
                 }
             }
@@ -286,8 +292,13 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         if (!$this->manage_categories || !$this->manage_modules) {
             try {
-                // We need to load the catalog to get native modules later
-                $this->getCatalogModules();
+                $cache_data = true;
+                try {
+                    // We need to load the catalog to get native modules later
+                    $this->getCatalogModules();
+                } catch (\Exception $e) {
+                    $cache_data = false;
+                }
 
                 $this->manage_modules = new \stdClass;
                 $all_modules = $this->getAllModules();
@@ -313,10 +324,14 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                 $this->manage_modules = $this->convertJsonForNewCatalog(['products' => $all_installed_modules]);
                 $this->manage_categories = $this->getCategoriesFromModules($this->manage_modules);
 
-                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
-                $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
+                if ($cache_data) {
+                    $this->registerModuleCache(self::_CACHEFILE_INSTALLED_CATEGORIES_, $this->manage_categories);
+                    $this->registerModuleCache(self::_CACHEFILE_INSTALLED_MODULES_, $this->manage_modules);
+                }
             } catch (\Exception $e) {
                 if (! $this->fallbackOnManageCache()) {
+                    $this->manage_categories      = new \stdClass;
+                    $this->manage_modules         = [];
                     throw new \Exception("Data from shop is invalid, and cannot fallback on cache", 0, $e);
                 }
             }
@@ -383,7 +398,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                     $product->price->GBP = 0;
                 }
                 // ToDo: Does this test should be in the Addon service ?
-                if (isset($product->installed) && $product->installed == 1) {
+                //if (isset($product->installed) && $product->installed == 1) {
                     foreach (['logo.png', 'logo.gif'] as $logo) {
                         $logo_path = _PS_MODULE_DIR_.$product->name.DIRECTORY_SEPARATOR.$logo;
                         if (file_exists($logo_path)) {
@@ -391,7 +406,7 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
                             break;
                         }
                     }
-                }
+                //}
                 $product->conditions = [];
                 $product->rating     = (object)[
                         'score' => 0.0,
