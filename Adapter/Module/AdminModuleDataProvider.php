@@ -99,7 +99,9 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
 
         shuffle($this->catalog_modules);
 
-        return $this->applyModuleFilters($this->catalog_modules, $this->catalog_modules, $filter);
+        return $this->applyModuleFilters(
+                $this->catalog_modules, $this->catalog_categories, $filter
+        );
     }
 
     public function getCatalogCategories()
@@ -242,9 +244,8 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $this->catalog_categories = $this->getModuleCache(self::_CACHEFILE_CATEGORIES_);
         $this->catalog_modules    = $this->getModuleCache(self::_CACHEFILE_MODULES_);
 
-        $addons_provider = new AddonsDataProvider();
-
         if (!$this->catalog_categories || !$this->catalog_modules) {
+            $addons_provider = new AddonsDataProvider();
             $params = ['format' => 'json'];
             $requests = ['must-have', 'service', 'partner', 'native', 'native_all'];
             if ($addons_provider->isAddonsAuthenticated()) {
@@ -330,20 +331,17 @@ class AdminModuleDataProvider extends AbstractAdminQueryBuilder implements Modul
         $categories->categories = $this->createMenuObject('categories',
             'Categories');
 
-        foreach ($modules as $module_key => $module) {
+        foreach ($modules as $module) {
             foreach ($module->refs as $name) {
-                /*$name = !empty($module->categoryName)?
-                    $module->categoryName:
-                    'unknown';*/
                 $ref  = $this->getRefFromModuleCategoryName($name);
 
-                if (!isset($ref, $categories->categories->subMenu->{$ref})) {
+                if (!isset($categories->categories->subMenu->{$ref})) {
                     $categories->categories->subMenu->{$ref} = $this->createMenuObject($ref,
                         $name
                     );
                 }
 
-                $categories->categories->subMenu->{$ref}->modulesRef[] = $module_key;
+                $categories->categories->subMenu->{$ref}->modulesRef[] = $module->id;
             }
         }
 

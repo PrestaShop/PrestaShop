@@ -63,20 +63,31 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->assertGreaterThan(0, count($categories));
     }
 
-    public function test_modules_in_catalog_can_be_found_in_module_list()
+    public function test_modules_in_categories_can_be_found_in_module_list()
     {
         $dataProvider = new AdminModuleDataProvider($this->sfKernel);
 
         $modules = $dataProvider->getCatalogModules();
         $categories = $dataProvider->getCatalogCategories();
 
+        // For each category ...
         foreach ((array)$categories->categories->subMenu as $category) {
+            // For each module ID linked to this category
             foreach ($category->modulesRef as $moduleId) {
-                // The IDs given are related to a module in the list
-               $this->assertArrayHasKey($moduleId, $modules);
 
-               // We also check that the module has also a ref to the current category we test
-               $this->assertTrue(in_array($category->refMenu, $modules[$moduleId]->refs));
+                // We look for the module in the modules list
+                foreach ($modules as $module) {
+                    if ($module->id == $moduleId) {
+                        // The IDs given are related to a module in the list
+                        //$this->assertContains($moduleId, $moduleIds);
+
+                        // We also check that the module has also a ref to the current category we test
+                        $this->assertTrue(in_array($category->refMenu, $module->refs));
+
+                        continue 2;
+                    }
+                }
+                $this->fail('Module with the ID "'. $moduleId .'" not found.');
             }
         }
     }
@@ -132,7 +143,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider', ['convertJsonForNewCatalog'], ['kernel' => $this->sfKernel]);
         $mock->expects($this->once())->method('convertJsonForNewCatalog')->will($this->returnValue($dataProvider->getCatalogModules()));
 
-        $mock->clearCache();
+        $mock->clearCatalogCache();
 
         $modules = $mock->getCatalogModules();
         $modules2 = $mock->getCatalogModules();
