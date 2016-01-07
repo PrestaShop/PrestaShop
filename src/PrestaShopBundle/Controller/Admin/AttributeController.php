@@ -85,7 +85,7 @@ class AttributeController extends FrameworkBundleAdminController
         }
 
         $modelMapper = new ProductAdminModelAdapter(
-            $product->id,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -126,7 +126,7 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Delete a product atrtibute
+     * Delete a product attribute
      *
      * @param int $idAttribute The attribute ID
      * @param int $idProduct The product ID
@@ -155,6 +155,42 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
+     * Delete all product attributes
+     *
+     * @param int $idProduct The product ID
+     * @param Request $request The request
+     *
+     * @return string
+     */
+    public function deleteAllAttributeAction($idProduct, Request $request)
+    {
+        $translator = $this->container->get('prestashop.adapter.translator');
+        $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
+        $response = new JsonResponse();
+
+        //get all attribute for a product
+        $combinations = $attributeAdapter->getProductCombinations($idProduct);
+
+        if (!$combinations || !$request->isXmlHttpRequest()) {
+            return $response;
+        }
+
+        foreach ($combinations as $combination) {
+            $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')
+                ->ajaxProcessDeleteProductAttribute($combination['id_product_attribute'], $idProduct);
+
+            if ($res['status'] == 'error') {
+                $response->setStatusCode(400);
+                break;
+            }
+        }
+
+        $response->setData(['message' => $translator->trans($res['message'], [], 'AdminProducts')]);
+
+        return $response;
+    }
+
+    /**
      * get All Combinations for a product
      *
      * @param int $idProduct The product id
@@ -167,9 +203,13 @@ class AttributeController extends FrameworkBundleAdminController
         $attributeAdapter = $this->container->get('prestashop.adapter.data_provider.attribute');
         $combinations = $attributeAdapter->getProductCombinations($idProduct);
 
+        //get product
+        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct((int)$idProduct, true);
+
         //get combinations
         $modelMapper = new ProductAdminModelAdapter(
-            $idProduct,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),

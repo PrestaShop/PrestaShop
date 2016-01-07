@@ -53,7 +53,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param int $id The product ID
+     * @param object $product The product object
      * @param object $legacyContext
      * @param object $adminProductWrapper
      * @param object $toolsAdapter
@@ -63,7 +63,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param object $featureDataProvider
      * @param object $packDataProvider
      */
-    public function __construct($id, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
+    public function __construct($product, $legacyContext, $adminProductWrapper, $toolsAdapter, $productDataProvider, $supplierDataProvider, $warehouseDataProvider, $featureDataProvider, $packDataProvider)
     {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -77,8 +77,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
-        $this->product = $this->productAdapter->getProduct($id, true);
-        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($id);
+        $this->product = $product;
+        $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
         $this->configuration = new Configuration();
         $this->product->loadStockData();
 
@@ -138,6 +138,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'on_sale',
             'minimal_quantity',
             'available_date',
+            'ecotax',
         );
     }
 
@@ -358,17 +359,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'name' => $this->product->name,
                 'description' => $this->product->description,
                 'description_short' => $this->product->description_short,
-                'upc' => $this->product->upc,
-                'ean13' => $this->product->ean13,
-                'isbn' => $this->product->isbn,
-                'reference' => $this->product->reference,
-                'condition' => $this->product->condition,
                 'active' => $this->product->active == 0 ? false : true,
                 'price_shortcut' => $this->product->price,
                 'qty_0_shortcut' => $this->product->getQuantity($this->product->id),
                 'categories' => ['tree' => $this->product->getCategories()],
                 'id_category_default' => $this->product->id_category_default,
-                'id_manufacturer' => $this->product->id_manufacturer,
                 'related_products' => [
                     'data' => array_map(
                         function ($p) {
@@ -380,11 +375,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                         )
                     )
                 ],
+                'id_manufacturer' => $this->product->id_manufacturer,
                 'features' => $this->getFormFeatures(),
                 'images' => $this->productAdapter->getImages($this->product->id, $this->locales[0]['id_lang'])
             ],
             'step2' => [
                 'price' => $this->product->price,
+                'ecotax' => $this->product->ecotax,
                 'id_tax_rules_group' => $this->product->id_tax_rules_group,
                 'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,
@@ -438,6 +435,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                     'show_price' => (bool) $this->product->show_price,
                     'online_only' => (bool) $this->product->online_only,
                 ],
+                'upc' => $this->product->upc,
+                'ean13' => $this->product->ean13,
+                'isbn' => $this->product->isbn,
+                'reference' => $this->product->reference,
+                'condition' => $this->product->condition,
                 'suppliers' => array_map(
                     function ($s) {
                         return($s->id_supplier);

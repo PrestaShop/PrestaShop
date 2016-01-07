@@ -309,7 +309,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $product = $productAdapter->getProduct($id);
+        $product = $productAdapter->getProduct($id, true);
         if (!$product || empty($product->id)) {
             return $this->redirectToRoute('admin_product_catalog');
         }
@@ -330,7 +330,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $modelMapper = new ProductAdminModelAdapter(
-            $id,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -350,8 +350,8 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('router'),
                 $this->container->get('prestashop.adapter.data_provider.category'),
                 $productAdapter,
-                $this->container->get('prestashop.adapter.data_provider.manufacturer'),
-                $this->container->get('prestashop.adapter.data_provider.feature')
+                $this->container->get('prestashop.adapter.data_provider.feature'),
+                $this->container->get('prestashop.adapter.data_provider.manufacturer')
             ))
             ->add('step2', new ProductForms\ProductPrice(
                 $this->container->get('prestashop.adapter.translator'),
@@ -465,7 +465,8 @@ class ProductController extends FrameworkBundleAdminController
             'warehouses' => ($stockManager->isAsmGloballyActivated())? $warehouseProvider->getWarehouses() : [],
             'is_multishop_context' => $isMultiShopContext,
             'showContentHeader' => false,
-            'preview_link' => $legacyContextService->getFrontUrl('product') . '&id_product='.$id,
+            'preview_link' => $adminProductWrapper->getPreviewUrl($product),
+            'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
             'help_link' => 'http://help.prestashop.com/'.$legacyContextService->getEmployeeLanguageIso().'/doc/'
                 .'AdminProducts?version='._PS_VERSION_.'&country='.$legacyContextService->getEmployeeLanguageIso(),
             'languages' => $languages,

@@ -42,4 +42,53 @@ class TaxRuleDataProvider
     {
         return \TaxRulesGroupCore::getTaxRulesGroups($only_active);
     }
+
+    /**
+     * Get all Tax Rules Groups with rates
+     *
+     * @return array TaxRulesGroup
+     */
+    public function getTaxRulesGroupWithRates()
+    {
+        $address = new \Address();
+        $address->id_country = (int)\ContextCore::getContext()->country->id;
+        $tax_rules_groups = $this->getTaxRulesGroups();
+        $tax_rates = array(
+            0 => array(
+                'id_tax_rules_group' => 0,
+                'rates' => array(0),
+                'computation_method' => 0
+            )
+        );
+
+        foreach ($tax_rules_groups as $tax_rules_group) {
+            $id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
+            $tax_calculator = \TaxManagerFactoryCore::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $tax_rates[$id_tax_rules_group] = array(
+                'id_tax_rules_group' => $id_tax_rules_group,
+                'rates' => array(),
+                'computation_method' => (int)$tax_calculator->computation_method
+            );
+
+            if (isset($tax_calculator->taxes) && count($tax_calculator->taxes)) {
+                foreach ($tax_calculator->taxes as $tax) {
+                    $tax_rates[$id_tax_rules_group]['rates'][] = (float)$tax->rate;
+                }
+            } else {
+                $tax_rates[$id_tax_rules_group]['rates'][] = 0;
+            }
+        }
+
+        return $tax_rates;
+    }
+
+    /**
+     * Get product eco taxe rate
+     *
+     * @return float tax
+     */
+    public function getProductEcotaxRate()
+    {
+        return \TaxCore::getProductEcotaxRate();
+    }
 }

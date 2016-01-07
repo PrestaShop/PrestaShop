@@ -51,6 +51,7 @@ class ProductCombination extends CommonAbstractType
         $this->translator = $translator;
         $this->contextLegacy = $legacyContext->getContext();
         $this->configuration = $this->getConfiguration();
+        $this->currency = $this->contextLegacy->currency;
     }
 
     /**
@@ -86,9 +87,10 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Regex("/^[0-9]{0,12}$/"),
             )
         ))
-        ->add('attribute_wholesale_price', 'number', array(
+        ->add('attribute_wholesale_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_price_impact', 'choice', array(
             'choices'  => array(
@@ -99,14 +101,16 @@ class ProductCombination extends CommonAbstractType
             'required' => true,
             'label' => $this->translator->trans('Impact on price', [], 'AdminProducts'),
         ))
-        ->add('attribute_price', 'number', array(
+        ->add('attribute_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('(tax excl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('attribute_priceTI', 'number', array(
+        ->add('attribute_priceTI', 'money', array(
             'required' => false,
             'mapped' => false,
-            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('(tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('attribute_weight_impact', 'choice', array(
             'choices'  => array(

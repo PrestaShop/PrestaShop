@@ -56,7 +56,7 @@ class WarehouseController extends FrameworkBundleAdminController
         $warehouses = $warehouseAdapter->getWarehouses();
 
         $modelMapper = new ProductAdminModelAdapter(
-            $idProduct,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),

@@ -19,8 +19,15 @@
 #content.bootstrap.no-header-toolbar{
   padding-top: 20px;
 }
+
+
+/* Form */
 #form .toolbarBox a{
   text-decoration: none;
+  display: inline-block;
+}
+#form .toolbarBox a i{
+  font-size: 22px;
 }
 .product-combination-image{
   display: inline-block;
@@ -61,7 +68,9 @@ body.mobile-nav #form .form-action-bar{
 .checkbox-active .titatoggle input + span:after{
   margin-top: 7px
 }
-
+#footer{
+  display: none;
+}
 @media (max-width: 768px){
   #form .form-action-bar{
     padding-left:50px;
@@ -70,7 +79,6 @@ body.mobile-nav #form .form-action-bar{
 
 
 /* Listings */
-
 .icon-caret{
   cursor: pointer;
   color: #00aff0;

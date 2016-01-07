@@ -71,7 +71,7 @@ class SupplierController extends FrameworkBundleAdminController
         $adminProductController->processSuppliers($idProduct);
 
         $modelMapper = new ProductAdminModelAdapter(
-            $product->id,
+            $product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),

@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Product\ProductAttachement;
 use PrestaShopBundle\Form\Admin\Product\ProductCustomField;
@@ -129,6 +130,38 @@ class ProductOptions extends CommonAbstractType
                     'required' => false,
                 ))
         )
+        ->add('upc', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('UPC barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,12}$/"),
+            )
+        ))
+        ->add('ean13', 'text', array(
+            'required' => false,
+            'error_bubbling' => true,
+            'label' => $this->translator->trans('EAN-13 or JAN barcode', [], 'AdminProducts'),
+            'constraints' => array(
+                new Assert\Regex("/^[0-9]{0,13}$/"),
+            )
+        ))
+        ->add('isbn', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('ISBN code', [], 'AdminProducts')
+        ))
+        ->add('reference', 'text', array(
+            'required' => false,
+            'label' => $this->translator->trans('Reference code', [], 'AdminProducts')
+        ))
+        ->add('condition', 'choice', array(
+            'choices'  => array(
+                'new' => $this->translator->trans('New', [], 'AdminProducts'),
+                'used' => $this->translator->trans('Used', [], 'AdminProducts'),
+                'refurbished' => $this->translator->trans('Refurbished', [], 'AdminProducts')
+            ),
+            'required' => true,
+            'label' => $this->translator->trans('Condition', [], 'AdminProducts')
+        ))
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,
             'expanded' =>  true,

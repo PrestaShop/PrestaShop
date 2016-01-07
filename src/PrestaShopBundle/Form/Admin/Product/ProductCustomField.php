@@ -63,9 +63,10 @@ class ProductCustomField extends CommonAbstractType
                 new Assert\Length(array('min' => 2))
             )
         ), $this->locales), array(
-            'label' => ''
+            'label' => $this->translator->trans('Label', [], 'AdminProducts')
         ))
         ->add('type', 'choice', array(
+            'label' => $this->translator->trans('Type', [], 'AdminProducts'),
             'choices'  => array(
                 '1' => $this->translator->trans('Text', [], 'AdminProducts'),
                 '0' => $this->translator->trans('File', [], 'AdminProducts'),
