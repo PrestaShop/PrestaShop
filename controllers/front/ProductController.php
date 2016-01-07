@@ -558,16 +558,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected function assignCategory()
     {
         // Assign category to the template
-        if ($this->category !== false && Validate::isLoadedObject($this->category) && $this->category->inShop() && $this->category->isAssociatedToShop()) {
-            $path = Tools::getPath($this->category->id, $this->product->name, true);
-        } elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
+        if (($this->category === false || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop()) && Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
             $this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
-            if (Validate::isLoadedObject($this->category) && $this->category->active && $this->category->isAssociatedToShop()) {
-                $path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
-            }
-        }
-        if (!isset($path) || !$path) {
-            $path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
         }
 
         $sub_categories = array();
@@ -576,7 +568,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             // various assignements before Hook::exec
             $this->context->smarty->assign(array(
-                'path' => $path,
                 'category' => $this->category,
                 'subCategories' => $sub_categories,
                 'id_category_current' => (int)$this->category->id,
@@ -776,6 +767,26 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $product_full,
             $this->context->language
         );
+    }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $categoryDefault = new Category($this->product->id_category_default);
+
+        foreach ($categoryDefault->getAllParents() as $category) {
+            if ($category->id_parent != 0 && !$category->is_root_category) {
+                $breadcrumb[] = $this->getCategoryPath($category);
+            }
+        }
+
+        $breadcrumb[] = [
+            'title' => $this->context->controller->product->name,
+            'url' => $this->context->link->getProductLink($this->context->controller->product)
+        ];
+
+        return $breadcrumb;
     }
 
     protected function addProductCustomizationData(array $product_full)
