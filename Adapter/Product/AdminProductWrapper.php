@@ -673,4 +673,43 @@ class AdminProductWrapper
 
         return $img;
     }
+
+    /**
+     * Generate preview URL
+     *
+     * @param object $product
+     *
+     * @return string preview url
+     */
+    public function getPreviewUrl($product)
+    {
+        $context = \ContextCore::getContext();
+        $id_lang = \ConfigurationCore::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
+
+        if (!\ShopUrlCore::getMainShopDomain()) {
+            return false;
+        }
+
+        $token = \ToolsCore::getAdminTokenLite('AdminProducts');
+
+        $is_rewrite_active = (bool)\ConfigurationCore::get('PS_REWRITING_SETTINGS');
+        $preview_url = $context->link->getProductLink(
+            $product,
+            $product->link_rewrite[$context->language->id],
+            \CategoryCore::getLinkRewrite($product->id_category_default, $context->language->id),
+            null,
+            $id_lang,
+            (int)$context->shop->id,
+            0,
+            $is_rewrite_active
+        );
+
+        if (!$product->active) {
+            $admin_dir = dirname($_SERVER['PHP_SELF']);
+            $admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
+            $preview_url .= ((strpos($preview_url, '?') === false) ? '?' : '&').'adtoken='.$token.'&ad='.$admin_dir.'&id_employee='.(int)$context->employee->id;
+        }
+
+        return $preview_url;
+    }
 }
