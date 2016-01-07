@@ -136,4 +136,13 @@ class OrderFollowControllerCore extends FrontController
 
         return $orders_returns;
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }

@@ -1498,7 +1498,7 @@ class FrontControllerCore extends Controller
             'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
             'url'   => $this->context->link->getPageLink('index', true)
         ];
-        
+
         return $breadcrumb;
     }
 
@@ -1510,6 +1510,14 @@ class FrontControllerCore extends Controller
                 'url' => $this->context->link->getCategoryLink($category)
             ];
         }
+    }
+
+    protected function addMyAccountToBreadcrumb()
+    {
+        return [
+            'title' => $this->getTranslator()->trans('My account', [], 'Breadcrumb'),
+            'url' => $this->context->link->getPageLink('my-account', true)
+        ];
     }
 
     public function getCanonicalURL()

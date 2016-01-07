@@ -158,4 +158,20 @@ class OrderReturnControllerCore extends FrontController
 
         return $product_customizations;
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        if (($id_order_return = (int)Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
+            $breadcrumb[] =[
+                'title' => $this->getTranslator()->trans('Merchandise returns', [], 'Breadcrumb'),
+                'url' => $this->context->link->getPageLink('order-follow')
+            ];
+        }
+
+        return $breadcrumb;
+    }
 }
