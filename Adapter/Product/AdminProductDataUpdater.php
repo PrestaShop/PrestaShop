@@ -216,10 +216,19 @@ class AdminProductDataUpdater implements ProductInterface
             return false;
         }
 
-        $filterParams = array_diff($filterParams, array('')); // removes empty filters for the test
-        if (count($filterParams) !== 1 || !isset($filterParams['filter_category'])) {
+        if (!isset($filterParams['filter_category'])) {
+            throw new \Exception('Cannot sort when filterParams does not contains \'filter_category\'.', 5010);
+        }
+        foreach ($filterParams as $k => $v) {
+            if ($v == '' || strpos($k, 'filter_') !== 0) {
+                continue;
+            }
+            if ($k == 'filter_category') {
+                continue;
+            }
             throw new \Exception('Cannot sort when filterParams contains other filter than \'filter_category\'.', 5010);
         }
+
         $categoryId = $filterParams['filter_category'];
 
         /* Sorting items on one page only, with ONE SQL UPDATE query,

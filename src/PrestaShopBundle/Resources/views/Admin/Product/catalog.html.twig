@@ -23,9 +23,9 @@
 {% block content %}
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
-    
+
     <!--## QUICK HELP GREEN BANNER TO REINTEGRATE SOON!-->
-    
+
     <div id="product_catalog_category_tree_filter" class="panel">
         {{ trans("Categories", {}, 'AdminProducts') }} &nbsp;
         <input type="button" name="product_catalog_category_tree_filter_reset" value="Unselect"
@@ -35,7 +35,7 @@
             {{ form_widget(categories) }}
         </div>
     </div>
-    
+
     <div class="panel col-lg-12">
         <div class="panel-heading">
             {{ trans("Products", {}, 'AdminProducts') }} {% if has_category_filter == true and activate_drag_and_drop == true %} {{ trans("(ordering)", {}, 'AdminProducts') }} {%else%} {% if has_filter == true %} {{ trans("(filtered)", {}, 'AdminProducts') }} {% endif %} {% endif %}
@@ -63,7 +63,7 @@
                 </a>
             </span>
         </div>
-    
+
         <form name="product_catalog_list" id="product_catalog_list" method="post"
               action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
               orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'desc'}) }}" >
@@ -190,13 +190,13 @@
                     </tfooter>
                 </table>
             </div>
-            
+
             <div class="row">
                 <div class="pull-left" bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
                      massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
                      redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
                      redirecturlnextpage="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset+limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}">
-                
+
                     {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
                         'div_style': "btn-group dropup",
                         'button_id': "product_bulk_menu",
@@ -228,7 +228,7 @@
                             }
                         ]
                     } %}
-                    {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
+                    {# include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
                         'div_style': "btn-group dropup",
                         'button_id': "product_bulk_menu",
                         'menu_label': trans("Bulk actions", {}, 'AdminTab'),
@@ -237,11 +237,11 @@
                             {
                                 "href": "javascript:bulkProductEdition(this, 'quantity_edition');",
                                 "icon": "icon-pencil",
-                                "label": trans("Edit quantities", {}, 'AdminTab')
+                                "label": 'Edit a qty'
                             }
                         ]
-                    } %}
-                    
+                    } #}
+
                     <div style="display: inline; margin-left: 2em;">
                         <span id="bulk_edition_toolbar" style="display: none;">
                             <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ trans("Save & refresh", {}, 'AdminProducts')|raw }}" />
@@ -306,10 +306,10 @@
         'closable': true,
         'actions': [
             {
-            'type': 'button',
-            'label': trans("Export to SQL Manager", {}, 'AdminTab'),
-            'value': 'sql_manager',
-            'class': 'btn',
+                'type': 'button',
+                'label': trans("Export to SQL Manager", {}, 'AdminTab'),
+                'value': 'sql_manager',
+                'class': 'btn',
             }
         ],
     } %}
