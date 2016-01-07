@@ -58,4 +58,13 @@ class AddressesControllerCore extends FrontController
 
         $this->setTemplate('customer/addresses.tpl');
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }

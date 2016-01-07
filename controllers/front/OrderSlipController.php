@@ -66,4 +66,13 @@ class OrderSlipControllerCore extends FrontController
 
         return $credit_slips;
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }
