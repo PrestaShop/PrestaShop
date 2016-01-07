@@ -375,6 +375,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                         )
                     )
                 ],
+                'id_manufacturer' => $this->product->id_manufacturer,
                 'features' => $this->getFormFeatures(),
                 'images' => $this->productAdapter->getImages($this->product->id, $this->locales[0]['id_lang'])
             ],
@@ -439,7 +440,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'isbn' => $this->product->isbn,
                 'reference' => $this->product->reference,
                 'condition' => $this->product->condition,
-                'id_manufacturer' => $this->product->id_manufacturer,
                 'suppliers' => array_map(
                     function ($s) {
                         return($s->id_supplier);

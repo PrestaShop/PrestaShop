@@ -43,7 +43,6 @@ class ProductOptions extends CommonAbstractType
 {
     private $translator;
     private $suppliers;
-    private $manufacturers;
     private $context;
     private $productAdapter;
     private $router;
@@ -58,15 +57,13 @@ class ProductOptions extends CommonAbstractType
      * @param object $currencyDataprovider
      * @param object $attachmentDataprovider
      * @param object $router
-     * @param object $manufacturerDataProvider
      */
-    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router, $manufacturerDataProvider)
+    public function __construct($translator, $legacyContext, $productDataProvider, $supplierDataProvider, $currencyDataprovider, $attachmentDataprovider, $router)
     {
         $this->context = $legacyContext;
         $this->translator = $translator;
         $this->productAdapter = $productDataProvider;
         $this->currencyDataprovider = $currencyDataprovider;
-        $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->router = $router;
 
         $this->suppliers = $this->formatDataChoicesList(
@@ -77,11 +74,6 @@ class ProductOptions extends CommonAbstractType
         $this->attachmentList = $this->formatDataChoicesList(
             $attachmentDataprovider->getAllAttachments($this->context->getLanguages()[0]['id_lang']),
             'id_attachment'
-        );
-
-        $this->manufacturers = $this->formatDataChoicesList(
-            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
-            'id_manufacturer'
         );
     }
 
@@ -169,11 +161,6 @@ class ProductOptions extends CommonAbstractType
             ),
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'AdminProducts')
-        ))
-        ->add('id_manufacturer', 'choice', array(
-            'choices' => $this->manufacturers,
-            'required' => false,
-            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
         ->add('suppliers', 'choice', array(
             'choices' =>  $this->suppliers,

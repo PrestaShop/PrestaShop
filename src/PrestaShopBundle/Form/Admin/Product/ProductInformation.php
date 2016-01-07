@@ -50,6 +50,7 @@ class ProductInformation extends CommonAbstractType
     private $translator;
     private $locales;
     private $nested_categories;
+    private $manufacturers;
     private $productAdapter;
     private $configuration;
 
@@ -62,8 +63,9 @@ class ProductInformation extends CommonAbstractType
      * @param object $categoryDataProvider
      * @param object $productDataProvider
      * @param object $featureDataProvider
+     * @param object $manufacturerDataProvider
      */
-    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $featureDataProvider)
+    public function __construct($translator, $legacyContext, $router, $categoryDataProvider, $productDataProvider, $featureDataProvider, $manufacturerDataProvider)
     {
         $this->context = $legacyContext;
         $this->translator = $translator;
@@ -71,6 +73,7 @@ class ProductInformation extends CommonAbstractType
         $this->categoryDataProvider = $categoryDataProvider;
         $this->productDataProvider = $productDataProvider;
         $this->featureDataProvider = $featureDataProvider;
+        $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->configuration = new Configuration();
 
         $this->categories = $this->formatDataChoicesList($this->categoryDataProvider->getAllCategoriesName(), 'id_category');
@@ -78,6 +81,10 @@ class ProductInformation extends CommonAbstractType
         $this->productAdapter = $this->productDataProvider;
         $this->locales = $this->context->getLanguages();
         $this->currency = $this->context->getContext()->currency;
+        $this->manufacturers = $this->formatDataChoicesList(
+            $this->manufacturerDataProvider->getManufacturers(false, 0, true, false, false, false, true),
+            'id_manufacturer'
+        );
     }
 
     /**
@@ -154,6 +161,11 @@ class ProductInformation extends CommonAbstractType
             'prototype' => true,
             'allow_add' => true,
             'allow_delete' => true
+        ))
+        ->add('id_manufacturer', 'choice', array(
+            'choices' => $this->manufacturers,
+            'required' => false,
+            'label' => $this->translator->trans('Manufacturer', [], 'AdminProducts')
         ))
 
         //RIGHT COL

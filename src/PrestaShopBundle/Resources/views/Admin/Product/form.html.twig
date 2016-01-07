@@ -126,6 +126,8 @@
                                 </ul>
                             </div>
                         </div>
+
+                        {{ form_row(form.step1.id_manufacturer) }}
                     </div>
                     <div class="col-lg-3">
                         <div class="panel">
@@ -439,7 +441,6 @@
                     {{ form_row(form.step6.isbn) }}
                     {{ form_row(form.step6.reference) }}
                     {{ form_row(form.step6.condition) }}
-                    {{ form_row(form.step6.id_manufacturer) }}
                     {{ form_row(form.step6.suppliers) }}
                     {{ form_row(form.step6.default_supplier) }}
 

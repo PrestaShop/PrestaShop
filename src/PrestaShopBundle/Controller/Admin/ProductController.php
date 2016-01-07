@@ -339,7 +339,8 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('router'),
                 $this->container->get('prestashop.adapter.data_provider.category'),
                 $productAdapter,
-                $this->container->get('prestashop.adapter.data_provider.feature')
+                $this->container->get('prestashop.adapter.data_provider.feature'),
+                $this->container->get('prestashop.adapter.data_provider.manufacturer')
             ))
             ->add('step2', new ProductForms\ProductPrice(
                 $this->container->get('prestashop.adapter.translator'),
@@ -373,8 +374,7 @@ class ProductController extends FrameworkBundleAdminController
                 $this->container->get('prestashop.adapter.data_provider.supplier'),
                 $this->container->get('prestashop.adapter.data_provider.currency'),
                 $this->container->get('prestashop.adapter.data_provider.attachment'),
-                $this->container->get('router'),
-                $this->container->get('prestashop.adapter.data_provider.manufacturer')
+                $this->container->get('router')
             ))
             ->getForm();
 
