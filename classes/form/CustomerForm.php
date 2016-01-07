@@ -61,13 +61,7 @@ class CustomerFormCore extends AbstractForm
 
     public function getCustomer()
     {
-        if (isset($this->formFields['id_customer'])) {
-            $id_customer = $this->formFields['id_customer']->getValue();
-        } else {
-            $id_customer = null;
-        }
-
-        $customer = new Customer($id_customer);
+        $customer = new Customer($this->getValue('id_customer'));
 
         foreach ($this->formFields as $field) {
             $customerField = $field->getName();
@@ -85,15 +79,8 @@ class CustomerFormCore extends AbstractForm
     public function submit()
     {
         if ($this->validate()) {
-            $clearTextPassword = '';
-            $newPassword = '';
-            if (isset($this->formFields['password'])) {
-                $clearTextPassword = (string)$this->formFields['password']->getValue();
-            }
-
-            if (isset($this->formFields['new_password'])) {
-                $newPassword = $this->formFields['new_password']->getValue();
-            }
+            $clearTextPassword = $this->getValue('password');
+            $newPassword = $this->getValue('new_password');
 
             $ok = $this->customerPersister->save(
                 $this->getCustomer(),
