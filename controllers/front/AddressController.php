@@ -107,4 +107,18 @@ class AddressControllerCore extends FrontController
         parent::initContent();
         $this->setTemplate('customer/address.tpl');
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        $breadcrumb[] = [
+            'title' => $this->getTranslator()->trans('Addresses', [], 'Breadcrumb'),
+            'url' => $this->context->link->getPageLink('addresses')
+        ];
+
+        return $breadcrumb;
+    }
 }
