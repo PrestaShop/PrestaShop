@@ -382,8 +382,9 @@ var stock = (function() {
 		'updateQtyFields': function() {
 			/** if combinations exists, hide common quantity field */
 			if ($('#accordion_combinations > div.combination[id^="attribute_"]').length > 0) {
-				$('#form_step3_qty_0').attr('readonly', 'readonly');
+				$('#quantity-no-attribute').hide();
 				$('#product_qty_0_shortcut_div').hide();
+				$('#step3_minimal_quantity').hide();
 
 				if ($('#form_step3_depends_on_stock_1').length == 0 ||
 					$('#form_step3_depends_on_stock_1:checked').length == 1 ||
@@ -393,20 +394,22 @@ var stock = (function() {
 					$('#accordion_combinations > div.combination[id^="attribute_"] input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').attr('readonly', 'readonly');
 				}
 				return;
-			} /** else, there is no combinations */
+			} else {
+				/** else, there is no combinations */
+				$('#quantity-no-attribute').show();
+				$('#product_qty_0_shortcut_div').show();
+				$('#step3_minimal_quantity').show();
+			}
 
 			/** if GSA and if is manual */
 			if ($('#form_step3_depends_on_stock_1').length == 0 ||
 				$('#form_step3_depends_on_stock_1:checked').length == 1 ||
 				$('#form_step3_advanced_stock_management:checked').length == 0) {
-				$('#form_step3_qty_0').removeAttr('readonly');
+				$('#quantity-no-attribute').show();
 				$('#product_qty_0_shortcut_div').show();
+				$('#step3_minimal_quantity').show();
 				return;
 			}
-
-			/** display fallback */
-			$('#form_step3_qty_0').attr('readonly', 'readonly');
-			$('#product_qty_0_shortcut_div').hide();
 		}
 	};
 })();

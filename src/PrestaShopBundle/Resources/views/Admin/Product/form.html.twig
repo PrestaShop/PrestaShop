@@ -159,10 +159,10 @@
                             </div>
                         </div>
 
-                        <div class="panel" style="{% if has_combinations %}display: none;{% endif %}">
+                        <div class="panel" id="product_qty_0_shortcut_div" style="{% if has_combinations %}display: none;{% endif %}">
                             <div class="panel-heading">{{ trans("Quantity", {}, 'AdminProducts') }}</div>
                             <div class="panel-body">
-                                <div class="form-group" id="product_qty_0_shortcut_div">
+                                <div class="form-group">
                                     {{ form_errors(form.step1.qty_0_shortcut) }}
                                     <div class="col-xs-3">
                                         {{ form_widget(form.step1.qty_0_shortcut) }}
@@ -260,11 +260,11 @@
                             </div>
                         </div>
 
-                        <div class="form-group" id="quantity-no-attribute">
+                        <div class="form-group {% if has_combinations or form.step3.depends_on_stock.vars.value != "0" %}hide{% endif %}" id="quantity-no-attribute">
                             {{ form_label(form.step3.qty_0) }}
                             <div class="col-sm-10">
                                 {{ form_errors(form.step3.qty_0) }}
-                                {{ form_widget(form.step3.qty_0, {'attr': (has_combinations or (form.step3.depends_on_stock.vars.value != "0"))?{'readonly': 'readonly'}:{}}) }}
+                                {{ form_widget(form.step3.qty_0) }}
                             </div>
                         </div>
 
@@ -330,7 +330,15 @@
                         </div>
 
                         {{ form_row(form.step3.out_of_stock) }}
-                        {{ form_row(form.step3.minimal_quantity) }}
+
+                        <div class="form-group {% if has_combinations %}hide{% endif %}" id="step3_minimal_quantity">
+                            {{ form_errors(form.step3.minimal_quantity) }}
+                            {{ form_label(form.step3.minimal_quantity) }}
+                            <div class="col-sm-10">
+                                {{ form_widget(form.step3.minimal_quantity) }}
+                            </div>
+                        </div>
+
                         {{ form_row(form.step3.available_now) }}
                         {{ form_row(form.step3.available_later) }}
                         {{ form_row(form.step3.available_date) }}
