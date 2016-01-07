@@ -101,4 +101,13 @@ class HistoryControllerCore extends FrontController
 
         return $url_to_reorder;
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }

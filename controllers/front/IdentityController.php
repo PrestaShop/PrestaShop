@@ -172,4 +172,13 @@ class IdentityControllerCore extends FrontController
 
         $this->setTemplate('customer/identity.tpl');
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }
