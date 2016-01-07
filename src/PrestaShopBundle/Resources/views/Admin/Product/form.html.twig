@@ -145,28 +145,22 @@
                                 <div class="form-group">
                                     <div class="col-xs-5">
                                         <label class="control-label">{{ trans("Pre-tax retail price", {}, 'AdminProducts') }}</label>
-                                        <div class="input-group">
-                                            {{ form_widget(form.step1.price_shortcut) }}
-                                            <span class="input-group-addon">{{ currency.sign }}</span>
-                                        </div>
+                                        {{ form_widget(form.step1.price_shortcut) }}
                                         {{ form_errors(form.step1.price_shortcut) }}
                                     </div>
                                     <div class="col-xs-5">
                                         <label class="control-label">{{ trans("All-tax retail price", {}, 'AdminProducts') }}</label>
-                                        <div class="input-group">
-                                            {{ form_widget(form.step1.price_ttc_shortcut) }}
-                                            <span class="input-group-addon">{{ currency.sign }}</span>
-                                        </div>
+                                        {{ form_widget(form.step1.price_ttc_shortcut) }}
                                         {{ form_errors(form.step1.price_ttc_shortcut) }}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="panel">
+                        <div class="panel" style="{% if has_combinations %}display: none;{% endif %}">
                             <div class="panel-heading">{{ trans("Quantity", {}, 'AdminProducts') }}</div>
                             <div class="panel-body">
-                                <div class="form-group" id="product_qty_0_shortcut_div" style="{% if has_combinations %}display: none;{% endif %}">
+                                <div class="form-group" id="product_qty_0_shortcut_div">
                                     {{ form_errors(form.step1.qty_0_shortcut) }}
                                     <div class="col-xs-3">
                                         {{ form_widget(form.step1.qty_0_shortcut) }}
@@ -364,7 +358,7 @@
 
                             <div class="panel-group accordion" id="accordion_combinations" data-prototype="
                                 {% filter escape %}
-                                    {{ include('PrestaShopBundle:Admin/Product/Include:form-combination.html.twig', { 'form': form.step3.combinations.vars.prototype, 'currency': currency }) }}
+                                    {{ include('PrestaShopBundle:Admin/Product/Include:form-combination.html.twig', { 'form': form.step3.combinations.vars.prototype }) }}
                                 {% endfilter %}" data-action-delete="{{ path('admin_delete_attribute') }}" data-action-delete-all="{{ path('admin_delete_all_attributes') }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination') }}">
 
                                 {% for combination in form.step3.combinations %}
@@ -388,8 +382,7 @@
                                     <div class="clearfix"></div>
                                     <div id="combination_form_{{ combination.vars.value.id_product_attribute }}" class="panel-collapse collapse">
                                         <div class="panel-body">
-                                            {#{ form_widget(combination) }#}
-                                            {{ include('PrestaShopBundle:Admin/Product/Include:form-combination.html.twig', { 'form': combination, 'currency': currency }) }}
+                                            {{ include('PrestaShopBundle:Admin/Product/Include:form-combination.html.twig', { 'form': combination }) }}
                                         </div>
                                     </div>
                                 </div>

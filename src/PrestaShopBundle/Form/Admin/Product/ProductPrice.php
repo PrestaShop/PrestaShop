@@ -65,6 +65,7 @@ class ProductPrice extends CommonAbstractType
         $this->legacyContext = $legacyContext;
         $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
         $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
+        $this->currency = $legacyContext->getContext()->currency;
         $this->tax_rules = $this->formatDataChoicesList(
             $taxDataProvider->getTaxRulesGroups(true),
             'id_tax_rules_group'
@@ -78,23 +79,26 @@ class ProductPrice extends CommonAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('price', 'number', array(
+        $builder->add('price', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
             'attr' => ['data-display-price-precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_')],
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             )
         ))
-        ->add('price_ttc', 'number', array(
+        ->add('price_ttc', 'money', array(
             'required' => false,
             'mapped' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('ecotax', 'number', array(
+        ->add('ecotax', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
@@ -116,13 +120,15 @@ class ProductPrice extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('On sale', [], 'AdminProducts'),
         ))
-        ->add('wholesale_price', 'number', array(
+        ->add('wholesale_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts')
+            'label' => $this->translator->trans('Pre-tax wholesale price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
-        ->add('unit_price', 'number', array(
+        ->add('unit_price', 'money', array(
             'required' => false,
-            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts')
+            'label' => $this->translator->trans('Unit price (tax excl.)', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
         ))
         ->add('unity', 'text', array(
             'required' => false,

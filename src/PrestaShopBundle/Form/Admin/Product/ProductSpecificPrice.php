@@ -64,6 +64,7 @@ class ProductSpecificPrice extends CommonAbstractType
         $this->countries = $this->formatDataChoicesList($countryDataprovider->getCountries($this->locales[0]['id_lang']), 'id_country');
         $this->currencies = $this->formatDataChoicesList($currencyDataprovider->getCurrencies(), 'id_currency');
         $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
+        $this->currency = $legacyContext->getContext()->currency;
     }
 
     /**
@@ -135,17 +136,19 @@ class ProductSpecificPrice extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('sp_price', 'number', array(
+        ->add('sp_price', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Product price', [], 'AdminProducts'),
-            'attr' => ['class' => 'price']
+            'attr' => ['class' => 'price'],
+            'currency' => $this->currency->iso_code,
         ))
         ->add('leave_bprice', 'checkbox', array(
             'label'    => $this->translator->trans('Leave base price:', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('sp_reduction', 'number', array(
+        ->add('sp_reduction', 'money', array(
             'required' => false,
+            'currency' => $this->currency->iso_code,
         ))
         ->add('sp_reduction_type', 'choice', array(
             'choices'  => array(

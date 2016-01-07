@@ -77,6 +77,7 @@ class ProductInformation extends CommonAbstractType
         $this->nested_categories = $this->categoryDataProvider->getNestedCategories();
         $this->productAdapter = $this->productDataProvider;
         $this->locales = $this->context->getLanguages();
+        $this->currency = $this->context->getContext()->currency;
     }
 
     /**
@@ -160,19 +161,21 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Enabled', [], 'AdminProducts'),
             'required' => false,
         ))
-        ->add('price_shortcut', 'number', array(
+        ->add('price_shortcut', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Pre-tax retail price', [], 'AdminProducts'),
+            'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'float'))
             ),
             'attr' => []
         ))
-        ->add('price_ttc_shortcut', 'number', array(
+        ->add('price_ttc_shortcut', 'money', array(
             'required' => false,
             'label' => $this->translator->trans('Retail price with tax', [], 'AdminProducts'),
             'mapped' => false,
+            'currency' => $this->currency->iso_code,
         ))
         ->add('qty_0_shortcut', 'number', array(
             'required' => false,
