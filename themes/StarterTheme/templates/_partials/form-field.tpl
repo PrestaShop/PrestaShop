@@ -32,6 +32,8 @@
     >
     <span>{$field.label}</span>
   </label>
+{elseif $field.type === 'hidden'}
+  <input type="hidden" name="{$field.name}" value="{$field.value}">
 {else}
   <label>
     <span>{$field.label}</span>
