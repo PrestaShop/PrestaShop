@@ -74,4 +74,13 @@ class DiscountControllerCore extends FrontController
 
         return $cart_rules;
     }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $breadcrumb[] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }
