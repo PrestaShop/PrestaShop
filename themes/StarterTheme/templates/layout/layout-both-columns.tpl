@@ -21,6 +21,10 @@
 
     <div id="wrapper">
 
+      {block name="breadcrumb"}
+        {include file="_partials/breadcrumb.tpl"}
+      {/block}
+
       {block name="left_column"}
         <div id="left-column">
           {hook h="displayLeftColumn"}

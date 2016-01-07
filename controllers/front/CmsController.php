@@ -90,15 +90,8 @@ class CmsControllerCore extends FrontController
         parent::initContent();
 
         if ($this->assignCase == 1) {
-            if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category) {
-                $path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
-            } elseif (isset($this->cms_category->meta_title)) {
-                $path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
-            }
-
             $this->context->smarty->assign(array(
                 'cms' => $this->objectSerializer->toArray($this->cms),
-                'path' => $path,
             ));
 
             if ($this->cms->indexation == 0) {
@@ -116,7 +109,6 @@ class CmsControllerCore extends FrontController
                 'cms_category' => $this->cms_category,
                 'sub_category' => $this->cms_category->getSubCategories($this->context->language->id),
                 'cms_pages' => CMS::getCMSPages($this->context->language->id, (int)$this->cms_category->id, true, (int)$this->context->shop->id),
-                'path' => ($this->cms_category->id !== 1) ? Tools::getPath($this->cms_category->id, $this->cms_category->name, false, 'CMS') : '',
                 'body_classes' => array($this->php_self.'-'.$this->cms_category->id, $this->php_self.'-'.$this->cms_category->link_rewrite)
             ));
 
@@ -131,6 +123,30 @@ class CmsControllerCore extends FrontController
     protected function getSSLCMSPageIds()
     {
         return array((int)Configuration::get('PS_CONDITIONS_CMS_ID'), (int)Configuration::get('LEGAL_CMS_ID_REVOCATION'));
+    }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = parent::getBreadcrumb();
+
+        $cmsCategory = new CMSCategory($this->cms->id_cms_category);
+
+        if ($cmsCategory->id_parent != 0) {
+            foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
+                $cmsSubCategory = new CMSCategory($category['id_cms_category']);
+                $breadcrumb[] = [
+                    'title' => $cmsSubCategory->getName(),
+                    'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory)
+                ];
+            }
+        }
+
+        $breadcrumb[] = [
+            'title' => $this->context->controller->cms->meta_title,
+            'url' => $this->context->link->getCMSLink($this->context->controller->cms)
+        ];
+
+        return $breadcrumb;
     }
 
     public function getTemplateVarPage()
