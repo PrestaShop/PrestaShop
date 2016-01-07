@@ -2,6 +2,7 @@
 
 import fixtures from '../../fixtures';
 import * as checkout from '../../helpers/checkout';
+import {getRandomUser} from '../../helpers/random-user';
 
 describe('Customer Identity', function () {
   describe('the Customer Identity Page', function () {
@@ -56,7 +57,7 @@ describe('Customer Identity', function () {
     });
   });
 
-  describe.only('the guest form during checkout', function () {
+  describe('the guest form during checkout', function () {
 
     function initCheckout () {
       return checkout
@@ -113,11 +114,25 @@ describe('Customer Identity', function () {
 
       it('should let the guest change their email address if not used by a customer', function () {
         return browser
-          .click("#checkout-personal-information-step h1")
           .setValue("#customer-form [name=email]", "guest.guest@example.com")
           .click("#checkout-personal-information-step button")
           .waitForVisible("#checkout-personal-information-step.-complete")
         ;
+      });
+
+      it('should let the guest add a password to create an account', function () {
+        return getRandomUser().then(user => {
+          return browser
+            .click("#checkout-personal-information-step h1")
+            .setValue("#customer-form [name=email]", user.email)
+            .setValue("#customer-form [name=password]", "123456789")
+            .click("#checkout-personal-information-step button")
+            .waitForVisible("#checkout-personal-information-step.-complete")
+            .click("#checkout-personal-information-step h1")
+            .isVisible("#checkout-personal-information-step .identity")
+            .should.become(true)
+          ;
+        });
       });
     });
   });
