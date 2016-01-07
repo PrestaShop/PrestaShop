@@ -27,7 +27,7 @@
 
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerAddressFormatterCore
+class CustomerAddressFormatterCore implements FormFormatterInterface
 {
     private $country;
     private $translator;
@@ -69,6 +69,9 @@ class CustomerAddressFormatterCore
                 ->setType('hidden'),
             'id_customer' => (new FormField)
                 ->setName('id_customer')
+                ->setType('hidden'),
+            'back' => (new FormField)
+                ->setName('back')
                 ->setType('hidden'),
             'token'       => (new FormField)
                 ->setName('token')
@@ -122,6 +125,21 @@ class CustomerAddressFormatterCore
             ;
 
             $format[$formField->getName()] = $formField;
+        }
+
+        return $this->addConstraints($format);
+    }
+
+    private function addConstraints(array $format)
+    {
+        $constraints = Address::$definition['fields'];
+
+        foreach ($format as $field) {
+            if (!empty($constraints[$field->getName()]['validate'])) {
+                $field->addConstraint(
+                    $constraints[$field->getName()]['validate']
+                );
+            }
         }
 
         return $format;
