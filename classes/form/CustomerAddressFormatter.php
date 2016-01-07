@@ -109,20 +109,30 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                         );
                     }
                 } elseif ($entity === 'State') {
-                    $states = State::getStatesByIdCountry($this->country->id);
-                    foreach ($states as $state) {
-                        $formField->addAvailableValue(
-                            $state['id_state'],
-                            $state[$entityField]
-                        );
+                    if ($this->country->contains_states) {
+                        $states = State::getStatesByIdCountry($this->country->id);
+                        foreach ($states as $state) {
+                            $formField->addAvailableValue(
+                                $state['id_state'],
+                                $state[$entityField]
+                            );
+                        }
+                        $formField->setRequired(true);
                     }
                 }
             }
 
-            $formField
-                ->setRequired(array_key_exists($field, $required))
-                ->setLabel($this->getFieldLabel($field))
-            ;
+            $formField->setLabel($this->getFieldLabel($field));
+            if (!$formField->isRequired()) {
+                // Only trust the $required array for fields
+                // that are not marked as required.
+                // $required doesn't have all the info, and fields
+                // may be required for other reasons than what
+                // AddressFormat::getFieldsRequired() says.
+                $formField->setRequired(
+                    array_key_exists($field, $required)
+                );
+            }
 
             $format[$formField->getName()] = $formField;
         }
