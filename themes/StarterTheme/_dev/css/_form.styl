@@ -6,6 +6,11 @@ label.radio-block
     margin-top small-padding
     margin-bottom 2*small-padding
     display block
+    &.-required
+      > span
+        font-weight bold
+        &:after
+          content: " *"
   input[type=checkbox] + span
     display inline
   textarea
