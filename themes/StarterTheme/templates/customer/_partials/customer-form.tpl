@@ -1,6 +1,4 @@
-{foreach from=$errors[''] item=error}
-  <p>{$error}</p>
-{/foreach}
+{include file="_partials/form-errors.tpl" errors=$errors['']}
 
 <form action="{$action}" id="customer-form" method="post">
 

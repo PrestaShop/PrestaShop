@@ -1625,6 +1625,7 @@ class FrontControllerCore extends Controller
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
+            new CustomerLoginFormatter($this->getTranslator()),
             $this->getTemplateVarUrls()
         );
 
