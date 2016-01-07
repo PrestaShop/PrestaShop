@@ -135,9 +135,9 @@ class CustomerPersisterCore
             }
 
             /**
-             * TODO SECURITY: this is only safe provided
+             * Warning: this is only safe provided
              * that guests cannot log in even with the generated
-             * password.
+             * password. That's the case at least at the time of writing.
              */
             $clearTextPassword = $this->crypto->encrypt(
                 microtime(),
