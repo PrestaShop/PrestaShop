@@ -517,6 +517,7 @@ class FrontControllerCore extends Controller
             'urls' => $urls,
             'feature_active' => $this->getTemplateVarFeatureActive(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
+            'breadcrumb' => $this->getBreadcrumb(),
         ]);
         Media::addJsDef(['prestashop' => [
             'customer' => $customer,
@@ -1487,6 +1488,28 @@ class FrontControllerCore extends Controller
         ];
 
         return $page;
+    }
+
+    public function getBreadcrumb()
+    {
+        $breadcrumb = [];
+
+        $breadcrumb[] = [
+            'title' => $this->getTranslator()->trans('Home', [], 'Breadcrumb'),
+            'url'   => $this->context->link->getPageLink('index', true)
+        ];
+        
+        return $breadcrumb;
+    }
+
+    protected function getCategoryPath($category)
+    {
+        if ($category->id_parent != 0 && !$category->is_root_category) {
+            return [
+                'title' => $category->name,
+                'url' => $this->context->link->getCategoryLink($category)
+            ];
+        }
     }
 
     public function getCanonicalURL()
