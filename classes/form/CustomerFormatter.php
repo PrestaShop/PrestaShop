@@ -1,7 +1,7 @@
 <?php
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerFormatterCore
+class CustomerFormatterCore implements FormFormatterInterface
 {
     private $translator;
     private $language;
