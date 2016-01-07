@@ -278,7 +278,7 @@ function bulkProductAction(element, action) {
 
 function unitProductAction(element, action) {
 	var form = $('form#product_catalog_list');
-	
+
 	// save action URL for redirection and update to post to bulk action instead
 	// using form action URL allow to get route attributes and stay on the same page & ordering.
 	var urlHandler = $(element).closest('[uniturl]');
@@ -327,8 +327,9 @@ function showBulkProductEdition(show) {
 
 function bulkProductEdition(element, action) {
 	var form = $('form#product_catalog_list');
-	
+
 	switch (action) {
+		/*
 		case 'quantity_edition':
 			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
@@ -342,7 +343,7 @@ function bulkProductEdition(element, action) {
 					.attr('onkeydown', 'if (event.keyCode == 13) return bulkProductAction(this, "edition_next"); if (event.keyCode == 27) return bulkProductEdition(this, "cancel");')
 					.val($quantity);
 				$(this).html($input);
-				
+
 			});
 			$('#bulk_edition_toolbar input:submit').attr('tabindex', i++);
 			$('#bulk_edition_toolbar input:button').attr('tabindex', i++);
@@ -350,6 +351,7 @@ function bulkProductEdition(element, action) {
 
 			$('td.product-sav-quantity input', form).first().focus();
 			break;
+		*/
 		case 'sort':
 			showBulkProductEdition(true);
 			$('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form).prop('disabled', true);
