@@ -3,12 +3,12 @@
 {block name="step_content"}
 
   {if !$use_same_address}
-    <h2 class="h2">{l s='Your Delivery Address'}</h2>
+    <h2 class="h2">{l s="Your Delivery Address"}</h2>
   {/if}
 
   {if $use_same_address}
     <p>
-      {l s='The selected address will be used both as your personal address (for invoice) and as your delivery address.'}
+      {l s="The selected address will be used both as your personal address (for invoice) and as your delivery address."}
     </p>
   {/if}
 
@@ -32,11 +32,11 @@
       }
     </div>
 
-    <a href="?newAddress=delivery">{l s='Add another address'}</a>
+    <a href="?newAddress=delivery">{l s="Add another address"}</a>
 
     {if $use_same_address}
       <p>
-        <a data-link-action="different-invoice-address" href="?use_same_address=0">{l s='Use a different address for invoice?'}</a>
+        <a data-link-action="different-invoice-address" href="?use_same_address=0">{l s="Use a different address for invoice?"}</a>
       </p>
     {/if}
 
@@ -44,7 +44,7 @@
 
   {if !$use_same_address}
 
-    <h2 class="h2">{l s='Your Invoice Address'}</h2>
+    <h2 class="h2">{l s="Your Invoice Address"}</h2>
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
@@ -66,7 +66,7 @@
         }
       </div>
 
-      <a href="?newAddress=invoice">{l s='Add another address'}</a>
+      <a href="?newAddress=invoice">{l s="Add another address"}</a>
 
     {/if}
 
@@ -75,7 +75,7 @@
   {if !$form_has_continue_button}
     <form>
       <button type="submit" class="continue" name="continue" value="1">
-          {l s='Continue'}
+          {l s="Continue"}
       </button>
     </form>
   {/if}

@@ -8,7 +8,7 @@
          because it makes ensuring they were checked very tricky and overcomplicates
          the template. Might change later.
       *}
-      {l s='By confirming your order, I certify that I have read and agree with all of the conditions below:'}
+      {l s="By confirming your order, I certify that I have read and agree with all of the conditions below:"}
     </p>
 
     <form id="conditions-to-approve" method="GET">
@@ -91,12 +91,12 @@
   <div id="payment-confirmation">
     <div class="ps-shown-by-js">
       <button type="submit" {if !$selected_payment_option} disabled {/if}>
-        {l s='Order with an obligation to pay'}
+        {l s="Order with an obligation to pay"}
       </button>
     </div>
     <div class="ps-hidden-by-js">
       {if $selected_payment_option and $all_conditions_approved}
-        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay'}</label>
+        <label for="pay-with-{$selected_payment_option}">{l s="Order with an obligation to pay"}</label>
       {/if}
     </div>
   </div>

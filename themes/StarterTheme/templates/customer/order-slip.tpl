@@ -1,20 +1,20 @@
 {extends file="customer/page.tpl"}
 
 {block name="page_title"}
-  {l s='Credit slips'}
+  {l s="Credit slips"}
 {/block}
 
 {block name="page_content"}
-  <h2>{l s='Credit slips you have received after canceled orders'}.</h2>
+  <h2>{l s="Credit slips you have received after canceled orders"}.</h2>
 
   {if $credit_slips}
     <table>
       <thead>
         <tr>
-          <th>{l s='Credit slip'}</th>
-          <th>{l s='Order'}</th>
-          <th>{l s='Date issued'}</th>
-          <th>{l s='View credit slip'}</th>
+          <th>{l s="Credit slip"}</th>
+          <th>{l s="Order"}</th>
+          <th>{l s="Date issued"}</th>
+          <th>{l s="View credit slip"}</th>
         </tr>
       </thead>
       <tbody>
@@ -23,7 +23,7 @@
             <td>{$slip.credit_slip_number}</td>
             <td><a href="#">{$slip.order_number}</a></td>
             <td>{$slip.credit_slip_date}</td>
-            <td><a href="{$slip.url}">{l s='PDF'}</a></td>
+            <td><a href="{$slip.url}">{l s="PDF"}</a></td>
           </tr>
         {/foreach}
       </tbody>
