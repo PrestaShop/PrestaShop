@@ -1,0 +1,25 @@
+.drop-down{
+  margin-top: 20px;
+  span,a,i{
+    color:$gray-light;
+  }
+  ul{
+    list-style: none;
+    visibility: hidden;
+    height: 0;
+    padding-left: 0;
+    background: white;
+    @include transition(all .7s ease-in-out);
+  }
+  i{
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+  .expand-more{
+    cursor: pointer;
+    &:hover + ul{
+      visibility: visible;
+      height: auto;
+    }
+  }
+}
