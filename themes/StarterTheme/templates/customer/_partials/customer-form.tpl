@@ -1,8 +1,6 @@
 {include file="_partials/form-errors.tpl" errors=$errors['']}
 
-{* TODO StarterTheme: HOOKS!!! *}
-
-<form action="{$action}" method="post">
+<form action="{$action}" id="customer-form" method="post">
 
   <section class="form-fields">
     {block "form_fields"}
@@ -12,18 +10,14 @@
         {/block}
       {/foreach}
     {/block}
-
-    <p class="lost_password">
-      <a href="{$urls.pages.password}" rel="nofollow">
-        {l s='Forgot your password?'}
-      </a>
-    </p>
   </section>
 
   <footer class="form-footer">
-    <input type="hidden" name="submitLogin" value="1">
+    <input type="hidden" name="submitCreate" value="1">
     {block "form_buttons"}
-      <button type="submit">{l s='Sign in'}</button>
+      <button type="submit">
+        {l s='Save'}
+      </button>
     {/block}
   </footer>
 
