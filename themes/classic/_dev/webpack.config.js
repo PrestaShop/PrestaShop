@@ -41,7 +41,8 @@ module.exports = {
                     "style",
                     "css?sourceMap!postcss!sass?sourceMap"
                 )
-            }
+            },
+            { test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'file-loader?name=../css/[hash][ext]' }
         ]
     },
     externals: {
