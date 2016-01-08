@@ -79,6 +79,7 @@ hookModule('blocktopmenu', 'displayTop');
 hookModule('blocklanguages', 'displayNav');
 hookModule('blockcurrencies', 'displayNav');
 hookModule('blockuserinfo', 'displayNav');
+hookModule('blocksearch', 'displayHeaderMiddle');
 
 // We need a customizable product: we add a single required text field to the product with id 1.
 
