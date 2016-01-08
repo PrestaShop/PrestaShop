@@ -809,6 +809,26 @@ class ShopCore extends ObjectModel
         return false;
     }
 
+    // NOTE : Added for convenience in AdminproductController initForm
+    /**
+     * Return a shop name from shop ID
+     *
+     * @param int $id_shop
+     * @return string
+     */
+    public static function getNameById($id_shop)
+    {
+    	Shop::cacheShops();
+    	foreach (self::$shops as $group_data) {
+    	    foreach ($group_data['shops'] as $shop_id => $shop_data) {
+    	        if ((int)$shop_data['id_shop'] == (int)$id_shop) {
+    	            return $shop_data['name'];
+    	        }
+    	    }
+    	}
+    	return false;
+    }
+
     /**
      * @param bool $active
      * @param int $id_shop_group
