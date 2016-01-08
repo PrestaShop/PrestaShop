@@ -105,14 +105,14 @@
 
             {block name="product_extra_right"}
               <div class="product-extra-right">
-                {hook h='displayRightColumnProduct'}
+                {hook h="displayRightColumnProduct"}
               </div>
             {/block}
 
             {* StarterTheme: Content Only *}
             {block name="product_extra_left"}
               <div class="product-extra-left">
-                {hook h='displayLeftColumnProduct'}
+                {hook h="displayLeftColumnProduct"}
               </div>
             {/block}
             {* StarterTheme: Content Only End *}

@@ -30,7 +30,7 @@
             data-link-action="add-to-cart"
           >{l s='Add to cart'}</a>
       {/if}
-      {hook h='displayProductListFunctionalButtons' product=$product}
+      {hook h="displayProductListFunctionalButtons" product=$product}
     </div>
   {/block}
 
@@ -80,6 +80,6 @@
     {/if}
   {/block}
 
-  {hook h='displayProductListReviews' product=$product}
+  {hook h="displayProductListReviews" product=$product}
 
 </article>
