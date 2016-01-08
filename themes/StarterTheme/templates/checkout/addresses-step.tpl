@@ -14,8 +14,8 @@
 
   {if $show_delivery_address_form}
     <div id="delivery-address">
-      {render ui                        = $address_form
-              template                  = "checkout/_partials/address-form.tpl"
+      {render file                      = "checkout/_partials/address-form.tpl"
+              ui                        = $address_form
               use_same_address          = $use_same_address
               type                      = "delivery"
               form_has_continue_button  = $form_has_continue_button
@@ -48,8 +48,8 @@
 
     {if $show_invoice_address_form}
       <div id="invoice-address">
-        {render ui                        = $address_form
-                template                  = "checkout/_partials/address-form.tpl"
+        {render file                      = "checkout/_partials/address-form.tpl"
+                ui                        = $address_form
                 use_same_address          = $use_same_address
                 type                      = "invoice"
                 form_has_continue_button  = $form_has_continue_button
