@@ -27,13 +27,13 @@ namespace PrestaShop\PrestaShop\Core\Business\Addon;
 
 interface AddonManagerInterface
 {
-    public function install(string $source);
-    public function uninstall(string $name);
-    public function upgrade(string $name, string $version, string $source = null);
-    public function enable(string $name);
-    public function disable(string $name);
-    public function reset(string $name);
+    public function install($source);
+    public function uninstall($name);
+    public function upgrade($name, $version, $source = null);
+    public function enable($name);
+    public function disable($name);
+    public function reset($name);
 
-    public function getInstanceByName(string $name);
+    public function getInstanceByName($name);
     public function getAddonList(AddonListFilter $filter);
 }

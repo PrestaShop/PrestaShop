@@ -43,7 +43,7 @@ abstract class AbstractTheme implements AddonInterface
     *
     * @return bool true for success
     */
-    public function onUpgrade(string $version)
+    public function onUpgrade($version)
     {
         return true;
     }
