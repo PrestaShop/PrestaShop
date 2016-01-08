@@ -36,7 +36,7 @@ class ThemeManager implements AddonManagerInterface
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
-    public function install(string $source)
+    public function install($source)
     {
         return true;
     }
@@ -62,7 +62,7 @@ class ThemeManager implements AddonManagerInterface
     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
     * @return bool true for success
     */
-    public function upgrade(Addon $theme, string $version, string $source = null)
+    public function upgrade(Addon $theme, $version, $source = null)
     {
         return true;
     }
@@ -76,7 +76,7 @@ class ThemeManager implements AddonManagerInterface
      * @param  string $name The theme name to enable
      * @return bool         True for success
      */
-    public function enable(string $name)
+    public function enable($name)
     {
         return true;
     }
@@ -87,7 +87,7 @@ class ThemeManager implements AddonManagerInterface
      * @param  string $name The theme name to enable
      * @return bool         True for success
      */
-    public function disable(string $name)
+    public function disable($name)
     {
         return true;
     }
@@ -98,7 +98,7 @@ class ThemeManager implements AddonManagerInterface
      * @param  string $name The theme name to reset
      * @return bool         True for success
      */
-    public function reset(string $name)
+    public function reset($name)
     {
         return true;
     }

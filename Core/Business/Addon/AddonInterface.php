@@ -33,5 +33,5 @@ interface AddonInterface
     public function onDisable();
     public function onReset();
 
-    public function onUpgrade(string $version);
+    public function onUpgrade($version);
 }
