@@ -21,7 +21,6 @@
       {/block}
 
       <div id="wrapper">
-
         {block name='breadcrumb'}
           {include file='_partials/breadcrumb.tpl'}
         {/block}
@@ -53,6 +52,7 @@
           {include file="_partials/footer.tpl"}
         {/block}
       </footer>
+
     </main>
     <!-- Load JS files here -->
     {*StarterTheme: This is useful for module debugging, but should be removed before end release.*}
