@@ -27,7 +27,7 @@
 
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CustomerAddressFormatterCore
+class CustomerAddressFormatterCore implements FormFormatterInterface
 {
     private $country;
     private $translator;
@@ -64,49 +64,28 @@ class CustomerAddressFormatterCore
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'id_address'  => [
-                'name'      => 'id_address',
-                'type'      => 'hidden',
-                'required'  => false,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'id_customer' => [
-                'name'      => 'id_customer',
-                'type'      => 'hidden',
-                'required'  => true,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'token' => [
-                'name'      => 'token',
-                'type'      => 'hidden',
-                'required'  => true,
-                'label'     => '',
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ],
-            'alias' => [
-                'name'      => 'alias',
-                'type'      => 'text',
-                'required'  => false,
-                'label'     => $this->getFieldLabel('alias'),
-                'value'     => null,
-                'values'    => null,
-                'errors'    => []
-            ]
+            'id_address'  => (new FormField)
+                ->setName('id_address')
+                ->setType('hidden'),
+            'id_customer' => (new FormField)
+                ->setName('id_customer')
+                ->setType('hidden'),
+            'back' => (new FormField)
+                ->setName('back')
+                ->setType('hidden'),
+            'token'       => (new FormField)
+                ->setName('token')
+                ->setType('hidden'),
+            'alias'       => (new FormField)
+                ->setName('alias')
+                ->setLabel(
+                    $this->getFieldLabel('alias')
+                )
         ];
 
         foreach ($fields as $field) {
-            $type   = 'text';
-            $value  = null;
-            $values = null;
-            $name   = $field;
+            $formField = new FormField;
+            $formField->setName($field);
 
             $fieldParts = explode(':', $field, 2);
 
@@ -116,36 +95,63 @@ class CustomerAddressFormatterCore
                 // Fields specified using the Entity:field
                 // notation are actually references to other
                 // entities, so they should be displayed as a select
-                $type = 'select';
+                $formField->setType('select');
 
                 // Also, what we really want is the id of the linked entity
-                $name = 'id_'.strtolower($entity);
+                $formField->setName('id_'.strtolower($entity));
 
                 if ($entity === 'Country') {
-                    $value = $this->country->id;
-                    $values = [];
+                    $formField->setValue($this->country->id);
                     foreach ($this->availableCountries as $country) {
-                        $values[$country['id_country']] = $country[$entityField];
+                        $formField->addAvailableValue(
+                            $country['id_country'],
+                            $country[$entityField]
+                        );
                     }
                 } elseif ($entity === 'State') {
-                    $states = State::getStatesByIdCountry($this->country->id);
-                    $values = [];
-                    foreach ($states as $state) {
-                        $values[$state['id_state']] = $state[$entityField];
+                    if ($this->country->contains_states) {
+                        $states = State::getStatesByIdCountry($this->country->id);
+                        foreach ($states as $state) {
+                            $formField->addAvailableValue(
+                                $state['id_state'],
+                                $state[$entityField]
+                            );
+                        }
+                        $formField->setRequired(true);
                     }
                 }
             }
 
-            $format[$name] = [
-                'name'     => $name,
-                'type'     => $type,
-                'required' => array_key_exists($field, $required),
-                'label'    => $this->getFieldLabel($field),
-                'value'    => $value,
-                'values'   => $values,
-                'errors'   => []
-            ];
+            $formField->setLabel($this->getFieldLabel($field));
+            if (!$formField->isRequired()) {
+                // Only trust the $required array for fields
+                // that are not marked as required.
+                // $required doesn't have all the info, and fields
+                // may be required for other reasons than what
+                // AddressFormat::getFieldsRequired() says.
+                $formField->setRequired(
+                    array_key_exists($field, $required)
+                );
+            }
+
+            $format[$formField->getName()] = $formField;
         }
+
+        return $this->addConstraints($format);
+    }
+
+    private function addConstraints(array $format)
+    {
+        $constraints = Address::$definition['fields'];
+
+        foreach ($format as $field) {
+            if (!empty($constraints[$field->getName()]['validate'])) {
+                $field->addConstraint(
+                    $constraints[$field->getName()]['validate']
+                );
+            }
+        }
+
         return $format;
     }
 

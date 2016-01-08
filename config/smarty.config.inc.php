@@ -88,6 +88,7 @@ smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval')
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'function', 'widget', 'smartyWidget');
 smartyRegisterFunction($smarty, 'function', 'render', 'smartyRender');
+smartyRegisterFunction($smarty, 'function', 'form_field', 'smartyFormField');
 smartyRegisterFunction($smarty, 'block', 'widget_block', 'smartyWidgetBlock');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
@@ -285,6 +286,25 @@ function smartyRender($params, &$smarty)
         $ui->render($params),
         '<!-- end '.$ui->getTemplate().'-->'
     ]);
+}
+
+function smartyFormField($params, &$smarty)
+{
+    $scope = $smarty->createData(
+        $smarty
+    );
+
+    $scope->assign($params);
+
+    $file = '_partials/form-field.tpl';
+
+    if (isset($params['file'])) {
+        $file = $params['file'];
+    }
+
+    $tpl = $smarty->createTemplate($file, $scope);
+
+    return $tpl->fetch();
 }
 
 function smartyWidgetBlock($params, $content, &$smarty)

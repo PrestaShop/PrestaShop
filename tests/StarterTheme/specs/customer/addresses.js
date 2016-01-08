@@ -66,6 +66,13 @@ describe('Customer account: Addresses', function () {
         .setValue('.address-form input[name=lastname]', 'Really')
         .setValue('.address-form input[name=address1]', '12 rue d\'Amsterdam')
         .setValue('.address-form input[name=city]', 'Paris City')
+        .then(() => browser.isVisible('.address-form select[name=id_state]').then(
+          visible => {
+            if (visible) {
+              return browser.selectByIndex('.address-form select[name=id_state]', 0);
+            }
+          }
+        ))
         .setValue('.address-form input[name=postcode]', '75009')
         .setValue('.address-form input[name=phone]', '1234567890')
         .setValue('.address-form input[name=alias]', 'Selenium address '+_.now())
