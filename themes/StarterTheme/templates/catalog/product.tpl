@@ -9,7 +9,7 @@
   <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
-    {block name="product-activation"}
+    {block name="product_activation"}
       {include file="catalog/_partials/product-activation.tpl"}
     {/block}
 

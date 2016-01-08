@@ -1,6 +1,6 @@
 {extends file="checkout/checkout-step.tpl"}
 
-{block "step_content"}
+{block name="step_content"}
   {if $logged_in}
     <p class="identity">{l s='Connected as %1$s %2$s.' sprintf=[$customer.firstname, $customer.lastname]}</p>
     <p>{l s='Not you? [1]Log out[/1]' tags=["<a href='{$urls.actions.logout}'>"]}</p>
