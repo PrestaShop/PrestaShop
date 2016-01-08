@@ -24,8 +24,8 @@
     {block name="content"}
     <section id="content">
 
-      {include  cart          = $cart
-                file          = 'checkout/_partials/cart-summary.tpl'
+      {include  file          = "checkout/_partials/cart-summary.tpl"
+                cart          = $cart
       }
 
       {render   template  = "checkout/checkout-process.tpl"

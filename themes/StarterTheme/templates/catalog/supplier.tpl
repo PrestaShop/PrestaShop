@@ -9,7 +9,7 @@
     {/block}
 
     {block name="supplier_products"}
-      {include file='./products.tpl' products=$products}
+      {include file="catalog/products.tpl" products=$products}
     {/block}
 
   </section>
