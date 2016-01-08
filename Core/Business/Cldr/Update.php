@@ -79,6 +79,9 @@ class Update extends Repository
         }
 
         //extract ONLY supplemental json files
+        if (!class_exists('\ZipArchive')) {
+            throw new \Exception('ZipArchive class missing');
+        }
         $archive = new \ZipArchive();
         if ($archive->open($file) === true) {
             for ($i = 0; $i < $archive->numFiles; $i++) {
@@ -120,24 +123,25 @@ class Update extends Repository
         $file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip';
 
         $archive = new \ZipArchive();
-        $archive->open($file);
+        if ($archive->open($file) === true) {
+          for ($i = 0; $i < $archive->numFiles; $i++) {
+              $filename = $archive->getNameIndex($i);
 
-        for ($i = 0; $i < $archive->numFiles; $i++) {
-            $filename = $archive->getNameIndex($i);
+              if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
+                  if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
+                      mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
+                  }
 
-            if (preg_match('%^main\/'.$locale.'\/(.*).json$%', $filename)) {
-                if (!is_dir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename))) {
-                    mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.dirname($filename), 0777, true);
-                }
-
-                if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
-                    copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
-                    $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
-                }
-            }
+                  if (!file_exists($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'datas'.DIRECTORY_SEPARATOR.$filename)) {
+                      copy("zip://" . $file . "#" . $filename, $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename);
+                      $this->newDatasFile[] = $this->cldrCacheFolder . DIRECTORY_SEPARATOR . 'datas' . DIRECTORY_SEPARATOR . $filename;
+                  }
+              }
+          }
+          $archive->close();
+        } else {
+            throw new \Exception("Failed to unzip '".$file."'.");
         }
-        $archive->close();
-
         $this->generateMainDatas($locale);
     }
 
