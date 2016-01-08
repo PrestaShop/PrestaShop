@@ -1,4 +1,4 @@
-{extends "customer/order-detail.tpl"}
+{extends file="customer/order-detail.tpl"}
 
 {block name="page_title"}
   {l s='Guest Tracking'}
