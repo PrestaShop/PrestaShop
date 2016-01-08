@@ -1,0 +1,23 @@
+.search-widget{
+  margin-left: 20px;
+  form{
+      position: relative;
+      input[type=text]{
+        text-indent: 30px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: $gray-light;
+        border-radius: 4px;
+        padding: 10px;
+        min-width: 225px;
+      }
+      button[type=submit]{
+        position: absolute;
+        background: none;
+        border:none;
+        bottom: 2px;
+        left: 2px;
+        color: $gray-light;
+      }
+  }
+}
