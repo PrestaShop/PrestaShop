@@ -1,6 +1,6 @@
 {extends file="checkout/checkout-step.tpl"}
 
-{block "step_content"}
+{block name="step_content"}
   <div class="delivery-options-list">
     {if $delivery_options|count}
       <form id="delivery-method" method="post">

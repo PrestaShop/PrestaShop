@@ -2,9 +2,9 @@
 
 <form method="POST" action="{$action}">
   <section class="form-fields">
-    {block "form_fields"}
+    {block name="form_fields"}
       {foreach from=$formFields item="field"}
-        {block "form_field"}
+        {block name="form_field"}
           {form_field field=$field}
         {/block}
       {/foreach}
@@ -14,7 +14,7 @@
   <footer class="form-footer">
     <input type="hidden" name="submitAddress" value="1">
     {block "form_buttons"}
-      <button type="submit">{l s='Save'}</button>
+      <button type="submit">{l s="Save"}</button>
     {/block}
   </footer>
 </form>
