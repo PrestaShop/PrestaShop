@@ -6,9 +6,9 @@
     <p>{l s='Not you? [1]Log out[/1]' tags=["<a href='{$urls.actions.logout}'>"]}</p>
   {else if $show_login_form}
     <a href="{$urls.pages.order}">{l s='No account?'}</a>
-    {render template='checkout/_partials/login-form.tpl' ui=$login_form}
+    {render file="checkout/_partials/login-form.tpl" ui=$login_form}
   {else}
     <a data-link-action="show-login-form" href="?login">{l s='Already have an account?'}</a>
-    {render template='checkout/_partials/customer-form.tpl' ui=$register_form guest_allowed=$guest_allowed}
+    {render file="checkout/_partials/customer-form.tpl" ui=$register_form guest_allowed=$guest_allowed}
   {/if}
 {/block}
