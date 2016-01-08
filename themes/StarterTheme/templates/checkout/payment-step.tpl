@@ -1,6 +1,6 @@
 {extends file="checkout/checkout-step.tpl"}
 
-{block "step_content"}
+{block name="step_content"}
 
   {if $conditions_to_approve|count}
     <p class="ps-hidden-by-js">

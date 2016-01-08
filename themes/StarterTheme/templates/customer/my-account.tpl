@@ -44,7 +44,7 @@
         </li>
       {/if}
 
-      {block name="displayCustomerAccount"}
+      {block name="display_customer_account"}
         {hook h="displayCustomerAccount"}
       {/block}
 
