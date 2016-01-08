@@ -36,6 +36,7 @@ var AdminModule = function() {
     this.categoryResetBtnSelector = '.module-category-reset';
     this.moduleInstallBtnSelector = 'input.module-install-btn';
     this.moduleInstallLoaderSelector = '.module-install-loader';
+    this.moduleSortingDropdownSelector = '.module-sorting-author select';
 
 /**
  * Initialize all listners and bind everything
@@ -44,36 +45,104 @@ var AdminModule = function() {
  */
   this.init = function() {
     this.initSortingDisplaySwitch();
+    this.initSortingDropdown();
     this.initSearchBlock();
     this.initCategorySelect();
     this.initActionButtons();
   };
 
+  this.initSortingDropdown = function() {
+        var _this = this;
+        $(this.moduleSortingDropdownSelector).on('change', function(event){
+            var selectedSorting = $(this).attr('value');
+            _this.doDropdownSort(selectedSorting);
+        });
+    };
+
+    this.doDropdownSort = function(typeSort) {
+        var availableSorts = [
+                                'sort-by-author',
+                                'sort-by-price',
+                                'sort-by-name'
+                            ];
+
+        var selector = (
+              this.currentDisplay == 'grid' ?
+              this.moduleItemGridSelector :
+              this.moduleItemListSelector
+          );
+
+        if ($.inArray(typeSort, availableSorts) === -1) {
+            return false;
+        }
+
+        var dataAttr = null;
+        switch (typeSort) {
+            case availableSorts[0]:
+                dataAttr = ['data-author', 'data-tech-name'];
+                break;
+            case availableSorts[1]:
+                dataAttr = ['data-price', 'data-tech-name'];
+                break;
+            case availableSorts[2]:
+                dataAttr = ['data-name', 'data-tech-name'];
+                break;
+        }
+
+        var arrayToSort = {};
+        var keysToSort = [];
+
+        $(selector).each(function(index, value){
+            var selectorObject = $(this);
+            var uniqueID = '';
+            $.each(dataAttr, function (index, value){
+                uniqueID += selectorObject.attr(value);
+            });
+            arrayToSort[uniqueID] = $(this);
+            keysToSort.push(uniqueID);
+        });
+
+        var keysArrayLength = keysToSort.length;
+        keysToSort.sort();
+        var _this = this;
+
+        $(this.moduleGridSelector).fadeOut(function(){
+            var _that = _this;
+            var _arrayToSort = arrayToSort;
+            $(this).empty();
+            $(_this.moduleGridSelector).append('<div class="row">');
+            $.each(keysToSort, function(index, value){
+                $(_that.moduleGridSelector).append(_arrayToSort[value].get(0).outerHTML);
+                delete _arrayToSort[value];
+            });
+            $(_this.moduleGridSelector).append('</div>');
+            $(_this.moduleGridSelector).fadeIn();
+        });
+    };
+
   this.initActionButtons = function() {
-      var selector = (
-            this.currentDisplay == 'grid' ?
-            this.moduleItemGridSelector :
-            this.moduleItemListSelector
-        );
+        var selector = (
+                this.currentDisplay == 'grid' ?
+                this.moduleItemGridSelector :
+                this.moduleItemListSelector
+            );
 
         var _this = this;
 
-      $(this.moduleInstallBtnSelector).on('click', function(event){
-        /*  var currentModuleItem = $(this).parents().find(selector+':first');
-          var moduleName = currentModuleItem.attr('data-name');*/
-          event.preventDefault();
-          var _that = _this;
-          var next = $(this).next();
-          $(this).hide();
-          $(next).show();
-          $.ajax({
-                url: $(this).attr("data-url"),
-                dataType: 'json',
-            }).done(function() {
-                $(next).fadeOut();
-            });
-
-          
+        $(this.moduleInstallBtnSelector).on('click', function(event){
+            /*  var currentModuleItem = $(this).parents().find(selector+':first');
+              var moduleName = currentModuleItem.attr('data-name');*/
+              event.preventDefault();
+              var _that = _this;
+              var next = $(this).next();
+              $(this).hide();
+              $(next).show();
+              $.ajax({
+                    url: $(this).attr("data-url"),
+                    dataType: 'json',
+                }).done(function() {
+                    $(next).fadeOut();
+                });
       });
   };
 
