@@ -1,6 +1,6 @@
 {extends file="checkout/checkout-step.tpl"}
 
-{block "step_content"}
+{block name="step_content"}
 
   {if !$use_same_address}
     <h2 class="h2">{l s='Your Delivery Address'}</h2>
