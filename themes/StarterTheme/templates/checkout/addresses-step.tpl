@@ -23,8 +23,8 @@
     </div>
   {elseif $customer.addresses|count > 0}
     <div id="delivery-addresses">
-      {include  addresses   = $customer.addresses
-                file        = "checkout/_partials/address-selector-block.tpl"
+      {include  file        = "checkout/_partials/address-selector-block.tpl"
+                addresses   = $customer.addresses
                 name        = "id_address_delivery"
                 selected    = $id_address_delivery
                 type        = "delivery"
@@ -57,8 +57,8 @@
       </div>
     {else}
       <div id="invoice-addresses">
-        {include  addresses   = $customer.addresses
-                  file        = "checkout/_partials/address-selector-block.tpl"
+        {include  file        = "checkout/_partials/address-selector-block.tpl"
+                  addresses   = $customer.addresses
                   name        = "id_address_invoice"
                   selected    = $id_address_invoice
                   type        = "invoice"
