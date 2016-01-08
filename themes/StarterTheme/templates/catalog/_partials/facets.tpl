@@ -1,10 +1,10 @@
 <div id="search_filters">
   {if $activeFilters|count}
     <section class="active_filters">
-      <h1 class="h3">{l s='Active Filters'}</h1>
+      <h1 class="h3">{l s="Active Filters"}</h1>
       <ul>
         {foreach from=$activeFilters item="filter"}
-          <li>{l s='%1$s: ' sprintf=[$filter.facetLabel]} {$filter.label} <a  class="js-search-link" href="{$filter.nextEncodedFacetsURL}">{l s='Remove'}</a></li>
+          <li>{l s='%1$s: ' sprintf=[$filter.facetLabel]} {$filter.label} <a  class="js-search-link" href="{$filter.nextEncodedFacetsURL}">{l s="Remove"}</a></li>
         {/foreach}
       </ul>
     </section>
@@ -54,7 +54,7 @@
           <form>
             <input type="hidden" name="order" value="{$sort_order}">
             <select name="q">
-              <option disabled selected hidden>{l s='(no filter)'}</option>
+              <option disabled selected hidden>{l s="(no filter)"}</option>
               {foreach from=$facet.filters item="filter"}
                 {if $filter.displayed}
                   <option
@@ -75,7 +75,7 @@
             </select>
             {if !$js_enabled}
               <button class="ps-hidden-by-js" type="submit">
-                {l s='Filter'}
+                {l s="Filter"}
               </button>
             {/if}
           </form>
