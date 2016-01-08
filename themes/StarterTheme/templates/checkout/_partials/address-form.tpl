@@ -1,4 +1,4 @@
-{extends "customer/_partials/address-form.tpl"}
+{extends file="customer/_partials/address-form.tpl"}
 
 {block "form_field"}
   {if $field.name eq "alias"}
