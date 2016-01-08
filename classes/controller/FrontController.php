@@ -160,6 +160,8 @@ class FrontControllerCore extends Controller
             $this->ssl = true;
         }
 
+        $this->guestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+
         if (isset($useSSL)) {
             $this->ssl = $useSSL;
         } else {
@@ -1566,6 +1568,12 @@ class FrontControllerCore extends Controller
         $queryString = str_replace('%2F', '/', http_build_query($params));
         return $url . ($queryString ? "?$queryString" : '');
     }
+
+    protected function getCurrentURL()
+    {
+        return Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    }
+
     public function getPageName()
     {
         // Are we in a payment module
@@ -1617,6 +1625,7 @@ class FrontControllerCore extends Controller
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
+            new CustomerLoginFormatter($this->getTranslator()),
             $this->getTemplateVarUrls()
         );
 
@@ -1625,20 +1634,38 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function makeRegisterForm()
+    protected function makeCustomerFormatter()
     {
-        $form = new CustomerRegisterForm(
-            $this->context->smarty,
-            $this->context,
+        $formatter = new CustomerFormatter(
             $this->getTranslator(),
-            new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
-            $this->getTemplateVarUrls()
+            $this->context->language
         );
 
-        $form
+        $formatter
             ->setAskForNewsletter(Configuration::get('PS_CUSTOMER_NWSL'))
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
         ;
+
+        return $formatter;
+    }
+
+    protected function makeCustomerForm()
+    {
+        $form = new CustomerForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            $this->makeCustomerFormatter(),
+            new CustomerPersister(
+                $this->context,
+                new PrestaShop\PrestaShop\Core\Foundation\Crypto\Hashing,
+                $this->getTranslator(),
+                $this->guestAllowed
+            ),
+            $this->getTemplateVarUrls()
+        );
+
+        $form->setGuestAllowed($this->guestAllowed);
 
         $form->setAction($this->updateQueryString(null));
 
