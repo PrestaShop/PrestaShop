@@ -1,3 +1,63 @@
-@import "variables";
+@import "partials/_variables";
+@import "partials/_fonts";
 @import "~bootstrap/scss/bootstrap";
 @import "~bourbon/app/assets/stylesheets/bourbon";
+@import "modules/drop-down";
+@import "modules/search-widget";
+
+
+/*** HEADER ***/
+#header {
+  .header-nav {
+    border-bottom: $gray-light 1px solid;
+    max-height: 60px;
+    margin-bottom: 80px;
+    .login {
+      color: $gray-light;
+      display: inline-block;
+      font-weight: 400;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+  }
+
+  .header-top{
+    background: $gray;
+    margin-top: 70px;
+    height: 100px;
+    .menu{
+      padding-top: 40px;
+      > ul{
+        display: table;
+        > li{
+          display: table-cell;
+          ul{
+            visibility: hidden;
+          }
+        }
+      }
+    }
+
+    a{
+      color: white;
+      text-transform: uppercase;
+    }
+    .cart-preview{
+      position: absolute;
+      top:40px;
+      right: 20px;
+      .shopping-cart{
+        vertical-align: middle;
+      }
+      .body{
+        display: none;
+      }
+    }
+  }
+}
+
+/*** HEADER ***/
+
+.relative{
+  position: relative;
+}
