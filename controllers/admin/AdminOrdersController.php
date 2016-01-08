@@ -1745,6 +1745,16 @@ class AdminOrdersControllerCore extends AdminController
             $order_state['text-color'] = Tools::getBrightness($order_state['color']) < 128 ? 'white' : 'black';
         }
 
+        $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
+        $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
+        $slips = OrderSlip::getOrdersSlip($customer->id, $order->id);
+        foreach ($slips as $slip) {
+            $shipping_refundable_tax_excl -= $slip['total_shipping_tax_excl'];
+            $shipping_refundable_tax_incl -= $slip['total_shipping_tax_incl'];
+        }
+        $shipping_refundable_tax_excl = max(0, $shipping_refundable_tax_excl);
+        $shipping_refundable_tax_incl = max(0, $shipping_refundable_tax_incl);
+
         // Smarty assign
         $this->tpl_view_vars = array(
             'order' => $order,
@@ -1764,6 +1774,8 @@ class AdminOrdersControllerCore extends AdminController
             'orders_total_paid_tax_incl' => $order->getOrdersTotalPaid(), // Get the sum of total_paid_tax_incl of the order with similar reference
             'total_paid' => $order->getTotalPaid(),
             'returns' => OrderReturn::getOrdersReturn($order->id_customer, $order->id),
+            'shipping_refundable_tax_excl' => $shipping_refundable_tax_excl,
+            'shipping_refundable_tax_incl' => $shipping_refundable_tax_incl,
             'customer_thread_message' => CustomerThread::getCustomerMessages($order->id_customer, null, $order->id),
             'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
             'messages' => Message::getMessagesByOrderId($order->id, true),

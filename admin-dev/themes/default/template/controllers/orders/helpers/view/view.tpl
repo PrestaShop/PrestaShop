@@ -1049,11 +1049,13 @@
 											{assign var=order_discount_price value=$order->total_discounts_tax_excl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_excl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_excl}
+											{assign var=shipping_refundable value=$shipping_refundable_tax_excl}
 										{else}
 											{assign var=order_product_price value=$order->total_products_wt}
 											{assign var=order_discount_price value=$order->total_discounts_tax_incl}
 											{assign var=order_wrapping_price value=$order->total_wrapping_tax_incl}
 											{assign var=order_shipping_price value=$order->total_shipping_tax_incl}
+											{assign var=shipping_refundable value=$shipping_refundable_tax_incl}
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
@@ -1088,7 +1090,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(%s)' sprintf=$smarty.capture.TaxMethod}</p>
+												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
