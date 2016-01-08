@@ -55,7 +55,7 @@ function runScenario (scenario) {
         });
 
         it('should show the account creation form', function () {
-          return browser.waitForVisible('#customer-register-form');
+          return browser.waitForVisible('#customer-form');
         });
 
         it('should show a link to the login form', function () {
@@ -72,15 +72,15 @@ function runScenario (scenario) {
 
           it(infoFormTestText, function () {
             return browser
-              .setValue('#customer-register-form [name=firstname]', user.name.first)
-              .setValue('#customer-register-form [name=lastname]' , user.name.last)
-              .setValue('#customer-register-form [name=email]'    , user.email)
+              .setValue('#customer-form [name=firstname]', user.name.first)
+              .setValue('#customer-form [name=lastname]' , user.name.last)
+              .setValue('#customer-form [name=email]'    , user.email)
               .then(() => {
                 if (!scenario.customerOrdersAsGuest) {
-                  return browser.setValue('#customer-register-form [name=password]', '123456789');
+                  return browser.setValue('#customer-form [name=password]', '123456789');
                 }
               })
-              .click('#customer-register-form button')
+              .click('#customer-form button')
               .waitForVisible(
                   '#checkout-personal-information-step.-reachable.-complete'
               )

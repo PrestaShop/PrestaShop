@@ -1,7 +1,7 @@
 {if $errors|count}
-  <ul>
+  <ul class='form-errors'>
     {foreach $errors as $error}
-      <li>{$error nofilter}</li>
+      <li>{$error}</li>
     {/foreach}
   </ul>
 {/if}

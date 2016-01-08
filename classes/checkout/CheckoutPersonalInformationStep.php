@@ -14,7 +14,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         Smarty $smarty,
         TranslatorInterface $translator,
         CustomerLoginForm $loginForm,
-        CustomerRegisterForm $registerForm
+        CustomerForm $registerForm
     ) {
         parent::__construct($smarty, $translator);
         $this->loginForm = $loginForm;
@@ -26,13 +26,6 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         // personal info step is always reachable
         $this->step_is_reachable = true;
 
-        $this->show_login_form = array_key_exists('login', $requestParameters);
-        if ($this->show_login_form) {
-            $this->step_is_current = true;
-        }
-
-        $this->loginForm->fillWith($requestParameters);
-
         $this->registerForm
             ->fillFromCustomer(
                 $this
@@ -40,21 +33,26 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                     ->getCheckoutSession()
                     ->getCustomer()
             )
-            ->fillWith($requestParameters)
         ;
 
         if (isset($requestParameters['submitCreate'])) {
+            $this->registerForm->fillWith($requestParameters);
             if ($this->registerForm->submit()) {
                 $this->step_is_complete = true;
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
+                $this->step_is_complete = false;
             }
         } elseif (isset($requestParameters['submitLogin'])) {
+            $this->loginForm->fillWith($requestParameters);
             if ($this->loginForm->submit()) {
                 $this->step_is_complete = true;
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
             }
+        } elseif (array_key_exists('login', $requestParameters)) {
+            $this->show_login_form = true;
+            $this->step_is_current = true;
         }
 
         $this->logged_in = $this
@@ -83,7 +81,8 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
                 'logged_in'        => $this->logged_in,
                 'show_login_form'  => $this->show_login_form,
                 'login_form'       => $this->loginForm->getProxy(),
-                'register_form'    => $this->registerForm->getProxy()
+                'register_form'    => $this->registerForm->getProxy(),
+                'guest_allowed'    => $this->getCheckoutSession()->isGuestAllowed()
             ]
         );
     }
