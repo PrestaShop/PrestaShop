@@ -14,7 +14,7 @@
         {% for module in modules %}
                 <div class="module-item-{{display_type}} {{col_lg}}" data-id="{{ module.id }}" data-name="{{ module.displayName }}"
                 data-logo="{{ module.media.img }}" data-author="{{ module.author }}" data-version="{{ module.version }}" data-description="{{ module.description }}"
-                data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}">
+                data-tech-name="{{module.name}}" data-categories="{{ module.refs|join('|') }}" data-type="{{module.productType}}" data-price="{{module.price.EUR}}">
                      <div class="module-item-wrapper-{{display_type}}">
                         <div class="module-item-heading-{{display_type}}" data-toggle="modal" data-target="#module-modal-read-more-{{module.name}}">
                             <img class="module-logo-thumb-{{display_type}}" src="{{ module.media.img }}" alt="{{ module.displayName }}" />
@@ -57,7 +57,7 @@
                                     <li><a href="{{module_url}}" class="{% if module_action  != 'configure' %}module-install-btn{% endif %}">{{module_action|capitalize}}</a></li>
                                 {% endfor %}
                                 </ul>
-                                
+
                                 <div class="loader module-install-loader">
                                     <svg class="circular" viewBox="25 25 50 50">
                                         <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
