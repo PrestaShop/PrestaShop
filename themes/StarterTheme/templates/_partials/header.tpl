@@ -1,12 +1,12 @@
 {block name="header_banner"}
   <div class="header-banner">
-    {hook h='displayBanner'}
+    {hook h="displayBanner"}
   </div>
 {/block}
 
 {block name="header_nav"}
   <div class="header-nav">
-    {hook h='displayNav'}
+    {hook h="displayNav"}
   </div>
 {/block}
 
@@ -18,6 +18,6 @@
 
 {block name="header_top"}
   <div class="header-top">
-    {hook h='displayTop'}
+    {hook h="displayTop"}
   </div>
 {/block}
