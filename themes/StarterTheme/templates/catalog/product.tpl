@@ -10,7 +10,7 @@
     <meta itemprop="url" content="{$product.url}">
 
     {block name="product-activation"}
-      {include 'catalog/_partials/product-activation.tpl'}
+      {include file="catalog/_partials/product-activation.tpl"}
     {/block}
 
     {block name="page_header_container"}
@@ -328,7 +328,7 @@
                 <h3>{l s='Pack content'}</h3>
                 {foreach from=$packItems item="product_pack"}
                   {block name="product_miniature"}
-                    {include './product-miniature.tpl' product=$product_pack}
+                    {include file="catalog/product-miniature.tpl" product=$product_pack}
                   {/block}
                 {/foreach}
             </section>
@@ -341,7 +341,7 @@
                 <h3>{l s='Accessories'}</h3>
                 {foreach from=$accessories item="product_accessory"}
                   {block name="product_miniature"}
-                    {include './product-miniature.tpl' product=$product_accessory}
+                    {include file="catalog/product-miniature.tpl" product=$product_accessory}
                   {/block}
                 {/foreach}
               </section>

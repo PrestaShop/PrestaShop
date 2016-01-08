@@ -5,7 +5,7 @@
 {/block}
 
 {block name="order_detail"}
-  {include file='customer/_partials/order-detail-no-return.tpl'}
+  {include file="customer/_partials/order-detail-no-return.tpl"}
 {/block}
 
 {block name="order_messages"}

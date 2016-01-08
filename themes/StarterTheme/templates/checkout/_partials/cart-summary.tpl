@@ -10,7 +10,7 @@
     <div id="cart-summary-product-list">
       <ul>
         {foreach from=$cart.products item=product}
-          <li>{include './cart-summary-product-line.tpl' product=$product}</li>
+          <li>{include file="checkout/_partials/cart-summary-product-line.tpl" product=$product}</li>
         {/foreach}
       </ul>
     </div>

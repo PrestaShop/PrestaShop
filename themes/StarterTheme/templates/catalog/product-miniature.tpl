@@ -35,7 +35,7 @@
   {/block}
 
   {block name="product_variants"}
-    {include './_partials/variant-links.tpl' variants=$product.main_variants}
+    {include file="catalog/_partials/variant-links.tpl" variants=$product.main_variants}
   {/block}
 
   {block name="product_price_and_shipping"}
