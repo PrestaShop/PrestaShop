@@ -570,6 +570,7 @@ var combinations = (function() {
 
 	return {
 		'init': function() {
+			var _this = this;
 			var weightUnit = $('#accordion_combinations').attr('data-weight-unit');
 
 			/** delete combination */
@@ -616,6 +617,11 @@ var combinations = (function() {
 			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
 				var id_attribute = $(this).closest('.combination-form').attr('data');
 				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
+			});
+
+			/** on change images selection */
+			$(document).on('click', '#form .product-combination-image input', function() {
+				_this.refreshDefaultImage();
 			});
 
 			/** Combinations fields display management */
@@ -671,9 +677,38 @@ var combinations = (function() {
 				$('#form-nav, #form_content').show();
 			});
 		},
-		'refreshImagesCombination': function() {
-			var target = $('#accordion_combinations');
+		'refreshDefaultImage': function() {
+			var productDefaultImageUrl = null;
+			var productCoverImageElem = $('#product-images-dropzone').find('.iscover');
 
+			/** get product cover image */
+			if(productCoverImageElem.length == 1){
+				productDefaultImageUrl = productCoverImageElem.parent().find('.dz-image').css('background-image')
+					.replace(/^url\(["']?/, '')
+					.replace(/["']?\)$/, '');
+			}
+
+			$.each($('#form .combination-form'), function(key, elem){
+				var defaultImageUrl = productDefaultImageUrl;
+
+				/** get first selected image */
+				var defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
+				if(defaultImageElem.length == 1){
+					defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
+				}
+
+				if(defaultImageUrl){
+					var img = '<img src="' + defaultImageUrl + '" class="img-responsive" style="max-width:50px" />';
+					$('#accordion_combinations #attribute_'+$(elem).attr('data')).find('td.img').html(img);
+				}else{
+					$('#accordion_combinations #attribute_'+$(elem).attr('data')).find('td.img').html('');
+				}
+
+			});
+		},
+		'refreshImagesCombination': function() {
+			var _this = this;
+			var target = $('#accordion_combinations');
 			if(target.find('.combination').length == 0){
 				return;
 			}
@@ -697,6 +732,8 @@ var combinations = (function() {
 							imagesElem.append(row);
 						});
 					});
+
+					_this.refreshDefaultImage();
 			 	}
 			});
 		}
