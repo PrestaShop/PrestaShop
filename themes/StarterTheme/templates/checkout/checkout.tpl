@@ -28,8 +28,8 @@
                 cart          = $cart
       }
 
-      {render   template  = "checkout/checkout-process.tpl"
-                ui        = $checkout_process
+      {render   file  = "checkout/checkout-process.tpl"
+                ui    = $checkout_process
       }
 
     </section>
