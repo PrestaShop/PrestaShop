@@ -82,9 +82,9 @@
 
   {block name="order_detail"}
     {if $order.data.return_allowed}
-      {include file='customer/_partials/order-detail-return.tpl'}
+      {include file="customer/_partials/order-detail-return.tpl"}
     {else}
-      {include file='customer/_partials/order-detail-no-return.tpl'}
+      {include file="customer/_partials/order-detail-no-return.tpl"}
     {/if}
   {/block}
 
@@ -116,7 +116,7 @@
   {/block}
 
   {block name="order_messages"}
-    {include file='customer/_partials/order-messages.tpl'}
+    {include file="customer/_partials/order-messages.tpl"}
   {/block}
 
 {/block}
