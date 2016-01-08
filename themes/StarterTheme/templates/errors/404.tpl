@@ -12,7 +12,7 @@
       {hook h='displaySearch'}
     {/block}
 
-    {hook h='displayNotFound'}
+    {hook h="displayNotFound"}
   </section>
 {/block}
 
