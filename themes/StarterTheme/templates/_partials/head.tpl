@@ -28,5 +28,5 @@
 {/if}
 
 {block name="hook_header"}
-  {hook h='displayHeader'}
+  {hook h="displayHeader"}
 {/block}
