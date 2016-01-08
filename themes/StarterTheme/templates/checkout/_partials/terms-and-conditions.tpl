@@ -19,7 +19,7 @@
     {if $assume_approved or $all_conditions_approved}
       <button id="disapprove-terms" type="submit">{l s="I've changed my mind, I don't agree with those terms any longer"}</button>
     {else}
-      <button id="approve-terms" type="submit">{l s='I agree with all of the above'}</button>
+      <button id="approve-terms" type="submit">{l s="I agree with all of the above"}</button>
     {/if}
   </div>
 </form>

@@ -17,22 +17,22 @@
               value   = "1"
               {if $use_same_address} checked {/if}
       >
-      <span>{l s='Use this address for invoice too'}</span>
+      <span>{l s="Use this address for invoice too"}</span>
     </label>
   {/if}
 {/block}
 
 {block name="form_buttons"}
   {if !$form_has_continue_button}
-    <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
-    <button type="submit">{l s='Save Address'}</button>
+    <a href="?cancelAddress={$type}">{l s="Cancel"}</a>
+    <button type="submit">{l s="Save Address"}</button>
   {else}
     {if $customer.addresses|count > 0}
-      <a href="?cancelAddress={$type}">{l s='Cancel'}</a>
+      <a href="?cancelAddress={$type}">{l s="Cancel"}</a>
     {/if}
     <form>
       <button type="submit" class="continue" name="continue" value="1">
-          {l s='Continue'}
+          {l s="Continue"}
       </button>
     </form>
   {/if}

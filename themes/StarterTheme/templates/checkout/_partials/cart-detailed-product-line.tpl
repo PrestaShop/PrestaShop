@@ -26,7 +26,7 @@
                     {if $customization.down_quantity_url}<a href="{$customization.down_quantity_url}">-</a>{/if}
                     <span class="product-quantity">{$customization.quantity}</span>
                     {if $customization.up_quantity_url}<a href="{$customization.up_quantity_url}">+</a>{/if}
-                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s='Remove'}</a>
+                    <a href="{$customization.remove_from_cart_url}" class="remove-from-cart" rel="nofollow">{l s="Remove"}</a>
                     <ul>
                         {foreach from=$customization.fields item="field"}
                             <li>

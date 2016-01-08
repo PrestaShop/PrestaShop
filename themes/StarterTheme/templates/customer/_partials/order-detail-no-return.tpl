@@ -1,11 +1,11 @@
 <table id="order-products">
   <thead>
     <tr>
-      <th>{l s='Reference'}</th>
-      <th>{l s='Product'}</th>
-      <th>{l s='Quantity'}</th>
-      <th>{l s='Unit price'}</th>
-      <th>{l s='Total price'}</th>
+      <th>{l s="Reference"}</th>
+      <th>{l s="Product"}</th>
+      <th>{l s="Quantity"}</th>
+      <th>{l s="Unit price"}</th>
+      <th>{l s="Total price"}</th>
     </tr>
   </thead>
 
@@ -41,32 +41,32 @@
   <tfoot>
     {if $priceDisplay && $use_tax}
       <tr>
-        <td>{l s='Items (tax excl.)'}</td>
+        <td>{l s="Items (tax excl.)"}</td>
         <td colspan="4">{$order.data.total_products}</td>
       </tr>
     {/if}
     <tr>
-      <td>{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+      <td>{l s="Items"} {if $use_tax}{l s="(tax incl.)"}{/if}</td>
       <td colspan="4">{$order.data.total_products_wt}</td>
     </tr>
     {if $order.data.total_discounts}
       <tr>
-        <td>{l s='Total vouchers'}</td>
+        <td>{l s="Total vouchers"}</td>
         <td colspan="4">{$order.data.total_discounts}</td>
       </tr>
     {/if}
     {if $order.data.total_wrapping}
     <tr>
-      <td>{l s='Total gift wrapping cost'}</td>
+      <td>{l s="Total gift wrapping cost"}</td>
       <td colspan="4">{$order.data.total_wrapping}</td>
     </tr>
     {/if}
     <tr>
-      <td>{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+      <td>{l s="Shipping & handling"} {if $use_tax}{l s="(tax incl.)"}{/if}</td>
       <td colspan="4">{$order.data.total_shipping}</td>
     </tr>
     <tr>
-      <td>{l s='Total'}</td>
+      <td>{l s="Total"}</td>
       <td colspan="4">{$order.data.total_paid}</td>
     </tr>
   </tfoot>
