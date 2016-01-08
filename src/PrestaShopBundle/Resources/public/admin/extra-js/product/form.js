@@ -472,43 +472,15 @@ var combinationGenerator = (function() {
 		 * Combination row maker
 		 * @param {object} attribute
 		 */
-		var combinationRowMaker = function(attribute){
-
+		var combinationRowMaker = function(form){
 			var combinationsLength = $('#accordion_combinations').children().length;
-			var form = $('#accordion_combinations').attr('data-prototype').replace(/__name__/g, combinationsLength);
+			var newForm = form.replace(/product_combination\[/g, 'form[step3][combinations]['+combinationsLength+'][')
+				.replace(/id="product_combination_/g, 'id="form_step3_combinations_'+combinationsLength+'_')
+				.replace(/__loop_index__/g, combinationsLength);
 
-			var row = '<div class="panel panel-default combination" id="attribute___id_attribute__" data="__id_attribute__" data-index="___index__">\
-				<div class="panel-title">\
-					<div class="col-lg-4 pull-left">\
-						<a data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">__combination_name__</a>\
-					</div>\
-					<div class="col-lg-4 pull-left">\
-					    <span class="small col-lg-4 attribute-weight">'+ attribute.attribute_weight +' '+ $('#accordion_combinations').attr('data-weight-unit') +'</span>\
-						<span class="small col-lg-4 attribute-price-display">0,00 €</span>\
-						<span class="small col-lg-4 attribute-quantity">0</span>\
-					</div>\
-				</div>\
-				<div class="col-lg-2 pull-right text-right">\
-					<a class="btn btn-default btn-sm" data-toggle="collapse" data-parent="#accordion_combinations" href="#combination_form___name__">Open</a>\
-					<a href="__delete_link__" class="btn btn-default btn-sm delete" data="__id_attribute__">delete</a>\
-				</div>\
-				<div class="clearfix"></div>\
-				<div id="combination_form___name__" class="panel-collapse collapse">\
-					<div class="panel-body">__form__</div>\
-				</div>\
-			</div>';
-
-			var newRow = row.replace(/__name__/g, combinationsLength)
-				.replace(/___index__/g, combinationsLength)
-				.replace(/__combination_name__/g, attribute.name)
-				.replace(/__delete_link__/g, $('#accordion_combinations').attr('data-action-delete')+'/'+attribute.id_product_attribute+'/'+id_product)
-				.replace(/__id_attribute__/g, attribute.id_product_attribute)
-				.replace(/__form__/g, form);
-
-			$('#accordion_combinations').prepend(newRow);
-			$('#form_step3_combinations_' + combinationsLength + '_id_product_attribute').val(attribute.id_product_attribute);
-
+			$('#accordion_combinations').prepend(newForm);
 			stock.updateQtyFields();
+			combinations.refreshImagesCombination();
 		};
 
 		$.ajax({
@@ -608,31 +580,42 @@ var combinations = (function() {
 
 			/** on change quantity, update field quantity row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_quantity"]', function() {
-				$(this).closest('div.panel.combination').find('span.attribute-quantity').html($(this).val());
+				var id_attribute = $(this).closest('.combination-form').attr('data');
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-quantity input').val($(this).val());
+			});
+
+			/** on change shortcut quantity, update form field quantity */
+			$(document).on('keyup', '.attribute-quantity input', function() {
+				var id_attribute = $(this).closest('.combination').attr('data');
+				$('#combination_form_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_quantity"]').val($(this).val());
 			});
 
 			/** on change weigth, update weight row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_weight"]', function() {
-				var impactField = $(this).closest('div.panel.combination').find('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]');
+				var id_attribute = $(this).closest('.combination-form').attr('data');
+				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]');
 				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$(this).closest('div.panel.combination').find('span.attribute-weight').html(impact * $(this).val() + ' ' + weightUnit);
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-weight').html(impact * $(this).val() + ' ' + weightUnit);
 			});
 
 			/** on change weigth impact, update weight row */
 			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_weight_impact"]', function() {
-				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup();
+				var id_attribute = $(this).closest('.combination-form').attr('data');
+				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_weight"]').keyup();
 			});
 
 			/** on change price, update price row */
 			$(document).on('keyup', 'input[id^="form_step3_combinations_"][id$="_attribute_price"]', function() {
-				var impactField = $(this).closest('div.panel.combination').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
+				var id_attribute = $(this).closest('.combination-form').attr('data');
+				var impactField = $(this).closest('.combination-form').find('select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]');
 				var impact = impactField.val() === '0' ? '1' : impactField.val();
-				$(this).closest('div.panel.combination').find('span.attribute-price-display').html(formatCurrency(impact * $(this).val()));
+				$('#accordion_combinations #attribute_'+id_attribute).find('.attribute-price-display').html(formatCurrency(impact * $(this).val()));
 			});
 
 			/** on change price impact, update price row */
 			$(document).on('change', 'select[id^="form_step3_combinations_"][id$="_attribute_price_impact"]', function() {
-				$(this).closest('div.panel.combination').find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
+				var id_attribute = $(this).closest('.combination-form').attr('data');
+				$('#accordion_combinations #attribute_'+id_attribute).find('input[id^="form_step3_combinations_"][id$="_attribute_price"]').keyup();
 			});
 
 			/** Combinations fields display management */
@@ -672,6 +655,21 @@ var combinations = (function() {
 			}
 
 			this.refreshImagesCombination();
+
+			/** open combination form */
+			$(document).on('click', '#accordion_combinations .btn-open', function(e) {
+				e.preventDefault();
+				var contentElem = $($(this).attr('href'));
+				contentElem.insertBefore('#form-nav').removeClass('hide').show();
+				$('#form-nav, #form_content').hide();
+			});
+
+			/** close combination form */
+			$(document).on('click', '#form .combination-form .btn-back', function(e) {
+				e.preventDefault();
+				$(this).closest('.combination-form').hide();
+				$('#form-nav, #form_content').show();
+			});
 		},
 		'refreshImagesCombination': function() {
 			var target = $('#accordion_combinations');
@@ -691,11 +689,11 @@ var combinations = (function() {
 
 						imagesElem.html('');
 						$.each(combinationImages, function(key, image){
-
 							var row = '<div class="product-combination-image">\
 					 			<input type="checkbox" name="form[step3][combinations][' + index + '][id_image_attr][]" value="' + image.id + '" '+ (image.id_image_attr ? 'checked="checked"' : '') +'>\
 					 			<img src="' + image.base_image_url + '-small_default.' + image.format + '" alt="" />\
 					 		</div>';
+
 							imagesElem.append(row);
 						});
 					});
@@ -1564,7 +1562,6 @@ var modalConfirmation = (function() {
 	return {
 		'create': function(content, title, callbacks) {
 			if(title != null){
-				console.log('aa')
 				modal.find('.modal-title').html(title);
 			}
 			if(content != null){

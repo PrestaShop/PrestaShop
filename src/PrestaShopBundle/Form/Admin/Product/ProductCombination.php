@@ -172,17 +172,6 @@ class ProductCombination extends CommonAbstractType
             'attr' => array('class' => 'images'),
         ));
 
-        //set default minimal values for collection prototype
-        $builder->setData([
-            'attribute_wholesale_price' => 0,
-            'attribute_price' => 0,
-            'attribute_weight' => 0,
-            'attribute_unity' => 0,
-            'attribute_minimal_quantity' => 1,
-            'available_date_attribute' => '0000-00-00',
-            'attribute_quantity' => 0,
-        ]);
-
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
