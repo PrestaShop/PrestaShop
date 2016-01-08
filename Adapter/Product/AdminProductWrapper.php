@@ -712,4 +712,17 @@ class AdminProductWrapper
 
         return $preview_url;
     }
+
+    /**
+     * Generate preview URL
+     *
+     * @param integer $productId
+     *
+     * @return string preview url
+     */
+    public function getPreviewUrlFromId($productId)
+    {
+        $product = new \ProductCore($productId, false);
+        return $this->getPreviewUrl($product);
+    }
 }
