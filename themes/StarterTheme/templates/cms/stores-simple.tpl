@@ -20,16 +20,16 @@
           <ul>
             <li>{$store.address.formatted nofilter}</li>
             {if $store.phone}
-              <li>{l s='Phone:'} {$store.phone}</li>
+              <li>{l s="Phone:"} {$store.phone}</li>
             {/if}
             {if $store.fax}
-              <li>{l s='Fax:'} {$store.fax}</li>
+              <li>{l s="Fax:"} {$store.fax}</li>
             {/if}
             {if $store.email}
-              <li>{l s='Email:'} {$store.email}</li>
+              <li>{l s="Email:"} {$store.email}</li>
             {/if}
           </ul>
-          <p>{l s='Openning hours'}</p>
+          <p>{l s="Openning hours"}</p>
           <table>
             {foreach $store.business_hours as $day}
             <tr>

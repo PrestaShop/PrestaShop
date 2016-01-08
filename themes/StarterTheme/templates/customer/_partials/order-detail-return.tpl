@@ -4,12 +4,12 @@
     <thead>
       <tr>
         <th><input type="checkbox" /></th>
-        <th>{l s='Reference'}</th>
-        <th>{l s='Product'}</th>
-        <th>{l s='Quantity'}</th>
-        <th>{l s='Returned'}</th>
-        <th>{l s='Unit price'}</th>
-        <th>{l s='Total price'}</th>
+        <th>{l s="Reference"}</th>
+        <th>{l s="Product"}</th>
+        <th>{l s="Quantity"}</th>
+        <th>{l s="Returned"}</th>
+        <th>{l s="Unit price"}</th>
+        <th>{l s="Total price"}</th>
       </tr>
     </thead>
 
@@ -70,40 +70,40 @@
     <tfoot>
       {if $priceDisplay && $use_tax}
         <tr>
-          <td colspan="2">{l s='Items (tax excl.)'}</td>
+          <td colspan="2">{l s="Items (tax excl.)"}</td>
           <td colspan="5">{$order.data.total_products}</td>
         </tr>
       {/if}
       <tr>
-        <td colspan="2">{l s='Items'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+        <td colspan="2">{l s="Items"} {if $use_tax}{l s="(tax incl.)"}{/if}</td>
         <td colspan="5">{$order.data.total_products_wt}</td>
       </tr>
       {if $order.data.total_discounts}
         <tr>
-          <td colspan="2">{l s='Total vouchers'}</td>
+          <td colspan="2">{l s="Total vouchers"}</td>
           <td colspan="5">{$order.data.total_discounts}</td>
         </tr>
       {/if}
       {if $order.data.total_wrapping}
       <tr>
-        <td colspan="2">{l s='Total gift wrapping cost'}</td>
+        <td colspan="2">{l s="Total gift wrapping cost"}</td>
         <td colspan="5">{$order.data.total_wrapping}</td>
       </tr>
       {/if}
       <tr>
-        <td colspan="2">{l s='Shipping & handling'} {if $use_tax}{l s='(tax incl.)'}{/if}</td>
+        <td colspan="2">{l s="Shipping & handling"} {if $use_tax}{l s="(tax incl.)"}{/if}</td>
         <td colspan="5">{$order.data.total_shipping}</td>
       </tr>
       <tr>
-        <td colspan="2">{l s='Total'}</td>
+        <td colspan="2">{l s="Total"}</td>
         <td colspan="5">{$order.data.total_paid}</td>
       </tr>
     </tfoot>
   </table>
 
   <header>
-    <h1 class="h3">{l s='Merchandise return'}</h1>
-    <p>{l s='If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.'}</p>
+    <h1 class="h3">{l s="Merchandise return"}</h1>
+    <p>{l s="If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below."}</p>
   </header>
 
   <section class="form-fields">
@@ -117,7 +117,7 @@
   <footer class="form-footer">
     <input type="hidden" name="id_order" value="{$order.data.id}" />
     <button type="submit" name="submitReturnMerchandise">
-      {l s='Make an RMA slip'}
+      {l s="Make an RMA slip"}
     </button>
   </footer>
 </form>

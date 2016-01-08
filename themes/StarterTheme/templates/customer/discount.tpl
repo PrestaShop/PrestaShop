@@ -1,7 +1,7 @@
 {extends file="customer/page.tpl"}
 
 {block name="page_title"}
-  {l s='My vouchers'}
+  {l s="My vouchers"}
 {/block}
 
 {block name="page_content"}
@@ -10,13 +10,13 @@
     <table>
       <thead>
         <tr>
-          <th>{l s='Code'}</th>
-          <th>{l s='Description'}</th>
-          <th>{l s='Quantity'}</th>
-          <th>{l s='Value'}</th>
-          <th>{l s='Minimum'}</th>
-          <th>{l s='Cumulative'}</th>
-          <th>{l s='Expiration date'}</th>
+          <th>{l s="Code"}</th>
+          <th>{l s="Description"}</th>
+          <th>{l s="Quantity"}</th>
+          <th>{l s="Value"}</th>
+          <th>{l s="Minimum"}</th>
+          <th>{l s="Cumulative"}</th>
+          <th>{l s="Expiration date"}</th>
         </tr>
       </thead>
       <tbody>

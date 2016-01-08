@@ -9,12 +9,12 @@
     <ul class="action-list">
       <li>
         <a href="{url entity=address id=$address.id}" data-link-action="edit-address">
-          {l s='Update'}
+          {l s="Update"}
         </a>
       </li>
       <li>
         <a href="{url entity=address id=$address.id params=['delete' => 1, 'token' => $token]}" data-link-action="delete-address">
-          {l s='Delete'}
+          {l s="Delete"}
         </a>
       </li>
     </ul>
