@@ -15,6 +15,7 @@
     "bourbon": "^4.2.6",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.0",
+    "file-loader": "^0.8.5",
     "jquery": "^2.1.4",
     "node-sass": "^3.4.2",
     "postcss-loader": "^0.8.0",
@@ -23,5 +24,8 @@
     "stylus": "^0.52.4",
     "webpack": "^1.12.9",
     "webpack-sources": "^0.1.0"
+  },
+  "dependencies": {
+    "material-design-icons": "^2.1.3"
   }
 }
